@@ -29,7 +29,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="940.0"
 	prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="com.comino.flight.view.controller.FlightViewController">
+	fx:controller="com.comino.flight.analysis.FlightAnalysisController">
 	<children>
 		<TabPane
 			tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
@@ -61,7 +61,6 @@
                                 <DetailsWidget  fx:id="details" layoutX="10" layoutY="662.0"/>
 								<LineChartWidget fx:id="chart1" layoutX="200.0" layoutY="50.0"/>
 								<LineChartWidget fx:id="chart2" layoutX="200.0" layoutY="460.0"/>
-
 
 
 

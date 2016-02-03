@@ -6,12 +6,9 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.effect.Blend?>
-<?import javafx.scene.effect.Lighting?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="400.0" prefWidth="1380" styleClass="widget" stylesheets="@../../view/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="400.0" prefWidth="1380" styleClass="widget" stylesheets="@../../view/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="RIGHT" legendVisible="false" prefHeight="375.0" prefWidth="1271.0" verticalZeroLineVisible="false">
 		<xAxis>
 			<NumberAxis label="Seconds" lowerBound="0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="60.0" fx:id="xAxis" />

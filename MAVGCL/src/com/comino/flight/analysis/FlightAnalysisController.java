@@ -1,8 +1,7 @@
-package com.comino.flight.view.controller;
+package com.comino.flight.analysis;
 
 import java.text.DecimalFormat;
 
-import com.comino.flight.MSPTypes;
 import com.comino.flight.MainApp;
 import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget;
 import com.comino.flight.widgets.battery.BatteryWidget;
@@ -10,6 +9,7 @@ import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.linechart.LineChartWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.MSPTypes;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class FlightViewController {
+public class FlightAnalysisController {
 
 
 
@@ -61,7 +61,7 @@ public class FlightViewController {
 
 
 
-	public FlightViewController() {
+	public FlightAnalysisController() {
 
 		//		series = new XYChart.Series<Number,Number>();
 		//

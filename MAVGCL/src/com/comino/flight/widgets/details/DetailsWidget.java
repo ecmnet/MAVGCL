@@ -47,7 +47,7 @@ public class DetailsWidget extends Pane  {
 	private DataModel model;
 
 
-	private final DecimalFormat fo = new DecimalFormat("#0.0 ");
+	private final DecimalFormat fo = new DecimalFormat("#0.0");
 
 	public DetailsWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DetailsWidget.fxml"));

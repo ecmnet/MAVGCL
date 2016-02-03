@@ -1,4 +1,4 @@
-package com.comino.flight;
+package com.comino.model.types;
 
 import com.comino.msp.model.DataModel;
 

@@ -3,7 +3,7 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 
-import com.comino.flight.view.controller.FlightViewController;
+import com.comino.flight.analysis.FlightAnalysisController;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVUdpController;
@@ -72,12 +72,12 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("analysis/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
-            scene.getStylesheets().add(getClass().getResource("view/application.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("analysis/application.css").toExternalForm());
 
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -93,13 +93,13 @@ public class MainApp extends Application {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/MAVGCLPane.fxml"));
+            loader.setLocation(MainApp.class.getResource("analysis/MAVGAnalysis.fxml"));
             AnchorPane flightPane = (AnchorPane) loader.load();
 
             // Set person overview into the center of root layout.
             rootLayout.setCenter(flightPane);
 
-            FlightViewController fvController = loader.getController();
+            FlightAnalysisController fvController = loader.getController();
             fvController.start(control);
 
         } catch (IOException e) {

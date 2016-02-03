@@ -6,17 +6,19 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.comino.flight.MSPTypes;
 import com.comino.flight.widgets.analysiscontrol.IChartControl;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.MSPTypes;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
+import com.sun.javafx.geom.Rectangle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
@@ -27,8 +29,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+
 
 public class LineChartWidget extends Pane implements IChartControl {
 
@@ -100,6 +104,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
 	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+	private int    totalMax = 0;
 
 	public LineChartWidget() {
 
@@ -149,7 +154,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-
+                totalMax = 999999;
 				updateGraph();
 
 			}
@@ -230,6 +235,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 		});
 
+
 	}
 
 	public void saveAsPng(String path) {
@@ -263,7 +269,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 		}
 
 		if(time<mList.size() && mList.size()>0 ) {
-			while(time<mList.size()) {
+			while(time<mList.size() && time < totalMax) {
 
 
 				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
