@@ -1,0 +1,17 @@
+.root{
+    -fx-font-size: 8pt;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 1px;
+
+}
+
+.widget {
+    -fx-font-size: 8pt;
+    -fx-background-color: #F0F0E6;
+    -fx-border-color: #B0B0B0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
+}
