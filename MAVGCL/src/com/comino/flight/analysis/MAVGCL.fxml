@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.CheckBox?>
+
+<?import com.comino.flight.widgets.linechart.LineChartWidget?>
+<?import com.comino.flight.widgets.status.StatusWidget?>
+<?import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget?>
+<?import com.comino.flight.widgets.battery.BatteryWidget?>
+<?import com.comino.flight.widgets.details.DetailsWidget?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+	minHeight="-Infinity" minWidth="-Infinity" prefHeight="910.0"
+	prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.comino.flight.analysis.FlightAnalysisController">
+	<children>
+		<StatusWidget fx:id="status" layoutX="10" layoutY="20.0" />
+		<BatteryWidget fx:id="battery" layoutX="10" layoutY="290.0" />
+		<AnalysisControlWidget fx:id="analysiscontrol"
+			layoutX="10" layoutY="412.0" />
+		<DetailsWidget fx:id="details" layoutX="10" layoutY="632.0" />
+		<LineChartWidget fx:id="chart1" layoutX="200.0"
+			layoutY="20.0" />
+		<LineChartWidget fx:id="chart2" layoutX="200.0"
+			layoutY="430.0" />
+	</children>
+</AnchorPane>

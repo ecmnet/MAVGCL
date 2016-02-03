@@ -17,8 +17,11 @@ import com.comino.msp.utils.ExecutorService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -102,15 +105,9 @@ public class FlightAnalysisController {
 
 
 
-	@FXML
-	private void initialize() {
 
-
-
-	}
-
-
-	public void start(IMAVController control) {
+	public void start(MainApp mainApp,IMAVController control) {
+		this.mainApp = mainApp;
 		this.control = control;
 		this.model = control.getCurrentModel();
 		analysiscontrol.addChart(chart1.setup(control));
