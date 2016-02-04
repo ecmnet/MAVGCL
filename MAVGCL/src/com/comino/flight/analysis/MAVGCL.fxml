@@ -35,7 +35,7 @@
 		<BatteryWidget fx:id="battery" layoutX="10" layoutY="290.0" />
 		<AnalysisControlWidget fx:id="analysiscontrol"
 			layoutX="10" layoutY="412.0" />
-		<DetailsWidget fx:id="details" layoutX="10" layoutY="632.0" />
+		<DetailsWidget fx:id="details" layoutX="10" layoutY="665.0" />
 		<LineChartWidget fx:id="chart1" layoutX="200.0"
 			layoutY="20.0" />
 		<LineChartWidget fx:id="chart2" layoutX="200.0"

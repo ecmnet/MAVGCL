@@ -6,6 +6,5 @@
 	<classpathentry kind="lib" path="lib/jna-4.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/jssc.jar"/>
 	<classpathentry kind="lib" path="lib/mavcomm.jar"/>
-	<classpathentry kind="lib" path="lib/medusa-2.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

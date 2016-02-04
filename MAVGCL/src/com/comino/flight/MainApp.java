@@ -62,7 +62,6 @@ public class MainApp extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		control.stop();
 		control.close();
 		super.stop();
 		System.exit(0);

@@ -134,20 +134,20 @@ public class LineChartWidget extends Pane implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting && control.isCollecting()) {
+					if(!isCollecting && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
 						series3.getData().clear();
 						time = 0;
 					}
 
-					isCollecting = control.isCollecting();
+					isCollecting = control.getCollector().isCollecting();
 
-					if(control.isCollecting())
-						updateValue(control.getModelList().size());
+					if(control.getCollector().isCollecting())
+						updateValue(control.getCollector().getModelList().size());
 
 				}
-				return control.getModelList().size();
+				return control.getCollector().getModelList().size();
 			}
 		};
 
@@ -261,7 +261,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 	private void updateGraph() {
 		float dt_sec = 0;
-		List<DataModel> mList = control.getModelList();
+		List<DataModel> mList = control.getCollector().getModelList();
 
 		if(time==0) {
 			xAxis.setLowerBound(0);

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -33,7 +34,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 	private static final String[]  TRIG_START_OPTIONS = { "armed", "altHold entered", "posHold entered" };
 	private static final String[]  TRIG_STOP_OPTIONS = { "unarmed", "altHold left", "posHold left" };
 
-	private static final Integer[] TRIG_DELAY_OPTIONS = { 0, 10, 60, 120 };
+	private static final Integer[] TRIG_DELAY_OPTIONS = { 0, 2, 5, 10, 30 };
 	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 240, 1200 };
 
 	@FXML
@@ -52,18 +53,23 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 	private ChoiceBox<Integer> trigdelay;
 
 	@FXML
+	private ChoiceBox<Integer> predelay;
+
+	@FXML
 	private ChoiceBox<Integer> totaltime;
 
 
 	@FXML
 	private Circle isrecording;
 
+	private Task<Integer> task;
+
 	private IMAVController control;
 	private List<IChartControl> charts = null;
 
 	private int triggerStartMode =0;
 	private int triggerStopMode  =0;
-	private int triggerStopDelay =0;
+	private int triggerDelay =0;
 
 	private boolean modetrigger  = false;
 
@@ -79,6 +85,48 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 			throw new RuntimeException(exception);
 		}
 		charts = new ArrayList<IChartControl>();
+
+		task = new Task<Integer>() {
+
+			@Override
+			protected Integer call() throws Exception {
+				while(true) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException iex) {
+						Thread.currentThread().interrupt();
+					}
+
+					if (isCancelled()) {
+						break;
+					}
+					updateValue(control.getCollector().getMode());
+				}
+				return control.getCollector().getMode();
+			}
+		};
+
+		task.valueProperty().addListener(new ChangeListener<Integer>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
+				switch(newData) {
+				case ModelCollectorService.STOPPED:
+					 recording.selectedProperty().set(false);
+					 isrecording.setFill(Color.LIGHTGREY); break;
+				case ModelCollectorService.PRE_COLLECTING:
+					 recording.selectedProperty().set(true);
+					 isrecording.setFill(Color.LIGHTBLUE); break;
+				case ModelCollectorService.POST_COLLECTING:
+				     recording.selectedProperty().set(true);
+					 isrecording.setFill(Color.LIGHTYELLOW); break;
+				case ModelCollectorService.COLLECTING:
+					recording.selectedProperty().set(true);
+				    isrecording.setFill(Color.LIGHTGREEN); break;
+				}
+			}
+		});
+
 	}
 
 	@FXML
@@ -93,6 +141,9 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
 		trigdelay.getSelectionModel().select(0);
 		trigdelay.setDisable(true);
+		predelay.getItems().addAll(TRIG_DELAY_OPTIONS);
+		predelay.getSelectionModel().select(0);
+		predelay.setDisable(true);
 
 		totaltime.getItems().addAll(TOTAL_TIME);
 		totaltime.getSelectionModel().select(1);
@@ -102,7 +153,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 		recording.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {
-				recording(new_val);
+				recording(new_val, 0);
 			}
 		});
 
@@ -136,7 +187,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 		trigdelay.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				triggerStopDelay = newValue.intValue();
+				triggerDelay = newValue.intValue();
 			}
 		});
 
@@ -144,7 +195,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				for(IChartControl chart : charts)
-				  chart.setTotalTime(newValue.intValue());
+					chart.setTotalTime(newValue.intValue());
 			}
 		});
 	}
@@ -152,7 +203,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.control.addModeChangeListener(this);
-
+		ExecutorService.get().execute(task);
 	}
 
 
@@ -161,17 +212,13 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 	}
 
 
-	private void recording(boolean start) {
+	private void recording(boolean start, int delay) {
 		if(start) {
 			control.getMessageList().clear();
-			control.start();
-			isrecording.setFill(Color.LIGHTGREEN);
-			recording.selectedProperty().set(true);
+			control.getCollector().start();
 		}
 		else {
-			control.stop();
-			isrecording.setFill(Color.LIGHTGRAY);
-			recording.selectedProperty().set(false);
+			control.getCollector().stop(delay);
 		}
 	}
 
@@ -180,25 +227,19 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 		if(!modetrigger)
 			return;
 
-		if(!control.isCollecting()) {
+		if(!control.getCollector().isCollecting()) {
 			switch(triggerStartMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED)); break;
-			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE)); break;
-			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)); break;
+			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),0); break;
+			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
 			}
 		} else {
-			if(triggerStopDelay>0)
-			  isrecording.setFill(Color.LIGHTYELLOW);
-			ExecutorService.get().schedule(new Runnable() {
-				@Override
-				public void run() {
-					switch(triggerStopMode) {
-					case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED)); break;
-					case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE)); break;
-					case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)); break;
-					}
-				}
-			}, triggerStopDelay, TimeUnit.SECONDS);
+			switch(triggerStopMode) {
+			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay); break;
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),triggerDelay); break;
+			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay); break;
+			}
+
 		}
 	}
 
