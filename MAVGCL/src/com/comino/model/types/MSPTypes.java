@@ -53,7 +53,7 @@ public class MSPTypes {
 
 
 	private static final String type_names[]  = {
-			"None",
+			"not selected",
 			"AccX", "AccY", "AccZ",
 			"GyroX", "GyroY","GyroZ",
 			"AngleX", "AngleY","Compass","Alt.(local)","Alt.(amsl)",
@@ -62,9 +62,7 @@ public class MSPTypes {
 			"Loc.SpeedX", "Loc.SpeedY", "LocSpeedZ",
 			"RC Chan1.", "RC Chan2.", "RC Chan3.", "RC Chan4.",
 			"Raw Distance", "Raw FlowX", "Raw FlowY"
-
 	};
-
 
 	public static float getFloat(DataModel m, int type) {
 		switch(type) {

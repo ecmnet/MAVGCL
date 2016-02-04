@@ -2,14 +2,16 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.layout.Pane?>
 
 <fx:root prefHeight="400.0" prefWidth="1380" styleClass="widget" stylesheets="@../../analysis/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="RIGHT" legendVisible="false" prefHeight="375.0" prefWidth="1271.0" verticalZeroLineVisible="false">
+	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="TOP" prefHeight="375.0" prefWidth="1271.0" verticalZeroLineVisible="false">
 		<xAxis>
 			<NumberAxis label="Seconds" lowerBound="0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="60.0" fx:id="xAxis" />
 		</xAxis>
@@ -23,9 +25,8 @@
    <Group />
    <ChoiceBox fx:id="preset" layoutX="410.0" layoutY="364.0" prefHeight="19.0" prefWidth="100.0" />
    <CheckBox fx:id="normalize" layoutX="520.0" layoutY="368.0" mnemonicParsing="false" text="Normalize" />
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
+   <Button fx:id="export" layoutX="1213.0" layoutY="364.0" mnemonicParsing="false" text="PNG export" />
+
 
 
 </fx:root>

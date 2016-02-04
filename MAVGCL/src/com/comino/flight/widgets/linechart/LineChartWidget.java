@@ -34,13 +34,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
@@ -48,6 +52,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 
 public class LineChartWidget extends Pane implements IChartControl {
@@ -100,6 +105,10 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 	@FXML
 	private CheckBox normalize;
+
+	@FXML
+	private Button export;
+
 
 
 	private XYChart.Series<Number,Number> series1;
@@ -198,6 +207,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 		cseries2.getSelectionModel().select(0);
 		cseries3.getSelectionModel().select(0);
 
+
 		preset.getItems().addAll(PRESET_NAMES);
 		preset.getSelectionModel().select(0);
 
@@ -206,6 +216,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = newValue.intValue();
+				series1.setName(MSPTypes.getNames()[type1]);
+				linechart.setLegendVisible(true);
 				refreshGraph();
 
 			}
@@ -217,6 +229,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = newValue.intValue();
+				series2.setName(MSPTypes.getNames()[type2]);
+				linechart.setLegendVisible(true);
 				refreshGraph();
 
 			}
@@ -228,6 +242,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type3 = newValue.intValue();
+				series3.setName(MSPTypes.getNames()[type3]);
+				linechart.setLegendVisible(true);
 				refreshGraph();
 
 			}
@@ -246,10 +262,27 @@ public class LineChartWidget extends Pane implements IChartControl {
 				cseries2.getSelectionModel().select(type2);
 				cseries3.getSelectionModel().select(type3);
 
+				series1.setName(MSPTypes.getNames()[type1]);
+				series2.setName(MSPTypes.getNames()[type2]);
+				series3.setName(MSPTypes.getNames()[type3]);
+
+				linechart.setLegendVisible(true);
+
 				refreshGraph();
 			}
 
 		});
+
+		export.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				saveAsPng(System.getProperty("user.home"));
+			}
+
+		});
+
+
 
 
 	}
@@ -277,6 +310,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 	private void updateGraph() {
 		float dt_sec = 0;
+
+
 		List<DataModel> mList = control.getCollector().getModelList();
 
 		if(time==0) {
@@ -285,6 +320,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 		}
 
 		if(time<mList.size() && mList.size()>0 ) {
+
+
 			while(time<mList.size() && time < totalMax) {
 
 
@@ -326,6 +363,12 @@ public class LineChartWidget extends Pane implements IChartControl {
 		series3 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series3);
 		this.control = control;
+
+
+		series1.setName(MSPTypes.getNames()[type1]);
+		series2.setName(MSPTypes.getNames()[type2]);
+		series3.setName(MSPTypes.getNames()[type3]);
+
 		ExecutorService.get().execute(task);
 		return this;
 	}
@@ -349,7 +392,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 		else
 			resolution = 50;
 
-		xAxis.setTickUnit(resolution/10);
+		xAxis.setTickUnit(resolution/20);
+		xAxis.setMinorTickCount(10);
 
 		this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
 		refreshGraph();
