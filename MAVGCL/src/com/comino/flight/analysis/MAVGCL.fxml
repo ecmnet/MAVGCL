@@ -24,6 +24,7 @@
 <?import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
 <?import com.comino.flight.widgets.details.DetailsWidget?>
+<?import com.comino.flight.widgets.statusline.StatusLineWidget?>
 
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
@@ -40,5 +41,6 @@
 			layoutY="20.0" />
 		<LineChartWidget fx:id="chart2" layoutX="200.0"
 			layoutY="430.0" />
+		<StatusLineWidget fx:id="statusline" layoutX="0" layoutY="860.0" />
 	</children>
 </AnchorPane>

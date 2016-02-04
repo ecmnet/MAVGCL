@@ -24,6 +24,7 @@ import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.linechart.LineChartWidget;
 import com.comino.flight.widgets.status.StatusWidget;
+import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSPTypes;
 import com.comino.msp.model.DataModel;
@@ -63,6 +64,9 @@ public class FlightAnalysisController {
 
 	@FXML
 	private DetailsWidget details;
+
+	@FXML
+	private StatusLineWidget statusline;
 
 	private MainApp mainApp;
 	private DataModel model;
@@ -132,6 +136,7 @@ public class FlightAnalysisController {
 		status.setup(control);
 		battery.setup(control);
 		details.setup(control);
+		statusline.setup(control);
 		ExecutorService.get().execute(task);
 
 
