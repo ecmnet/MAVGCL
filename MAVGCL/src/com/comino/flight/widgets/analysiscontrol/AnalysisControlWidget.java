@@ -116,6 +116,8 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 					if (isCancelled()) {
 						break;
 					}
+
+
 					updateValue(control.getCollector().getMode());
 				}
 				return control.getCollector().getMode();

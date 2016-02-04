@@ -168,8 +168,9 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 					isCollecting = control.getCollector().isCollecting();
 
-					if(control.getCollector().isCollecting())
+					if(isCollecting && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
+					
 
 				}
 				return control.getCollector().getModelList().size();
