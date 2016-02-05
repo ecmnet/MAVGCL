@@ -2,18 +2,11 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="20.0" prefWidth="1600.0" styleClass="widget" stylesheets="@../../analysis/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="22.0" prefWidth="1600.0" styleClass="status" stylesheets="@../../analysis/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ToolBar layoutY="2.0" prefHeight="20.0" prefWidth="1600.0">
-         <items>
-            <Label fx:id="driver" prefWidth="300.0" text="no sensors available" />
-            <Separator orientation="VERTICAL" prefHeight="16.0" />
-            <Label fx:id="messages" prefWidth="600.0" text="" />
-            <Separator orientation="VERTICAL" prefHeight="16.0" />
-         </items>
-      </ToolBar>
+      <Label fx:id="driver" layoutX="19.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />
+      <Label fx:id="messages" layoutX="325.0" layoutY="2.0" prefHeight="18.0" prefWidth="464.0" text="" />
    </children>
 </fx:root>

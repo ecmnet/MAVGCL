@@ -41,7 +41,7 @@ import javafx.scene.shape.Circle;
 public class BatteryWidget extends Pane  {
 
 	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
-	private static final float cu_range[] = { 0.0f,  40.0f, 0,     20 };
+	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
 	private static final float ca_range[] = { 0.0f,  100.0f, 60.0f, 0 };
 
 	@FXML

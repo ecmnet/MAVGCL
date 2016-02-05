@@ -1,0 +1,37 @@
+<project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+
+	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
+
+	<path id="CLASSPATH">
+		<pathelement location="jna-4.1.0.jar" />
+		<pathelement location="jssc.jar" />
+		<pathelement location="mavcomm.jar" />
+		<pathelement path="." />
+	</path>
+
+
+	<target name="jar">
+		<fx:jar destfile="dist/MAVGAnalysis.jar">
+			<fx:application mainClass="com.comino.flight.MainApp">
+				<fx:param name="udp" value="172.168.178.2" />
+			</fx:application>
+
+			<fileset dir="bin/">
+				<include name="**" />
+			</fileset>
+			<fileset dir="lib/">
+				<include name="**" />
+			</fileset>
+
+			<manifest>
+				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
+				<attribute name="Class-Path" value="mavcomm.jar jna-4.1.0.jar jssc.jar" />
+			</manifest>
+		</fx:jar>
+		<copy todir="dist">
+			<fileset dir="lib/">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+</project>

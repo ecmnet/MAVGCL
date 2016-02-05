@@ -24,14 +24,14 @@
         </rowConstraints>
          <children>
             <ProgressBar fx:id="voltage" prefHeight="16.0" prefWidth="120.0" progress="0" GridPane.rowIndex="1" />
-            <ProgressBar fx:id="current" prefHeight="16.0" prefWidth="120.0" progress="0" GridPane.rowIndex="3" />
-            <ProgressBar fx:id="capacity" prefHeight="16.0" prefWidth="120.0" progress="0" GridPane.rowIndex="5" />
+            <ProgressBar fx:id="current" prefHeight="16.0" prefWidth="120.0" progress="0" GridPane.rowIndex="5" />
+            <ProgressBar fx:id="capacity" prefHeight="16.0" prefWidth="120.0" progress="0" GridPane.rowIndex="3" />
             <Label text="Voltage [V]:" />
             <Label fx:id="f_voltage" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Current [A]:" GridPane.rowIndex="2" />
-            <Label fx:id="f_current" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Capacity [%]:" GridPane.rowIndex="4" />
-            <Label fx:id="f_capacity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Current [A]:" GridPane.rowIndex="4" />
+            <Label fx:id="f_current" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Capacity [%]:" GridPane.rowIndex="2" />
+            <Label fx:id="f_capacity" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

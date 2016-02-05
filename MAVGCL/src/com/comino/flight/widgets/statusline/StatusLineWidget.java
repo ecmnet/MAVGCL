@@ -93,6 +93,7 @@ public class StatusLineWidget extends Pane  {
 	}
 
 	public void setup(IMAVController control) {
+    	this.setStyle(" -fx-font-size: 8pt;");
 		this.control = control;
 		ExecutorService.get().execute(task);
 

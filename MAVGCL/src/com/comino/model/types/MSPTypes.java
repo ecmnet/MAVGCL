@@ -39,14 +39,28 @@ public class MSPTypes {
 	public static final int	MSP_NEDVY		= 16;
 	public static final int	MSP_NEDVZ		= 17;
 
+	public static final int	MSP_SPNEDX		= 18;
+	public static final int	MSP_SPNEDY		= 19;
+	public static final int	MSP_SPNEDZ		= 20;
+	public static final int	MSP_SPNEDVX		= 21;
+	public static final int	MSP_SPNEDVY		= 22;
+	public static final int	MSP_SPNEDVZ		= 23;
 
-	public static final int	MSP_RC0			= 18;
-	public static final int	MSP_RC1			= 19;
-	public static final int	MSP_RC2			= 20;
-	public static final int	MSP_RC3			= 21;
-	public static final int	MSP_RAW_DI		= 22;
-	public static final int	MSP_RAW_FLOWX	= 23;
-	public static final int	MSP_RAW_FLOWY   = 24;
+	public static final int	MSP_LERRX		= 24;
+	public static final int	MSP_LERRY		= 25;
+	public static final int	MSP_LERRZ		= 26;
+
+
+	public static final int	MSP_RC0			= 27;
+	public static final int	MSP_RC1			= 28;
+	public static final int	MSP_RC2			= 29;
+	public static final int	MSP_RC3			= 30;
+	public static final int	MSP_RAW_DI		= 31;
+	public static final int	MSP_RAW_FLOWX	= 32;
+	public static final int	MSP_RAW_FLOWY   = 33;
+
+	public static final int	MSP_VOLTAGE		= 34;
+	public static final int	MSP_CURRENT   	= 35;
 
 
 
@@ -60,14 +74,18 @@ public class MSPTypes {
 
 			"Loc.PosX", "Loc.PosY", "LocPosZ",
 			"Loc.SpeedX", "Loc.SpeedY", "LocSpeedZ",
+			"Sp.L.PosX", "Sp.L.PosY", "Sp.L.PosZ",
+			"Sp.L.SpeedX", "Sp.L.SpeedY","Sp.L.SpeedZ",
+			"L.Pos.ErrorX", "L.Pos.ErrorY", "L.Pos.ErrorZ",
 			"RC Chan1.", "RC Chan2.", "RC Chan3.", "RC Chan4.",
-			"Raw Distance", "Raw FlowX", "Raw FlowY"
+			"Raw Distance", "Raw FlowX", "Raw FlowY",
+			"Voltage", "Current"
 	};
 
 	public static float getFloat(DataModel m, int type) {
 		switch(type) {
-		case MSP_ACCX: 			return m.imu.accx;
-		case MSP_ACCY: 			return m.imu.accy;
+		case MSP_ACCX: 			return m.imu.accy;
+		case MSP_ACCY: 			return m.imu.accx;
 		case MSP_ACCZ: 			return m.imu.accz;
 		case MSP_GYROX: 		return m.imu.gyrox;
 		case MSP_GYROY: 		return m.imu.gyroy;
@@ -83,6 +101,15 @@ public class MSPTypes {
 		case MSP_NEDVX:			return m.state.vx;
 		case MSP_NEDVY:			return m.state.vy;
 		case MSP_NEDVZ:			return m.state.vz;
+		case MSP_SPNEDX:		return m.target_state.x;
+		case MSP_SPNEDY:		return m.target_state.y;
+		case MSP_SPNEDZ:		return m.target_state.z;
+		case MSP_SPNEDVX:		return m.target_state.vx;
+		case MSP_SPNEDVY:		return m.target_state.vy;
+		case MSP_SPNEDVZ:		return m.target_state.vz;
+		case MSP_LERRX:		    return m.state.x - m.target_state.x;
+		case MSP_LERRY:		    return m.state.y - m.target_state.y;
+		case MSP_LERRZ:		    return m.state.z - m.target_state.z;
 		case MSP_RC0:			return m.rc.s0;
 		case MSP_RC1:			return m.rc.s1;
 		case MSP_RC2:			return m.rc.s2;
@@ -90,6 +117,9 @@ public class MSPTypes {
 		case MSP_RAW_DI:	    return m.raw.di;
 		case MSP_RAW_FLOWX:	    return m.raw.fX;
 		case MSP_RAW_FLOWY:	    return m.raw.fY;
+		case MSP_VOLTAGE:	    return m.battery.b0;
+		case MSP_CURRENT:	    return m.battery.c0;
+
 
 		default: return 0;
 		}

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.ModelUtils;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
@@ -100,9 +101,9 @@ public class DetailsWidget extends Pane  {
 
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-                   f_altitude.setText(fo.format(model.attitude.al));
-                   f_anglex.setText(fo.format(model.attitude.aX));
-                   f_angley.setText(fo.format(model.attitude.aY));
+                   f_altitude.setText(fo.format(model.attitude.ag));
+                   f_anglex.setText(fo.format(ModelUtils.fromRad(model.attitude.aX)));
+                   f_angley.setText(fo.format(ModelUtils.fromRad(model.attitude.aY)));
                    f_compass.setText(fo.format(model.attitude.h));
                    f_speed.setText(fo.format(Math.sqrt(model.state.vx * model.state.vx + model.state.vy * model.state.vy)));
                    f_quality.setText("0");

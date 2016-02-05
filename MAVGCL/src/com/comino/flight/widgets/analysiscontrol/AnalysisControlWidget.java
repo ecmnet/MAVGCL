@@ -253,7 +253,7 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 			}
 		} else {
 			switch(triggerStopMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay); break;
+			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);         break;
 			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),triggerDelay); break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay); break;
 			}
