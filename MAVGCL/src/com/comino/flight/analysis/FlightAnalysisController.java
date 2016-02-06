@@ -46,15 +46,14 @@ import javafx.scene.shape.Circle;
 public class FlightAnalysisController {
 
 
-
-	@FXML
-	private StatusWidget status;
-
 	@FXML
 	private LineChartWidget chart1;
 
 	@FXML
 	private LineChartWidget chart2;
+
+	@FXML
+	private StatusWidget status;
 
 	@FXML
 	private AnalysisControlWidget analysiscontrol;
@@ -68,57 +67,9 @@ public class FlightAnalysisController {
 	@FXML
 	private StatusLineWidget statusline;
 
-	private MainApp mainApp;
-	private DataModel model;
-
-
-	//	private XYChart.Series<Number,Number> series;
-
-	private int time=0;
-
-	private Task<Long> task;
-
-	private IMAVController control;
-
-	private static final DecimalFormat volt_f = new DecimalFormat("#0.0V");
-
 
 
 	public FlightAnalysisController() {
-
-		//		series = new XYChart.Series<Number,Number>();
-		//
-		task = new Task<Long>() {
-
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-					updateValue(control.getCurrentModel().sys.tms);
-				}
-				return control.getCurrentModel().sys.tms;
-			}
-		};
-		//
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-
-
-
-			}
-		});
-
-
 
 
 	}
@@ -126,9 +77,7 @@ public class FlightAnalysisController {
 
 
 	public void start(MainApp mainApp,IMAVController control) {
-		this.mainApp = mainApp;
-		this.control = control;
-		this.model = control.getCurrentModel();
+
 		analysiscontrol.addChart(chart1.setup(control));
 		analysiscontrol.addChart(chart2.setup(control));
 		analysiscontrol.setup(control);
@@ -136,8 +85,6 @@ public class FlightAnalysisController {
 		battery.setup(control);
 		details.setup(control);
 		statusline.setup(control);
-		ExecutorService.get().execute(task);
-
 
 	}
 
