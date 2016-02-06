@@ -25,11 +25,8 @@
       	<ChoiceBox fx:id="cseries3" layoutX="263.0" layoutY="364.0" prefHeight="19.0" prefWidth="100.0" />
          <Group />
          <ChoiceBox fx:id="preset" layoutX="410.0" layoutY="364.0" prefHeight="19.0" prefWidth="100.0" />
-     <!--  <CheckBox fx:id="normalize" layoutX="520.0" layoutY="368.0" mnemonicParsing="false" text="Normalize" /> -->
+         <CheckBox fx:id="normalize" layoutX="520.0" layoutY="368.0" mnemonicParsing="false" text="Normalize" />
          <Button fx:id="export" layoutX="599.0" layoutY="365.0" mnemonicParsing="false" text="PNG export" />
-
-
-
       </javafx.scene.layout.Pane>
    </children>
 </fx:root>

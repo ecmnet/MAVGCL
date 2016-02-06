@@ -19,8 +19,6 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -30,10 +28,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class StatusLineWidget extends Pane  {
 
@@ -82,9 +77,12 @@ public class StatusLineWidget extends Pane  {
 
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
+				if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
                   driver.setText(control.getCurrentModel().sys.getSensorString());
                   if(control.getMessageList().size()>0)
                      messages.setText(control.getMessageList().remove(0).msg);
+				} else
+					driver.setText("not connected");
 
 			}
 		});

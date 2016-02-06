@@ -19,7 +19,8 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 
-import com.comino.flight.analysis.FlightAnalysisController;
+import com.comino.flight.tabs.FlightTabs;
+import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
@@ -97,7 +98,7 @@ public class MainApp extends Application {
 		try {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("analysis/RootLayout.fxml"));
+			loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
 
 			// Show the scene containing the root layout.
@@ -141,13 +142,13 @@ public class MainApp extends Application {
 		try {
 			// Load person overview.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("analysis/MAVGCL.fxml"));
+			loader.setLocation(MainApp.class.getResource("tabs/MAVGCL2.fxml"));
 			AnchorPane flightPane = (AnchorPane) loader.load();
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
 //
-			FlightAnalysisController fvController = loader.getController();
+			FlightTabs fvController = loader.getController();
 			fvController.start(this,control);
 
 			StatusLineWidget statusline = new StatusLineWidget();

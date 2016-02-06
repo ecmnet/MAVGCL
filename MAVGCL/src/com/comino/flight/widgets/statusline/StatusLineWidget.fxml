@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="22.0" maxHeight="22.0" prefWidth="1600.0" styleClass="status"
+<fx:root prefHeight="25.0" maxHeight="25.0" prefWidth="1600.0" styleClass="status"
     type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="driver" layoutX="16.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />

@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
 import com.comino.msp.model.utils.Utils;
 import com.comino.msp.utils.ExecutorService;
 
@@ -32,12 +30,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class DetailsWidget extends Pane  {
 
@@ -106,7 +99,7 @@ public class DetailsWidget extends Pane  {
                    f_angley.setText(fo.format(Utils.fromRad(model.attitude.aY)));
                    f_compass.setText(fo.format(model.attitude.h));
                    f_speed.setText(fo.format(Math.sqrt(model.state.vx * model.state.vx + model.state.vy * model.state.vy)));
-                   f_quality.setText(Integer.toString(model.raw.fq));
+                   f_quality.setText("0");
 
 			}
 		});

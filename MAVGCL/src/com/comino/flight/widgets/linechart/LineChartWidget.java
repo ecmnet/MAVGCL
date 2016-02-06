@@ -27,11 +27,9 @@ import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSPTypes;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
-import com.sun.javafx.geom.Rectangle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -39,23 +37,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 
 public class LineChartWidget extends VBox implements IChartControl {
@@ -110,8 +100,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 	@FXML
 	private ChoiceBox<String> preset;
 
-//	@FXML
-//	private CheckBox normalize;
+	@FXML
+	private CheckBox normalize;
 
 	@FXML
 	private Button export;
