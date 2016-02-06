@@ -192,6 +192,8 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				triggerStartMode = newValue.intValue();
+				triggerStopMode  = newValue.intValue();
+				trigstop.getSelectionModel().select(triggerStopMode);
 			}
 		});
 

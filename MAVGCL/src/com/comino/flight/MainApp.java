@@ -69,8 +69,6 @@ public class MainApp extends Application {
 		else
 			control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
 
-		if(!control.isConnected())
-			control.connect();
 
 
 		initRootLayout();
@@ -151,6 +149,9 @@ public class MainApp extends Application {
 
 			FlightAnalysisController fvController = loader.getController();
 			fvController.start(this,control);
+
+			if(!control.isConnected())
+				control.connect();
 
 		} catch (IOException e) {
 			e.printStackTrace();
