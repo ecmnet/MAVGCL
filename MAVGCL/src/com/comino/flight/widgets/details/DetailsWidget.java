@@ -106,7 +106,7 @@ public class DetailsWidget extends Pane  {
                    f_angley.setText(fo.format(Utils.fromRad(model.attitude.aY)));
                    f_compass.setText(fo.format(model.attitude.h));
                    f_speed.setText(fo.format(Math.sqrt(model.state.vx * model.state.vx + model.state.vy * model.state.vy)));
-                   f_quality.setText("0");
+                   f_quality.setText(Integer.toString(model.raw.fq));
 
 			}
 		});
