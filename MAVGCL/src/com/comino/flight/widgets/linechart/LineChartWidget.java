@@ -62,20 +62,24 @@ public class LineChartWidget extends Pane implements IChartControl {
 			{ 0,						0,						0					},
 			{ MSPTypes.MSP_NEDX, 		MSPTypes.MSP_NEDY,		MSPTypes.MSP_NEDZ	},
 			{ MSPTypes.MSP_NEDVX, 		MSPTypes.MSP_NEDVY,		MSPTypes.MSP_NEDVZ	},
+			{ MSPTypes.MSP_LERRX, 		MSPTypes.MSP_LERRY,		MSPTypes.MSP_LERRZ	},
 			{ MSPTypes.MSP_ANGLEX, 		MSPTypes.MSP_ANGLEY,	0					},
 			{ MSPTypes.MSP_ACCX, 		MSPTypes.MSP_ACCY, 		MSPTypes.MSP_ACCZ 	},
 			{ MSPTypes.MSP_GYROX, 		MSPTypes.MSP_GYROY, 	MSPTypes.MSP_GYROZ 	},
 			{ MSPTypes.MSP_RAW_FLOWX, 	MSPTypes.MSP_RAW_FLOWY, 0 					},
+			{ MSPTypes.MSP_VOLTAGE, 	MSPTypes.MSP_CURRENT, 0 					},
 	};
 
 	private static String[] PRESET_NAMES = {
 			"None",
 			"Loc.Position",
 			"Loc. Speed",
+			"Loc. Pos.Error",
 			"Angle",
 			"Raw Accelerator",
 			"Raw Gyroskope",
 			"Raw Flow",
+			"Battery",
 
 	};
 
@@ -170,7 +174,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 					if(isCollecting && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
-					
+
 
 				}
 				return control.getCollector().getModelList().size();
