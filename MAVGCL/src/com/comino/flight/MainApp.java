@@ -53,18 +53,21 @@ public class MainApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
-		String ipAddress = null;
+		String peerAddress = null;
+		String bindAddress = null;
 
 		Map<String,String> args = getParameters().getNamed();
 
-		if(args.size()> 0)
-			ipAddress = args.get("udp");
+		if(args.size()> 1) {
+			peerAddress  = args.get("peerAddress");
+			bindAddress  = args.get("bindAddress");
+		}
 
 
-		if(ipAddress==null)
+		if(peerAddress ==null)
 			control = new MAVSerialController();
 		else
-			control = new MAVUdpController(ipAddress);
+			control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
 
 		if(!control.isConnected())
 			control.connect();
