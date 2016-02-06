@@ -64,8 +64,7 @@ public class FlightAnalysisController {
 	@FXML
 	private DetailsWidget details;
 
-	@FXML
-	private StatusLineWidget statusline;
+
 
 
 
@@ -84,7 +83,7 @@ public class FlightAnalysisController {
 		status.setup(control);
 		battery.setup(control);
 		details.setup(control);
-		statusline.setup(control);
+
 
 	}
 

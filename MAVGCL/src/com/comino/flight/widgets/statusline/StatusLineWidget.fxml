@@ -4,9 +4,10 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="22.0" prefWidth="1600.0" styleClass="status" stylesheets="@../../analysis/application.css" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="22.0" maxHeight="22.0" prefWidth="1600.0" styleClass="status"
+    type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="driver" layoutX="19.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />
+      <Label fx:id="driver" layoutX="16.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />
       <Label fx:id="messages" layoutX="325.0" layoutY="2.0" prefHeight="18.0" prefWidth="464.0" text="" />
    </children>
 </fx:root>

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.comino.flight.analysis.FlightAnalysisController;
-import com.comino.flight.widgets.status.StatusWidget;
+import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVUdpController;
@@ -45,6 +45,8 @@ public class MainApp extends Application {
 
 	@FXML
 	private MenuItem m_close;
+
+
 
 
 	@Override
@@ -100,7 +102,7 @@ public class MainApp extends Application {
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
-			scene.getStylesheets().add(getClass().getResource("analysis/application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -128,11 +130,9 @@ public class MainApp extends Application {
 
 		});
 
+
 	}
 
-	public  BorderPane getRootLayout() {
-		return rootLayout;
-	}
 
 	public void showMAVGCLApplication() {
 
@@ -146,12 +146,19 @@ public class MainApp extends Application {
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
-
+//
 			FlightAnalysisController fvController = loader.getController();
 			fvController.start(this,control);
 
+			StatusLineWidget statusline = new StatusLineWidget();
+			rootLayout.setBottom(statusline);
+			statusline.setup(control);
+
+
 			if(!control.isConnected())
 				control.connect();
+
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
