@@ -125,7 +125,6 @@ public class FlightAnalysisController {
 
 
 
-
 	public void start(MainApp mainApp,IMAVController control) {
 		this.mainApp = mainApp;
 		this.control = control;

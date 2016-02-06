@@ -51,11 +51,14 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 
-public class LineChartWidget extends Pane implements IChartControl {
+public class LineChartWidget extends VBox implements IChartControl {
 
 
 	private static int[][] PRESETS = {
@@ -195,6 +198,9 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 	@FXML
 	private void initialize() {
+
+		VBox.setVgrow(this, Priority.ALWAYS);
+		this.setFillWidth(true);
 
 		xAxis.setAutoRanging(false);
 		xAxis.setForceZeroInRange(false);

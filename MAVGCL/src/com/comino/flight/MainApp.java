@@ -72,6 +72,7 @@ public class MainApp extends Application {
 		if(!control.isConnected())
 			control.connect();
 
+
 		initRootLayout();
 		showMAVGCLApplication();
 
@@ -129,6 +130,10 @@ public class MainApp extends Application {
 
 		});
 
+	}
+
+	public  BorderPane getRootLayout() {
+		return rootLayout;
 	}
 
 	public void showMAVGCLApplication() {

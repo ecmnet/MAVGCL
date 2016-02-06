@@ -58,9 +58,10 @@ public class MSPTypes {
 	public static final int	MSP_RAW_DI		= 31;
 	public static final int	MSP_RAW_FLOWX	= 32;
 	public static final int	MSP_RAW_FLOWY   = 33;
+	public static final int	MSP_RAW_FLOWQ   = 34;
 
-	public static final int	MSP_VOLTAGE		= 34;
-	public static final int	MSP_CURRENT   	= 35;
+	public static final int	MSP_VOLTAGE		= 35;
+	public static final int	MSP_CURRENT   	= 36;
 
 
 
@@ -78,7 +79,7 @@ public class MSPTypes {
 			"Sp.L.SpeedX", "Sp.L.SpeedY","Sp.L.SpeedZ",
 			"L.Pos.ErrorX", "L.Pos.ErrorY", "L.Pos.ErrorZ",
 			"RC Chan1.", "RC Chan2.", "RC Chan3.", "RC Chan4.",
-			"Raw Distance", "Raw FlowX", "Raw FlowY",
+			"Distance", "FlowX", "FlowY", "Flow Quality",
 			"Voltage", "Current"
 	};
 
@@ -117,6 +118,7 @@ public class MSPTypes {
 		case MSP_RAW_DI:	    return m.raw.di;
 		case MSP_RAW_FLOWX:	    return m.raw.fX;
 		case MSP_RAW_FLOWY:	    return m.raw.fY;
+		case MSP_RAW_FLOWQ:     return m.raw.fq;
 		case MSP_VOLTAGE:	    return m.battery.b0;
 		case MSP_CURRENT:	    return m.battery.c0;
 

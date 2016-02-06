@@ -29,7 +29,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefHeight="910.0"
-	prefWidth="2000.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+	prefWidth="1400.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.comino.flight.analysis.FlightAnalysisController">
 	<children>
 		<StatusWidget fx:id="status" layoutX="10" layoutY="20.0" />
