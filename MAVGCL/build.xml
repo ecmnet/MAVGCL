@@ -1,6 +1,7 @@
 <project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
 
-	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
+   <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant"
+   	   classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
 
 
    <target name="distribution">
