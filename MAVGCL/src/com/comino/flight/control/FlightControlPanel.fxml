@@ -7,7 +7,7 @@
 
 
 <fx:root prefWidth="196.0" type="javafx.scene.layout.Pane"
-	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<StatusWidget fx:id="status" layoutX="10" layoutY="5.0" />
 		<BatteryWidget fx:id="battery" layoutX="10" layoutY="275.0" />

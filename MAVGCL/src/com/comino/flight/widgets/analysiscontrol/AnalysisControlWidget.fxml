@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Circle?>
 
-<fx:root prefHeight="248.0" prefWidth="183.0" styleClass="widget"  type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="248.0" prefWidth="183.0" styleClass="widget"  type="javafx.scene.layout.Pane"
+xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="12.0" layoutY="14.0" text="Control recording" textFill="#1414da" />
       <Separator layoutX="11.0" layoutY="27.0" prefHeight="0.0" prefWidth="161.0" />
