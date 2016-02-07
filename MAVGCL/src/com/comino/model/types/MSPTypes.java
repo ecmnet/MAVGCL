@@ -73,7 +73,7 @@ public class MSPTypes {
 			"GyroX", "GyroY","GyroZ",
 			"AngleX", "AngleY","Compass","Alt.(local)","Alt.(amsl)",
 
-			"Loc.PosX", "Loc.PosY", "LocPosZ",
+			"Rel.locPosX", "Rel.locPosY", "Rel.locPosZ",
 			"Loc.SpeedX", "Loc.SpeedY", "LocSpeedZ",
 			"Sp.L.PosX", "Sp.L.PosY", "Sp.L.PosZ",
 			"Sp.L.SpeedX", "Sp.L.SpeedY","Sp.L.SpeedZ",
@@ -96,9 +96,9 @@ public class MSPTypes {
 		case MSP_COMPASS: 		return m.attitude.h;
 		case MSP_AL: 			return m.attitude.al;
 		case MSP_AS: 			return m.attitude.ag;
-		case MSP_NEDX:			return m.state.x;
-		case MSP_NEDY:			return m.state.y;
-		case MSP_NEDZ:			return m.state.z;
+		case MSP_NEDX:			return m.state.x - m.state.hx;
+		case MSP_NEDY:			return m.state.y - m.state.hy;
+		case MSP_NEDZ:			return m.state.z - m.state.hz;
 		case MSP_NEDVX:			return m.state.vx;
 		case MSP_NEDVY:			return m.state.vy;
 		case MSP_NEDVZ:			return m.state.vz;

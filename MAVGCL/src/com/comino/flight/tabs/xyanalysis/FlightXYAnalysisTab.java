@@ -24,6 +24,7 @@ import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.linechart.LineChartWidget;
 import com.comino.flight.widgets.status.StatusWidget;
+import com.comino.flight.widgets.xychart.XYChartWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -45,7 +46,8 @@ public class FlightXYAnalysisTab extends Pane {
 	@FXML
 	private DetailsWidget details;
 
-
+	@FXML
+	private XYChartWidget chart1;
 
 	public FlightXYAnalysisTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FlightXYAnalysisTab.fxml"));
@@ -63,13 +65,11 @@ public class FlightXYAnalysisTab extends Pane {
 
 
 	public void start(IMAVController control) {
-
 		analysiscontrol.setup(control);
+		analysiscontrol.addChart(chart1.setup(control));
 		status.setup(control);
 		battery.setup(control);
 		details.setup(control);
-
-
 	}
 
 

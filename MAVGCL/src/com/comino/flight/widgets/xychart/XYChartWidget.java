@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.linechart;
+package com.comino.flight.widgets.xychart;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,36 +44,38 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 
-public class LineChartWidget extends VBox implements IChartControl {
+public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 	private static int[][] PRESETS = {
-			{ 0,						0,						0					},
-			{ MSPTypes.MSP_NEDX, 		MSPTypes.MSP_NEDY,		MSPTypes.MSP_NEDZ	},
-			{ MSPTypes.MSP_NEDVX, 		MSPTypes.MSP_NEDVY,		MSPTypes.MSP_NEDVZ	},
-			{ MSPTypes.MSP_LERRX, 		MSPTypes.MSP_LERRY,		MSPTypes.MSP_LERRZ	},
-			{ MSPTypes.MSP_ANGLEX, 		MSPTypes.MSP_ANGLEY,	0					},
-			{ MSPTypes.MSP_ACCX, 		MSPTypes.MSP_ACCY, 		MSPTypes.MSP_ACCZ 	},
-			{ MSPTypes.MSP_GYROX, 		MSPTypes.MSP_GYROY, 	MSPTypes.MSP_GYROZ 	},
-			{ MSPTypes.MSP_RAW_FLOWX, 	MSPTypes.MSP_RAW_FLOWY, 0 					},
-			{ MSPTypes.MSP_VOLTAGE, 	MSPTypes.MSP_CURRENT, 0 					},
+			{ 0,						0,						},
+			{ MSPTypes.MSP_NEDX, 		MSPTypes.MSP_NEDY,		},
+			{ MSPTypes.MSP_NEDVX, 		MSPTypes.MSP_NEDVY,		},
+			{ MSPTypes.MSP_LERRX, 		MSPTypes.MSP_LERRY,		},
+			{ MSPTypes.MSP_ANGLEX, 		MSPTypes.MSP_ANGLEY,	},
+			{ MSPTypes.MSP_ACCX, 		MSPTypes.MSP_ACCY, 		},
+			{ MSPTypes.MSP_GYROX, 		MSPTypes.MSP_GYROY, 	},
+			{ MSPTypes.MSP_RAW_FLOWX, 	MSPTypes.MSP_RAW_FLOWY, },
 	};
 
 	private static String[] PRESET_NAMES = {
 			"None",
-			"Loc.Position",
+			"Rel.loc.Pos.",
 			"Loc. Speed",
 			"Loc. Pos.Error",
 			"Angle",
 			"Raw Accelerator",
 			"Raw Gyroskope",
 			"Raw Flow",
-			"Battery",
+	};
 
+	private static Float[] SCALES = {
+			1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
 	};
 
 	private static int COLLETCOR_CYCLE = 50;
@@ -95,10 +97,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private ChoiceBox<String> cseries2;
 
 	@FXML
-	private ChoiceBox<String> cseries3;
+	private ChoiceBox<Float> scale;
 
-	@FXML
-	private ChoiceBox<String> preset;
 
 	@FXML
 	private CheckBox normalize;
@@ -110,7 +110,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 	private XYChart.Series<Number,Number> series1;
 	private XYChart.Series<Number,Number> series2;
-	private XYChart.Series<Number,Number> series3;
 
 	private Task<Integer> task;
 	private int time=0;
@@ -119,7 +118,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 	private int type1;
 	private int type2;
-	private int type3;
 
 	private boolean isCollecting = false;
 
@@ -128,9 +126,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
 	private int    totalMax = 0;
 
-	public LineChartWidget() {
+	public XYChartWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LineChartWidget.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("XYChartWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -159,7 +157,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 					if(!isCollecting && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
-						series3.getData().clear();
 						time = 0;
 					}
 
@@ -177,7 +174,7 @@ public class LineChartWidget extends VBox implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-                totalMax = 999999;
+				totalMax = 999999;
 				updateGraph();
 
 			}
@@ -189,36 +186,37 @@ public class LineChartWidget extends VBox implements IChartControl {
 	@FXML
 	private void initialize() {
 
-		VBox.setVgrow(this, Priority.ALWAYS);
-		this.setFillWidth(true);
 
 		xAxis.setAutoRanging(false);
 		xAxis.setForceZeroInRange(false);
+		yAxis.setAutoRanging(false);
 		yAxis.setForceZeroInRange(false);
-		xAxis.setLowerBound(0);
-		xAxis.setUpperBound(totalTime);
 
-		linechart.setPrefWidth(this.getPrefWidth()-50);
+		cseries1.getItems().addAll(PRESET_NAMES);
+		cseries2.getItems().addAll(PRESET_NAMES);
 
-		cseries1.getItems().addAll(MSPTypes.getNames());
-		cseries2.getItems().addAll(MSPTypes.getNames());
-		cseries3.getItems().addAll(MSPTypes.getNames());
-
+		scale.getItems().addAll(SCALES);
 
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
-		cseries3.getSelectionModel().select(0);
+
+		scale.getSelectionModel().select(2);
+
+		xAxis.setLowerBound(-5);
+		xAxis.setUpperBound(5);
+		yAxis.setLowerBound(-5);
+		yAxis.setUpperBound(5);
+
+		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
 
 
-		preset.getItems().addAll(PRESET_NAMES);
-		preset.getSelectionModel().select(0);
 
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = newValue.intValue();
-				series1.setName(MSPTypes.getNames()[type1]);
+				series1.setName(PRESET_NAMES[type1]);
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -231,7 +229,7 @@ public class LineChartWidget extends VBox implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = newValue.intValue();
-				series2.setName(MSPTypes.getNames()[type2]);
+				series2.setName(PRESET_NAMES[type2]);
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -239,41 +237,29 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 		});
 
-		cseries3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		scale.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type3 = newValue.intValue();
-				series3.setName(MSPTypes.getNames()[type3]);
-				linechart.setLegendVisible(true);
+				xAxis.setLowerBound(-SCALES[newValue.intValue()]);
+				xAxis.setUpperBound(SCALES[newValue.intValue()]);
+				yAxis.setLowerBound(-SCALES[newValue.intValue()]);
+				yAxis.setUpperBound(SCALES[newValue.intValue()]);
+
+				if(SCALES[newValue.intValue()]>10) {
+					xAxis.setTickUnit(10); yAxis.setTickUnit(10);
+				} else if(SCALES[newValue.intValue()]>1) {
+					xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+				} else {
+					xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
+				}
+
 				refreshGraph();
 
 			}
 
 		});
 
-		preset.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = PRESETS[newValue.intValue()][0];
-				type2 = PRESETS[newValue.intValue()][1];
-				type3 = PRESETS[newValue.intValue()][2];
-
-				cseries1.getSelectionModel().select(type1);
-				cseries2.getSelectionModel().select(type2);
-				cseries3.getSelectionModel().select(type3);
-
-				series1.setName(MSPTypes.getNames()[type1]);
-				series2.setName(MSPTypes.getNames()[type2]);
-				series3.setName(MSPTypes.getNames()[type3]);
-
-				linechart.setLegendVisible(true);
-
-				refreshGraph();
-			}
-
-		});
 
 		export.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -283,10 +269,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 			}
 
 		});
-
-
-
-
 	}
 
 	public void saveAsPng(String path) {
@@ -302,7 +284,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private void refreshGraph() {
 		series1.getData().clear();
 		series2.getData().clear();
-		series3.getData().clear();
 
 		time = control.getMessageList().size() - totalTime * 1000 / COLLETCOR_CYCLE;
 		if(time < 0) time = 0;
@@ -311,15 +292,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 
 	private void updateGraph() {
-		float dt_sec = 0;
-
 
 		List<DataModel> mList = control.getCollector().getModelList();
-
-		if(time==0) {
-			xAxis.setLowerBound(0);
-			xAxis.setUpperBound(time_max * COLLETCOR_CYCLE / 1000f);
-		}
 
 		if(time<mList.size() && mList.size()>0 ) {
 
@@ -327,16 +301,22 @@ public class LineChartWidget extends VBox implements IChartControl {
 			while(time<mList.size() && time < totalMax) {
 
 
+
 				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
 
-					dt_sec = time *  COLLETCOR_CYCLE / 1000f;
+
 
 					if(type1>0)
-						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type1)));
+						series1.getData().add(new XYChart.Data<Number,Number>(
+								MSPTypes.getFloat(mList.get(time),PRESETS[type1][0]),
+								MSPTypes.getFloat(mList.get(time),PRESETS[type1][1]))
+								);
+
 					if(type2>0)
-						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type2)));
-					if(type3>0)
-						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type3)));
+						series2.getData().add(new XYChart.Data<Number,Number>(
+								MSPTypes.getFloat(mList.get(time),PRESETS[type2][0]),
+								MSPTypes.getFloat(mList.get(time),PRESETS[type2][1]))
+								);
 
 
 					if(time > time_max) {
@@ -344,10 +324,7 @@ public class LineChartWidget extends VBox implements IChartControl {
 							series1.getData().remove(0);
 						if(series2.getData().size()>0)
 							series2.getData().remove(0);
-						if(series3.getData().size()>0)
-							series3.getData().remove(0);
-						xAxis.setLowerBound((time-time_max) * COLLETCOR_CYCLE / 1000F);
-						xAxis.setUpperBound(time * COLLETCOR_CYCLE / 1000f);
+
 					}
 				}
 
@@ -357,19 +334,18 @@ public class LineChartWidget extends VBox implements IChartControl {
 	}
 
 
-	public LineChartWidget setup(IMAVController control) {
+	public XYChartWidget setup(IMAVController control) {
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series2);
-		series3 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series3);
+
+
 		this.control = control;
 
+		series1.setName(PRESET_NAMES[type1]);
+		series2.setName(PRESET_NAMES[type2]);
 
-		series1.setName(MSPTypes.getNames()[type1]);
-		series2.setName(MSPTypes.getNames()[type2]);
-		series3.setName(MSPTypes.getNames()[type3]);
 
 		ExecutorService.get().execute(task);
 		return this;
@@ -394,10 +370,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 		else
 			resolution = 50;
 
-		xAxis.setTickUnit(resolution/20);
-		xAxis.setMinorTickCount(10);
 
 		this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+
 		refreshGraph();
 
 	}

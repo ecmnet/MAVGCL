@@ -1,4 +1,4 @@
-
+<?import com.comino.flight.widgets.xychart.XYChartWidget?>
 <?import com.comino.flight.widgets.status.StatusWidget?>
 <?import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
@@ -14,6 +14,6 @@
 		<AnalysisControlWidget fx:id="analysiscontrol"
 			layoutX="10" layoutY="397.0" />
 		<DetailsWidget fx:id="details" layoutX="10" layoutY="650.0" />
-
+       <XYChartWidget fx:id="chart1" layoutX="200.0" layoutY="5.0"  prefHeight="810.0" prefWidth="1000.0" />
 	</children>
 </fx:root>

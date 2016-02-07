@@ -15,3 +15,9 @@
     -fx-border-radius: 5px;
     -fx-border-insets: 2px;
 }
+
+.chart-alternative-row-fill {
+    -fx-fill: #F0F0F0;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0;
+}

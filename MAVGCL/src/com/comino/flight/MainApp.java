@@ -148,8 +148,7 @@ public class MainApp extends Application {
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
 //
-			FlightTabs fvController = loader.getController();
-			fvController.start(this,control);
+
 
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
@@ -158,6 +157,9 @@ public class MainApp extends Application {
 
 			if(!control.isConnected())
 				control.connect();
+
+			FlightTabs fvController = loader.getController();
+			fvController.start(this,control);
 
 
 
