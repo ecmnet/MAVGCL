@@ -35,18 +35,6 @@ public class FlightXYAnalysisTab extends Pane {
 
 
 	@FXML
-	private StatusWidget status;
-
-	@FXML
-	private AnalysisControlWidget analysiscontrol;
-
-	@FXML
-	private BatteryWidget battery;
-
-	@FXML
-	private DetailsWidget details;
-
-	@FXML
 	private XYChartWidget chart1;
 
 	public FlightXYAnalysisTab() {
@@ -63,14 +51,17 @@ public class FlightXYAnalysisTab extends Pane {
 	}
 
 
+	public void setup(AnalysisControlWidget recordControl,IMAVController control) {
 
-	public void start(IMAVController control) {
-		analysiscontrol.setup(control);
-		analysiscontrol.addChart(chart1.setup(control));
-		status.setup(control);
-		battery.setup(control);
-		details.setup(control);
+		recordControl.addChart(chart1.setup(control));
+
+
+
+
+
 	}
+
+
 
 
 

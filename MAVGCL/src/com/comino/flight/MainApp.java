@@ -19,6 +19,7 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 
+import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -31,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -147,6 +149,8 @@ public class MainApp extends Application {
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
+			BorderPane.setAlignment(flightPane, Pos.TOP_CENTER);;
+
 //
 
 
@@ -154,12 +158,16 @@ public class MainApp extends Application {
 			rootLayout.setBottom(statusline);
 			statusline.setup(control);
 
+			FlightControlPanel controlpanel = new FlightControlPanel();
+			rootLayout.setLeft(controlpanel);
+			controlpanel.setup(control);
+
 
 			if(!control.isConnected())
 				control.connect();
 
 			FlightTabs fvController = loader.getController();
-			fvController.start(this,control);
+			fvController.setup(controlpanel.getRecordControl(),control);
 
 
 

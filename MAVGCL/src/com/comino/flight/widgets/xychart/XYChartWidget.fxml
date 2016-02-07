@@ -12,7 +12,8 @@
    <center>
       <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <LineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minHeight="800.0" minWidth="810.0" prefHeight="800.0" prefWidth="810.0" verticalZeroLineVisible="false">
+            <LineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP"
+            minHeight="760.0" minWidth="810.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
                <xAxis>
                   <NumberAxis animated="false" lowerBound="-5.0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="5.0" fx:id="xAxis" />
                </xAxis>

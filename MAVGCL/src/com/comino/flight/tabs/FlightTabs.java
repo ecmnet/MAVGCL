@@ -3,6 +3,7 @@ package com.comino.flight.tabs;
 import com.comino.flight.MainApp;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
+import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -16,9 +17,9 @@ public class FlightTabs {
 	@FXML
 	private FlightXYAnalysisTab xyanalysistab;
 
-	public void start(MainApp mainApp, IMAVController control) {
-		xtanalysistab.start(control);
-		xyanalysistab.start(control);
+	public void setup(AnalysisControlWidget recordControl, IMAVController control) {
+		xtanalysistab.setup(recordControl,control);
+		xyanalysistab.setup(recordControl,control);
 	}
 
 

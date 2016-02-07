@@ -14,7 +14,7 @@
 	fx:controller="com.comino.flight.tabs.FlightTabs">
 	<children>
 		<TabPane tabClosingPolicy="UNAVAILABLE" prefWidth="1400.0"
-			prefHeight="850.0">
+			prefHeight="820.0">
 			<tabs>
 				<Tab text="Xt-Analysis">
 					<content>
@@ -32,6 +32,16 @@
 							xmlns:fx="http://javafx.com/fxml/1">
 							<children>
 								<FlightXYAnalysisTab fx:id="xyanalysistab" />
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="Histogram">
+					<content>
+						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+							xmlns:fx="http://javafx.com/fxml/1">
+							<children>
+
 							</children>
 						</AnchorPane>
 					</content>

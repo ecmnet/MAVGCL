@@ -39,19 +39,6 @@ public class FlightXtAnalysisTab extends Pane {
 	@FXML
 	private LineChartWidget chart2;
 
-	@FXML
-	private StatusWidget status;
-
-	@FXML
-	private AnalysisControlWidget analysiscontrol;
-
-	@FXML
-	private BatteryWidget battery;
-
-	@FXML
-	private DetailsWidget details;
-
-
 
 	public FlightXtAnalysisTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FlightXtAnalysisTab.fxml"));
@@ -68,14 +55,12 @@ public class FlightXtAnalysisTab extends Pane {
 
 
 
-	public void start(IMAVController control) {
+	public void setup(AnalysisControlWidget recordControl,IMAVController control) {
 
-		analysiscontrol.addChart(chart1.setup(control));
-		analysiscontrol.addChart(chart2.setup(control));
-		analysiscontrol.setup(control);
-		status.setup(control);
-		battery.setup(control);
-		details.setup(control);
+		recordControl.addChart(chart1.setup(control));
+		recordControl.addChart(chart2.setup(control));
+
+
 
 
 	}
