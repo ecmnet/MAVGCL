@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 
 
-**Binary version 0.1 published.**
+**Last updated 07/02/2016**
 
 
 
@@ -20,13 +20,19 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 
 
+**How to build**
+
+- Clone repository
+- Goto main directory  'cd MAVGCL-MAVGAnalysis/MAVGCL'
+- Run 'ant all'
+
+
+
 **How to start:**
 
-1. Clone repository
+1. Goto directory /dist
    
-2. Goto directory /dist
-   
-3. Start with 
+2. Start with 
    
    java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1 --bindAddress=172.168.178.2
    
@@ -37,8 +43,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 **Screenshot:**
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot.png)
-
-
 
 
 
