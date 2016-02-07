@@ -6,6 +6,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 
 
+**Binary version 0.1 published.**
+
+
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
@@ -33,8 +37,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 **Screenshot:**
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot.png)
-
-
 
 
 

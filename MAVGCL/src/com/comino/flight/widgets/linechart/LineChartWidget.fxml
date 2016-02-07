@@ -13,7 +13,7 @@
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <javafx.scene.layout.Pane maxHeight="390.0" minHeight="390.0" styleClass="widget">
-      	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="TOP" maxHeight="360.0" maxWidth="1400.0" minHeight="360.0" minWidth="700.0" verticalZeroLineVisible="false">
+      	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="358.0" minWidth="700.0" verticalZeroLineVisible="false">
       		<xAxis>
       			<NumberAxis animated="false" lowerBound="0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="60.0" fx:id="xAxis" />
       		</xAxis>
@@ -21,13 +21,13 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
       			<NumberAxis fx:id="yAxis" animated="false" side="LEFT" />
       		</yAxis>
       	</LineChart>
-      	<ChoiceBox fx:id="cseries1" layoutX="47.0" layoutY="354.0" prefHeight="19.0" prefWidth="100.0" />
-      	<ChoiceBox fx:id="cseries2" layoutX="155.0" layoutY="354.0" prefHeight="19.0" prefWidth="100.0" />
-      	<ChoiceBox fx:id="cseries3" layoutX="263.0" layoutY="354.0" prefHeight="19.0" prefWidth="100.0" />
+      	<ChoiceBox fx:id="cseries1" layoutX="47.0" layoutY="362.0" prefHeight="19.0" prefWidth="100.0" />
+      	<ChoiceBox fx:id="cseries2" layoutX="155.0" layoutY="362.0" prefHeight="19.0" prefWidth="100.0" />
+      	<ChoiceBox fx:id="cseries3" layoutX="263.0" layoutY="362.0" prefHeight="19.0" prefWidth="100.0" />
          <Group />
-         <ChoiceBox fx:id="preset" layoutX="410.0" layoutY="354.0" prefHeight="19.0" prefWidth="100.0" />
-         <CheckBox fx:id="normalize" layoutX="520.0" layoutY="358.0" mnemonicParsing="false" text="Normalize" />
-         <Button fx:id="export" layoutX="599.0" layoutY="355.0" mnemonicParsing="false" text="PNG export" />
+         <ChoiceBox fx:id="preset" layoutX="410.0" layoutY="362.0" prefHeight="19.0" prefWidth="100.0" />
+         <CheckBox fx:id="normalize" layoutX="520.0" layoutY="366.0" mnemonicParsing="false" text="Normalize" />
+         <Button fx:id="export" layoutX="599.0" layoutY="363.0" mnemonicParsing="false" text="PNG export" />
       </javafx.scene.layout.Pane>
    </children>
 </fx:root>
