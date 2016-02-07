@@ -1,10 +1,33 @@
 <project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
 
-   <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant"
-   	   classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
+	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
 
+	<target name="all" depends="clean,compile,build" />
 
-   <target name="distribution">
+	<target name="clean">
+		<delete dir="dist" />
+		<mkdir dir="dist" />
+		<delete dir="bin" />
+		<mkdir dir="bin" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<copy todir="bin">
+		  <fileset dir="src">
+		    <exclude name="**/*.java"/>
+		  </fileset>
+		</copy>
+		<javac destdir="bin" includeantruntime="false" >
+			<src path="src" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
 		<fx:jar destfile="dist/MAVGAnalysis.jar">
 			<fx:application mainClass="com.comino.flight.MainApp">
 				<!--
@@ -18,10 +41,10 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar jna-4.1.0.jar jssc.jar" />
+				<attribute name="Class-Path" value="mavcomm.jar" />
 			</manifest>
 		</fx:jar>
-		   <copy todir="dist">
+		<copy todir="dist">
 			<fileset dir="lib/">
 				<include name="mavcomm.jar" />
 			</fileset>
