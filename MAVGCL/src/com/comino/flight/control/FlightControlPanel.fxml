@@ -1,0 +1,18 @@
+
+<?import com.comino.flight.widgets.status.StatusWidget?>
+<?import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget?>
+<?import com.comino.flight.widgets.battery.BatteryWidget?>
+<?import com.comino.flight.widgets.details.DetailsWidget?>
+<?import com.comino.flight.widgets.statusline.StatusLineWidget?>
+
+
+<fx:root prefWidth="196.0" type="javafx.scene.layout.Pane"
+	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<StatusWidget fx:id="status" layoutX="10" layoutY="5.0" />
+		<BatteryWidget fx:id="battery" layoutX="10" layoutY="275.0" />
+		<AnalysisControlWidget fx:id="xyanalysiscontrol"
+			layoutX="10" layoutY="397.0" />
+		<DetailsWidget fx:id="details" layoutX="10" layoutY="650.0" />
+	</children>
+</fx:root>
