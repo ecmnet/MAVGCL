@@ -7,7 +7,8 @@
 <fx:root prefHeight="25.0" maxHeight="25.0" prefWidth="1600.0" styleClass="status"
     type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="driver" layoutX="16.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />
-      <Label fx:id="messages" layoutX="325.0" layoutY="2.0" prefHeight="18.0" prefWidth="464.0" text="" />
+      <Label  fx:id="driver" layoutX="16.0" layoutY="2.0" prefHeight="18.0" prefWidth="283.0" text="no sensors available" />
+      <Label  styleClass="message" fx:id="messages" layoutX="325.0" layoutY="2.0" prefHeight="18.0" prefWidth="464.0" text="" />
+      <Label  fx:id="modelcount" layoutX="800.0" layoutY="2.0" prefHeight="18.0" prefWidth="100.0" text="" />
    </children>
 </fx:root>

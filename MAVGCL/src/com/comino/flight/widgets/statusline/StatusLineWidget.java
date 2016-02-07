@@ -38,6 +38,9 @@ public class StatusLineWidget extends Pane  {
 	@FXML
 	private Label messages;
 
+	@FXML
+	private Label modelcount;
+
 	private Task<Long> task;
 	private IMAVController control;
 
@@ -84,6 +87,8 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
+				modelcount.setText("#"+Integer.toString(control.getCollector().getModelList().size()));
+
 			}
 		});
 
@@ -91,7 +96,6 @@ public class StatusLineWidget extends Pane  {
 	}
 
 	public void setup(IMAVController control) {
-    	this.setStyle(" -fx-font-size: 8pt;");
 		this.control = control;
 		ExecutorService.get().execute(task);
 

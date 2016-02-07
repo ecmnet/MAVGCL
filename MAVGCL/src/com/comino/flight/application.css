@@ -21,3 +21,9 @@
     -fx-stroke: transparent;
     -fx-stroke-width: 0;
 }
+
+.status .label {
+	-fx-text-fill: black;
+	-fx-font-size: 10px;
+}
+
