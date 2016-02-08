@@ -23,7 +23,12 @@
 }
 
 .status .label {
-	-fx-text-fill: black;
+	-fx-text-fill: #505050;
+	-fx-font-size: 10px;
+}
+
+.status .message {
+	-fx-text-fill: #805050;
 	-fx-font-size: 10px;
 }
 

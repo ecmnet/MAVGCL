@@ -87,7 +87,7 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
-				modelcount.setText("#"+Integer.toString(control.getCollector().getModelList().size()));
+		//		modelcount.setText("#"+Integer.toString(control.getCollector().getModelList().size()));
 
 			}
 		});

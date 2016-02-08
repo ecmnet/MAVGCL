@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 
 import com.comino.flight.widgets.analysiscontrol.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSPTypes;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -51,16 +51,16 @@ import javafx.scene.layout.VBox;
 public class LineChartWidget extends VBox implements IChartControl {
 
 
-	private static int[][] PRESETS = {
-			{ 0,						0,						0					},
-			{ MSPTypes.MSP_NEDX, 		MSPTypes.MSP_NEDY,		MSPTypes.MSP_NEDZ	},
-			{ MSPTypes.MSP_NEDVX, 		MSPTypes.MSP_NEDVY,		MSPTypes.MSP_NEDVZ	},
-			{ MSPTypes.MSP_LERRX, 		MSPTypes.MSP_LERRY,		MSPTypes.MSP_LERRZ	},
-			{ MSPTypes.MSP_ANGLEX, 		MSPTypes.MSP_ANGLEY,	0					},
-			{ MSPTypes.MSP_ACCX, 		MSPTypes.MSP_ACCY, 		MSPTypes.MSP_ACCZ 	},
-			{ MSPTypes.MSP_GYROX, 		MSPTypes.MSP_GYROY, 	MSPTypes.MSP_GYROZ 	},
-			{ MSPTypes.MSP_RAW_FLOWX, 	MSPTypes.MSP_RAW_FLOWY, 0 					},
-			{ MSPTypes.MSP_VOLTAGE, 	MSPTypes.MSP_CURRENT, 0 					},
+	private static MSTYPE[][] PRESETS = {
+			{ MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_NEDY,		MSTYPE.MSP_NEDZ		},
+			{ MSTYPE.MSP_NEDVX, 	MSTYPE.MSP_NEDVY,		MSTYPE.MSP_NEDVZ	},
+			{ MSTYPE.MSP_LERRX, 	MSTYPE.MSP_LERRY,		MSTYPE.MSP_LERRZ	},
+			{ MSTYPE.MSP_ANGLEX, 	MSTYPE.MSP_ANGLEY,		MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_ACCX, 		MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
+			{ MSTYPE.MSP_GYROX, 	MSTYPE.MSP_GYROY, 		MSTYPE.MSP_GYROZ 	},
+			{ MSTYPE.MSP_RAW_FLOWX, MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_VOLTAGE, 	MSTYPE.MSP_CURRENT, 	MSTYPE.MSP_NONE		},
 	};
 
 	private static String[] PRESET_NAMES = {
@@ -117,9 +117,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 	private IMAVController control;
 
-	private int type1;
-	private int type2;
-	private int type3;
+	private MSTYPE type1=MSTYPE.MSP_NONE;
+	private MSTYPE type2=MSTYPE.MSP_NONE;
+	private MSTYPE type3=MSTYPE.MSP_NONE;
 
 	private boolean isCollecting = false;
 
@@ -200,9 +200,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 		linechart.setPrefWidth(this.getPrefWidth()-50);
 
-		cseries1.getItems().addAll(MSPTypes.getNames());
-		cseries2.getItems().addAll(MSPTypes.getNames());
-		cseries3.getItems().addAll(MSPTypes.getNames());
+		cseries1.getItems().addAll(MSTYPE.getList());
+		cseries2.getItems().addAll(MSTYPE.getList());
+		cseries3.getItems().addAll(MSTYPE.getList());
 
 
 		cseries1.getSelectionModel().select(0);
@@ -217,8 +217,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = newValue.intValue();
-				series1.setName(MSPTypes.getNames()[type1]);
+				type1 = MSTYPE.values()[newValue.intValue()];
+				series1.setName(type1.getDescription());
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -230,8 +230,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type2 = newValue.intValue();
-				series2.setName(MSPTypes.getNames()[type2]);
+				type2 = MSTYPE.values()[newValue.intValue()];
+				series2.setName(type2.getDescription());
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -243,8 +243,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type3 = newValue.intValue();
-				series3.setName(MSPTypes.getNames()[type3]);
+				type3 = MSTYPE.values()[newValue.intValue()];
+				series3.setName(type3.getDescription());
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -260,13 +260,13 @@ public class LineChartWidget extends VBox implements IChartControl {
 				type2 = PRESETS[newValue.intValue()][1];
 				type3 = PRESETS[newValue.intValue()][2];
 
-				cseries1.getSelectionModel().select(type1);
-				cseries2.getSelectionModel().select(type2);
-				cseries3.getSelectionModel().select(type3);
+				cseries1.getSelectionModel().select(type1.getDescription());
+				cseries2.getSelectionModel().select(type2.getDescription());
+				cseries3.getSelectionModel().select(type3.getDescription());
 
-				series1.setName(MSPTypes.getNames()[type1]);
-				series2.setName(MSPTypes.getNames()[type2]);
-				series3.setName(MSPTypes.getNames()[type3]);
+				series1.setName(type1.getDescription());
+				series2.setName(type2.getDescription());
+				series3.setName(type3.getDescription());
 
 				linechart.setLegendVisible(true);
 
@@ -331,12 +331,12 @@ public class LineChartWidget extends VBox implements IChartControl {
 
 					dt_sec = time *  COLLETCOR_CYCLE / 1000f;
 
-					if(type1>0)
-						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type1)));
-					if(type2>0)
-						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type2)));
-					if(type3>0)
-						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSPTypes.getFloat(mList.get(time),type3)));
+					if(type1!=MSTYPE.MSP_NONE)
+						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
+					if(type2!=MSTYPE.MSP_NONE)
+						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type2)));
+					if(type3!=MSTYPE.MSP_NONE)
+						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
 
 
 					if(time > time_max) {
@@ -367,9 +367,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 		this.control = control;
 
 
-		series1.setName(MSPTypes.getNames()[type1]);
-		series2.setName(MSPTypes.getNames()[type2]);
-		series3.setName(MSPTypes.getNames()[type3]);
+		series1.setName(type1.getDescription());
+		series2.setName(type2.getDescription());
+		series3.setName(type3.getDescription());
 
 		ExecutorService.get().execute(task);
 		return this;

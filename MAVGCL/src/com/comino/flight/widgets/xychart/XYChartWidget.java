@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 
 import com.comino.flight.widgets.analysiscontrol.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSPTypes;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -52,22 +52,22 @@ import javafx.scene.layout.VBox;
 public class XYChartWidget extends BorderPane implements IChartControl {
 
 
-	private static int[][] PRESETS = {
-			{ 0,						0,						},
-			{ MSPTypes.MSP_NEDX, 		MSPTypes.MSP_NEDY,		},
-			{ MSPTypes.MSP_NEDVX, 		MSPTypes.MSP_NEDVY,		},
-			{ MSPTypes.MSP_LERRX, 		MSPTypes.MSP_LERRY,		},
-			{ MSPTypes.MSP_ANGLEX, 		MSPTypes.MSP_ANGLEY,	},
-			{ MSPTypes.MSP_ACCX, 		MSPTypes.MSP_ACCY, 		},
-			{ MSPTypes.MSP_GYROX, 		MSPTypes.MSP_GYROY, 	},
-			{ MSPTypes.MSP_RAW_FLOWX, 	MSPTypes.MSP_RAW_FLOWY, },
+	private static MSTYPE[][] PRESETS = {
+			{ MSTYPE.MSP_NONE,			MSTYPE.MSP_NONE							},
+			{ MSTYPE.MSP_RNEDX, 		MSTYPE.MSP_RNEDY,		},
+			{ MSTYPE.MSP_NEDVX, 		MSTYPE.MSP_NEDVY,		},
+			{ MSTYPE.MSP_LERRX, 		MSTYPE.MSP_LERRY,		},
+			{ MSTYPE.MSP_ANGLEX, 		MSTYPE.MSP_ANGLEY,	},
+			{ MSTYPE.MSP_ACCX, 			MSTYPE.MSP_ACCY, 		},
+			{ MSTYPE.MSP_GYROX, 		MSTYPE.MSP_GYROY, 	},
+			{ MSTYPE.MSP_RAW_FLOWX, 	MSTYPE.MSP_RAW_FLOWY, },
 	};
 
 	private static String[] PRESET_NAMES = {
 			"None",
-			"Rel.loc.Pos.",
-			"Loc. Speed",
-			"Loc. Pos.Error",
+			"Loc.Pos.rel.",
+			"Loc.Speed",
+			"Loc.Pos.Error",
 			"Angle",
 			"Raw Accelerator",
 			"Raw Gyroskope",
@@ -308,14 +308,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 					if(type1>0)
 						series1.getData().add(new XYChart.Data<Number,Number>(
-								MSPTypes.getFloat(mList.get(time),PRESETS[type1][0]),
-								MSPTypes.getFloat(mList.get(time),PRESETS[type1][1]))
+								MSTYPE.getValue(mList.get(time),PRESETS[type1][0]),
+								MSTYPE.getValue(mList.get(time),PRESETS[type1][1]))
 								);
 
 					if(type2>0)
 						series2.getData().add(new XYChart.Data<Number,Number>(
-								MSPTypes.getFloat(mList.get(time),PRESETS[type2][0]),
-								MSPTypes.getFloat(mList.get(time),PRESETS[type2][1]))
+								MSTYPE.getValue(mList.get(time),PRESETS[type2][0]),
+								MSTYPE.getValue(mList.get(time),PRESETS[type2][1]))
 								);
 
 

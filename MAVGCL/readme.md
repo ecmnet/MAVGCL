@@ -2,7 +2,8 @@
 
 ## In-Flight Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace GCL.
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the
+official groundcontrol QGC.
 
 
 
@@ -31,11 +32,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 **How to start:**
 
 1. Goto directory /dist
-   
-2. Start with 
-   
+
+2. Start with
+
    java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1 --bindAddress=172.168.178.2
-   
+
    *(PX4 standard ports used, replace IPs with yours)*
 
 
