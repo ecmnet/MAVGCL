@@ -105,9 +105,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private ChoiceBox<String> preset;
 
 	@FXML
-	private CheckBox normalize;
-
-	@FXML
 	private Button export;
 
 

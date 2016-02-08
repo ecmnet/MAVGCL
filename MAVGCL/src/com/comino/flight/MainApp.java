@@ -68,18 +68,13 @@ public class MainApp extends Application {
 			bindAddress  = args.get("bindAddress");
 		}
 
-
 		if(peerAddress ==null)
 			control = new MAVSerialController();
 		else
 			control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
 
-
-
 		initRootLayout();
 		showMAVGCLApplication();
-
-
 
 	}
 
@@ -89,7 +84,6 @@ public class MainApp extends Application {
 		super.stop();
 		System.exit(0);
 	}
-
 
 
 	public static void main(String[] args) {
@@ -128,7 +122,6 @@ public class MainApp extends Application {
 				} catch (Exception e) {
 					System.exit(-1);
 				}
-
 			}
 
 		});
@@ -138,8 +131,6 @@ public class MainApp extends Application {
 
 
 	public void showMAVGCLApplication() {
-
-
 
 		try {
 			// Load person overview.
@@ -151,9 +142,6 @@ public class MainApp extends Application {
 			rootLayout.setCenter(flightPane);
 			BorderPane.setAlignment(flightPane, Pos.TOP_CENTER);;
 
-//
-
-
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
 			statusline.setup(control);
@@ -161,7 +149,6 @@ public class MainApp extends Application {
 			FlightControlPanel controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
-
 
 			if(!control.isConnected())
 				control.connect();

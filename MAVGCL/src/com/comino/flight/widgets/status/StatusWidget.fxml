@@ -31,7 +31,7 @@
         </rowConstraints>
          <children>
             <Circle fx:id="connected" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" />
-            <Label prefHeight="184.0" prefWidth="89.0" text="WLAN connected" GridPane.columnIndex="1" />
+            <Label prefHeight="184.0" prefWidth="89.0" text="Connected" GridPane.columnIndex="1" />
             <Circle fx:id="rcavailable" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="1" />
             <Label prefHeight="184.0" prefWidth="89.0" text="RC available" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Circle fx:id="armed" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="2" />
