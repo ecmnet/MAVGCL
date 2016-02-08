@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root prefHeight="390.0" prefWidth="1064.0" type="VBox"
+<fx:root prefHeight="390.0" prefWidth="1080" type="VBox"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <javafx.scene.layout.Pane maxHeight="390.0" minHeight="390.0" styleClass="widget">
-      	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="358.0" minWidth="700.0" verticalZeroLineVisible="false">
+      	<LineChart fx:id="linechart" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0" legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="358.0"  verticalZeroLineVisible="false">
       		<xAxis>
       			<NumberAxis animated="false" lowerBound="0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="60.0" fx:id="xAxis" />
       		</xAxis>

@@ -6,7 +6,7 @@
 <?import com.comino.flight.widgets.statusline.StatusLineWidget?>
 
 
-<fx:root prefHeight="164.0" prefWidth="183.0" type="javafx.scene.layout.Pane"
+<fx:root prefHeight="164.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<LineChartWidget fx:id="chart1"

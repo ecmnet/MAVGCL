@@ -25,6 +25,7 @@ import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
+import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 
 import javafx.application.Application;
@@ -63,15 +64,19 @@ public class MainApp extends Application {
 
 		Map<String,String> args = getParameters().getNamed();
 
-		if(args.size()> 1) {
+		if(args.size()> 0) {
 			peerAddress  = args.get("peerAddress");
 			bindAddress  = args.get("bindAddress");
 		}
 
 		if(peerAddress ==null)
 			control = new MAVSerialController();
-		else
-			control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
+		else {
+			if(peerAddress.contains("sim"))
+				control = new MAVSimController();
+			else
+				control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
+		}
 
 		initRootLayout();
 		showMAVGCLApplication();
@@ -140,7 +145,7 @@ public class MainApp extends Application {
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
-			BorderPane.setAlignment(flightPane, Pos.TOP_CENTER);;
+			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);;
 
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
