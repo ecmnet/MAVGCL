@@ -54,6 +54,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private static MSTYPE[][] PRESETS = {
 			{ MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_NEDY,		MSTYPE.MSP_NEDZ		},
+			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_SPNEDX,		MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_NEDY, 		MSTYPE.MSP_SPNEDY,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_NEDVX, 	MSTYPE.MSP_NEDVY,		MSTYPE.MSP_NEDVZ	},
 			{ MSTYPE.MSP_LERRX, 	MSTYPE.MSP_LERRY,		MSTYPE.MSP_LERRZ	},
 			{ MSTYPE.MSP_ANGLEX, 	MSTYPE.MSP_ANGLEY,		MSTYPE.MSP_NONE		},
@@ -66,6 +68,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 	private static String[] PRESET_NAMES = {
 			"None",
 			"Loc.Position",
+			"Loc.PositionX",
+			"Loc.PositionY",
 			"Loc. Speed",
 			"Loc. Pos.Error",
 			"Angle",
