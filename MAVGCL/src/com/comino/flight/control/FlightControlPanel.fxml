@@ -3,7 +3,6 @@
 <?import com.comino.flight.widgets.charts.control.ChartControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
 <?import com.comino.flight.widgets.details.DetailsWidget?>
-<?import com.comino.flight.widgets.statusline.StatusLineWidget?>
 
 
 <fx:root prefWidth="196.0" type="javafx.scene.layout.Pane"
