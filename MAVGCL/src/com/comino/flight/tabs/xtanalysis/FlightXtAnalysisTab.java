@@ -52,7 +52,6 @@ public class FlightXtAnalysisTab extends Pane {
 
 			throw new RuntimeException(exception);
 		}
-		HBox.setHgrow(this, Priority.ALWAYS);
 
 	}
 
@@ -60,6 +59,8 @@ public class FlightXtAnalysisTab extends Pane {
 
 	public void setup(AnalysisControlWidget recordControl,IMAVController control) {
 
+		chart1.prefWidthProperty().bind(widthProperty());
+		chart2.prefWidthProperty().bind(widthProperty());
 
 		recordControl.addChart(chart1.setup(control));
 		recordControl.addChart(chart2.setup(control));

@@ -47,10 +47,11 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 
-public class LineChartWidget extends VBox implements IChartControl {
+public class LineChartWidget extends Pane implements IChartControl {
 
 
 	private static MSTYPE[][] PRESETS = {
@@ -147,7 +148,6 @@ public class LineChartWidget extends VBox implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
-		this.setFillWidth(true);
 
 		task = new Task<Integer>() {
 
@@ -205,8 +205,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 		xAxis.setUpperBound(totalTime);
 
 
-
-		linechart.setPrefWidth(this.getPrefWidth()-50);
+        linechart.prefWidthProperty().bind(widthProperty());
+        linechart.prefHeightProperty().bind(heightProperty());
 
 		cseries1.getItems().addAll(MSTYPE.getList());
 		cseries2.getItems().addAll(MSTYPE.getList());

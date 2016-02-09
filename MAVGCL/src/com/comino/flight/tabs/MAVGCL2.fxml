@@ -3,25 +3,25 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.AnchorPane?>
 
 <?import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab?>
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
 
-<AnchorPane maxHeight="-Infinity" prefWidth="Infinity"
+<AnchorPane maxHeight="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.comino.flight.tabs.FlightTabs">
 	<children>
-		<TabPane tabClosingPolicy="UNAVAILABLE" prefWidth="1400"
+		<TabPane tabClosingPolicy="UNAVAILABLE"
+		    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 			prefHeight="820.0">
 			<tabs>
-				<Tab text="Xt-Analysis">
+				<Tab text="Xt-Analysis" >
 					<content>
 						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
 							xmlns:fx="http://javafx.com/fxml/1">
 							<children>
-								<FlightXtAnalysisTab fx:id="xtanalysistab" />
+								<FlightXtAnalysisTab fx:id="xtanalysistab" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="50.0" />
 							</children>
 						</AnchorPane>
 					</content>
