@@ -19,12 +19,12 @@ package com.comino.flight.tabs.xyanalysis;
 import java.io.IOException;
 
 import com.comino.flight.MainApp;
-import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget;
 import com.comino.flight.widgets.battery.BatteryWidget;
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
+import com.comino.flight.widgets.charts.line.LineChartWidget;
+import com.comino.flight.widgets.charts.xy.XYChartWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
-import com.comino.flight.widgets.linechart.LineChartWidget;
 import com.comino.flight.widgets.status.StatusWidget;
-import com.comino.flight.widgets.xychart.XYChartWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -52,7 +52,7 @@ public class FlightXYAnalysisTab extends Pane {
 	}
 
 
-	public void setup(AnalysisControlWidget recordControl,IMAVController control) {
+	public void setup(ChartControlWidget recordControl,IMAVController control) {
 		recordControl.addChart(chart1.setup(control));
 
 

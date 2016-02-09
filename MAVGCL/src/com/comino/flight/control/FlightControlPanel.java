@@ -2,8 +2,8 @@ package com.comino.flight.control;
 
 import java.io.IOException;
 
-import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget;
 import com.comino.flight.widgets.battery.BatteryWidget;
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
@@ -18,7 +18,7 @@ public class FlightControlPanel extends Pane  {
 	private StatusWidget status;
 
 	@FXML
-	private AnalysisControlWidget xyanalysiscontrol;
+	private ChartControlWidget xyanalysiscontrol;
 
 	@FXML
 	private BatteryWidget battery;
@@ -39,7 +39,7 @@ public class FlightControlPanel extends Pane  {
 
 	}
 
-	public AnalysisControlWidget getRecordControl() {
+	public ChartControlWidget getRecordControl() {
 		return xyanalysiscontrol;
 	}
 

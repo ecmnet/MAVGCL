@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.analysiscontrol;
+package com.comino.flight.widgets.charts.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class AnalysisControlWidget extends Pane implements IMSPModeChangedListener {
+public class ChartControlWidget extends Pane implements IMSPModeChangedListener {
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_ALTHOLD		= 1;
@@ -87,8 +87,8 @@ public class AnalysisControlWidget extends Pane implements IMSPModeChangedListen
 	private boolean modetrigger  = false;
 
 
-	public AnalysisControlWidget() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AnalysisControlWidget.fxml"));
+	public ChartControlWidget() {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChartControlWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {

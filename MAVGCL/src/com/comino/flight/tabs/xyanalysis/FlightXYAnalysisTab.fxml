@@ -1,10 +1,4 @@
-<?import com.comino.flight.widgets.xychart.XYChartWidget?>
-<?import com.comino.flight.widgets.status.StatusWidget?>
-<?import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget?>
-<?import com.comino.flight.widgets.battery.BatteryWidget?>
-<?import com.comino.flight.widgets.details.DetailsWidget?>
-<?import com.comino.flight.widgets.statusline.StatusLineWidget?>
-
+<?import com.comino.flight.widgets.charts.xy.XYChartWidget?>
 
 <fx:root prefHeight="164.0" prefWidth="183.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root maxHeight="390.0" minHeight="390.0" styleClass="widget" minWidth="600"
+	type="BorderPane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+	<center>
+		<LineChart fx:id="linechart" animated="false" createSymbols="false"
+			AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0"
+			legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="358.0"
+			verticalZeroLineVisible="false">
+			<xAxis>
+				<NumberAxis animated="false" lowerBound="0"
+					minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0"
+					tickLength="10.0" upperBound="60.0" fx:id="xAxis" />
+			</xAxis>
+			<yAxis>
+				<NumberAxis fx:id="yAxis" animated="false" side="LEFT" />
+			</yAxis>
+		</LineChart>
+	</center>
+	<bottom>
+		<Pane prefHeight="28">
+			<ChoiceBox fx:id="cseries1" layoutX="47.0" prefHeight="19.0"
+				prefWidth="100.0" />
+			<ChoiceBox fx:id="cseries2" layoutX="155.0" prefHeight="19.0"
+				prefWidth="100.0" />
+			<ChoiceBox fx:id="cseries3" layoutX="263.0" prefHeight="19.0"
+				prefWidth="100.0" />
+			<ChoiceBox fx:id="preset" layoutX="410.0" prefHeight="19.0"
+				prefWidth="100.0" />
+			<Button fx:id="export" layoutX="599.0" mnemonicParsing="false"
+				text="PNG export" />
+		</Pane>
+	</bottom>
+</fx:root>

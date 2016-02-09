@@ -3,7 +3,7 @@ package com.comino.flight.tabs;
 import com.comino.flight.MainApp;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
-import com.comino.flight.widgets.analysiscontrol.AnalysisControlWidget;
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ public class FlightTabs extends Pane {
 	@FXML
 	private FlightXYAnalysisTab xyanalysistab;
 
-	public void setup(AnalysisControlWidget recordControl, IMAVController control) {
+	public void setup(ChartControlWidget recordControl, IMAVController control) {
 
 
 		xtanalysistab.setup(recordControl,control);

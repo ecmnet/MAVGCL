@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.analysiscontrol;
+package com.comino.flight.widgets.charts.control;
 
 public interface IChartControl {
 

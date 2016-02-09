@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.linechart;
+package com.comino.flight.widgets.charts.xy;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.comino.flight.widgets.analysiscontrol.IChartControl;
+import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
@@ -44,47 +44,40 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 
-public class LineChartWidget extends Pane implements IChartControl {
+public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 	private static MSTYPE[][] PRESETS = {
-			{ MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_NEDY,		MSTYPE.MSP_NEDZ		},
-			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_SPNEDX,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDY, 		MSTYPE.MSP_SPNEDY,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDVX, 	MSTYPE.MSP_NEDVY,		MSTYPE.MSP_NEDVZ	},
-			{ MSTYPE.MSP_GPSRELX,   MSTYPE.MSP_GPSRELY,		MSTYPE.MSP_GPSRELZ  },
-			{ MSTYPE.MSP_GPSRELVX,  MSTYPE.MSP_GPSRELVY,	MSTYPE.MSP_GPSRELVZ },
-			{ MSTYPE.MSP_LERRX, 	MSTYPE.MSP_LERRY,		MSTYPE.MSP_LERRZ	},
-			{ MSTYPE.MSP_ANGLEX, 	MSTYPE.MSP_ANGLEY,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ACCX, 		MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
-			{ MSTYPE.MSP_GYROX, 	MSTYPE.MSP_GYROY, 		MSTYPE.MSP_GYROZ 	},
-			{ MSTYPE.MSP_RAW_FLOWX, MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_VOLTAGE, 	MSTYPE.MSP_CURRENT, 	MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_NONE,			MSTYPE.MSP_NONE							},
+			{ MSTYPE.MSP_RNEDX, 		MSTYPE.MSP_RNEDY,		},
+			{ MSTYPE.MSP_NEDVX, 		MSTYPE.MSP_NEDVY,		},
+			{ MSTYPE.MSP_LERRX, 		MSTYPE.MSP_LERRY,		},
+			{ MSTYPE.MSP_GPSRELX,       MSTYPE.MSP_GPSRELY, },
+			{ MSTYPE.MSP_ANGLEX, 		MSTYPE.MSP_ANGLEY,	},
+			{ MSTYPE.MSP_ACCX, 			MSTYPE.MSP_ACCY, 		},
+			{ MSTYPE.MSP_GYROX, 		MSTYPE.MSP_GYROY, 	},
+			{ MSTYPE.MSP_RAW_FLOWX, 	MSTYPE.MSP_RAW_FLOWY, },
 	};
 
 	private static String[] PRESET_NAMES = {
 			"None",
-			"Loc.Position",
-			"Loc.PositionX",
-			"Loc.PositionY",
-			"Loc.GPS.Position",
-			"Loc. Speed",
-			"Loc.GPS.Speed",
-			"Loc. Pos.Error",
+			"Loc.Pos.rel.",
+			"Loc.Speed",
+			"Loc.Pos.Error",
+			"Loc.GPS.Pos",
 			"Angle",
 			"Raw Accelerator",
 			"Raw Gyroskope",
 			"Raw Flow",
-			"Battery",
+	};
 
+	private static Float[] SCALES = {
+			1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
 	};
 
 	private static int COLLETCOR_CYCLE = 50;
@@ -106,10 +99,11 @@ public class LineChartWidget extends Pane implements IChartControl {
 	private ChoiceBox<String> cseries2;
 
 	@FXML
-	private ChoiceBox<String> cseries3;
+	private ChoiceBox<Float> scale;
+
 
 	@FXML
-	private ChoiceBox<String> preset;
+	private CheckBox normalize;
 
 	@FXML
 	private Button export;
@@ -118,16 +112,14 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 	private XYChart.Series<Number,Number> series1;
 	private XYChart.Series<Number,Number> series2;
-	private XYChart.Series<Number,Number> series3;
 
 	private Task<Integer> task;
 	private int time=0;
 
 	private IMAVController control;
 
-	private MSTYPE type1=MSTYPE.MSP_NONE;
-	private MSTYPE type2=MSTYPE.MSP_NONE;
-	private MSTYPE type3=MSTYPE.MSP_NONE;
+	private int type1;
+	private int type2;
 
 	private boolean isCollecting = false;
 
@@ -136,9 +128,9 @@ public class LineChartWidget extends Pane implements IChartControl {
 	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
 	private int    totalMax = 0;
 
-	public LineChartWidget() {
+	public XYChartWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LineChartWidget.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("XYChartWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -147,7 +139,6 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 			throw new RuntimeException(exception);
 		}
-
 
 		task = new Task<Integer>() {
 
@@ -168,7 +159,6 @@ public class LineChartWidget extends Pane implements IChartControl {
 					if(!isCollecting && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
-						series3.getData().clear();
 						time = 0;
 					}
 
@@ -186,7 +176,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-                totalMax = Integer.MAX_VALUE;
+				totalMax = 999999;
 				updateGraph();
 
 			}
@@ -198,35 +188,37 @@ public class LineChartWidget extends Pane implements IChartControl {
 	@FXML
 	private void initialize() {
 
+
 		xAxis.setAutoRanging(false);
 		xAxis.setForceZeroInRange(false);
+		yAxis.setAutoRanging(false);
 		yAxis.setForceZeroInRange(false);
-		xAxis.setLowerBound(0);
-		xAxis.setUpperBound(totalTime);
 
+		cseries1.getItems().addAll(PRESET_NAMES);
+		cseries2.getItems().addAll(PRESET_NAMES);
 
-        linechart.prefWidthProperty().bind(widthProperty());
-        linechart.prefHeightProperty().bind(heightProperty());
-
-		cseries1.getItems().addAll(MSTYPE.getList());
-		cseries2.getItems().addAll(MSTYPE.getList());
-		cseries3.getItems().addAll(MSTYPE.getList());
-
+		scale.getItems().addAll(SCALES);
 
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
-		cseries3.getSelectionModel().select(0);
+
+		scale.getSelectionModel().select(2);
+
+		xAxis.setLowerBound(-5);
+		xAxis.setUpperBound(5);
+		yAxis.setLowerBound(-5);
+		yAxis.setUpperBound(5);
+
+		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
 
 
-		preset.getItems().addAll(PRESET_NAMES);
-		preset.getSelectionModel().select(0);
 
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = MSTYPE.values()[newValue.intValue()];
-				series1.setName(type1.getDescription());
+				type1 = newValue.intValue();
+				series1.setName(PRESET_NAMES[type1]);
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -238,8 +230,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type2 = MSTYPE.values()[newValue.intValue()];
-				series2.setName(type2.getDescription());
+				type2 = newValue.intValue();
+				series2.setName(PRESET_NAMES[type2]);
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -247,41 +239,29 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 		});
 
-		cseries3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		scale.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type3 = MSTYPE.values()[newValue.intValue()];
-				series3.setName(type3.getDescription());
-				linechart.setLegendVisible(true);
+				xAxis.setLowerBound(-SCALES[newValue.intValue()]);
+				xAxis.setUpperBound(SCALES[newValue.intValue()]);
+				yAxis.setLowerBound(-SCALES[newValue.intValue()]);
+				yAxis.setUpperBound(SCALES[newValue.intValue()]);
+
+				if(SCALES[newValue.intValue()]>10) {
+					xAxis.setTickUnit(10); yAxis.setTickUnit(10);
+				} else if(SCALES[newValue.intValue()]>1) {
+					xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+				} else {
+					xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
+				}
+
 				refreshGraph();
 
 			}
 
 		});
 
-		preset.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = PRESETS[newValue.intValue()][0];
-				type2 = PRESETS[newValue.intValue()][1];
-				type3 = PRESETS[newValue.intValue()][2];
-
-				cseries1.getSelectionModel().select(type1.getDescription());
-				cseries2.getSelectionModel().select(type2.getDescription());
-				cseries3.getSelectionModel().select(type3.getDescription());
-
-				series1.setName(type1.getDescription());
-				series2.setName(type2.getDescription());
-				series3.setName(type3.getDescription());
-
-				linechart.setLegendVisible(true);
-
-				refreshGraph();
-			}
-
-		});
 
 		export.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -291,10 +271,6 @@ public class LineChartWidget extends Pane implements IChartControl {
 			}
 
 		});
-
-
-
-
 	}
 
 	public void saveAsPng(String path) {
@@ -310,7 +286,6 @@ public class LineChartWidget extends Pane implements IChartControl {
 	private void refreshGraph() {
 		series1.getData().clear();
 		series2.getData().clear();
-		series3.getData().clear();
 
 		time = control.getMessageList().size() - totalTime * 1000 / COLLETCOR_CYCLE;
 		if(time < 0) time = 0;
@@ -319,15 +294,8 @@ public class LineChartWidget extends Pane implements IChartControl {
 
 
 	private void updateGraph() {
-		float dt_sec = 0;
-
 
 		List<DataModel> mList = control.getCollector().getModelList();
-
-		if(time==0) {
-			xAxis.setLowerBound(0);
-			xAxis.setUpperBound(time_max * COLLETCOR_CYCLE / 1000f);
-		}
 
 		if(time<mList.size() && mList.size()>0 ) {
 
@@ -335,16 +303,22 @@ public class LineChartWidget extends Pane implements IChartControl {
 			while(time<mList.size() && time < totalMax) {
 
 
+
 				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
 
-					dt_sec = time *  COLLETCOR_CYCLE / 1000f;
 
-					if(type1!=MSTYPE.MSP_NONE)
-						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
-					if(type2!=MSTYPE.MSP_NONE)
-						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type2)));
-					if(type3!=MSTYPE.MSP_NONE)
-						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
+
+					if(type1>0)
+						series1.getData().add(new XYChart.Data<Number,Number>(
+								MSTYPE.getValue(mList.get(time),PRESETS[type1][0]),
+								MSTYPE.getValue(mList.get(time),PRESETS[type1][1]))
+								);
+
+					if(type2>0)
+						series2.getData().add(new XYChart.Data<Number,Number>(
+								MSTYPE.getValue(mList.get(time),PRESETS[type2][0]),
+								MSTYPE.getValue(mList.get(time),PRESETS[type2][1]))
+								);
 
 
 					if(time > time_max) {
@@ -352,10 +326,7 @@ public class LineChartWidget extends Pane implements IChartControl {
 							series1.getData().remove(0);
 						if(series2.getData().size()>0)
 							series2.getData().remove(0);
-						if(series3.getData().size()>0)
-							series3.getData().remove(0);
-						xAxis.setLowerBound((time-time_max) * COLLETCOR_CYCLE / 1000F);
-						xAxis.setUpperBound(time * COLLETCOR_CYCLE / 1000f);
+
 					}
 				}
 
@@ -365,19 +336,18 @@ public class LineChartWidget extends Pane implements IChartControl {
 	}
 
 
-	public LineChartWidget setup(IMAVController control) {
+	public XYChartWidget setup(IMAVController control) {
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series2);
-		series3 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series3);
+
+
 		this.control = control;
 
+		series1.setName(PRESET_NAMES[type1]);
+		series2.setName(PRESET_NAMES[type2]);
 
-		series1.setName(type1.getDescription());
-		series2.setName(type2.getDescription());
-		series3.setName(type3.getDescription());
 
 		ExecutorService.get().execute(task);
 		return this;
@@ -402,10 +372,9 @@ public class LineChartWidget extends Pane implements IChartControl {
 		else
 			resolution = 50;
 
-		xAxis.setTickUnit(resolution/20);
-		xAxis.setMinorTickCount(10);
 
 		this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+
 		refreshGraph();
 
 	}
