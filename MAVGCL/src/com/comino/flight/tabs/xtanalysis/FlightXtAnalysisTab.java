@@ -28,7 +28,9 @@ import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 
 public class FlightXtAnalysisTab extends Pane {
 
@@ -50,12 +52,14 @@ public class FlightXtAnalysisTab extends Pane {
 
 			throw new RuntimeException(exception);
 		}
+		HBox.setHgrow(this, Priority.ALWAYS);
 
 	}
 
 
 
 	public void setup(AnalysisControlWidget recordControl,IMAVController control) {
+
 
 		recordControl.addChart(chart1.setup(control));
 		recordControl.addChart(chart2.setup(control));

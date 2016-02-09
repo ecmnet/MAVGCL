@@ -46,6 +46,9 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	@FXML
 	private Circle poshold;
 
+	@FXML
+	private Circle landed;
+
 	private IMAVController control;
 	private DataModel model;
 
@@ -95,6 +98,11 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 			poshold.setFill(Color.LIGHTGREEN);
 		else
 			poshold.setFill(Color.LIGHTGRAY);
+
+		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
+			landed.setFill(Color.LIGHTGREEN);
+		else
+			landed.setFill(Color.LIGHTGRAY);
 
 	}
 

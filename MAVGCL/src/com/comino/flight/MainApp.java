@@ -117,7 +117,6 @@ public class MainApp extends Application {
 
 	@FXML
 	private void initialize() {
-
 		m_close.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override

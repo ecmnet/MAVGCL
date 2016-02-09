@@ -45,7 +45,7 @@
             <Circle fx:id="poshold1" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="7" />
             <Circle fx:id="poshold2" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="8" />
             <Circle fx:id="poshold3" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="9" />
-            <Circle fx:id="poshold4" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="10" />
+            <Circle fx:id="landed" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="10" />
             <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Return to land" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label text="TakeOff" GridPane.columnIndex="1" GridPane.rowIndex="9" />

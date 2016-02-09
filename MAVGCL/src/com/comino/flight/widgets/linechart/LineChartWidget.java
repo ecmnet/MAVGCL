@@ -45,6 +45,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -142,6 +143,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
+		this.setFillWidth(true);
+
 		task = new Task<Integer>() {
 
 			@Override
@@ -196,6 +199,7 @@ public class LineChartWidget extends VBox implements IChartControl {
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(totalTime);
+
 
 
 		linechart.setPrefWidth(this.getPrefWidth()-50);
