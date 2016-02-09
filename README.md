@@ -6,15 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 09/02/2016
-
-Changes:
-
-- horizontal resize enabled
-  
-- rel. GPS data
-  
-  ​
+Last updated 09/02/2016​
 
 **Features:**
 
@@ -46,4 +38,3 @@ Changes:
 **Screenshot:**
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot.png)
-
