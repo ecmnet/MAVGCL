@@ -33,7 +33,13 @@ Last updated 09/02/2016​
   
    *(PX4 standard ports used, replace IPs with yours)*
 
+**How to deploy on OSX:**
 
+- Modify `build.xml` to adjust `bind` an `peer` properties.
+  
+- Run `ant_deploy`
+  
+  ​
 
 **Screenshot:**
 
