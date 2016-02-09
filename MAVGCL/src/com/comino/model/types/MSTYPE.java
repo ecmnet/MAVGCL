@@ -51,6 +51,12 @@ public enum MSTYPE {
 	MSP_S1			("Servo.1"),
 	MSP_S2			("Servo.2"),
 	MSP_S3			("Servo.3"),
+	MSP_GPSRELX	    ("GPS.rel.PosX"),
+	MSP_GPSRELY	    ("GPS.rel.PosY"),
+	MSP_GPSRELZ	    ("GPS.rel.PosZ"),
+	MSP_GPSRELVX	("GPS.rel.SpeedX"),
+	MSP_GPSRELVY    ("GPS.rel.SpeedY"),
+	MSP_GPSRELVZ	("GPS.rel.SpeedZ"),
 
 ;
 
@@ -114,6 +120,12 @@ public enum MSTYPE {
 		case MSP_S1:			return m.servo.s1;
 		case MSP_S2:			return m.servo.s2;
 		case MSP_S3:			return m.servo.s3;
+		case MSP_GPSRELX:		return m.gps.rel_x;
+		case MSP_GPSRELY:		return m.gps.rel_y;
+		case MSP_GPSRELZ:		return m.gps.rel_z;
+		case MSP_GPSRELVX:		return m.gps.rel_vx;
+		case MSP_GPSRELVY:		return m.gps.rel_vy;
+		case MSP_GPSRELVZ:		return m.gps.rel_vz;
 		default:
 			return 0;
 		}

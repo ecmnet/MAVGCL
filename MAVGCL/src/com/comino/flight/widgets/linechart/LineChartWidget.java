@@ -59,6 +59,8 @@ public class LineChartWidget extends VBox implements IChartControl {
 			{ MSTYPE.MSP_NEDX, 		MSTYPE.MSP_SPNEDX,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_NEDY, 		MSTYPE.MSP_SPNEDY,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_NEDVX, 	MSTYPE.MSP_NEDVY,		MSTYPE.MSP_NEDVZ	},
+			{ MSTYPE.MSP_GPSRELX,   MSTYPE.MSP_GPSRELY,		MSTYPE.MSP_GPSRELZ  },
+			{ MSTYPE.MSP_GPSRELVX,  MSTYPE.MSP_GPSRELVY,	MSTYPE.MSP_GPSRELVZ },
 			{ MSTYPE.MSP_LERRX, 	MSTYPE.MSP_LERRY,		MSTYPE.MSP_LERRZ	},
 			{ MSTYPE.MSP_ANGLEX, 	MSTYPE.MSP_ANGLEY,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_ACCX, 		MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
@@ -72,7 +74,9 @@ public class LineChartWidget extends VBox implements IChartControl {
 			"Loc.Position",
 			"Loc.PositionX",
 			"Loc.PositionY",
+			"Loc.GPS.Position",
 			"Loc. Speed",
+			"Loc.GPS.Speed",
 			"Loc. Pos.Error",
 			"Angle",
 			"Raw Accelerator",
@@ -182,7 +186,7 @@ public class LineChartWidget extends VBox implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-                totalMax = 999999;
+                totalMax = Integer.MAX_VALUE;
 				updateGraph();
 
 			}
