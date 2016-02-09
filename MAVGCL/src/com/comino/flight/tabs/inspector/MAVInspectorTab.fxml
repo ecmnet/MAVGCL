@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root styleClass="inspector"  type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TreeTableView layoutX="14.0" layoutY="14.0" >
+        <columns>
+          <TreeTableColumn editable="false" prefWidth="175.0" text="Message" />
+          <TreeTableColumn editable="false" prefWidth="150.0" text="Variable" />
+          <TreeTableColumn editable="false" prefWidth="120.0" text="Value" />
+          <TreeTableColumn editable="false" prefWidth="75.0" text="Unit" />
+        </columns>
+      </TreeTableView>
+   </center>
+</fx:root>

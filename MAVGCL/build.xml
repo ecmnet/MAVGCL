@@ -2,7 +2,12 @@
 
 	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
 
+	<property name="bind" value="172.168.178.2" />
+	<property name="peer" value="172.168.178.1" />
+
+
 	<target name="all" depends="clean,compile,build" />
+	<target name="all_deploy" depends="clean,compile,build, deploy_osx" />
 
 	<target name="clean">
 		<delete dir="dist" />
@@ -13,11 +18,11 @@
 
 	<target name="compile" depends="clean">
 		<copy todir="bin">
-		  <fileset dir="src">
-		    <exclude name="**/*.java"/>
-		  </fileset>
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
 		</copy>
-		<javac destdir="bin" includeantruntime="false" >
+		<javac destdir="bin" includeantruntime="false">
 			<src path="src" />
 			<classpath>
 				<fileset dir="lib">
@@ -30,10 +35,6 @@
 	<target name="build" depends="compile">
 		<fx:jar destfile="dist/MAVGAnalysis.jar">
 			<fx:application mainClass="com.comino.flight.MainApp">
-				<!--
-				<fx:param name="bindAddress" value="172.168.178.2" />
-				<fx:param name="peerAddress" value="172.168.178.1" />
-				-->
 			</fx:application>
 
 			<fileset dir="bin/">
@@ -49,6 +50,20 @@
 				<include name="mavcomm.jar" />
 			</fileset>
 		</copy>
+
+	</target>
+
+	<target name="deploy_osx" depends="build">
+		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
+			<fx:info title="MAVGAnalysiss" />
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
+				  <fx:argument>--bindAddress=${bind}</fx:argument>
+				  <fx:argument>--peerAddress=${peer}</fx:argument>
+			</fx:application>
+			<fx:resources>
+				<fx:fileset dir="dist" includes="*.jar" />
+			</fx:resources>
+		</fx:deploy>
 	</target>
 
 </project>

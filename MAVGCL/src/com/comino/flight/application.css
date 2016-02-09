@@ -22,6 +22,10 @@
     -fx-stroke-width: 0;
 }
 
+.inspector {
+	 -fx-font-size: 7pt;
+}
+
 .status .label {
 	-fx-text-fill: #505050;
 	-fx-font-size: 10px;

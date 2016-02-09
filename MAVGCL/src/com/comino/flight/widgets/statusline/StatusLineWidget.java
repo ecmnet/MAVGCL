@@ -97,6 +97,7 @@ public class StatusLineWidget extends Pane  {
 
 	public void setup(IMAVController control) {
 		this.control = control;
+		messages.setText(control.getClass().getSimpleName());
 		ExecutorService.get().execute(task);
 
 	}

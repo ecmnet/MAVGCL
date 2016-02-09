@@ -36,6 +36,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -70,7 +71,7 @@ public class MainApp extends Application {
 		}
 
 		if(peerAddress ==null)
-			control = new MAVSerialController();
+			control = new MAVSimController();
 		else {
 			if(peerAddress.contains("sim"))
 				control = new MAVSimController();

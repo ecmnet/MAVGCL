@@ -6,6 +6,7 @@
 
 <?import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab?>
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
+<?import com.comino.flight.tabs.inspector.MAVInspectorTab?>
 
 <AnchorPane maxHeight="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity"
@@ -41,7 +42,7 @@
 						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
 							xmlns:fx="http://javafx.com/fxml/1">
 							<children>
-
+								<MAVInspectorTab fx:id="mavinspectortab"/>
 							</children>
 						</AnchorPane>
 					</content>

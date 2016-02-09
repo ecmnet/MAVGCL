@@ -49,7 +49,7 @@
             <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Return to land" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label text="TakeOff" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <Label text="Landing" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <Label text="Landed" GridPane.columnIndex="1" GridPane.rowIndex="10" />
          </children>
       </GridPane>
    </children>
