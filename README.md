@@ -17,7 +17,7 @@ Last updated 09/02/2016​
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 
-**How to build**
+**How to build** (OS X, other platforms mya need adjustments in `build.xml`)
 
 - Clone repository
 - Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`

@@ -27,15 +27,36 @@ import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 
 public class MAVInspectorTab extends BorderPane {
 
+	@FXML
+	private TreeTableView<String> treetableview;
 
+	@FXML
+	private TreeTableColumn message_col;
+
+	@FXML
+	private TreeTableColumn variable_col;
+
+	@FXML
+	private TreeTableColumn value_col;
+
+	@FXML
+	private TreeTableColumn unit_col;
+
+	final TreeItem<String> root = new TreeItem<String>("Messages");
 
 	public MAVInspectorTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVInspectorTab.fxml"));
@@ -50,7 +71,18 @@ public class MAVInspectorTab extends BorderPane {
 
 	}
 
+	@FXML
+	private void initialize() {
 
+	 treetableview.setRoot(root);
+     root.setExpanded(true);
+
+	}
+
+	public MAVInspectorTab setup(IMAVController control) {
+
+		return this;
+	}
 
 
 
