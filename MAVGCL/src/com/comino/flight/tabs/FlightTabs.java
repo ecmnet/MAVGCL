@@ -23,7 +23,7 @@ public class FlightTabs extends Pane {
 
 	public void setup(ChartControlWidget recordControl, IMAVController control) {
 
-
+        mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
 		xyanalysistab.setup(recordControl,control);
 	}

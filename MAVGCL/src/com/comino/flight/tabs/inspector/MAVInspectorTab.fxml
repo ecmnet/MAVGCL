@@ -11,9 +11,9 @@
 	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<top>
 		<Pane prefHeight="35">
-			<Button layoutX="220.0" layoutY="10" mnemonicParsing="false"
+			<Button fx:id="b_clear" layoutX="220.0" layoutY="10" mnemonicParsing="false"
 				text="Clear filter" />
-			<TextField layoutX="10.0" layoutY="10" prefWidth="200"
+			<TextField fx:id="t_filter" layoutX="10.0" layoutY="10" prefWidth="200"
 				text="*" />
 		</Pane>
 	</top>
@@ -26,8 +26,6 @@
 					text="Variable" />
 				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0"
 					text="Value" />
-				<TreeTableColumn fx:id="unit_col" editable="false" prefWidth="75.0"
-					text="Unit" />
 			</columns>
 		</TreeTableView>
 	</center>
