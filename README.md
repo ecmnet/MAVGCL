@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 09/02/2016​
+Last updated 11/02/2016
 
 **Features:**
 
@@ -16,8 +16,9 @@ Last updated 09/02/2016​
 - Display of all key-figures during and after recording
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
+- MAVLink inspector
 
-**How to build** (OS X, other platforms mya need adjustments in `build.xml`)
+**How to build** (OS X, other platforms may need adjustments in `build.xml`)
 
 - Clone repository
 - Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`
@@ -35,12 +36,14 @@ Last updated 09/02/2016​
 
 **How to deploy on OSX:**
 
-- Modify `build.xml` to adjust `bind` an `peer` properties.
+- Modify `build.xml` to adjust `bind` and `peer` properties.
   
 - Run `ant_deploy`
   
   ​
 
-**Screenshot:**
+**Screenshots:**
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot.png)
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot2.png)
