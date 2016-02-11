@@ -45,6 +45,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.layout.BorderPane;
@@ -64,13 +65,15 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	@FXML
 	private TreeTableColumn<Dataset, Number>  value_col;
 
-	@FXML
-	private TextField t_filter;
+//	@FXML
+//	private TextField t_filter;
+//
+//	@FXML
+//	private Button b_clear;
 
-	@FXML
-	private Button b_clear;
+//	private String filter;
 
-	private String filter;
+	private long tms = 0;
 
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
 	ObservableList<String> numberStrings = FXCollections.observableArrayList("Eins", "Zwei", "Drei", "Vier");
@@ -91,8 +94,6 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	@FXML
 	private void initialize() {
 
-		t_filter.setText("<filter>");
-		t_filter.setStyle("-fx-text-inner-color: gray;");
 
 		TreeItem<Dataset> root = new TreeItem<Dataset>(new Dataset("", 0));
 		treetableview.setRoot(root);
@@ -110,6 +111,8 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			}
 		});
 
+		variable_col.setSortType(SortType.ASCENDING);
+
 		value_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, Number>, ObservableValue<Number>>() {
 			@Override
 			public ObservableValue<Number> call(CellDataFeatures<Dataset, Number> param) {
@@ -117,44 +120,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			}
 		});
 
-
-
-		b_clear.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				enableFilter(false);
-			}
-
-		});
-
-		t_filter.focusedProperty().addListener(new ChangeListener<Boolean>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
-			{
-				if (newPropertyValue) {
-					enableFilter(t_filter.getText().equals("<filter>"));
-				} else {
-					if(t_filter.getText().equals("")) {
-						enableFilter(false);
-					} else
-						filter = t_filter.getText();
-				}
-			}
-		});
-
-		t_filter.textProperty().addListener(new ChangeListener<String>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends String> arg0, String oldPropertyValue, String newPropertyValue)
-			{
-				if(!newPropertyValue.isEmpty() && !newPropertyValue.startsWith("<")) {
-					filter = newPropertyValue;
-				}
-
-			}
-		});
+		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
 
 
 	}
@@ -167,50 +133,40 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 	@Override
 	public void received(Object _msg) {
-
-		if(filter!=null) {
-			if(_msg.toString().toLowerCase().contains(filter.toLowerCase()))
-				parseMessageString(_msg.toString());
-		}
-		else
-			parseMessageString(_msg.toString());
+			parseMessageString(_msg.toString().split(" "));
 	}
 
+	private void parseMessageString(String[] msg) {
+		String _msg = msg[0].trim();
 
-	private void enableFilter(boolean enable) {
-		if(enable) {
-			t_filter.setText("");
-			t_filter.setStyle("-fx-text-inner-color: black;");
-		} else {
-			filter = null;
-			t_filter.setText("<filter>");
-			t_filter.setStyle("-fx-text-inner-color: gray;");
-		}
-	}
-
-
-	private void parseMessageString(String msg) {
-		String _msg = msg.substring(0, 20);
 		if(!allData.containsKey(_msg)) {
 
 			ObservableMap<String,Dataset> variables =  FXCollections.observableHashMap();
 
-			variables.put("tms", new Dataset("tms",System.currentTimeMillis()));
-			Data data = new Data(_msg,variables);
+			for(String v : msg)
+             if(v.contains("=")) {
+            	String[] p = v.split("=");
+			    variables.put(p[0], new Dataset(p[0],Float.parseFloat(p[1])));
+			}
 
+			Data data = new Data(_msg,variables);
 			allData.put(_msg,data);
 
 			TreeItem<Dataset> ti = new TreeItem<>(new Dataset(data.getName(), null));
-			ti.setExpanded(true);
+			ti.setExpanded(false);
 			treetableview.getRoot().getChildren().add(ti);
 			for (Dataset dataset : data.getData().values()) {
 				TreeItem treeItem = new TreeItem(dataset);
 				ti.getChildren().add(treeItem);
 			}
 		} else {
-			Data data = allData.get(_msg);
-			data.getData().get("tms").setValue(System.currentTimeMillis());
 
+			Data data = allData.get(_msg);
+			for(String v : msg)
+	             if(v.contains("=")) {
+	            	String[] p = v.split("=");
+				    data.getData().get(p[0]).setValue(Float.parseFloat(p[1]));
+				}
 		}
 
 	}

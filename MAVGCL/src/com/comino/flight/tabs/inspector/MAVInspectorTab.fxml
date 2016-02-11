@@ -1,31 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 
-<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
-	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<top>
-		<Pane prefHeight="35">
-			<Button fx:id="b_clear" layoutX="220.0" layoutY="10" mnemonicParsing="false"
-				text="Clear filter" />
-			<TextField fx:id="t_filter" layoutX="10.0" layoutY="10" prefWidth="200"
-				text="*" />
-		</Pane>
+		<Pane prefHeight="10"/>
 	</top>
 	<center>
 		<TreeTableView fx:id="treetableview" layoutX="14.0" layoutY="14.0">
 			<columns>
-				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="175.0"
-					text="Message" />
-				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="150.0"
-					text="Variable" />
-				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0"
-					text="Value" />
+				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="275.0" text="Message" />
+				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
+				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0" sortable="false" text="Value" />
 			</columns>
 		</TreeTableView>
 	</center>
