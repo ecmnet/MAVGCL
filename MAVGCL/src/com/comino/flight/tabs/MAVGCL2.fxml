@@ -7,6 +7,7 @@
 <?import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab?>
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
 <?import com.comino.flight.tabs.inspector.MAVInspectorTab?>
+<?import com.comino.flight.tabs.map.MAVMapTab?>
 
 <AnchorPane maxHeight="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity"
@@ -43,6 +44,17 @@
 							xmlns:fx="http://javafx.com/fxml/1">
 							<children>
 								<MAVInspectorTab fx:id="mavinspectortab"
+								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="3.0" AnchorPane.topAnchor="0.0"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="Map">
+					<content>
+						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+							xmlns:fx="http://javafx.com/fxml/1">
+							<children>
+								<MAVMapTab
 								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="3.0" AnchorPane.topAnchor="0.0"/>
 							</children>
 						</AnchorPane>

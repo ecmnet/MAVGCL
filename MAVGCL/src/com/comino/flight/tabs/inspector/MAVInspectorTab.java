@@ -65,18 +65,8 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	@FXML
 	private TreeTableColumn<Dataset, String>  value_col;
 
-//	@FXML
-//	private TextField t_filter;
-//
-//	@FXML
-//	private Button b_clear;
-
-//	private String filter;
-
-	private long tms = 0;
 
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
-	ObservableList<String> numberStrings = FXCollections.observableArrayList("Eins", "Zwei", "Drei", "Vier");
 
 	public MAVInspectorTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVInspectorTab.fxml"));

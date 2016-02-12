@@ -42,12 +42,14 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar" />
+				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar" />
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
 			<fileset dir="lib/">
 				<include name="mavcomm.jar" />
+				<include name="jssc.jar" />
+				<include name="jna-4.1.0.jar" />
 			</fileset>
 		</copy>
 
