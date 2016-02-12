@@ -313,7 +313,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		series2.getData().clear();
 		series3.getData().clear();
 
-		time = control.getMessageList().size() - totalTime * 1000 / COLLETCOR_CYCLE;
+		time = control.getCollector().getModelList().size() - totalTime * 2000 / COLLETCOR_CYCLE;
 		if(time < 0) time = 0;
 		updateGraph();
 	}
