@@ -338,6 +338,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 					dt_sec = time *  COLLETCOR_CYCLE / 1000f;
 
+					if(dt_sec > xAxis.getLowerBound()) {
+
 					if(type1!=MSTYPE.MSP_NONE)
 						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
 					if(type2!=MSTYPE.MSP_NONE)
@@ -345,6 +347,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if(type3!=MSTYPE.MSP_NONE)
 						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
 
+					}
 
 					if(time > time_max) {
 						if(series1.getData().size()>0)
