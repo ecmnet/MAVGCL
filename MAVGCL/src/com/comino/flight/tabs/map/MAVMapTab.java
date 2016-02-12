@@ -29,9 +29,12 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapShape;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.lynden.gmapsfx.shapes.Circle;
+import com.lynden.gmapsfx.shapes.CircleOptions;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,7 +49,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 	@FXML
 	private GoogleMapView mapView;
 
-	private Task<Long> task;
+	private Task<Double> task;
 
 	private GoogleMap map;
 
@@ -66,13 +69,13 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Long>() {
+		task = new Task<Double>() {
 
 			@Override
-			protected Long call() throws Exception {
+			protected Double call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(200);
+						Thread.sleep(500);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -80,21 +83,23 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 					if (isCancelled()) {
 						break;
 					}
-					updateValue(System.currentTimeMillis());
+					updateValue(model.gps.latitude+model.gps.longitude);
 				}
-				return System.currentTimeMillis();
+				return model.gps.latitude+model.gps.longitude;
 			}
 		};
 
-		task.valueProperty().addListener(new ChangeListener<Long>() {
+		task.valueProperty().addListener(new ChangeListener<Double>() {
 
 			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
+			public void changed(ObservableValue<? extends Double> observableValue, Double oldData, Double newData) {
 				try {
 					if(map!=null) {
-						LatLong current_pos = new LatLong(model.gps.latitude, model.gps.longitude);
-						map.setCenter(current_pos);
-						vehicle.setPosition(current_pos);
+						map.setCenter(new LatLong(model.gps.ref_lat, model.gps.ref_lon));
+			//			map.removeMarker(vehicle);
+						vehicle.setPosition(new LatLong(model.gps.latitude, model.gps.longitude));
+			//			map.addMarker(vehicle);
+
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -130,6 +135,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 		vehicle= new Marker(markerOptions);
 
 		map.addMarker(vehicle);
+
 
 	}
 
