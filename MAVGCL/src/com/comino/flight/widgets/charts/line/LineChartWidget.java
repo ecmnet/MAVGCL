@@ -89,7 +89,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private static int COLLETCOR_CYCLE = 50;
-	private static int REFRESH_MS = 200;
+	private static int REFRESH_MS = 100;
 
 	@FXML
 	private LineChart<Number,Number> linechart;
