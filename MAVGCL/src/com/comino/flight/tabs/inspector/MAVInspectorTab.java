@@ -126,7 +126,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			parseMessageString(_msg.toString().split(" "));
 	}
 
-	private void parseMessageString(String[] msg) {
+	private synchronized void parseMessageString(String[] msg) {
 		String _msg = msg[0].trim();
 
 		if(!allData.containsKey(_msg)) {
