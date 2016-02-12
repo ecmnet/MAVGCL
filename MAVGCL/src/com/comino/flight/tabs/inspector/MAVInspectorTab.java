@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.IMAVLinkMsgListener;
+import com.comino.msp.main.control.listener.IMAVLinkMsgListener;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;

@@ -21,13 +21,21 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.ExecutorService;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
+import com.lynden.gmapsfx.javascript.object.Marker;
+import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,7 +46,14 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 	@FXML
 	private GoogleMapView mapView;
 
+	private Task<Double> task;
+
 	private GoogleMap map;
+
+	private Marker vehicle;
+	private MarkerOptions markerOptions;
+
+	private DataModel model;
 
 	public MAVMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVMapTab.fxml"));
@@ -51,6 +66,40 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 			throw new RuntimeException(exception);
 		}
 
+		task = new Task<Double>() {
+
+			@Override
+			protected Double call() throws Exception {
+				while(true) {
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException iex) {
+						Thread.currentThread().interrupt();
+					}
+
+					if (isCancelled()) {
+						break;
+					}
+					updateValue(model.gps.latitude + model.gps.longitude);
+				}
+				return model.gps.latitude + model.gps.longitude;
+			}
+		};
+
+		task.valueProperty().addListener(new ChangeListener<Double>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Double> observableValue, Double oldData, Double newData) {
+                try {
+					LatLong current_pos = new LatLong(model.gps.latitude, model.gps.longitude);
+					map.setCenter(current_pos);
+					vehicle.setPosition(current_pos);
+					vehicle.setTitle("vehicle");
+                } catch(Exception e) { }
+
+			}
+		});
+
 	}
 
 	@Override
@@ -61,7 +110,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 
 		mapOptions.center(center)
 		.mapMarker(false)
-		.zoom(12)
+		.zoom(18)
 		.overviewMapControl(false)
 		.panControl(false)
 		.rotateControl(false)
@@ -70,7 +119,17 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 		.zoomControl(true)
 		.mapType(MapTypeIdEnum.TERRAIN);
 
+
 		map = mapView.createMap(mapOptions);
+
+		markerOptions = new MarkerOptions();
+		markerOptions.position(new LatLong(47.606189, 13.335842));
+		markerOptions.icon(getClass().getResource("qc.png").getFile());
+		vehicle= new Marker(markerOptions);
+
+		map.addMarker(vehicle);
+
+		ExecutorService.get().execute(task);
 
 	}
 
@@ -82,7 +141,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 
 
 	public MAVMapTab setup(IMAVController control) {
-
+		this.model=control.getCurrentModel();
 		return this;
 	}
 
