@@ -2,7 +2,6 @@
 
 	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
 
-	<property name="bind" value="172.168.178.2" />
 	<property name="peer" value="172.168.178.1" />
 
 
@@ -59,7 +58,6 @@
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
 			<fx:info title="MAVGAnalysiss" />
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
-				  <fx:argument>--bindAddress=${bind}</fx:argument>
 				  <fx:argument>--peerAddress=${peer}</fx:argument>
 			</fx:application>
 			<fx:resources>

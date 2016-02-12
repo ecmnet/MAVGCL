@@ -61,13 +61,12 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
 		String peerAddress = null;
-		String bindAddress = null;
 
 		Map<String,String> args = getParameters().getNamed();
 
 		if(args.size()> 0) {
 			peerAddress  = args.get("peerAddress");
-			bindAddress  = args.get("bindAddress");
+
 		}
 
 		if(peerAddress ==null) {
@@ -78,7 +77,7 @@ public class MainApp extends Application {
 			if(peerAddress.contains("sim"))
 				control = new MAVSimController();
 			else
-				control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
+				control = new MAVUdpController(peerAddress,14556,"0.0.0.0",14550);
 		}
 
 

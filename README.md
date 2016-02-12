@@ -35,17 +35,15 @@ Last updated 12/02/2016
 
 - Goto directory `/dist`
   
-- Start UDP with 
+- Start UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
   
-  `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1 --bindAddress=172.168.178.2`
-  
-   *(PX4 standard ports used, replace IPs with yours)*
+   *(PX4 standard ports used, replace IP with yours)*
   
   ​
 
 **How to deploy on OSX:**
 
-- Modify `build.xml` to adjust `bind` and `peer` properties.
+- Modify `build.xml` to adjust  `peer` property.
   
 - Run `ant_deploy`
   
