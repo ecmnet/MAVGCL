@@ -13,7 +13,7 @@
 		<Pane prefHeight="10"/>
 	</top>
 	<center>
-     <GoogleMapView fx:id="mapView"  />
+         <GoogleMapView fx:id="mapView"  />
 	</center>
 	<bottom>
 		<Pane prefHeight="10" />

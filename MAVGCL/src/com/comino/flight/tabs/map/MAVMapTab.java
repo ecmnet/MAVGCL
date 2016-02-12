@@ -19,6 +19,7 @@ package com.comino.flight.tabs.map;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -49,7 +50,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 	@FXML
 	private GoogleMapView mapView;
 
-	private Task<Double> task;
+	private Task<Long> task;
 
 	private GoogleMap map;
 
@@ -69,13 +70,13 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Double>() {
+		task = new Task<Long>() {
 
 			@Override
-			protected Double call() throws Exception {
+			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(200);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -83,22 +84,21 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 					if (isCancelled()) {
 						break;
 					}
-					updateValue(model.gps.latitude+model.gps.longitude);
+					updateValue(System.currentTimeMillis());
 				}
-				return model.gps.latitude+model.gps.longitude;
+				return System.currentTimeMillis();
 			}
 		};
 
-		task.valueProperty().addListener(new ChangeListener<Double>() {
+		task.valueProperty().addListener(new ChangeListener<Long>() {
 
 			@Override
-			public void changed(ObservableValue<? extends Double> observableValue, Double oldData, Double newData) {
+			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
 					if(map!=null) {
-						map.setCenter(new LatLong(model.gps.ref_lat, model.gps.ref_lon));
-			//			map.removeMarker(vehicle);
+						map.setCenter(new LatLong(model.gps.latitude, model.gps.longitude));
+						Thread.sleep(5);
 						vehicle.setPosition(new LatLong(model.gps.latitude, model.gps.longitude));
-			//			map.addMarker(vehicle);
 
 					}
 
@@ -131,7 +131,7 @@ public class MAVMapTab extends BorderPane implements Initializable, MapComponent
 
 		markerOptions = new MarkerOptions();
 		markerOptions.position(new LatLong(47.606189, 13.335842));
-		markerOptions.icon(getClass().getResource("airplane.png").getFile());
+		markerOptions.icon(getClass().getResource("airplane_S.png").getFile());
 		vehicle= new Marker(markerOptions);
 
 		map.addMarker(vehicle);

@@ -116,7 +116,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private Button export;
 
 
-
 	private XYChart.Series<Number,Number> series1;
 	private XYChart.Series<Number,Number> series2;
 	private XYChart.Series<Number,Number> series3;
@@ -134,8 +133,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
-	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
-	private int    totalMax = 0;
+	private int time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+	private boolean refresh_request = false;
 
 	public LineChartWidget() {
 
@@ -187,7 +186,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-                totalMax = Integer.MAX_VALUE;
 				updateGraph();
 
 			}
@@ -206,8 +204,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setUpperBound(totalTime);
 
 
-        linechart.prefWidthProperty().bind(widthProperty());
-        linechart.prefHeightProperty().bind(heightProperty());
+		linechart.prefWidthProperty().bind(widthProperty());
+		linechart.prefHeightProperty().bind(heightProperty());
 
 		cseries1.getItems().addAll(MSTYPE.getList());
 		cseries2.getItems().addAll(MSTYPE.getList());
@@ -308,14 +306,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private void refreshGraph() {
-		series1.getData().clear();
-		series2.getData().clear();
-		series3.getData().clear();
-
-		time = control.getCollector().getModelList().size() - totalTime * 2000 / COLLETCOR_CYCLE;
-		if(time < 0) time = 0;
-		updateGraph();
+	private  void refreshGraph() {
+		refresh_request = true;
 	}
 
 
@@ -325,6 +317,15 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		List<DataModel> mList = control.getCollector().getModelList();
 
+		if(refresh_request) {
+			refresh_request = false;
+			series1.getData().clear();
+			series2.getData().clear();
+			series3.getData().clear();
+			time = 0;
+
+		}
+
 		if(time==0) {
 			xAxis.setLowerBound(0);
 			xAxis.setUpperBound(time_max * COLLETCOR_CYCLE / 1000f);
@@ -332,8 +333,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		if(time<mList.size() && mList.size()>0 ) {
 
+			int i=0;
 
-			while(time<mList.size() && time < totalMax) {
+			while(time<mList.size() ) {
 
 
 				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
@@ -358,8 +360,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						xAxis.setLowerBound((time-time_max) * COLLETCOR_CYCLE / 1000F);
 						xAxis.setUpperBound(time * COLLETCOR_CYCLE / 1000f);
 					}
-				}
 
+
+				}
 				time++;
 			}
 		}
