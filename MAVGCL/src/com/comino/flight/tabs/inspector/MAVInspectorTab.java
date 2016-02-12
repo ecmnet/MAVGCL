@@ -63,7 +63,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	private TreeTableColumn<Dataset, String> variable_col;
 
 	@FXML
-	private TreeTableColumn<Dataset, Number>  value_col;
+	private TreeTableColumn<Dataset, String>  value_col;
 
 //	@FXML
 //	private TextField t_filter;
@@ -95,7 +95,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	private void initialize() {
 
 
-		TreeItem<Dataset> root = new TreeItem<Dataset>(new Dataset("", 0));
+		TreeItem<Dataset> root = new TreeItem<Dataset>(new Dataset("", ""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
@@ -113,10 +113,10 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 		variable_col.setSortType(SortType.ASCENDING);
 
-		value_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, Number>, ObservableValue<Number>>() {
+		value_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<Number> call(CellDataFeatures<Dataset, Number> param) {
-				return param.getValue().getValue().noProperty();
+			public ObservableValue<String> call(CellDataFeatures<Dataset, String> param) {
+				return param.getValue().getValue().getValue();
 			}
 		});
 
@@ -146,7 +146,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			for(String v : msg)
              if(v.contains("=")) {
             	String[] p = v.split("=");
-			    variables.put(p[0], new Dataset(p[0],Float.parseFloat(p[1])));
+			    variables.put(p[0], new Dataset(p[0],p[1]));
 			}
 
 			Data data = new Data(_msg,variables);
@@ -165,7 +165,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			for(String v : msg)
 	             if(v.contains("=")) {
 	            	String[] p = v.split("=");
-				    data.getData().get(p[0]).setValue(Float.parseFloat(p[1]));
+				    data.getData().get(p[0]).setValue(p[1]);
 				}
 		}
 
@@ -198,22 +198,19 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 	class Dataset {
 
 		StringProperty str = new SimpleStringProperty();
-		ObjectProperty<Number> value = new SimpleObjectProperty<>();
+		StringProperty value = new SimpleStringProperty();
 
-		public Dataset(String s, Number n) {
+		public Dataset(String s, String n) {
 			str.set(s);
 			value.set(n);
 		}
 
-		public Number getValue() {
-			return value.get();
-		}
 
-		public ObjectProperty<Number> noProperty() {
+		public StringProperty getValue() {
 			return value;
 		}
 
-		public void setValue(Number no) {
+		public void setValue(String no) {
 			this.value.set(no);
 		}
 
