@@ -70,8 +70,10 @@ public class MainApp extends Application {
 			bindAddress  = args.get("bindAddress");
 		}
 
-		if(peerAddress ==null)
+		if(peerAddress ==null) {
 			control = new MAVSerialController();
+			 control.connect();
+		}
 		else {
 			if(peerAddress.contains("sim"))
 				control = new MAVSimController();
@@ -79,7 +81,6 @@ public class MainApp extends Application {
 				control = new MAVUdpController(peerAddress,14556,bindAddress,14550);
 		}
 
-		 control.connect();
 
 		initRootLayout();
 		showMAVGCLApplication();
