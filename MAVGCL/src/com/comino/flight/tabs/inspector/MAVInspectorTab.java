@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkMsgListener;
+import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -35,6 +36,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -67,6 +69,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
+
 
 	public MAVInspectorTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVInspectorTab.fxml"));
@@ -123,7 +126,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 	@Override
 	public void received(Object _msg) {
-			parseMessageString(_msg.toString().split(" "));
+		parseMessageString(_msg.toString().split(" "));
 	}
 
 	private synchronized void parseMessageString(String[] msg) {
@@ -134,10 +137,10 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 			ObservableMap<String,Dataset> variables =  FXCollections.observableHashMap();
 
 			for(String v : msg)
-             if(v.contains("=")) {
-            	String[] p = v.split("=");
-			    variables.put(p[0], new Dataset(p[0],p[1]));
-			}
+				if(v.contains("=")) {
+					String[] p = v.split("=");
+					variables.put(p[0], new Dataset(p[0],p[1]));
+				}
 
 			Data data = new Data(_msg,variables);
 			allData.put(_msg,data);
@@ -153,9 +156,9 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 			Data data = allData.get(_msg);
 			for(String v : msg)
-	             if(v.contains("=")) {
-	            	String[] p = v.split("=");
-				    data.getData().get(p[0]).setValue(p[1]);
+				if(v.contains("=")) {
+					String[] p = v.split("=");
+					data.getData().get(p[0]).setValue(p[1]);
 				}
 		}
 
@@ -187,6 +190,8 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 
 	class Dataset {
 
+		long tms = 0;
+
 		StringProperty str = new SimpleStringProperty();
 		StringProperty value = new SimpleStringProperty();
 
@@ -201,7 +206,10 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
 		}
 
 		public void setValue(String no) {
-			this.value.set(no);
+			if((System.currentTimeMillis() - tms)> 100) {
+				tms = System.currentTimeMillis();
+				this.value.set(no);
+			}
 		}
 
 		public String getStr() {
