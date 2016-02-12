@@ -134,7 +134,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
 	private int time_max = totalTime * 1000 / COLLETCOR_CYCLE;
-	private boolean refresh_request = false;
+
 
 	public LineChartWidget() {
 
@@ -307,7 +307,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private  void refreshGraph() {
-		refresh_request = true;
+		series1.getData().clear();
+		series2.getData().clear();
+		series3.getData().clear();
+		time = 0;
+		updateGraph();
 	}
 
 
@@ -317,14 +321,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		List<DataModel> mList = control.getCollector().getModelList();
 
-		if(refresh_request) {
-			refresh_request = false;
-			series1.getData().clear();
-			series2.getData().clear();
-			series3.getData().clear();
-			time = 0;
-
-		}
 
 		if(time==0) {
 			xAxis.setLowerBound(0);
