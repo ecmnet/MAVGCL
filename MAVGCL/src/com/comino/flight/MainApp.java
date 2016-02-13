@@ -77,7 +77,7 @@ public class MainApp extends Application {
 			if(peerAddress.contains("sim"))
 				control = new MAVSimController();
 			else
-				control = new MAVUdpController(peerAddress,14556,"0.0.0.0",14550);
+				control = new MAVUdpController(peerAddress,14555,"0.0.0.0",14550);
 		}
 
 
