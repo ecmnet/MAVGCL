@@ -63,6 +63,9 @@
 			<fx:resources>
 				<fx:fileset dir="dist" includes="*.jar" />
 			</fx:resources>
+			<fx:info title="MAVGAnalysis" vendor="ecmnet">
+			    <fx:icon href="MAVGAnalysis.icns"/>
+			</fx:info>
 		</fx:deploy>
 	</target>
 

@@ -65,7 +65,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			{ MSTYPE.MSP_RAW_FLOWX, 	MSTYPE.MSP_RAW_FLOWY, },
 	};
 
-	private static String[] PRESET_NAMES = {
+	private final static String[] PRESET_NAMES = {
 			"None",
 			"Loc.Pos.rel.",
 			"Loc.Speed",
@@ -78,9 +78,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Raw Flow",
 	};
 
-	private static Float[] SCALES = {
+	private final static Float[] SCALES = {
 			1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
 	};
+
 
 	private static int COLLETCOR_CYCLE = 50;
 	private static int REFRESH_MS = 100;
@@ -128,7 +129,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
 	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
-	private int    totalMax = 0;
+	private int   totalMax = 0;
+
 
 	public XYChartWidget() {
 

@@ -64,6 +64,7 @@ public class MainApp extends Application {
 
 		Map<String,String> args = getParameters().getNamed();
 
+
 		if(args.size()> 0) {
 			peerAddress  = args.get("peerAddress");
 
