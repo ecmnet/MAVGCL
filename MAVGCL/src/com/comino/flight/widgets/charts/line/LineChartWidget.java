@@ -19,6 +19,7 @@ package com.comino.flight.widgets.charts.line;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -329,7 +330,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		if(time<mList.size() && mList.size()>0 ) {
 
-			int i=0;
 
 			while(time<mList.size() ) {
 
@@ -340,12 +340,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 					if(dt_sec > xAxis.getLowerBound()) {
 
-					if(type1!=MSTYPE.MSP_NONE)
-						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
-					if(type2!=MSTYPE.MSP_NONE)
-						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type2)));
-					if(type3!=MSTYPE.MSP_NONE)
-						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
+						if(type1!=MSTYPE.MSP_NONE)
+							series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
+						if(type2!=MSTYPE.MSP_NONE)
+							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type2)));
+						if(type3!=MSTYPE.MSP_NONE)
+							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
 
 					}
 

@@ -6,9 +6,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 12/02/2016
+Last updated 13/02/2016 - <u>Important Bugfixes:</u>
 
-
+- Tested on PixRacer with ESP8266
+- Correct port being used now  
 
 **Features:**
 
