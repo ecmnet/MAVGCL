@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 13/02/2016 - <u>Important Bugfixes:</u>
+Last updated 14/02/2016 - <u>Important Bugfixes:</u>
 
 - Tested on PixRacer with ESP8266
 - Correct port being used now
@@ -20,7 +20,7 @@ Last updated 13/02/2016 - <u>Important Bugfixes:</u>
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- GoogleMaps viewer (requires internet access)
+- OpenStreepMap viewer (requires internet access)
 
 
 

@@ -1,7 +1,7 @@
 package com.comino.flight.tabs;
 
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
-import com.comino.flight.tabs.map.MAVMapTab;
+import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
@@ -23,7 +23,7 @@ public class FlightTabs extends Pane {
 	private MAVInspectorTab mavinspectortab;
 
 	@FXML
-	private MAVMapTab mavmaptab;
+	private MAVOpenMapTab mavmaptab;
 
 	public void setup(ChartControlWidget recordControl, IMAVController control) {
 
