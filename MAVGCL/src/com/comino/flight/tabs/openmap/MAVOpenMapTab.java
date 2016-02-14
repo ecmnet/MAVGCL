@@ -31,6 +31,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.utils.ExecutorService;
+import com.comino.openmapfx.ext.InformationLayer;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,14 +58,16 @@ public class MAVOpenMapTab extends BorderPane  {
 
 	private LayeredMap map;
 
-	private PositionLayer positionLayer;
-	private PositionLayer homeLayer;
-	private LicenceLayer licenceLayer;
+	private PositionLayer 		positionLayer;
+	private PositionLayer 		homeLayer;
+	private LicenceLayer  		licenceLayer;
+	private InformationLayer 	infoLayer;
 
 	private Task<Long> task;
 
 	private DataModel model;
 	private float zoom_value = 20;
+	private boolean home_set = false;
 
 	public MAVOpenMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
@@ -107,6 +110,9 @@ public class MAVOpenMapTab extends BorderPane  {
 						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude,model.attitude.h);
 
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
+							if(!home_set)
+								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+							home_set = true;
 							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
 						} else {
 							map.setCenter(model.gps.latitude,model.gps.longitude);
@@ -163,6 +169,8 @@ public class MAVOpenMapTab extends BorderPane  {
 
 	public MAVOpenMapTab setup(IMAVController control) {
 		this.model=control.getCurrentModel();
+		infoLayer = new InformationLayer(model);
+		map.getLayers().add(infoLayer);
 		ExecutorService.get().execute(task);
 		return this;
 	}

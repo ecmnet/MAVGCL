@@ -67,18 +67,18 @@ public class MainApp extends Application {
 
 		if(args.size()> 0) {
 			peerAddress  = args.get("peerAddress");
-
 		}
 
 		if(peerAddress ==null) {
-			control = new MAVSerialController();
+			control = new MAVSimController();
 			control.connect();
 		}
 		else {
-			if(peerAddress.contains("sim"))
-				control = new MAVSimController();
-			else
+			if(peerAddress.contains("127.0") || peerAddress.contains("localhost"))
+				control = new MAVUdpController(peerAddress,14556,"0.0.0.0",14550);
+			else {
 				control = new MAVUdpController(peerAddress,14555,"0.0.0.0",14550);
+			}
 		}
 
 
