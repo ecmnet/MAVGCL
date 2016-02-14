@@ -1,14 +1,26 @@
 <project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
 
-	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/lib/ant-javafx.jar" />
+	<!-- Upodate your vehicle address here -->
 
 	<property name="peer" value="172.168.178.1" />
 
+
+	<!-- Works at least on OSX, to determine JDK -->
+
+	<script language="javascript">
+	  arr = project.getProperty('java.home').split('jre');
+	  project.setProperty('jdk.home', arr[0]);
+    </script>
+
+	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+		uri="javafx:com.sun.javafx.tools.ant"
+	    classpath="${jdk.home}lib/ant-javafx.jar" />
 
 	<target name="all" depends="clean,compile,build" />
 	<target name="all_deploy" depends="clean,compile,build, deploy_osx" />
 
 	<target name="clean">
+
 		<delete dir="dist" />
 		<mkdir dir="dist" />
 		<delete dir="bin" />
