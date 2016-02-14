@@ -72,7 +72,7 @@ public class MainApp extends Application {
 
 		if(peerAddress ==null) {
 			control = new MAVSerialController();
-			 control.connect();
+			control.connect();
 		}
 		else {
 			if(peerAddress.contains("sim"))

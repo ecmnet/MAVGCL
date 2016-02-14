@@ -23,18 +23,24 @@ import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
+import org.lodgon.openmapfx.core.TileProvider;
+import org.lodgon.openmapfx.core.TileType;
 import org.lodgon.openmapfx.service.MapViewPane;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.GPS;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -46,12 +52,19 @@ public class MAVOpenMapTab extends BorderPane  {
 	@FXML
 	private BorderPane mapviewpane;
 
+	@FXML
+	private Slider zoom;
+
 	private LayeredMap map;
-	private PositionLayer positionLayer = null;
+
+	private PositionLayer positionLayer;
+	private PositionLayer homeLayer;
+	private LicenceLayer licenceLayer;
 
 	private Task<Long> task;
 
 	private DataModel model;
+	private float zoom_value = 20;
 
 	public MAVOpenMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
@@ -70,7 +83,7 @@ public class MAVOpenMapTab extends BorderPane  {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(200);
+						Thread.sleep(100);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -89,9 +102,16 @@ public class MAVOpenMapTab extends BorderPane  {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
-					if(map!=null) {
-						map.setCenter(model.gps.latitude,model.gps.longitude);
-						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude);
+					map.setZoom(zoom_value);
+					if(model.gps.numsat>3) {
+						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude,model.attitude.h);
+
+						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
+							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+						} else {
+							map.setCenter(model.gps.latitude,model.gps.longitude);
+						}
+
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -106,6 +126,8 @@ public class MAVOpenMapTab extends BorderPane  {
 	@FXML
 	private void initialize() {
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider();
+
+
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
 		mapviewpane.setCenter(mapPane);
@@ -118,25 +140,25 @@ public class MAVOpenMapTab extends BorderPane  {
 		map.setCenter(48.142899,11.577723);
 		map.setZoom(20);
 
-		URL im = this.getClass().getResource("airplane.png");
-		Image image = new Image(im.toString());
-		positionLayer = new PositionLayer(image);
+		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
+		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(positionLayer);
+		map.getLayers().add(homeLayer);
 		positionLayer.updatePosition(48.142899,11.577723);
+
+		licenceLayer = new LicenceLayer(provider);
+		map.getLayers().add(licenceLayer);
+
+		zoom.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+				zoom_value = new_val.floatValue();
+			}
+		});
 
 
 	}
 
-//	private void showMyLocation() {
-//		URL im = this.getClass().getResource("airplane.png");
-//		Image image = new Image(im.toString());
-//		positionLayer = new PositionLayer(image);
-//		map.getLayers().add(positionLayer);
-//		positionLayer.updatePosition(48.142899,11.577723);
-//		map.centerLatitudeProperty().addListener(i -> {
-//			System.out.println("center of map: lat = " + map.centerLatitudeProperty().get() + ", lon = " + map.centerLongitudeProperty().get());
-//		});
-//	}
 
 
 	public MAVOpenMapTab setup(IMAVController control) {

@@ -45,6 +45,7 @@ public class PositionLayer extends Parent implements MapLayer {
 
     private double lat;
     private double lon;
+    private double rotation;
     private final Node icon;
     private final double iconTranslateX, iconTranslateY;
     private LayeredMap layeredMap;
@@ -101,6 +102,13 @@ public class PositionLayer extends Parent implements MapLayer {
         refreshLayer();
     }
 
+    public void updatePosition(double lat, double lon, float rotation) {
+        this.lat = lat;
+        this.lon = lon;
+        this.rotation = rotation;
+        refreshLayer();
+    }
+
     protected void refreshLayer() {
         Point2D cartPoint = this.layeredMap.getMapPoint(lat, lon);
         if (cartPoint == null) {
@@ -110,6 +118,7 @@ public class PositionLayer extends Parent implements MapLayer {
         icon.setVisible(true);
         icon.setTranslateX(cartPoint.getX() + iconTranslateX);
         icon.setTranslateY(cartPoint.getY() + iconTranslateY);
+        icon.setRotate(rotation);
     }
 
     @Override

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<?import org.lodgon.openmapfx.core.LayeredMap?>
-
 
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<top>
-		<Pane prefHeight="10"/>
+		<Pane prefHeight="28">
+			<children>
+			  <Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0" layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0" prefWidth="161.0" showTickMarks="true" value="20.0" />
+			</children>
+		</Pane>
 	</top>
 	<center>
-	   <BorderPane fx:id="mapviewpane" prefWidth="800"/>
+		<BorderPane fx:id="mapviewpane" prefWidth="800" />
 	</center>
 	<bottom>
 		<Pane prefHeight="10" />
