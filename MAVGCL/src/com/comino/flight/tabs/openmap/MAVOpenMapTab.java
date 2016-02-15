@@ -31,6 +31,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
@@ -92,7 +93,7 @@ public class MAVOpenMapTab extends BorderPane {
 
 	private boolean isCollecting = false;
 
-	private IMAVController control;
+	private ModelCollectorService collector;
 
 	public MAVOpenMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
@@ -120,10 +121,10 @@ public class MAVOpenMapTab extends BorderPane {
 						break;
 					}
 
-					if(!isCollecting && control.getCollector().isCollecting()) {
+					if(!isCollecting && collector.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
-					isCollecting = control.getCollector().isCollecting();
+					isCollecting = collector.isCollecting();
 
 					updateValue(System.currentTimeMillis());
 				}
@@ -156,7 +157,7 @@ public class MAVOpenMapTab extends BorderPane {
 						} else {
 							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 						}
-						canvasLayer.redraw(false);
+					 canvasLayer.redraw(false);
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -202,32 +203,44 @@ public class MAVOpenMapTab extends BorderPane {
 		// Test paintlistener
 		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
 
-			Point2D p0; Point2D p1; int index=0; boolean first = true;
+			Point2D p0; Point2D p1; int index=0; boolean first = true; DataModel m;
 
 			@Override
 			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+
 
 				if(refresh) {
 					index = 0;
 					first = true;
 				}
 
-				if(isCollecting && control.getCollector().getModelList().size()>1) {
+
+				if(isCollecting &&
+						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
+
+					//System.out.println(index+" -> "+collector.getModelList().size());
 
 					gc.setStroke(Color.BLUE); gc.setFill(Color.BLUE);
-					for(int i=index; i<control.getCollector().getModelList().size();
-							i += MAP_UPDATE_MS/control.getCollector().getCollectorInterval_ms()) {
-						DataModel m = control.getCollector().getModelList().get(i);
+					for(int i=index; i<collector.getModelList().size();
+							i += MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
+
+						m = collector.getModelList().get(i);
+
 						if(first) {
-							p0 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+							p0 = map.getMapArea().getMapPoint(
+									MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+
 							gc.fillOval(p0.getX()-3, p0.getY()-3,6,6);
 							first = false; continue;
 						}
-						p1 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+						p1 = map.getMapArea().getMapPoint(
+								MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+
 						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-						p0 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+						p0 = map.getMapArea().getMapPoint(
+								MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 					}
-					index = control.getCollector().getModelList().size();
+					index = collector.getModelList().size();
 				}
 
 			}
@@ -257,7 +270,7 @@ public class MAVOpenMapTab extends BorderPane {
 
 
 	public MAVOpenMapTab setup(IMAVController control) {
-		this.control = control;
+		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
 
 		infoLayer = new InformationLayer(model);
