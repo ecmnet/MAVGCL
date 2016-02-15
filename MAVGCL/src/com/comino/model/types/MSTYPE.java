@@ -51,12 +51,18 @@ public enum MSTYPE {
 	MSP_S1			("Servo.1"),
 	MSP_S2			("Servo.2"),
 	MSP_S3			("Servo.3"),
-	MSP_GPSRELX	    ("GPS.rel.PosX"),
-	MSP_GPSRELY	    ("GPS.rel.PosY"),
-	MSP_GPSRELZ	    ("GPS.rel.PosZ"),
-	MSP_GPSRELVX	("GPS.rel.SpeedX"),
-	MSP_GPSRELVY    ("GPS.rel.SpeedY"),
-	MSP_GPSRELVZ	("GPS.rel.SpeedZ"),
+	MSP_GLOBRELX	("Global.rel.PosX"),
+	MSP_GLOBRELY 	("Global.rel.PosY"),
+	MSP_GLOBRELZ	("Global.rel.PosZ"),
+	MSP_GLOBRELVX	("Global.rel.SpeedX"),
+	MSP_GLOBRELVY   ("Global.rel.SpeedY"),
+	MSP_GLOBRELVZ	("Global.rel.SpeedZ"),
+	MSP_GLOBPLAT	("Global.Latitude"),
+	MSP_GLOBPLON	("Global.Longitude"),
+	MSP_RAW_GPSLAT  ("Raw.Latitude"),
+	MSP_RAW_GPSLON  ("Raw.Longitude"),
+	MSP_REF_GPSLAT  ("Home.Latitude"),
+	MSP_REF_GPSLON  ("Home.Longitude"),
 
 ;
 
@@ -120,12 +126,18 @@ public enum MSTYPE {
 		case MSP_S1:			return m.servo.s1;
 		case MSP_S2:			return m.servo.s2;
 		case MSP_S3:			return m.servo.s3;
-		case MSP_GPSRELX:		return m.gps.rel_x;
-		case MSP_GPSRELY:		return m.gps.rel_y;
-		case MSP_GPSRELZ:		return m.gps.rel_z;
-		case MSP_GPSRELVX:		return m.gps.rel_vx;
-		case MSP_GPSRELVY:		return m.gps.rel_vy;
-		case MSP_GPSRELVZ:		return m.gps.rel_vz;
+		case MSP_GLOBRELX:		return m.state.g_x;
+		case MSP_GLOBRELY:		return m.state.g_y;
+		case MSP_GLOBRELZ:		return m.state.g_z;
+		case MSP_GLOBRELVX:		return m.state.g_vx;
+		case MSP_GLOBRELVY:		return m.state.g_vy;
+		case MSP_GLOBRELVZ:		return m.state.g_vz;
+		case MSP_GLOBPLAT:		return m.state.lat;
+		case MSP_GLOBPLON:		return m.state.lon;
+		case MSP_RAW_GPSLAT:	return (float) m.gps.latitude;
+		case MSP_RAW_GPSLON:	return (float) m.gps.longitude;
+		case MSP_REF_GPSLAT:    return (float) m.gps.ref_lat;
+		case MSP_REF_GPSLON:    return (float) m.gps.ref_lon;
 		default:
 			return 0;
 		}

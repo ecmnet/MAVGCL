@@ -29,6 +29,7 @@ import org.lodgon.openmapfx.service.MapViewPane;
 
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.utils.ExecutorService;
@@ -58,11 +59,20 @@ public class MAVOpenMapTab extends BorderPane {
 
 	private final static int MAP_UPDATE_MS = 500;
 
+	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
+
+	private final static MSTYPE TYPES[][] =
+		{ { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON },
+		  { MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON } };
+
 	@FXML
 	private BorderPane mapviewpane;
 
 	@FXML
 	private Slider zoom;
+
+	@FXML
+	private ChoiceBox<String> gpssource;
 
 	private LayeredMap map;
 
@@ -75,10 +85,12 @@ public class MAVOpenMapTab extends BorderPane {
 	private Task<Long> task;
 
 	private DataModel model;
-	private DataModel old_model;
+	private int type = 1;
 
-	private boolean zoom_changed = false;
+	private boolean map_changed = false;
 	private boolean home_set = false;
+
+	private boolean isCollecting = false;
 
 	private IMAVController control;
 
@@ -107,6 +119,12 @@ public class MAVOpenMapTab extends BorderPane {
 					if (isCancelled()) {
 						break;
 					}
+
+					if(!isCollecting && control.getCollector().isCollecting()) {
+						canvasLayer.redraw(true);
+					}
+					isCollecting = control.getCollector().isCollecting();
+
 					updateValue(System.currentTimeMillis());
 				}
 				return System.currentTimeMillis();
@@ -118,17 +136,17 @@ public class MAVOpenMapTab extends BorderPane {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
-					if(zoom_changed) {
+					if(map_changed) {
 						map.setZoom(zoom.getValue());
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
 							map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 						canvasLayer.redraw(true);
-						zoom_changed = false;
+						map_changed = false;
 						return;
 					}
 
 					if(model.gps.numsat>3) {
-						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude,model.attitude.h);
+						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
 
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
 							if(!home_set)
@@ -136,7 +154,7 @@ public class MAVOpenMapTab extends BorderPane {
 							home_set = true;
 							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
 						} else {
-							map.setCenter(model.gps.latitude,model.gps.longitude);
+							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 						}
 						canvasLayer.redraw(false);
 					}
@@ -154,6 +172,8 @@ public class MAVOpenMapTab extends BorderPane {
 	private void initialize() {
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider();
 
+		gpssource.getItems().addAll(GPS_SOURCES);
+		gpssource.getSelectionModel().select(1);
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
@@ -192,20 +212,20 @@ public class MAVOpenMapTab extends BorderPane {
 					first = true;
 				}
 
-				if(control.getCollector().isCollecting() && control.getCollector().getModelList().size()>1) {
+				if(isCollecting && control.getCollector().getModelList().size()>1) {
 
 					gc.setStroke(Color.BLUE); gc.setFill(Color.BLUE);
 					for(int i=index; i<control.getCollector().getModelList().size();
-							   i += MAP_UPDATE_MS/control.getCollector().getCollectorInterval_ms()) {
+							i += MAP_UPDATE_MS/control.getCollector().getCollectorInterval_ms()) {
 						DataModel m = control.getCollector().getModelList().get(i);
 						if(first) {
-							p0 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
-							gc.fillOval(p0.getX()-2, p0.getY()-2,4,4);
+							p0 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+							gc.fillOval(p0.getX()-3, p0.getY()-3,6,6);
 							first = false; continue;
 						}
-						p1 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+						p1 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-						p0 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+						p0 = map.getMapArea().getMapPoint(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 					}
 					index = control.getCollector().getModelList().size();
 				}
@@ -217,8 +237,18 @@ public class MAVOpenMapTab extends BorderPane {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				zoom_changed = true;
+				map_changed = true;
 			}
+		});
+
+		gpssource.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				type = newValue.intValue();
+				map_changed = true;
+			}
+
 		});
 
 
