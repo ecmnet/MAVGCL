@@ -56,6 +56,7 @@ import javafx.scene.shape.Rectangle;
 
 public class MAVOpenMapTab extends BorderPane {
 
+	private final static int MAP_UPDATE_MS = 500;
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -193,11 +194,13 @@ public class MAVOpenMapTab extends BorderPane {
 
 				if(control.getCollector().isCollecting() && control.getCollector().getModelList().size()>1) {
 
-					gc.setStroke(Color.BLUE);
-					for(int i=index; i<control.getCollector().getModelList().size();i++) {
+					gc.setStroke(Color.BLUE); gc.setFill(Color.BLUE);
+					for(int i=index; i<control.getCollector().getModelList().size();
+							   i += MAP_UPDATE_MS/control.getCollector().getCollectorInterval_ms()) {
 						DataModel m = control.getCollector().getModelList().get(i);
 						if(first) {
 							p0 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+							gc.fillOval(p0.getX()-2, p0.getY()-2,4,4);
 							first = false; continue;
 						}
 						p1 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
