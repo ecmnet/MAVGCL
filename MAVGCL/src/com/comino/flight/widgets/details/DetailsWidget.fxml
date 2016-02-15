@@ -24,7 +24,7 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 				<RowConstraints minHeight="10.0" prefHeight="27.0" vgrow="NEVER" />
 			</rowConstraints>
 			<children>
-				<Label prefHeight="15.0" prefWidth="87.0" text="Altitude (amsl)" />
+				<Label prefHeight="11.0" prefWidth="87.0" text="Altitude (amsl)" />
 				<Label fx:id="f_altitude" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 				<Label text="m" GridPane.columnIndex="2" />
 				<Label text="Angle Roll" GridPane.rowIndex="1" />

@@ -18,19 +18,13 @@ package com.comino.flight.tabs.xtanalysis;
 
 import java.io.IOException;
 
-import com.comino.flight.MainApp;
-import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.line.LineChartWidget;
-import com.comino.flight.widgets.details.DetailsWidget;
-import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 
 public class FlightXtAnalysisTab extends Pane {
 
@@ -67,6 +61,9 @@ public class FlightXtAnalysisTab extends Pane {
 
 		chart1.prefWidthProperty().bind(widthProperty());
 		chart2.prefWidthProperty().bind(widthProperty());
+
+		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(1));
+		chart2.prefHeightProperty().bind(heightProperty().divide(2).subtract(1));
 
 		recordControl.addChart(chart1.setup(control));
 		recordControl.addChart(chart2.setup(control));

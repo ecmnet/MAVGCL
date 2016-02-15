@@ -3,6 +3,6 @@
 <fx:root prefHeight="164.0" prefWidth="183.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-       <XYChartWidget fx:id="chart1" layoutX="0" layoutY="5.0"  prefHeight="785.0" prefWidth="1000.0" />
+       <XYChartWidget fx:id="chart1" layoutX="0" layoutY="5.0"   prefWidth="1000.0" />
 	</children>
 </fx:root>

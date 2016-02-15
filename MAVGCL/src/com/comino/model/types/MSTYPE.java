@@ -2,7 +2,6 @@ package com.comino.model.types;
 
 import java.util.ArrayList;
 
-
 import com.comino.msp.model.DataModel;
 
 public enum MSTYPE {

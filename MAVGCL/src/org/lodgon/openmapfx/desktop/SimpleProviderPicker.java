@@ -32,6 +32,10 @@
 
 package org.lodgon.openmapfx.desktop;
 
+import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
+import org.lodgon.openmapfx.core.TileProvider;
+import org.lodgon.openmapfx.core.TileType;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -41,10 +45,6 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
-import org.lodgon.openmapfx.core.BaseMapProvider;
-import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
-import org.lodgon.openmapfx.core.TileProvider;
-import org.lodgon.openmapfx.core.TileType;
 
 /**
  *

@@ -36,7 +36,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 
 /**
  *
@@ -71,6 +70,7 @@ final int MAXZOOM=16;
                }
             }
         });
+
         // TODO: Fix path drawing issue first, then enable mouse again
 //        setOnMousePressed(t -> {
 //            x0 = t.getSceneX();

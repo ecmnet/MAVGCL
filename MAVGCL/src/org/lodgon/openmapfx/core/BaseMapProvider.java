@@ -27,6 +27,7 @@
 package org.lodgon.openmapfx.core;
 
 import java.util.List;
+
 import javafx.beans.property.ObjectProperty;
 
 /** 

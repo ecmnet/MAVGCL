@@ -32,9 +32,10 @@
 
 package org.lodgon.openmapfx.service;
 
+import org.lodgon.openmapfx.core.LayeredMap;
+
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import org.lodgon.openmapfx.core.LayeredMap;
 
 /**
  *

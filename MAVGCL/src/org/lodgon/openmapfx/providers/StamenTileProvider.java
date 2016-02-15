@@ -28,6 +28,7 @@ package org.lodgon.openmapfx.providers;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.lodgon.openmapfx.core.TileProvider;
 import org.lodgon.openmapfx.core.TileType;
 

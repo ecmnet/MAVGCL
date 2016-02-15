@@ -12,7 +12,6 @@ import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
@@ -56,6 +55,9 @@ public class FlightTabs extends Pane {
 	}
 
 	public void setup(ChartControlWidget recordControl, IMAVController control) {
+
+
+		tabpane.prefHeightProperty().bind(heightProperty());
 
 		mavmaptab.setup(control);
         mavinspectortab.setup(control);

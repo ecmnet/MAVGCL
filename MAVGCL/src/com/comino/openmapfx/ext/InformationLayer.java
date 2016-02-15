@@ -31,15 +31,11 @@
  */
 package com.comino.openmapfx.ext;
 
-import org.lodgon.openmapfx.core.BaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.MapLayer;
-import org.lodgon.openmapfx.core.TileProvider;
 
 import com.comino.msp.model.DataModel;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -50,7 +46,7 @@ import javafx.scene.layout.AnchorPane;
  */
 public class InformationLayer extends AnchorPane implements MapLayer {
 
-    private Label lblLicence;
+    private Label label;
 
     private DataModel model;
 
@@ -58,18 +54,25 @@ public class InformationLayer extends AnchorPane implements MapLayer {
     public InformationLayer(DataModel model) {
         this.model = model;
 
-        lblLicence = new Label();
-        lblLicence.setText("Satellites: "+model.gps.numsat);
-        lblLicence.setStyle("-fx-background-color:rgba(66%,66%,66%,0.5)");
+        label = new Label();
+        label.setText("Satellites: "+model.gps.numsat);
+        label.setStyle("-fx-background-color:rgba(66%,66%,66%,0.5)");
 
-        AnchorPane.setLeftAnchor(lblLicence, 0.0);
-        AnchorPane.setTopAnchor(lblLicence, 0.0);
-        AnchorPane.setRightAnchor(lblLicence, 0.0);
-
-
-        getChildren().add(lblLicence);
+        AnchorPane.setLeftAnchor(label, 0.0);
+        AnchorPane.setTopAnchor(label, 0.0);
+        AnchorPane.setRightAnchor(label, 0.0);
 
 
+        getChildren().add(label);
+
+
+
+
+    }
+
+
+    public void update() {
+    	  label.setText("Satellites: "+model.gps.numsat);
     }
 
 

@@ -37,13 +37,10 @@ import java.util.List;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.MapLayer;
 
-import com.comino.msp.model.DataModel;
-
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 
 /**
  *

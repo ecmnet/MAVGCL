@@ -45,8 +45,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 
 
 public class XYChartWidget extends BorderPane implements IChartControl {
@@ -218,7 +216,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
 
-
+		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 

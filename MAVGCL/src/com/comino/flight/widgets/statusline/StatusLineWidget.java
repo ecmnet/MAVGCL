@@ -33,6 +33,9 @@ import javafx.scene.layout.Pane;
 public class StatusLineWidget extends Pane  {
 
 	@FXML
+	private Label version;
+
+	@FXML
 	private Label driver;
 
 	@FXML

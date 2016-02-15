@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root styleClass="widget" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="600.0"  styleClass="widget" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <LineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minHeight="760.0" minWidth="810.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
+            <LineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minWidth="810.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
                <xAxis>
                   <NumberAxis animated="false" lowerBound="-5.0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="5.0" fx:id="xAxis" />
                </xAxis>
@@ -26,7 +26,7 @@
    <right>
       <Pane prefWidth="140">
          <children>
-            <Button fx:id="export" layoutX="5.0" layoutY="729.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="100.0" text="PNG export" />
+            <Button fx:id="export" layoutX="5.0" layoutY="230.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="100.0" text="PNG export" />
             <ChoiceBox fx:id="cseries1" layoutX="5.0" layoutY="50.0" prefHeight="19.0" prefWidth="100.0" />
             <ChoiceBox fx:id="cseries2" layoutX="5.0" layoutY="97.0" prefHeight="19.0" prefWidth="100.0" />
             <Label layoutX="5.0" layoutY="33.0" text="Dataset 1:" />

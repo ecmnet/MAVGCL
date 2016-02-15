@@ -28,6 +28,7 @@ package org.lodgon.openmapfx.core;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
+
 import javafx.beans.property.ObjectProperty;
 
 /**

@@ -26,10 +26,6 @@
  */
 package org.lodgon.openmapfx.core;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-
 import javafx.concurrent.Worker;
 import javafx.scene.image.Image;
 

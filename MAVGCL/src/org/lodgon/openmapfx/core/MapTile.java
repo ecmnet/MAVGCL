@@ -27,9 +27,11 @@
 package org.lodgon.openmapfx.core;
 
 import static java.lang.Math.floor;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.BooleanProperty;

@@ -29,6 +29,7 @@ package org.lodgon.openmapfx.core;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;

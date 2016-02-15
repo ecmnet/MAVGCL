@@ -21,10 +21,8 @@ import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.tabs.FlightTabs;
-import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 
@@ -36,7 +34,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -163,6 +160,8 @@ public class MainApp extends Application {
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel.getRecordControl(),control);
+			fvController.setPrefHeight(820);
+		//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());
 
 
 
