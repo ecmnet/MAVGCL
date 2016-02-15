@@ -51,6 +51,14 @@ public class FlightXYAnalysisTab extends Pane {
 
 	}
 
+	@FXML
+	private void initialize() {
+
+		chart1.disableProperty().bind(this.disabledProperty());
+
+
+	}
+
 
 	public void setup(ChartControlWidget recordControl,IMAVController control) {
 		recordControl.addChart(chart1.setup(control));

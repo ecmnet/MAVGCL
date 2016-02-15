@@ -67,6 +67,10 @@ public class StatusLineWidget extends Pane  {
 						Thread.currentThread().interrupt();
 					}
 
+					if(isDisabled()) {
+						continue;
+					}
+
 					if (isCancelled()) {
 						break;
 					}

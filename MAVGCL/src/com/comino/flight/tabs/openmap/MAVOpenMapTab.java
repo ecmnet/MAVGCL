@@ -49,6 +49,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -106,6 +107,8 @@ public class MAVOpenMapTab extends BorderPane {
 			throw new RuntimeException(exception);
 		}
 
+
+
 		task = new Task<Long>() {
 
 			@Override
@@ -117,7 +120,11 @@ public class MAVOpenMapTab extends BorderPane {
 						Thread.currentThread().interrupt();
 					}
 
-					if (isCancelled()) {
+					if(isDisabled()) {
+						continue;
+					}
+
+					if (isCancelled() ) {
 						break;
 					}
 

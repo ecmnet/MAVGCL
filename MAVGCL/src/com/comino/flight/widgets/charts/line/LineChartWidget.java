@@ -161,6 +161,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						Thread.currentThread().interrupt();
 					}
 
+					if(isDisabled()) {
+						continue;
+					}
 
 					if (isCancelled()) {
 						break;

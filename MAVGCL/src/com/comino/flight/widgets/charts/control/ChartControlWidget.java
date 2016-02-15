@@ -111,6 +111,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 						Thread.currentThread().interrupt();
 					}
 
+					if(isDisabled()) {
+						continue;
+					}
+
 					if (isCancelled()) {
 						break;
 					}

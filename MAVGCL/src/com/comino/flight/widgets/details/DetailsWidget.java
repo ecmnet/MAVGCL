@@ -81,6 +81,10 @@ public class DetailsWidget extends Pane  {
 						Thread.currentThread().interrupt();
 					}
 
+					if(isDisabled()) {
+						continue;
+					}
+
 					if (isCancelled()) {
 						break;
 					}

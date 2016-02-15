@@ -85,6 +85,10 @@ public class BatteryWidget extends Pane  {
 						Thread.currentThread().interrupt();
 					}
 
+					if(isDisabled()) {
+						continue;
+					}
+
 					if (isCancelled()) {
 						break;
 					}
