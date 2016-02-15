@@ -29,6 +29,7 @@ import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.GPS;
+import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
@@ -159,6 +160,7 @@ public class MAVOpenMapTab extends BorderPane {
 					 canvasLayer.redraw(false);
 					}
 
+
 					infoLayer.update();
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -185,7 +187,6 @@ public class MAVOpenMapTab extends BorderPane {
 		mapPane.setClip(clip);
 		clip.heightProperty().bind(mapPane.heightProperty());
 		clip.widthProperty().bind(mapPane.widthProperty());
-
 		map.setCenter(48.142899,11.577723);
 		map.setZoom(20);
 
@@ -193,6 +194,7 @@ public class MAVOpenMapTab extends BorderPane {
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(positionLayer);
 		map.getLayers().add(homeLayer);
+
 		positionLayer.updatePosition(48.142899,11.577723);
 
 		licenceLayer = new LicenceLayer(provider);
@@ -215,6 +217,7 @@ public class MAVOpenMapTab extends BorderPane {
 					first = true;
 				}
 
+				positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
 
 				if(isCollecting &&
 						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
