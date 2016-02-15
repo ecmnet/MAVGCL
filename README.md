@@ -8,16 +8,18 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Last updated 15/02/2016 
 
+- Horizontal and vertical resizing
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
 - Trigger recording manually or by selectable flight-mode changes
 - Choosable stop-recording delay
-- Display of all key-figures during and after recording
+- Display of  key-figures during and after recording
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- OpenStreepMap viewer (requires internet access) with option to record path
+- OpenStreepMap viewer of global position and raw gps data (requires internet access) with option to record path
 
 
 
