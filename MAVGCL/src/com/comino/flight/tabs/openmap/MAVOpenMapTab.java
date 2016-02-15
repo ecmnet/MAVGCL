@@ -27,10 +27,13 @@ import org.lodgon.openmapfx.core.TileProvider;
 import org.lodgon.openmapfx.core.TileType;
 import org.lodgon.openmapfx.service.MapViewPane;
 
+import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.utils.ExecutorService;
+import com.comino.openmapfx.ext.CanvasLayer;
+import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.InformationLayer;
 
 import javafx.beans.value.ChangeListener;
@@ -39,15 +42,19 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class MAVOpenMapTab extends BorderPane  {
+public class MAVOpenMapTab extends BorderPane {
 
 
 	@FXML
@@ -62,12 +69,17 @@ public class MAVOpenMapTab extends BorderPane  {
 	private PositionLayer 		homeLayer;
 	private LicenceLayer  		licenceLayer;
 	private InformationLayer 	infoLayer;
+	private CanvasLayer			canvasLayer;
 
 	private Task<Long> task;
 
 	private DataModel model;
-	private float zoom_value = 20;
+	private DataModel old_model;
+
+	private boolean zoom_changed = false;
 	private boolean home_set = false;
+
+	private IMAVController control;
 
 	public MAVOpenMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
@@ -86,7 +98,7 @@ public class MAVOpenMapTab extends BorderPane  {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(200);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -105,7 +117,11 @@ public class MAVOpenMapTab extends BorderPane  {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
-					map.setZoom(zoom_value);
+					if(zoom_changed) {
+						map.setZoom(zoom.getValue());
+						canvasLayer.redraw(true);
+						zoom_changed = false;
+					}
 					if(model.gps.numsat>3) {
 						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude,model.attitude.h);
 
@@ -117,7 +133,7 @@ public class MAVOpenMapTab extends BorderPane  {
 						} else {
 							map.setCenter(model.gps.latitude,model.gps.longitude);
 						}
-
+						canvasLayer.redraw(false);
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -155,25 +171,62 @@ public class MAVOpenMapTab extends BorderPane  {
 		licenceLayer = new LicenceLayer(provider);
 		map.getLayers().add(licenceLayer);
 
+		canvasLayer = new CanvasLayer();
+		map.getLayers().add(canvasLayer);
+
+		// Test paintlistener
+		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+
+			Point2D p0; Point2D p1; int index=0; boolean first = true;
+
+			@Override
+			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+
+				if(refresh) {
+					index = 0;
+					first = true;
+				}
+
+				if(control.getCollector().isCollecting() && control.getCollector().getModelList().size()>1) {
+
+					gc.setStroke(Color.BLUE);
+					for(int i=index; i<control.getCollector().getModelList().size();i++) {
+						DataModel m = control.getCollector().getModelList().get(i);
+						if(first) {
+							p0 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+							first = false; continue;
+						}
+						p1 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+						p0 = map.getMapArea().getMapPoint(m.gps.latitude, m.gps.longitude);
+					}
+					index = control.getCollector().getModelList().size();
+				}
+
+			}
+
+		});
+
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				zoom_value = new_val.floatValue();
+				zoom_changed = true;
 			}
 		});
 
 
+		zoom.setTooltip(new Tooltip("Zooming"));
 	}
-
 
 
 	public MAVOpenMapTab setup(IMAVController control) {
+		this.control = control;
 		this.model=control.getCurrentModel();
+
 		infoLayer = new InformationLayer(model);
 		map.getLayers().add(infoLayer);
+
 		ExecutorService.get().execute(task);
 		return this;
 	}
-
-
 }

@@ -4,6 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 
 public interface CanvasLayerPaintListener {
 
-	public void redraw(GraphicsContext gc, double width, double height);
+	public void redraw(GraphicsContext gc, double width, double height, boolean refresh);
 
 }

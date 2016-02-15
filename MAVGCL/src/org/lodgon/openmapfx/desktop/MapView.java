@@ -61,20 +61,20 @@ public class MapView extends Application {
     public void start(Stage stage) throws Exception {
         DefaultBaseMapProvider provider = new DefaultBaseMapProvider();
 
-     //   spp = new SimpleProviderPicker(provider);
+        spp = new SimpleProviderPicker(provider);
 
         map = new LayeredMap(provider);
 
         BorderPane cbp = new BorderPane();
         cbp.setCenter(map);
 
-//        Rectangle clip = new Rectangle(700, 600);
-//        cbp.setClip(clip);
-//        clip.heightProperty().bind(cbp.heightProperty());
-//        clip.widthProperty().bind(cbp.widthProperty());
+        Rectangle clip = new Rectangle(700, 600);
+        cbp.setClip(clip);
+        clip.heightProperty().bind(cbp.heightProperty());
+        clip.widthProperty().bind(cbp.widthProperty());
 
         BorderPane bp = new BorderPane();
-  //      bp.setTop(spp);
+        bp.setTop(spp);
         bp.setCenter(cbp);
 
         Scene scene = new Scene(bp, 700, 600);
@@ -87,8 +87,8 @@ public class MapView extends Application {
         map.setCenter(48.142899,11.577723);
         showMyLocation();
         map.setZoom(12);
-        
-       
+
+
 
 //        licenceLayer = new LicenceLayer(provider);
 //        map.getLayers().add(licenceLayer);

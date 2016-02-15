@@ -34,6 +34,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -171,6 +172,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				recording(new_val, 0);
 			}
 		});
+
+		recording.setTooltip(new Tooltip("start/stop recording"));
 
 
 		enablemodetrig.selectedProperty().addListener(new ChangeListener<Boolean>() {

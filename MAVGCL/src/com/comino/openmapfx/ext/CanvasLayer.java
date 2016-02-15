@@ -70,8 +70,8 @@ public class CanvasLayer extends AnchorPane implements MapLayer {
     	paintListener.add(listener);
     }
 
-    public void redraw() {
-    	canvas.draw();
+    public void redraw(boolean refresh) {
+    	canvas.draw(refresh);
     }
 
     @Override
@@ -90,19 +90,21 @@ public class CanvasLayer extends AnchorPane implements MapLayer {
     class ResizableCanvas extends Canvas {
 
         public ResizableCanvas() {
-            widthProperty().addListener(evt -> draw());
-            heightProperty().addListener(evt -> draw());
+            widthProperty().addListener(evt -> draw(true));
+            heightProperty().addListener(evt -> draw(true));
         }
 
-        public void draw() {
+        public void draw(boolean refresh) {
 
         	GraphicsContext gc = getGraphicsContext2D();
         	double width = getWidth();
             double height = getHeight();
-            gc.clearRect(0, 0, width, height);
+
+            if(refresh)
+              gc.clearRect(0, 0, width, height);
 
         	for(CanvasLayerPaintListener listener : paintListener)
-        		listener.redraw(gc, width, height);
+        		listener.redraw(gc, width, height, refresh);
         }
 
         @Override
