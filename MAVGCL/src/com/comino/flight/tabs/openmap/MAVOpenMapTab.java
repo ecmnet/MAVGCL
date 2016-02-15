@@ -119,9 +119,13 @@ public class MAVOpenMapTab extends BorderPane {
 				try {
 					if(zoom_changed) {
 						map.setZoom(zoom.getValue());
+						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
+							map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 						canvasLayer.redraw(true);
 						zoom_changed = false;
+						return;
 					}
+
 					if(model.gps.numsat>3) {
 						positionLayer.updatePosition(model.gps.latitude,model.gps.longitude,model.attitude.h);
 
