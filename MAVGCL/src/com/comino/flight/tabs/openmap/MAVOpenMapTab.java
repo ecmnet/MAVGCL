@@ -59,7 +59,7 @@ import javafx.scene.shape.Rectangle;
 
 public class MAVOpenMapTab extends BorderPane {
 
-	private final static int MAP_UPDATE_MS = 500;
+	private final static int MAP_UPDATE_MS = 330;
 
 	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
 
@@ -166,6 +166,8 @@ public class MAVOpenMapTab extends BorderPane {
 						}
 					 canvasLayer.redraw(false);
 					}
+
+					infoLayer.update();
 
 				} catch(Exception e) { e.printStackTrace(); }
 
