@@ -5,13 +5,18 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
+	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<top>
 		<Pane prefHeight="28">
 			<children>
-			  <Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0" layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0" prefWidth="161.0" showTickMarks="true" value="20.0" />
-			<ChoiceBox fx:id="gpssource" layoutX="180.0" prefHeight="19.0" layoutY="5.0"
-				prefWidth="100.0" />
+				<Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0"
+					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0"
+					prefWidth="161.0" showTickMarks="true" value="20.0" />
+				<ChoiceBox fx:id="gpssource" layoutX="180.0" prefHeight="19.0"
+					layoutY="5.0" prefWidth="100.0" />
+				<ChoiceBox fx:id="tiletype" layoutX="293" prefHeight="19.0"
+					layoutY="5.0" prefWidth="100.0" />
 			</children>
 		</Pane>
 	</top>

@@ -42,7 +42,8 @@ public class ThunderForestTileProvider implements TileProvider {
 
     private static final List<TileType> tileTypes = new LinkedList<>();
     static {
-        tileTypes.add(new TileType("Terrain", "http://tile.thunderforest.com/outdoors/", "© OpenStreetMap/ThunderForest contributors"));
+        tileTypes.add(new TileType("Outdoors", "http://tile.thunderforest.com/outdoors/", "© OpenStreetMap/ThunderForest contributors"));
+        tileTypes.add(new TileType("Landscape", "http://tile.thunderforest.com/landscape/", "© OpenStreetMap/ThunderForest contributors"));
     }
 
     public ThunderForestTileProvider() {

@@ -110,7 +110,8 @@ public class MapArea extends Pane implements BaseMap {
                 -> nearestZoom = (Math.min((int) floor(t1.doubleValue() + TIPPING), MAX_ZOOM - 1)));
 
         this.tileType.addListener((ObservableValue<? extends MapTileType> obs, MapTileType o, MapTileType n) -> {
-            System.out.println("TileType was changed: " + n);
+           if(debug)
+        	   System.out.println("TileType was changed: " + n);
             if (n != null) {
                 reloadTiles();
             } else {
@@ -421,7 +422,7 @@ public class MapArea extends Pane implements BaseMap {
      * efficient way?
      */
     private void reloadTiles() {
-
+      if(debug)
         System.out.println("TileType was changed, reloading tiles.");
 
         clearTiles();

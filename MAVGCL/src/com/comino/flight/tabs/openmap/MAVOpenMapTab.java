@@ -21,6 +21,7 @@ import java.io.IOException;
 import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
+import org.lodgon.openmapfx.core.MapTileType;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
@@ -57,6 +58,7 @@ public class MAVOpenMapTab extends BorderPane {
 
 	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
 
+
 	private final static MSTYPE TYPES[][] =
 		{ { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON },
 		  { MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON } };
@@ -69,6 +71,9 @@ public class MAVOpenMapTab extends BorderPane {
 
 	@FXML
 	private ChoiceBox<String> gpssource;
+
+	@FXML
+	private ChoiceBox<MapTileType> tiletype;
 
 	private LayeredMap map;
 
@@ -179,6 +184,11 @@ public class MAVOpenMapTab extends BorderPane {
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(1);
+
+		tiletype.getItems().addAll(provider.getTileTypes());
+		tiletype.getSelectionModel().select(0);
+
+		provider.tileTypeProperty().bind(tiletype.valueProperty());
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
