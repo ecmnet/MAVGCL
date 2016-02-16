@@ -6,9 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 15/02/2016 
-
-- Horizontal and vertical resizing
+Last updated 16/02/2016 
 
 **Features:**
 
