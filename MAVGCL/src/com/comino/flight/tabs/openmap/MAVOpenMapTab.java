@@ -34,6 +34,7 @@ import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.InformationLayer;
+import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -174,7 +175,7 @@ public class MAVOpenMapTab extends BorderPane {
 
 	@FXML
 	private void initialize() {
-		DefaultBaseMapProvider provider = new DefaultBaseMapProvider();
+		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(1);
@@ -187,7 +188,7 @@ public class MAVOpenMapTab extends BorderPane {
 		mapPane.setClip(clip);
 		clip.heightProperty().bind(mapPane.heightProperty());
 		clip.widthProperty().bind(mapPane.widthProperty());
-		map.setCenter(48.142899,11.577723);
+		map.setCenter(49.142899,11.577723);
 		map.setZoom(20);
 
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
@@ -195,7 +196,7 @@ public class MAVOpenMapTab extends BorderPane {
 		map.getLayers().add(positionLayer);
 		map.getLayers().add(homeLayer);
 
-		positionLayer.updatePosition(48.142899,11.577723);
+		positionLayer.updatePosition(49.142899,11.577723);
 
 		licenceLayer = new LicenceLayer(provider);
 		map.getLayers().add(licenceLayer);
