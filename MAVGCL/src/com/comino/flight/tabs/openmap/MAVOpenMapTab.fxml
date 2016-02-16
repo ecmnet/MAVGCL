@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import com.comino.flight.widgets.gps.details.GPSDetailsWidget?>
 
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
 	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
@@ -13,15 +17,27 @@
 				<Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0"
 					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0"
 					prefWidth="161.0" showTickMarks="true" value="20.0" />
-				<ChoiceBox fx:id="gpssource" layoutX="180.0" prefHeight="19.0"
-					layoutY="5.0" prefWidth="100.0" />
-				<ChoiceBox fx:id="tiletype" layoutX="293" prefHeight="19.0"
-					layoutY="5.0" prefWidth="100.0" />
+				<ChoiceBox fx:id="gpssource" layoutX="180.0" layoutY="5.0"
+					prefHeight="19.0" prefWidth="100.0" />
+				<ChoiceBox fx:id="tiletype" layoutX="293" layoutY="5.0"
+					prefHeight="19.0" prefWidth="100.0" />
+				<CheckBox fx:id="viewdetails" layoutX="410.0" layoutY="9.0"
+					mnemonicParsing="false" text="Details" />
 			</children>
 		</Pane>
 	</top>
 	<center>
-		<BorderPane fx:id="mapviewpane" prefWidth="800" />
+		<StackPane alignment="TOP_LEFT">
+			<children>
+				<BorderPane fx:id="mapviewpane" prefWidth="800" />
+				<GPSDetailsWidget fx:id="gpsdetails" maxHeight="140"
+					maxWidth="185" styleClass="glass">
+					<StackPane.margin>
+						<Insets left="10.0" top="10.0" />
+					</StackPane.margin>
+				</GPSDetailsWidget>
+			</children>
+		</StackPane>
 	</center>
 	<bottom>
 		<Pane prefHeight="10" />

@@ -43,15 +43,6 @@ public class FlightTabs extends Pane {
 		tabs.add(mavinspectortab);
 		tabs.add(mavmaptab);
 
-		xtanalysistab.setDisable(false);
-		xyanalysistab.setDisable(true);
-		mavinspectortab.setDisable(true);
-		mavmaptab.setDisable(true);
-
-		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
-	           for(int i =0; i<tabs.size();i++)
-	        	   tabs.get(i).setDisable(i!=nv.intValue());
-	     });
 	}
 
 	public void setup(ChartControlWidget recordControl, IMAVController control) {
@@ -63,6 +54,16 @@ public class FlightTabs extends Pane {
         mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
 		xyanalysistab.setup(recordControl,control);
+
+		xtanalysistab.setDisable(false);
+		xyanalysistab.setDisable(true);
+		mavinspectortab.setDisable(true);
+		mavmaptab.setDisable(true);
+
+		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
+	           for(int i =0; i<tabs.size();i++)
+	        	   tabs.get(i).setDisable(i!=nv.intValue());
+	     });
 	}
 
 

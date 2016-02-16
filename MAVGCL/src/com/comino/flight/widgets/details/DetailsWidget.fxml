@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root  prefWidth="183.0" styleClass="widget"  type="javafx.scene.layout.Pane"
+<fx:root  prefWidth="183.0"  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<GridPane layoutX="14.0" layoutY="14.0"  prefWidth="163.0">

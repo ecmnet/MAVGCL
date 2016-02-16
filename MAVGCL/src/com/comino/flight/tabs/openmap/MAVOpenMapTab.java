@@ -26,6 +26,7 @@ import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
+import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
@@ -46,11 +47,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -77,12 +80,17 @@ public class MAVOpenMapTab extends BorderPane {
 	@FXML
 	private ChoiceBox<MapTileType> tiletype;
 
+	@FXML
+	private CheckBox viewdetails;
+
+	@FXML
+	private GPSDetailsWidget gpsdetails;
+
 	private LayeredMap map;
 
 	private PositionLayer 		positionLayer;
 	private PositionLayer 		homeLayer;
 	private LicenceLayer  		licenceLayer;
-	private InformationLayer 	infoLayer;
 	private CanvasLayer			canvasLayer;
 
 	private Task<Long> task;
@@ -168,9 +176,6 @@ public class MAVOpenMapTab extends BorderPane {
 						canvasLayer.redraw(false);
 					}
 
-
-					infoLayer.update();
-
 				} catch(Exception e) { e.printStackTrace(); }
 
 			}
@@ -182,6 +187,10 @@ public class MAVOpenMapTab extends BorderPane {
 
 	@FXML
 	private void initialize() {
+
+		gpsdetails.setVisible(false);
+		gpsdetails.visibleProperty().bind(viewdetails.selectedProperty());
+
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 
 		gpssource.getItems().addAll(GPS_SOURCES);
@@ -295,6 +304,7 @@ public class MAVOpenMapTab extends BorderPane {
 		});
 
 
+
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
 
@@ -303,8 +313,7 @@ public class MAVOpenMapTab extends BorderPane {
 		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
 
-		infoLayer = new InformationLayer(model);
-		map.getLayers().add(infoLayer);
+		gpsdetails.setup(control);
 
 		ExecutorService.get().execute(task);
 		return this;

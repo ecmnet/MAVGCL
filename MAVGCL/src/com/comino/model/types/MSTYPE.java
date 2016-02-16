@@ -63,7 +63,7 @@ public enum MSTYPE {
 	MSP_REF_GPSLAT  ("Home.Latitude",0),
 	MSP_REF_GPSLON  ("Home.Longitude",0),
 
-;
+	;
 
 	private final String description;
 	private final int    type;
@@ -72,8 +72,8 @@ public enum MSTYPE {
 
 	static {
 		for(MSTYPE mstype : MSTYPE.values()) {
-		  if(mstype.type==1)
-			list.add(mstype.description);
+			if(mstype.type==1)
+				list.add(mstype.description);
 		}
 	}
 
