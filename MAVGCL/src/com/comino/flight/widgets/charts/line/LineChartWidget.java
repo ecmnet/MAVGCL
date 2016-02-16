@@ -115,7 +115,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private XYChart.Series<Number,Number> series3;
 
 	private Task<Integer> task;
-	private int time=0;
 
 	private IMAVController control;
 
@@ -125,10 +124,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private boolean isCollecting = false;
 
-	private int totalTime 	= 30;
-	private int resolution 	= 50;
-	private int time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+	private int time_frame_sec 	= 30;
+	private int resolution_ms 	= 50;
 
+	private int current_x_pt=0;
 
 	public LineChartWidget() {
 
@@ -166,7 +165,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series1.getData().clear();
 						series2.getData().clear();
 						series3.getData().clear();
-						time = 0;
+						current_x_pt = 0;
 					}
 
 					isCollecting = control.getCollector().isCollecting();
@@ -198,7 +197,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setForceZeroInRange(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
-		xAxis.setUpperBound(totalTime);
+		xAxis.setUpperBound(time_frame_sec);
 
 
 		linechart.prefWidthProperty().bind(widthProperty());
@@ -307,7 +306,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		series1.getData().clear();
 		series2.getData().clear();
 		series3.getData().clear();
-		time = 0;
+		current_x_pt = 0;
 		updateGraph();
 	}
 
@@ -319,46 +318,47 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		List<DataModel> mList = control.getCollector().getModelList();
 
 
-		if(time==0) {
+		if(current_x_pt==0) {
 			xAxis.setLowerBound(0);
-			xAxis.setUpperBound(time_max * COLLETCOR_CYCLE / 1000f);
+			xAxis.setUpperBound(time_frame_sec);
 		}
 
-		if(time<mList.size() && mList.size()>0 ) {
+		if(current_x_pt<mList.size() && mList.size()>0 ) {
+
+			int max_x = time_frame_sec * 1000 / COLLETCOR_CYCLE;
+
+			while(current_x_pt<mList.size() ) {
 
 
-			while(time<mList.size() ) {
+				if(((current_x_pt * COLLETCOR_CYCLE) % resolution_ms) == 0) {
 
-
-				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
-
-					dt_sec = time *  COLLETCOR_CYCLE / 1000f;
+					dt_sec = current_x_pt *  COLLETCOR_CYCLE / 1000f;
 
 					if(dt_sec > xAxis.getLowerBound()) {
 
 						if(type1!=MSTYPE.MSP_NONE)
-							series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type1)));
+							series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
 						if(type2!=MSTYPE.MSP_NONE)
-							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type2)));
+							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
 						if(type3!=MSTYPE.MSP_NONE)
-							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(time),type3)));
+							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
 
 					}
 
-					if(time > time_max) {
+					if(current_x_pt > max_x) {
 						if(series1.getData().size()>0)
 							series1.getData().remove(0);
 						if(series2.getData().size()>0)
 							series2.getData().remove(0);
 						if(series3.getData().size()>0)
 							series3.getData().remove(0);
-						xAxis.setLowerBound((time-time_max) * COLLETCOR_CYCLE / 1000F);
-						xAxis.setUpperBound(time * COLLETCOR_CYCLE / 1000f);
+						xAxis.setLowerBound((current_x_pt-max_x) * COLLETCOR_CYCLE / 1000F);
+						xAxis.setUpperBound(current_x_pt * COLLETCOR_CYCLE / 1000f);
 					}
 
 
 				}
-				time++;
+				current_x_pt++;
 			}
 		}
 	}
@@ -386,25 +386,24 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@Override
 	public void setTotalTime(int time_window) {
-		this.totalTime = time_window;
-		this.time = 0;
+		this.time_frame_sec = time_window;
+		this.current_x_pt = 0;
 
 		if(time_window > 600) {
-			resolution = 500;
+			resolution_ms = 500;
 		}
 		else if(time_window > 200) {
-			resolution = 200;
+			resolution_ms = 200;
 		}
 		else if(time_window > 20) {
-			resolution = 100;
+			resolution_ms = 100;
 		}
 		else
-			resolution = 50;
+			resolution_ms = 50;
 
-		xAxis.setTickUnit(resolution/20);
+		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
-		this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
 		refreshGraph();
 
 	}

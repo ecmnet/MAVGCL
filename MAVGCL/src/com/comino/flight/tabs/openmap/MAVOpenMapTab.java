@@ -170,10 +170,12 @@ public class MAVOpenMapTab extends BorderPane {
 								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 							home_set = true;
 							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+							canvasLayer.redraw(false);
 						} else {
 							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+							canvasLayer.redraw(true);
 						}
-						canvasLayer.redraw(false);
+
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
