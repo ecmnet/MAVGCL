@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** 
 
-Last updated 16/02/2016 
+Last updated 17/02/2016 
 
 **Features:**
 
@@ -17,11 +17,11 @@ Last updated 16/02/2016
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- OpenStreepMap viewer of global position and raw gps data (requires internet access) with option to record path
+- OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 
 
 
-**How to build** (OS X, other platforms may need adjustments in `build.xml`)
+**How to build on OSX** (other platforms may need adjustments in `build.xml`)
 
 - Clone repository
 - Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`
@@ -29,13 +29,15 @@ Last updated 16/02/2016
 
 
 
-**How to start:**
+**How to start (all platforms):**
 
 - Goto directory `/dist`
   
-- Start UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
+- Start either UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
   
    *(PX4 standard ports used, replace IP with yours)*
+  
+  or just `java -jar MAVGAnalysis.jar`for a demo.
   
   ​
 
