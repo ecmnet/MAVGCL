@@ -22,6 +22,7 @@ import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.MapTileType;
+import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
@@ -32,6 +33,7 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
+import com.comino.msp.utils.MSPGeoUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.InformationLayer;
@@ -61,7 +63,7 @@ public class MAVOpenMapTab extends BorderPane {
 
 	private final static MSTYPE TYPES[][] =
 		{ { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON },
-		  { MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON } };
+				{ MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON } };
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -163,7 +165,7 @@ public class MAVOpenMapTab extends BorderPane {
 						} else {
 							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 						}
-					 canvasLayer.redraw(false);
+						canvasLayer.redraw(false);
 					}
 
 
@@ -258,6 +260,19 @@ public class MAVOpenMapTab extends BorderPane {
 					index = collector.getModelList().size();
 				}
 
+				if(refresh) {
+					// TODO: Calculate scale and display
+//					Position p1 = map.getMapArea().getMapPosition(width-150, height-20);
+//					Position p2 = map.getMapArea().getMapPosition(width-50, height-20);
+//					int scale = (int)(0.5f+MSPGeoUtils.getDistance(p1.getLatitude(), p1.getLongitude(),
+//							p2.getLatitude(), p2.getLongitude()));
+//					gc.fillText(scale+"m", width-75, height-10);
+
+					gc.setStroke(Color.DARKGRAY);
+					gc.strokeLine(width-150, height-20, width-50,height-20);
+					gc.strokeLine(width-150, height-25, width-150,height-20);
+					gc.strokeLine(width-50, height-25, width-50,height-20);
+				}
 			}
 
 		});
