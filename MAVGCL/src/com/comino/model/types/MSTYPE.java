@@ -42,6 +42,7 @@ public enum MSTYPE {
 	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1),
 	MSP_VOLTAGE		("Bat.Voltage",1),
 	MSP_CURRENT		("Bat.Current",1),
+	MSP_CONSPOWER	("Bat.Cons.Power",0),
 	MSP_RC0			("RC.0",1),
 	MSP_RC1			("RC.1",1),
 	MSP_RC2			("RC.2",1),
@@ -124,6 +125,7 @@ public enum MSTYPE {
 		case MSP_RAW_FLOWQ:     return m.raw.fq;
 		case MSP_VOLTAGE:	    return m.battery.b0;
 		case MSP_CURRENT:	    return m.battery.c0;
+		case MSP_CONSPOWER:     return m.battery.a0;
 		case MSP_S0:			return m.servo.s0;
 		case MSP_S1:			return m.servo.s1;
 		case MSP_S2:			return m.servo.s2;

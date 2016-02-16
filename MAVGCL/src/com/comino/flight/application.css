@@ -7,6 +7,10 @@
 
 }
 
+.text{
+    -fx-font-smoothing-type: LCD;
+}
+
 .widget {
     -fx-font-size: 7pt;
     -fx-background-color: #F0F0E6;

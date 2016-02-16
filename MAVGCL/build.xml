@@ -12,9 +12,7 @@
 	  project.setProperty('jdk.home', arr[0]);
     </script>
 
-	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
-		uri="javafx:com.sun.javafx.tools.ant"
-	    classpath="${jdk.home}lib/ant-javafx.jar" />
+	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home}lib/ant-javafx.jar" />
 
 	<target name="all" depends="clean,compile,build" />
 	<target name="all_deploy" depends="clean,compile,build, deploy_osx" />
@@ -70,14 +68,27 @@
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
 			<fx:info title="MAVGAnalysiss" />
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
-				  <fx:argument>--peerAddress=${peer}</fx:argument>
+				<fx:argument>--peerAddress=${peer}</fx:argument>
 			</fx:application>
 			<fx:resources>
 				<fx:fileset dir="dist" includes="*.jar" />
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
-			    <fx:icon href="MAVGAnalysis.icns"/>
+				<fx:icon href="MAVGAnalysis.icns" />
 			</fx:info>
+		</fx:deploy>
+	</target>
+
+	<target name="deploy_win" depends="build">
+		<echo>Refer to http://docs.oracle.com/javafx/2/deployment/self-contained-packaging.htm for prerequisites</echo>
+		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="exe">
+			<fx:info title="MAVGAnalysiss" />
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
+				<fx:argument>--peerAddress=${peer}</fx:argument>
+			</fx:application>
+			<fx:resources>
+				<fx:fileset dir="dist" includes="*.jar" />
+			</fx:resources>
 		</fx:deploy>
 	</target>
 

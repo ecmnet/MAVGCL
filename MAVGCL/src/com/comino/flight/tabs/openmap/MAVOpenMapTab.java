@@ -153,6 +153,7 @@ public class MAVOpenMapTab extends BorderPane {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
+
 					if(map_changed) {
 						map.setZoom(zoom.getValue());
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
@@ -175,7 +176,6 @@ public class MAVOpenMapTab extends BorderPane {
 							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 							canvasLayer.redraw(true);
 						}
-
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
