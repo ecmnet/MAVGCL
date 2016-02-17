@@ -148,7 +148,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
 					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.LIGHTGREEN); break;
+					isrecording.setFill(Color.RED); break;
 				}
 			}
 		});

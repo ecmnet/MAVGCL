@@ -14,10 +14,9 @@
       <Label layoutX="12.0" layoutY="14.0" text="Control recording" textFill="#1414da" />
       <Separator layoutX="11.0" layoutY="27.0" prefHeight="0.0" prefWidth="161.0" />
       <CheckBox fx:id="enablemodetrig" layoutX="14.0" layoutY="62.0" mnemonicParsing="false" text="Enable mode-trigger" />
-      <Circle fx:id="isrecording" fill="#eaecee" layoutX="22.0" layoutY="45.0" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" />
-      <ToggleButton fx:id="recording" layoutX="34.0" layoutY="35.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="87.0" text="Record" textFill="#790606">
+      <ToggleButton fx:id="recording" layoutX="14.0" layoutY="35.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="107.0" text="Record" textFill="#790606">
          <graphic>
-            <Circle fill="#c9191c" radius="5.0" strokeWidth="0.0" />
+            <Circle fx:id="isrecording" fill="#eaecee" radius="5.0" strokeWidth="0.0" />
          </graphic></ToggleButton>
       <ChoiceBox fx:id="trigstart" layoutX="75.0" layoutY="81.0" prefHeight="22.0" prefWidth="97.0" />
       <Label layoutX="14.0" layoutY="85.0" text="Start when" />
