@@ -16,10 +16,14 @@
 
 package com.comino.flight.widgets.charts.control;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+
 public interface IChartControl {
 
-	public void setTotalTime(int TotalTime);
+	public BooleanProperty getCollectingProperty();
+	public BooleanProperty getReplayingProperty();
+	public IntegerProperty getTimeFrameProperty();
 
-	public void replay(boolean enable);
 
 }

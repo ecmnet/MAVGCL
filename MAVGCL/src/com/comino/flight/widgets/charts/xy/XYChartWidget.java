@@ -28,6 +28,10 @@ import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -122,7 +126,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int type1;
 	private int type2;
 
-	private boolean isCollecting = false;
+	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
+	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
@@ -161,15 +167,15 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting && control.getCollector().isCollecting()) {
+					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
 						time = 0;
 					}
 
-					isCollecting = control.getCollector().isCollecting();
+					isCollecting.set(control.getCollector().isCollecting());
 
-					if(isCollecting && control.isConnected())
+					if(isCollecting.get() && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
 
 
@@ -276,6 +282,29 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 
 		});
+
+		timeFrame.addListener((v, ov, nv) -> {
+
+			this.totalTime = nv.intValue();
+			this.time = 0;
+
+			if(nv.intValue() > 600) {
+				resolution = 500;
+			}
+			else if(nv.intValue() > 200) {
+				resolution = 200;
+			}
+			else if(nv.intValue() > 20) {
+				resolution = 100;
+			}
+			else
+				resolution = 50;
+
+
+			this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+
+			refreshGraph();
+		});
 	}
 
 	public void saveAsPng(String path) {
@@ -359,35 +388,17 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 
-
-	@Override
-	public void setTotalTime(int time_window) {
-		this.totalTime = time_window;
-		this.time = 0;
-
-		if(time_window > 600) {
-			resolution = 500;
-		}
-		else if(time_window > 200) {
-			resolution = 200;
-		}
-		else if(time_window > 20) {
-			resolution = 100;
-		}
-		else
-			resolution = 50;
-
-
-		this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
-
-		refreshGraph();
-
+	public BooleanProperty getCollectingProperty() {
+		return isCollecting;
 	}
 
-	@Override
-	public void replay(boolean enable) {
-		// TODO Auto-generated method stub
-
+	public BooleanProperty getReplayingProperty() {
+		return isReplaying;
 	}
+
+	public IntegerProperty getTimeFrameProperty() {
+		return timeFrame;
+	}
+
 
 }

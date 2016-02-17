@@ -28,6 +28,10 @@ import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -123,16 +127,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private MSTYPE type2=MSTYPE.MSP_NONE;
 	private MSTYPE type3=MSTYPE.MSP_NONE;
 
-	private boolean isCollecting = false;
-	private boolean isReplaying  = false;
+	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
+	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
-	private int time_frame_sec 	= 30;
+
 	private int resolution_ms 	= 50;
 
 	private int current_x_pt=0;
 	private int replay_x_pt=0;
 	private int current_x0_pt = 0;
-	private int current_x1_pt = time_frame_sec * 1000 / COLLECTOR_CYCLE;
+	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 	private double m_x0=0;
 
@@ -169,25 +174,25 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting && control.getCollector().isCollecting()) {
+					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
 						series3.getData().clear();
 						current_x_pt = 0; current_x0_pt=0;
 					}
 
-					isCollecting = control.getCollector().isCollecting();
+					isCollecting.set(control.getCollector().isCollecting());
 
-					if((isCollecting && control.isConnected()))
+					if((isCollecting.get() && control.isConnected()))
 						updateValue(control.getCollector().getModelList().size());
 
 
-					if(isReplaying) {
+					if(isReplaying.get()) {
 						replay_x_pt += REFRESH_MS / COLLECTOR_CYCLE;
 						if(replay_x_pt < control.getCollector().getModelList().size())
-						  updateValue(replay_x_pt);
+							updateValue(replay_x_pt);
 						else
-						  isReplaying = false;
+							isReplaying.set(false);;
 					}
 
 				}
@@ -215,13 +220,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(current_x0_pt<0)
 				current_x0_pt=0;
 			if(current_x0_pt >
-			  control.getCollector().getModelList().size()-time_frame_sec * 1000 / COLLECTOR_CYCLE)
+			control.getCollector().getModelList().size()-timeFrame.intValue() * 1000 / COLLECTOR_CYCLE)
 				current_x0_pt= old_x0;
 
 			updateGraph(true);
 
 			if(dx!=0)
-			  m_x0 = t.getSceneX();
+				m_x0 = t.getSceneX();
 		});
 
 	}
@@ -233,7 +238,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setForceZeroInRange(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
-		xAxis.setUpperBound(time_frame_sec);
+		xAxis.setUpperBound(timeFrame.intValue());
 
 		xAxis.setTickLabelFormatter(new StringConverter<Number>() {
 
@@ -338,6 +343,48 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 
+		isReplaying.addListener((v, ov, nv) -> {
+			if(isCollecting.get())
+				return;
+
+			if(nv.booleanValue() && !ov.booleanValue()) {
+				series1.getData().clear();
+				series2.getData().clear();
+				series3.getData().clear();
+				current_x_pt = 0; current_x0_pt=0;
+				replay_x_pt = 0;
+				setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
+			}
+
+		});
+
+		timeFrame.addListener((v, ov, nv) -> {
+
+			this.current_x_pt = 0;
+
+			if(nv.intValue() > 600) {
+				resolution_ms = 500;
+			}
+			else if(nv.intValue() > 200) {
+				resolution_ms = 200;
+			}
+			else if(nv.intValue() > 20) {
+				resolution_ms = 100;
+			}
+			else
+				resolution_ms = 50;
+
+			xAxis.setTickUnit(resolution_ms/20);
+			xAxis.setMinorTickCount(10);
+
+			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
+			if(current_x0_pt < 0)
+				current_x0_pt = 0;
+
+			updateGraph(true);
+		});
+
+
 
 
 	}
@@ -364,17 +411,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt + time_frame_sec * 1000 / COLLECTOR_CYCLE;
+			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();
-			if(!isCollecting && current_x1_pt < max_x)
+			if(!isCollecting.get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			if(isReplaying)
+			if(isReplaying.get())
 				max_x = replay_x_pt;
 
 			while(current_x_pt<max_x ) {
@@ -444,49 +491,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 
-
-	@Override
-	public void setTotalTime(int time_window) {
-		this.time_frame_sec = time_window;
-		this.current_x_pt = 0;
-
-		if(time_window > 600) {
-			resolution_ms = 500;
-		}
-		else if(time_window > 200) {
-			resolution_ms = 200;
-		}
-		else if(time_window > 20) {
-			resolution_ms = 100;
-		}
-		else
-			resolution_ms = 50;
-
-		xAxis.setTickUnit(resolution_ms/20);
-		xAxis.setMinorTickCount(10);
-
-		current_x0_pt = control.getCollector().getModelList().size() - time_frame_sec * 1000 / COLLECTOR_CYCLE;
-		if(current_x0_pt < 0)
-			current_x0_pt = 0;
-
-		updateGraph(true);
-
+	public BooleanProperty getCollectingProperty() {
+		return isCollecting;
 	}
 
-	@Override
-	public void replay(boolean enable) {
-
-		if(isCollecting)
-			return;
-
-		if(enable && !isReplaying) {
-			series1.getData().clear();
-			series2.getData().clear();
-			series3.getData().clear();
-			current_x_pt = 0; current_x0_pt=0;
-			replay_x_pt = 0;
-		}
-		isReplaying = enable;
+	public BooleanProperty getReplayingProperty() {
+		return isReplaying;
 	}
+
+	public IntegerProperty getTimeFrameProperty() {
+		return timeFrame;
+	}
+
 
 }

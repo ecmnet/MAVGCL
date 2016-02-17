@@ -225,7 +225,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				for(IChartControl chart : charts)
-					chart.setTotalTime(newValue.intValue());
+					chart.getTimeFrameProperty().set(newValue.intValue());
 			}
 		});
 
@@ -233,7 +233,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		replay.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
 		    	for(IChartControl chart : charts)
-					chart.replay(true);
+					chart.getReplayingProperty().set(true);
 		    }
 		});
 	}

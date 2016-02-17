@@ -42,6 +42,10 @@ import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.InformationLayer;
 import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -103,7 +107,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private boolean map_changed = false;
 	private boolean home_set = false;
 
-	private boolean isCollecting = false;
+	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
+	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private ModelCollectorService collector;
 
@@ -139,10 +145,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting && collector.isCollecting()) {
+					if(!isCollecting.get() && collector.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
-					isCollecting = collector.isCollecting();
+					isCollecting.set(collector.isCollecting());
 
 					updateValue(System.currentTimeMillis());
 				}
@@ -247,7 +253,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 				positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
 
-				if(isCollecting &&
+				if(isCollecting.get() &&
 						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
 
 					//System.out.println(index+" -> "+collector.getModelList().size());
@@ -326,15 +332,17 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	}
 
 
-	@Override
-	public void setTotalTime(int TotalTime) {
-		// not used
+	public BooleanProperty getCollectingProperty() {
+		return isCollecting;
+	}
+
+	public BooleanProperty getReplayingProperty() {
+		return isReplaying;
+	}
+
+	public IntegerProperty getTimeFrameProperty() {
+		return timeFrame;
 	}
 
 
-	@Override
-	public void replay(boolean enable) {
-		// TODO Auto-generated method stub
-
-	}
 }
