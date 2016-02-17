@@ -6,14 +6,14 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 17/02/2016 
 
-- LineChart: Scrolling after recording
+Early stable version V0.1 released
 
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
 - Trigger recording manually or by selectable flight-mode changes
 - Choosable stop-recording delay
-- Display of  key-figures during and after recording
+- Display of  key-figures during and after recording (with horizontal scrolling)
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
