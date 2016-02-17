@@ -132,6 +132,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt = 0;
 	private int current_x1_pt = time_frame_sec * 1000 / COLLETCOR_CYCLE;
 
+	private double m_x0=0;
+
 	public LineChartWidget() {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LineChartWidget.fxml"));
@@ -189,17 +191,25 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
-//      setOnMousePressed(t -> {
-//      x0 = t.getSceneX();
-//      y0 = t.getSceneY();
-//  });
-//  setOnMouseDragged(t -> {
-//      mapArea.moveX(x0-t.getSceneX());
-//      mapArea.moveY(y0-t.getSceneY());
-//      x0 = t.getSceneX();
-//      y0 = t.getSceneY();
-//  });
+		setOnMousePressed(t -> {
+			m_x0 = t.getSceneX();
 
+		});
+
+		setOnMouseDragged(t -> {
+			int dx = (int)(m_x0 - t.getSceneX());
+			int old_x0 = current_x0_pt;
+			current_x0_pt += dx/3;
+
+			if(current_x0_pt<0)
+				current_x0_pt=0;
+			if(current_x0_pt >
+			  control.getCollector().getModelList().size()-time_frame_sec * 1000 / COLLETCOR_CYCLE)
+				current_x0_pt= old_x0;
+
+			updateGraph(true);
+			m_x0 = t.getSceneX();
+		});
 
 	}
 
@@ -341,20 +351,23 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt+ time_frame_sec * 1000 / COLLETCOR_CYCLE;
+			current_x1_pt = current_x0_pt + time_frame_sec * 1000 / COLLETCOR_CYCLE;
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
 
-		if(current_x_pt==0) {
-			xAxis.setLowerBound(0);
-			xAxis.setUpperBound(time_frame_sec);
-		}
+//		if(current_x_pt==0) {
+//			xAxis.setLowerBound(0);
+//			xAxis.setUpperBound(time_frame_sec);
+//		}
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
+			int max_x = mList.size();
+			if(!isCollecting && current_x1_pt < max_x)
+				max_x = current_x1_pt;
 
-			while(current_x_pt<mList.size() ) {
+			while(current_x_pt<max_x ) {
 
 				if(current_x_pt > current_x1_pt)
 					current_x0_pt++;
@@ -442,6 +455,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
+		current_x0_pt = control.getCollector().getModelList().size() - time_frame_sec * 1000 / COLLETCOR_CYCLE;
+		if(current_x0_pt < 0)
+			current_x0_pt = 0;
 
 		updateGraph(true);
 
