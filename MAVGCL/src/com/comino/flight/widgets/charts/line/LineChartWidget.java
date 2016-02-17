@@ -44,6 +44,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.util.StringConverter;
 
 
 public class LineChartWidget extends BorderPane implements IChartControl {
@@ -188,6 +189,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
+//      setOnMousePressed(t -> {
+//      x0 = t.getSceneX();
+//      y0 = t.getSceneY();
+//  });
+//  setOnMouseDragged(t -> {
+//      mapArea.moveX(x0-t.getSceneX());
+//      mapArea.moveY(y0-t.getSceneY());
+//      x0 = t.getSceneX();
+//      y0 = t.getSceneY();
+//  });
+
 
 	}
 
@@ -199,6 +211,20 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(time_frame_sec);
+
+		xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+
+			@Override
+			public String toString(Number o) {
+				return Integer.toString((int)(Math.round(o.floatValue())));
+			}
+
+			@Override
+			public Number fromString(String string) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		});
 
 
 		linechart.prefWidthProperty().bind(widthProperty());
