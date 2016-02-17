@@ -103,7 +103,7 @@ public class GPSDetailsWidget extends Pane  {
                    f_lat.setText(fo6.format(model.gps.latitude));
                    f_lon.setText(fo6.format(model.gps.longitude));
                    f_compass.setText(fo.format(model.attitude.h));
-                   f_eph.setText(fo.format(model.gps.error2d));
+                   f_eph.setText(fo.format(model.gps.eph));
                    f_sat.setText(Integer.toString(model.gps.numsat));
 
 			}

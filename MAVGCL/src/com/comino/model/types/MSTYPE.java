@@ -42,7 +42,6 @@ public enum MSTYPE {
 	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1),
 	MSP_VOLTAGE		("Bat.Voltage",1),
 	MSP_CURRENT		("Bat.Current",1),
-	MSP_CONSPOWER	("Bat.Cons.Power",0),
 	MSP_RC0			("RC.0",1),
 	MSP_RC1			("RC.1",1),
 	MSP_RC2			("RC.2",1),
@@ -57,12 +56,14 @@ public enum MSTYPE {
 	MSP_GLOBRELVX	("Global.rel.SpeedX",1),
 	MSP_GLOBRELVY   ("Global.rel.SpeedY",1),
 	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1),
+	MSP_GPSEPH  	("GPS.eph",1),
 	MSP_GLOBPLAT	("Global.Latitude",0),
 	MSP_GLOBPLON	("Global.Longitude",0),
 	MSP_RAW_GPSLAT  ("Raw.Latitude",0),
 	MSP_RAW_GPSLON  ("Raw.Longitude",0),
 	MSP_REF_GPSLAT  ("Home.Latitude",0),
 	MSP_REF_GPSLON  ("Home.Longitude",0),
+	MSP_CONSPOWER	("Bat.Cons.Power",0),
 
 	;
 
@@ -142,6 +143,8 @@ public enum MSTYPE {
 		case MSP_RAW_GPSLON:	return (float) m.gps.longitude;
 		case MSP_REF_GPSLAT:    return (float) m.gps.ref_lat;
 		case MSP_REF_GPSLON:    return (float) m.gps.ref_lon;
+		case MSP_GPSEPH: 		return (float) m.gps.eph;
+
 		default:
 			return -1;
 		}
