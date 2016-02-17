@@ -197,9 +197,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		setOnMouseDragged(t -> {
-			int dx = (int)(m_x0 - t.getSceneX());
+			int dx = (int)(m_x0 - t.getSceneX())/4;
 			int old_x0 = current_x0_pt;
-			current_x0_pt += dx/3;
+			current_x0_pt += dx;
 
 			if(current_x0_pt<0)
 				current_x0_pt=0;
@@ -208,7 +208,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				current_x0_pt= old_x0;
 
 			updateGraph(true);
-			m_x0 = t.getSceneX();
+
+			if(dx!=0)
+			  m_x0 = t.getSceneX();
 		});
 
 	}
