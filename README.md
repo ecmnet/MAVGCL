@@ -4,9 +4,9 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the QGC.
 
-**Status:** 
+**Status:** Last updated 17/02/2016 
 
-Last updated 17/02/2016 
+- LineChart: Scrolling after recording
 
 **Features:**
 
@@ -37,7 +37,7 @@ Last updated 17/02/2016
   
    *(PX4 standard ports used, replace IP with yours)*
   
-  or just `java -jar MAVGAnalysis.jar`for a demo.
+  or just `java -jar MAVGAnalysis.jar`for a basic demo.
   
   ​
 
