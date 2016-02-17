@@ -128,6 +128,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int resolution_ms 	= 50;
 
 	private int current_x_pt=0;
+	private int current_x0_pt = 0;
+	private int current_x1_pt = time_frame_sec * 1000 / COLLETCOR_CYCLE;
 
 	public LineChartWidget() {
 
@@ -165,7 +167,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series1.getData().clear();
 						series2.getData().clear();
 						series3.getData().clear();
-						current_x_pt = 0;
+						current_x_pt = 0; current_x0_pt=0;
 					}
 
 					isCollecting = control.getCollector().isCollecting();
@@ -182,8 +184,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-				updateGraph();
-
+				updateGraph(false);
 			}
 		});
 
@@ -223,7 +224,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type1 = MSTYPE.values()[newValue.intValue()];
 				series1.setName(type1.getDescription());
 				linechart.setLegendVisible(true);
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -236,7 +237,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type2 = MSTYPE.values()[newValue.intValue()];
 				series2.setName(type2.getDescription());
 				linechart.setLegendVisible(true);
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -249,7 +250,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type3 = MSTYPE.values()[newValue.intValue()];
 				series3.setName(type3.getDescription());
 				linechart.setLegendVisible(true);
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -273,7 +274,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				linechart.setLegendVisible(true);
 
-				refreshGraph();
+				updateGraph(true);
 			}
 
 		});
@@ -302,20 +303,21 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private  void refreshGraph() {
-		series1.getData().clear();
-		series2.getData().clear();
-		series3.getData().clear();
-		current_x_pt = 0;
-		updateGraph();
-	}
 
 
-	private void updateGraph() {
+	private void updateGraph(boolean refresh) {
 		float dt_sec = 0;
 
-
 		List<DataModel> mList = control.getCollector().getModelList();
+
+		if(refresh) {
+			series1.getData().clear();
+			series2.getData().clear();
+			series3.getData().clear();
+			current_x_pt = current_x0_pt;
+			current_x1_pt = current_x0_pt+ time_frame_sec * 1000 / COLLETCOR_CYCLE;
+			setXAxisBounds(current_x0_pt,current_x1_pt);
+		}
 
 
 		if(current_x_pt==0) {
@@ -325,12 +327,28 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
-			int max_x = time_frame_sec * 1000 / COLLETCOR_CYCLE;
 
 			while(current_x_pt<mList.size() ) {
 
+				if(current_x_pt > current_x1_pt)
+					current_x0_pt++;
+
 
 				if(((current_x_pt * COLLETCOR_CYCLE) % resolution_ms) == 0) {
+
+					if(current_x_pt > current_x1_pt) {
+						current_x1_pt++;
+						if(series1.getData().size()>0)
+							series1.getData().remove(0);
+						if(series2.getData().size()>0)
+							series2.getData().remove(0);
+						if(series3.getData().size()>0)
+							series3.getData().remove(0);
+						setXAxisBounds(current_x0_pt,current_x1_pt);
+				//		setXAxisBounds(current_x_pt-current_x1_pt,current_x_pt );
+					}
+
+					System.out.println(current_x_pt+":"+current_x0_pt);
 
 					dt_sec = current_x_pt *  COLLETCOR_CYCLE / 1000f;
 
@@ -342,25 +360,19 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
 						if(type3!=MSTYPE.MSP_NONE)
 							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
-
 					}
-
-					if(current_x_pt > max_x) {
-						if(series1.getData().size()>0)
-							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
-						if(series3.getData().size()>0)
-							series3.getData().remove(0);
-						xAxis.setLowerBound((current_x_pt-max_x) * COLLETCOR_CYCLE / 1000F);
-						xAxis.setUpperBound(current_x_pt * COLLETCOR_CYCLE / 1000f);
-					}
-
 
 				}
+
+
 				current_x_pt++;
 			}
 		}
+	}
+
+	private void setXAxisBounds(int lower_pt, int upper_pt) {
+		xAxis.setLowerBound(lower_pt * COLLETCOR_CYCLE / 1000F);
+		xAxis.setUpperBound(upper_pt * COLLETCOR_CYCLE / 1000f);
 	}
 
 
@@ -404,7 +416,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
-		refreshGraph();
+
+		updateGraph(true);
 
 	}
 
