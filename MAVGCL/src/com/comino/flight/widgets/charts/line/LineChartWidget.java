@@ -345,10 +345,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						if(series3.getData().size()>0)
 							series3.getData().remove(0);
 						setXAxisBounds(current_x0_pt,current_x1_pt);
-				//		setXAxisBounds(current_x_pt-current_x1_pt,current_x_pt );
+
 					}
 
-					System.out.println(current_x_pt+":"+current_x0_pt);
+					//System.out.println(current_x_pt+":"+current_x0_pt);
 
 					dt_sec = current_x_pt *  COLLETCOR_CYCLE / 1000f;
 
