@@ -34,8 +34,6 @@ import javafx.scene.layout.Pane;
 
 public class DetailsWidget extends Pane  {
 
-	@FXML
-	private Label f_altitude;
 
 	@FXML
 	private Label f_anglex;
@@ -98,7 +96,6 @@ public class DetailsWidget extends Pane  {
 
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-                   f_altitude.setText(fo.format(model.attitude.ag));
                    f_anglex.setText(fo.format(Utils.fromRad(model.attitude.aX)));
                    f_angley.setText(fo.format(Utils.fromRad(model.attitude.aY)));
                    f_compass.setText(fo.format(model.attitude.h));

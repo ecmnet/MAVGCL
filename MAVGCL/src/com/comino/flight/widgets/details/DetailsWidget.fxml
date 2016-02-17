@@ -16,31 +16,27 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 				<ColumnConstraints hgrow="SOMETIMES" maxWidth="62.0" minWidth="10.0" prefWidth="29.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="27.0" vgrow="NEVER" />
+				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
+				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
+				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
+				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
+				<RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="NEVER" />
 			</rowConstraints>
 			<children>
-				<Label prefHeight="11.0" prefWidth="87.0" text="Altitude (amsl)" />
-				<Label fx:id="f_altitude" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-				<Label text="m" GridPane.columnIndex="2" />
-				<Label text="Angle Roll" GridPane.rowIndex="1" />
-				<Label fx:id="f_anglex" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<Label text="Angle Pitch" GridPane.rowIndex="2" />
-				<Label fx:id="f_angley" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<Label text="Compass" GridPane.rowIndex="3" />
-				<Label fx:id="f_compass" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<Label text="Speed" GridPane.rowIndex="4" />
-				<Label fx:id="f_speed" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-				<Label text="Flow quality" GridPane.rowIndex="5" />
-				<Label fx:id="f_quality" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+				<Label text="Angle Roll" GridPane.rowIndex="0" />
+				<Label fx:id="f_anglex" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+				<Label text="Angle Pitch" GridPane.rowIndex="1" />
+				<Label fx:id="f_angley" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+				<Label text="Compass" GridPane.rowIndex="2" />
+				<Label fx:id="f_compass" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+				<Label text="Speed" GridPane.rowIndex="3" />
+				<Label fx:id="f_speed" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<Label text="Flow quality" GridPane.rowIndex="4" />
+				<Label fx:id="f_quality" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-				<Label text="m/s" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+				<Label text="m/s" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 			</children>
 		</GridPane>
 	</children>

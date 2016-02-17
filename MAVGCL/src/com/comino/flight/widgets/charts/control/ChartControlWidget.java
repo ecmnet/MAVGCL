@@ -29,8 +29,11 @@ import com.comino.msp.utils.ExecutorService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
@@ -53,6 +56,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@FXML
 	private ToggleButton recording;
+
+	@FXML
+	private Button replay;
 
 	@FXML
 	private CheckBox enablemodetrig;
@@ -142,7 +148,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
 					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.RED); break;
+					isrecording.setFill(Color.LIGHTGREEN); break;
 				}
 			}
 		});
@@ -221,6 +227,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				for(IChartControl chart : charts)
 					chart.setTotalTime(newValue.intValue());
 			}
+		});
+
+
+		replay.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		    	for(IChartControl chart : charts)
+					chart.replay(true);
+		    }
 		});
 	}
 

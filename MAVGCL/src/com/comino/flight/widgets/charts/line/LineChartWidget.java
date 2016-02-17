@@ -83,7 +83,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	};
 
-	private static int COLLETCOR_CYCLE = 50;
+	private static int COLLECTOR_CYCLE = 50;
 	private static int REFRESH_MS = 100;
 
 	@FXML
@@ -124,13 +124,15 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private MSTYPE type3=MSTYPE.MSP_NONE;
 
 	private boolean isCollecting = false;
+	private boolean isReplaying  = false;
 
 	private int time_frame_sec 	= 30;
 	private int resolution_ms 	= 50;
 
 	private int current_x_pt=0;
+	private int replay_x_pt=0;
 	private int current_x0_pt = 0;
-	private int current_x1_pt = time_frame_sec * 1000 / COLLETCOR_CYCLE;
+	private int current_x1_pt = time_frame_sec * 1000 / COLLECTOR_CYCLE;
 
 	private double m_x0=0;
 
@@ -148,6 +150,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		task = new Task<Integer>() {
+
 
 			@Override
 			protected Integer call() throws Exception {
@@ -175,9 +178,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 					isCollecting = control.getCollector().isCollecting();
 
-					if(isCollecting && control.isConnected())
+					if((isCollecting && control.isConnected()))
 						updateValue(control.getCollector().getModelList().size());
 
+
+					if(isReplaying) {
+						replay_x_pt += REFRESH_MS / COLLECTOR_CYCLE;
+						if(replay_x_pt < control.getCollector().getModelList().size())
+						  updateValue(replay_x_pt);
+						else
+						  isReplaying = false;
+					}
 
 				}
 				return control.getCollector().getModelList().size();
@@ -204,7 +215,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(current_x0_pt<0)
 				current_x0_pt=0;
 			if(current_x0_pt >
-			  control.getCollector().getModelList().size()-time_frame_sec * 1000 / COLLETCOR_CYCLE)
+			  control.getCollector().getModelList().size()-time_frame_sec * 1000 / COLLECTOR_CYCLE)
 				current_x0_pt= old_x0;
 
 			updateGraph(true);
@@ -353,15 +364,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt + time_frame_sec * 1000 / COLLETCOR_CYCLE;
+			current_x1_pt = current_x0_pt + time_frame_sec * 1000 / COLLECTOR_CYCLE;
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
-
-
-//		if(current_x_pt==0) {
-//			xAxis.setLowerBound(0);
-//			xAxis.setUpperBound(time_frame_sec);
-//		}
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
@@ -369,13 +374,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(!isCollecting && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
+			if(isReplaying)
+				max_x = replay_x_pt;
+
 			while(current_x_pt<max_x ) {
 
 				if(current_x_pt > current_x1_pt)
 					current_x0_pt++;
 
 
-				if(((current_x_pt * COLLETCOR_CYCLE) % resolution_ms) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					if(current_x_pt > current_x1_pt) {
 						current_x1_pt++;
@@ -391,7 +399,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 					//System.out.println(current_x_pt+":"+current_x0_pt);
 
-					dt_sec = current_x_pt *  COLLETCOR_CYCLE / 1000f;
+					dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
 					if(dt_sec > xAxis.getLowerBound()) {
 
@@ -412,8 +420,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void setXAxisBounds(int lower_pt, int upper_pt) {
-		xAxis.setLowerBound(lower_pt * COLLETCOR_CYCLE / 1000F);
-		xAxis.setUpperBound(upper_pt * COLLETCOR_CYCLE / 1000f);
+		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
+		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
 
 
@@ -457,12 +465,28 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
-		current_x0_pt = control.getCollector().getModelList().size() - time_frame_sec * 1000 / COLLETCOR_CYCLE;
+		current_x0_pt = control.getCollector().getModelList().size() - time_frame_sec * 1000 / COLLECTOR_CYCLE;
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
 
 		updateGraph(true);
 
+	}
+
+	@Override
+	public void replay(boolean enable) {
+
+		if(isCollecting)
+			return;
+
+		if(enable && !isReplaying) {
+			series1.getData().clear();
+			series2.getData().clear();
+			series3.getData().clear();
+			current_x_pt = 0; current_x0_pt=0;
+			replay_x_pt = 0;
+		}
+		isReplaying = enable;
 	}
 
 }

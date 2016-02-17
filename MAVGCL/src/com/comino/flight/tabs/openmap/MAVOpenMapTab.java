@@ -26,6 +26,8 @@ import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
+import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
@@ -57,7 +59,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class MAVOpenMapTab extends BorderPane {
+public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private final static int MAP_UPDATE_MS = 330;
 
@@ -313,7 +315,7 @@ public class MAVOpenMapTab extends BorderPane {
 	}
 
 
-	public MAVOpenMapTab setup(IMAVController control) {
+	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
 
@@ -321,5 +323,18 @@ public class MAVOpenMapTab extends BorderPane {
 
 		ExecutorService.get().execute(task);
 		return this;
+	}
+
+
+	@Override
+	public void setTotalTime(int TotalTime) {
+		// not used
+	}
+
+
+	@Override
+	public void replay(boolean enable) {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -20,4 +20,6 @@ public interface IChartControl {
 
 	public void setTotalTime(int TotalTime);
 
+	public void replay(boolean enable);
+
 }

@@ -384,4 +384,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	}
 
+	@Override
+	public void replay(boolean enable) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

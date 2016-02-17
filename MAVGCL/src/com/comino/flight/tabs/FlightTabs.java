@@ -50,7 +50,7 @@ public class FlightTabs extends Pane {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
-		mavmaptab.setup(control);
+		mavmaptab.setup(recordControl,control);
         mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
 		xyanalysistab.setup(recordControl,control);
