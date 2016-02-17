@@ -179,6 +179,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series2.getData().clear();
 						series3.getData().clear();
 						current_x_pt = 0; current_x0_pt=0;
+						setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());

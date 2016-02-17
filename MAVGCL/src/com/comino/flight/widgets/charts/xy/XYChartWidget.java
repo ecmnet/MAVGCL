@@ -85,7 +85,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	};
 
 
-	private static int COLLETCOR_CYCLE = 50;
+	private static int COLLECTOR_CYCLE = 50;
 	private static int REFRESH_MS = 100;
 
 	@FXML
@@ -132,8 +132,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
-	private float time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+	private float time_max = totalTime * 1000 / COLLECTOR_CYCLE;
 	private int   totalMax = 0;
+
+	private int replay_x_pt;
 
 
 	public XYChartWidget() {
@@ -177,6 +179,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 					if(isCollecting.get() && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
+
+					if(isReplaying.get()) {
+						replay_x_pt += REFRESH_MS / COLLECTOR_CYCLE;
+						if(replay_x_pt < control.getCollector().getModelList().size())
+							updateValue(replay_x_pt);
+						else
+							isReplaying.set(false);;
+					}
 
 
 				}
@@ -301,7 +311,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				resolution = 50;
 
 
-			this.time_max = totalTime * 1000 / COLLETCOR_CYCLE;
+			this.time_max = totalTime * 1000 / COLLECTOR_CYCLE;
 
 			refreshGraph();
 		});
@@ -321,7 +331,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		series1.getData().clear();
 		series2.getData().clear();
 
-		time = control.getMessageList().size() - totalTime * 1000 / COLLETCOR_CYCLE;
+		time = control.getMessageList().size() - totalTime * 1000 / COLLECTOR_CYCLE;
 		if(time < 0) time = 0;
 		updateGraph();
 	}
@@ -334,11 +344,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(time<mList.size() && mList.size()>0 ) {
 
 
+
+
 			while(time<mList.size() && time < totalMax) {
 
 
 
-				if(((time * COLLETCOR_CYCLE) % resolution) == 0) {
+				if(((time * COLLECTOR_CYCLE) % resolution) == 0) {
 
 
 
