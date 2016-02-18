@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
+import com.comino.flight.tabs.world.MAVWorldTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
@@ -32,6 +33,9 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVOpenMapTab mavmaptab;
 
+	@FXML
+	private MAVWorldTab mavworldtab;
+
 	private List<Node> tabs = new ArrayList<Node>();
 
 
@@ -42,6 +46,7 @@ public class FlightTabs extends Pane {
 		tabs.add(xyanalysistab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavmaptab);
+		tabs.add(mavworldtab);
 
 	}
 
@@ -50,6 +55,7 @@ public class FlightTabs extends Pane {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
+		mavworldtab.setup(recordControl,control);
 		mavmaptab.setup(recordControl,control);
         mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
@@ -59,6 +65,7 @@ public class FlightTabs extends Pane {
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
 		mavmaptab.setDisable(true);
+		mavworldtab.setDisable(true);
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 	           for(int i =0; i<tabs.size();i++)

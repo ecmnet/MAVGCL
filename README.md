@@ -54,3 +54,5 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot2.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot3.png)
+
+MAVGCL uses jpct.jar http://www.jpct.net

@@ -7,7 +7,7 @@
 <?import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab?>
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
 <?import com.comino.flight.tabs.inspector.MAVInspectorTab?>
-
+<?import com.comino.flight.tabs.world.MAVWorldTab?>
 <?import com.comino.flight.tabs.openmap.MAVOpenMapTab?>
 
 <AnchorPane
@@ -60,6 +60,18 @@
 							xmlns:fx="http://javafx.com/fxml/1">
 							<children>
 								<MAVOpenMapTab fx:id="mavmaptab"
+								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
+								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+				<Tab text="World">
+					<content>
+						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+							xmlns:fx="http://javafx.com/fxml/1">
+							<children>
+								<MAVWorldTab fx:id="mavworldtab"
 								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
 								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
 							</children>
