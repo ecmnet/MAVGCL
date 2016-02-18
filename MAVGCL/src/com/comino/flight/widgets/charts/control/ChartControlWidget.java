@@ -232,8 +232,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				for(IChartControl chart : charts)
-					chart.getScrollProperty().set(new_val.intValue());
+				for(IChartControl chart : charts) {
+					if(chart.getScrollProperty()!=null)
+					   chart.getScrollProperty().set(new_val.intValue());
+				}
 
 
 			}

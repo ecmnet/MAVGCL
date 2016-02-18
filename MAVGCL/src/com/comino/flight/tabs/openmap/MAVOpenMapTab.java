@@ -43,6 +43,7 @@ import com.comino.openmapfx.ext.InformationLayer;
 import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -107,9 +108,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private boolean map_changed = false;
 	private boolean home_set = false;
 
+	private int index=0;
+
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private IntegerProperty scroll    = new SimpleIntegerProperty(0);
+
 
 	private ModelCollectorService collector;
 
@@ -240,7 +243,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		// Test paintlistener
 		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
 
-			Point2D p0; Point2D p1; int index=0; boolean first = true; DataModel m;
+			Point2D p0; Point2D p1;  boolean first = true; DataModel m;
 
 			@Override
 			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
@@ -317,6 +320,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 
+
+
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
 
@@ -342,8 +347,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 	@Override
-	public IntegerProperty getScrollProperty() {
-		return scroll;
+	public DoubleProperty getScrollProperty() {
+		return null;
 	}
 
 

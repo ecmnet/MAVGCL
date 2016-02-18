@@ -29,8 +29,10 @@ import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -128,7 +130,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private IntegerProperty scroll    = new SimpleIntegerProperty(0);
+	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
 	private int totalTime 	= 30;
 	private int resolution 	= 50;
@@ -402,7 +404,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public DoubleProperty getScrollProperty() {
 		return scroll;
 	}
 

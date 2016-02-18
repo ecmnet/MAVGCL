@@ -29,8 +29,10 @@ import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -130,17 +132,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private IntegerProperty scroll    = new SimpleIntegerProperty(0);
+	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
 
 	private int resolution_ms 	= 50;
 
 	private int current_x_pt=0;
-	private int replay_x_pt=0;
+
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
-	private double m_x0=0;
+
 
 	public LineChartWidget() {
 
@@ -345,14 +347,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		scroll.addListener((v, ov, nv) -> {
-				if(!isCollecting.get()) {
-					current_x0_pt = (int)(
-							( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
-							* (1 - nv.intValue() / 100f))	;
-					if(current_x0_pt<0)
-						current_x0_pt = 0;
-					updateGraph(true);
-				}
+			if(!isCollecting.get()) {
+				current_x0_pt = (int)(
+						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
+						* (1 - nv.intValue() / 100f))	;
+				if(current_x0_pt<0)
+					current_x0_pt = 0;
+				updateGraph(true);
+			}
 		});
 
 	}
@@ -468,7 +470,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public DoubleProperty getScrollProperty() {
 		return scroll;
 	}
 
