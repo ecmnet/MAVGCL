@@ -109,6 +109,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
+	private IntegerProperty scroll    = new SimpleIntegerProperty(0);
 
 	private ModelCollectorService collector;
 
@@ -337,6 +338,12 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;
+	}
+
+
+	@Override
+	public IntegerProperty getScrollProperty() {
+		return scroll;
 	}
 
 

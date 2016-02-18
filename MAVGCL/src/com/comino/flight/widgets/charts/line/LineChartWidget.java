@@ -115,9 +115,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private Button export;
 
-	@FXML
-	private Slider scroll;
-
 
 	private XYChart.Series<Number,Number> series1;
 	private XYChart.Series<Number,Number> series2;
@@ -133,6 +130,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
+	private IntegerProperty scroll    = new SimpleIntegerProperty(0);
 
 
 	private int resolution_ms 	= 50;
@@ -345,25 +343,20 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			updateGraph(true);
 		});
 
-		scroll.disableProperty().bind(isCollecting);
 
-		scroll.valueProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> ov,
-					Number old_val, Number new_val) {
+		scroll.addListener((v, ov, nv) -> {
 				if(!isCollecting.get()) {
 					current_x0_pt = (int)(
 							( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
-							* (1 - new_val.intValue() / 100f))	;
+							* (1 - nv.intValue() / 100f))	;
 					if(current_x0_pt<0)
 						current_x0_pt = 0;
 					updateGraph(true);
 				}
-
-			}
 		});
 
-
 	}
+
 
 	public void saveAsPng(String path) {
 		WritableImage image = linechart.snapshot(new SnapshotParameters(), null);
@@ -472,6 +465,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;
+	}
+
+	@Override
+	public IntegerProperty getScrollProperty() {
+		return scroll;
 	}
 
 

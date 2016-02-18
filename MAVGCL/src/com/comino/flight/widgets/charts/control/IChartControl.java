@@ -23,6 +23,7 @@ public interface IChartControl {
 
 	public BooleanProperty getCollectingProperty();
 	public IntegerProperty getTimeFrameProperty();
+	public IntegerProperty getScrollProperty();
 
 
 }

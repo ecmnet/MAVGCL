@@ -36,6 +36,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
@@ -76,6 +77,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private ChoiceBox<Integer> totaltime;
 
+    @FXML Slider scroll;
 
 	@FXML
 	private Circle isrecording;
@@ -227,12 +229,23 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 		});
 
+		scroll.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+				for(IChartControl chart : charts)
+					chart.getScrollProperty().set(new_val.intValue());
+
+
+			}
+		});
+
 	}
 
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.control.addModeChangeListener(this);
 		ExecutorService.get().execute(task);
+
 	}
 
 
@@ -245,9 +258,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			if(start) {
 				control.getMessageList().clear();
 				control.getCollector().start();
+				scroll.setDisable(true);
 			}
 			else {
 				control.getCollector().stop(delay);
+				scroll.setDisable(false);
 			}
 	}
 

@@ -41,9 +41,7 @@
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="preset" layoutX="390.0" prefHeight="19.0"
 				prefWidth="100.0" />
-			<Slider fx:id="scroll" blockIncrement="5.0" layoutX="510.0"
-					layoutY="3.0" majorTickUnit="1.0" max="100" min="0" prefHeight="15.0" value="0"/>
-			<Button fx:id="export" layoutX="670.0" mnemonicParsing="false"
+			<Button fx:id="export" layoutX="510.0" mnemonicParsing="false"
 				text="PNG export" />
 		</Pane>
 	</bottom>
