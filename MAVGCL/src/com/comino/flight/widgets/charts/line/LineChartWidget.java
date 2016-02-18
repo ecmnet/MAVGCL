@@ -364,7 +364,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
 			if(current_x0_pt < 0)
 				current_x0_pt = 0;
-			scroll.setValue(100);
+			scroll.setValue(0);
 			updateGraph(true);
 		});
 
@@ -374,9 +374,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 
-                        	current_x0_pt =
+                        	current_x0_pt = (int)(
                         		( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
-                        		* new_val.intValue() / 100	;
+                        		* (1 - new_val.intValue() / 100f))	;
                         	if(current_x0_pt<0)
                         		current_x0_pt = 0;
                 			updateGraph(true);

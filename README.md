@@ -4,9 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the QGC.
 
-**Status:** Last updated 17/02/2016 
-
-Early stable version V0.1 released
+**Status:** Last updated 18/02/2016 
 
 **Features:**
 
