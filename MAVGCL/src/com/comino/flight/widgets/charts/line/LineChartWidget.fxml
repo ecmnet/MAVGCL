@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Slider?>
 
 <fx:root  minHeight="250.0" styleClass="widget" minWidth="600"
 	type="BorderPane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
@@ -38,9 +39,11 @@
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="cseries3" layoutX="263.0" prefHeight="19.0"
 				prefWidth="100.0" />
-			<ChoiceBox fx:id="preset" layoutX="410.0" prefHeight="19.0"
+			<ChoiceBox fx:id="preset" layoutX="390.0" prefHeight="19.0"
 				prefWidth="100.0" />
-			<Button fx:id="export" layoutX="599.0" mnemonicParsing="false"
+			<Slider fx:id="scroll" blockIncrement="5.0" layoutX="510.0"
+					layoutY="3.0" majorTickUnit="1.0" max="100" min="0" prefHeight="15.0" value="100"/>
+			<Button fx:id="export" layoutX="670.0" mnemonicParsing="false"
 				text="PNG export" />
 		</Pane>
 	</bottom>

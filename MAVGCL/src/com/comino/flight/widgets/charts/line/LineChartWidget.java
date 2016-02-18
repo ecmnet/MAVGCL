@@ -46,6 +46,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.util.StringConverter;
@@ -114,6 +115,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private Button export;
 
+	@FXML
+	private Slider scroll;
+
 
 	private XYChart.Series<Number,Number> series1;
 	private XYChart.Series<Number,Number> series2;
@@ -174,6 +178,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						break;
 					}
 
+
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
@@ -206,28 +211,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				updateGraph(false);
 			}
-		});
-
-		setOnMousePressed(t -> {
-			m_x0 = t.getSceneX();
-
-		});
-
-		setOnMouseDragged(t -> {
-			int dx = (int)(m_x0 - t.getSceneX())/4 * resolution_ms / COLLECTOR_CYCLE;
-			int old_x0 = current_x0_pt;
-			current_x0_pt += dx;
-
-			if(current_x0_pt<0)
-				current_x0_pt=0;
-			if(current_x0_pt >
-			control.getCollector().getModelList().size()-timeFrame.intValue() * 1000 / COLLECTOR_CYCLE)
-				current_x0_pt= old_x0;
-
-			updateGraph(true);
-
-			if(dx!=0)
-				m_x0 = t.getSceneX();
 		});
 
 	}
@@ -381,11 +364,25 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
 			if(current_x0_pt < 0)
 				current_x0_pt = 0;
-
+			scroll.setValue(100);
 			updateGraph(true);
 		});
 
+		scroll.disableProperty().bind(isCollecting.or(isReplaying));
 
+		scroll.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+
+                        	current_x0_pt =
+                        		( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
+                        		* new_val.intValue() / 100	;
+                        	if(current_x0_pt<0)
+                        		current_x0_pt = 0;
+                			updateGraph(true);
+
+			}
+		});
 
 
 	}
@@ -406,6 +403,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		float dt_sec = 0;
 
 		List<DataModel> mList = control.getCollector().getModelList();
+
 
 		if(refresh) {
 			series1.getData().clear();
