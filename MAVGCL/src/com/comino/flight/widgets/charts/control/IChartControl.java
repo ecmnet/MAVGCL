@@ -22,7 +22,6 @@ import javafx.beans.property.IntegerProperty;
 public interface IChartControl {
 
 	public BooleanProperty getCollectingProperty();
-	public BooleanProperty getReplayingProperty();
 	public IntegerProperty getTimeFrameProperty();
 
 

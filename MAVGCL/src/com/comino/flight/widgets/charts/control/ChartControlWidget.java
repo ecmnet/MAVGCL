@@ -57,8 +57,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private ToggleButton recording;
 
-	@FXML
-	private Button replay;
 
 	@FXML
 	private CheckBox enablemodetrig;
@@ -229,13 +227,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 		});
 
-
-		replay.setOnAction(new EventHandler<ActionEvent>() {
-		    @Override public void handle(ActionEvent e) {
-		    	for(IChartControl chart : charts)
-					chart.getReplayingProperty().set(true);
-		    }
-		});
 	}
 
 	public void setup(IMAVController control) {

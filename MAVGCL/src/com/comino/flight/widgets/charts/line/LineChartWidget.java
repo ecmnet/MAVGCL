@@ -132,7 +132,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private MSTYPE type3=MSTYPE.MSP_NONE;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
-	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 
@@ -185,6 +184,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series3.getData().clear();
 						current_x_pt = 0; current_x0_pt=0;
 						setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
+						scroll.setValue(0);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
@@ -192,14 +192,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if((isCollecting.get() && control.isConnected()))
 						updateValue(control.getCollector().getModelList().size());
 
-
-					if(isReplaying.get()) {
-						replay_x_pt += REFRESH_MS / COLLECTOR_CYCLE;
-						if(replay_x_pt < control.getCollector().getModelList().size())
-							updateValue(replay_x_pt);
-						else
-							isReplaying.set(false);;
-					}
 
 				}
 				return control.getCollector().getModelList().size();
@@ -327,21 +319,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 
-		isReplaying.addListener((v, ov, nv) -> {
-			if(isCollecting.get())
-				return;
-
-			if(nv.booleanValue() && !ov.booleanValue()) {
-				series1.getData().clear();
-				series2.getData().clear();
-				series3.getData().clear();
-				current_x_pt = 0; current_x0_pt=0;
-				replay_x_pt = 0;
-				setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
-			}
-
-		});
-
 		timeFrame.addListener((v, ov, nv) -> {
 
 			this.current_x_pt = 0;
@@ -368,18 +345,19 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			updateGraph(true);
 		});
 
-		scroll.disableProperty().bind(isCollecting.or(isReplaying));
+		scroll.disableProperty().bind(isCollecting);
 
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-
-                        	current_x0_pt = (int)(
-                        		( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
-                        		* (1 - new_val.intValue() / 100f))	;
-                        	if(current_x0_pt<0)
-                        		current_x0_pt = 0;
-                			updateGraph(true);
+				if(!isCollecting.get()) {
+					current_x0_pt = (int)(
+							( control.getCollector().getModelList().size()  - timeFrame.get() *  1000 / COLLECTOR_CYCLE)
+							* (1 - new_val.intValue() / 100f))	;
+					if(current_x0_pt<0)
+						current_x0_pt = 0;
+					updateGraph(true);
+				}
 
 			}
 		});
@@ -419,9 +397,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			int max_x = mList.size();
 			if(!isCollecting.get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
-
-			if(isReplaying.get())
-				max_x = replay_x_pt;
 
 			while(current_x_pt<max_x ) {
 
@@ -494,9 +469,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		return isCollecting;
 	}
 
-	public BooleanProperty getReplayingProperty() {
-		return isReplaying;
-	}
 
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;

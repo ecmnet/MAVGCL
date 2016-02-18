@@ -108,7 +108,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private boolean home_set = false;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
-	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private ModelCollectorService collector;
@@ -334,10 +333,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	public BooleanProperty getCollectingProperty() {
 		return isCollecting;
-	}
-
-	public BooleanProperty getReplayingProperty() {
-		return isReplaying;
 	}
 
 	public IntegerProperty getTimeFrameProperty() {

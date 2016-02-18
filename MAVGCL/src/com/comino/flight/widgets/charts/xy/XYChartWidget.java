@@ -127,7 +127,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int type2;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
-	private BooleanProperty isReplaying  = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private int totalTime 	= 30;
@@ -180,13 +179,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					if(isCollecting.get() && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
 
-					if(isReplaying.get()) {
-						replay_x_pt += REFRESH_MS / COLLECTOR_CYCLE;
-						if(replay_x_pt < control.getCollector().getModelList().size())
-							updateValue(replay_x_pt);
-						else
-							isReplaying.set(false);;
-					}
 
 
 				}
@@ -402,10 +394,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	public BooleanProperty getCollectingProperty() {
 		return isCollecting;
-	}
-
-	public BooleanProperty getReplayingProperty() {
-		return isReplaying;
 	}
 
 	public IntegerProperty getTimeFrameProperty() {
