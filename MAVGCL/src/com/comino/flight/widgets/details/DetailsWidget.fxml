@@ -29,14 +29,13 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 				<Label fx:id="f_angley" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				<Label text="Compass" GridPane.rowIndex="2" />
 				<Label fx:id="f_compass" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<Label text="Speed" GridPane.rowIndex="3" />
-				<Label fx:id="f_speed" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<Label text="Satellites" GridPane.rowIndex="3" />
+				<Label fx:id="f_num" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 				<Label text="Flow quality" GridPane.rowIndex="4" />
 				<Label fx:id="f_quality" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-				<Label text="m/s" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 			</children>
 		</GridPane>
 	</children>

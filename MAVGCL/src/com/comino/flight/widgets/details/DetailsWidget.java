@@ -45,7 +45,7 @@ public class DetailsWidget extends Pane  {
 	private Label f_compass;
 
 	@FXML
-	private Label f_speed;
+	private Label f_num;
 
 	@FXML
 	private Label f_quality;
@@ -99,7 +99,7 @@ public class DetailsWidget extends Pane  {
                    f_anglex.setText(fo.format(Utils.fromRad(model.attitude.aX)));
                    f_angley.setText(fo.format(Utils.fromRad(model.attitude.aY)));
                    f_compass.setText(fo.format(model.attitude.h));
-                   f_speed.setText(fo.format(Math.sqrt(model.state.vx * model.state.vx + model.state.vy * model.state.vy)));
+                   f_num.setText(Integer.toString(model.gps.numsat));
                    f_quality.setText(Integer.toString(model.raw.fq));
 
 			}
