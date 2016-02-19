@@ -18,6 +18,6 @@
 		<Pane prefWidth="10" />
 	</right>
    <center>
-      <ImageView fx:id="worldimage" fitHeight="600" fitWidth="600.0" pickOnBounds="true"  BorderPane.alignment="CENTER" />
+
    </center>
 </fx:root>

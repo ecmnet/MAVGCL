@@ -16,19 +16,17 @@
 
 package com.comino.flight.tabs.world;
 
+import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.ExecutorService;
-import com.threed.jpct.FrameBuffer;
-import com.threed.jpct.Object3D;
-import com.threed.jpct.Primitives;
-import com.threed.jpct.Texture;
-import com.threed.jpct.TextureManager;
-import com.threed.jpct.World;
+
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -44,18 +42,9 @@ import javafx.scene.layout.BorderPane;
 
 public class MAVWorldTab extends BorderPane  {
 
-	@FXML
-	private ImageView worldimage;
-
-
-	private World world;
-	private FrameBuffer buffer;
-	private Object3D box;
 
 	private Task<Long> task;
 
-	private WritableImage image ;
-	private BufferedImage bimg;
 
 	public MAVWorldTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVWorldTab.fxml"));
@@ -74,7 +63,7 @@ public class MAVWorldTab extends BorderPane  {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(20);
+						Thread.sleep(50);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -99,32 +88,11 @@ public class MAVWorldTab extends BorderPane  {
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
 
-					draw();
-
-
 				} catch(Exception e) { e.printStackTrace(); }
 
 			}
 		});
 
-		world = new World();
-		world.setAmbientLight(0, 255, 0);
-
-		TextureManager.getInstance().addTexture("box", new Texture(getClass().getResourceAsStream("box.jpg")));
-
-		box = Primitives.getBox(13f, 2f);
-		box.setTexture("box");
-		box.setEnvmapped(Object3D.ENVMAP_ENABLED);
-		box.build();
-		world.addObject(box);
-
-		world.getCamera().setPosition(50, -50, -5);
-		world.getCamera().lookAt(box.getTransformedCenter());
-
-		buffer = new FrameBuffer(600, 600, FrameBuffer.SAMPLINGMODE_NORMAL);
-		image = new WritableImage(600,600);
-		bimg = new BufferedImage(600,600, 8);
-		worldimage.setImage(image);
 
 
 	}
@@ -132,7 +100,6 @@ public class MAVWorldTab extends BorderPane  {
 
 	@FXML
 	private void initialize() {
-
 
 
 
@@ -156,23 +123,8 @@ public class MAVWorldTab extends BorderPane  {
 
 
 
-	private void draw() throws Exception {
-
-
-		box.rotateY(0.01f);
-		buffer.clear(java.awt.Color.BLUE);
-		world.renderScene(buffer);
-		world.draw(buffer);
-		buffer.update();
-		buffer.display(bimg.getGraphics());
-		//			BufferedImage img = (BufferedImage) buffer.getOutputBuffer();
-		SwingFXUtils.toFXImage(bimg, image);
-
-
-
-
-
-	}
 
 
 }
+
+

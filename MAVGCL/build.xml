@@ -51,7 +51,7 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar jpct.jar" />
+				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar " />
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
@@ -59,7 +59,6 @@
 				<include name="mavcomm.jar" />
 				<include name="jssc.jar" />
 				<include name="jna-4.1.0.jar" />
-				<include name="jpct.jar" />
 			</fileset>
 		</copy>
 

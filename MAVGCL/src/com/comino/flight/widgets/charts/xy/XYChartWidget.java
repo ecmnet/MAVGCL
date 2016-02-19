@@ -338,9 +338,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(time<mList.size() && mList.size()>0 ) {
 
-
-
-
 			while(time<mList.size() && time < totalMax) {
 
 
