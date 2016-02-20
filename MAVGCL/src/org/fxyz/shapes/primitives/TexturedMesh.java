@@ -18,12 +18,31 @@
  */
 package org.fxyz.shapes.primitives;
 
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLOR_PALETTE;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DENSITY_FUNCTION;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DIFFUSE_COLOR;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_PATTERN;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_PATTERN_SCALE;
+import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_UNIDIM_FUNCTION;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.helper.MeshHelper;
+import org.fxyz.shapes.primitives.helper.TextureMode;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
+import org.fxyz.utils.Palette.ColorPalette;
+import org.fxyz.utils.Patterns.CarbonPatterns;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,22 +57,6 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.helper.MeshHelper;
-import org.fxyz.shapes.primitives.helper.TextureMode;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLORS;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_COLOR_PALETTE;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DENSITY_FUNCTION;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_DIFFUSE_COLOR;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_PATTERN;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_PATTERN_SCALE;
-import static org.fxyz.shapes.primitives.helper.TriangleMeshHelper.DEFAULT_UNIDIM_FUNCTION;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
-import org.fxyz.utils.Palette.ColorPalette;
-import org.fxyz.utils.Patterns.CarbonPatterns;
 
 /**
  * TexturedMesh is a base class that provides support for different mesh implementations

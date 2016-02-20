@@ -18,8 +18,11 @@
  */
 package org.fxyz.tests;
 
+import org.fxyz.cameras.CameraTransformer;
+
 import com.sun.javafx.geom.Vec3d;
 import com.sun.javafx.scene.CameraHelper;
+
 import javafx.application.Application;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
@@ -36,7 +39,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
 
 /**
  *

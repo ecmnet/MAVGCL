@@ -18,44 +18,33 @@
  */
 package org.fxyz.tests;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.IntStream;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.primitives.Text3DMesh;
+import org.fxyz.shapes.primitives.TexturedMesh;
+import org.fxyz.utils.OBJWriter;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.CuboidMesh;
-import org.fxyz.shapes.primitives.Text3DMesh;
-import org.fxyz.shapes.primitives.TexturedMesh;
-import org.fxyz.shapes.primitives.TriangulatedMesh;
-import org.fxyz.utils.OBJWriter;
-import org.fxyz.utils.Palette;
-import org.fxyz.utils.Palette.ColorPalette;
-import org.fxyz.utils.Patterns;
 
 /**
  *

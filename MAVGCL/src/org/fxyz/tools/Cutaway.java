@@ -18,6 +18,9 @@
  */
 package org.fxyz.tools;
 
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.events.CloseCutawayEvent;
+
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -46,8 +49,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.events.CloseCutawayEvent;
 
 /**
  * Builds upon base CameraView class but provides event handling for 

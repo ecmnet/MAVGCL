@@ -20,10 +20,12 @@ package org.fxyz.shapes.primitives.helper;
 
 import java.util.List;
 import java.util.function.Function;
-import javafx.scene.paint.Color;
+
 import org.fxyz.geometry.Point3D;
 import org.fxyz.utils.Palette.ColorPalette;
 import org.fxyz.utils.Patterns.CarbonPatterns;
+
+import javafx.scene.paint.Color;
 
 /**
  *

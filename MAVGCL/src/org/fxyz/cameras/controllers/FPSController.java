@@ -19,12 +19,13 @@
 package org.fxyz.cameras.controllers;
 
 import org.fxyz.utils.AnimationPreference;
+import org.fxyz.utils.MathUtils;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import org.fxyz.utils.MathUtils;
 
 /**
  *

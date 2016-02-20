@@ -20,11 +20,14 @@ package org.fxyz.tests;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import static javafx.animation.Animation.INDEFINITE;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.SegmentedSphereMesh;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
@@ -33,19 +36,12 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.SegmentedSphereMesh;
 
 /**
  *

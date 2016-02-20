@@ -18,10 +18,20 @@
  */
 package org.fxyz.tests;
 
+import java.util.function.Function;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.CSGMesh;
+import org.fxyz.shapes.primitives.CuboidMesh;
+import org.fxyz.shapes.primitives.PrismMesh;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+import org.fxyz.utils.MeshUtils;
+import org.fxyz.utils.OBJWriter;
+
 import eu.mihosoft.vrl.v3d.CSG;
 import eu.mihosoft.vrl.v3d.Cube;
 import eu.mihosoft.vrl.v3d.Transform;
-import java.util.function.Function;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -35,14 +45,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.CSGMesh;
-import org.fxyz.shapes.primitives.CuboidMesh;
-import org.fxyz.shapes.primitives.PrismMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
-import org.fxyz.utils.MeshUtils;
-import org.fxyz.utils.OBJWriter;
 
 /**
  *

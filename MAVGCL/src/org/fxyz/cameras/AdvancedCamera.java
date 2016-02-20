@@ -18,11 +18,12 @@
  */
 package org.fxyz.cameras;
 
+import org.fxyz.cameras.controllers.CameraController;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
-import org.fxyz.cameras.controllers.CameraController;
 
 /**
  *

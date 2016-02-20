@@ -20,6 +20,9 @@ package org.fxyz.shapes.composites;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.fxyz.utils.ListOfOne;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
@@ -29,7 +32,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
-import org.fxyz.utils.ListOfOne;
 
 /**
  *

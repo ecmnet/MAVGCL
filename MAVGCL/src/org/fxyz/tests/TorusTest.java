@@ -19,6 +19,10 @@
 package org.fxyz.tests;
 
 import java.util.Random;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.Torus;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -31,8 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.Torus;
 
 /**
  *

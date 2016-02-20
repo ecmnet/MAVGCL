@@ -18,6 +18,8 @@
  */
 package org.fxyz.extras;
 
+import org.fxyz.geometry.Vector3D;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
@@ -26,7 +28,6 @@ import javafx.scene.Node;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Transform;
-import org.fxyz.geometry.Vector3D;
 
 /**
  * Basic interface for Billboard Nodes. 

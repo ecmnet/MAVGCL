@@ -26,15 +26,18 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import javax.imageio.ImageIO;
+
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
+import org.fxyz.utils.Palette.ColorPalette;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.TriangleMesh;
-import javax.imageio.ImageIO;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
-import org.fxyz.utils.Palette.ColorPalette;
 
 /**
  *

@@ -22,6 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.ScatterMesh;
+import org.fxyz.shapes.primitives.TexturedMesh;
+import org.fxyz.utils.OBJWriter;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -40,11 +47,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.ScatterMesh;
-import org.fxyz.shapes.primitives.TexturedMesh;
-import org.fxyz.utils.OBJWriter;
 
 /**
  *

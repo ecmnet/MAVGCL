@@ -18,6 +18,8 @@
  */
 package org.fxyz.extras;
 
+import org.fxyz.geometry.Vector3D;
+
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Affine;
@@ -26,7 +28,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 import javafx.util.Callback;
-import org.fxyz.geometry.Vector3D;
 
 /**
  * An Interface implementation of Xform found in the Molecule Sample

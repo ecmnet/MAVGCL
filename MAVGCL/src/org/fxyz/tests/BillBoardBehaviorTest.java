@@ -19,6 +19,14 @@
 package org.fxyz.tests;
 
 import java.util.Random;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.extras.BillboardBehavior;
+import org.fxyz.extras.Skybox;
+import org.fxyz.shapes.primitives.TorusMesh;
+import org.fxyz.tools.CameraView;
+import org.fxyz.utils.MathUtils;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -43,12 +51,6 @@ import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.primitives.TorusMesh;
-import org.fxyz.extras.BillboardBehavior;
-import org.fxyz.tools.CameraView;
-import org.fxyz.extras.Skybox;
-import org.fxyz.utils.MathUtils;
 
 /**
  *

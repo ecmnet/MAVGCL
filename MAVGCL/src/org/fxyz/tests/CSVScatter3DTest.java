@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.ScatterMesh;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
@@ -39,10 +44,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.ScatterMesh;
-import org.fxyz.utils.Palette;
 
 /**
  *

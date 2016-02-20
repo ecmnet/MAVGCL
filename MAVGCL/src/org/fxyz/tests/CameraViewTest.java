@@ -18,13 +18,16 @@
  */
 package org.fxyz.tests;
 
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.primitives.TorusMesh;
+import org.fxyz.tools.CameraView;
+
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -43,9 +46,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.primitives.TorusMesh;
-import org.fxyz.tools.CameraView;
 
 /**
  *

@@ -23,10 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
+
 import org.fxyz.geometry.Face3;
 import org.fxyz.geometry.Point3D;
 import org.fxyz.utils.FloatCollector;
@@ -35,6 +32,11 @@ import org.fxyz.utils.Palette;
 import org.fxyz.utils.Palette.ColorPalette;
 import org.fxyz.utils.Patterns;
 import org.fxyz.utils.Patterns.CarbonPatterns;
+
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
 
 /**
  *

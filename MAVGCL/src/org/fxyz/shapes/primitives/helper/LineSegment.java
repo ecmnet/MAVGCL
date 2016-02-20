@@ -20,8 +20,10 @@ package org.fxyz.shapes.primitives.helper;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.shape.Path;
+
 import org.fxyz.geometry.Point3D;
+
+import javafx.scene.shape.Path;
 
 /**
  *

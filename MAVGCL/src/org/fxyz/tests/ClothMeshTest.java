@@ -18,13 +18,15 @@
  */
 package org.fxyz.tests;
 
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.complex.cloth.ClothMesh;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -35,8 +37,6 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.complex.cloth.ClothMesh;
 
 /**
  *

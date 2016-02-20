@@ -19,6 +19,7 @@
 package org.fxyz.extras;
 
 import java.util.ArrayList;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;

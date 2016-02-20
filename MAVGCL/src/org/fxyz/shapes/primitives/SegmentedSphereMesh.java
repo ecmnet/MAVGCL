@@ -18,6 +18,9 @@
  */
 package org.fxyz.shapes.primitives;
 
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -32,8 +35,6 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
 
 /**
  * SegmentedTorusMesh is based in TorusMesh, but allows cutting the torus in two 

@@ -22,8 +22,10 @@ package org.fxyz.shapes.primitives.helper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import javafx.scene.shape.TriangleMesh;
+
 import org.fxyz.geometry.Point3D;
+
+import javafx.scene.shape.TriangleMesh;
 
 /**
  *

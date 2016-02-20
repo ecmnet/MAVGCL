@@ -20,6 +20,7 @@ package org.fxyz.shapes.primitives.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fxyz.geometry.Point3D;
 import org.fxyz.utils.GaussianQuadrature;
 

@@ -20,6 +20,7 @@ package org.fxyz.shapes.primitives.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.fxyz.geometry.Point3D;
 
 /** Given N 3D points (knots), N-1 Bezier cubic curves will be generated, 

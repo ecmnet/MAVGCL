@@ -18,14 +18,20 @@
  */
 package org.fxyz.shapes.primitives;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.helper.LineSegment;
+import org.fxyz.shapes.primitives.helper.MeshHelper;
+import org.fxyz.shapes.primitives.helper.Text3DHelper;
+import org.fxyz.shapes.primitives.helper.TextureMode;
+import org.fxyz.utils.Palette.ColorPalette;
+import org.fxyz.utils.Patterns;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -42,18 +48,10 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Translate;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.helper.LineSegment;
-import org.fxyz.shapes.primitives.helper.MeshHelper;
-import org.fxyz.shapes.primitives.helper.Text3DHelper;
-import org.fxyz.shapes.primitives.helper.TextureMode;
-import org.fxyz.utils.Palette.ColorPalette;
-import org.fxyz.utils.Patterns;
 
 /**
  *

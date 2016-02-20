@@ -21,7 +21,6 @@ import java.text.DecimalFormat;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.utils.Utils;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.value.ChangeListener;

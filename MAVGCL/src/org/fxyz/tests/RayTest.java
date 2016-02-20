@@ -22,6 +22,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.primitives.CurvedSpringMesh;
+import org.fxyz.shapes.primitives.KnotMesh;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
+import org.fxyz.utils.Axes;
+
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
@@ -43,11 +50,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.primitives.CurvedSpringMesh;
-import org.fxyz.shapes.primitives.KnotMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.SectionType;
-import org.fxyz.utils.Axes;
 
 /**
  *

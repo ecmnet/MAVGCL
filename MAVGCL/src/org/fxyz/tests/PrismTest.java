@@ -20,6 +20,12 @@ package org.fxyz.tests;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.PrismMesh;
+import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -27,26 +33,14 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.PrismMesh;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper;
-import org.fxyz.utils.OBJWriter;
-import org.fxyz.utils.Palette;
-import org.fxyz.utils.Palette.ColorPalette;
 
 /**
  *

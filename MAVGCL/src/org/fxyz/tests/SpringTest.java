@@ -20,6 +20,12 @@ package org.fxyz.tests;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.SpringMesh;
+import org.fxyz.utils.OBJWriter;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -33,10 +39,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.SpringMesh;
-import org.fxyz.utils.OBJWriter;
 
 /**
  *

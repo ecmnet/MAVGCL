@@ -18,6 +18,8 @@
  */
 package org.fxyz.tools;
 
+import org.fxyz.cameras.CameraTransformer;
+
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -31,7 +33,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import org.fxyz.cameras.CameraTransformer;
 
 /**
  *  This class is based on "AnotherView.java" provided by: 

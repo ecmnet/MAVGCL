@@ -18,16 +18,18 @@
  */
 package org.fxyz.shapes.primitives;
 
-import eu.mihosoft.vrl.v3d.CSG;
-import eu.mihosoft.vrl.v3d.Vertex;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+
+import eu.mihosoft.vrl.v3d.CSG;
+import eu.mihosoft.vrl.v3d.Vertex;
 import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
 
 /**
  *

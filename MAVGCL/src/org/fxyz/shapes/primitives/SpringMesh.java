@@ -18,6 +18,9 @@
  */
 package org.fxyz.shapes.primitives;
 
+import org.fxyz.geometry.Face3;
+import org.fxyz.shapes.primitives.helper.SpringHelper;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -26,9 +29,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.helper.SpringHelper;
 
 /**
  *  Spring based on this model:  http://math.stackexchange.com/a/461637

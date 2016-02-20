@@ -22,7 +22,6 @@ import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.MapTileType;
-import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
@@ -36,10 +35,8 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
-import com.comino.msp.utils.MSPGeoUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
-import com.comino.openmapfx.ext.InformationLayer;
 import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.property.BooleanProperty;
@@ -60,7 +57,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 

@@ -25,6 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.utils.FloatCollector;
+
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -34,10 +39,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.utils.FloatCollector;
-import org.fxyz.shapes.primitives.helper.TriangleMeshHelper.TextureType;
 
 /**
  *

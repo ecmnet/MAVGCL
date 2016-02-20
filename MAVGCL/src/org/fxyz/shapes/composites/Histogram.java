@@ -19,6 +19,7 @@
 package org.fxyz.shapes.composites;
 
 import java.util.ArrayList;
+
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;

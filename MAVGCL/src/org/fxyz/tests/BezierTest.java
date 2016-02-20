@@ -23,6 +23,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.BezierMesh;
+import org.fxyz.shapes.primitives.PrismMesh;
+import org.fxyz.shapes.primitives.helper.InterpolateBezier;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
@@ -39,11 +46,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.BezierMesh;
-import org.fxyz.shapes.primitives.PrismMesh;
-import org.fxyz.shapes.primitives.helper.InterpolateBezier;
 
 /**
  *

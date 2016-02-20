@@ -19,6 +19,7 @@
 package org.fxyz.shapes.complex.cloth;
 
 import java.util.HashMap;
+
 import org.fxyz.geometry.Point3D;
 import org.fxyz.utils.Constraint;
 

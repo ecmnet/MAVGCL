@@ -36,6 +36,7 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVWorldTab mavworldtab;
 
+
 	private List<Node> tabs = new ArrayList<Node>();
 
 

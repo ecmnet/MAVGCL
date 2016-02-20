@@ -18,9 +18,9 @@
  */
 package org.fxyz.shapes.primitives;
 
-import javafx.scene.shape.MeshView;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**

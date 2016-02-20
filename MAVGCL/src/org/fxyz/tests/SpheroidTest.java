@@ -19,8 +19,12 @@
 package org.fxyz.tests;
 
 import java.util.Random;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.shapes.Spheroid;
+import org.fxyz.utils.MathUtils;
+
 import javafx.application.Application;
-import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
@@ -30,14 +34,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.shapes.Spheroid;
-import org.fxyz.utils.MathUtils;
 
 /**
  *

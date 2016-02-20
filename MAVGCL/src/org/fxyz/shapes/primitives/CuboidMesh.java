@@ -25,6 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.utils.FloatCollector;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,9 +45,6 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.utils.FloatCollector;
 
 /**
  *

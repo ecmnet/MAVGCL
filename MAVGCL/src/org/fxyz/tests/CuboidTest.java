@@ -23,6 +23,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.CuboidMesh;
+import org.fxyz.utils.Axes;
+import org.fxyz.utils.OBJWriter;
+
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -42,11 +49,6 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.CuboidMesh;
-import org.fxyz.utils.Axes;
-import org.fxyz.utils.OBJWriter;
 
 /**
  *

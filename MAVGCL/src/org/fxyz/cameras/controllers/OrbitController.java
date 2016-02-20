@@ -19,6 +19,7 @@
 package org.fxyz.cameras.controllers;
 
 import org.fxyz.utils.AnimationPreference;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;

@@ -18,7 +18,9 @@
  */
 package org.fxyz.tests;
 
-import java.util.ArrayList;
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.tools.CubeViewer;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -29,8 +31,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.tools.CubeViewer;
 
 /**
  *

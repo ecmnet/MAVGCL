@@ -18,6 +18,9 @@
  */
 package org.fxyz.tests;
 
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Ray;
+
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -39,8 +42,6 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Ray;
 
 /**
  * A simple app Showing the newly added Ray class.

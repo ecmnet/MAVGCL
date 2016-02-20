@@ -19,7 +19,6 @@
 package org.fxyz.events;
 
 import javafx.event.Event;
-import static javafx.event.Event.ANY;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 

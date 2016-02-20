@@ -19,6 +19,10 @@
 package org.fxyz.tests;
 
 import java.util.ArrayList;
+
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.composites.PolyLine3D;
+
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -30,8 +34,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.composites.PolyLine3D;
 
 /**
  *

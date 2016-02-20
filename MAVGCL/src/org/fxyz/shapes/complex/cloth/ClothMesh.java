@@ -19,6 +19,7 @@
 package org.fxyz.shapes.complex.cloth;
 
 import static java.lang.Math.sqrt;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -26,6 +27,10 @@ import java.util.concurrent.ThreadFactory;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
+
+import org.fxyz.geometry.Point3D;
+import org.fxyz.utils.FloatCollector;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -49,8 +54,6 @@ import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Affine;
 import javafx.util.Duration;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.utils.FloatCollector;
 
 /**
  *

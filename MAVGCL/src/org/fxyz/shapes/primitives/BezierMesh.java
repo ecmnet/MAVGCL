@@ -18,6 +18,9 @@
  */
 package org.fxyz.shapes.primitives;
 
+import org.fxyz.geometry.Face3;
+import org.fxyz.shapes.primitives.helper.BezierHelper;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -28,8 +31,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.geometry.Face3;
-import org.fxyz.shapes.primitives.helper.BezierHelper;
 
 /**
  *  Spring based on this model:  http://en.wikipedia.org/wiki/Trefoil_knot

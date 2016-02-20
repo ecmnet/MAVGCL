@@ -20,6 +20,11 @@ package org.fxyz.tests;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.shapes.primitives.IcosahedronMesh;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -35,9 +40,6 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.shapes.primitives.IcosahedronMesh;
 
 /**
  *

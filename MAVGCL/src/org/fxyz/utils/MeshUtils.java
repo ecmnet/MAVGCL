@@ -18,10 +18,6 @@
  */
 package org.fxyz.utils;
 
-import eu.mihosoft.vrl.v3d.CSG;
-import eu.mihosoft.vrl.v3d.Polygon;
-import eu.mihosoft.vrl.v3d.PropertyStorage;
-import eu.mihosoft.vrl.v3d.Vector3d;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -30,13 +26,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import eu.mihosoft.vrl.v3d.CSG;
+import eu.mihosoft.vrl.v3d.Polygon;
+import eu.mihosoft.vrl.v3d.PropertyStorage;
+import eu.mihosoft.vrl.v3d.Vector3d;
 import javafx.collections.ObservableFloatArray;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.shapes.primitives.TexturedMesh;
 
 /**
  * Loads a CSG from TriangleMesh based on JCSG from Michael Hoffer

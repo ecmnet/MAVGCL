@@ -26,6 +26,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+
+import org.fxyz.geometry.Face3;
+import org.fxyz.geometry.Point3D;
+import org.fxyz.utils.FloatCollector;
+import org.poly2tri.Poly2Tri;
+import org.poly2tri.polygon.Polygon;
+import org.poly2tri.polygon.PolygonPoint;
+import org.poly2tri.polygon.PolygonSet;
+import org.poly2tri.triangulation.TriangulationPoint;
+import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,15 +49,6 @@ import javafx.scene.DepthTest;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.TriangleMesh;
-import org.fxyz.geometry.Face3;
-import org.fxyz.geometry.Point3D;
-import org.fxyz.utils.FloatCollector;
-import org.poly2tri.Poly2Tri;
-import org.poly2tri.polygon.Polygon;
-import org.poly2tri.polygon.PolygonPoint;
-import org.poly2tri.polygon.PolygonSet;
-import org.poly2tri.triangulation.TriangulationPoint;
-import org.poly2tri.triangulation.delaunay.DelaunayTriangle;
 
 /**
  *

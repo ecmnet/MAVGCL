@@ -18,6 +18,9 @@
  */
 package org.fxyz.tests;
 
+import org.fxyz.cameras.CameraTransformer;
+import org.fxyz.extras.CubeWorld;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -28,8 +31,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.extras.CubeWorld;
 
 /**
  *

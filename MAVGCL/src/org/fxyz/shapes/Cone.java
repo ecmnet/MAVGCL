@@ -18,14 +18,15 @@
  */
 package org.fxyz.shapes;
 
+import org.fxyz.shapes.containers.ShapeContainer;
+import org.fxyz.shapes.primitives.ConeMesh;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
-import org.fxyz.shapes.containers.ShapeContainer;
-import org.fxyz.shapes.primitives.ConeMesh;
 
 /**
  *

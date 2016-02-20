@@ -18,7 +18,10 @@
  */
 package org.fxyz.cameras.controllers;
 
+import org.fxyz.cameras.AdvancedCamera;
+import org.fxyz.extras.Transformable;
 import org.fxyz.utils.AnimationPreference;
+
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -28,14 +31,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
-import static javafx.scene.input.MouseButton.MIDDLE;
-import static javafx.scene.input.MouseButton.PRIMARY;
-import static javafx.scene.input.MouseButton.SECONDARY;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.util.Duration;
-import org.fxyz.cameras.AdvancedCamera;
-import org.fxyz.extras.Transformable;
 
 /**
  *

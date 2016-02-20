@@ -19,6 +19,11 @@
 package org.fxyz.tests;
 
 import java.util.Random;
+
+import org.fxyz.cameras.AdvancedCamera;
+import org.fxyz.cameras.controllers.FPSController;
+import org.fxyz.shapes.Capsule;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -29,9 +34,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.cameras.AdvancedCamera;
-import org.fxyz.cameras.controllers.FPSController;
-import org.fxyz.shapes.Capsule;
 
 /**
  *

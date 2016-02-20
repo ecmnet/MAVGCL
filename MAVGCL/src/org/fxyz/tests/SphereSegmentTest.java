@@ -19,6 +19,9 @@
 package org.fxyz.tests;
 
 import java.util.Random;
+
+import org.fxyz.shapes.SphereSegment;
+
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -30,7 +33,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
-import org.fxyz.shapes.SphereSegment;
 
 /**
  *
