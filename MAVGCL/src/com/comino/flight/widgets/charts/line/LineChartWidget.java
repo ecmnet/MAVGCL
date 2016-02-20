@@ -131,7 +131,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
+	private DoubleProperty  scroll       = new SimpleDoubleProperty(0);
 
 
 	private int resolution_ms 	= 50;
@@ -213,6 +213,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setForceZeroInRange(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
+	    xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
 		xAxis.setTickLabelFormatter(new StringConverter<Number>() {
@@ -251,7 +252,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = MSTYPE.values()[newValue.intValue()];
-				series1.setName(type1.getDescription());
+				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
 				updateGraph(true);
 
@@ -264,7 +265,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = MSTYPE.values()[newValue.intValue()];
-				series2.setName(type2.getDescription());
+				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
 				updateGraph(true);
 
@@ -277,7 +278,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type3 = MSTYPE.values()[newValue.intValue()];
-				series3.setName(type3.getDescription());
+				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
 				updateGraph(true);
 

@@ -6,69 +6,70 @@ import com.comino.msp.model.DataModel;
 
 public enum MSTYPE {
 
-	MSP_NONE 		("none",1),
-	MSP_ACCX 		("AccX",1),
-	MSP_ACCY 		("AccY",1),
-	MSP_ACCZ 		("AccZ",1),
-	MSP_GYROX		("GyroX",1),
-	MSP_GYROY		("GyroY",1),
-	MSP_GYROZ		("GyroZ",1),
-	MSP_ANGLEX		("AngleX",1),
-	MSP_ANGLEY		("AngleY",1),
-	MSP_COMPASS		("Compass",1),
-	MSP_AL			("Alt.local",1),
-	MSP_AS			("Alt.amsl",1),
-	MSP_NEDX		("Loc.PosX",1),
-	MSP_NEDY		("Loc.PosY",1),
-	MSP_NEDZ		("Loc.PosZ",1),
-	MSP_NEDVX		("Loc.SpeedX",1),
-	MSP_NEDVY		("Loc.SpeedY",1),
-	MSP_NEDVZ		("Loc.SpeedZ",1),
-	MSP_SPNEDX		("Sp.Loc.PosX",1),
-	MSP_SPNEDY		("Sp.Loc.PosY",1),
-	MSP_SPNEDZ		("Sp.Loc.PosZ",1),
-	MSP_SPNEDVX		("Sp.Loc.SpeedX",1),
-	MSP_SPNEDVY		("Sp.Loc.SpeedY",1),
-	MSP_SPNEDVZ		("Sp.Loc.SpeedZ",1),
-	MSP_LERRX		("Loc.ErrX",1),
-	MSP_LERRY		("Loc.ErrY",1),
-	MSP_LERRZ		("Loc.ErrZ",1),
-	MSP_RNEDX		("Loc.PosX.rel.",1),
-	MSP_RNEDY		("Loc.PosX.rel.",1),
-	MSP_RNEDZ		("Loc.PosX.rel.",1),
-	MSP_RAW_DI		("Raw.Dist.S.",1),
-	MSP_RAW_FLOWX	("Raw.FlowX",1),
-	MSP_RAW_FLOWY	("Raw.FlowX",1),
-	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1),
-	MSP_VOLTAGE		("Bat.Voltage",1),
-	MSP_CURRENT		("Bat.Current",1),
-	MSP_RC0			("RC.0",1),
-	MSP_RC1			("RC.1",1),
-	MSP_RC2			("RC.2",1),
-	MSP_RC3			("RC.3",1),
-	MSP_S0			("Servo.0",1),
-	MSP_S1			("Servo.1",1),
-	MSP_S2			("Servo.2",1),
-	MSP_S3			("Servo.3",1),
-	MSP_GLOBRELX	("Global.rel.PosX",1),
-	MSP_GLOBRELY 	("Global.rel.PosY",1),
-	MSP_GLOBRELZ	("Global.rel.PosZ",1),
-	MSP_GLOBRELVX	("Global.rel.SpeedX",1),
-	MSP_GLOBRELVY   ("Global.rel.SpeedY",1),
-	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1),
-	MSP_GPSEPH  	("GPS.eph",1),
-	MSP_GLOBPLAT	("Global.Latitude",0),
-	MSP_GLOBPLON	("Global.Longitude",0),
-	MSP_RAW_GPSLAT  ("Raw.Latitude",0),
-	MSP_RAW_GPSLON  ("Raw.Longitude",0),
-	MSP_REF_GPSLAT  ("Home.Latitude",0),
-	MSP_REF_GPSLON  ("Home.Longitude",0),
-	MSP_CONSPOWER	("Bat.Cons.Power",0),
+	MSP_NONE 		("none",1,"-"),
+	MSP_ACCX 		("AccX",1,"-"),
+	MSP_ACCY 		("AccY",1,"m/s2"),
+	MSP_ACCZ 		("AccZ",1,"m/s2"),
+	MSP_GYROX		("GyroX",1,"-"),
+	MSP_GYROY		("GyroY",1,"-"),
+	MSP_GYROZ		("GyroZ",1,"-"),
+	MSP_ANGLEX		("AngleX",1,"rad"),
+	MSP_ANGLEY		("AngleY",1,"rad"),
+	MSP_COMPASS		("Compass",1,"°"),
+	MSP_AL			("Alt.local",1,"m"),
+	MSP_AS			("Alt.amsl",1,"m"),
+	MSP_NEDX		("Loc.PosX",1,"m"),
+	MSP_NEDY		("Loc.PosY",1,"m"),
+	MSP_NEDZ		("Loc.PosZ",1,"m"),
+	MSP_NEDVX		("Loc.SpeedX",1,"m/s"),
+	MSP_NEDVY		("Loc.SpeedY",1,"m/s"),
+	MSP_NEDVZ		("Loc.SpeedZ",1,"m/s"),
+	MSP_SPNEDX		("Sp.Loc.PosX",1,"m"),
+	MSP_SPNEDY		("Sp.Loc.PosY",1,"m"),
+	MSP_SPNEDZ		("Sp.Loc.PosZ",1,"m"),
+	MSP_SPNEDVX		("Sp.Loc.SpeedX",1,"m/s"),
+	MSP_SPNEDVY		("Sp.Loc.SpeedY",1,"m/s"),
+	MSP_SPNEDVZ		("Sp.Loc.SpeedZ",1,"m/s"),
+	MSP_LERRX		("Loc.ErrX",1,"m"),
+	MSP_LERRY		("Loc.ErrY",1,"m"),
+	MSP_LERRZ		("Loc.ErrZ",1,"m"),
+	MSP_RNEDX		("Loc.PosX.rel.",1,"m"),
+	MSP_RNEDY		("Loc.PosX.rel.",1,"m"),
+	MSP_RNEDZ		("Loc.PosX.rel.",1,"m"),
+	MSP_RAW_DI		("Raw.Dist.S.",1,"m"),
+	MSP_RAW_FLOWX	("Raw.FlowX",1,"-"),
+	MSP_RAW_FLOWY	("Raw.FlowX",1,"-"),
+	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,"-"),
+	MSP_VOLTAGE		("Bat.Voltage",1,"V"),
+	MSP_CURRENT		("Bat.Current",1,"A"),
+	MSP_RC0			("RC.0",1,"-"),
+	MSP_RC1			("RC.1",1,"-"),
+	MSP_RC2			("RC.2",1,"-"),
+	MSP_RC3			("RC.3",1,"-"),
+	MSP_S0			("Servo.0",1,"-"),
+	MSP_S1			("Servo.1",1,"-"),
+	MSP_S2			("Servo.2",1,"-"),
+	MSP_S3			("Servo.3",1,"-"),
+	MSP_GLOBRELX	("Global.rel.PosX",1,"m"),
+	MSP_GLOBRELY 	("Global.rel.PosY",1,"m"),
+	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m"),
+	MSP_GLOBRELVX	("Global.rel.SpeedX",1,"m/s"),
+	MSP_GLOBRELVY   ("Global.rel.SpeedY",1,"m/s"),
+	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1,"m/s"),
+	MSP_GPSEPH  	("GPS.eph",1,"-"),
+	MSP_GLOBPLAT	("Global.Latitude",0,"°"),
+	MSP_GLOBPLON	("Global.Longitude",0,"°"),
+	MSP_RAW_GPSLAT  ("Raw.Latitude",0,"°"),
+	MSP_RAW_GPSLON  ("Raw.Longitude",0,"°"),
+	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
+	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
+	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAH"),
 
 	;
 
 	private final String description;
 	private final int    type;
+	private final String unit;
 
 	private static ArrayList<String> list = new ArrayList<String>();
 
@@ -80,9 +81,10 @@ public enum MSTYPE {
 	}
 
 
-	private MSTYPE(String s, int type) {
+	private MSTYPE(String s, int type, String unit) {
 		this.description = s;
 		this.type = type;
+		this.unit = unit;
 	}
 
 	public static float getValue(DataModel m, MSTYPE mstype) {
@@ -153,6 +155,11 @@ public enum MSTYPE {
 	public String getDescription() {
 		return description;
 	}
+
+	public String getUnit() {
+		return unit;
+	}
+
 
 	public static String getDescriptionOf(int index) {
 		return MSTYPE.values()[index].description;

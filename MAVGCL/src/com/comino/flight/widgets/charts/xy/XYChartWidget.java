@@ -235,6 +235,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = newValue.intValue();
 				series1.setName(PRESET_NAMES[type1]);
+				xAxis.setLabel(PRESETS[type1][0].getUnit());
+				yAxis.setLabel(PRESETS[type1][0].getUnit());
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
@@ -248,6 +250,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = newValue.intValue();
 				series2.setName(PRESET_NAMES[type2]);
+				xAxis.setLabel(PRESETS[type2][0].getUnit());
+				yAxis.setLabel(PRESETS[type2][0].getUnit());
 				linechart.setLegendVisible(true);
 				refreshGraph();
 
