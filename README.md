@@ -4,7 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the QGC.
 
-**Status:** Last updated 18/02/2016 
+**Status:** Last updated 20/02/2016 
 
 **Features:**
 
@@ -18,7 +18,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 
 
-
 **How to build on OSX** (other platforms may need adjustments in `build.xml`)
 
 - Clone repository
@@ -26,25 +25,24 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - Run `ant all`
 
 
-
 **How to start (all platforms):**
 
 - Goto directory `/dist`
-  
+
 - Start either UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
-  
+
    *(PX4 standard ports used, replace IP with yours)*
-  
+
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
-  
+
   ​
 
 **How to deploy on OSX:**
 
 - Modify `build.xml` to adjust  `peer` property.
-  
+
 - Run `ant_deploy`
-  
+
   ​
 
 **Screenshots:**
@@ -54,4 +52,3 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot2.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot3.png)
-
