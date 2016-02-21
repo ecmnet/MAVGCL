@@ -298,9 +298,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				cseries2.getSelectionModel().select(type2.getDescription());
 				cseries3.getSelectionModel().select(type3.getDescription());
 
-				series1.setName(type1.getDescription());
-				series2.setName(type2.getDescription());
-				series3.setName(type3.getDescription());
+				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
+				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
+				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
+
 
 				linechart.setLegendVisible(true);
 
