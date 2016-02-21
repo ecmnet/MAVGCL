@@ -55,7 +55,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot3.png)
 
-Experimental 3D Analysis:
+Experimental 3D Analysis (relative NED only):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot4.png)
-
