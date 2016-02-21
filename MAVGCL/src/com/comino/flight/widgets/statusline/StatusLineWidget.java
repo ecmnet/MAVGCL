@@ -49,7 +49,7 @@ public class StatusLineWidget extends Pane  {
 	private IMAVController control;
 
 
-	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss:SSS");
+	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss.SSS");
 
 
 	public StatusLineWidget() {
@@ -98,7 +98,7 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
-		         elapsedtime.setText(fo.format(control.getCollector().getElapsedTimeMS()));
+		         elapsedtime.setText("Total: "+fo.format(control.getCollector().getElapsedTimeMS()));
 
 			}
 		});

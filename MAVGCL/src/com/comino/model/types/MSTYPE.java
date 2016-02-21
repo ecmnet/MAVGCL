@@ -165,6 +165,10 @@ public enum MSTYPE {
 		return MSTYPE.values()[index].description;
 	}
 
+	public static MSTYPE getTypeOf(int index) {
+		return MSTYPE.values()[index];
+	}
+
 	public static String[] getList() {
 		return list.toArray(new String[list.size()]);
 	}
