@@ -4,7 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the QGC.
 
-**Status:** Last updated 20/02/2016 
+**Status:** Last updated 21/02/2016 
 
 **Features:**
 
@@ -17,13 +17,15 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 
+**In preparation:**
 
-**How to build on OSX** (other platforms may need adjustments in `build.xml`)
+- 3D Analysis of selected key figures
+
+**How to build on OSX** (other platforms may need adjustments in `build.xml`):
 
 - Clone repository
 - Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`
 - Run `ant all`
-
 
 **How to start (all platforms):**
 
