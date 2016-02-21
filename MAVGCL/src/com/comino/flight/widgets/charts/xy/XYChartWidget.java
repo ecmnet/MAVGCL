@@ -49,7 +49,13 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ListView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 
 
@@ -100,13 +106,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private NumberAxis yAxis;
 
 	@FXML
-	private ChoiceBox<String> cseries1;
-
-	@FXML
-	private ChoiceBox<String> cseries2;
-
-	@FXML
 	private ChoiceBox<Float> scale;
+
+	@FXML
+	private ListView<String> keyfigurelist;
 
 
 	@FXML
@@ -118,7 +121,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 	private XYChart.Series<Number,Number> series1;
-	private XYChart.Series<Number,Number> series2;
 
 	private Task<Integer> task;
 
@@ -172,7 +174,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						series1.getData().clear();
-						series2.getData().clear();
 						current_x_pt = 0;
 					}
 
@@ -208,13 +209,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		yAxis.setAutoRanging(false);
 		yAxis.setForceZeroInRange(false);
 
-		cseries1.getItems().addAll(PRESET_NAMES);
-		cseries2.getItems().addAll(PRESET_NAMES);
+		keyfigurelist.getItems().addAll(PRESET_NAMES);
 
 		scale.getItems().addAll(SCALES);
-
-		cseries1.getSelectionModel().select(0);
-		cseries2.getSelectionModel().select(0);
 
 		scale.getSelectionModel().select(2);
 
@@ -227,35 +224,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
-		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = newValue.intValue();
-				series1.setName(PRESET_NAMES[type1]);
-				xAxis.setLabel(PRESETS[type1][0].getUnit());
-				yAxis.setLabel(PRESETS[type1][0].getUnit());
-				linechart.setLegendVisible(true);
-				updateGraph(true);
-
-			}
-
-		});
-
-		cseries2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type2 = newValue.intValue();
-				series2.setName(PRESET_NAMES[type2]);
-				xAxis.setLabel(PRESETS[type2][0].getUnit());
-				yAxis.setLabel(PRESETS[type2][0].getUnit());
-				linechart.setLegendVisible(true);
-				updateGraph(true);
-
-			}
-
-		});
 
 		scale.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -327,6 +296,58 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
+		keyfigurelist.setOnDragDetected(new EventHandler <MouseEvent>() {
+            public void handle(MouseEvent event) {
+                Dragboard db = keyfigurelist.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(Integer.toString(keyfigurelist.getSelectionModel().getSelectedIndex()));
+                db.setContent(content);
+                event.consume();
+            }
+        });
+
+
+		linechart.setOnDragOver(new EventHandler <DragEvent>() {
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() != linechart &&
+                        event.getDragboard().hasString()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                event.consume();
+            }
+        });
+
+		linechart.setOnDragDropped(new EventHandler <DragEvent>() {
+            public void handle(DragEvent event) {
+
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                	int series = Integer.parseInt(db.getString());
+                		type1 = series;
+        				series1.setName(PRESET_NAMES[type1]);
+        				xAxis.setLabel(PRESETS[type1][0].getUnit());
+        				yAxis.setLabel(PRESETS[type1][0].getUnit());
+        				linechart.setLegendVisible(true);
+                    success = true;
+                    updateGraph(true);
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+
+		keyfigurelist.setOnDragDone(new EventHandler <DragEvent>() {
+	            public void handle(DragEvent event) {
+	                if (event.getTransferMode() == TransferMode.MOVE) {
+                          keyfigurelist.getSelectionModel().clearSelection();
+	                }
+	                event.consume();
+	            }
+	        });
+
 
 	}
 
@@ -346,7 +367,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(refresh) {
 			series1.getData().clear();
-			series2.getData().clear();
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -377,20 +397,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type1][1]))
 								);
 
-					if(type2>0)
-						series2.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][0]),
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][1]))
-								);
-
 
 					if(current_x_pt > current_x1_pt) {
 						current_x1_pt++;
 						if(series1.getData().size()>0)
 							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
-
 					}
 				}
 
@@ -402,16 +413,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	public XYChartWidget setup(IMAVController control) {
 		series1 = new XYChart.Series<Number,Number>();
+		series1.setName(PRESET_NAMES[type1]);
 		linechart.getData().add(series1);
-		series2 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series2);
-
 
 		this.control = control;
-
-		series1.setName(PRESET_NAMES[type1]);
-		series2.setName(PRESET_NAMES[type2]);
-
 
 		ExecutorService.get().execute(task);
 		return this;
