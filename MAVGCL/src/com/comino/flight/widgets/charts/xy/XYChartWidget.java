@@ -121,7 +121,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private XYChart.Series<Number,Number> series2;
 
 	private Task<Integer> task;
-	private int time=0;
+
 
 	private IMAVController control;
 
@@ -132,11 +132,12 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
-	private int totalTime 	= 30;
 	private int resolution 	= 50;
-	private float time_max = totalTime * 1000 / COLLECTOR_CYCLE;
-	private int   totalMax = 0;
 
+
+	private int current_x_pt=0;
+	private int current_x0_pt=0;
+	private int current_x1_pt=0;
 
 	public XYChartWidget() {
 
@@ -172,7 +173,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						series1.getData().clear();
 						series2.getData().clear();
-						time = 0;
+						current_x_pt = 0;
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
@@ -190,8 +191,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		task.valueProperty().addListener(new ChangeListener<Integer>() {
 			@Override
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-				totalMax = 999999;
-				updateGraph();
+				updateGraph(false);
 
 			}
 		});
@@ -236,7 +236,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				xAxis.setLabel(PRESETS[type1][0].getUnit());
 				yAxis.setLabel(PRESETS[type1][0].getUnit());
 				linechart.setLegendVisible(true);
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -251,7 +251,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				xAxis.setLabel(PRESETS[type2][0].getUnit());
 				yAxis.setLabel(PRESETS[type2][0].getUnit());
 				linechart.setLegendVisible(true);
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -274,7 +274,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
 				}
 
-				refreshGraph();
+				updateGraph(true);
 
 			}
 
@@ -292,8 +292,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		timeFrame.addListener((v, ov, nv) -> {
 
-			this.totalTime = nv.intValue();
-			this.time = 0;
+			this.current_x_pt = 0;
 
 			if(nv.intValue() > 600) {
 				resolution = 500;
@@ -308,15 +307,32 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				resolution = 50;
 
 
-			this.time_max = totalTime * 1000 / COLLECTOR_CYCLE;
+			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
+			if(current_x0_pt < 0)
+				current_x0_pt = 0;
 
-			refreshGraph();
+			scroll.setValue(0);
+			updateGraph(true);
 		});
+
+
+		scroll.addListener((v, ov, nv) -> {
+			if(!isCollecting.get()) {
+				current_x0_pt = (int)(
+						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
+						* (1 - nv.intValue() / 100f))	;
+				if(current_x0_pt<0)
+					current_x0_pt = 0;
+				updateGraph(true);
+			}
+		});
+
+
 	}
 
 	public void saveAsPng(String path) {
 		WritableImage image = linechart.snapshot(new SnapshotParameters(), null);
-		File file = new File(path+"/chart.png");
+		File file = new File(path+"/xychart.png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (IOException e) {
@@ -324,44 +340,52 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private void refreshGraph() {
-		series1.getData().clear();
-		series2.getData().clear();
-
-		time = control.getMessageList().size() - totalTime * 1000 / COLLECTOR_CYCLE;
-		if(time < 0) time = 0;
-		updateGraph();
-	}
 
 
-	private void updateGraph() {
+	private void updateGraph(boolean refresh) {
+
+		if(refresh) {
+			series1.getData().clear();
+			series2.getData().clear();
+
+			current_x_pt = current_x0_pt;
+			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+
+			if(current_x_pt < 0) current_x_pt = 0;
+		}
 
 		List<DataModel> mList = control.getCollector().getModelList();
 
-		if(time<mList.size() && mList.size()>0 ) {
+		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
-			while(time<mList.size()) {
+			int max_x = mList.size();
+			if(!isCollecting.get() && current_x1_pt < max_x)
+				max_x = current_x1_pt;
 
+			while(current_x_pt<max_x) {
 
+				if(current_x_pt > current_x1_pt)
+					current_x0_pt++;
 
-				if(((time * COLLECTOR_CYCLE) % resolution) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
 
 
 					if(type1>0)
 						series1.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(time),PRESETS[type1][0]),
-								MSTYPE.getValue(mList.get(time),PRESETS[type1][1]))
+								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type1][0]),
+								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type1][1]))
 								);
 
 					if(type2>0)
 						series2.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(time),PRESETS[type2][0]),
-								MSTYPE.getValue(mList.get(time),PRESETS[type2][1]))
+								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][0]),
+								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][1]))
 								);
 
 
-					if(time > time_max) {
+					if(current_x_pt > current_x1_pt) {
+						current_x1_pt++;
 						if(series1.getData().size()>0)
 							series1.getData().remove(0);
 						if(series2.getData().size()>0)
@@ -370,7 +394,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 				}
 
-				time++;
+				current_x_pt++;
 			}
 		}
 	}
