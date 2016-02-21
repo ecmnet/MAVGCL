@@ -3,6 +3,7 @@ package com.comino.flight.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.world.MAVWorldTab;
@@ -36,6 +37,9 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVWorldTab mavworldtab;
 
+	@FXML
+	private MAVAnalysis3DTab mavanalysis3Dtab;
+
 
 	private List<Node> tabs = new ArrayList<Node>();
 
@@ -45,6 +49,7 @@ public class FlightTabs extends Pane {
 
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
+		tabs.add(mavanalysis3Dtab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavmaptab);
 		tabs.add(mavworldtab);
@@ -61,10 +66,12 @@ public class FlightTabs extends Pane {
         mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
 		xyanalysistab.setup(recordControl,control);
+		mavanalysis3Dtab.setup(recordControl,control);
 
 		xtanalysistab.setDisable(false);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
+		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mavworldtab.setDisable(true);
 

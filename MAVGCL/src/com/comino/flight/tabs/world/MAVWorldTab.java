@@ -65,8 +65,6 @@ public class MAVWorldTab extends BorderPane  {
 	@FXML
 	private SubScene scene;
 
-	 private CubeViewer cubeViewer;
-
 	private CubeWorld cubeWorld;
 
 	private IMAVController control;

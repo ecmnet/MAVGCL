@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.charts.line;
+package deprectated.com.comino.flight.widgets.charts.line;
 
 import java.awt.Image;
 import java.io.File;

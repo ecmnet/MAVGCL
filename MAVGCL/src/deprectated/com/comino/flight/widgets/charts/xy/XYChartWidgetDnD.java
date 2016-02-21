@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.comino.flight.widgets.charts.xy;
+package deprectated.com.comino.flight.widgets.charts.xy;
 
 import java.io.File;
 import java.io.IOException;

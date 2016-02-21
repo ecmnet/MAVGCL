@@ -18,6 +18,8 @@
  */
 package org.fxyz.tests;
 
+import java.util.ArrayList;
+
 import org.fxyz.cameras.CameraTransformer;
 import org.fxyz.tools.CubeViewer;
 
@@ -77,20 +79,23 @@ public class CubeViewerTest extends Application {
         light.setTranslateZ(camera.getTranslateZ());
         scene.setCamera(camera);
 
+        cubeViewer.scatterRadius=5;
+
         //Create and add some data to the Cube
-//        ArrayList<Double> dataX = new ArrayList<>();
-//        ArrayList<Double> dataY = new ArrayList<>();
-//        ArrayList<Double> dataZ = new ArrayList<>();
-//        for(int i=-250;i<250;i++) {
-//            dataX.add(new Double(i));
-//            dataY.add(new Double(Math.sin(i)*50)+i);
-//            dataZ.add(new Double(Math.cos(i)*50)+i);
-//        }
-//        //The cube viewer will add data nodes as cubes here but you can add
-//        //your own scatter plot to the same space as the cube if you want.
-//        cubeViewer.setxAxisData(dataX);
-//        cubeViewer.setyAxisData(dataY);
-//        cubeViewer.setzAxisData(dataZ);
+        ArrayList<Double> dataX = new ArrayList<>();
+        ArrayList<Double> dataY = new ArrayList<>();
+        ArrayList<Double> dataZ = new ArrayList<>();
+        for(int i=-250;i<250;i++) {
+            dataX.add(new Double(i));
+            dataY.add(new Double(Math.sin(i)*50)+i);
+            dataZ.add(new Double(Math.cos(i)*50)+i);
+        }
+        //The cube viewer will add data nodes as cubes here but you can add
+        //your own scatter plot to the same space as the cube if you want.
+        cubeViewer.setxAxisData(dataX);
+        cubeViewer.setyAxisData(dataY);
+        cubeViewer.setzAxisData(dataZ);
+
         //First person shooter keyboard movement
         scene.setOnKeyPressed(event -> {
             double change = 10.0;
