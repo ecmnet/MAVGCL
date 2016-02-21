@@ -17,6 +17,7 @@
 package com.comino.flight.widgets.statusline;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.segment.Status;
@@ -42,10 +43,13 @@ public class StatusLineWidget extends Pane  {
 	private Label messages;
 
 	@FXML
-	private Label modelcount;
+	private Label elapsedtime;
 
 	private Task<Long> task;
 	private IMAVController control;
+
+
+	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss:SSS");
 
 
 	public StatusLineWidget() {
@@ -94,7 +98,7 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
-		//		modelcount.setText("#"+Integer.toString(control.getCollector().getModelList().size()));
+		         elapsedtime.setText(fo.format(control.getCollector().getElapsedTimeMS()));
 
 			}
 		});
