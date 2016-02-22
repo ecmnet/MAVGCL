@@ -56,7 +56,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 
 	private static int COLLECTOR_CYCLE = 50;
-	private static int REFRESH_MS = 100;
+	private static int REFRESH_MS = 200;
 
 	private Task<Integer> task;
 
@@ -91,6 +91,10 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private int current_x_pt=0;
 	private int current_x0_pt=0;
 	private int current_x1_pt=0;
+
+	private double old_x=0;
+	private double old_y=0;
+	private double old_z=0;
 
 
 	public MAVAnalysis3DTab() {
@@ -300,16 +304,21 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
-					cubeViewer.addData(1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX),
-				                       1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ),
-					                   1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY));
+					double x = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
+					double z = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ);
+					double y = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY);
+
+					if(Math.abs(x-old_x)>10 ||Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
+						cubeViewer.addData(x,z,y);
+						old_x = x; old_y = y; old_z = z;
+					}
 
 
 
 					if(current_x_pt > current_x1_pt) {
 						current_x1_pt++;
-//						if(cubeViewer.getxAxisData().size()>0)
-//							cubeViewer.remove(0);
+						//						if(cubeViewer.getxAxisData().size()>0)
+						//							cubeViewer.remove(0);
 
 
 					}
