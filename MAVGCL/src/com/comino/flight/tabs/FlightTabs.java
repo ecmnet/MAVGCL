@@ -34,8 +34,8 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVOpenMapTab mavmaptab;
 
-	@FXML
-	private MAVWorldTab mavworldtab;
+//	@FXML
+//	private MAVWorldTab mavworldtab;
 
 	@FXML
 	private MAVAnalysis3DTab mavanalysis3Dtab;
@@ -52,7 +52,7 @@ public class FlightTabs extends Pane {
 		tabs.add(mavanalysis3Dtab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavmaptab);
-		tabs.add(mavworldtab);
+//		tabs.add(mavworldtab);
 
 	}
 
@@ -61,7 +61,7 @@ public class FlightTabs extends Pane {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
-		mavworldtab.setup(recordControl,control);
+//		mavworldtab.setup(recordControl,control);
 		mavmaptab.setup(recordControl,control);
         mavinspectortab.setup(control);
 		xtanalysistab.setup(recordControl,control);
@@ -73,7 +73,7 @@ public class FlightTabs extends Pane {
 		mavinspectortab.setDisable(true);
 		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
-		mavworldtab.setDisable(true);
+//		mavworldtab.setDisable(true);
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 	           for(int i =0; i<tabs.size();i++)
