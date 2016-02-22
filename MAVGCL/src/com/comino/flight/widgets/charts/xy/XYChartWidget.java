@@ -174,6 +174,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						series1.getData().clear();
 						series2.getData().clear();
 						current_x_pt = 0;
+						updateGraph(true);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());

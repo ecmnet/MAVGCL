@@ -128,8 +128,8 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					}
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
-
 						current_x_pt = 0;
+						updateGraph(true);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());

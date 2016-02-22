@@ -184,6 +184,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						current_x_pt = 0; current_x0_pt=0;
 						setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 						scroll.setValue(0);
+						updateGraph(true);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
