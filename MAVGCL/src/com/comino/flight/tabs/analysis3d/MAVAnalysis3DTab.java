@@ -134,6 +134,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 					isCollecting.set(control.getCollector().isCollecting());
 
+
 					if(isCollecting.get() && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
 
@@ -304,23 +305,23 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
+					System.out.println(current_x_pt);
+
 					double x = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
 					double z = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ);
 					double y = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY);
 
-					if(Math.abs(x-old_x)>10 ||Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
+				//	if(Math.abs(x-old_x)>10 ||Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
 						cubeViewer.addData(x,z,y);
-						old_x = x; old_y = y; old_z = z;
-					}
+//						old_x = x; old_y = y; old_z = z;
+//					}
 
 
 
 					if(current_x_pt > current_x1_pt) {
 						current_x1_pt++;
-						//						if(cubeViewer.getxAxisData().size()>0)
-						//							cubeViewer.remove(0);
-
-
+						if(cubeViewer.getxAxisData().size()>0)
+							cubeViewer.remove(0);
 					}
 
 				}
