@@ -6,7 +6,6 @@ import java.util.List;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
-import com.comino.flight.tabs.world.MAVWorldTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;

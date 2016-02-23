@@ -74,7 +74,7 @@ public class MainApp extends Application {
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost"))
 				control = new MAVUdpController(peerAddress,14556,"0.0.0.0",14550);
 			else {
-				control = new MAVUdpController(peerAddress,14555,"0.0.0.0",14550);
+				control = new MAVUdpController(peerAddress,14555,"0.0.0.0",14557);
 			}
 		}
 

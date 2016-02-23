@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import org.fxyz.cameras.CameraTransformer;
 import org.fxyz.extras.CubeWorld;
-import org.fxyz.tools.CubeViewer;
 
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.mav.control.IMAVController;

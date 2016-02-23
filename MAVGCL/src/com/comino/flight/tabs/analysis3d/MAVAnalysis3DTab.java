@@ -20,11 +20,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.fxyz.cameras.CameraTransformer;
-import org.fxyz.extras.CubeWorld;
-import org.fxyz.tools.CubeViewer;
 
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.fxyz.ext.FlightCubeViewer;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
@@ -46,11 +45,9 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Box;
 
 public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
@@ -63,7 +60,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private PerspectiveCamera camera;
 	private final double sceneWidth = 1000;
 	private final double sceneHeight = 700;
-	private double cameraDistance = 5000;
+
 
 	private CameraTransformer cameraTransform = new CameraTransformer();
 
@@ -77,7 +74,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	@FXML
 	private SubScene scene;
 
-	private CubeViewer cubeViewer;
+	private FlightCubeViewer cubeViewer;
 
 	private IMAVController control;
 
@@ -200,7 +197,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		scene.setFill(Color.BLACK);
 		//Setup camera and scatterplot cubeviewer
 		camera = new PerspectiveCamera(true);
-		cubeViewer = new CubeViewer(2000,100, false);
+		cubeViewer = new FlightCubeViewer(2000,100, false);
 
 
 		sceneRoot.getChildren().addAll(cubeViewer);
