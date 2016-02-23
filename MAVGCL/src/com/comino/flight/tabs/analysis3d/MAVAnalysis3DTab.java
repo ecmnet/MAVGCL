@@ -92,9 +92,6 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private int current_x0_pt=0;
 	private int current_x1_pt=0;
 
-	private double old_x=0;
-	private double old_y=0;
-	private double old_z=0;
 
 
 	public MAVAnalysis3DTab() {
@@ -129,6 +126,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						current_x_pt = 0;
+						scroll.setValue(0);
 						updateGraph(true);
 					}
 
@@ -256,12 +254,14 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		});
 
 		scroll.addListener((v, ov, nv) -> {
+
 			if(!isCollecting.get()) {
 				current_x0_pt = (int)(
 						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
 						* (1 - nv.intValue() / 100f))	;
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
+
 				updateGraph(true);
 			}
 		});
@@ -272,9 +272,15 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 	public MAVAnalysis3DTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.control = control;
+		recordControl.addChart(this);
 		ExecutorService.get().execute(task);
 		return this;
 	}
+
+
+	private double old_x;
+	private double old_y;
+	private double old_z;
 
 
 
@@ -305,20 +311,22 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
-					System.out.println(current_x_pt);
 
-					double x = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
-					double z = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ);
-					double y = 1000.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY);
+					double x = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
+					double z = (250.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ))+999.0;
+					double y = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY);
 
-					if(Math.abs(x-old_x)>5 ||Math.abs(y-old_y)>5 || Math.abs(z-old_z)>5) {
-						cubeViewer.addData(x,z,y);
+
+					if(Math.abs(x-old_x)>10 || Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
 						old_x = x; old_y = y; old_z = z;
-						if(current_x_pt > current_x1_pt) {
-							current_x1_pt++;
-							if(cubeViewer.getxAxisData().size()>0)
-								cubeViewer.remove(0);
-						}
+
+					cubeViewer.addData(x,z,y);
+
+					if(current_x_pt > current_x1_pt) {
+						current_x1_pt++;
+						if(cubeViewer.getxAxisData().size()>0)
+							cubeViewer.remove(0);
+					}
 					}
 
 				}

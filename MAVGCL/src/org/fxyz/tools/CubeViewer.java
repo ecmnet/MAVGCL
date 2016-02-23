@@ -49,8 +49,8 @@ public class CubeViewer extends Group {
 	public double scatterRadius = 1;
 	public double axesThickness = 5;
 	public double gridSize = 2;
-	final double gridLinesOpacity = 0.1;
-	final double gridPanelsOpacity = 0.5;
+	final double gridLinesOpacity = 0.2;
+	final double gridPanelsOpacity = 0.6;
 	private boolean selfLightEnabled = true;
 
 
