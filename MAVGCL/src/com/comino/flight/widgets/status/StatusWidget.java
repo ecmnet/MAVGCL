@@ -99,10 +99,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		else
 			poshold.setFill(Color.LIGHTGRAY);
 
-//		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-//			landed.setFill(Color.LIGHTGREEN);
-//		else
-//			landed.setFill(Color.LIGHTGRAY);
+		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
+			landed.setFill(Color.LIGHTGREEN);
+		else
+			landed.setFill(Color.LIGHTGRAY);
 
 	}
 

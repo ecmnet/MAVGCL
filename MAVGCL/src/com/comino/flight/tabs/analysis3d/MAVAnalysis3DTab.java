@@ -219,7 +219,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		light.setTranslateZ(camera.getTranslateZ());
 		scene.setCamera(camera);
 
-		cubeViewer.scatterRadius=10;
+		cubeViewer.scatterRadius=15;
 
 
 
@@ -259,6 +259,14 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 
+				updateGraph(true);
+			}
+		});
+
+		this.disabledProperty().addListener((v, ov, nv) -> {
+			if(ov.booleanValue() && !nv.booleanValue()) {
+				current_x_pt = 0;
+				scroll.setValue(0);
 				updateGraph(true);
 			}
 		});
@@ -317,13 +325,13 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					if(Math.abs(x-old_x)>10 || Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
 						old_x = x; old_y = y; old_z = z;
 
-					cubeViewer.addData(x,z,y);
+						cubeViewer.addData(x,z,y);
 
-					if(current_x_pt > current_x1_pt) {
-						current_x1_pt++;
-						if(cubeViewer.getxAxisData().size()>0)
-							cubeViewer.remove(0);
-					}
+						if(current_x_pt > current_x1_pt) {
+							current_x1_pt++;
+							if(cubeViewer.getxAxisData().size()>0)
+								cubeViewer.remove(0);
+						}
 					}
 
 				}

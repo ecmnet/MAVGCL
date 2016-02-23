@@ -62,7 +62,7 @@ import javafx.scene.shape.Rectangle;
 
 public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
-	private final static int MAP_UPDATE_MS = 330;
+	private final static int MAP_UPDATE_MS = 100;
 
 	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
 
@@ -313,6 +313,14 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			}
 
 		});
+
+
+		this.disabledProperty().addListener((v, ov, nv) -> {
+			if(ov.booleanValue() && !nv.booleanValue()) {
+				map_changed = true;
+			}
+		});
+
 
 
 

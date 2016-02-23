@@ -48,7 +48,7 @@
             <Circle fx:id="landed" fill="#eaecee" radius="8.0" stroke="#b4b4b4" strokeType="INSIDE" GridPane.rowIndex="10" />
             <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Return to land" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label text="TakeOff" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label text="Offboard" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Label text="Landed" GridPane.columnIndex="1" GridPane.rowIndex="10" />
          </children>
       </GridPane>

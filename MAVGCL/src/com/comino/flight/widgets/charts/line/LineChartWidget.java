@@ -359,6 +359,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
+
+		this.disabledProperty().addListener((v, ov, nv) -> {
+			if(ov.booleanValue() && !nv.booleanValue()) {
+				current_x_pt = 0;
+				scroll.setValue(0);
+				updateGraph(true);
+			}
+		});
+
+
 	}
 
 

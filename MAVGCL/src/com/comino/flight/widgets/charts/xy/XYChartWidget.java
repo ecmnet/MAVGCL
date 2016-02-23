@@ -83,7 +83,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private final static Float[] SCALES = {
-			1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
+			0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
 	};
 
 
@@ -328,6 +328,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				updateGraph(true);
 			}
 		});
+
+
+		this.disabledProperty().addListener((v, ov, nv) -> {
+			if(ov.booleanValue() && !nv.booleanValue()) {
+				current_x_pt = 0;
+				scroll.setValue(0);
+				updateGraph(true);
+			}
+		});
+
 
 
 	}

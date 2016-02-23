@@ -43,11 +43,12 @@ import javafx.scene.shape.Circle;
 public class ChartControlWidget extends Pane implements IMSPModeChangedListener {
 
 	private static final int TRIG_ARMED 		= 0;
-	private static final int TRIG_ALTHOLD		= 1;
-	private static final int TRIG_POSHOLD 		= 2;
+	private static final int TRIG_LANDED		= 1;
+	private static final int TRIG_ALTHOLD		= 2;
+	private static final int TRIG_POSHOLD 		= 3;
 
-	private static final String[]  TRIG_START_OPTIONS = { "armed", "altHold entered", "posHold entered" };
-	private static final String[]  TRIG_STOP_OPTIONS = { "unarmed", "altHold left", "posHold left" };
+	private static final String[]  TRIG_START_OPTIONS = { "armed", "started", "altHold entered", "posHold entered" };
+	private static final String[]  TRIG_STOP_OPTIONS = { "unarmed", "landed", "altHold left", "posHold left" };
 
 	private static final Integer[] TRIG_DELAY_OPTIONS = { 0, 2, 5, 10, 30 };
 	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 240, 1200 };
@@ -273,12 +274,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		if(!control.getCollector().isCollecting()) {
 			switch(triggerStartMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
+			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
 			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),0); break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
 			}
 		} else {
 			switch(triggerStopMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);         break;
+			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay); 		break;
 			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),triggerDelay); break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay); break;
 			}
