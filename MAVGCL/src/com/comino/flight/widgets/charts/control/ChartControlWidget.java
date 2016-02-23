@@ -232,6 +232,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					scroll.setDisable(true);
 				else
 					scroll.setDisable(false);
+				scroll.setValue(0);
 			}
 		});
 

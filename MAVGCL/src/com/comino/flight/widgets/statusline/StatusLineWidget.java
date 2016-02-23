@@ -98,7 +98,7 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
-		         elapsedtime.setText("Total: "+fo.format(control.getCollector().getElapsedTimeMS()));
+		         elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
 
 			}
 		});

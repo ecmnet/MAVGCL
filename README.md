@@ -6,6 +6,8 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 23/02/2016 
 
+Version: 0.2
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
