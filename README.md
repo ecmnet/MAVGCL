@@ -6,12 +6,12 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 23/02/2016 
 
-Version: 0.2
+Stable branch: Stable_V0.2
 
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
-- Trigger recording manually or by selectable flight-mode changes
+- Trigger recording manually or by selectable flight-mode/state changes
 - Choosable stop-recording delay
 - Display of  key-figures during and after recording (with horizontal scrolling)
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
