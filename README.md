@@ -2,7 +2,7 @@
 
 ## In-Flight Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP. It is not intended to replace the QGC.
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
 
 **Status:** Last updated 23/02/2016 
 
@@ -23,7 +23,7 @@ Stable branch: Stable_V0.2
 
 - 3D Analysis of selected key figures
 
-**How to build on OSX** (other platforms may need adjustments in `build.xml`):
+**How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
 - Clone repository
 - Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`
@@ -37,9 +37,10 @@ Stable branch: Stable_V0.2
 
    *(PX4 standard ports used, replace IP with yours)*
 
+  or `java -jar MAVGAnalysis.jar --peerAddress=127.0.0.1` for SITL (jMAVSim)
+
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
 
-  ​
 
 **How to deploy on OSX:**
 
