@@ -75,7 +75,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private ChoiceBox<Integer> totaltime;
 
-    @FXML Slider scroll;
+	@FXML Slider scroll;
 
 	@FXML
 	private Circle isrecording;
@@ -90,6 +90,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private int triggerDelay =0;
 
 	private boolean modetrigger  = false;
+	protected int totalTime_sec = 30;
+	private ModelCollectorService collector;
 
 
 	public ChartControlWidget() {
@@ -222,8 +224,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		totaltime.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				totalTime_sec  = newValue.intValue();
 				for(IChartControl chart : charts)
 					chart.getTimeFrameProperty().set(newValue.intValue());
+
+				if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
+					scroll.setDisable(true);
+				else
+					scroll.setDisable(false);
 			}
 		});
 
@@ -232,7 +240,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					Number old_val, Number new_val) {
 				for(IChartControl chart : charts) {
 					if(chart.getScrollProperty()!=null)
-					   chart.getScrollProperty().set(new_val.intValue());
+						chart.getScrollProperty().set(new_val.intValue());
 				}
 
 
@@ -243,6 +251,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	public void setup(IMAVController control) {
 		this.control = control;
+		this.collector = control.getCollector();
 		this.control.addModeChangeListener(this);
 		ExecutorService.get().execute(task);
 
@@ -255,15 +264,16 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 	private void recording(boolean start, int delay) {
-			if(start) {
-				control.getMessageList().clear();
-				control.getCollector().start();
-				scroll.setDisable(true);
-			}
-			else {
-				control.getCollector().stop(delay);
-				scroll.setDisable(false);
-			}
+		if(start) {
+			control.getMessageList().clear();
+			control.getCollector().start();
+			scroll.setDisable(true);
+		}
+		else {
+			control.getCollector().stop(delay);
+			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
+			  scroll.setDisable(false);
+		}
 	}
 
 	@Override

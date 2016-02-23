@@ -32,6 +32,7 @@ import com.comino.msp.utils.ExecutorService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -258,7 +259,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 						* (1 - nv.intValue() / 100f))	;
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
-
+             if(!disabledProperty().get())
 				updateGraph(true);
 			}
 		});
@@ -354,7 +355,6 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	public DoubleProperty getScrollProperty() {
 		return scroll;
 	}
-
 
 }
 

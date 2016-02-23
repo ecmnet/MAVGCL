@@ -325,7 +325,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						* (1 - nv.intValue() / 100f))	;
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
-				updateGraph(true);
+				if(!disabledProperty().get())
+					updateGraph(true);
 			}
 		});
 
