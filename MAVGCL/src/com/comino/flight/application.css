@@ -104,13 +104,46 @@
 }
 
 .button {
-	 -fx-background-color: #404040;
+	-fx-background-color: #404040;
+	-fx-text-fill: #F0F0F0;
+}
+
+.check-box {
+	-fx-background-color: #303030;
+	-fx-text-fill: #F0F0F0;
 }
 
 .toggle-button {
 	 -fx-background-color: #404040;
 }
 
+.check-box *.box {
+  -fx-background-color:#404040;
+}
+
+.slider .track  {
+  -fx-background-color:#404040;
+}
+
+.progress-bar > .track {
+  -fx-control-inner-background: #303030;
+   -fx-text-box-border: #303030;
+    -fx-shadow-highlight-color: #303030;
+}
+
+.tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
+	 -fx-background-color:#404040;
+}
+
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected  {
+     -fx-background-color: #606060;
+       -fx-shadow-highlight-color: #303030;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: #303030;
+  }
 
 
 .status .label {
