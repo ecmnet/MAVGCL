@@ -490,4 +490,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 
+
+
 }

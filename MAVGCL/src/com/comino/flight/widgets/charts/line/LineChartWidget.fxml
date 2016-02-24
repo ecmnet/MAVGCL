@@ -22,7 +22,7 @@
 			legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="220.0"
 			verticalZeroLineVisible="false">
 			<xAxis>
-				<NumberAxis animated="false" lowerBound="0"
+				<NumberAxis animated="true" lowerBound="0"
 					minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0"
 					tickLength="10.0" upperBound="60.0" fx:id="xAxis" />
 			</xAxis>
@@ -32,7 +32,7 @@
 		</LineChart>
 	</center>
 	<bottom>
-		<Pane prefHeight="28">
+		<Pane prefHeight="23">
 			<ChoiceBox fx:id="cseries1" layoutX="47.0" prefHeight="19.0"
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="cseries2" layoutX="155.0" prefHeight="19.0"

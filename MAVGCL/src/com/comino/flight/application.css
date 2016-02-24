@@ -1,56 +1,126 @@
 .root{
-    -fx-font-size: 8pt;
+    -fx-font-size: 8.0pt;
+    -fx-background-color: #303030;
+    -fx-text-fill: #FFFFFF;
+}
+
+.tab-pane {
+	 -fx-background-color: #303030;
+}
+
+.tab-header-background {
+	 -fx-background-color: #303030;
+}
+
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-padding: 20.0px;
+}
+
+
+.progress-bar {
+    -fx-background-color: #303030;
+}
+
+.label {
+	-fx-text-fill: #F0F0F0;
+	-fx-font-size: 10.0px;
+}
+
+.tab
+{
+-fx-background-color: #303030;
+-fx-alignment: CENTER;
+-fx-text-fill: #f0f0f0;
+}
+
+.tab-label {
+ -fx-text-fill: #f0f0f0;
 }
 
 .chart-series-line {
-    -fx-stroke-width: 1px;
-
+    -fx-stroke-width: 1.0px;
 }
+
+.chart-plot-background {
+    -fx-background-color: #282828;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #404040;
+}
+.chart-horizontal-grid-lines {
+    -fx-stroke: #404040;
+}
+
+.chart-alternative-row-fill {
+    -fx-fill: #303030;
+    -fx-stroke: transparent;
+    -fx-stroke-width: 0.0;
+}
+
+.axis {
+    -fx-tick-label-fill: #F0F0F0;
+}
+
+.seprator {
+	 -fx-fill: #505050;
+}
+
 
 .text{
     -fx-font-smoothing-type: LCD;
 }
 
 .widget {
-    -fx-font-size: 7pt;
-    -fx-background-color: #F0F0E6;
-    -fx-border-color: #B0B0B0;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-border-insets: 2px;
+    -fx-font-size: 7.0pt;
+
 }
 
 .glass  {
-	-fx-font-size: 7pt;
-    -fx-background-color: rgba(0, 100, 100, 0.4); -fx-background-radius: 10;
+	-fx-font-size: 7.0pt;
+    -fx-background-color: rgba(0.0, 100.0, 100.0, 0.4); -fx-background-radius: 10.0;
     -fx-border-color: #B0B0B0;
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px;
-    -fx-border-insets: 2px;
+    -fx-border-width: 1.0px;
+    -fx-border-radius: 5.0px;
+    -fx-border-insets: 2.0px;
 }
 
 .glass .label {
 	-fx-text-fill: #FFFFFF;
 }
 
-.chart-alternative-row-fill {
-    -fx-fill: #F0F0F0;
-    -fx-stroke: transparent;
-    -fx-stroke-width: 0;
-}
 
 .inspector {
-	 -fx-font-size: 7pt;
+	 -fx-font-size: 7.0pt;
 }
 
+.choice-box .context-menu  {
+	 -fx-background-color: #404040;
+}
+
+.choice-box {
+	 -fx-background-color: #404040;
+}
+
+.button {
+	 -fx-background-color: #404040;
+}
+
+.toggle-button {
+	 -fx-background-color: #404040;
+}
+
+
+
 .status .label {
-	-fx-text-fill: #505050;
-	-fx-font-size: 10px;
+	-fx-text-fill: #F0F0F0;
+	-fx-font-size: 10.0px;
 }
 
 .status .message {
-	-fx-text-fill: #805050;
-	-fx-font-size: 10px;
+	-fx-text-fill: #F05050;
+	-fx-font-size: 10.0px;
 }
 
 
