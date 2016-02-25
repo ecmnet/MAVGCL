@@ -150,6 +150,15 @@
 	 -fx-background-color:#404040;
 }
 
+.tree-table-view {
+    -fx-base: #1d1d1d;
+    -fx-control-inner-background: #202020;
+    -fx-background-color: #303030;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-padding: 5;
+}
+
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected  {
      -fx-background-color: #606060;
