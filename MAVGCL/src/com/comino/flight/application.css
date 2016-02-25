@@ -17,6 +17,10 @@
    -fx-padding: 20.0px;
 }
 
+.separator:horizontal .line {
+    -fx-background-color: null;
+    -fx-border-color: #404040;
+}
 
 .progress-bar {
     -fx-background-color: #303030;
@@ -154,6 +158,22 @@
 .status .message {
 	-fx-text-fill: #F05050;
 	-fx-font-size: 10.0px;
+}
+
+.menu-item .label {
+    -fx-text-fill: white;
+}
+
+.menu-item:focused {
+     -fx-background-color: darkgray;
+}
+
+.context-menu {
+    -fx-background-color: black;
+}
+
+.menu-bar {
+	 -fx-background-color: #404040;
 }
 
 

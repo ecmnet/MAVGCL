@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/jssc.jar"/>
 	<classpathentry kind="lib" path="lib/JCSG.jar"/>
 	<classpathentry kind="lib" path="lib/poly2tri-core-0.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/medusa-3.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

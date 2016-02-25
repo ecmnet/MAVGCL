@@ -24,6 +24,9 @@ import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import eu.hansolo.medusa.Gauge;
+import eu.hansolo.medusa.Gauge.ScaleDirection;
+import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -32,6 +35,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 public class BatteryWidget extends Pane  {
 
@@ -39,23 +43,15 @@ public class BatteryWidget extends Pane  {
 	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
 	private static final float ca_range[] = { 0.0f,  100.0f, 60.0f, 0 };
 
-	@FXML
-	private ProgressBar voltage;
+
 
 	@FXML
-	private ProgressBar current;
+	private Gauge g_voltage;
 
 	@FXML
-	private ProgressBar capacity;
+	private Gauge g_capacity;
 
-	@FXML
-	private Label f_voltage;
 
-	@FXML
-	private Label f_current;
-
-	@FXML
-	private Label f_capacity;
 
 	private final DecimalFormat fo = new DecimalFormat("#0.0");
 
@@ -103,23 +99,25 @@ public class BatteryWidget extends Pane  {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 
-				checkBarLimits(voltage, model.battery.b0, vo_range[2], vo_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-				if(model.battery.b0 > vo_range[0]) {
-					voltage.setProgress((model.battery.b0 - vo_range[0]) / (vo_range[1] - vo_range[0]));
-					f_voltage.setText(fo.format(model.battery.b0));
-				}
+				g_voltage.setValue(model.battery.b0);
 
-				checkBarLimits(current, model.battery.c0, cu_range[2], cu_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-				if(model.battery.c0 > cu_range[0]) {
-					current.setProgress((model.battery.c0 - cu_range[0]) / (cu_range[1] - cu_range[0]));
-					f_current.setText(fo.format(model.battery.c0));
-				}
-
-				checkBarLimits(capacity, model.battery.p, ca_range[2], ca_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-				if(model.battery.p > ca_range[0]) {
-					capacity.setProgress((model.battery.p - ca_range[0]) / (ca_range[1] - ca_range[0]));
-					f_capacity.setText(fo.format(model.battery.p));
-				}
+//				checkBarLimits(voltage, model.battery.b0, vo_range[2], vo_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
+//				if(model.battery.b0 > vo_range[0]) {
+//					voltage.setProgress((model.battery.b0 - vo_range[0]) / (vo_range[1] - vo_range[0]));
+//					f_voltage.setText(fo.format(model.battery.b0));
+//				}
+//
+//				checkBarLimits(current, model.battery.c0, cu_range[2], cu_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
+//				if(model.battery.c0 > cu_range[0]) {
+//					current.setProgress((model.battery.c0 - cu_range[0]) / (cu_range[1] - cu_range[0]));
+//					f_current.setText(fo.format(model.battery.c0));
+//				}
+//
+//				checkBarLimits(capacity, model.battery.p, ca_range[2], ca_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
+//				if(model.battery.p > ca_range[0]) {
+//					capacity.setProgress((model.battery.p - ca_range[0]) / (ca_range[1] - ca_range[0]));
+//					f_capacity.setText(fo.format(model.battery.p));
+//				}
 
 			}
 		});
@@ -140,6 +138,27 @@ public class BatteryWidget extends Pane  {
 			return; }
 
 		bar.setStyle("-fx-accent: darkcyan;");
+	}
+
+	@FXML
+	private void initialize() {
+         setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
+         g_voltage.setDecimals(1);
+         setupGauge(g_capacity,0,100,"%",Color.DARKBLUE);
+         g_capacity.setDecimals(0);
+	}
+
+
+	private void setupGauge(Gauge gauge, float min, float max, String unit, Color color) {
+		gauge.setSkinType(SkinType.SLIM);
+		gauge.setBarColor(color);
+		gauge.setMinValue(min);
+		gauge.setMaxValue(max);
+		gauge.setDecimals(1);
+	    gauge.setTitle(unit);
+		gauge.setValueColor(Color.WHITE);
+		gauge.setTitleColor(Color.WHITE);
+
 	}
 
 
