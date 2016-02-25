@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
-import com.comino.flight.widgets.controls.ControlsWidget;
+
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
