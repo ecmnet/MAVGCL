@@ -75,32 +75,32 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	@Override
 	public void update(Status arg0, Status newStat) {
 		if(newStat.isStatus(Status.MSP_CONNECTED))
-			connected.setFill(Color.LIGHTGREEN);
+			connected.setFill(Color.DARKORANGE);
 		else
 			connected.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
-			armed.setFill(Color.LIGHTGREEN);
+			armed.setFill(Color.DARKORANGE);
 		else
 			armed.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_RC_ATTACHED) && newStat.isStatus(Status.MSP_CONNECTED))
-			rcavailable.setFill(Color.LIGHTGREEN);
+			rcavailable.setFill(Color.DARKORANGE);
 		else
 			rcavailable.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
-			althold.setFill(Color.LIGHTGREEN);
+			althold.setFill(Color.GREEN);
 		else
 			althold.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
-			poshold.setFill(Color.LIGHTGREEN);
+			poshold.setFill(Color.GREEN);
 		else
 			poshold.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-			landed.setFill(Color.LIGHTGREEN);
+			landed.setFill(Color.GREEN);
 		else
 			landed.setFill(Color.LIGHTGRAY);
 

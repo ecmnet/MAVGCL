@@ -32,7 +32,7 @@
 		</LineChart>
 	</center>
 	<bottom>
-		<Pane prefHeight="23">
+		<Pane prefHeight="35">
 			<ChoiceBox fx:id="cseries1" layoutX="47.0" prefHeight="19.0"
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="cseries2" layoutX="155.0" prefHeight="19.0"

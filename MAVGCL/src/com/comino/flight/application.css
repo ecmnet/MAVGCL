@@ -100,15 +100,15 @@
 }
 
 .choice-box .context-menu  {
-	 -fx-background-color: #404040;
+	 -fx-background-color: #606060;
 }
 
 .choice-box {
-	 -fx-background-color: #404040;
+	 -fx-background-color: #606060;
 }
 
 .button {
-	-fx-background-color: #404040;
+	 -fx-background-color: #606060;
 	-fx-text-fill: #F0F0F0;
 }
 
@@ -117,8 +117,19 @@
 	-fx-text-fill: #F0F0F0;
 }
 
+.check-box .mark {
+    -fx-background-color: transparent;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.333333em; /* 4 -- this is half the size of the mark */
+    -fx-shape: "M0,4H2L3,6L6,0H8L4,8H2Z";
+}
+
+.check-box:selected .mark {
+	-fx-background-color: DARKORANGE;
+}
+
 .toggle-button {
-	 -fx-background-color: #404040;
+	 -fx-background-color: #606060;
 }
 
 .check-box *.box {
@@ -170,6 +181,11 @@
 
 .context-menu {
     -fx-background-color: black;
+}
+
+.tree-table-view {
+  -fx-background-color: #303030;
+  -fx-text-fill: #F0F0F0;
 }
 
 .menu-bar {

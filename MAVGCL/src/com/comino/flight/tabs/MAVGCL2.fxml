@@ -19,7 +19,7 @@
 		    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 		    AnchorPane.topAnchor="5.0"  AnchorPane.bottomAnchor="0.0">
 			<tabs>
-				<Tab text="tY-Analysis" >
+				<Tab text="Time-Series" >
 					<content>
 						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
 							xmlns:fx="http://javafx.com/fxml/1">

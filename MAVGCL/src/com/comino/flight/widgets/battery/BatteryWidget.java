@@ -100,6 +100,7 @@ public class BatteryWidget extends Pane  {
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 
 				g_voltage.setValue(model.battery.b0);
+				g_capacity.setValue(model.battery.p);
 
 //				checkBarLimits(voltage, model.battery.b0, vo_range[2], vo_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
 //				if(model.battery.b0 > vo_range[0]) {
@@ -144,7 +145,7 @@ public class BatteryWidget extends Pane  {
 	private void initialize() {
          setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
          g_voltage.setDecimals(1);
-         setupGauge(g_capacity,0,100,"%",Color.DARKBLUE);
+         setupGauge(g_capacity,0,100,"%",Color.DEEPSKYBLUE);
          g_capacity.setDecimals(0);
 	}
 
@@ -156,8 +157,10 @@ public class BatteryWidget extends Pane  {
 		gauge.setMaxValue(max);
 		gauge.setDecimals(1);
 	    gauge.setTitle(unit);
+	    gauge.setUnit("Battery");
 		gauge.setValueColor(Color.WHITE);
 		gauge.setTitleColor(Color.WHITE);
+		gauge.setUnitColor(Color.WHITE);
 
 	}
 
