@@ -4,7 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
 
-**Status:** Last updated 23/02/2016 
+**Status:** Last updated 26/02/2016 
 
 Stable branch: Stable_V0.2
 
@@ -41,7 +41,6 @@ Stable branch: Stable_V0.2
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
 
-
 **How to deploy on OSX:**
 
 - Modify `build.xml` to adjust  `peer` property.
@@ -50,7 +49,7 @@ Stable branch: Stable_V0.2
 
   ​
 
-**Screenshots:**
+**Screenshots** (MAVGAnalysis2 branch):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot1.png)
 
