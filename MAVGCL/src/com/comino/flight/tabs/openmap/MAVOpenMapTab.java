@@ -173,18 +173,18 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					if(model.gps.numsat>3) {
 						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
 
-						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
-							if(!home_set) {
-								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-								canvasLayer.redraw(true);
-							    home_set = true;
-							}
-							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
-							canvasLayer.redraw(false);
-						} else {
+//						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
+//							if(!home_set && model.gps.eph < 10) {
+//								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+//								canvasLayer.redraw(true);
+//							    home_set = true;
+//							}
+//							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+//							canvasLayer.redraw(false);
+//						} else {
 							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 							canvasLayer.redraw(true);
-						}
+//						}
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
