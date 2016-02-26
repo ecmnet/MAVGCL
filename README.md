@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 26/02/2016 
 
-Stable branch: Stable_V0.2
+Changed to master-branch as default
 
 **Features:**
 
@@ -60,3 +60,5 @@ Stable branch: Stable_V0.2
 Experimental 3D Analysis (relative Local position in NED only):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot4.png)
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot5.png)
