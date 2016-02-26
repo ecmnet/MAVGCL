@@ -38,7 +38,7 @@ public enum MSTYPE {
 	MSP_RNEDZ		("Loc.PosX.rel.",1,"m"),
 	MSP_RAW_DI		("Raw.Dist.S.",1,"m"),
 	MSP_RAW_FLOWX	("Raw.FlowX",1,"-"),
-	MSP_RAW_FLOWY	("Raw.FlowX",1,"-"),
+	MSP_RAW_FLOWY	("Raw.FlowY",1,"-"),
 	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,"-"),
 	MSP_VOLTAGE		("Bat.Voltage",1,"V"),
 	MSP_CURRENT		("Bat.Current",1,"A"),
