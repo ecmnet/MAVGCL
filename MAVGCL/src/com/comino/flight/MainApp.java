@@ -48,7 +48,7 @@ public class MainApp extends Application {
 	@FXML
 	private MenuItem m_close;
 
-
+	private FlightTabs fvController;
 
 
 	@Override
@@ -107,6 +107,12 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
+			primaryStage.focusedProperty().addListener((observable, wasFocused, nowFocused) -> {
+                 if(fvController!=null) {
+                	 fvController.activateCurrentTab(wasFocused.booleanValue());
+                 }
+			});
+
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -136,6 +142,7 @@ public class MainApp extends Application {
 	}
 
 
+
 	public void showMAVGCLApplication() {
 
 		try {
@@ -159,7 +166,7 @@ public class MainApp extends Application {
 			if(!control.isConnected())
 				control.connect();
 
-			FlightTabs fvController = loader.getController();
+			fvController = loader.getController();
 			fvController.setup(controlpanel.getRecordControl(),control);
 			fvController.setPrefHeight(820);
 		//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());

@@ -55,6 +55,11 @@ public class FlightTabs extends Pane {
 
 	}
 
+	public void activateCurrentTab(boolean disable) {
+		int tab = tabpane.getSelectionModel().getSelectedIndex();
+		tabs.get(tab).setDisable(disable);
+	}
+
 	public void setup(ChartControlWidget recordControl, IMAVController control) {
 
 
