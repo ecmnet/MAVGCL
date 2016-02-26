@@ -49,7 +49,7 @@ Stable branch: Stable_V0.2
 
   ​
 
-**Screenshots** (MAVGAnalysis2 branch):
+**Screenshots**:
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/MAVGAnalysis/MAVGCL/screenshot1.png)
 
