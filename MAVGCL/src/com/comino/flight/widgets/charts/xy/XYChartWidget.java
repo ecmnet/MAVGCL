@@ -88,7 +88,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 	private static int COLLECTOR_CYCLE = 50;
-	private static int REFRESH_MS = 100;
 
 	@FXML
 	private LineChart<Number,Number> linechart;
@@ -147,7 +146,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
-	private int resolution 	= 50;
+	private int resolution_ms 	= 50;
 
 
 	private int current_x_pt=0;
@@ -172,7 +171,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(REFRESH_MS);
+						Thread.sleep(resolution_ms*2);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -413,16 +412,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			this.current_x_pt = 0;
 
 			if(nv.intValue() > 600) {
-				resolution = 500;
+				resolution_ms = 500;
 			}
 			else if(nv.intValue() > 200) {
-				resolution = 200;
+				resolution_ms = 200;
 			}
 			else if(nv.intValue() > 20) {
-				resolution = 100;
+				resolution_ms = 100;
 			}
 			else
-				resolution = 50;
+				resolution_ms = 50;
 
 
 			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -498,7 +497,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(current_x_pt > current_x1_pt)
 					current_x0_pt++;
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					synchronized(this) {
 						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)

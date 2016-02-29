@@ -90,7 +90,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private static int COLLECTOR_CYCLE = 50;
-	private static int REFRESH_MS = 100;
 
 	@FXML
 	private LineChart<Number,Number> linechart;
@@ -166,7 +165,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(REFRESH_MS);
+						Thread.sleep(resolution_ms);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -339,8 +338,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			else if(nv.intValue() > 20) {
 				resolution_ms = 100;
 			}
-			else
+			else {
 				resolution_ms = 50;
+			}
 
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
