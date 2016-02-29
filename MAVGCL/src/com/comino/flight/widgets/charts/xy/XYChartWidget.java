@@ -200,8 +200,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					if(isCollecting.get() && control.isConnected())
 						updateValue(control.getCollector().getModelList().size());
 
-
-
 				}
 				return control.getCollector().getModelList().size();
 			}
@@ -502,7 +500,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
-
 					synchronized(this) {
 						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)
 							series1.getData().add(new XYChart.Data<Number,Number>(
@@ -515,7 +512,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 									MSTYPE.getValue(mList.get(current_x_pt),type2_x),
 									MSTYPE.getValue(mList.get(current_x_pt),type2_y))
 									);
-
 
 						if(current_x_pt > current_x1_pt) {
 							current_x1_pt++;
@@ -540,9 +536,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		series2 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series2);
 
-
 		this.control = control;
-
 
 		ExecutorService.get().execute(task);
 		return this;
