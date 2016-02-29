@@ -7,7 +7,7 @@ import com.comino.msp.model.DataModel;
 public enum MSTYPE {
 
 	MSP_NONE 		("none",1,"-"),
-	MSP_ACCX 		("AccX",1,"-"),
+	MSP_ACCX 		("AccX",1,"m/s2"),
 	MSP_ACCY 		("AccY",1,"m/s2"),
 	MSP_ACCZ 		("AccZ",1,"m/s2"),
 	MSP_GYROX		("GyroX",1,"-"),

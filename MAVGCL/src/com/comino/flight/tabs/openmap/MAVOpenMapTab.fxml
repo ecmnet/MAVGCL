@@ -35,7 +35,7 @@
 				    maxHeight="140" maxWidth="185" visible="false"
 					styleClass="glass">
 					<StackPane.margin>
-						<Insets left="10.0" top="10.0" />
+						<Insets left="10.0" top="13.0" />
 					</StackPane.margin>
 				</GPSDetailsWidget>
 			</children>

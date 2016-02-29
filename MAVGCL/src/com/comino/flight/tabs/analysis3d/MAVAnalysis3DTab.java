@@ -259,8 +259,8 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 						* (1 - nv.intValue() / 100f))	;
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
-             if(!disabledProperty().get())
-				updateGraph(true);
+				if(!disabledProperty().get())
+					updateGraph(true);
 			}
 		});
 
@@ -293,7 +293,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private void updateGraph(boolean refresh) {
 
 		if(refresh) {
-			cubeViewer.clear();
+			synchronized(this) {
+				cubeViewer.clear();
+			}
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -326,7 +328,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					if(Math.abs(x-old_x)>10 || Math.abs(y-old_y)>10 || Math.abs(z-old_z)>10) {
 						old_x = x; old_y = y; old_z = z;
 
-						cubeViewer.addData(x,z,y);
+						synchronized(this) {
+							cubeViewer.addData(x,z,y);
+						}
 
 						if(current_x_pt > current_x1_pt) {
 							current_x1_pt++;

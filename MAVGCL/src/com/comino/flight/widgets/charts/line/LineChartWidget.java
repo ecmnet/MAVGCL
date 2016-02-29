@@ -129,6 +129,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private MSTYPE type2=MSTYPE.MSP_NONE;
 	private MSTYPE type3=MSTYPE.MSP_NONE;
 
+
+
+
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private DoubleProperty  scroll       = new SimpleDoubleProperty(0);
@@ -178,9 +181,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
-						series1.getData().clear();
-						series2.getData().clear();
-						series3.getData().clear();
+						synchronized(this) {
+							series1.getData().clear();
+							series2.getData().clear();
+							series3.getData().clear();
+						}
 						current_x_pt = 0; current_x0_pt=0;
 						setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 						scroll.setValue(0);
@@ -214,7 +219,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setForceZeroInRange(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
-	    xAxis.setLabel("Seconds");
+		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
 		xAxis.setTickLabelFormatter(new StringConverter<Number>() {
@@ -394,9 +399,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		if(refresh) {
-			series1.getData().clear();
-			series2.getData().clear();
-			series3.getData().clear();
+			synchronized(this) {
+				series1.getData().clear();
+				series2.getData().clear();
+				series3.getData().clear();
+			}
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 			setXAxisBounds(current_x0_pt,current_x1_pt);
@@ -417,14 +424,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					if(current_x_pt > current_x1_pt) {
-						current_x1_pt++;
-						if(series1.getData().size()>0)
-							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
-						if(series3.getData().size()>0)
-							series3.getData().remove(0);
-						setXAxisBounds(current_x0_pt,current_x1_pt);
+						synchronized(this) {
+							current_x1_pt++;
+							if(series1.getData().size()>0)
+								series1.getData().remove(0);
+							if(series2.getData().size()>0)
+								series2.getData().remove(0);
+							if(series3.getData().size()>0)
+								series3.getData().remove(0);
+							setXAxisBounds(current_x0_pt,current_x1_pt);
+						}
 
 					}
 
@@ -434,12 +443,15 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 					if(dt_sec > xAxis.getLowerBound()) {
 
-						if(type1!=MSTYPE.MSP_NONE)
-							series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
-						if(type2!=MSTYPE.MSP_NONE)
-							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
-						if(type3!=MSTYPE.MSP_NONE)
-							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
+						synchronized(this) {
+
+							if(type1!=MSTYPE.MSP_NONE)
+								series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
+							if(type2!=MSTYPE.MSP_NONE)
+								series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
+							if(type3!=MSTYPE.MSP_NONE)
+								series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
+						}
 					}
 
 				}

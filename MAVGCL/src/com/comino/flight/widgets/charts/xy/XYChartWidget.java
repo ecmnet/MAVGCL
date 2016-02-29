@@ -82,8 +82,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Raw Flow",
 	};
 
-	private final static Float[] SCALES = {
-			0.5f, 1.0f, 2.0f, 5.0f, 10.0f, 50.0f, 100.0f
+	private final static String[] SCALES = {
+			"Auto", "0.5","1", "2", "5", "10", "50", "100"
 	};
 
 
@@ -106,8 +106,19 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private ChoiceBox<String> cseries2;
 
 	@FXML
-	private ChoiceBox<Float> scale;
+	private ChoiceBox<String> cseries1_x;
 
+	@FXML
+	private ChoiceBox<String> cseries1_y;
+
+	@FXML
+	private ChoiceBox<String> cseries2_x;
+
+	@FXML
+	private ChoiceBox<String> cseries2_y;
+
+	@FXML
+	private ChoiceBox<String> scale;
 
 	@FXML
 	private CheckBox normalize;
@@ -125,8 +136,12 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private IMAVController control;
 
-	private int type1;
-	private int type2;
+
+	private MSTYPE type1_x=MSTYPE.MSP_NONE;
+	private MSTYPE type1_y=MSTYPE.MSP_NONE;
+
+	private MSTYPE type2_x=MSTYPE.MSP_NONE;
+	private MSTYPE type2_y=MSTYPE.MSP_NONE;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
@@ -171,8 +186,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
-						series1.getData().clear();
-						series2.getData().clear();
+						synchronized(this) {
+							series1.getData().clear();
+							series2.getData().clear();
+						}
 						current_x_pt = 0;
 						scroll.setValue(0);
 						updateGraph(true);
@@ -213,6 +230,18 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries1.getItems().addAll(PRESET_NAMES);
 		cseries2.getItems().addAll(PRESET_NAMES);
 
+		linechart.setLegendVisible(false);
+
+		cseries1_x.getItems().addAll(MSTYPE.getList());
+		cseries1_y.getItems().addAll(MSTYPE.getList());
+		cseries1_x.getSelectionModel().select(0);
+		cseries1_y.getSelectionModel().select(0);
+
+		cseries2_x.getItems().addAll(MSTYPE.getList());
+		cseries2_y.getItems().addAll(MSTYPE.getList());
+		cseries2_x.getSelectionModel().select(0);
+		cseries2_y.getSelectionModel().select(0);
+
 		scale.getItems().addAll(SCALES);
 
 		cseries1.getSelectionModel().select(0);
@@ -233,12 +262,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = newValue.intValue();
-				series1.setName(PRESET_NAMES[type1]);
-				xAxis.setLabel(PRESETS[type1][0].getUnit());
-				yAxis.setLabel(PRESETS[type1][0].getUnit());
-				linechart.setLegendVisible(true);
-				updateGraph(true);
+
+				cseries1_x.getSelectionModel().select(PRESETS[newValue.intValue()][0].getDescription());
+				cseries1_y.getSelectionModel().select(PRESETS[newValue.intValue()][1].getDescription());
 
 			}
 
@@ -248,11 +274,92 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type2 = newValue.intValue();
-				series2.setName(PRESET_NAMES[type2]);
-				xAxis.setLabel(PRESETS[type2][0].getUnit());
-				yAxis.setLabel(PRESETS[type2][0].getUnit());
-				linechart.setLegendVisible(true);
+
+				cseries2_x.getSelectionModel().select(PRESETS[newValue.intValue()][0].getDescription());
+				cseries2_y.getSelectionModel().select(PRESETS[newValue.intValue()][1].getDescription());
+
+
+
+			}
+
+		});
+
+		cseries1_x.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				type1_x = MSTYPE.values()[newValue.intValue()];
+
+				String x_desc = "";
+				if(type1_x!=MSTYPE.MSP_NONE)
+					x_desc = x_desc + type1_x.getDescription()+" ["+type1_x.getUnit()+"]  ";
+
+
+				if(type2_x!=MSTYPE.MSP_NONE)
+					x_desc = x_desc + type2_x.getDescription()+" ["+type2_x.getUnit()+"]  ";
+
+			    xAxis.setLabel(x_desc);
+				updateGraph(true);
+
+			}
+
+		});
+
+		cseries1_y.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				type1_y = MSTYPE.values()[newValue.intValue()];
+
+                String y_desc = "";
+				if(type1_y!=MSTYPE.MSP_NONE)
+					y_desc = y_desc + type1_y.getDescription()+" ["+type1_y.getUnit()+"]  ";
+
+				if(type2_y!=MSTYPE.MSP_NONE)
+					y_desc = y_desc + type2_y.getDescription()+" ["+type2_y.getUnit()+"]  ";
+
+				  yAxis.setLabel(y_desc);
+
+				updateGraph(true);
+
+			}
+
+		});
+
+		cseries2_x.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				type2_x = MSTYPE.values()[newValue.intValue()];
+
+				String x_desc = "";
+				if(type1_x!=MSTYPE.MSP_NONE)
+					x_desc = x_desc + type1_x.getDescription()+" ["+type1_x.getUnit()+"]  ";
+
+				if(type2_x!=MSTYPE.MSP_NONE)
+					x_desc = x_desc + type2_x.getDescription()+" ["+type2_x.getUnit()+"]  ";
+
+			    xAxis.setLabel(x_desc);
+				updateGraph(true);
+
+			}
+
+		});
+
+		cseries2_y.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				type2_y = MSTYPE.values()[newValue.intValue()];
+
+				String y_desc = "";
+				if(type1_y!=MSTYPE.MSP_NONE)
+					y_desc = y_desc + type1_y.getDescription()+" ["+type1_y.getUnit()+"]  ";
+
+				if(type2_y!=MSTYPE.MSP_NONE)
+					y_desc = y_desc + type2_y.getDescription()+" ["+type2_y.getUnit()+"]  ";
+
+			    yAxis.setLabel(y_desc);
 				updateGraph(true);
 
 			}
@@ -263,17 +370,28 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				xAxis.setLowerBound(-SCALES[newValue.intValue()]);
-				xAxis.setUpperBound(SCALES[newValue.intValue()]);
-				yAxis.setLowerBound(-SCALES[newValue.intValue()]);
-				yAxis.setUpperBound(SCALES[newValue.intValue()]);
 
-				if(SCALES[newValue.intValue()]>10) {
-					xAxis.setTickUnit(10); yAxis.setTickUnit(10);
-				} else if(SCALES[newValue.intValue()]>1) {
-					xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+				if(newValue.intValue()>0) {
+				   float scale = Float.parseFloat(SCALES[newValue.intValue()]);
+
+				   xAxis.setAutoRanging(false);
+				   yAxis.setAutoRanging(false);
+
+				   xAxis.setLowerBound(-scale);
+				   xAxis.setUpperBound(+scale);
+				   yAxis.setLowerBound(-scale);
+				   yAxis.setUpperBound(+scale);
+
+				   if(scale>10) {
+						xAxis.setTickUnit(10); yAxis.setTickUnit(10);
+					} else if(scale>1) {
+						xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+					} else {
+						xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
+					}
 				} else {
-					xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
+					xAxis.setAutoRanging(true);
+					yAxis.setAutoRanging(true);
 				}
 
 				updateGraph(true);
@@ -358,8 +476,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private void updateGraph(boolean refresh) {
 
 		if(refresh) {
-			series1.getData().clear();
-			series2.getData().clear();
+			synchronized(this) {
+				series1.getData().clear();
+				series2.getData().clear();
+			}
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -383,27 +503,28 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
 
 
+					synchronized(this) {
+						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)
+							series1.getData().add(new XYChart.Data<Number,Number>(
+									MSTYPE.getValue(mList.get(current_x_pt),type1_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type1_y))
+									);
 
-					if(type1>0)
-						series1.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type1][0]),
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type1][1]))
-								);
-
-					if(type2>0)
-						series2.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][0]),
-								MSTYPE.getValue(mList.get(current_x_pt),PRESETS[type2][1]))
-								);
+						if(type2_x!=MSTYPE.MSP_NONE && type2_y!=MSTYPE.MSP_NONE)
+							series2.getData().add(new XYChart.Data<Number,Number>(
+									MSTYPE.getValue(mList.get(current_x_pt),type2_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type2_y))
+									);
 
 
-					if(current_x_pt > current_x1_pt) {
-						current_x1_pt++;
-						if(series1.getData().size()>0)
-							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
+						if(current_x_pt > current_x1_pt) {
+							current_x1_pt++;
+							if(series1.getData().size()>0)
+								series1.getData().remove(0);
+							if(series2.getData().size()>0)
+								series2.getData().remove(0);
 
+						}
 					}
 				}
 
@@ -421,9 +542,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 		this.control = control;
-
-		series1.setName(PRESET_NAMES[type1]);
-		series2.setName(PRESET_NAMES[type2]);
 
 
 		ExecutorService.get().execute(task);
