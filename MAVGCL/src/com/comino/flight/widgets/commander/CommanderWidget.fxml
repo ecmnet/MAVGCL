@@ -10,6 +10,7 @@
 <fx:root  prefHeight="125" prefWidth="183.0"  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-       <Button fx:id="land_command" layoutX="15.0"  layoutY="10" prefHeight="19" prefWidth="100" text="Landing"/>
+       <Button fx:id="land_command" layoutX="15.0"  layoutY="10" prefHeight="19" prefWidth="157.0" text="Auto-Landing"/>
+       <Button layoutX="15.0" layoutY="35" prefHeight="19" prefWidth="157.0" text="Auto-TakeOff"/>
 	</children>
 </fx:root>

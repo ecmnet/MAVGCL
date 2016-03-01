@@ -315,13 +315,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		});
 
-		export.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				saveAsPng(System.getProperty("user.home"));
-			}
-
+		export.setOnAction((ActionEvent event)-> {
+			saveAsPng(System.getProperty("user.home"));
 		});
 
 

@@ -295,7 +295,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(type2_x!=MSTYPE.MSP_NONE)
 					x_desc = x_desc + type2_x.getDescription()+" ["+type2_x.getUnit()+"]  ";
 
-			    xAxis.setLabel(x_desc);
+				xAxis.setLabel(x_desc);
 				updateGraph(true);
 
 			}
@@ -308,14 +308,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1_y = MSTYPE.values()[newValue.intValue()];
 
-                String y_desc = "";
+				String y_desc = "";
 				if(type1_y!=MSTYPE.MSP_NONE)
 					y_desc = y_desc + type1_y.getDescription()+" ["+type1_y.getUnit()+"]  ";
 
 				if(type2_y!=MSTYPE.MSP_NONE)
 					y_desc = y_desc + type2_y.getDescription()+" ["+type2_y.getUnit()+"]  ";
 
-				  yAxis.setLabel(y_desc);
+				yAxis.setLabel(y_desc);
 
 				updateGraph(true);
 
@@ -336,7 +336,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(type2_x!=MSTYPE.MSP_NONE)
 					x_desc = x_desc + type2_x.getDescription()+" ["+type2_x.getUnit()+"]  ";
 
-			    xAxis.setLabel(x_desc);
+				xAxis.setLabel(x_desc);
 				updateGraph(true);
 
 			}
@@ -356,7 +356,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(type2_y!=MSTYPE.MSP_NONE)
 					y_desc = y_desc + type2_y.getDescription()+" ["+type2_y.getUnit()+"]  ";
 
-			    yAxis.setLabel(y_desc);
+				yAxis.setLabel(y_desc);
 				updateGraph(true);
 
 			}
@@ -369,17 +369,17 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
 				if(newValue.intValue()>0) {
-				   float scale = Float.parseFloat(SCALES[newValue.intValue()]);
+					float scale = Float.parseFloat(SCALES[newValue.intValue()]);
 
-				   xAxis.setAutoRanging(false);
-				   yAxis.setAutoRanging(false);
+					xAxis.setAutoRanging(false);
+					yAxis.setAutoRanging(false);
 
-				   xAxis.setLowerBound(-scale);
-				   xAxis.setUpperBound(+scale);
-				   yAxis.setLowerBound(-scale);
-				   yAxis.setUpperBound(+scale);
+					xAxis.setLowerBound(-scale);
+					xAxis.setUpperBound(+scale);
+					yAxis.setLowerBound(-scale);
+					yAxis.setUpperBound(+scale);
 
-				   if(scale>10) {
+					if(scale>10) {
 						xAxis.setTickUnit(10); yAxis.setTickUnit(10);
 					} else if(scale>1) {
 						xAxis.setTickUnit(1); yAxis.setTickUnit(1);
@@ -398,13 +398,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		});
 
 
-		export.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				saveAsPng(System.getProperty("user.home"));
-			}
-
+		export.setOnAction((ActionEvent event)-> {
+			saveAsPng(System.getProperty("user.home"));
 		});
 
 		timeFrame.addListener((v, ov, nv) -> {

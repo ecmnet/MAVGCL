@@ -27,6 +27,8 @@ import com.comino.msp.utils.ExecutorService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -88,6 +90,16 @@ public class CommanderWidget extends Pane  {
 		});
 
 	}
+
+	@FXML
+	private void initialize() {
+
+		land_command.setOnAction((ActionEvent event)-> {
+		      System.out.println("Landing command to be invoked");
+			});
+	}
+
+
 
 
 	public void setup(IMAVController control) {
