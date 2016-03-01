@@ -120,10 +120,15 @@
 	-fx-background-color: #505050;
 }
 
+.button:hover {
+	-fx-background-color: #505058;
+}
+
 .check-box {
 	-fx-background-color: #303030;
 	-fx-text-fill: #F0F0F0;
 }
+
 
 .check-box .mark {
     -fx-background-color: transparent;
@@ -144,8 +149,16 @@
 	-fx-background-color: #505050;
 }
 
+.toggle-button:hover {
+	-fx-background-color: #505058;
+}
+
 .check-box *.box {
   -fx-background-color:#404040;
+}
+
+.choice-box:hover {
+	-fx-background-color: #505058;
 }
 
 .slider .track  {

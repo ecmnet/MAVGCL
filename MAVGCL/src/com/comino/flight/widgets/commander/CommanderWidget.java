@@ -19,6 +19,9 @@ package com.comino.flight.widgets.commander;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.lquac.msg_command_long;
+
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.utils.Utils;
@@ -39,6 +42,9 @@ public class CommanderWidget extends Pane  {
 
 	@FXML
 	private Button land_command;
+
+	@FXML
+	private Button takeoff_command;
 
 	private Task<Long> task;
 	private IMAVController control;
@@ -96,6 +102,14 @@ public class CommanderWidget extends Pane  {
 
 		land_command.setOnAction((ActionEvent event)-> {
 		      System.out.println("Landing command to be invoked");
+		      control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
+
+			});
+
+		takeoff_command.setOnAction((ActionEvent event)-> {
+		      System.out.println("Landing command to be invoked");
+		      control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
+
 			});
 	}
 
