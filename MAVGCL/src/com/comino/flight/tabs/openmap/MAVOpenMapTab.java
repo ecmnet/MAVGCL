@@ -131,7 +131,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(200);
+						Thread.sleep(100);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -211,6 +211,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		tiletype.getSelectionModel().select(0);
 
 		provider.tileTypeProperty().bind(tiletype.valueProperty());
+
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
