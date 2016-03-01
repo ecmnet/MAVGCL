@@ -113,7 +113,11 @@
 
 .button {
 	 -fx-background-color: #606060;
-	-fx-text-fill: #F0F0F0;
+	 -fx-text-fill: #F0F0F0;
+}
+
+.button:pressed {
+	-fx-background-color: #505050;
 }
 
 .check-box {
@@ -134,6 +138,10 @@
 
 .toggle-button {
 	 -fx-background-color: #606060;
+}
+
+.toggle-button:pressed {
+	-fx-background-color: #505050;
 }
 
 .check-box *.box {
