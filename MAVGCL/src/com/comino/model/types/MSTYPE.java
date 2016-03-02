@@ -36,10 +36,11 @@ public enum MSTYPE {
 	MSP_RNEDX		("Loc.PosX.rel.",1,"m"),
 	MSP_RNEDY		("Loc.PosY.rel.",1,"m"),
 	MSP_RNEDZ		("Loc.PosZ.rel.",1,"m"),
-	MSP_RAW_DI		("Raw.Dist.S.",1,"m"),
+	MSP_RAW_DI		("Raw.Distance.",1,"m"),
 	MSP_RAW_FLOWX	("Raw.FlowX",1,"-"),
 	MSP_RAW_FLOWY	("Raw.FlowY",1,"-"),
 	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,"-"),
+	MSP_RAW_FLOWD	("Raw.Flow.Dist.",1,"m"),
 	MSP_VOLTAGE		("Bat.Voltage",1,"V"),
 	MSP_CURRENT		("Bat.Current",1,"A"),
 	MSP_RC0			("RC.0",1,"-"),
@@ -126,6 +127,7 @@ public enum MSTYPE {
 		case MSP_RAW_FLOWX:	    return m.raw.fX;
 		case MSP_RAW_FLOWY:	    return m.raw.fY;
 		case MSP_RAW_FLOWQ:     return m.raw.fq;
+		case MSP_RAW_FLOWD:     return m.raw.fd;
 		case MSP_VOLTAGE:	    return m.battery.b0;
 		case MSP_CURRENT:	    return m.battery.c0;
 		case MSP_CONSPOWER:     return m.battery.a0;

@@ -106,9 +106,10 @@ public class CommanderWidget extends Pane  {
 
 			});
 
+		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-		      System.out.println("Landing command to be invoked");
-		      control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
+		      System.out.println("Takeoff command to be invoked");
+		   // control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
 
 			});
 	}

@@ -14,11 +14,9 @@
 		<BatteryWidget fx:id="battery" layoutX="10" layoutY="275.0"  styleClass="widget" />
 		<ChartControlWidget fx:id="xyanalysiscontrol" styleClass="widget"
 			layoutX="10" layoutY="377.0" />
-
+<!--  
          <DetailsWidget fx:id="details" layoutX="10" layoutY="673.0" styleClass="widget"  />
-
-<!--
-         <CommanderWidget fx:id="commander" layoutX="10" layoutY="673.0" styleClass="widget"  />
 -->
+         <CommanderWidget fx:id="commander" layoutX="10" layoutY="673.0" styleClass="widget"  />
 	</children>
 </fx:root>

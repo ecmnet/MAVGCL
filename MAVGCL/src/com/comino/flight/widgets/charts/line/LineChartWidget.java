@@ -165,7 +165,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(resolution_ms);
+						Thread.sleep(resolution_ms*2);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
