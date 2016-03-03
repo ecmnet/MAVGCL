@@ -71,7 +71,7 @@ public class FlightTabs extends Pane {
 		details.prefHeightProperty().bind(heightProperty());
 
 		details.visibleProperty().bind(flightControl.getStatusControl().getDetailsProperty());
-
+		details.setup(control);
 
 
 		//		mavworldtab.setup(recordControl,control);
