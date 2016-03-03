@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.Insets?>
 
 <fx:root minHeight="600.0" styleClass="widget" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
@@ -24,35 +25,36 @@
          </children>
       </Pane>
    </center>
-   <right>
-      <Pane prefWidth="140">
+   <left >
+      <Pane prefWidth="140" >
          <children>
 
-            <Label layoutX="5.0" layoutY="33.0" text="Dataset 1:" />
-            <ChoiceBox fx:id="cseries1" layoutX="5.0" layoutY="60.0" prefHeight="19.0" prefWidth="110.0" />
-            <Label layoutX="5.0" layoutY="94.0" text="X:" />
-            <ChoiceBox fx:id="cseries1_x" layoutX="30.0" layoutY="90.0" prefHeight="19.0" prefWidth="86.0" />
-            <Label layoutX="5.0" layoutY="124.0" text="Y:" />
-            <ChoiceBox fx:id="cseries1_y" layoutX="30.0" layoutY="120.0" prefHeight="19.0" prefWidth="86.0" />
-            <Separator layoutX="5.0" layoutY="175.0" prefHeight="4.0" prefWidth="126.0" />
+            <Label layoutX="15.0" layoutY="33.0" text="Dataset 1:" />
+            <ChoiceBox fx:id="cseries1" layoutX="15.0" layoutY="60.0" prefHeight="19.0" prefWidth="110.0" />
+            <Label layoutX="15.0" layoutY="94.0" text="X:" />
+            <ChoiceBox fx:id="cseries1_x" layoutX="40.0" layoutY="90.0" prefHeight="19.0" prefWidth="86.0" />
+            <Label layoutX="15.0" layoutY="124.0" text="Y:" />
+            <ChoiceBox fx:id="cseries1_y" layoutX="40.0" layoutY="120.0" prefHeight="19.0" prefWidth="86.0" />
+            <Separator layoutX="15.0" layoutY="175.0" prefHeight="4.0" prefWidth="126.0" />
 
-            <Label layoutX="5.0" layoutY="195.0" text="Dataset 2:" />
-            <ChoiceBox fx:id="cseries2" layoutX="5.0" layoutY="220.0" prefHeight="19.0" prefWidth="110.0" />
-            <Label layoutX="5.0" layoutY="254.0" text="X:" />
-            <ChoiceBox fx:id="cseries2_x" layoutX="30.0" layoutY="250.0" prefHeight="19.0" prefWidth="86.0" />
-            <Label layoutX="5.0" layoutY="284.0" text="Y:" />
-            <ChoiceBox fx:id="cseries2_y" layoutX="30.0" layoutY="280.0" prefHeight="19.0" prefWidth="86.0" />
+            <Label layoutX="15.0" layoutY="195.0" text="Dataset 2:" />
+            <ChoiceBox fx:id="cseries2" layoutX="15.0" layoutY="220.0" prefHeight="19.0" prefWidth="110.0" />
+            <Label layoutX="15.0" layoutY="254.0" text="X:" />
+            <ChoiceBox fx:id="cseries2_x" layoutX="40.0" layoutY="250.0" prefHeight="19.0" prefWidth="86.0" />
+            <Label layoutX="15.0" layoutY="284.0" text="Y:" />
+            <ChoiceBox fx:id="cseries2_y" layoutX="40.0" layoutY="280.0" prefHeight="19.0" prefWidth="86.0" />
 
-            <Separator layoutX="5.0" layoutY="336.0" prefHeight="4.0" prefWidth="126.0" />
+            <Separator layoutX="15.0" layoutY="336.0" prefHeight="4.0" prefWidth="126.0" />
 
-            <Label layoutX="10.0" layoutY="368.0" text="Scale:" />
-            <ChoiceBox fx:id="scale" layoutX="5.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
+            <Label layoutX="20.0" layoutY="368.0" text="Scale:" />
+            <ChoiceBox fx:id="scale" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
 
-            <Separator layoutX="5.0" layoutY="443.0" prefHeight="4.0" prefWidth="126.0" />
+            <Separator layoutX="15.0" layoutY="443.0" prefHeight="4.0" prefWidth="126.0" />
 
-            <Button fx:id="export" layoutX="5.0" layoutY="500.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
+            <Button fx:id="export" layoutX="15.0" layoutY="500.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 
          </children>
+
       </Pane>
-   </right>
-</fx:root>
+   </left>
+ </fx:root>
