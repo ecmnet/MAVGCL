@@ -4,7 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
 
-**Status:** Last updated 01/03/2016 
+**Status:** Last updated 03/03/2016 
 
 **Features:**
 
