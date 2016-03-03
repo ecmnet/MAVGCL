@@ -47,6 +47,10 @@ public class FlightControlPanel extends Pane  {
 		return xyanalysiscontrol;
 	}
 
+	public StatusWidget getStatusControl() {
+		return status;
+	}
+
 	public void setup(IMAVController control) {
 		xyanalysiscontrol.setup(control);
 		status.setup(control);

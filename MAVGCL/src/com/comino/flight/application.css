@@ -87,7 +87,7 @@
 
 .glass  {
 	-fx-font-size: 7.0pt;
-    -fx-background-color: rgba(0.0, 100.0, 100.0, 0.4); -fx-background-radius: 10.0;
+    -fx-background-color: rgba(0.0, 100.0, 100.0, 0.7); -fx-background-radius: 10.0;
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1.0px;
     -fx-border-radius: 5.0px;

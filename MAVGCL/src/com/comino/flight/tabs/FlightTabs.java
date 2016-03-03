@@ -3,18 +3,21 @@ package com.comino.flight.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
+import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 public class FlightTabs extends Pane {
 
@@ -33,8 +36,8 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVOpenMapTab mavmaptab;
 
-	//	@FXML
-	//	private MAVWorldTab mavworldtab;
+	@FXML
+	private DetailsWidget details;
 
 	@FXML
 	private MAVAnalysis3DTab mavanalysis3Dtab;
@@ -62,17 +65,21 @@ public class FlightTabs extends Pane {
 		}
 	}
 
-	public void setup(ChartControlWidget recordControl, IMAVController control) {
-
+	public void setup(FlightControlPanel flightControl, IMAVController control) {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
+		details.prefHeightProperty().bind(heightProperty());
+
+		details.visibleProperty().bind(flightControl.getStatusControl().getDetailsProperty());
+
+
 
 		//		mavworldtab.setup(recordControl,control);
-		mavmaptab.setup(recordControl,control);
+		mavmaptab.setup(flightControl.getRecordControl(),control);
 		mavinspectortab.setup(control);
-		xtanalysistab.setup(recordControl,control);
-		xyanalysistab.setup(recordControl,control);
-		mavanalysis3Dtab.setup(recordControl,control);
+		xtanalysistab.setup(flightControl.getRecordControl(),control);
+		xyanalysistab.setup(flightControl.getRecordControl(),control);
+		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
 
 		xtanalysistab.setDisable(false);
 		xyanalysistab.setDisable(true);

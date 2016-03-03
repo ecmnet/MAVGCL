@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
 
 <?import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab?>
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
@@ -11,89 +13,93 @@
 <?import com.comino.flight.tabs.openmap.MAVOpenMapTab?>
 <?import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab?>
 
-<AnchorPane
-	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+<?import com.comino.flight.widgets.details.DetailsWidget?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.comino.flight.tabs.FlightTabs">
 	<children>
-		<TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE"
-		    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-		    AnchorPane.topAnchor="5.0"  AnchorPane.bottomAnchor="0.0">
-			<tabs>
-				<Tab text="Time-Series" >
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<FlightXtAnalysisTab fx:id="xtanalysistab"
-								     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0"
- 									 AnchorPane.topAnchor="5.0"  AnchorPane.bottomAnchor="2.0" />
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				<Tab text="XY-Analysis">
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<FlightXYAnalysisTab fx:id="xyanalysistab"
-								AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0"
- 							    AnchorPane.topAnchor="5.0"  AnchorPane.bottomAnchor="2.0" />
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				<Tab text="3D Analysis">
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<MAVAnalysis3DTab fx:id="mavanalysis3Dtab"
-								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				<Tab text="Inspector">
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<MAVInspectorTab fx:id="mavinspectortab"
-								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				<Tab text="Map">
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<MAVOpenMapTab fx:id="mavmaptab"
-								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				<!--
-				<Tab text="World">
-					<content>
-						<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1">
-							<children>
-								<MAVWorldTab fx:id="mavworldtab"
-								    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-								    AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0"/>
-							</children>
-						</AnchorPane>
-					</content>
-				</Tab>
-				-->
-			</tabs>
-		</TabPane>
+		<StackPane alignment="TOP_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+					AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="0.0">
+			<children>
+				<TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE"
+					AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+					AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="0.0">
+					<tabs>
+						<Tab text="Time-Series">
+							<content>
+								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+									xmlns:fx="http://javafx.com/fxml/1">
+									<children>
+										<FlightXtAnalysisTab fx:id="xtanalysistab"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0"
+											AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="2.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="XY-Analysis">
+							<content>
+								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+									xmlns:fx="http://javafx.com/fxml/1">
+									<children>
+										<FlightXYAnalysisTab fx:id="xyanalysistab"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0"
+											AnchorPane.topAnchor="5.0" AnchorPane.bottomAnchor="2.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="3D Analysis">
+							<content>
+								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+									xmlns:fx="http://javafx.com/fxml/1">
+									<children>
+										<MAVAnalysis3DTab fx:id="mavanalysis3Dtab"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
+											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="Inspector">
+							<content>
+								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+									xmlns:fx="http://javafx.com/fxml/1">
+									<children>
+										<MAVInspectorTab fx:id="mavinspectortab"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
+											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<Tab text="Map">
+							<content>
+								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+									xmlns:fx="http://javafx.com/fxml/1">
+									<children>
+										<MAVOpenMapTab fx:id="mavmaptab"
+											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
+											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+						<!-- <Tab text="World"> <content> <AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
+							xmlns:fx="http://javafx.com/fxml/1"> <children> <MAVWorldTab fx:id="mavworldtab"
+							AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="2.0"
+							AnchorPane.topAnchor="0.0"/> </children> </AnchorPane> </content> </Tab> -->
+					</tabs>
+				</TabPane>
+				<DetailsWidget fx:id="details"
+				    StackPane.alignment="TOP_RIGHT"
+				    maxWidth="185"  visible="false"
+					styleClass="glass">
+					<StackPane.margin>
+						<Insets right="10.0" top="32.0" />
+					</StackPane.margin>
+				</DetailsWidget>
+			</children>
+		</StackPane>
 	</children>
 </AnchorPane>

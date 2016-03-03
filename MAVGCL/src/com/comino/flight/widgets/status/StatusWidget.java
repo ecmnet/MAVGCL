@@ -23,8 +23,10 @@ import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -49,7 +51,11 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	@FXML
 	private Circle landed;
 
+	@FXML
+	private CheckBox details;
+
 	private IMAVController control;
+
 	private DataModel model;
 
 	public StatusWidget() {
@@ -63,6 +69,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 			throw new RuntimeException(exception);
 		}
 
+	}
+
+	public BooleanProperty getDetailsProperty() {
+		return details.selectedProperty();
 	}
 
 	public void setup(IMAVController control) {
