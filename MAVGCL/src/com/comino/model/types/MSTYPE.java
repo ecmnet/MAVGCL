@@ -6,18 +6,18 @@ import com.comino.msp.model.DataModel;
 
 public enum MSTYPE {
 
-	MSP_NONE 		("none",1,"-"),
+	MSP_NONE 		("none",1,""),
 	MSP_ACCX 		("AccX",1,"m/s2"),
 	MSP_ACCY 		("AccY",1,"m/s2"),
 	MSP_ACCZ 		("AccZ",1,"m/s2"),
-	MSP_GYROX		("GyroX",1,"-"),
-	MSP_GYROY		("GyroY",1,"-"),
-	MSP_GYROZ		("GyroZ",1,"-"),
+	MSP_GYROX		("GyroX",1,""),
+	MSP_GYROY		("GyroY",1,""),
+	MSP_GYROZ		("GyroZ",1,""),
 	MSP_ANGLEX		("AngleX",1,"rad"),
 	MSP_ANGLEY		("AngleY",1,"rad"),
 	MSP_COMPASS		("Compass",1,"°"),
-	MSP_AL			("Alt.local",1,"m"),
-	MSP_AS			("Alt.amsl",1,"m"),
+	MSP_ALTLOCAL	("Alt.local",1,"m"),
+	MSP_ALTAMSL		("Alt.amsl",1,"m"),
 	MSP_NEDX		("Loc.PosX",1,"m"),
 	MSP_NEDY		("Loc.PosY",1,"m"),
 	MSP_NEDZ		("Loc.PosZ",1,"m"),
@@ -37,27 +37,27 @@ public enum MSTYPE {
 	MSP_RNEDY		("Loc.PosY.rel.",1,"m"),
 	MSP_RNEDZ		("Loc.PosZ.rel.",1,"m"),
 	MSP_RAW_DI		("Raw.Distance.",1,"m"),
-	MSP_RAW_FLOWX	("Raw.FlowX",1,"-"),
-	MSP_RAW_FLOWY	("Raw.FlowY",1,"-"),
-	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,"-"),
+	MSP_RAW_FLOWX	("Raw.FlowX",1,""),
+	MSP_RAW_FLOWY	("Raw.FlowY",1,""),
+	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,""),
 	MSP_RAW_FLOWD	("Raw.Flow.Dist.",1,"m"),
 	MSP_VOLTAGE		("Bat.Voltage",1,"V"),
 	MSP_CURRENT		("Bat.Current",1,"A"),
-	MSP_RC0			("RC.0",1,"-"),
-	MSP_RC1			("RC.1",1,"-"),
-	MSP_RC2			("RC.2",1,"-"),
-	MSP_RC3			("RC.3",1,"-"),
-	MSP_S0			("Servo.0",1,"-"),
-	MSP_S1			("Servo.1",1,"-"),
-	MSP_S2			("Servo.2",1,"-"),
-	MSP_S3			("Servo.3",1,"-"),
+	MSP_RC0			("RC.0",1,""),
+	MSP_RC1			("RC.1",1,""),
+	MSP_RC2			("RC.2",1,""),
+	MSP_RC3			("RC.3",1,""),
+	MSP_S0			("Servo.0",1,""),
+	MSP_S1			("Servo.1",1,""),
+	MSP_S2			("Servo.2",1,""),
+	MSP_S3			("Servo.3",1,""),
 	MSP_GLOBRELX	("Global.rel.PosX",1,"m"),
 	MSP_GLOBRELY 	("Global.rel.PosY",1,"m"),
 	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m"),
 	MSP_GLOBRELVX	("Global.rel.SpeedX",1,"m/s"),
 	MSP_GLOBRELVY   ("Global.rel.SpeedY",1,"m/s"),
 	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1,"m/s"),
-	MSP_GPSEPH  	("GPS.eph",1,"-"),
+	MSP_GPSEPH  	("GPS.eph",1,""),
 	MSP_GLOBPLAT	("Global.Latitude",0,"°"),
 	MSP_GLOBPLON	("Global.Longitude",0,"°"),
 	MSP_RAW_GPSLAT  ("Raw.Latitude",0,"°"),
@@ -65,6 +65,7 @@ public enum MSTYPE {
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
 	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAH"),
+	MSP_RAW_SATNUM  ("Satellites",0,""),
 
 	;
 
@@ -99,8 +100,8 @@ public enum MSTYPE {
 		case MSP_ANGLEX: 		return m.attitude.aX;
 		case MSP_ANGLEY: 		return m.attitude.aY;
 		case MSP_COMPASS: 		return m.attitude.h;
-		case MSP_AL: 			return m.attitude.al;
-		case MSP_AS: 			return m.attitude.ag;
+		case MSP_ALTLOCAL: 		return m.attitude.ag;
+		case MSP_ALTAMSL: 		return m.attitude.al;
 		case MSP_NEDX:			return m.state.x;
 		case MSP_NEDY:			return m.state.y;
 		case MSP_NEDZ:			return m.state.z;
@@ -148,6 +149,7 @@ public enum MSTYPE {
 		case MSP_REF_GPSLAT:    return (float) m.gps.ref_lat;
 		case MSP_REF_GPSLON:    return (float) m.gps.ref_lon;
 		case MSP_GPSEPH: 		return (float) m.gps.eph;
+		case MSP_RAW_SATNUM:    return m.gps.numsat;
 
 		default:
 			return -1;

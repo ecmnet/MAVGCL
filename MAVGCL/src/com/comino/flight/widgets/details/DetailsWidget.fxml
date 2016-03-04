@@ -8,35 +8,5 @@
 
 <fx:root  prefWidth="183.0"  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<GridPane layoutX="14.0" layoutY="14.0"  prefWidth="163.0">
-			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="95.0" />
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="39.0" />
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="62.0" minWidth="10.0" prefWidth="29.0" />
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="21.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="23.0" vgrow="NEVER" />
-			</rowConstraints>
-			<children>
-				<Label text="Angle Roll" GridPane.rowIndex="0" />
-				<Label fx:id="f_anglex" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-				<Label text="Angle Pitch" GridPane.rowIndex="1" />
-				<Label fx:id="f_angley" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<Label text="Compass" GridPane.rowIndex="2" />
-				<Label fx:id="f_compass" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<Label text="Satellites" GridPane.rowIndex="3" />
-				<Label fx:id="f_num" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<Label text="Flow quality" GridPane.rowIndex="4" />
-				<Label fx:id="f_quality" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="34.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-			</children>
-		</GridPane>
-	</children>
+  <GridPane fx:id="grid" layoutX="14.0" layoutY="14.0"  prefWidth="163.0"/>
 </fx:root>
