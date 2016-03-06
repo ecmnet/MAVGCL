@@ -64,8 +64,11 @@ public enum MSTYPE {
 	MSP_RAW_GPSLON  ("Raw.Longitude",0,"°"),
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
-	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAH"),
+	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh"),
 	MSP_RAW_SATNUM  ("Satellites",0,""),
+	MSP_VIBX        ("VibrationX",0,""),
+	MSP_VIBY        ("VibrationY",0,""),
+	MSP_VIBZ        ("VibrationZ",0,""),
 
 	;
 
@@ -150,6 +153,10 @@ public enum MSTYPE {
 		case MSP_REF_GPSLON:    return (float) m.gps.ref_lon;
 		case MSP_GPSEPH: 		return (float) m.gps.eph;
 		case MSP_RAW_SATNUM:    return m.gps.numsat;
+		case MSP_VIBX:          return m.vibration.vibx;
+		case MSP_VIBY:          return m.vibration.viby;
+		case MSP_VIBZ:          return m.vibration.vibz;
+
 
 		default:
 			return -1;

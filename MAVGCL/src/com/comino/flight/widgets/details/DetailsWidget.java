@@ -64,7 +64,10 @@ public class DetailsWidget extends Pane  {
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_CURRENT,
 			MSTYPE.MSP_CONSPOWER,
-
+			MSTYPE.MSP_NONE,
+			MSTYPE.MSP_VIBX,
+			MSTYPE.MSP_VIBY,
+			MSTYPE.MSP_VIBZ,
 
 
 	};
