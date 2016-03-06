@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
@@ -36,7 +37,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-public class DetailsWidget extends Pane  {
+public class DetailsWidget extends FadePane  {
 
 
 	private static MSTYPE[] key_figures = {
@@ -84,6 +85,7 @@ public class DetailsWidget extends Pane  {
 	private DecimalFormat f = new DecimalFormat("#0.#");
 
 	public DetailsWidget() {
+
 
 		figures = new ArrayList<KeyFigure>();
 

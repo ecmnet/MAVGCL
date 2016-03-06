@@ -19,6 +19,7 @@ package com.comino.flight.widgets.gps.details;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
@@ -31,7 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
-public class GPSDetailsWidget extends Pane  {
+public class GPSDetailsWidget extends FadePane  {
 
 	@FXML
 	private Label f_altitude;

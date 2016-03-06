@@ -94,6 +94,15 @@
     -fx-border-insets: 2.0px;
 }
 
+.glass_red  {
+	-fx-font-size: 7.0pt;
+    -fx-background-color: rgba(100.0, 0.0, 0.0, 0.7); -fx-background-radius: 10.0;
+    -fx-border-color: #B0B0B0;
+    -fx-border-width: 1.0px;
+    -fx-border-radius: 5.0px;
+    -fx-border-insets: 2.0px;
+}
+
 .glass .label {
 	-fx-text-fill: #FFFFFF;
 }

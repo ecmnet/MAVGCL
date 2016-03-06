@@ -200,7 +200,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private void initialize() {
 
 		gpsdetails.setVisible(false);
-		gpsdetails.visibleProperty().bind(viewdetails.selectedProperty());
+		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
 
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMAVLinkMsgListener;
+import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -38,7 +38,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
-public class MAVInspectorTab extends BorderPane implements IMAVLinkMsgListener {
+public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 
 	@FXML
 	private TreeTableView<Dataset> treetableview;
