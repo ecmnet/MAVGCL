@@ -76,7 +76,6 @@ public class FlightTabs extends Pane {
 
 		details.fadeProperty().bind(flightControl.getStatusControl().getDetailsProperty());
 		details.setup(control);
-
 		messages.setup(control);
 
 		//		mavworldtab.setup(recordControl,control);

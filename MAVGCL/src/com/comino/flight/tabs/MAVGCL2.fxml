@@ -102,7 +102,7 @@
 				</DetailsWidget>
 				<MessagesWidget fx:id="messages"
 				    StackPane.alignment="TOP_LEFT"
-				    maxWidth="250"  visible="false" maxHeight="180"
+				    maxWidth="250"  visible="false" maxHeight="120"
 					styleClass="glass_red">
 					<StackPane.margin>
 						<Insets left="0.0" top="32.0" />

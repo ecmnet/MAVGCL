@@ -105,7 +105,7 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 
 
 	public MAVInspectorTab setup(IMAVController control) {
-		control.addMAVLinkMsgListener(this);
+		control.addMAVLinkListener(this);
 		return this;
 	}
 
