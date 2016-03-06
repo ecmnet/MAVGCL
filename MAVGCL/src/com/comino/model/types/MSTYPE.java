@@ -65,7 +65,7 @@ public enum MSTYPE {
 	MSP_RAW_GPSLON  ("Raw.Longitude",0,"°"),
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
-	MSP_CONSPOWER	("Bat.Cons.Power",1,"mAh"),
+	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh"),
 	MSP_RAW_SATNUM  ("Satellites",1,""),
 	MSP_VIBX        ("VibrationX",1,""),
 	MSP_VIBY        ("VibrationY",1,""),
