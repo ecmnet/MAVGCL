@@ -18,6 +18,7 @@ public enum MSTYPE {
 	MSP_COMPASS		("Compass",1,"°"),
 	MSP_ALTLOCAL	("Alt.local",1,"m"),
 	MSP_ALTAMSL		("Alt.amsl",1,"m"),
+	MSP_ALTTERRAIN  ("Alt.terrain",1,"m"),
 	MSP_NEDX		("Loc.PosX",1,"m"),
 	MSP_NEDY		("Loc.PosY",1,"m"),
 	MSP_NEDZ		("Loc.PosZ",1,"m"),
@@ -64,11 +65,11 @@ public enum MSTYPE {
 	MSP_RAW_GPSLON  ("Raw.Longitude",0,"°"),
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
-	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh"),
-	MSP_RAW_SATNUM  ("Satellites",0,""),
-	MSP_VIBX        ("VibrationX",0,""),
-	MSP_VIBY        ("VibrationY",0,""),
-	MSP_VIBZ        ("VibrationZ",0,""),
+	MSP_CONSPOWER	("Bat.Cons.Power",1,"mAh"),
+	MSP_RAW_SATNUM  ("Satellites",1,""),
+	MSP_VIBX        ("VibrationX",1,""),
+	MSP_VIBY        ("VibrationY",1,""),
+	MSP_VIBZ        ("VibrationZ",1,""),
 
 	;
 
@@ -103,8 +104,9 @@ public enum MSTYPE {
 		case MSP_ANGLEX: 		return m.attitude.aX;
 		case MSP_ANGLEY: 		return m.attitude.aY;
 		case MSP_COMPASS: 		return m.attitude.h;
-		case MSP_ALTLOCAL: 		return m.attitude.ag;
-		case MSP_ALTAMSL: 		return m.attitude.al;
+		case MSP_ALTLOCAL: 		return m.attitude.al;
+		case MSP_ALTAMSL: 		return m.attitude.ag;
+		case MSP_ALTTERRAIN:	return m.attitude.at;
 		case MSP_NEDX:			return m.state.x;
 		case MSP_NEDY:			return m.state.y;
 		case MSP_NEDZ:			return m.state.z;
