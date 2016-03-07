@@ -76,6 +76,7 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	}
 
 	public void setup(IMAVController control) {
+		this.details.setSelected(true);
 		this.model = control.getCurrentModel();
 		this.control = control;
         this.control.addModeChangeListener(this);

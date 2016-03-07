@@ -70,8 +70,8 @@ public enum MSTYPE {
 	MSP_VIBX        ("VibrationX",1,""),
 	MSP_VIBY        ("VibrationY",1,""),
 	MSP_VIBZ        ("VibrationZ",1,""),
-	MSP_ABSPRESSURE ("Abs.pressure",0,"hPa"),
-	MSP_IMUTEMP	    ("Imu temp.",0,"°C"),
+	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa"),
+	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C"),
 
 	;
 
