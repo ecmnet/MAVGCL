@@ -8,6 +8,6 @@
 
 <fx:root  prefWidth="183.0" type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-     <ListView fx:id="listview"  layoutX="10" layoutY="10" prefWidth="375"
+     <ListView fx:id="listview"  layoutX="10" layoutY="18" prefWidth="375"
         prefHeight="120" editable="false"  />
 </fx:root>

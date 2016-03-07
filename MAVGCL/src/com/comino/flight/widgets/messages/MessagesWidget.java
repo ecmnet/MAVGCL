@@ -67,6 +67,7 @@ public class MessagesWidget extends FadePane  {
 
 
 		fadeProperty().setValue(false);
+	
 
 
 		control.addMAVMessageListener( new IMAVMessageListener() {

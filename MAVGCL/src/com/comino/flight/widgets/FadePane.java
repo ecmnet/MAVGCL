@@ -29,6 +29,10 @@ public class FadePane extends Pane {
 		out.setFromValue(1.0);
 		out.setToValue(0.0);
 
+		out.setOnFinished(value -> {
+			setVisible(false);
+		});
+
 		this.fade.addListener(new ChangeListener<Boolean>() {
 
 			@Override
