@@ -19,16 +19,22 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import com.comino.flight.control.FlightControlPanel;
+import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class StatusLineWidget extends Pane  {
@@ -103,13 +109,29 @@ public class StatusLineWidget extends Pane  {
 			}
 		});
 
+		messages.setTooltip(new Tooltip("Click to show messagee"));
+
+
 
 	}
 
+
+
 	public void setup(IMAVController control) {
+
 		this.control = control;
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
 		ExecutorService.get().execute(task);
+
+	}
+
+
+
+	public void registerMessageWidget(MessagesWidget m) {
+		messages.setOnMousePressed(value -> {
+            m.showMessages();
+
+		});
 
 	}
 

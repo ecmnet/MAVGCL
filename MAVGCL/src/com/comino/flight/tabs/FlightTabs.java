@@ -12,6 +12,7 @@ import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.messages.MessagesWidget;
+import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -69,7 +70,7 @@ public class FlightTabs extends Pane {
 		}
 	}
 
-	public void setup(FlightControlPanel flightControl, IMAVController control) {
+	public void setup(FlightControlPanel flightControl, StatusLineWidget statusline, IMAVController control) {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
@@ -77,6 +78,8 @@ public class FlightTabs extends Pane {
 		details.fadeProperty().bind(flightControl.getStatusControl().getDetailsProperty());
 		details.setup(control);
 		messages.setup(control);
+		
+		statusline.registerMessageWidget(messages);
 
 		//		mavworldtab.setup(recordControl,control);
 		mavmaptab.setup(flightControl.getRecordControl(),control);

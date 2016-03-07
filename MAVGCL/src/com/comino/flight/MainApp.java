@@ -148,19 +148,22 @@ public class MainApp extends Application {
 			rootLayout.setCenter(flightPane);
 			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);;
 
+
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
+
 			statusline.setup(control);
 
 			FlightControlPanel controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
 
+
 			if(!control.isConnected())
 				control.connect();
 
 			FlightTabs fvController = loader.getController();
-			fvController.setup(controlpanel,control);
+			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 		//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());
 

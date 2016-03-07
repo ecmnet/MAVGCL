@@ -40,7 +40,7 @@ import javafx.scene.layout.GridPane;
 
 public class MessagesWidget extends FadePane  {
 
-    @FXML
+	@FXML
 	private ListView<String> listview;
 
 	private IMAVController control;
@@ -100,6 +100,20 @@ public class MessagesWidget extends FadePane  {
 			}
 
 		});
+	}
+
+	public void showMessages() {
+
+		if(listview.getItems().size()<1)
+			return;
+
+		fadeProperty().setValue(true);
+		ExecutorService.get().schedule(new Runnable() {
+			@Override
+			public void run() {
+				fadeProperty().setValue(false);
+			}
+		},3,TimeUnit.SECONDS);
 	}
 
 }
