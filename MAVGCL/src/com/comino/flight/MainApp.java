@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
+import com.comino.flight.debug.Debugging;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -78,14 +79,7 @@ public class MainApp extends Application {
 			}
 		}
 
-
-		/*  EXAMPLE for Debugging values:
-
-		control.getCollector().addDebugListener(model -> {
-			model.debug.x = (float) Math.sin(model.attitude.h);
-		});
-
-		*/
+		Debugging.registerDebugging(control);
 
 
 		initRootLayout();
