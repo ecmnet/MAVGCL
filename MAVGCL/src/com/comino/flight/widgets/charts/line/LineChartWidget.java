@@ -68,6 +68,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			{ MSTYPE.MSP_ANGLEX, 	MSTYPE.MSP_ANGLEY,		MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_ACCX, 		MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
 			{ MSTYPE.MSP_GYROX, 	MSTYPE.MSP_GYROY, 		MSTYPE.MSP_GYROZ 	},
+			{ MSTYPE.MSP_MAGX,	    MSTYPE.MSP_MAGY, 		MSTYPE.MSP_MAGZ		},
 			{ MSTYPE.MSP_RAW_FLOWX, MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_NONE		},
 			{ MSTYPE.MSP_VOLTAGE, 	MSTYPE.MSP_CURRENT, 	MSTYPE.MSP_NONE		},
 	};
@@ -84,6 +85,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			"Angle",
 			"Raw Accelerator",
 			"Raw Gyroskope",
+			"Raw Magnetometer",
 			"Raw Flow",
 			"Battery",
 

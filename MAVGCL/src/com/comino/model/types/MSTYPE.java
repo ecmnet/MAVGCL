@@ -13,6 +13,9 @@ public enum MSTYPE {
 	MSP_GYROX		("GyroX",1,""),
 	MSP_GYROY		("GyroY",1,""),
 	MSP_GYROZ		("GyroZ",1,""),
+	MSP_MAGX		("MagX",1,""),
+	MSP_MAGY		("MagY",1,""),
+	MSP_MAGZ		("MagZ",1,""),
 	MSP_ANGLEX		("AngleX",1,"rad"),
 	MSP_ANGLEY		("AngleY",1,"rad"),
 	MSP_GRSPEED     ("Groundspeed",1,"m/s"),
@@ -105,6 +108,9 @@ public enum MSTYPE {
 		case MSP_GYROX: 		return m.imu.gyrox;
 		case MSP_GYROY: 		return m.imu.gyroy;
 		case MSP_GYROZ: 		return m.imu.gyroz;
+		case MSP_MAGX: 			return m.imu.magx;
+		case MSP_MAGY: 			return m.imu.magy;
+		case MSP_MAGZ: 			return m.imu.magz;
 		case MSP_ANGLEX: 		return m.attitude.aX;
 		case MSP_ANGLEY: 		return m.attitude.aY;
 		case MSP_GRSPEED: 		return m.attitude.s;

@@ -67,6 +67,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			{ MSTYPE.MSP_ACCX, 			MSTYPE.MSP_ACCY, 		},
 			{ MSTYPE.MSP_GYROX, 		MSTYPE.MSP_GYROY, 	},
 			{ MSTYPE.MSP_RAW_FLOWX, 	MSTYPE.MSP_RAW_FLOWY, },
+			{ MSTYPE.MSP_MAGX, 			MSTYPE.MSP_MAGY, },
 	};
 
 	private final static String[] PRESET_NAMES = {
@@ -80,6 +81,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Raw Accelerator",
 			"Raw Gyroskope",
 			"Raw Flow",
+			"Magnetic Field XY"
 	};
 
 	private final static String[] SCALES = {
