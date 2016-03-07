@@ -79,6 +79,15 @@ public class MainApp extends Application {
 		}
 
 
+		/*  EXAMPLE for Debugging values:
+
+		control.getCollector().addDebugListener(model -> {
+			model.debug.x = (float) Math.sin(model.attitude.h);
+		});
+
+		*/
+
+
 		initRootLayout();
 		showMAVGCLApplication();
 

@@ -20,12 +20,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -92,6 +94,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private ModelCollectorService collector;
+	private BooleanProperty details;
 
 
 	public ChartControlWidget() {
@@ -138,15 +141,19 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
+					details.setValue(true);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
+					details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
+					details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
+					details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
@@ -253,11 +260,12 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	}
 
-	public void setup(IMAVController control) {
+	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
 		this.collector = control.getCollector();
 		this.control.addModeChangeListener(this);
 		ExecutorService.get().execute(task);
+		details = statuswidget.getDetailsProperty();
 
 	}
 
