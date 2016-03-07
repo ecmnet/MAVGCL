@@ -180,6 +180,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {
 				recording(new_val, 0);
+				if(new_val.booleanValue()) {
+					scroll.setValue(0);
+				}
 			}
 		});
 
