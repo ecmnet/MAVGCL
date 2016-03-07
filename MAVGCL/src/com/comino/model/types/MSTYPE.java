@@ -70,6 +70,8 @@ public enum MSTYPE {
 	MSP_VIBX        ("VibrationX",1,""),
 	MSP_VIBY        ("VibrationY",1,""),
 	MSP_VIBZ        ("VibrationZ",1,""),
+	MSP_ABSPRESSURE ("Abs.pressure",0,"hPa"),
+	MSP_IMUTEMP	    ("Imu temp.",0,"°C"),
 
 	;
 
@@ -158,6 +160,8 @@ public enum MSTYPE {
 		case MSP_VIBX:          return m.vibration.vibx;
 		case MSP_VIBY:          return m.vibration.viby;
 		case MSP_VIBZ:          return m.vibration.vibz;
+		case MSP_ABSPRESSURE:   return m.imu.abs_pressure;
+		case MSP_IMUTEMP:       return m.sys.imu_temp;
 
 
 		default:
