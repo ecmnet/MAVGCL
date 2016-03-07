@@ -43,6 +43,10 @@ public enum MSTYPE {
 	MSP_RNEDY		("Loc.PosY.rel.",1,"m"),
 	MSP_RNEDZ		("Loc.PosZ.rel.",1,"m"),
 	MSP_RAW_DI		("Raw.Distance.",1,"m"),
+	MSP_DEBUGX		("DebugX",1,"-"),
+	MSP_DEBUGY		("DebugY",1,"-"),
+	MSP_DEBUGZ		("DebugZ",1,"-"),
+	MSP_DEBUGH		("DebugH",1,"-"),
 	MSP_RAW_FLOWX	("Raw.FlowX",1,""),
 	MSP_RAW_FLOWY	("Raw.FlowY",1,""),
 	MSP_RAW_FLOWQ	("Raw.Flow.Qual.",1,""),
@@ -53,10 +57,10 @@ public enum MSTYPE {
 	MSP_RC1			("RC.1",1,""),
 	MSP_RC2			("RC.2",1,""),
 	MSP_RC3			("RC.3",1,""),
-	MSP_S0			("Servo.0",1,""),
-	MSP_S1			("Servo.1",1,""),
-	MSP_S2			("Servo.2",1,""),
-	MSP_S3			("Servo.3",1,""),
+	MSP_S0			("Servo.0",0,""),
+	MSP_S1			("Servo.1",0,""),
+	MSP_S2			("Servo.2",0,""),
+	MSP_S3			("Servo.3",0,""),
 	MSP_GLOBRELX	("Global.rel.PosX",1,"m"),
 	MSP_GLOBRELY 	("Global.rel.PosY",1,"m"),
 	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m"),
@@ -111,6 +115,10 @@ public enum MSTYPE {
 		case MSP_MAGX: 			return m.imu.magx;
 		case MSP_MAGY: 			return m.imu.magy;
 		case MSP_MAGZ: 			return m.imu.magz;
+		case MSP_DEBUGX: 		return m.debug.x;
+		case MSP_DEBUGY: 		return m.debug.y;
+		case MSP_DEBUGZ: 		return m.debug.z;
+		case MSP_DEBUGH: 		return m.debug.h;
 		case MSP_ANGLEX: 		return m.attitude.aX;
 		case MSP_ANGLEY: 		return m.attitude.aY;
 		case MSP_GRSPEED: 		return m.attitude.s;
