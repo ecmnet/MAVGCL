@@ -16,7 +16,7 @@ public class FadePane extends Pane {
 	private BooleanProperty fade = new SimpleBooleanProperty();
 
 	public FadePane() {
-		this(200);
+		this(150);
 	}
 
 	public FadePane(int duration_ms) {

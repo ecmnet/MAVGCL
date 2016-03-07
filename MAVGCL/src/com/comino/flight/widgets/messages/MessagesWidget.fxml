@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -8,5 +8,6 @@
 
 <fx:root  prefWidth="183.0" type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-  <GridPane fx:id="m_grid" layoutX="14.0" layoutY="14.0"  prefWidth="163.0" />
+     <ListView fx:id="listview"  layoutX="10" layoutY="10" prefWidth="375"
+        prefHeight="120" editable="false"  />
 </fx:root>

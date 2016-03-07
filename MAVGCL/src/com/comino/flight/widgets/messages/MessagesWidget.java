@@ -18,9 +18,9 @@ package com.comino.flight.widgets.messages;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.comino.flight.widgets.FadePane;
@@ -30,29 +30,27 @@ import com.comino.msp.model.segment.Message;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
 public class MessagesWidget extends FadePane  {
 
-
-	@FXML
-	private GridPane m_grid;
-
-	private MessageList[] l_messages = null;
-
+    @FXML
+	private ListView<String> listview;
 
 	private IMAVController control;
 
-	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss.SSS");
+	private final SimpleDateFormat fo = new SimpleDateFormat("HH:mm:ss");
 
 	public MessagesWidget() {
 
 		super(300);
 
-		l_messages = new MessageList[5];
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MessagesWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -65,72 +63,43 @@ public class MessagesWidget extends FadePane  {
 		}
 	}
 
-
-
 	public void setup(IMAVController control) {
 
 
 		fadeProperty().setValue(false);
 
-//		for(int i=0;i<5;i++)
-//			l_messages[i] = new MessageList(i);
-//
-//
-//		control.addMAVMessageListener( new IMAVMessageListener() {
-//
-//			@Override
-//			public void messageReceived(List<Message> ml, Message m) {
-//				fadeProperty().setValue(true);
-//
-//				Platform.runLater(new Runnable() {
-//					@Override
-//					public void run() {
-//                      l_messages[0].setMessage(m);
-//					}
-//				});
-//
-//				System.out.println(ml.size());
-//
-//				ExecutorService.get().schedule(new Runnable() {
-//					@Override
-//					public void run() {
-//						fadeProperty().setValue(true);
-//					}
-//				},2500,TimeUnit.MILLISECONDS);
-//
-//			}
-//
-//		});
 
+		control.addMAVMessageListener( new IMAVMessageListener() {
 
-	}
+			ScheduledFuture f = null;
 
+			@Override
+			public void messageReceived(List<Message> ml, Message m) {
+				fadeProperty().setValue(true);
 
-	private class MessageList {
-		private Label l_tms;
-		private Label l_msg;
+				if(f!=null)
+					f.cancel(true);
 
-		private Message ms;
+				Platform.runLater(new Runnable() {
 
-		public MessageList(int row) {
-			l_tms = new Label();
-			l_tms.setPrefWidth(65); l_tms.setPrefHeight(19);
-			m_grid.add(l_tms, 0, row);
-			l_msg = new Label();
-			l_msg.setPrefWidth(120); l_msg.setPrefHeight(19);
-			m_grid.add(l_msg, 1, row);
-		}
+					@Override
+					public void run() {
+						listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
+						listview.scrollTo(listview.getItems().size()-1);
+					}
 
-		public void setMessage(Message m) {
-			this.ms = m;
-			l_tms.setText(Long.toString(m.tms));
-			l_msg.setText(m.msg);
-		}
+				});
 
-		public Message getMessage() {
-			return ms;
-		}
+				f = ExecutorService.get().schedule(new Runnable() {
+					@Override
+					public void run() {
+						fadeProperty().setValue(false);
+					}
+				},3,TimeUnit.SECONDS);
 
+			}
+
+		});
 	}
 
 }
