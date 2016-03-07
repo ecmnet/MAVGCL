@@ -15,6 +15,8 @@ public enum MSTYPE {
 	MSP_GYROZ		("GyroZ",1,""),
 	MSP_ANGLEX		("AngleX",1,"rad"),
 	MSP_ANGLEY		("AngleY",1,"rad"),
+	MSP_GRSPEED     ("Groundspeed",1,"m/s"),
+	MSP_CLIMBRATE   ("Climb.Rate",1,"m/s"),
 	MSP_COMPASS		("Compass",1,"°"),
 	MSP_ALTLOCAL	("Alt.local",1,"m"),
 	MSP_ALTAMSL		("Alt.amsl",1,"m"),
@@ -105,6 +107,8 @@ public enum MSTYPE {
 		case MSP_GYROZ: 		return m.imu.gyroz;
 		case MSP_ANGLEX: 		return m.attitude.aX;
 		case MSP_ANGLEY: 		return m.attitude.aY;
+		case MSP_GRSPEED: 		return m.attitude.s;
+		case MSP_CLIMBRATE:     return m.attitude.vs;
 		case MSP_COMPASS: 		return m.attitude.h;
 		case MSP_ALTLOCAL: 		return m.attitude.al;
 		case MSP_ALTAMSL: 		return m.attitude.ag;

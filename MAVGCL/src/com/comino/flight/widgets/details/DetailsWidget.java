@@ -43,6 +43,8 @@ public class DetailsWidget extends FadePane  {
 	private static MSTYPE[] key_figures = {
 			MSTYPE.MSP_ANGLEX,
 			MSTYPE.MSP_ANGLEY,
+			MSTYPE.MSP_GRSPEED,
+			MSTYPE.MSP_CLIMBRATE,
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_COMPASS,
 			MSTYPE.MSP_RAW_SATNUM,
