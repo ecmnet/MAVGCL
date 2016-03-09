@@ -169,7 +169,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(resolution_ms*3);
+						Thread.sleep(100);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -325,30 +325,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		timeFrame.addListener((v, ov, nv) -> {
-
-			this.current_x_pt = 0;
-
-			if(nv.intValue() > 600) {
-				resolution_ms = 500;
-			}
-			else if(nv.intValue() > 200) {
-				resolution_ms = 200;
-			}
-			else if(nv.intValue() > 20) {
-				resolution_ms = 100;
-			}
-			else {
-				resolution_ms = 50;
-			}
-
-			xAxis.setTickUnit(resolution_ms/20);
-			xAxis.setMinorTickCount(10);
-
-			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
-			if(current_x0_pt < 0)
-				current_x0_pt = 0;
-			scroll.setValue(0);
-			updateGraph(true);
+			setXResolution(nv.intValue());
 		});
 
 
@@ -389,6 +366,31 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
+	private void setXResolution(int frame) {
+		this.current_x_pt = 0;
+
+		if(frame > 600)
+			resolution_ms = 500;
+		else if(frame > 200)
+			resolution_ms = 300;
+		else if(frame > 30)
+			resolution_ms = 200;
+		else if(frame > 20)
+			resolution_ms = 100;
+		else
+			resolution_ms = 50;
+
+		xAxis.setTickUnit(resolution_ms/20);
+		xAxis.setMinorTickCount(10);
+
+		current_x0_pt = control.getCollector().getModelList().size() - frame * 1000 / COLLECTOR_CYCLE;
+		if(current_x0_pt < 0)
+			current_x0_pt = 0;
+		scroll.setValue(0);
+		xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
+		updateGraph(true);
+	}
+
 
 
 	private void updateGraph(boolean refresh) {
@@ -419,8 +421,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				if(current_x_pt > current_x1_pt)
 					current_x0_pt++;
 
+			//	System.out.println("cu="+current_x_pt+" mod="+((current_x_pt * COLLECTOR_CYCLE) % resolution_ms));
 
-			//	if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					if(current_x_pt > current_x1_pt) {
 						synchronized(this) {
@@ -453,7 +456,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						}
 					}
 
-				//}
+				}
 
 
 				current_x_pt++;
@@ -480,6 +483,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		series1.setName(type1.getDescription());
 		series2.setName(type2.getDescription());
 		series3.setName(type3.getDescription());
+
+		setXResolution(30);
 
 		ExecutorService.get().execute(task);
 		return this;

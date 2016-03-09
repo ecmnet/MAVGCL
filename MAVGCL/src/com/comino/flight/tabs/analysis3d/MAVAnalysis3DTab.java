@@ -54,7 +54,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 
 	private static int COLLECTOR_CYCLE = 50;
-	private static int REFRESH_MS = 200;
+	private static int REFRESH_MS = 300;
 
 	private Task<Integer> task;
 
@@ -83,7 +83,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
-	private int resolution 	= 50;
+	private int resolution_ms 	= 50;
 
 
 	private int current_x_pt=0;
@@ -227,28 +227,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		this.setCenter(scene);
 
 		timeFrame.addListener((v, ov, nv) -> {
-
-			this.current_x_pt = 0;
-
-			if(nv.intValue() > 600) {
-				resolution = 500;
-			}
-			else if(nv.intValue() > 200) {
-				resolution = 200;
-			}
-			else if(nv.intValue() > 20) {
-				resolution = 100;
-			}
-			else
-				resolution = 50;
-
-
-			current_x0_pt = control.getCollector().getModelList().size() - nv.intValue() * 1000 / COLLECTOR_CYCLE;
-			if(current_x0_pt < 0)
-				current_x0_pt = 0;
-
-			scroll.setValue(0);
-			updateGraph(true);
+			setXResolution(nv.intValue());
 		});
 
 		scroll.addListener((v, ov, nv) -> {
@@ -276,6 +255,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	}
 
 
+
 	public MAVAnalysis3DTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.control = control;
 		recordControl.addChart(this);
@@ -287,6 +267,30 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private double old_x;
 	private double old_y;
 	private double old_z;
+
+
+	private void setXResolution(int frame) {
+		this.current_x_pt = 0;
+
+		if(frame > 600)
+			resolution_ms = 500;
+		else if(frame > 200)
+			resolution_ms = 300;
+		else if(frame > 30)
+			resolution_ms = 200;
+		else if(frame > 20)
+			resolution_ms = 100;
+		else
+			resolution_ms = 50;
+
+		current_x0_pt = control.getCollector().getModelList().size() - frame * 1000 / COLLECTOR_CYCLE;
+		if(current_x0_pt < 0)
+			current_x0_pt = 0;
+
+		scroll.setValue(0);
+		updateGraph(true);
+
+	}
 
 
 
@@ -317,7 +321,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					current_x0_pt++;
 
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 
 					double x = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
