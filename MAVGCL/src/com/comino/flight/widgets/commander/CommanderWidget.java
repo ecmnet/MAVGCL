@@ -84,10 +84,10 @@ public class CommanderWidget extends Pane  {
 
 		});
 
-	//	takeoff_command.setDisable(true);
+		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
 
-			 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
+//			 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
 
 		});
 

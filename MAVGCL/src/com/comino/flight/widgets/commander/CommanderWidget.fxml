@@ -12,7 +12,7 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
        <Button fx:id="land_command" layoutX="15.0"  layoutY="10" prefHeight="19" prefWidth="157.0" text="Auto-Landing"/>
        <Button fx:id="takeoff_command" layoutX="15.0" layoutY="35" prefHeight="19" prefWidth="157.0" text="Auto-TakeOff"/>
-       <Button fx:id="althold_command" layoutX="15.0" layoutY="60" prefHeight="19" prefWidth="157.0" text="Altitude hold"/>
-       <Button fx:id="poshold_command" layoutX="15.0" layoutY="85" prefHeight="19" prefWidth="157.0" text="Position hold"/>
+       <Button fx:id="althold_command" layoutX="15.0" layoutY="70" prefHeight="19" prefWidth="157.0" text="Altitude hold"/>
+       <Button fx:id="poshold_command" layoutX="15.0" layoutY="95" prefHeight="19" prefWidth="157.0" text="Position hold"/>
 	</children>
 </fx:root>
