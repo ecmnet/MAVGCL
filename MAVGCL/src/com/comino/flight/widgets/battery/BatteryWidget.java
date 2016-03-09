@@ -102,44 +102,11 @@ public class BatteryWidget extends Pane  {
 				g_voltage.setValue(model.battery.b0);
 				g_capacity.setValue(model.battery.p);
 
-//				checkBarLimits(voltage, model.battery.b0, vo_range[2], vo_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-//				if(model.battery.b0 > vo_range[0]) {
-//					voltage.setProgress((model.battery.b0 - vo_range[0]) / (vo_range[1] - vo_range[0]));
-//					f_voltage.setText(fo.format(model.battery.b0));
-//				}
-//
-//				checkBarLimits(current, model.battery.c0, cu_range[2], cu_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-//				if(model.battery.c0 > cu_range[0]) {
-//					current.setProgress((model.battery.c0 - cu_range[0]) / (cu_range[1] - cu_range[0]));
-//					f_current.setText(fo.format(model.battery.c0));
-//				}
-//
-//				checkBarLimits(capacity, model.battery.p, ca_range[2], ca_range[3], model.sys.isStatus(Status.MSP_CONNECTED));
-//				if(model.battery.p > ca_range[0]) {
-//					capacity.setProgress((model.battery.p - ca_range[0]) / (ca_range[1] - ca_range[0]));
-//					f_capacity.setText(fo.format(model.battery.p));
-//				}
-
 			}
 		});
 
 	}
 
-	private void checkBarLimits(ProgressBar bar, float val, float low, float high, boolean valid) {
-		if(low!=0 && val < low && val > 0) {
-			bar.setStyle("-fx-accent: red;");
-			return; }
-
-		if(high!=0 && val > high) {
-			bar.setStyle("-fx-accent: red;");
-			return; }
-
-		if(!valid) {
-			bar.setStyle("-fx-accent: lightgrey;");
-			return; }
-
-		bar.setStyle("-fx-accent: darkcyan;");
-	}
 
 	@FXML
 	private void initialize() {
