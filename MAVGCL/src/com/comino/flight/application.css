@@ -71,6 +71,10 @@
 	 -fx-fill: #505050;
 }
 
+.status-cmd .label {
+	-fx-text-fill: #00fFf0;
+}
+
 
 .text{
     -fx-font-smoothing-type: LCD;

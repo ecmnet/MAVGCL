@@ -49,6 +49,12 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	private Circle poshold;
 
 	@FXML
+	private Circle mission;
+
+	@FXML
+	private Circle offboard;
+
+	@FXML
 	private Circle landed;
 
 	@FXML
@@ -109,6 +115,16 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 			poshold.setFill(Color.GREEN);
 		else
 			poshold.setFill(Color.LIGHTGRAY);
+
+		if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
+			mission.setFill(Color.GREEN);
+		else
+			mission.setFill(Color.LIGHTGRAY);
+
+		if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
+			offboard.setFill(Color.GREEN);
+		else
+			offboard.setFill(Color.LIGHTGRAY);
 
 		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
 			landed.setFill(Color.GREEN);

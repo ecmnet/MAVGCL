@@ -41,11 +41,11 @@
             <Separator maxWidth="-Infinity" prefHeight="0.0" prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
             <Circle fx:id="althold" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="4" />
             <Circle fx:id="poshold" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="5" />
-            <Label text="Altitude hold" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Altitude hold" GridPane.columnIndex="1" GridPane.rowIndex="4"  styleClass="status-cmd" />
             <Label text="Position hold" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="6" />
-            <Circle fx:id="poshold1" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="7" />
-            <Circle fx:id="poshold2" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="8" />
+            <Circle fx:id="mission" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="7" />
+            <Circle fx:id="offboard" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="8" />
             <Circle fx:id="landed" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="9" />
             <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Offboard" GridPane.columnIndex="1" GridPane.rowIndex="8" />

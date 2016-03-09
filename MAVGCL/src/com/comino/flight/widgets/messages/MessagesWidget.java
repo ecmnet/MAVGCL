@@ -45,7 +45,10 @@ public class MessagesWidget extends FadePane  {
 
 	private IMAVController control;
 
+	private ScheduledFuture f = null;
+
 	private final SimpleDateFormat fo = new SimpleDateFormat("HH:mm:ss");
+
 
 	public MessagesWidget() {
 
@@ -65,14 +68,18 @@ public class MessagesWidget extends FadePane  {
 
 	public void setup(IMAVController control) {
 
+        this.setOnMouseEntered(event -> {
+        	f.cancel(true);
+        });
+
+        this.setOnMouseExited(event -> {
+        	fadeProperty().setValue(false);
+        });
 
 		fadeProperty().setValue(false);
-	
-
 
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
-			ScheduledFuture f = null;
 
 			@Override
 			public void messageReceived(List<Message> ml, Message m) {
@@ -91,12 +98,7 @@ public class MessagesWidget extends FadePane  {
 
 				});
 
-				f = ExecutorService.get().schedule(new Runnable() {
-					@Override
-					public void run() {
-						fadeProperty().setValue(false);
-					}
-				},3,TimeUnit.SECONDS);
+				showMessages();
 
 			}
 
@@ -109,7 +111,7 @@ public class MessagesWidget extends FadePane  {
 			return;
 
 		fadeProperty().setValue(true);
-		ExecutorService.get().schedule(new Runnable() {
+		f = ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
 				fadeProperty().setValue(false);

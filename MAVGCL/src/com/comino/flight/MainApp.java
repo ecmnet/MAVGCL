@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
-import com.comino.flight.debug.Debugging;
+import com.comino.flight.debug.AnalysisIntegration;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -73,13 +73,13 @@ public class MainApp extends Application {
 		}
 		else {
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost"))
-				control = new MAVUdpController(peerAddress,14556,"0.0.0.0",14550);
+				control = new MAVUdpController(peerAddress,14556,14550);
 			else {
-				control = new MAVUdpController(peerAddress,14555,"0.0.0.0",14550);
+				control = new MAVUdpController(peerAddress,14555,14550);
 			}
 		}
 
-		Debugging.registerDebugging(control);
+		AnalysisIntegration.registerFunction(control);
 
 
 		initRootLayout();

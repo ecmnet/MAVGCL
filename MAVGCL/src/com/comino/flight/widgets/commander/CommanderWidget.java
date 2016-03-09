@@ -20,10 +20,17 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_FRAME;
+import org.mavlink.messages.MAV_MODE;
+import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_command_long;
+import org.mavlink.messages.lquac.msg_set_mode;
+import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
 import com.comino.msp.model.utils.Utils;
 import com.comino.msp.utils.ExecutorService;
 
@@ -46,7 +53,12 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private Button takeoff_command;
 
-	private Task<Long> task;
+	@FXML
+	private Button althold_command;
+
+	@FXML
+	private Button poshold_command;
+
 	private IMAVController control;
 	private DataModel model;
 
@@ -61,57 +73,60 @@ public class CommanderWidget extends Pane  {
 
 			throw new RuntimeException(exception);
 		}
-
-		task = new Task<Long>() {
-
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
-					if(isDisabled()) {
-						continue;
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-					updateValue(System.currentTimeMillis());
-				}
-				return System.currentTimeMillis();
-			}
-		};
-
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-
-
-			}
-		});
-
 	}
 
 	@FXML
 	private void initialize() {
 
 		land_command.setOnAction((ActionEvent event)-> {
-		      System.out.println("Landing command to be invoked");
-		      control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 
-			});
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 
-		takeoff_command.setDisable(true);
+		});
+
+	//	takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-		      System.out.println("Takeoff command to be invoked");
-		   // control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
 
-			});
+			 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
+
+		});
+
+
+		althold_command.setOnAction((ActionEvent event)-> {
+
+			//			 if(!model.sys.isStatus(Status.MSP_ARMED)) {
+			//				 System.out.println("Not armed: Changing mode rejected");
+			//			 }
+
+			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+			else
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+
+		});
+
+		poshold_command.setOnAction((ActionEvent event)-> {
+
+			//			 if(!model.sys.isStatus(Status.MSP_ARMED)) {
+			//				 System.out.println("Not armed: Changing mode rejected");
+			//               return;
+			//			 }
+
+			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+			else
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+
+		});
+
 	}
 
 
@@ -120,7 +135,6 @@ public class CommanderWidget extends Pane  {
 	public void setup(IMAVController control) {
 		this.model = control.getCurrentModel();
 		this.control = control;
-		ExecutorService.get().execute(task);
 	}
 
 }
