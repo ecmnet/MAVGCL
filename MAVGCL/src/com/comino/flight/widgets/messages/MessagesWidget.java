@@ -30,6 +30,8 @@ import com.comino.msp.model.segment.Message;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -103,6 +105,17 @@ public class MessagesWidget extends FadePane  {
 			}
 
 		});
+
+		listview.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> observable, Object oldvalue, Object newValue) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        listview.getSelectionModel().select(-1);
+                    }
+                });
+            }
+        });
 	}
 
 	public void showMessages() {

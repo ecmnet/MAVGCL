@@ -461,7 +461,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private void setXAxisBounds(int lower_pt, int upper_pt) {
+	private synchronized void setXAxisBounds(int lower_pt, int upper_pt) {
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
