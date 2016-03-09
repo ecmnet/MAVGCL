@@ -26,6 +26,10 @@
  */
 package org.lodgon.openmapfx.core;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
+import javafx.scene.image.Image;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,10 +43,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
-import javafx.scene.image.Image;
 
 /** Describes a type of tile that can be returned from a {@link TileProvider},
  * for example, map, terrain or satellite. The base address is set here to be
@@ -103,7 +103,9 @@ public class TileType implements MapTileType {
         Task<Image> worker = new Task<Image>() {
             @Override
             protected Image call() throws Exception {
-                return new Image(getImageURL(zoom, i, j), true);
+                String imageUrl = getImageURL(zoom, i, j);
+                boolean bg = imageUrl.startsWith("http");
+                return new Image(getImageURL(zoom, i, j), bg);
             }
         };
         new Thread(worker).start();
