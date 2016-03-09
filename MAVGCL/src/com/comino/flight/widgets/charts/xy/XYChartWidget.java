@@ -496,7 +496,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				if(current_x_pt > current_x1_pt)
 					current_x0_pt++;
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+			//	if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					synchronized(this) {
 						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)
@@ -520,7 +520,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 						}
 					}
-				}
+			//	}
 
 				current_x_pt++;
 			}
