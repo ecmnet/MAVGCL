@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 
 <fx:root  prefHeight="125" prefWidth="183.0"  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-       <Button fx:id="land_command" layoutX="15.0"  layoutY="10" prefHeight="19" prefWidth="157.0" text="Auto-Landing"/>
-       <Button fx:id="takeoff_command" layoutX="15.0" layoutY="35" prefHeight="19" prefWidth="157.0" text="Auto-TakeOff"/>
-       <Button fx:id="althold_command" layoutX="15.0" layoutY="70" prefHeight="19" prefWidth="157.0" text="Altitude hold"/>
-       <Button fx:id="poshold_command" layoutX="15.0" layoutY="95" prefHeight="19" prefWidth="157.0" text="Position hold"/>
+       <Button fx:id="land_command" layoutX="15.0"    layoutY="10" prefHeight="19" prefWidth="70.0" text="Landing"/>
+       <Button fx:id="takeoff_command" layoutX="95.0" layoutY="10" prefHeight="19" prefWidth="70.0" text="TakeOff"/>
+       <Button fx:id="althold_command" layoutX="15.0" layoutY="35" prefHeight="19" prefWidth="70.0" text="Alt.hold"/>
+       <Button fx:id="poshold_command" layoutX="95.0" layoutY="35" prefHeight="19" prefWidth="70.0" text="Pos.hold"/>
+       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="65" prefWidth="150.0" />
+       <Button fx:id="left"  layoutX="15.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp1"/>
+       <Button fx:id="right" layoutX="95.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp2"/>
 	</children>
 </fx:root>

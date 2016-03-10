@@ -59,6 +59,12 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private Button poshold_command;
 
+	@FXML
+	private Button left;
+
+	@FXML
+	private Button right;
+
 	private IMAVController control;
 	private DataModel model;
 
@@ -80,6 +86,11 @@ public class CommanderWidget extends Pane  {
 
 		land_command.setOnAction((ActionEvent event)-> {
 
+			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+				System.out.println("Not armed: Changing mode rejected");
+				return;
+			}
+
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 
 		});
@@ -87,16 +98,19 @@ public class CommanderWidget extends Pane  {
 		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
 
-//			 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, 0, 2, 0.5f );
+
+				System.out.println("Rejected");
+
 
 		});
 
 
 		althold_command.setOnAction((ActionEvent event)-> {
 
-			//			 if(!model.sys.isStatus(Status.MSP_ARMED)) {
-			//				 System.out.println("Not armed: Changing mode rejected");
-			//			 }
+			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+				System.out.println("Not armed: Changing mode rejected");
+				return;
+			}
 
 			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -111,10 +125,10 @@ public class CommanderWidget extends Pane  {
 
 		poshold_command.setOnAction((ActionEvent event)-> {
 
-			//			 if(!model.sys.isStatus(Status.MSP_ARMED)) {
-			//				 System.out.println("Not armed: Changing mode rejected");
-			//               return;
-			//			 }
+			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+				System.out.println("Not armed: Changing mode rejected");
+				return;
+			}
 
 			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -126,6 +140,24 @@ public class CommanderWidget extends Pane  {
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
 
 		});
+
+//		left.setOnAction((ActionEvent event)-> {
+//
+//			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+//				System.out.println("Not armed: Changing mode rejected");
+//				return;
+//			}
+//
+//			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
+//			else
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+//
+//		});
 
 	}
 
