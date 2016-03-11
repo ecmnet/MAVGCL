@@ -21,19 +21,15 @@ import java.text.DecimalFormat;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
 import eu.hansolo.medusa.Gauge;
-import eu.hansolo.medusa.Gauge.ScaleDirection;
 import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 

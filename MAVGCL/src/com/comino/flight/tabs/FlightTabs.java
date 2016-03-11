@@ -9,7 +9,6 @@ import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
-import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -19,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 public class FlightTabs extends Pane {
 

@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.integration.AnalysisIntegration;
-
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;

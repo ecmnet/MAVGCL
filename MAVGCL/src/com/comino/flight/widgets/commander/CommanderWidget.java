@@ -17,33 +17,20 @@
 package com.comino.flight.widgets.commander;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_FRAME;
-import org.mavlink.messages.MAV_MODE;
 import org.mavlink.messages.MAV_MODE_FLAG;
-import org.mavlink.messages.lquac.msg_command_long;
-import org.mavlink.messages.lquac.msg_set_mode;
-import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
-import com.comino.msp.model.utils.Utils;
-import com.comino.msp.utils.ExecutorService;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class CommanderWidget extends Pane  {
