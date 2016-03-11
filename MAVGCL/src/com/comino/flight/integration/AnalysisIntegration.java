@@ -1,4 +1,4 @@
-package com.comino.flight.debug;
+package com.comino.flight.integration;
 
 import com.comino.mav.control.IMAVController;
 

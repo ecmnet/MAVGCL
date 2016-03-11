@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
-import com.comino.flight.debug.AnalysisIntegration;
+import com.comino.flight.integration.AnalysisIntegration;
+import com.comino.flight.log.MAVGCLLog;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -81,6 +82,7 @@ public class MainApp extends Application {
 
 		AnalysisIntegration.registerFunction(control);
 
+		MAVGCLLog.getInstance(control);
 
 		initRootLayout();
 		showMAVGCLApplication();

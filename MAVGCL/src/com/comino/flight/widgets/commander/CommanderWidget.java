@@ -27,6 +27,7 @@ import org.mavlink.messages.lquac.msg_command_long;
 import org.mavlink.messages.lquac.msg_set_mode;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
+import com.comino.flight.log.MAVGCLLog;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.model.DataModel;
@@ -87,7 +88,7 @@ public class CommanderWidget extends Pane  {
 		land_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				System.out.println("Not armed: Changing mode rejected");
+				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 
@@ -108,7 +109,7 @@ public class CommanderWidget extends Pane  {
 		althold_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				System.out.println("Not armed: Changing mode rejected");
+				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 
@@ -126,7 +127,7 @@ public class CommanderWidget extends Pane  {
 		poshold_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				System.out.println("Not armed: Changing mode rejected");
+				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 
