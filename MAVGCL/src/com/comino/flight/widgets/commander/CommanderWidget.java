@@ -27,9 +27,9 @@ import org.mavlink.messages.lquac.msg_command_long;
 import org.mavlink.messages.lquac.msg_set_mode;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
-import com.comino.flight.log.MAVGCLLog;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.model.utils.Utils;
@@ -88,7 +88,7 @@ public class CommanderWidget extends Pane  {
 		land_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
+				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 
@@ -109,7 +109,7 @@ public class CommanderWidget extends Pane  {
 		althold_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
+				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 
@@ -119,7 +119,7 @@ public class CommanderWidget extends Pane  {
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
 			else {
 				if(!model.sys.isStatus(Status.MSP_LANDED))
-				   MAVGCLLog.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
+					MSPLogger.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
 				else
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
@@ -131,7 +131,7 @@ public class CommanderWidget extends Pane  {
 		poshold_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MAVGCLLog.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
+				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
 				return;
 			}
 

@@ -21,12 +21,13 @@ import java.util.Map;
 
 import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.integration.AnalysisIntegration;
-import com.comino.flight.log.MAVGCLLog;
+
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
+import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -82,7 +83,7 @@ public class MainApp extends Application {
 
 		AnalysisIntegration.registerFunction(control);
 
-		MAVGCLLog.getInstance(control);
+		MSPLogger.getInstance(control);
 
 		initRootLayout();
 		showMAVGCLApplication();
