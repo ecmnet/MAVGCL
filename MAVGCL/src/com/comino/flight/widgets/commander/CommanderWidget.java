@@ -117,10 +117,14 @@ public class CommanderWidget extends Pane  {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-			else
+			else {
+				if(!model.sys.isStatus(Status.MSP_LANDED))
+				   MAVGCLLog.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
+				else
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+			}
 
 		});
 
@@ -138,7 +142,7 @@ public class CommanderWidget extends Pane  {
 			else
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
 
 		});
 
