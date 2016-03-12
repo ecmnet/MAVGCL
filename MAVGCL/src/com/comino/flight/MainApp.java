@@ -60,12 +60,13 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
 		String peerAddress = null;
+        String proxy = null;
 
 		Map<String,String> args = getParameters().getNamed();
 
-
 		if(args.size()> 0) {
 			peerAddress  = args.get("peerAddress");
+			proxy = args.get("proxy");
 		}
 
 		if(peerAddress ==null) {
@@ -73,8 +74,12 @@ public class MainApp extends Application {
 			control.connect();
 		}
 		else {
-			if(peerAddress.contains("127.0") || peerAddress.contains("localhost"))
+			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
+				if(proxy==null)
 				control = new MAVUdpController(peerAddress,14556,14550);
+				else
+					control = new MAVUdpController(peerAddress,14558,14550);
+			}
 			else {
 				control = new MAVUdpController(peerAddress,14555,14550);
 			}
