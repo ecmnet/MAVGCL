@@ -6,6 +6,8 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 14/03/2016 
 
+**Note:** To execute extended commands, a companion computer running MAVComm (Proxy) is required.
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)

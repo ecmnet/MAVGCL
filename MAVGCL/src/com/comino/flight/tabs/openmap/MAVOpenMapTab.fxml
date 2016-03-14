@@ -12,7 +12,7 @@
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
 	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<top>
-		<Pane prefHeight="28">
+		<Pane prefHeight="34">
 			<children>
 				<Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0"
 					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0"
