@@ -81,6 +81,7 @@ public enum MSTYPE {
 	MSP_VIBZ        ("VibrationZ",1,""),
 	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa"),
 	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C"),
+	MSP_CPULOAD     ("CPU Load",0,"°%"),
 
 	;
 
@@ -180,6 +181,7 @@ public enum MSTYPE {
 		case MSP_VIBZ:          return m.vibration.vibz;
 		case MSP_ABSPRESSURE:   return m.imu.abs_pressure;
 		case MSP_IMUTEMP:       return m.sys.imu_temp;
+		case MSP_CPULOAD:       return m.sys.load_p;
 
 
 		default:

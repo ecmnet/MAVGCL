@@ -73,7 +73,9 @@ public class DetailsWidget extends FadePane  {
 			MSTYPE.MSP_VIBZ,
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_ABSPRESSURE,
+			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_IMUTEMP,
+			MSTYPE.MSP_CPULOAD,
 
 
 	};
