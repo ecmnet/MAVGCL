@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
@@ -133,23 +134,13 @@ public class CommanderWidget extends Pane  {
 
 		});
 
-//		left.setOnAction((ActionEvent event)-> {
-//
-//			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-//				System.out.println("Not armed: Changing mode rejected");
-//				return;
-//			}
-//
-//			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
-//			else
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
-//
-//		});
+		left.setOnAction((ActionEvent event)-> {
+
+			msg_msp_command cmd = new msg_msp_command();
+			control.sendMAVLinkMessage(cmd);
+
+
+		});
 
 	}
 
