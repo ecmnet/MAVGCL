@@ -25,6 +25,7 @@ import org.lodgon.openmapfx.core.MapTileType;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.service.MapViewPane;
 
+import com.comino.flight.control.FlightControlPanel;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
@@ -331,7 +332,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	}
 
 
-	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
+	public MAVOpenMapTab setup(FlightControlPanel flightControl, IMAVController control) {
 		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
 

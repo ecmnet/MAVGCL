@@ -67,7 +67,8 @@ public class MessagesWidget extends FadePane  {
 	public void setup(IMAVController control) {
 
         this.setOnMouseEntered(event -> {
-        	f.cancel(true);
+        	if(f!=null)
+        	  f.cancel(true);
         });
 
         this.setOnMouseExited(event -> {
