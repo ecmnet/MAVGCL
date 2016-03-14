@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
-import com.comino.msp.model.segment.Message;
+import com.comino.msp.model.segment.LogMessage;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
@@ -80,7 +80,7 @@ public class MessagesWidget extends FadePane  {
 
 
 			@Override
-			public void messageReceived(List<Message> ml, Message m) {
+			public void messageReceived(List<LogMessage> ml, LogMessage m) {
 				fadeProperty().setValue(true);
 
 				if(f!=null)
