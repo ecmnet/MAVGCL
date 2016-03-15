@@ -4,9 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
 
-**Status:** Last updated 14/03/2016 
-
-**Note:** To execute extended commands, a companion computer running MAVComm (Proxy) is required.
+**Status:** Last updated 15/03/2016 
 
 **Features:**
 
