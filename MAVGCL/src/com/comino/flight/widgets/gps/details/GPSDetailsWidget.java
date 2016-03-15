@@ -18,9 +18,12 @@ package com.comino.flight.widgets.gps.details;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -29,37 +32,35 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 
 public class GPSDetailsWidget extends FadePane  {
 
-	@FXML
-	private Label f_altitude;
+	private static MSTYPE[] key_figures = {
+			MSTYPE.MSP_GLOBPLAT,
+			MSTYPE.MSP_GLOBPLON,
+			MSTYPE.MSP_REF_GPSLAT,
+			MSTYPE.MSP_REF_GPSLON,
+			MSTYPE.MSP_RAW_GPSLAT,
+			MSTYPE.MSP_RAW_GPSLON,
+	};
 
-	@FXML
-	private Label f_lat;
-
-	@FXML
-	private Label f_lon;
-
-	@FXML
-	private Label f_compass;
-
-	@FXML
-	private Label f_sat;
-
-	@FXML
-	private Label f_eph;
+	 @FXML
+	 private GridPane gps_grid;
 
 	private Task<Long> task;
-	private IMAVController control;
 	private DataModel model;
 
+	private List<KeyFigure> figures = null;
 
-	private final DecimalFormat fo = new DecimalFormat("#0.0");
-	private final DecimalFormat fo6 = new DecimalFormat("#0.000000");
+	private DecimalFormat f = new DecimalFormat("#0.######");
+
 
 	public GPSDetailsWidget() {
+		figures = new ArrayList<KeyFigure>();
+
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GPSDetailsWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -98,12 +99,9 @@ public class GPSDetailsWidget extends FadePane  {
 
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-                   f_altitude.setText(fo.format(model.attitude.ag));
-                   f_lat.setText(fo6.format(model.gps.latitude));
-                   f_lon.setText(fo6.format(model.gps.longitude));
-                   f_compass.setText(fo.format(model.attitude.h));
-                   f_eph.setText(fo.format(model.gps.eph));
-                   f_sat.setText(Integer.toString(model.gps.numsat));
+				for(KeyFigure figure : figures) {
+					figure.setValue(model);
+				}
 
 			}
 		});
@@ -112,9 +110,40 @@ public class GPSDetailsWidget extends FadePane  {
 
 
 	public void setup(IMAVController control) {
+		int i=0;
+		for(MSTYPE k : key_figures) {
+			figures.add(new KeyFigure(gps_grid,k,i));
+			i++;
+		}
+
 		this.model = control.getCurrentModel();
-		this.control = control;
 		ExecutorService.get().execute(task);
 	}
+
+	private class KeyFigure {
+		MSTYPE type  = null;
+		Label  value = null;
+
+		public KeyFigure(GridPane grid, MSTYPE k, int row) {
+			this.type = k;
+			if(k==MSTYPE.MSP_NONE) {
+				grid.add(new Label(),0,row);
+			} else {
+			Label l1 = new Label(k.getDescription()+" :");
+			l1.setPrefWidth(95); l1.setPrefHeight(19);
+			grid.add(l1, 0, row);
+			value = new Label("-"); value.setPrefWidth(70); value.setAlignment(Pos.CENTER_RIGHT);
+			grid.add(value, 1, row);
+			Label l3 = new Label(" "+k.getUnit()); l3.setPrefWidth(20);
+			grid.add(l3, 2, row);
+			}
+		}
+
+		public void setValue(DataModel model) {
+			if(type!=MSTYPE.MSP_NONE)
+			  value.setText(f.format(MSTYPE.getValue(model, type)));
+		}
+	}
+
 
 }

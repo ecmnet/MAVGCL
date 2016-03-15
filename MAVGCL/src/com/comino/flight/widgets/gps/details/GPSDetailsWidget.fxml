@@ -7,39 +7,5 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <fx:root prefWidth="183.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-	<children>
-		<GridPane layoutX="14.0" layoutY="14.0" prefWidth="163.0">
-			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="84.0" />
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="87.0" minWidth="10.0" prefWidth="71.0" />
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="62.0" minWidth="8.0" prefWidth="8.0" />
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-				<RowConstraints minHeight="10.0" prefHeight="19.0" vgrow="NEVER" />
-			</rowConstraints>
-			<children>
-				<Label prefHeight="11.0" prefWidth="87.0" text="Altitude (amsl)" />
-				<Label fx:id="f_altitude" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="67.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-				<Label text="m" GridPane.columnIndex="2" />
-				<Label text="Laitude" GridPane.rowIndex="1" />
-				<Label fx:id="f_lat" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="67.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-				<Label text="Longitude" GridPane.rowIndex="2" />
-				<Label fx:id="f_lon" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="67.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-				<Label text="Compass" GridPane.rowIndex="3" />
-				<Label fx:id="f_compass" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="67.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<Label text="Satellites" GridPane.rowIndex="4" />
-				<Label fx:id="f_sat" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="67.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-				<Label text="Eph" GridPane.rowIndex="5" />
-				<Label fx:id="f_eph" alignment="CENTER_RIGHT" prefHeight="11.0" prefWidth="67.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-				<Label text="°" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-			</children>
-		</GridPane>
-	</children>
+		<GridPane fx:id="gps_grid" layoutX="14.0" layoutY="14.0" prefWidth="163.0" />
 </fx:root>
