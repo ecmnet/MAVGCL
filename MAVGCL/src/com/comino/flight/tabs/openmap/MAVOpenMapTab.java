@@ -88,6 +88,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private CheckBox viewdetails;
 
 	@FXML
+	private CheckBox mapfollow;
+
+	@FXML
 	private GPSDetailsWidget gpsdetails;
 
 	private LayeredMap map;
@@ -183,9 +186,19 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 //							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
 //							canvasLayer.redraw(false);
 //						} else {
-							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
-							canvasLayer.redraw(true);
+//							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+//							canvasLayer.redraw(true);
 //						}
+
+							if(mapfollow.selectedProperty().get()) {
+								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+								canvasLayer.redraw(true);
+							} else {
+								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+								canvasLayer.redraw(false);
+							}
+
+
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -202,6 +215,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
+
+		mapfollow.selectedProperty().set(true);
 
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 
