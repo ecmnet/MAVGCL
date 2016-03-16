@@ -27,7 +27,8 @@ public class FileHandler {
 		FileChooser fileChooser = getFileDialog("Import collected data from...");
 		File file = fileChooser.showOpenDialog(stage);
 		try {
-			control.getCollector().readFromFile(file);
+			if(file!=null)
+				control.getCollector().readFromFile(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +40,8 @@ public class FileHandler {
 		FileChooser fileChooser = getFileDialog("Export collected data to...");
 		File file = fileChooser.showSaveDialog(stage);
 		try {
-			control.getCollector().writeToFile(file);
+			if(file!=null)
+				control.getCollector().writeToFile(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -50,9 +52,9 @@ public class FileHandler {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(
-		         new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
+				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		fileChooser.setInitialDirectory(
-	            new File(System.getProperty("user.home")));
+				new File(System.getProperty("user.home")));
 		return fileChooser;
 	}
 
