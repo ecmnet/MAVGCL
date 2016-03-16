@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 16/03/2016 
 
-*New:* Import/Export of recorded data
+New feature: Import/Export of recorded data
 
 **Features:**
 
