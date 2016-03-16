@@ -40,6 +40,7 @@ New feature: Import/Export of recorded data
   or `java -jar MAVGAnalysis.jar --peerAddress=127.0.0.1` for SITL (jMAVSim)
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
+- Import `demo_data.mgc` or collect data from your vehicle
 
 **How to deploy on OSX:**
 

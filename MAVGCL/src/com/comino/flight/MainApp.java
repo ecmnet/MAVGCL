@@ -172,6 +172,7 @@ public class MainApp extends Application {
 		m_export.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				if(control.getCollector().getModelList().size()>0)
 				   fileHandler.fileExport();
 			}
 
