@@ -428,23 +428,22 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
 						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
 
+						if(series1.getData().size()>0)
+							series1.getData().remove(0);
+						if(series2.getData().size()>0)
+							series2.getData().remove(0);
+						if(series3.getData().size()>0)
+							series3.getData().remove(0);
 
-							if(series1.getData().size()>0)
-								series1.getData().remove(0);
-							if(series2.getData().size()>0)
-								series2.getData().remove(0);
-							if(series3.getData().size()>0)
-								series3.getData().remove(0);
-
-							setXAxisBounds(current_x0_pt,current_x1_pt);
+						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
 
-							if(type1!=MSTYPE.MSP_NONE)
-								series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
-							if(type2!=MSTYPE.MSP_NONE)
-								series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
-							if(type3!=MSTYPE.MSP_NONE)
-								series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
+					if(type1!=MSTYPE.MSP_NONE)
+						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
+					if(type2!=MSTYPE.MSP_NONE)
+						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
+					if(type3!=MSTYPE.MSP_NONE)
+						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
 				}
 
 
