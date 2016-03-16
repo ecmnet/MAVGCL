@@ -266,10 +266,12 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	private double old_x;
 	private double old_y;
 	private double old_z;
+	private int frame_secs = 30;
 
 
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
+		this.frame_secs  = frame;
 
 		if(frame > 600)
 			resolution_ms = 500;
@@ -365,7 +367,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		updateGraph(true);
+		setXResolution(frame_secs);
 	}
 
 }

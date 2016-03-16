@@ -156,6 +156,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt=0;
 	private int current_x1_pt=0;
 
+	private int frame_secs;
+
 	public XYChartWidget() {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("XYChartWidget.fxml"));
@@ -434,6 +436,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
+		this.frame_secs = frame;
 
 		if(frame > 600)
 			resolution_ms = 500;
@@ -559,7 +562,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		updateGraph(true);
+		setXResolution(frame_secs);
 	}
 
 

@@ -146,6 +146,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
+	private int frame_secs;
+
 
 
 	public LineChartWidget() {
@@ -367,6 +369,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
+		this.frame_secs = frame;
 
 		if(frame > 600)
 			resolution_ms = 500;
@@ -495,7 +498,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		updateGraph(true);
+		setXResolution(frame_secs);
 	}
 
 
