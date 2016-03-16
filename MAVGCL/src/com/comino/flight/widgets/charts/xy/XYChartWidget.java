@@ -518,7 +518,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 								MSTYPE.getValue(mList.get(current_x_pt),type2_x),
 								MSTYPE.getValue(mList.get(current_x_pt),type2_y))
 								);
-
 				}
 
 				current_x_pt++;

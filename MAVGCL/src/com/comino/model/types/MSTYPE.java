@@ -57,10 +57,6 @@ public enum MSTYPE {
 	MSP_RC1			("RC.1",1,""),
 	MSP_RC2			("RC.2",1,""),
 	MSP_RC3			("RC.3",1,""),
-	MSP_S0			("Servo.0",0,""),
-	MSP_S1			("Servo.1",0,""),
-	MSP_S2			("Servo.2",0,""),
-	MSP_S3			("Servo.3",0,""),
 	MSP_GLOBRELX	("Global.rel.PosX",1,"m"),
 	MSP_GLOBRELY 	("Global.rel.PosY",1,"m"),
 	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m"),
@@ -68,6 +64,20 @@ public enum MSTYPE {
 	MSP_GLOBRELVY   ("Global.rel.SpeedY",1,"m/s"),
 	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1,"m/s"),
 	MSP_GPSEPH  	("GPS.eph",1,""),
+	MSP_RAW_SATNUM  ("Satellites",1,""),
+	MSP_VIBX        ("VibrationX",1,""),
+	MSP_VIBY        ("VibrationY",1,""),
+	MSP_VIBZ        ("VibrationZ",1,""),
+
+	// now  keyfigures that are not selectable
+
+	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa"),
+	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C"),
+	MSP_CPULOAD     ("CPU Load",0,"%"),
+	MSP_S0			("Servo.0",0,""),
+	MSP_S1			("Servo.1",0,""),
+	MSP_S2			("Servo.2",0,""),
+	MSP_S3			("Servo.3",0,""),
 	MSP_GLOBPLAT	("Global.Latitude",0,"°"),
 	MSP_GLOBPLON	("Global.Longitude",0,"°"),
 	MSP_RAW_GPSLAT  ("Raw.Latitude",0,"°"),
@@ -75,13 +85,6 @@ public enum MSTYPE {
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°"),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°"),
 	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh"),
-	MSP_RAW_SATNUM  ("Satellites",1,""),
-	MSP_VIBX        ("VibrationX",1,""),
-	MSP_VIBY        ("VibrationY",1,""),
-	MSP_VIBZ        ("VibrationZ",1,""),
-	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa"),
-	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C"),
-	MSP_CPULOAD     ("CPU Load",0,"%"),
 
 	;
 
