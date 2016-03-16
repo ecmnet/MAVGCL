@@ -26,6 +26,7 @@ import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
+import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;
@@ -42,7 +43,11 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-	private IMAVController control = null;
+	private static IMAVController control = null;
+
+	private static FileHandler fileHandler = null;
+
+	private static FlightControlPanel controlpanel = null;
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
@@ -50,8 +55,16 @@ public class MainApp extends Application {
 	@FXML
 	private MenuItem m_close;
 
+	@FXML
+	private MenuItem m_import;
+
+	@FXML
+	private MenuItem m_export;
 
 
+	public MainApp() {
+		super();
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -89,6 +102,8 @@ public class MainApp extends Application {
 
 		MSPLogger.getInstance(control);
 
+		fileHandler = new FileHandler(primaryStage,control);
+
 		initRootLayout();
 		showMAVGCLApplication();
 
@@ -121,6 +136,8 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
+			System.out.println(control.getCollector());
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,8 +146,9 @@ public class MainApp extends Application {
 
 	@FXML
 	private void initialize() {
-		m_close.setOnAction(new EventHandler<ActionEvent>() {
 
+
+		m_close.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
@@ -138,6 +156,23 @@ public class MainApp extends Application {
 				} catch (Exception e) {
 					System.exit(-1);
 				}
+			}
+
+		});
+
+		m_import.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				fileHandler.fileImport();
+				controlpanel.getRecordControl().refreshCharts();
+			}
+
+		});
+
+		m_export.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				   fileHandler.fileExport();
 			}
 
 		});
@@ -164,7 +199,7 @@ public class MainApp extends Application {
 
 			statusline.setup(control);
 
-			FlightControlPanel controlpanel = new FlightControlPanel();
+			controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
 

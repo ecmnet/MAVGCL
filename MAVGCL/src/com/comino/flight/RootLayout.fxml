@@ -12,6 +12,8 @@ fx:controller="com.comino.flight.MainApp">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
+              <MenuItem fx:id="m_export" mnemonicParsing="false" text="Export to..." />
+              <MenuItem fx:id="m_import" mnemonicParsing="false" text="Import from..." />
               <MenuItem fx:id="m_close" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>

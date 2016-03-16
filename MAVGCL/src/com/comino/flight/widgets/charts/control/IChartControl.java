@@ -24,7 +24,9 @@ public interface IChartControl {
 
 	public BooleanProperty getCollectingProperty();
 	public IntegerProperty getTimeFrameProperty();
-	public DoubleProperty getScrollProperty();
+	public DoubleProperty  getScrollProperty();
+
+	public void refreshChart();
 
 
 }

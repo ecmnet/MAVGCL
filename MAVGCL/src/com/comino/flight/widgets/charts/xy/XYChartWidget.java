@@ -557,5 +557,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		return scroll;
 	}
 
+	@Override
+	public void refreshChart() {
+		updateGraph(true);
+	}
+
 
 }

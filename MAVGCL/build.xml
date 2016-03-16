@@ -51,7 +51,7 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar JCSG.jar medusa-3.6.jar" />
+				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar JCSG.jar medusa-3.6.jar gson-2.4.jar" />
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
@@ -62,6 +62,7 @@
 				<include name="poly2tri-core.jar" />
 			    <include name="JCSG.jar" />
 				<include name="medusa-3.6.jar" />
+				<include name="gson-2.4.jar" />
 			</fileset>
 		</copy>
 

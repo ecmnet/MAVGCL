@@ -488,4 +488,9 @@ public class LineChartWidgetDnD extends BorderPane implements IChartControl {
 		}
 	}
 
+	@Override
+	public void refreshChart() {
+		updateGraph(true);
+	}
+
 }

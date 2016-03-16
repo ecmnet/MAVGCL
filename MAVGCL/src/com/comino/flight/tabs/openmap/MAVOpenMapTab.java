@@ -373,4 +373,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	}
 
 
+	@Override
+	public void refreshChart() {
+		map_changed = true;
+	}
+
 }

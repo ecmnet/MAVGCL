@@ -274,6 +274,12 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		charts.add(chart);
 	}
 
+	public void refreshCharts() {
+		for(IChartControl chart : charts)
+			chart.refreshChart();
+
+	}
+
 
 	private void recording(boolean start, int delay) {
 		if(start) {

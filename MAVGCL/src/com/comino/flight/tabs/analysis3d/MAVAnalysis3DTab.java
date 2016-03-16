@@ -363,6 +363,11 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		return scroll;
 	}
 
+	@Override
+	public void refreshChart() {
+		updateGraph(true);
+	}
+
 }
 
 
