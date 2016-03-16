@@ -3,17 +3,18 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="853" prefWidth="1220.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.comino.flight.MainApp">
-   <top >
+<BorderPane prefHeight="853" prefWidth="1220.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.comino.flight.MainApp">
+   <top>
       <MenuBar maxHeight="29.0" BorderPane.alignment="TOP_LEFT">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem fx:id="m_export" mnemonicParsing="false" text="Export to..." />
               <MenuItem fx:id="m_import" mnemonicParsing="false" text="Import from..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="m_close" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>

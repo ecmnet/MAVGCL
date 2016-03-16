@@ -136,8 +136,6 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			System.out.println(control.getCollector());
-
 
 		} catch (IOException e) {
 			e.printStackTrace();
