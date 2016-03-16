@@ -14,6 +14,7 @@
 <?import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab?>
 
 <?import com.comino.flight.widgets.details.DetailsWidget?>
+<?import com.comino.flight.widgets.camera.CameraWidget?>
 <?import com.comino.flight.widgets.messages.MessagesWidget?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
@@ -100,6 +101,17 @@
 						<Insets right="10.0" top="32.0" />
 					</StackPane.margin>
 				</DetailsWidget>
+				<!--
+				<CameraWidget fx:id="camera"
+				    StackPane.alignment="BOTTOM_LEFT"
+				    maxWidth="875"  visible="true" maxHeight="300"
+
+					>
+					<StackPane.margin>
+						<Insets left="0.0" bottom="32.0" />
+					</StackPane.margin>
+				</CameraWidget>
+				-->
 				<MessagesWidget fx:id="messages"
 				    StackPane.alignment="TOP_LEFT"
 				    maxWidth="375"  visible="false" maxHeight="120"

@@ -492,12 +492,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			while(current_x_pt<max_x) {
 
-				if(current_x_pt > current_x1_pt)
-					current_x0_pt++;
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
-					synchronized(this) {
+					current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
+					current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
+
+
 						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)
 							series1.getData().add(new XYChart.Data<Number,Number>(
 									MSTYPE.getValue(mList.get(current_x_pt),type1_x),
@@ -511,13 +512,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 									);
 
 						if(current_x_pt > current_x1_pt) {
-							current_x1_pt++;
+
 							if(series1.getData().size()>0)
 								series1.getData().remove(0);
 							if(series2.getData().size()>0)
 								series2.getData().remove(0);
 
-						}
+
 					}
 				}
 

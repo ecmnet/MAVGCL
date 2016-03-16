@@ -9,6 +9,7 @@ import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
+import com.comino.flight.widgets.camera.CameraWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -41,6 +42,9 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private MessagesWidget messages;
+
+	@FXML
+	private CameraWidget camera;
 
 	@FXML
 	private MAVAnalysis3DTab mavanalysis3Dtab;

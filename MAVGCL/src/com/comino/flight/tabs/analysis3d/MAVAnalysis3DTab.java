@@ -316,11 +316,11 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 			while(current_x_pt<max_x) {
 
-				if(current_x_pt > current_x1_pt)
-					current_x0_pt++;
-
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+
+					current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
+					current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
 
 
 					double x = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
@@ -336,7 +336,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 						}
 
 						if(current_x_pt > current_x1_pt) {
-							current_x1_pt++;
+
 							if(cubeViewer.getxAxisData().size()>0)
 								cubeViewer.remove(0);
 						}
