@@ -8,8 +8,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 - *Import of PX4Log files available*
 
-  Note: Anyone who wants to try it on android?
-
 
 **Features:**
 
@@ -23,12 +21,14 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
-- mjpeg based video streaming (recording and replay in prep)
+- Save and Load of collected data 
+- MJPEG based video streaming based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
 
 **Requirements**
 
 - requires Java 8 JRE
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion
+- [MAVComm library](https://github.com/ecmnet/MAVComm) (included in package)
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
