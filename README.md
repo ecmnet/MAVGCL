@@ -16,9 +16,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - XY Analysis for selected key-figures
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
-
-
-- `3D` Analysis of selected key figures
+- 3D Analysis of selected key figures
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
