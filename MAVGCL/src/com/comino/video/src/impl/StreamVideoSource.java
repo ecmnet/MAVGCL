@@ -228,7 +228,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 			thread.start();
 			isAvailable = true;
 			try {
-				Thread.sleep(50);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 
 				e.printStackTrace();
@@ -250,8 +250,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		try {
 			Thread.sleep(50);
 		} catch (InterruptedException e) {
-
-			e.printStackTrace();
 		}
 	}
 
@@ -263,8 +261,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	public void setTriggerTime(long time) {
 		this.trigger = time;
 	}
-
-
 
 
 	@Override

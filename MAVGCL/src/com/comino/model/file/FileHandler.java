@@ -24,7 +24,8 @@ public class FileHandler {
 	}
 
 	public void fileImport() {
-		FileChooser fileChooser = getFileDialog("Import collected data from...");
+		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
+				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null)
@@ -35,9 +36,24 @@ public class FileHandler {
 
 	}
 
+
+	public void fileImportPX4Log() {
+		FileChooser fileChooser = getFileDialog("Import PX4Log...",
+				new ExtensionFilter("PX4Log Files", "*.px4log"));
+		File file = fileChooser.showOpenDialog(stage);
+		try {
+			if(file!=null)
+				control.getCollector().importPX4Log(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public void fileExport() {
 
-		FileChooser fileChooser = getFileDialog("Export collected data to...");
+		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
+				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		File file = fileChooser.showSaveDialog(stage);
 		try {
 			if(file!=null)
@@ -48,11 +64,10 @@ public class FileHandler {
 
 	}
 
-	private FileChooser getFileDialog(String title) {
+	private FileChooser getFileDialog(String title, ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
-		fileChooser.getExtensionFilters().addAll(
-				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
+		fileChooser.getExtensionFilters().addAll(filter);
 		fileChooser.setInitialDirectory(
 				new File(System.getProperty("user.home")));
 		return fileChooser;

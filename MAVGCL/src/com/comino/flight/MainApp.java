@@ -61,6 +61,9 @@ public class MainApp extends Application {
 	@FXML
 	private MenuItem m_export;
 
+	@FXML
+	private MenuItem m_px4log;
+
 
 	public MainApp() {
 		super();
@@ -162,6 +165,15 @@ public class MainApp extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				fileHandler.fileImport();
+				controlpanel.getRecordControl().refreshCharts();
+			}
+
+		});
+
+		m_px4log.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				fileHandler.fileImportPX4Log();
 				controlpanel.getRecordControl().refreshCharts();
 			}
 
