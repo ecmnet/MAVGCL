@@ -223,9 +223,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private void initialize() {
 
 
-		xAxis.setAutoRanging(false);
+		xAxis.setAutoRanging(true);
 		xAxis.setForceZeroInRange(false);
-		yAxis.setAutoRanging(false);
+		yAxis.setAutoRanging(true);
 		yAxis.setForceZeroInRange(false);
 
 		cseries1.getItems().addAll(PRESET_NAMES);
