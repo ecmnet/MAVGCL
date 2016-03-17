@@ -175,6 +175,7 @@ public class MainApp extends Application {
 			public void handle(ActionEvent event) {
 				fileHandler.fileImportPX4Log();
 				controlpanel.getRecordControl().refreshCharts();
+				
 			}
 
 		});

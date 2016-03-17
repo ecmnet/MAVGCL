@@ -31,7 +31,7 @@ public class FileHandler {
 			if(file!=null)
 				control.getCollector().readFromFile(file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 
 	}
@@ -45,7 +45,7 @@ public class FileHandler {
 			if(file!=null)
 				control.getCollector().importPX4Log(file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 
 	}
@@ -59,7 +59,7 @@ public class FileHandler {
 			if(file!=null)
 				control.getCollector().writeToFile(file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 
 	}
