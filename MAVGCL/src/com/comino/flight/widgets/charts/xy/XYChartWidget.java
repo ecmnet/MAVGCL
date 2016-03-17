@@ -248,7 +248,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
 
-		scale.getSelectionModel().select(2);
+		scale.getSelectionModel().select(0);
 
 		xAxis.setLowerBound(-5);
 		xAxis.setUpperBound(5);
