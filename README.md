@@ -6,6 +6,8 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 17/03/2016 
 
+*Import of PX4Log files available (mapping currently done only for LocalPosition)*
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
