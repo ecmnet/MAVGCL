@@ -55,7 +55,7 @@ public class CameraWidget extends FadePane  {
 
 	@FXML
 	private void initialize() {
-		image.setOpacity(0.75);
+		image.setOpacity(0.90);
         fadeProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
