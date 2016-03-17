@@ -18,6 +18,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 - 3D Analysis of selected key figures
 
+**Requirements**
+
+- requires Java 8 JRE
+- Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion
+
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
 - Clone repository
