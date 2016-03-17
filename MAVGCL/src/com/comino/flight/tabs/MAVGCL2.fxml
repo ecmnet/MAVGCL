@@ -101,17 +101,16 @@
 						<Insets right="10.0" top="32.0" />
 					</StackPane.margin>
 				</DetailsWidget>
-				<!--
+
 				<CameraWidget fx:id="camera"
 				    StackPane.alignment="BOTTOM_LEFT"
-				    maxWidth="875"  visible="true" maxHeight="300"
-
+				    maxWidth="875"  visible="false" maxHeight="300"
 					>
 					<StackPane.margin>
 						<Insets left="0.0" bottom="32.0" />
 					</StackPane.margin>
 				</CameraWidget>
-				-->
+
 				<MessagesWidget fx:id="messages"
 				    StackPane.alignment="TOP_LEFT"
 				    maxWidth="375"  visible="false" maxHeight="120"

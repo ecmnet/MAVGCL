@@ -4,9 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
 
-**Status:** Last updated 16/03/2016 
-
-New feature: Import/Export of recorded data
+**Status:** Last updated 17/03/2016 
 
 **Features:**
 
@@ -18,10 +16,10 @@ New feature: Import/Export of recorded data
 - XY Analysis for selected key-figures
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
+- Display Videostream (MJPEG Stream as provided by eg. [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14))
 
-**In preparation:**
 
-- 3D Analysis of selected key figures
+- `3D` Analysis of selected key figures
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
@@ -41,6 +39,7 @@ New feature: Import/Export of recorded data
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
 - Import `demo_data.mgc` or collect data from your vehicle
+- Setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 with `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
 
 **How to deploy on OSX:**
 

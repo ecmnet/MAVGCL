@@ -60,6 +60,9 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	@FXML
 	private CheckBox details;
 
+	@FXML
+	private CheckBox video;
+
 	private IMAVController control;
 
 	private DataModel model;
@@ -79,6 +82,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 	public BooleanProperty getDetailsProperty() {
 		return details.selectedProperty();
+	}
+
+	public BooleanProperty getVideoProperty() {
+		return video.selectedProperty();
 	}
 
 

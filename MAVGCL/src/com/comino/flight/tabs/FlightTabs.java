@@ -76,6 +76,11 @@ public class FlightTabs extends Pane {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
+		if(camera!=null) {
+			camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
+			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoProperty());
+		}
+
 
 		details.fadeProperty().bind(flightControl.getStatusControl().getDetailsProperty());
 		details.setup(control);

@@ -245,4 +245,9 @@
 	 -fx-background-color: #404040;
 }
 
+.image-view {
+	  -fx-background-color: rgba(0.0, 100.0, 100.0, 0.7);
+	  -fx-background-radius: 10.0;
+}
+
 
