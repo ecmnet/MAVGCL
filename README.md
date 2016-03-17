@@ -16,7 +16,6 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - XY Analysis for selected key-figures
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
-- Display Videostream (MJPEG Stream as provided by eg. [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14))
 
 
 - `3D` Analysis of selected key figures
@@ -39,7 +38,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
 - Import `demo_data.mgc` or collect data from your vehicle
-- Setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 with `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
+- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
 
 **How to deploy on OSX:**
 
