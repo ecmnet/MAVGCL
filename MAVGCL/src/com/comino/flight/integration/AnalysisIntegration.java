@@ -8,7 +8,7 @@ public class AnalysisIntegration {
 
 		/*  EXAMPLE for Debugging values */
 
-		control.getCollector().addDebugListener(model -> {
+		control.getCollector().addInjectionListener(model -> {
 			model.debug.x = (float) Math.asin(model.attitude.aY);
 		});
 

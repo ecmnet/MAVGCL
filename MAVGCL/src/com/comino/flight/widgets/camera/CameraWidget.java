@@ -77,7 +77,7 @@ public class CameraWidget extends FadePane  {
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,320, 240);
-			source.addProcessListener(im -> {
+			source.addProcessListener((im,buf) -> {
 				image.setImage(im);
 			});
 		} catch (MalformedURLException e) {

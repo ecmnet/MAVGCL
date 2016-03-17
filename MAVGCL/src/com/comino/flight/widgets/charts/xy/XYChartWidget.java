@@ -217,7 +217,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
-
 	}
 
 	@FXML

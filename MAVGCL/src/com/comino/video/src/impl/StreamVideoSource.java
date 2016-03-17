@@ -191,7 +191,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 						    		if(System.currentTimeMillis() >= trigger) {
 
 						    		if(listener!=null)
-						    		   listener.process(getfromjpeg(img));
+						    		   listener.process(getfromjpeg(img),img);
 
 						    		  fps = (int)(1000 / (System.currentTimeMillis() - tms));
 									  tms = System.currentTimeMillis();

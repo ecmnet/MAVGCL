@@ -53,7 +53,7 @@
             <Label text="Landed" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="10" />
             <CheckBox fx:id="details" GridPane.rowIndex="11" text="Details" GridPane.columnSpan="2"/>
-            <CheckBox fx:id="video" GridPane.rowIndex="12" text="Videostream" GridPane.columnSpan="2"/>
+            <CheckBox fx:id="video" GridPane.rowIndex="12" text="Video" GridPane.columnSpan="2"/>
 
 
          </children>
