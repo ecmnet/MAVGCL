@@ -6,19 +6,24 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 **Status:** Last updated 17/03/2016 
 
-*Import of PX4Log files available: Selected keyfigures mapped*
+- *Import of PX4Log files available*
+
+  Note: Anyone who wants to try it on android?
+
 
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
 - Trigger recording manually or by selectable flight-mode/state changes
 - Choosable stop-recording delay
-- Display of  key-figures during and after recording (with horizontal scrolling)
+- Display of  key-figures during and after recording (with 'Replay')
 - Display of basic vehicle information, like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
 - 3D Analysis of selected key figures
+- Import of selected key-figures from PX4Log
+- mjpeg based video streaming (recording and replay in prep)
 
 **Requirements**
 
