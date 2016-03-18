@@ -40,6 +40,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
@@ -49,7 +50,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 
@@ -90,10 +94,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Auto", "0.5","1", "2", "5", "10", "50", "100"
 	};
 
-	private final static String[] ROTATIONS = {
-			"-90°", "-60°","-30°", "0°", "30°", "60°", "90°",
-	};
-
 
 	private static int COLLECTOR_CYCLE = 50;
 
@@ -128,7 +128,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private ChoiceBox<String> scale;
 
 	@FXML
-	private ChoiceBox<String> rotation;
+	private Slider rotation;
+
+	@FXML
+	private Label rot_label;
 
 	@FXML
 	private CheckBox normalize;
@@ -258,9 +261,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		scale.getItems().addAll(SCALES);
 		scale.getSelectionModel().select(0);
-
-		rotation.getItems().addAll(ROTATIONS);
-		rotation.getSelectionModel().select(3);
 
 		xAxis.setLowerBound(-5);
 		xAxis.setUpperBound(5);
@@ -413,14 +413,26 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		});
 
-		rotation.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				rotation_rad = Utils.toRad(Float.parseFloat(ROTATIONS[newValue.intValue()].replace('°', ' ')));
+		rotation.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+				rotation_rad = Utils.toRad(new_val.intValue());
+				rot_label.setText("Rotation: ["+new_val.intValue()+"°]");
 				updateGraph(true);
-			}
 
+			}
+		});
+
+		rotation.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+		    @Override
+		    public void handle(MouseEvent click) {
+		        if (click.getClickCount() == 2) {
+		           rotation_rad = 0;
+		           rotation.setValue(0);
+		           rot_label.setText("Rotation: [ 0°]");
+		        }
+		    }
 		});
 
 
