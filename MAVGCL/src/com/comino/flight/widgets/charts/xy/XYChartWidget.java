@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.MSTYPE;
+import com.comino.msp.model.utils.Utils;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -89,6 +90,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Auto", "0.5","1", "2", "5", "10", "50", "100"
 	};
 
+	private final static String[] ROTATIONS = {
+			"-90°", "-60°","-30°", "0°", "30°", "60°", "90°",
+	};
+
 
 	private static int COLLECTOR_CYCLE = 50;
 
@@ -121,6 +126,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	@FXML
 	private ChoiceBox<String> scale;
+
+	@FXML
+	private ChoiceBox<String> rotation;
 
 	@FXML
 	private CheckBox normalize;
@@ -157,6 +165,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int current_x1_pt=0;
 
 	private int frame_secs =30;
+
+	private float rotation_rad = 0;
 
 	public XYChartWidget() {
 
@@ -243,12 +253,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries2_x.getSelectionModel().select(0);
 		cseries2_y.getSelectionModel().select(0);
 
-		scale.getItems().addAll(SCALES);
-
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
 
+		scale.getItems().addAll(SCALES);
 		scale.getSelectionModel().select(0);
+
+		rotation.getItems().addAll(ROTATIONS);
+		rotation.getSelectionModel().select(3);
 
 		xAxis.setLowerBound(-5);
 		xAxis.setUpperBound(5);
@@ -401,6 +413,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		});
 
+		rotation.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				rotation_rad = Utils.toRad(Float.parseFloat(ROTATIONS[newValue.intValue()].replace('°', ' ')));
+				updateGraph(true);
+			}
+
+		});
+
 
 		export.setOnAction((ActionEvent event)-> {
 			saveAsPng(System.getProperty("user.home"));
@@ -507,17 +529,34 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 
-					if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE)
-						series1.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(current_x_pt),type1_x),
-								MSTYPE.getValue(mList.get(current_x_pt),type1_y))
-								);
+					if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE) {
+						if(rotation_rad==0) {
+							series1.getData().add(new XYChart.Data<Number,Number>(
+									MSTYPE.getValue(mList.get(current_x_pt),type1_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type1_y))
+									);
+						} else {
+							float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type1_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type1_y),
+									rotation_rad);
+							series1.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+						}
+					}
 
-					if(type2_x!=MSTYPE.MSP_NONE && type2_y!=MSTYPE.MSP_NONE)
-						series2.getData().add(new XYChart.Data<Number,Number>(
-								MSTYPE.getValue(mList.get(current_x_pt),type2_x),
-								MSTYPE.getValue(mList.get(current_x_pt),type2_y))
-								);
+					if(type2_x!=MSTYPE.MSP_NONE && type2_y!=MSTYPE.MSP_NONE) {
+						if(rotation_rad==0) {
+							series2.getData().add(new XYChart.Data<Number,Number>(
+									MSTYPE.getValue(mList.get(current_x_pt),type2_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type2_y))
+									);
+						} else {
+							float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type2_x),
+									MSTYPE.getValue(mList.get(current_x_pt),type2_y),
+									rotation_rad);
+							series2.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+
+						}
+					}
 				}
 
 				current_x_pt++;
@@ -563,6 +602,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
 		updateGraph(true);
+	}
+
+	private  float[] rotateRad(float posx, float posy, float heading_rad) {
+		float[] rotated = new float[2];
+		rotated[0] =  posx * (float)Math.cos(heading_rad) + posy * (float)Math.sin(heading_rad);
+		rotated[1] = -posx * (float)Math.sin(heading_rad) + posy * (float)Math.cos(heading_rad);
+		return rotated;
 	}
 
 
