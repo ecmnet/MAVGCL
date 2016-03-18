@@ -52,6 +52,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -434,6 +435,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		        }
 		    }
 		});
+
+		rotation.setTooltip(new Tooltip("Double-click to set to 0°"));
 
 
 		export.setOnAction((ActionEvent event)-> {

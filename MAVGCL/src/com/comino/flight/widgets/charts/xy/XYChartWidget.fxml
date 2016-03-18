@@ -52,7 +52,7 @@
             <ChoiceBox fx:id="scale" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
             <Label fx:id="rot_label" layoutX="20.0" layoutY="422.0" text="Rotation: [ 0°]" />
             <Slider fx:id="rotation" blockIncrement="10.0" layoutX="13.0" prefWidth="126.0"
-					layoutY="437" majorTickUnit="10.0" max="180" min="-180" prefHeight="13.0" value="0"/>
+					layoutY="437" majorTickUnit="10.0" max="90" min="-90" prefHeight="13.0" value="0"/>
 
             <Separator layoutX="15.0" layoutY="470.0" prefHeight="4.0" prefWidth="126.0" />
 

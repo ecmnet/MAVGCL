@@ -77,7 +77,10 @@ public class FlightTabs extends Pane {
 		tabpane.prefHeightProperty().bind(heightProperty());
 
 		if(camera!=null) {
-			camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
+			if(control.getConnectedAddress()!=null && !control.getConnectedAddress().contains("127.0.0") )
+			  camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
+			else
+			  camera.setup(control, "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240");
 			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoProperty());
 		}
 
