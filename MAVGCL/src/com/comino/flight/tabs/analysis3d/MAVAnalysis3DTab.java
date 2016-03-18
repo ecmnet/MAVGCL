@@ -285,7 +285,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 			resolution_ms = 50;
 
 		scroll.setValue(0);
-		updateGraph(true);
+		refreshChart();
 
 	}
 

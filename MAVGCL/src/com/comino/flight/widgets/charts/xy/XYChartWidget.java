@@ -452,7 +452,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		xAxis.setMinorTickCount(10);
 
 		scroll.setValue(0);
-		updateGraph(true);
+		refreshChart();
 	}
 
 	public void saveAsPng(String path) {

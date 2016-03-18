@@ -387,7 +387,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.setValue(0);
 		xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
-		updateGraph(true);
+		refreshChart();
 	}
 
 
