@@ -141,19 +141,19 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
-					details.setValue(true);
+					//details.setValue(true);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
-					details.setValue(false);
+					//details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
-					details.setValue(false);
+					//details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
-					details.setValue(false);
+					//details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
