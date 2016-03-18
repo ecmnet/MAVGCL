@@ -23,7 +23,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - Save and Load of collected data 
 - MJPEG based video streaming based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
 
-**Requirements**
+**Requirements:**
 
 - requires Java 8 JRE
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion
@@ -32,12 +32,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
 - Clone repository
-- Goto main directory  `cd MAVGCL-MAVGAnalysis/MAVGCL`
+- Goto main directory  `cd MAVGCL-master/MAVGCL`
 - Run `ant all`
 
 **How to start (all platforms):**
 
 - Goto directory `/dist`
+  ​
 
 - Start either UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
 
@@ -46,7 +47,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
   or `java -jar MAVGAnalysis.jar --peerAddress=127.0.0.1` for SITL (jMAVSim)
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
+  ​
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
+  ​
 - For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
   ​
   `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
