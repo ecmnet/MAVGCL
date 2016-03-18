@@ -1,8 +1,8 @@
 # MAVGAnalysis
 
-## In-Flight Analysis for PX4
+## In-Flight/PX4Log Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight. It is not intended to replace the QGC.
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC.
 
 **Status:** Last updated 18/03/2016 
 
@@ -14,7 +14,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - Trigger recording manually or by selectable flight-mode/state changes
 - Choosable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
-- Display of basic vehicle information, like mode, battery status, messages and sensor availability
+- Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
 - OpenStreepMap viewer of global position and raw gps data with option to record path (requires internet access)
@@ -46,8 +46,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
   or `java -jar MAVGAnalysis.jar --peerAddress=127.0.0.1` for SITL (jMAVSim)
 
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
-- Import `demo_data.mgc` or collect data from your vehicle
-- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
+- Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
+- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
+  ​
+  `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
 
 **How to deploy on OSX:**
 
