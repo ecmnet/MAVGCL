@@ -40,23 +40,19 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	private boolean isRunning = false;
 	private boolean isAvailable = true;
 
-	private  boolean isProcessing = false;
-
 	private long tms=0;
 
 	private long trigger = 0;
 
 	private int  fps=0;
-	private int width = 0;
-	private int height = 0;
+
 
 
 	private IMWStreamVideoProcessListener listener = null;
 
 
-	public StreamVideoSource(URL url, int width, int height) {
-		this.width = width;
-		this.height = height;
+	public StreamVideoSource(URL url) {
+
 
 		if (url == null)
 			throw new NullPointerException();
@@ -206,7 +202,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 									e.printStackTrace();
 								}
 
-						    	isProcessing = false;
 						}
 					}
 
@@ -271,13 +266,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 	private Image getfromjpeg(byte[] in) {
-		Image im = new Image(new ByteArrayInputStream(in));
-		return im;
+		return new Image(new ByteArrayInputStream(in));
 	}
-
-
-
-
 
 }
 

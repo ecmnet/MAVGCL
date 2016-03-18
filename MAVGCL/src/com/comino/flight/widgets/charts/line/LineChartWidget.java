@@ -146,7 +146,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
-	private int frame_secs;
+	private int frame_secs = 30;
 
 
 
@@ -349,7 +349,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				current_x_pt = 0;
 				scroll.setValue(0);
-				updateGraph(true);
+				refreshChart();
 			}
 		});
 
@@ -385,9 +385,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
-		current_x0_pt = control.getCollector().getModelList().size() - frame * 1000 / COLLECTOR_CYCLE;
-		if(current_x0_pt < 0)
-			current_x0_pt = 0;
 		scroll.setValue(0);
 		xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 		updateGraph(true);
@@ -406,6 +403,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.getData().clear();
 				series2.getData().clear();
 				series3.getData().clear();
+
 			}
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -498,7 +496,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		setXResolution(frame_secs);
+		current_x0_pt = control.getCollector().getModelList().size() - frame_secs * 1000 / COLLECTOR_CYCLE;
+		if(current_x0_pt < 0)
+			current_x0_pt = 0;
+		updateGraph(true);
 	}
 
 

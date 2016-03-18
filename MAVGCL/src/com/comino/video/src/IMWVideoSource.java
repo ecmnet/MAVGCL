@@ -10,4 +10,5 @@ public interface IMWVideoSource {
 	int getFPS();
 
 
+
 }

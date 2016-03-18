@@ -40,6 +40,8 @@ public class CameraWidget extends FadePane  {
 
 	private IMWVideoSource source = null;
 
+	private boolean big_size=false;
+
 	public CameraWidget() {
 
 
@@ -57,18 +59,17 @@ public class CameraWidget extends FadePane  {
 	@FXML
 	private void initialize() {
 		image.setOpacity(0.90);
-        fadeProperty().addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(newValue.booleanValue())
+        fadeProperty().addListener((observable, oldvalue, newvalue) -> {
+        		if(newvalue.booleanValue())
 					source.start();
 				else
 					source.stop();
+        });
 
-			}
+        image.setOnMouseClicked(event -> {
 
         });
+
 
 	}
 
@@ -77,7 +78,7 @@ public class CameraWidget extends FadePane  {
 
 		try {
 			URL url = new URL(url_string);
-			source = new StreamVideoSource(url,320, 240);
+			source = new StreamVideoSource(url);
 			source.addProcessListener((im,buf) -> {
 				image.setImage(im);
 			});
