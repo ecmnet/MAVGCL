@@ -92,17 +92,18 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	public void setup(IMAVController control) {
 		this.model = control.getCurrentModel();
 		this.control = control;
-        this.control.addModeChangeListener(this);
+		this.control.addModeChangeListener(this);
 
-        update(model.sys,model.sys);
+		update(model.sys,model.sys);
 	}
 
 	@Override
 	public void update(Status arg0, Status newStat) {
 		if(newStat.isStatus(Status.MSP_CONNECTED))
 			connected.setFill(Color.DARKORANGE);
-		else
+		else {
 			connected.setFill(Color.LIGHTGRAY);
+		}
 
 		if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
 			armed.setFill(Color.DARKORANGE);

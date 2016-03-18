@@ -47,6 +47,9 @@ public class StatusLineWidget extends Pane  {
 	@FXML
 	private Label elapsedtime;
 
+	@FXML
+	private Label filename;
+
 	private Task<Long> task;
 	private IMAVController control;
 
@@ -101,6 +104,8 @@ public class StatusLineWidget extends Pane  {
 					driver.setText("not connected");
 
 		         elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
+
+		         filename.setText(control.getCollector().getName());
 
 			}
 		});

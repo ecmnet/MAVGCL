@@ -22,11 +22,15 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
+import com.emxsys.chart.extension.XYAnnotation;
+import com.emxsys.chart.extension.XYAnnotations.Layer;
+import com.emxsys.chart.extension.XYFieldAnnotation;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -41,6 +45,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -49,6 +54,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
 
@@ -95,7 +101,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private static int COLLECTOR_CYCLE = 50;
 
 	@FXML
-	private LineChart<Number,Number> linechart;
+	private SectionLineChart<Number, Number> linechart;
 
 	@FXML
 	private NumberAxis xAxis;
@@ -117,6 +123,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@FXML
 	private Button export;
+
+	private ModeAnnotation posHoldAnnotation;
+	private ModeAnnotation altHoldAnnotation;
 
 
 	private XYChart.Series<Number,Number> series1;
@@ -241,8 +250,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 
+//		linechart.getAnnotations().add(posHoldAnnotation,Layer.FOREGROUND);
+//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
+//
+//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
+//		altHoldAnnotation = new ModeAnnotation(0, 3, Orientation.VERTICAL, 0, null, new Color(1, 0, 0, 0.1));
+
+
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
+
 
 		cseries1.getItems().addAll(MSTYPE.getList());
 		cseries2.getItems().addAll(MSTYPE.getList());
@@ -354,6 +371,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 
+
+
 	}
 
 
@@ -420,7 +439,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			while(current_x_pt<max_x ) {
 
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
-
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
