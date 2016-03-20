@@ -36,6 +36,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -63,6 +64,9 @@ public class MainApp extends Application {
 
 	@FXML
 	private MenuItem m_px4log;
+
+	@FXML
+	private MenuBar menubar;
 
 
 	public MainApp() {
@@ -148,6 +152,8 @@ public class MainApp extends Application {
 	@FXML
 	private void initialize() {
 
+		menubar.setUseSystemMenuBar(true);
+
 
 		m_close.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -175,7 +181,7 @@ public class MainApp extends Application {
 			public void handle(ActionEvent event) {
 				fileHandler.fileImportPX4Log();
 				controlpanel.getRecordControl().refreshCharts();
-				
+
 			}
 
 		});
