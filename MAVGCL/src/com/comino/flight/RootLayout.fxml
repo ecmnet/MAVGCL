@@ -36,8 +36,6 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem fx:id="m_close" mnemonicParsing="false" text="Close" />
 					</items>
 				</Menu>
 			</menus>

@@ -155,18 +155,6 @@ public class MainApp extends Application {
 		menubar.setUseSystemMenuBar(true);
 
 
-		m_close.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					stop();
-				} catch (Exception e) {
-					System.exit(-1);
-				}
-			}
-
-		});
-
 		m_import.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
