@@ -43,7 +43,7 @@ public class BingTileProvider implements TileProvider {
 
     public BingTileProvider(String server, String fileStorage) {
         this.server = server;
-        TileType tileType = new TileType("BingMap", "http://tile.openstreetmap.org/") {
+        TileType tileType = new TileType("BingMap", null) {
             @Override
             protected String calculateURL(int zoom, long i, long j) {
                 return server + getQuadKey(zoom, i, j)+"?g=1";

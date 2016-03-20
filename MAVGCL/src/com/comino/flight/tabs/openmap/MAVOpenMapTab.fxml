@@ -19,11 +19,9 @@
 					prefWidth="161.0" showTickMarks="true" value="19.5" />
 				<ChoiceBox fx:id="gpssource" layoutX="180.0" layoutY="5.0"
 					prefHeight="19.0" prefWidth="100.0" />
-				<ChoiceBox fx:id="tiletype" layoutX="293" layoutY="5.0"
-					prefHeight="19.0" prefWidth="100.0" />
-				<CheckBox fx:id="viewdetails" layoutX="410.0" layoutY="9.0"
+				<CheckBox fx:id="viewdetails" layoutX="310.0" layoutY="9.0"
 					mnemonicParsing="false" text="GPS Details" />
-				<CheckBox fx:id="mapfollow" layoutX="490.0" layoutY="9.0"
+				<CheckBox fx:id="mapfollow" layoutX="390.0" layoutY="9.0"
 					mnemonicParsing="false" text="Map follows" />
 			</children>
 		</Pane>

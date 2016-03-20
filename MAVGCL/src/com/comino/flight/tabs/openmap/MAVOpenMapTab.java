@@ -38,6 +38,7 @@ import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
+import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -47,6 +48,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
@@ -56,6 +58,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -79,9 +82,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@FXML
 	private ChoiceBox<String> gpssource;
-
-	@FXML
-	private ChoiceBox<MapTileType> tiletype;
 
 	@FXML
 	private CheckBox viewdetails;
@@ -207,18 +207,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		// TODO 1.0: provide application directory
 
-		//	DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 		String mapFileName = System.getProperty("user.home")+"/.MAVGCLMaps";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(1);
-
-		tiletype.getItems().addAll(provider.getTileTypes());
-		tiletype.getSelectionModel().select(0);
-
-		provider.tileTypeProperty().bind(tiletype.valueProperty());
-
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
@@ -231,6 +224,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		//		map.setCenter(49.142899,11.577723);
 		map.setZoom(19.5);
 
+		canvasLayer = new CanvasLayer();
+		map.getLayers().add(canvasLayer);
+
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(positionLayer);
@@ -240,9 +236,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		licenceLayer = new LicenceLayer(provider);
 		map.getLayers().add(licenceLayer);
-
-		canvasLayer = new CanvasLayer();
-		map.getLayers().add(canvasLayer);
 
 		// Test paintlistener
 		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
@@ -265,7 +258,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 					//System.out.println(index+" -> "+collector.getModelList().size());
 
-					gc.setStroke(Color.BLUE); gc.setFill(Color.BLUE);
+					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
+					gc.setLineWidth(2);
 					for(int i=index; i<collector.getModelList().size();
 							i += MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
 
@@ -275,7 +269,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 							p0 = map.getMapArea().getMapPoint(
 									MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 
-							gc.fillOval(p0.getX()-3, p0.getY()-3,6,6);
+							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
 							first = false; continue;
 						}
 						p1 = map.getMapArea().getMapPoint(
@@ -308,10 +302,22 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				//map_changed = true;
 				map.setZoom(zoom.getValue());
+				map_changed = true;
 			}
 		});
+
+		zoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+		    @Override
+		    public void handle(MouseEvent click) {
+		        if (click.getClickCount() == 2) {
+		          zoom.setValue(19.5f);
+		          map.setZoom(zoom.getValue());
+		        }
+		    }
+		});
+
 
 		gpssource.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -342,11 +348,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				map_changed = true;
 			}
 		});
-
-
-
-
-
 
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
