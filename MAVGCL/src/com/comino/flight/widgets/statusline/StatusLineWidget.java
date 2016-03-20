@@ -105,7 +105,8 @@ public class StatusLineWidget extends Pane  {
 
 		         elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
 
-		         filename.setText(control.getCollector().getName());
+		         if(control.getCollector().getName()!=null)
+		           filename.setText("File: "+control.getCollector().getName());
 
 			}
 		});
