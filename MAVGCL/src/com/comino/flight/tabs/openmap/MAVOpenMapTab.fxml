@@ -15,8 +15,8 @@
 		<Pane prefHeight="34">
 			<children>
 				<Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0"
-					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0"
-					prefWidth="161.0" showTickMarks="true" value="19.0" />
+					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="17.0" prefHeight="15.0"
+					prefWidth="161.0" showTickMarks="true" value="19.5" />
 				<ChoiceBox fx:id="gpssource" layoutX="180.0" layoutY="5.0"
 					prefHeight="19.0" prefWidth="100.0" />
 				<ChoiceBox fx:id="tiletype" layoutX="293" layoutY="5.0"

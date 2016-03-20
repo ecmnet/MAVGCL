@@ -167,37 +167,26 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				try {
 
 					if(map_changed) {
-						map.setZoom(zoom.getValue());
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
-							map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0)
+							  map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+							else
+						      map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 						canvasLayer.redraw(true);
 						map_changed = false;
 						return;
 					}
 
 					if(model.gps.numsat>3) {
-						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
-
-//						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
-//							if(!home_set && model.gps.eph < 10) {
-//								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-//								canvasLayer.redraw(true);
-//							    home_set = true;
-//							}
-//							homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
-//							canvasLayer.redraw(false);
-//						} else {
-//							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
-//							canvasLayer.redraw(true);
-//						}
 
 							if(mapfollow.selectedProperty().get()) {
 								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 								canvasLayer.redraw(true);
 							} else {
-								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+									  map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 								canvasLayer.redraw(false);
 							}
+							positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
 
 
 					}
@@ -219,8 +208,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		mapfollow.selectedProperty().set(true);
 
+		// TODO 1.0: provide application directory
+		// TODO 1.0 Zooming not centered
+
 	//	DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
-		String mapFileName = System.getProperty("user.home")+"/MAVGCLMaps";
+		String mapFileName = System.getProperty("user.home")+"/.MAVGCLMaps";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
@@ -240,7 +232,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		mapPane.setClip(clip);
 		clip.heightProperty().bind(mapPane.heightProperty());
 		clip.widthProperty().bind(mapPane.widthProperty());
-		map.setCenter(49.142899,11.577723);
+//		map.setCenter(49.142899,11.577723);
 		map.setZoom(18);
 
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
@@ -320,7 +312,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				map_changed = true;
+				//map_changed = true;
+				map.setZoom(zoom.getValue());
 			}
 		});
 
