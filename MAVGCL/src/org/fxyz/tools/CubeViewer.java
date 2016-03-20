@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 F(X)yz, 
+ * Copyright (C) 2013-2015 F(X)yz,
  * Sean Phillips, Jason Pollastrini and Jose Pereda
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ public class CubeViewer extends Group {
     final double gridPanelsOpacity = 0.5;
     private boolean selfLightEnabled = true;
 
-    
+
     double cameraRX = 0;
     double cameraRY = 0;
     double cameraRZ = 0;
@@ -69,28 +69,28 @@ public class CubeViewer extends Group {
     public Color x1AxisRectangleColor = new Color(0.5, 1.0, 0.5, gridPanelsOpacity);
     public Color x2AxisRectangleColor = new Color(0.5, 1.0, 0.5, gridPanelsOpacity);
     public Color y1AxisRectangleColor = new Color(0.5, 0.5, 1.0, gridPanelsOpacity);
-    public Color y2AxisRectangleColor = new Color(0.5, 0.5, 1.0, gridPanelsOpacity);    
-    public Color z1AxisRectangleColor = new Color(1.0, 0.5, 0.5, gridPanelsOpacity);    
+    public Color y2AxisRectangleColor = new Color(0.5, 0.5, 1.0, gridPanelsOpacity);
+    public Color z1AxisRectangleColor = new Color(1.0, 0.5, 0.5, gridPanelsOpacity);
     public Color z2AxisRectangleColor = new Color(1.0, 0.5, 0.5, gridPanelsOpacity);
-    
+
     public boolean showx1AxisRectangle = true;
     public boolean showx2AxisRectangle = true;
     public boolean showy1AxisRectangle = true;
     public boolean showy2AxisRectangle = true;
     public boolean showz1AxisRectangle = true;
-    public boolean showz2AxisRectangle = true;    
-    
+    public boolean showz2AxisRectangle = true;
+
     public Group sphereGroup = new Group();
     public boolean showSphereGroup = true;
-    
+
     public Group xAxesGroup = new Group();
     public Group yAxesGroup = new Group();
     public Group zAxesGroup = new Group();
-    
+
     public boolean showxAxesGroup = true;
     public boolean showyAxesGroup = true;
     public boolean showzAxesGroup = true;
-    
+
     public Group xy1GridLinesGroup = new Group();
     public Group xx1GridLinesGroup = new Group();
     public Group yy1GridLinesGroup = new Group();
@@ -116,36 +116,36 @@ public class CubeViewer extends Group {
     public boolean showyx2GridLinesGroup = true;
     public boolean showzy2GridLinesGroup = true;
     public boolean showzx2GridLinesGroup = true;
-    
+
     public CubeViewer(boolean ambientLight) {
         selfLightEnabled = ambientLight;
         init();
-        
+
     }
     public CubeViewer(double size, double spacing, boolean selfLight) {
         axesSize = size;
         gridLineSpacing = spacing;
-        selfLightEnabled = selfLight;        
+        selfLightEnabled = selfLight;
         init();
     }
-   
-    public CubeViewer(double axesSize, double spacing, boolean selfLight, 
+
+    public CubeViewer(double axesSize, double spacing, boolean selfLight,
                     double scatterRadius, double axesThickness, double gridSize) {
         this.axesSize = axesSize;
         gridLineSpacing = spacing;
-        selfLightEnabled = selfLight;        
+        selfLightEnabled = selfLight;
         this.scatterRadius = scatterRadius;
         this.axesThickness = axesThickness;
         this.gridSize = gridSize;
-        
+
         init();
     }
-    
+
     private void init(){
         buildAxes(axesSize, axesThickness);
         buildPanels(axesSize);
         buildGrids(axesSize, gridLineSpacing);
-        buildEventHandlers();        
+        buildEventHandlers();
         getChildren().add(scatterDataGroup); //Holds ScatterPlot data
         if(selfLightEnabled) {
             PointLight light = new PointLight(Color.WHITE);
@@ -153,16 +153,16 @@ public class CubeViewer extends Group {
         }
         setDepthTest(DepthTest.ENABLE);
     }
-    
+
     private void buildPanels(double size) {
-        //@SMP TODO might be easier to just replace the Rectangle side panels with really flat Box 3D objects
+
         x1AxisRectangle = new Rectangle(size, size, x1AxisRectangleColor);
         x2AxisRectangle = new Rectangle(size, size, x2AxisRectangleColor);
         y1AxisRectangle = new Rectangle(size, size, y1AxisRectangleColor);
         y2AxisRectangle = new Rectangle(size, size, y2AxisRectangleColor);
         z1AxisRectangle = new Rectangle(size, size, z1AxisRectangleColor);
         z2AxisRectangle = new Rectangle(size, size, z2AxisRectangleColor);
-        
+
         x1AxisRectangle.setTranslateX(-size / 2);
         x1AxisRectangle.setTranslateY(-size / 2);
         x1AxisRectangle.setTranslateZ(-size / 2);
@@ -231,7 +231,7 @@ public class CubeViewer extends Group {
             xx2Cyls.add(newCyl);
         }
         xx2GridLinesGroup = new Group(xx2Cyls);
-        //Add the sub groups to the parent group 
+        //Add the sub groups to the parent group
         getChildren().addAll(xy1GridLinesGroup);
         getChildren().addAll(xx1GridLinesGroup);
         getChildren().addAll(xy2GridLinesGroup);
@@ -419,7 +419,7 @@ public class CubeViewer extends Group {
         y3AxisCyl.setMaterial(greenMaterial);
         z3AxisCyl.setMaterial(blueMaterial);
 
-        //getChildren().addAll(x3AxisCyl, y3AxisCyl, z3AxisCyl);        
+        //getChildren().addAll(x3AxisCyl, y3AxisCyl, z3AxisCyl);
         //XYZ 4
         final Cylinder x4AxisCyl = new Cylinder(axisThickness, size);
         final Cylinder y4AxisCyl = new Cylinder(axisThickness, size);
@@ -443,7 +443,7 @@ public class CubeViewer extends Group {
         y4AxisCyl.setMaterial(greenMaterial);
         z4AxisCyl.setMaterial(blueMaterial);
 
-        //getChildren().addAll(x4AxisCyl, y4AxisCyl, z4AxisCyl);        
+        //getChildren().addAll(x4AxisCyl, y4AxisCyl, z4AxisCyl);
         xAxesGroup.getChildren().addAll(x1AxisCyl, x2AxisCyl, x3AxisCyl, x4AxisCyl);
         yAxesGroup.getChildren().addAll(y1AxisCyl, y2AxisCyl, y3AxisCyl, y4AxisCyl);
         zAxesGroup.getChildren().addAll(z1AxisCyl, z2AxisCyl, z3AxisCyl, z4AxisCyl);
@@ -524,7 +524,7 @@ public class CubeViewer extends Group {
             yy1GridLinesGroup.setVisible(false);
             yx1GridLinesGroup.setVisible(false);
         } else {
-            if(showy1AxisRectangle)            
+            if(showy1AxisRectangle)
                 y1AxisRectangle.setVisible(true);
             if(showyy1GridLinesGroup)
                 yy1GridLinesGroup.setVisible(true);
@@ -662,7 +662,7 @@ public class CubeViewer extends Group {
             dataSphere.setTranslateY(translateY);
             dataSphere.setTranslateZ(translateZ);
             scatterDataGroup.getChildren().add(dataSphere);
-        }        
+        }
     }
 
     /**
@@ -691,7 +691,7 @@ public class CubeViewer extends Group {
             dataSphere.setTranslateY(yAxisData.get(i));
             dataSphere.setTranslateZ(translateZ);
             scatterDataGroup.getChildren().add(dataSphere);
-        }        
+        }
     }
 
     /**
@@ -710,7 +710,7 @@ public class CubeViewer extends Group {
         for(int i=0;i<zAxisData.size();i++) {
             final Sphere dataSphere = new Sphere(scatterRadius);
 //            final Box dataSphere = new Box(getScatterRadius(), getScatterRadius(), getScatterRadius());
-        
+
             double translateX = 0.0;
             double translateY = 0.0;
             if(!xAxisData.isEmpty() && xAxisData.size() > i)
@@ -721,7 +721,7 @@ public class CubeViewer extends Group {
             dataSphere.setTranslateY(translateY);
             dataSphere.setTranslateZ(zAxisData.get(i));
             scatterDataGroup.getChildren().add(dataSphere);
-        }       
+        }
     }
 
     public void setX1PanelColor(Color color) {
@@ -748,7 +748,7 @@ public class CubeViewer extends Group {
         z2AxisRectangleColor = color;
         z2AxisRectangle.setFill(color);
     }
-    
+
     public void showAll(boolean visible) {
         showSphereGroup(visible);
         showXAxesGroup(visible);
@@ -765,19 +765,19 @@ public class CubeViewer extends Group {
         showYY1GridLinesGroup(visible);
         showYX1GridLinesGroup(visible);
         showZY1GridLinesGroup(visible);
-        showZX1GridLinesGroup(visible);      
+        showZX1GridLinesGroup(visible);
         showXY2GridLinesGroup(visible);
         showXX2GridLinesGroup(visible);
         showYY2GridLinesGroup(visible);
         showYX2GridLinesGroup(visible);
         showZY2GridLinesGroup(visible);
-        showZX2GridLinesGroup(visible);      
+        showZX2GridLinesGroup(visible);
     }
     public void showSphereGroup(boolean visible) {
         showSphereGroup = visible;
         sphereGroup.setVisible(visible);
     }
-    
+
     public void showX1Panel(boolean visible) {
         showx1AxisRectangle = visible;
         x1AxisRectangle.setVisible(visible);
@@ -802,7 +802,7 @@ public class CubeViewer extends Group {
         showz2AxisRectangle = visible;
         z2AxisRectangle.setVisible(visible);
     }
-    
+
     public void showXAxesGroup(boolean visible) {
         showxAxesGroup = visible;
         xAxesGroup.setVisible(visible);
@@ -816,53 +816,53 @@ public class CubeViewer extends Group {
         zAxesGroup.setVisible(visible);
     }
     public void showXY1GridLinesGroup(boolean visible) {
-        showxy1GridLinesGroup = visible;        
+        showxy1GridLinesGroup = visible;
         xy1GridLinesGroup.setVisible(visible);
     }
     public void showXX1GridLinesGroup(boolean visible) {
-        showxx1GridLinesGroup = visible;        
+        showxx1GridLinesGroup = visible;
         xx1GridLinesGroup.setVisible(visible);
-    }    
+    }
     public void showYY1GridLinesGroup(boolean visible) {
-        showyy1GridLinesGroup = visible;        
+        showyy1GridLinesGroup = visible;
         yy1GridLinesGroup.setVisible(visible);
     }
     public void showYX1GridLinesGroup(boolean visible) {
-        showyx1GridLinesGroup = visible;        
+        showyx1GridLinesGroup = visible;
         yx1GridLinesGroup.setVisible(visible);
-    }    
+    }
     public void showZY1GridLinesGroup(boolean visible) {
-        showzy1GridLinesGroup = visible;        
+        showzy1GridLinesGroup = visible;
         zy1GridLinesGroup.setVisible(visible);
     }
     public void showZX1GridLinesGroup(boolean visible) {
-        showzx1GridLinesGroup = visible;        
+        showzx1GridLinesGroup = visible;
         zx1GridLinesGroup.setVisible(visible);
-    }    
+    }
     public void showXY2GridLinesGroup(boolean visible) {
-        showxy2GridLinesGroup = visible;        
+        showxy2GridLinesGroup = visible;
         xy2GridLinesGroup.setVisible(visible);
     }
     public void showXX2GridLinesGroup(boolean visible) {
-        showxx2GridLinesGroup = visible;        
+        showxx2GridLinesGroup = visible;
         xx2GridLinesGroup.setVisible(visible);
-    }    
+    }
     public void showYY2GridLinesGroup(boolean visible) {
-        showyy2GridLinesGroup = visible;        
+        showyy2GridLinesGroup = visible;
         yy2GridLinesGroup.setVisible(visible);
     }
     public void showYX2GridLinesGroup(boolean visible) {
-        showyx2GridLinesGroup = visible;        
+        showyx2GridLinesGroup = visible;
         yx2GridLinesGroup.setVisible(visible);
-    }    
+    }
     public void showZY2GridLinesGroup(boolean visible) {
-        showzy2GridLinesGroup = visible;        
+        showzy2GridLinesGroup = visible;
         zy2GridLinesGroup.setVisible(visible);
     }
     public void showZX2GridLinesGroup(boolean visible) {
-        showzx2GridLinesGroup = visible;        
+        showzx2GridLinesGroup = visible;
         zx2GridLinesGroup.setVisible(visible);
-    }    
+    }
 
     /**
      * @return the selfLightEnabled

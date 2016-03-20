@@ -298,7 +298,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				}
 
 				if(refresh) {
-					// TODO: Calculate scale and display
+
 //					Position p1 = map.getMapArea().getMapPosition(width-150, height-20);
 //					Position p2 = map.getMapArea().getMapPosition(width-50, height-20);
 //					int scale = (int)(0.5f+MSPGeoUtils.getDistance(p1.getLatitude(), p1.getLongitude(),

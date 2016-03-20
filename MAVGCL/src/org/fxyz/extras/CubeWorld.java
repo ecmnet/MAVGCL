@@ -161,7 +161,7 @@ public class CubeWorld extends Group {
     }
 
     private void buildPanels(double size) {
-        //@SMP TODO might be easier to just replace the Rectangle side panels with really flat Box 3D objects
+
         x1AxisRectangle = new Rectangle(size, size, panelWallColor);
         x2AxisRectangle = new Rectangle(size, size, panelWallColor);
         y1AxisRectangle = new Rectangle(size, size, panelWallColor);

@@ -228,7 +228,6 @@ public class LineChartWidgetDnD extends BorderPane implements IChartControl {
 
 			@Override
 			public Number fromString(String string) {
-				// TODO Auto-generated method stub
 				return null;
 			}
 		});
