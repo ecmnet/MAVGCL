@@ -27,19 +27,17 @@ import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.service.MapViewPane;
 
 import com.comino.flight.control.FlightControlPanel;
-import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.MSTYPE;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.MSTYPE;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
-import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -169,9 +167,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					if(map_changed) {
 						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
 							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0)
-							  map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 							else
-						      map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 						canvasLayer.redraw(true);
 						map_changed = false;
 						return;
@@ -179,14 +177,13 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 					if(model.gps.numsat>3) {
 
-							if(mapfollow.selectedProperty().get()) {
-								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
-								canvasLayer.redraw(true);
-							} else {
-									  map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-								canvasLayer.redraw(false);
-							}
-							positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
+						if(mapfollow.selectedProperty().get()) {
+							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+							canvasLayer.redraw(true);
+						} else {
+							canvasLayer.redraw(false);
+						}
+						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
 
 
 					}
@@ -209,9 +206,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		mapfollow.selectedProperty().set(true);
 
 		// TODO 1.0: provide application directory
-		// TODO 1.0 Zooming not centered
 
-	//	DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
+		//	DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
 		String mapFileName = System.getProperty("user.home")+"/.MAVGCLMaps";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
@@ -232,8 +228,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		mapPane.setClip(clip);
 		clip.heightProperty().bind(mapPane.heightProperty());
 		clip.widthProperty().bind(mapPane.widthProperty());
-//		map.setCenter(49.142899,11.577723);
-		map.setZoom(18);
+		//		map.setCenter(49.142899,11.577723);
+		map.setZoom(19.5);
 
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
@@ -294,11 +290,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 				if(refresh) {
 
-//					Position p1 = map.getMapArea().getMapPosition(width-150, height-20);
-//					Position p2 = map.getMapArea().getMapPosition(width-50, height-20);
-//					int scale = (int)(0.5f+MSPGeoUtils.getDistance(p1.getLatitude(), p1.getLongitude(),
-//							p2.getLatitude(), p2.getLongitude()));
-//					gc.fillText(scale+"m", width-75, height-10);
+					//					Position p1 = map.getMapArea().getMapPosition(width-150, height-20);
+					//					Position p2 = map.getMapArea().getMapPosition(width-50, height-20);
+					//					int scale = (int)(0.5f+MSPGeoUtils.getDistance(p1.getLatitude(), p1.getLongitude(),
+					//							p2.getLatitude(), p2.getLongitude()));
+					//					gc.fillText(scale+"m", width-75, height-10);
 
 					gc.setStroke(Color.DARKGRAY);
 					gc.strokeLine(width-150, height-20, width-50,height-20);
@@ -325,6 +321,19 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				map_changed = true;
 			}
 
+		});
+
+		mapfollow.selectedProperty().addListener(new ChangeListener<Boolean>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(oldValue.booleanValue() && !newValue) {
+					if(model.gps.ref_lat!=0)
+						map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+					else
+						map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+				}
+			}
 		});
 
 
