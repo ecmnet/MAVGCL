@@ -37,7 +37,7 @@ import org.lodgon.openmapfx.core.TileType;
  * Provider for Bing tiles
  */
 public class BingTileProvider implements TileProvider {
-    
+
     private static final List<TileType> tileTypes = new LinkedList<>();
     final String server;
 
@@ -48,14 +48,14 @@ public class BingTileProvider implements TileProvider {
             protected String calculateURL(int zoom, long i, long j) {
                 return server + getQuadKey(zoom, i, j)+"?g=1";
             }
-            
+
         };
         if (fileStorage != null) {
             tileType.setFileStorageBase(fileStorage);
         }
         tileTypes.add(tileType);
     }
-    
+
     @Override
     public String getProviderName() {
         return "Microsoft";
@@ -73,9 +73,9 @@ public class BingTileProvider implements TileProvider {
 
     @Override
     public String getAttributionNotice() {
-        return "";
+        return "© Microsoft BingMaps";
     }
- 
+
     private String getQuadKey(int zoom, long x, long y) {
         final StringBuilder quadKey = new StringBuilder();
         for (int i = zoom; i > 0; i--) {
@@ -92,5 +92,5 @@ public class BingTileProvider implements TileProvider {
 
         return quadKey.toString();
     }
-    
+
 }

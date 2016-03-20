@@ -97,16 +97,15 @@ public class StatusLineWidget extends Pane  {
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
-                  driver.setText(control.getCurrentModel().sys.getSensorString());
-                  if(control.getMessageList().size()>0)
-                     messages.setText(control.getMessageList().remove(0).msg);
+					driver.setText(control.getCurrentModel().sys.getSensorString());
+					if(control.getMessageList().size()>0)
+						messages.setText(control.getMessageList().remove(0).msg);
 				} else
 					driver.setText("not connected");
 
-		         elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
+				elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
 
-		         if(control.getCollector().getName()!=null)
-		           filename.setText("File: "+control.getCollector().getName());
+				filename.setText(control.getCollector().getName());
 
 			}
 		});
@@ -131,7 +130,7 @@ public class StatusLineWidget extends Pane  {
 
 	public void registerMessageWidget(MessagesWidget m) {
 		messages.setOnMousePressed(value -> {
-            m.showMessages();
+			m.showMessages();
 
 		});
 

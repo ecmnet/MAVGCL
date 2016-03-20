@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.CheckBox?>
 
 <fx:root minHeight="600.0" styleClass="widget" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
@@ -50,13 +51,14 @@
 
             <Label layoutX="20.0" layoutY="368.0" text="Scale:" />
             <ChoiceBox fx:id="scale" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
-            <Label fx:id="rot_label" layoutX="20.0" layoutY="422.0" text="Rotation: [ 0°]" />
+            <CheckBox fx:id="center_origin" layoutX="15.0" layoutY="422.0" mnemonicParsing="false" text="Center origin" />
+            <Label fx:id="rot_label" layoutX="20.0" layoutY="452.0" text="Rotation: [ 0°]" />
             <Slider fx:id="rotation" blockIncrement="10.0" layoutX="13.0" prefWidth="126.0"
-					layoutY="437" majorTickUnit="10.0" max="90" min="-90" prefHeight="13.0" value="0"/>
+					layoutY="467" majorTickUnit="10.0" max="90" min="-90" prefHeight="13.0" value="0"/>
 
-            <Separator layoutX="15.0" layoutY="470.0" prefHeight="4.0" prefWidth="126.0" />
+            <Separator layoutX="15.0" layoutY="490.0" prefHeight="4.0" prefWidth="126.0" />
 
-            <Button fx:id="export" layoutX="15.0" layoutY="500.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
+            <Button fx:id="export" layoutX="15.0" layoutY="520.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 
          </children>
 

@@ -180,10 +180,7 @@ public class MainApp extends Application {
 				if(control.getCollector().getModelList().size()>0)
 				   fileHandler.fileExport();
 			}
-
 		});
-
-
 	}
 
 

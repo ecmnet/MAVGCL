@@ -23,6 +23,7 @@ import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.MapTileType;
 import org.lodgon.openmapfx.core.PositionLayer;
+import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.service.MapViewPane;
 
 import com.comino.flight.control.FlightControlPanel;
@@ -218,7 +219,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		mapfollow.selectedProperty().set(true);
 
-		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
+	//	DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new ThunderForestTileProvider());
+		String mapFileName = System.getProperty("user.home")+"/MAVGCLMaps";
+		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(1);
@@ -238,7 +241,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		clip.heightProperty().bind(mapPane.heightProperty());
 		clip.widthProperty().bind(mapPane.widthProperty());
 		map.setCenter(49.142899,11.577723);
-		map.setZoom(20);
+		map.setZoom(18);
 
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
