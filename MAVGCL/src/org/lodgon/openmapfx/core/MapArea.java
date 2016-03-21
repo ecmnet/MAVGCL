@@ -143,8 +143,8 @@ public class MapArea extends Pane implements BaseMap {
         double mex = (double) id * 256;
         double mey = (double) jd * 256;
 
-        double ttx = mex - (this.getScene().getWidth()-225) / 2;
-        double tty = mey - (this.getScene().getHeight()-118) / 2;
+        double ttx = mex - (this.getScene().getWidth()-230) / 2;
+        double tty = mey - (this.getScene().getHeight()-120) / 2;
         setTranslateX(-1 * ttx);
         setTranslateY(-1 * tty);
         if (debug) {
@@ -193,7 +193,7 @@ public class MapArea extends Pane implements BaseMap {
             System.out.println("setZoom called");
         }
         zoomProperty.set(z);
-        setCenter(this.lat, this.lon);
+     //   setCenter(this.lat, this.lon);
     }
 
     public void zoom(double delta, double pivotX, double pivotY) {

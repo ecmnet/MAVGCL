@@ -211,7 +211,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
-		gpssource.getSelectionModel().select(1);
+		gpssource.getSelectionModel().select(0);
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
