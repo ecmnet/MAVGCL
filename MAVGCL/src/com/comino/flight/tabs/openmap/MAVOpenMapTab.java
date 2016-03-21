@@ -102,7 +102,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private Task<Long> task;
 
 	private DataModel model;
-	private int type = 1;
+	private int type = 0;
 
 	private boolean map_changed = false;
 	private boolean home_set = false;
@@ -165,11 +165,16 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				try {
 
 					if(map_changed) {
-						if(model.gps.isFlagSet(GPS.GPS_REF_VALID))
-							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0)
-								map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
+							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
+								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+								home_set = true;
+							}
 							else
 								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+
+						}
 						canvasLayer.redraw(true);
 						map_changed = false;
 						return;
@@ -227,10 +232,12 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		canvasLayer = new CanvasLayer();
 		map.getLayers().add(canvasLayer);
 
-		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
-		map.getLayers().add(positionLayer);
 		map.getLayers().add(homeLayer);
+
+		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
+		map.getLayers().add(positionLayer);
+
 
 		positionLayer.updatePosition(49.142899,11.577723);
 
@@ -252,6 +259,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				}
 
 				positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
+
 
 				if(isCollecting.get() &&
 						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
