@@ -47,6 +47,7 @@ public class GPSDetailsWidget extends FadePane  {
 			MSTYPE.MSP_RAW_GPSLON,
 			MSTYPE.MSP_RAW_SATNUM,
 			MSTYPE.MSP_GPSHDOP,
+			MSTYPE.MSP_GPSEPH,
 	};
 
 	 @FXML
