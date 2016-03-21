@@ -21,7 +21,6 @@ import java.io.IOException;
 import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
-import org.lodgon.openmapfx.core.MapTileType;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.service.MapViewPane;
@@ -38,7 +37,6 @@ import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
-import com.comino.openmapfx.ext.ThunderForestTileProvider;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -105,7 +103,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private int type = 0;
 
 	private boolean map_changed = false;
-	private boolean home_set = false;
 
 	private int index=0;
 
@@ -169,7 +166,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
 								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
-								home_set = true;
 							}
 							else
 								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
@@ -217,6 +213,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
+		type = 0;
 
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
