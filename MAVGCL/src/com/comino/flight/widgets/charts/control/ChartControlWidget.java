@@ -203,7 +203,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				trigdelay.setDisable(old_val);
 				trigstop.setDisable(old_val);
 				trigstart.setDisable(old_val);
-			    recording.setDisable(new_val);
+				recording.setDisable(new_val);
 
 			}
 		});
@@ -277,6 +277,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	public void refreshCharts() {
 		for(IChartControl chart : charts)
 			chart.refreshChart();
+		if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
+			scroll.setDisable(false);
 
 	}
 
@@ -290,7 +292,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		else {
 			control.getCollector().stop(delay);
 			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
-			  scroll.setDisable(false);
+				scroll.setDisable(false);
 		}
 	}
 
