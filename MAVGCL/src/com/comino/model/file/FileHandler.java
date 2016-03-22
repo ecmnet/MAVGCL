@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -68,7 +70,6 @@ public class FileHandler {
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
-
 	}
 
 
@@ -92,9 +93,10 @@ public class FileHandler {
 	}
 
 	public void fileExport() {
-
+        String defaultName = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
+		fileChooser.setInitialFileName(defaultName);
 		File file = fileChooser.showSaveDialog(stage);
 		try {
 			if(file!=null) {

@@ -221,8 +221,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		MapViewPane mapPane = new MapViewPane(map);
 		mapviewpane.setCenter(mapPane);
 
-		map.disableProperty().bind(FlightModeProperties.getInstance().getConnectedProperty().not());
-
 		Rectangle clip = new Rectangle();
 		mapPane.setClip(clip);
 		clip.heightProperty().bind(mapPane.heightProperty());
