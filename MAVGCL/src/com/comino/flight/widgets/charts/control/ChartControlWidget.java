@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.control.FlightModeProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
@@ -182,7 +183,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		totaltime.getSelectionModel().select(1);
 
 
-
+		recording.disableProperty().bind(FlightModeProperties.getInstance().getConnectedProperty().not());
 		recording.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {

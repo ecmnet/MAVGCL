@@ -95,7 +95,6 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);
-
 		update(model.sys,model.sys);
 	}
 

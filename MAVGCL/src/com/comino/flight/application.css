@@ -172,6 +172,18 @@
 	-fx-background-color: #505058;
 }
 
+.emergency   {
+	 -fx-background-color: #600000;
+}
+
+#emergency:pressed   {
+	-fx-background-color: #500000;
+}
+
+.emergency:hover  {
+	-fx-background-color: #A00000;
+}
+
 .check-box *.box {
   -fx-background-color:#404040;
 }

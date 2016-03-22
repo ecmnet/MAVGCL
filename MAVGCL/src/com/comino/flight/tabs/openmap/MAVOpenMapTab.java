@@ -25,6 +25,7 @@ import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.service.MapViewPane;
 
+import com.comino.flight.control.FlightModeProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
@@ -201,6 +202,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	@FXML
 	private void initialize() {
 
+
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
 
@@ -218,6 +220,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		map = new LayeredMap(provider);
 		MapViewPane mapPane = new MapViewPane(map);
 		mapviewpane.setCenter(mapPane);
+
+		map.disableProperty().bind(FlightModeProperties.getInstance().getConnectedProperty().not());
 
 		Rectangle clip = new Rectangle();
 		mapPane.setClip(clip);
