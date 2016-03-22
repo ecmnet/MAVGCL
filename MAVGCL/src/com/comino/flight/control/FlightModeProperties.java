@@ -11,7 +11,6 @@ public class FlightModeProperties implements IMSPModeChangedListener{
 
 	private static FlightModeProperties instance = null;
 
-
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
 	private BooleanProperty landedProperty = new SimpleBooleanProperty();
