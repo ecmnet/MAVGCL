@@ -19,6 +19,8 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 
+import org.mavlink.messages.MAV_CMD;
+
 import com.comino.flight.control.FlightModeProperties;
 import com.comino.flight.control.integration.AnalysisIntegration;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -39,6 +41,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -138,6 +141,14 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
+
+	        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+	            @Override
+	            public void handle(KeyEvent event) {
+					if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
+						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
+	            }
+	        });
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
