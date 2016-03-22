@@ -25,7 +25,7 @@ import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.service.MapViewPane;
 
-import com.comino.flight.control.FlightControlPanel;
+import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;

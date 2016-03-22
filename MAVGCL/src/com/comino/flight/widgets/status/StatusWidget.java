@@ -18,12 +18,14 @@ package com.comino.flight.widgets.status;
 
 import java.io.IOException;
 
+import com.comino.flight.control.FlightModeProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
@@ -99,6 +101,7 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 	@Override
 	public void update(Status arg0, Status newStat) {
+
 		if(newStat.isStatus(Status.MSP_CONNECTED))
 			connected.setFill(Color.DARKORANGE);
 		else {

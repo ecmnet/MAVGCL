@@ -19,8 +19,9 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 
-import com.comino.flight.control.FlightControlPanel;
-import com.comino.flight.integration.AnalysisIntegration;
+import com.comino.flight.control.FlightModeProperties;
+import com.comino.flight.control.integration.AnalysisIntegration;
+import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -106,8 +107,8 @@ public class MainApp extends Application {
 		}
 
 		AnalysisIntegration.registerFunction(control);
-
 		MSPLogger.getInstance(control);
+		FlightModeProperties.getInstance(control);
 
 		fileHandler = new FileHandler(primaryStage,control);
 

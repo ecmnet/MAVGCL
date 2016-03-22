@@ -22,6 +22,7 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_msp_command;
 
+import com.comino.flight.control.FlightModeProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -54,6 +55,9 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private Button right;
 
+	@FXML
+	private Button emergency;
+
 	private IMAVController control;
 	private DataModel model;
 
@@ -73,34 +77,18 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
+		this.disableProperty().bind(FlightModeProperties.getInstance().getArmedProperty().not());
+
 		land_command.setOnAction((ActionEvent event)-> {
-
-			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
-				return;
-			}
-
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
-
 		});
 
 		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-
-
-				System.out.println("Rejected");
-
-
+			System.out.println("Rejected");
 		});
 
-
 		althold_command.setOnAction((ActionEvent event)-> {
-
-			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
-				return;
-			}
-
 			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
@@ -109,19 +97,14 @@ public class CommanderWidget extends Pane  {
 				if(!model.sys.isStatus(Status.MSP_LANDED))
 					MSPLogger.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
 				else
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
 			}
 
 		});
 
 		poshold_command.setOnAction((ActionEvent event)-> {
-
-			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				MSPLogger.getInstance().writeLocalMsg("Not armed: Changing mode rejected");
-				return;
-			}
 
 			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -140,6 +123,11 @@ public class CommanderWidget extends Pane  {
 			control.sendMAVLinkMessage(cmd);
 
 
+		});
+
+		emergency.setOnAction((ActionEvent event)-> {
+				MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 );
 		});
 
 	}

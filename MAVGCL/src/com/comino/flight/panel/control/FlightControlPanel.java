@@ -1,4 +1,4 @@
-package com.comino.flight.control;
+package com.comino.flight.panel.control;
 
 import java.io.IOException;
 

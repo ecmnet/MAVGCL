@@ -1,4 +1,4 @@
-package com.comino.flight.integration;
+package com.comino.flight.control.integration;
 
 import com.comino.mav.control.IMAVController;
 

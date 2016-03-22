@@ -3,7 +3,7 @@ package com.comino.flight.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comino.flight.control.FlightControlPanel;
+import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
