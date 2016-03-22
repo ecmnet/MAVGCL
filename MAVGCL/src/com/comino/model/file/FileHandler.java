@@ -1,26 +1,54 @@
 package com.comino.model.file;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.model.DataModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import me.drton.jmavlib.log.px4.PX4LogReader;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+
 
 public class FileHandler {
 
+	private static FileHandler handler = null;
+
 	private Stage stage;
 	private IMAVController control;
+	private String name;
 
 
+	public static FileHandler getInstance() {
+		return handler;
+	}
 
-	public FileHandler(Stage stage, IMAVController control) {
+	public static FileHandler getInstance(Stage stage, IMAVController control) {
+		if(handler==null)
+			handler = new FileHandler(stage,control);
+		return handler;
+	}
+
+
+	private FileHandler(Stage stage, IMAVController control) {
 		super();
 		this.stage = stage;
 		this.control = control;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public void fileImport() {
@@ -28,8 +56,15 @@ public class FileHandler {
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		File file = fileChooser.showOpenDialog(stage);
 		try {
-			if(file!=null)
-				control.getCollector().readFromFile(file);
+			if(file!=null) {
+				Type listType = new TypeToken<ArrayList<DataModel>>() {}.getType();
+				Reader reader = new FileReader(file);
+				Gson gson = new GsonBuilder().create();
+				ArrayList<DataModel>modelList = gson.fromJson(reader,listType);
+				reader.close();
+				control.getCollector().setModelList(modelList);
+				name = file.getName();
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
@@ -42,9 +77,15 @@ public class FileHandler {
 				new ExtensionFilter("PX4Log Files", "*.px4log"));
 		File file = fileChooser.showOpenDialog(stage);
 		try {
-			if(file!=null)
-				control.getCollector().importPX4Log(file);
-		} catch (IOException e) {
+			if(file!=null) {
+				ArrayList<DataModel>modelList = new ArrayList<DataModel>();
+				PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+				PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
+				converter.doConversion();
+				control.getCollector().setModelList(modelList);
+				name = file.getName();
+			}
+		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
 
@@ -56,8 +97,13 @@ public class FileHandler {
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		File file = fileChooser.showSaveDialog(stage);
 		try {
-			if(file!=null)
-				control.getCollector().writeToFile(file);
+			if(file!=null) {
+				Writer writer = new FileWriter(file);
+				Gson gson = new GsonBuilder().create();
+				gson.toJson(control.getCollector().getModelList(), writer);
+				writer.close();
+				name = file.getName();
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}

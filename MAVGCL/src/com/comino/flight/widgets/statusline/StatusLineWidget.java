@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.file.FileHandler;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -105,7 +106,7 @@ public class StatusLineWidget extends Pane  {
 
 				elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
 
-				filename.setText(control.getCollector().getName());
+				filename.setText(FileHandler.getInstance().getName());
 
 			}
 		});

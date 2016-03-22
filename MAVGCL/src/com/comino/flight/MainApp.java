@@ -47,8 +47,6 @@ public class MainApp extends Application {
 
 	private static IMAVController control = null;
 
-	private static FileHandler fileHandler = null;
-
 	private static FlightControlPanel controlpanel = null;
 
 	private Stage primaryStage;
@@ -110,7 +108,7 @@ public class MainApp extends Application {
 		MSPLogger.getInstance(control);
 		FlightModeProperties.getInstance(control);
 
-		fileHandler = new FileHandler(primaryStage,control);
+		FileHandler.getInstance(primaryStage,control);
 
 		initRootLayout();
 		showMAVGCLApplication();
@@ -159,7 +157,7 @@ public class MainApp extends Application {
 		m_import.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				fileHandler.fileImport();
+				FileHandler.getInstance().fileImport();
 				controlpanel.getRecordControl().refreshCharts();
 			}
 
@@ -168,7 +166,7 @@ public class MainApp extends Application {
 		m_px4log.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				fileHandler.fileImportPX4Log();
+				FileHandler.getInstance().fileImportPX4Log();
 				controlpanel.getRecordControl().refreshCharts();
 
 			}
@@ -179,7 +177,7 @@ public class MainApp extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if(control.getCollector().getModelList().size()>0)
-				   fileHandler.fileExport();
+					FileHandler.getInstance().fileExport();
 			}
 		});
 	}
