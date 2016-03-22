@@ -104,7 +104,7 @@ public class StatusLineWidget extends Pane  {
 				} else
 					driver.setText("not connected");
 
-				elapsedtime.setText("Time: "+fo.format(control.getCollector().getElapsedTimeMS()));
+				elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
 
 				filename.setText(FileHandler.getInstance().getName());
 
