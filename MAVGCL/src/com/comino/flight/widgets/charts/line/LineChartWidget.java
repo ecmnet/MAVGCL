@@ -18,10 +18,12 @@ package com.comino.flight.widgets.charts.line;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.comino.flight.widgets.MovingAxis;
 import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
@@ -106,7 +108,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private SectionLineChart<Number, Number> linechart;
 
 	@FXML
-	private NumberAxis xAxis;
+	private MovingAxis xAxis;
 
 	@FXML
 	private NumberAxis yAxis;
@@ -141,8 +143,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private MSTYPE type1=MSTYPE.MSP_NONE;
 	private MSTYPE type2=MSTYPE.MSP_NONE;
 	private MSTYPE type3=MSTYPE.MSP_NONE;
-
-
 
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
@@ -231,31 +231,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void initialize() {
 
 		xAxis.setAutoRanging(false);
-		xAxis.setForceZeroInRange(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
 		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
-		xAxis.setTickLabelFormatter(new StringConverter<Number>() {
 
-			@Override
-			public String toString(Number o) {
-				return Integer.toString((int)(Math.round(o.floatValue())));
-			}
-
-			@Override
-			public Number fromString(String string) {
-				return null;
-			}
-		});
-
-
-//		linechart.getAnnotations().add(posHoldAnnotation,Layer.FOREGROUND);
-//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
-//
-//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
-//		altHoldAnnotation = new ModeAnnotation(0, 3, Orientation.VERTICAL, 0, null, new Color(1, 0, 0, 0.1));
+		//		linechart.getAnnotations().add(posHoldAnnotation,Layer.FOREGROUND);
+		//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
+		//
+		//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
+		//		altHoldAnnotation = new ModeAnnotation(0, 3, Orientation.VERTICAL, 0, null, new Color(1, 0, 0, 0.1));
 
 
 		linechart.prefWidthProperty().bind(widthProperty());
