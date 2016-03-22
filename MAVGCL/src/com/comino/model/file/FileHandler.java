@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import me.drton.jmavlib.log.px4.PX4LogReader;
@@ -62,9 +63,11 @@ public class FileHandler {
 				Type listType = new TypeToken<ArrayList<DataModel>>() {}.getType();
 				Reader reader = new FileReader(file);
 				Gson gson = new GsonBuilder().create();
+				stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
 				ArrayList<DataModel>modelList = gson.fromJson(reader,listType);
 				reader.close();
 				control.getCollector().setModelList(modelList);
+				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 			}
 		} catch (IOException e) {
@@ -81,9 +84,11 @@ public class FileHandler {
 			if(file!=null) {
 				ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 				PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+				stage.getScene().setCursor(Cursor.WAIT);
 				PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
 				converter.doConversion();
 				control.getCollector().setModelList(modelList);
+				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 			}
 		} catch (Exception e) {
@@ -102,8 +107,10 @@ public class FileHandler {
 			if(file!=null) {
 				Writer writer = new FileWriter(file);
 				Gson gson = new GsonBuilder().create();
+				stage.getScene().setCursor(Cursor.WAIT);
 				gson.toJson(control.getCollector().getModelList(), writer);
 				writer.close();
+				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 			}
 		} catch (IOException e) {
