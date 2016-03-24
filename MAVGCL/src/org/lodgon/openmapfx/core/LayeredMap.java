@@ -126,10 +126,7 @@ final int MAXZOOM=16;
      * @param z the zoom level
      */
     public void setZoom (double z) {
-        Scene s = this.getScene();
-        double x = (s == null)? 0 : s.getWidth()/2;
-        double y = (s == null)? 0 : s.getWidth()/2;
-        setZoom(z, x, y);
+        setZoom(z, this.getWidth()/2, this.getHeight()/2);
     }
 
    /**

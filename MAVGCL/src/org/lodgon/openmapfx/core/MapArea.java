@@ -305,7 +305,7 @@ public class MapArea extends Pane implements BaseMap {
         double height = getScene().getHeight();
         long imin = Math.max(0, (long) (-tx * Math.pow(2, deltaZ) / 256) - 1);
         long jmin = Math.max(0, (long) (-ty * Math.pow(2, deltaZ) / 256));
-        long imax = Math.min(i_max, imin + (long) (width * Math.pow(2, deltaZ) / 256) + 3);
+        long imax = Math.min(i_max, imin + (long) (width  * Math.pow(2, deltaZ) / 256) + 3);
         long jmax = Math.min(j_max, jmin + (long) (height * Math.pow(2, deltaZ) / 256) + 3);
         if (debug) {
             System.out.println("zoom = " + nearestZoom + ", active = " + activeZoom +", tx = "+tx+ ", loadtiles, check i-range: " + imin + ", " + imax + " and j-range: " + jmin + ", " + jmax);
@@ -462,8 +462,8 @@ public class MapArea extends Pane implements BaseMap {
                 @Override
                 public void invalidated(Observable observable) {
                     if (getScene() != null) {
-                        area.widthProperty().bind(getScene().widthProperty().add(20));
-                        area.heightProperty().bind(getScene().heightProperty().add(20));
+                        area.widthProperty().bind(getScene().widthProperty());
+                        area.heightProperty().bind(getScene().heightProperty());
                     }
                     if (abortedTileLoad) {
                         abortedTileLoad = false;

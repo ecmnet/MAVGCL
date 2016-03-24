@@ -227,14 +227,14 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		type = 0;
 
 		map = new LayeredMap(provider);
-		MapViewPane mapPane = new MapViewPane(map);
-		mapviewpane.setCenter(mapPane);
+
+		mapviewpane.setCenter(map);
 
 		Rectangle clip = new Rectangle();
-		mapPane.setClip(clip);
-		clip.heightProperty().bind(mapPane.heightProperty());
-		clip.widthProperty().bind(mapPane.widthProperty());
-		//		map.setCenter(49.142899,11.577723);
+		mapviewpane.setClip(clip);
+		clip.heightProperty().bind(map.heightProperty());
+		clip.widthProperty().bind(map.widthProperty());
+//		//		map.setCenter(49.142899,11.577723);
 		map.setZoom(19.5);
 
 		canvasLayer = new CanvasLayer();
