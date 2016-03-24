@@ -108,9 +108,9 @@ public class GPSDetailsWidget extends FadePane  {
 
 				DataModel m;
 
-				if(collector.getModelList().size()>0)
-					m = collector.getModelList().get(collector.getModelList().size()-1);
-				else
+//				if(collector.getModelList().size()>0)
+//					m = collector.getModelList().get(collector.getModelList().size()-1);
+//				else
 					m = model;
 
 				for(KeyFigure figure : figures) {
