@@ -294,6 +294,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
 				scroll.setDisable(false);
 		}
+		for(IChartControl chart : charts)
+			chart.refreshChart();
 	}
 
 	@Override
