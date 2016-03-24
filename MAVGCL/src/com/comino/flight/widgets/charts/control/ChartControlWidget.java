@@ -23,6 +23,7 @@ import java.util.List;
 import com.comino.flight.control.FlightModeProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.file.FileHandler;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
@@ -142,19 +143,17 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
-					//details.setValue(true);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
-					//details.setValue(false);
+					FileHandler.getInstance().close();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
-					//details.setValue(false);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
-					//details.setValue(false);
+					FileHandler.getInstance().close();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}

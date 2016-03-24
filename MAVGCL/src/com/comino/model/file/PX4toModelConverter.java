@@ -52,7 +52,7 @@ public class PX4toModelConverter {
 							try {
 							  MSTYPE.putValue(model, types[i], (float)data.get(px4Name));
 							} catch(Exception e) {
-								//System.err.println(px4Name+" was not found");
+								System.err.println(px4Name+" was not found");
 							}
 						}
 					}

@@ -50,6 +50,10 @@ public class FileHandler {
 		this.control = control;
 	}
 
+	public void close() {
+		this.name = "";
+	}
+
 	public String getName() {
 		return name;
 	}
