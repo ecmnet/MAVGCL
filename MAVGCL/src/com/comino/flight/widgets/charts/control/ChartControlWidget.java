@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comino.flight.control.FlightModeProperties;
+import com.comino.flight.control.ControlProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -33,6 +33,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
@@ -40,6 +41,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -59,6 +61,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@FXML
 	private ToggleButton recording;
+
+	@FXML
+	private ToggleButton clear;
 
 
 	@FXML
@@ -84,6 +89,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private Circle isrecording;
 
+
 	private Task<Integer> task;
 
 	private IMAVController control;
@@ -96,7 +102,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private ModelCollectorService collector;
-	private BooleanProperty details;
 
 
 	public ChartControlWidget() {
@@ -143,17 +148,19 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
+					clear.setDisable(false);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
-					FileHandler.getInstance().close();
+					clear.setDisable(true);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
+					clear.setDisable(true);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
-					FileHandler.getInstance().close();
+					clear.setDisable(true);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
@@ -182,7 +189,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		totaltime.getSelectionModel().select(1);
 
 
-		recording.disableProperty().bind(FlightModeProperties.getInstance().getConnectedProperty().not());
+		recording.disableProperty().bind(ControlProperties.getInstance().getConnectedProperty().not());
 		recording.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {
@@ -190,6 +197,17 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				if(new_val.booleanValue()) {
 					scroll.setValue(0);
 				}
+			}
+		});
+
+		clear.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> ov,
+					Boolean old_val, Boolean new_val) {
+					scroll.setValue(0);
+					scroll.setDisable(true);
+					control.getCollector().clearModelList();
+					for(IChartControl chart : charts)
+						chart.refreshChart();
 			}
 		});
 
@@ -231,9 +249,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 		});
 
-		totaltime.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 				totalTime_sec  = newValue.intValue();
 				for(IChartControl chart : charts)
 					chart.getTimeFrameProperty().set(newValue.intValue());
@@ -243,20 +259,35 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				else
 					scroll.setDisable(false);
 				scroll.setValue(0);
-			}
 		});
 
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
+
 				for(IChartControl chart : charts) {
 					if(chart.getScrollProperty()!=null)
 						chart.getScrollProperty().set(new_val.intValue());
 				}
-
-
 			}
 		});
+
+		scroll.setDisable(true);
+
+		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					scroll.setValue(100);
+					for(IChartControl chart : charts) {
+						if(chart.getScrollProperty()!=null)
+							chart.getScrollProperty().set(100);
+					}
+				}
+			}
+		});
+
 
 	}
 
@@ -265,7 +296,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		this.collector = control.getCollector();
 		this.control.addModeChangeListener(this);
 		ExecutorService.get().execute(task);
-		details = statuswidget.getDetailsProperty();
 
 	}
 

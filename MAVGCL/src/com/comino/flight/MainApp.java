@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.mavlink.messages.MAV_CMD;
 
-import com.comino.flight.control.FlightModeProperties;
+import com.comino.flight.control.ControlProperties;
 import com.comino.flight.control.integration.AnalysisIntegration;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.FlightTabs;
@@ -109,7 +109,7 @@ public class MainApp extends Application {
 
 		AnalysisIntegration.registerFunction(control);
 		MSPLogger.getInstance(control);
-		FlightModeProperties.getInstance(control);
+		ControlProperties.getInstance(control);
 
 		FileHandler.getInstance(primaryStage,control);
 

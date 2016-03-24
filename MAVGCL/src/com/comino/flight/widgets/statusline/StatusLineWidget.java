@@ -19,6 +19,7 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import com.comino.flight.control.ControlProperties;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -106,7 +107,13 @@ public class StatusLineWidget extends Pane  {
 
 				elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
 
-				filename.setText(FileHandler.getInstance().getName());
+				if(control.getCollector().getModelList().size()>0)  {
+					if(control.getCollector().isCollecting())
+						filename.setText("untitled");
+					else
+				      filename.setText(FileHandler.getInstance().getName());
+				} else
+				   filename.setText("");
 
 			}
 		});

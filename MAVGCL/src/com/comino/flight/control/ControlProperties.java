@@ -7,9 +7,9 @@ import com.comino.msp.model.segment.Status;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class FlightModeProperties implements IMSPModeChangedListener{
+public class ControlProperties implements IMSPModeChangedListener{
 
-	private static FlightModeProperties instance = null;
+	private static ControlProperties instance = null;
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
@@ -17,17 +17,17 @@ public class FlightModeProperties implements IMSPModeChangedListener{
 	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
 
-	public static FlightModeProperties getInstance() {
+	public static ControlProperties getInstance() {
 		return instance;
 	}
 
-	public static FlightModeProperties getInstance(IMAVController control) {
+	public static ControlProperties getInstance(IMAVController control) {
 		if(instance == null)
-			instance = new FlightModeProperties(control);
+			instance = new ControlProperties(control);
 		return instance;
 	}
 
-	private FlightModeProperties(IMAVController control) {
+	private ControlProperties(IMAVController control) {
 		 control.addModeChangeListener(this);
 	}
 
@@ -60,10 +60,5 @@ public class FlightModeProperties implements IMSPModeChangedListener{
 	public BooleanProperty getPosHoldProperty() {
 		return posholdProperty;
 	}
-
-
-
-
-
 
 }

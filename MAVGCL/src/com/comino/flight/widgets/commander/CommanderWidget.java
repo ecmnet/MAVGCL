@@ -22,7 +22,7 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.control.FlightModeProperties;
+import com.comino.flight.control.ControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -77,7 +77,7 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
-		this.disableProperty().bind(FlightModeProperties.getInstance().getArmedProperty().not());
+		this.disableProperty().bind(ControlProperties.getInstance().getArmedProperty().not());
 
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );

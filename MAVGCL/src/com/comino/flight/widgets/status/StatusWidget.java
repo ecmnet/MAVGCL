@@ -18,7 +18,7 @@ package com.comino.flight.widgets.status;
 
 import java.io.IOException;
 
-import com.comino.flight.control.FlightModeProperties;
+import com.comino.flight.control.ControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;

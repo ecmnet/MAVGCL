@@ -11,12 +11,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.comino.flight.control.ControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -52,12 +55,8 @@ public class FileHandler {
 		this.control = control;
 	}
 
-	public void close() {
-		this.name = "";
-	}
-
 	public String getName() {
-		return name;
+			return name;
 	}
 
 
@@ -81,6 +80,7 @@ public class FileHandler {
 				control.getCollector().setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
+
 			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
@@ -102,6 +102,7 @@ public class FileHandler {
 				control.getCollector().setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
+
 			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -110,7 +111,7 @@ public class FileHandler {
 	}
 
 	public void fileExport() {
-        String defaultName = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+		String defaultName = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 		fileChooser.setInitialFileName(defaultName);
@@ -124,6 +125,7 @@ public class FileHandler {
 				writer.close();
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
+
 			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
