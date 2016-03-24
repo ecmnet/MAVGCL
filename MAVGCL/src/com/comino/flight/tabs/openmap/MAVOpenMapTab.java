@@ -103,7 +103,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private DataModel model;
 	private int type = 0;
 
-	private boolean map_changed = false;
 
 	private int index=0;
 
@@ -170,21 +169,12 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						m = model;
 
 
-
-					if(map_changed) {
-						if(m.gps.isFlagSet(GPS.GPS_REF_VALID)) {
-							if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
-								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-								homeLayer.updatePosition(m.gps.ref_lat, m.gps.ref_lon);
-							}
-							else
-								map.setCenter(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
-
-						}
-						canvasLayer.redraw(true);
-						map_changed = false;
-						return;
-					}
+					if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
+						//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+						homeLayer.setVisible(true);
+						homeLayer.updatePosition(m.gps.ref_lat, m.gps.ref_lon);
+					} else
+						homeLayer.setVisible(false);
 
 					if(m.gps.numsat>3) {
 
@@ -233,7 +223,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		Rectangle clip = new Rectangle();
 		mapviewpane.setClip(clip);
 		clip.heightProperty().bind(map.heightProperty());
-		clip.widthProperty().bind(map.widthProperty());
+		clip.widthProperty().bind(mapviewpane.widthProperty());
 //		//		map.setCenter(49.142899,11.577723);
 		map.setZoom(19.5);
 
@@ -320,7 +310,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				map.setZoom(zoom.getValue());
-				map_changed = true;
 			}
 		});
 
@@ -341,7 +330,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type = newValue.intValue();
-				map_changed = true;
+
 			}
 
 		});
@@ -359,12 +348,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			}
 		});
 
-
-		this.disabledProperty().addListener((v, ov, nv) -> {
-			if(ov.booleanValue() && !nv.booleanValue()) {
-				map_changed = true;
-			}
-		});
 
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
@@ -398,7 +381,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		map_changed = true;
+		canvasLayer.redraw(true);
 	}
 
 }
