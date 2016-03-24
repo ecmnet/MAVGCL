@@ -26,6 +26,8 @@ import javafx.stage.Stage;
 
 public class FileHandler {
 
+	private static final String BASEPATH = "/.MAVGCL";
+
 	private static FileHandler handler = null;
 
 	private Stage stage;
@@ -57,6 +59,12 @@ public class FileHandler {
 	public String getName() {
 		return name;
 	}
+
+
+	public String getBasePath() {
+		return System.getProperty("user.home")+BASEPATH;
+	}
+
 
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",

@@ -30,6 +30,7 @@ import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.file.FileHandler;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.MSTYPE;
 import com.comino.msp.model.collector.ModelCollectorService;
@@ -209,7 +210,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		// TODO 1.0: provide application directory
 
-		String mapFileName = System.getProperty("user.home")+"/.MAVGCLMaps";
+		String mapFileName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
