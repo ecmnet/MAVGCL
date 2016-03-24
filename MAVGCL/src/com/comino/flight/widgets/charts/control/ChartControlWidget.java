@@ -153,6 +153,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
 					clear.setDisable(true);
+					FileHandler.getInstance().clear();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
@@ -161,6 +162,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
 					clear.setDisable(true);
+					FileHandler.getInstance().clear();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
@@ -203,11 +205,12 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		clear.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {
-					scroll.setValue(0);
-					scroll.setDisable(true);
-					control.getCollector().clearModelList();
-					for(IChartControl chart : charts)
-						chart.refreshChart();
+				FileHandler.getInstance().clear();
+				scroll.setValue(0);
+				scroll.setDisable(true);
+				control.getCollector().clearModelList();
+				for(IChartControl chart : charts)
+					chart.refreshChart();
 			}
 		});
 
@@ -250,15 +253,15 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-				totalTime_sec  = newValue.intValue();
-				for(IChartControl chart : charts)
-					chart.getTimeFrameProperty().set(newValue.intValue());
+			totalTime_sec  = newValue.intValue();
+			for(IChartControl chart : charts)
+				chart.getTimeFrameProperty().set(newValue.intValue());
 
-				if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
-					scroll.setDisable(true);
-				else
-					scroll.setDisable(false);
-				scroll.setValue(0);
+			if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
+				scroll.setDisable(true);
+			else
+				scroll.setDisable(false);
+			scroll.setValue(0);
 		});
 
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {

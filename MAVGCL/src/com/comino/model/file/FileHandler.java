@@ -59,6 +59,10 @@ public class FileHandler {
 			return name;
 	}
 
+	public void clear() {
+		name = "";
+	}
+
 
 	public String getBasePath() {
 		return System.getProperty("user.home")+BASEPATH;

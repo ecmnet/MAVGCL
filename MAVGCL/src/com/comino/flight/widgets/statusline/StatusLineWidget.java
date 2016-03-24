@@ -107,13 +107,7 @@ public class StatusLineWidget extends Pane  {
 
 				elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
 
-				if(control.getCollector().getModelList().size()>0)  {
-					if(control.getCollector().isCollecting())
-						filename.setText("untitled");
-					else
-				      filename.setText(FileHandler.getInstance().getName());
-				} else
-				   filename.setText("");
+		        filename.setText(FileHandler.getInstance().getName());
 
 			}
 		});
