@@ -19,7 +19,7 @@
          <graphic>
             <Circle fx:id="isrecording" fill="#eaecee" radius="5.0" strokeWidth="0.0" />
          </graphic></ToggleButton>
-          <ToggleButton fx:id="clear" layoutX="130.0" layoutY="35.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="40.0" text="Clear" textFill="#FFFFFF" />
+          <Button fx:id="clear" layoutX="130.0" layoutY="35.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="40.0" text="Clear" textFill="#FFFFFF" />
       <ChoiceBox fx:id="trigstart" layoutX="75.0" layoutY="81.0" prefHeight="22.0" prefWidth="97.0" />
       <Label layoutX="14.0" layoutY="85.0" text="Start when" />
       <ChoiceBox fx:id="trigstop" layoutX="75.0" layoutY="133.0" prefHeight="22.0" prefWidth="97.0" />

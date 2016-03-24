@@ -33,9 +33,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
@@ -63,7 +65,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private ToggleButton recording;
 
 	@FXML
-	private ToggleButton clear;
+	private Button clear;
 
 
 	@FXML
@@ -202,16 +204,13 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 		});
 
-		clear.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			public void changed(ObservableValue<? extends Boolean> ov,
-					Boolean old_val, Boolean new_val) {
+		clear.setOnAction((ActionEvent event)-> {
 				FileHandler.getInstance().clear();
 				scroll.setValue(0);
 				scroll.setDisable(true);
 				control.getCollector().clearModelList();
 				for(IChartControl chart : charts)
 					chart.refreshChart();
-			}
 		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
