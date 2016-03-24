@@ -24,6 +24,7 @@ import java.util.List;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.MSTYPE;
+import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -59,6 +60,8 @@ public class GPSDetailsWidget extends FadePane  {
 	private List<KeyFigure> figures = null;
 
 	private DecimalFormat f = new DecimalFormat("#0.######");
+
+	private ModelCollectorService collector;
 
 
 	public GPSDetailsWidget() {
@@ -102,8 +105,16 @@ public class GPSDetailsWidget extends FadePane  {
 
 			@Override
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
+
+				DataModel m;
+
+				if(collector.getModelList().size()>0)
+					m = collector.getModelList().get(collector.getModelList().size()-1);
+				else
+					m = model;
+
 				for(KeyFigure figure : figures) {
-					figure.setValue(model);
+					figure.setValue(m);
 				}
 
 			}
@@ -119,6 +130,7 @@ public class GPSDetailsWidget extends FadePane  {
 			i++;
 		}
 
+		this.collector = control.getCollector();
 		this.model = control.getCurrentModel();
 		ExecutorService.get().execute(task);
 	}

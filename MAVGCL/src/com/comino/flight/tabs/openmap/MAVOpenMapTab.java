@@ -162,14 +162,23 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
 
+					DataModel m;
+
+					if(collector.getModelList().size()>0)
+						m = collector.getModelList().get(collector.getModelList().size()-1);
+					else
+						m = model;
+
+
+
 					if(map_changed) {
-						if(model.gps.isFlagSet(GPS.GPS_REF_VALID)) {
-							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
+						if(m.gps.isFlagSet(GPS.GPS_REF_VALID)) {
+							if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
 								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+								homeLayer.updatePosition(m.gps.ref_lat, m.gps.ref_lon);
 							}
 							else
-								map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+								map.setCenter(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 
 						}
 						canvasLayer.redraw(true);
@@ -177,15 +186,15 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						return;
 					}
 
-					if(model.gps.numsat>3) {
+					if(m.gps.numsat>3) {
 
 						if(mapfollow.selectedProperty().get()) {
-							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+							map.setCenter(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
 							canvasLayer.redraw(true);
 						} else {
 							canvasLayer.redraw(false);
 						}
-						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
+						positionLayer.updatePosition(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]),m.attitude.h);
 
 
 					}
@@ -236,6 +245,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
 		map.getLayers().add(positionLayer);
+		positionLayer.setVisible(true);
 
 
 		positionLayer.updatePosition(49.142899,11.577723);
@@ -257,7 +267,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					first = true;
 				}
 
-				positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
+		//		positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
 
 
 				if(isCollecting.get() &&
