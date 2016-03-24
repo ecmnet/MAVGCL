@@ -110,7 +110,7 @@ public class FileHandler {
 		try {
 			if(file!=null) {
 				Writer writer = new FileWriter(file);
-				Gson gson = new GsonBuilder().create();
+				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 				stage.getScene().setCursor(Cursor.WAIT);
 				gson.toJson(control.getCollector().getModelList(), writer);
 				writer.close();
