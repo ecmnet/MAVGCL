@@ -164,10 +164,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 					DataModel m;
 
-//					if(collector.getModelList().size()>0)
-//						m = collector.getModelList().get(collector.getModelList().size()-1);
-//					else
-						m = model;
+					//					if(collector.getModelList().size()>0)
+					//						m = collector.getModelList().get(collector.getModelList().size()-1);
+					//					else
+					m = model;
 
 
 					if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
@@ -225,7 +225,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		mapviewpane.setClip(clip);
 		clip.heightProperty().bind(map.heightProperty());
 		clip.widthProperty().bind(mapviewpane.widthProperty());
-//		//		map.setCenter(49.142899,11.577723);
+		//		//		map.setCenter(49.142899,11.577723);
 		map.setZoom(19.5);
 
 		canvasLayer = new CanvasLayer();
@@ -258,13 +258,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					first = true;
 				}
 
-		//		positionLayer.setVisible(model.sys.isStatus(Status.MSP_CONNECTED));
-
 
 				if(isCollecting.get() &&
 						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
 
-					//System.out.println(index+" -> "+collector.getModelList().size());
 
 					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
 					gc.setLineWidth(2);
@@ -289,20 +286,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					}
 					index = collector.getModelList().size();
 				}
-
-				if(refresh) {
-
-					//					Position p1 = map.getMapArea().getMapPosition(width-150, height-20);
-					//					Position p2 = map.getMapArea().getMapPosition(width-50, height-20);
-					//					int scale = (int)(0.5f+MSPGeoUtils.getDistance(p1.getLatitude(), p1.getLongitude(),
-					//							p2.getLatitude(), p2.getLongitude()));
-					//					gc.fillText(scale+"m", width-75, height-10);
-
-					gc.setStroke(Color.DARKGRAY);
-					gc.strokeLine(width-150, height-20, width-50,height-20);
-					gc.strokeLine(width-150, height-25, width-150,height-20);
-					gc.strokeLine(width-50, height-25, width-50,height-20);
-				}
 			}
 
 		});
@@ -311,18 +294,20 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 				map.setZoom(zoom.getValue());
+				canvasLayer.redraw(true);
 			}
 		});
 
 		zoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-		    @Override
-		    public void handle(MouseEvent click) {
-		        if (click.getClickCount() == 2) {
-		          zoom.setValue(19.5f);
-		          map.setZoom(zoom.getValue());
-		        }
-		    }
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					zoom.setValue(19.5f);
+					map.setZoom(zoom.getValue());
+					canvasLayer.redraw(true);
+				}
+			}
 		});
 
 
@@ -331,7 +316,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type = newValue.intValue();
-
+				canvasLayer.redraw(true);
 			}
 
 		});
@@ -345,6 +330,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 					else
 						map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+					canvasLayer.redraw(true);
 				}
 			}
 		});
