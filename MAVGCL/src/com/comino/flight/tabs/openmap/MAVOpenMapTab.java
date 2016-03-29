@@ -385,6 +385,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public void refreshChart() {
+		if(collector.getModelList().size()>0)
+			m = collector.getModelList().get(collector.getModelList().size()-1);
 		canvasLayer.redraw(true);
 	}
 
