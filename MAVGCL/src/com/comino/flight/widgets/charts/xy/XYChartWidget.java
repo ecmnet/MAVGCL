@@ -92,7 +92,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private final static String[] SCALES = {
-			"Auto", "0.5","1", "2", "5", "10", "50", "100"
+			"Auto", "0.5","1", "2", "5", "10", "50", "100", "500"
 	};
 
 
@@ -460,7 +460,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(!isCollecting.get()) {
 				current_x0_pt = (int)(
 						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
-						* (1 - nv.intValue() / 100f))	;
+						* nv.doubleValue())	;
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 				if(!disabledProperty().get())
@@ -624,7 +624,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		current_x0_pt = control.getCollector().getModelList().size() - frame_secs * 1000 / COLLECTOR_CYCLE;
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
-		updateGraph(true);
+
+		if(!disabledProperty().get())
+		  updateGraph(true);
 	}
 
 	private  float[] rotateRad(float posx, float posy, float heading_rad) {

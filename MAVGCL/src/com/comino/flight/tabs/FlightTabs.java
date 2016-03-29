@@ -92,7 +92,7 @@ public class FlightTabs extends Pane {
 		statusline.registerMessageWidget(messages);
 
 		//		mavworldtab.setup(recordControl,control);
-		mavmaptab.setup(flightControl,control);
+		mavmaptab.setup(flightControl.getRecordControl(),control);
 		mavinspectortab.setup(control);
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
 		xyanalysistab.setup(flightControl.getRecordControl(),control);

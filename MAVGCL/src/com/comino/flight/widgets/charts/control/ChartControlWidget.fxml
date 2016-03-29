@@ -35,6 +35,6 @@
       <Label layoutX="11.0" layoutY="237.0" text="Replay" textFill="#1414da" />
       <Separator layoutX="13.0" layoutY="250.0" prefHeight="0.0" prefWidth="161.0" />
       <Slider fx:id="scroll" blockIncrement="20.0" layoutX="13.0" prefWidth="161.0"
-					layoutY="262.0" majorTickUnit="10.0" max="100" min="0" prefHeight="13.0" value="0"/>
+					layoutY="262.0" majorTickUnit="100.0" max="1000" min="0" prefHeight="13.0" value="0"/>
    </children>
 </fx:root>

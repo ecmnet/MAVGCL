@@ -26,6 +26,8 @@ public interface IChartControl {
 	public IntegerProperty getTimeFrameProperty();
 	public DoubleProperty  getScrollProperty();
 
+	public boolean isVisible();
+
 	public void refreshChart();
 
 

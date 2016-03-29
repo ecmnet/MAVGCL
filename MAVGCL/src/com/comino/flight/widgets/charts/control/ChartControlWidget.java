@@ -18,7 +18,9 @@ package com.comino.flight.widgets.charts.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.comino.flight.control.ControlProperties;
 import com.comino.flight.widgets.status.StatusWidget;
@@ -29,6 +31,7 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -104,6 +107,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private ModelCollectorService collector;
+
+	private long scroll_tms = 0;
 
 
 	public ChartControlWidget() {
@@ -263,13 +268,17 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			scroll.setValue(0);
 		});
 
+
 		scroll.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 
-				for(IChartControl chart : charts) {
-					if(chart.getScrollProperty()!=null)
-						chart.getScrollProperty().set(new_val.intValue());
+				if((System.currentTimeMillis() - scroll_tms)>20) {
+					  scroll_tms = System.currentTimeMillis();
+						for(IChartControl chart : charts) {
+							if(chart.getScrollProperty()!=null)
+								chart.getScrollProperty().set(1d-new_val.doubleValue()/1000d);
+						}
 				}
 			}
 		});

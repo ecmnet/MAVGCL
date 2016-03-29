@@ -27,6 +27,7 @@ import org.lodgon.openmapfx.service.MapViewPane;
 
 import com.comino.flight.control.ControlProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
@@ -44,6 +45,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -110,6 +112,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
+	private DoubleProperty  scroll       = new SimpleDoubleProperty(0);
+
 
 	private ModelCollectorService collector;
 
@@ -167,8 +171,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					//					if(collector.getModelList().size()>0)
 					//						m = collector.getModelList().get(collector.getModelList().size()-1);
 					//					else
-					m = model;
 
+					if(!collector.isCollecting() && collector.getModelList().size()==0)
+						m = model;
+					else
+						m = collector.getModelList().get(collector.getModelList().size()-1);
 
 					if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
 						//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
@@ -186,8 +193,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 							canvasLayer.redraw(false);
 						}
 						positionLayer.updatePosition(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]),m.attitude.h);
-
-
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -335,16 +340,36 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			}
 		});
 
+		scroll.addListener((v, ov, nv) -> {
+			if(!isCollecting.get()) {
+
+				if(!disabledProperty().get())
+				  System.out.println(nv.doubleValue());
+
+//				current_x0_pt = (int)(
+//						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
+//						* (1 - nv.intValue() / 100f))	;
+//				if(current_x0_pt<0)
+//					current_x0_pt = 0;
+//
+//				if(!disabledProperty().get())
+//					updateGraph(true);
+
+			}
+		});
+
+
 
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
 
 
-	public MAVOpenMapTab setup(FlightControlPanel flightControl, IMAVController control) {
+	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
 
 		gpsdetails.setup(control);
+		recordControl.addChart(this);
 
 		ExecutorService.get().execute(task);
 		return this;
@@ -362,7 +387,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public DoubleProperty getScrollProperty() {
-		return null;
+		return scroll;
 	}
 
 
