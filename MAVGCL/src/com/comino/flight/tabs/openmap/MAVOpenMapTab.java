@@ -104,6 +104,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private Task<Long> task;
 
 	private DataModel model;
+	private DataModel m;
 	private int type = 0;
 
 
@@ -166,16 +167,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
 
-					DataModel m;
-
-					//					if(collector.getModelList().size()>0)
-					//						m = collector.getModelList().get(collector.getModelList().size()-1);
-					//					else
-
 					if(!collector.isCollecting() && collector.getModelList().size()==0)
 						m = model;
-					else
-						m = collector.getModelList().get(collector.getModelList().size()-1);
+//					else
+//						m = collector.getModelList().get(collector.getModelList().size()-1);
 
 					if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
 						//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
@@ -343,17 +338,14 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		scroll.addListener((v, ov, nv) -> {
 			if(!isCollecting.get()) {
 
-				if(!disabledProperty().get())
-				  System.out.println(nv.doubleValue());
+				int current_x0_pt = (int)(
+						( collector.getModelList().size()-1)
+						* nv.doubleValue())	;
 
-//				current_x0_pt = (int)(
-//						( control.getCollector().getModelList().size()  - timeFrame.get() *  1000f / COLLECTOR_CYCLE)
-//						* (1 - nv.intValue() / 100f))	;
-//				if(current_x0_pt<0)
-//					current_x0_pt = 0;
-//
-//				if(!disabledProperty().get())
-//					updateGraph(true);
+				if(current_x0_pt<0)
+					current_x0_pt = 0;
+
+				m = collector.getModelList().get(current_x0_pt);
 
 			}
 		});
