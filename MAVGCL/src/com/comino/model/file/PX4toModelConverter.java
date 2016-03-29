@@ -36,8 +36,12 @@ public class PX4toModelConverter {
 			}
 		}
 
+
+
 		list.clear();
 		DataModel model = new DataModel();
+
+		Object val=null;
 
 		try {
 
@@ -49,10 +53,28 @@ public class PX4toModelConverter {
 					for(int i=0; i< types.length;i++) {
 						if(MSTYPE.getPX4LogName(types[i]).length()>0) {
 							String px4Name = MSTYPE.getPX4LogName(types[i]);
+
 							try {
-							  MSTYPE.putValue(model, types[i], (float)data.get(px4Name));
+								val = data.get(px4Name);
+								if(val == null) {
+									System.err.println(px4Name+" not found in file");
+									continue;
+								}
+
+								if(val instanceof Double) {
+									MSTYPE.putValue(model, types[i], ((Double)val).floatValue());
+								}
+								else if(val instanceof Float) {
+									MSTYPE.putValue(model, types[i], ((Float)val).floatValue());
+								}
+								else if(val instanceof Integer) {
+									MSTYPE.putValue(model, types[i], ((Integer)val).floatValue());
+								} else {
+									MSTYPE.putValue(model, types[i], ((float)val));
+								}
+
 							} catch(Exception e) {
-								System.err.println(px4Name+" was not found");
+								   System.err.println(px4Name+":"+ val.getClass().getSimpleName()+" : "+e.getMessage());
 							}
 						}
 					}
