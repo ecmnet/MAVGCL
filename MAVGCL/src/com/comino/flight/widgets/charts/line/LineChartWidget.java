@@ -394,11 +394,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(frame > 600)
 			resolution_ms = 500;
 		else if(frame > 200)
-			resolution_ms = 300;
-		else if(frame > 30)
 			resolution_ms = 200;
-		else if(frame > 20)
+		else if(frame > 30)
 			resolution_ms = 100;
+		else if(frame > 20)
+			resolution_ms = 50;
 		else
 			resolution_ms = 50;
 
