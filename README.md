@@ -19,7 +19,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
 - Save and Load of collected data 
-- MJPEG based video streaming based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
+- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation) 
 
 **Requirements:**
 
@@ -60,9 +60,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
   ​
 
-**Screenshots**:
+**Screenshots** (from PX4Log / Online acquisition):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot1.png)
+
+
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot2.png)
 

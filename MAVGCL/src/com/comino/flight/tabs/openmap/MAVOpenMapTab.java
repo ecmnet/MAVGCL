@@ -115,7 +115,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private Task<Long> task;
 
 	private DataModel model;
-	private DataModel m;
 	private int type = 0;
 
 
@@ -178,27 +177,23 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
 				try {
 
-					if(!collector.isCollecting() && collector.getModelList().size()==0)
-						m = model;
-//					else
-//						m = collector.getModelList().get(collector.getModelList().size()-1);
 
-					if(m.gps.ref_lat!=0 && m.gps.ref_lon!=0) {
+					if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
 						//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 						homeLayer.setVisible(true);
-						homeLayer.updatePosition(m.gps.ref_lat, m.gps.ref_lon);
+						homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
 					} else
 						homeLayer.setVisible(false);
 
-					if(m.gps.numsat>3) {
+					if(model.gps.numsat>3) {
 
 						if(mapfollow.selectedProperty().get()) {
-							map.setCenter(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 							canvasLayer.redraw(true);
 						} else {
 							canvasLayer.redraw(false);
 						}
-						positionLayer.updatePosition(MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]),m.attitude.h);
+						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
 					}
 
 				} catch(Exception e) { e.printStackTrace(); }
@@ -363,7 +358,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 
-				m = collector.getModelList().get(current_x0_pt);
+				model = collector.getModelList().get(current_x0_pt);
 
 			}
 		});
@@ -371,7 +366,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		export.setOnAction((ActionEvent event)-> {
 			saveAsPng(System.getProperty("user.home"));
 		});
-
 
 
 		zoom.setTooltip(new Tooltip("Zooming"));
@@ -420,7 +414,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	@Override
 	public void refreshChart() {
 		if(collector.getModelList().size()>0)
-			m = collector.getModelList().get(collector.getModelList().size()-1);
+			model = collector.getModelList().get(collector.getModelList().size()-1);
 		canvasLayer.redraw(true);
 	}
 
