@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
 <?import com.comino.flight.widgets.gps.details.GPSDetailsWidget?>
 
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
@@ -23,6 +24,8 @@
 					mnemonicParsing="false" text="GPS Details" />
 				<CheckBox fx:id="mapfollow" layoutX="390.0" layoutY="9.0"
 					mnemonicParsing="false" text="Map follows" />
+				<Button fx:id="export" layoutX="470.0" layoutY="5.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
+
 			</children>
 		</Pane>
 	</top>

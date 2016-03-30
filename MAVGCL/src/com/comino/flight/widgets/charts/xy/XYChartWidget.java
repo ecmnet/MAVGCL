@@ -56,6 +56,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 
 
 public class XYChartWidget extends BorderPane implements IChartControl {
@@ -501,7 +502,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 	public void saveAsPng(String path) {
-		WritableImage image = linechart.snapshot(new SnapshotParameters(), null);
+		SnapshotParameters param = new SnapshotParameters();
+		param.setFill(Color.BLACK);
+		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/xychart.png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
