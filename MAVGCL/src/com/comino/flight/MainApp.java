@@ -181,7 +181,6 @@ public class MainApp extends Application {
 
 		menubar.setUseSystemMenuBar(true);
 
-
 		m_import.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {

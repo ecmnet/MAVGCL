@@ -140,6 +140,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private ModelCollectorService collector;
 
+	private IMAVController control;
+
 	public MAVOpenMapTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
 		fxmlLoader.setRoot(this);
@@ -361,17 +363,16 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						( collector.getModelList().size()-1)
 						* nv.doubleValue())	;
 
-//				int current_x0_pt = (int)(
-//						( collector.getModelList().size()  - timeFrame.get() *  1000f / collector.getCollectorInterval_ms())
-//						* nv.doubleValue() + timeFrame.get() *  1000f / collector.getCollectorInterval_ms() )	;
-
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 
-				model = collector.getModelList().get(current_x0_pt);
+				if(collector.getModelList().size()>0 && current_x0_pt > 0)
+                    model = collector.getModelList().get(current_x0_pt);
+				else
+					model = control.getCurrentModel();
 
 			}
 		});
@@ -400,6 +401,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.collector = control.getCollector();
 		this.model=control.getCurrentModel();
+		this.control = control;
 
 		gpsdetails.setup(control);
 		recordControl.addChart(this);
@@ -426,8 +428,12 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public void refreshChart() {
+
 		if(collector.getModelList().size()>0)
 			model = collector.getModelList().get(collector.getModelList().size()-1);
+		else
+			model = control.getCurrentModel();
+
 		canvasLayer.redraw(true);
 	}
 

@@ -348,7 +348,6 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					if(Math.abs(x-old_x)>20 || Math.abs(y-old_y)>20 || Math.abs(z-old_z)>20) {
 						old_x = x; old_y = y; old_z = z;
 
-
 						synchronized(this) {
 							cubeViewer.addData(x,z,y);
 						}
