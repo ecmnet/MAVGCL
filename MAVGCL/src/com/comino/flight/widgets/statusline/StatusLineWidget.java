@@ -19,7 +19,6 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-import com.comino.flight.control.ControlProperties;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;

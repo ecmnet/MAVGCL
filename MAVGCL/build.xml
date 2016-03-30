@@ -43,9 +43,7 @@
 
 	<target name="build" depends="compile">
 		<fx:jar destfile="dist/MAVGAnalysis.jar">
-			<fx:application mainClass="com.comino.flight.MainApp">
-			</fx:application>
-
+			<fx:application mainClass="com.comino.flight.MainApp"/>
 			<fileset dir="bin/">
 				<include name="**" />
 			</fileset>

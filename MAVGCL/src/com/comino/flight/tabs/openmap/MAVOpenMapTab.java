@@ -26,20 +26,15 @@ import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
-import org.lodgon.openmapfx.service.MapViewPane;
 
-import com.comino.flight.control.ControlProperties;
-import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
+import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.MSTYPE;
 import com.comino.msp.model.collector.ModelCollectorService;
-import com.comino.msp.model.segment.GPS;
-import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
@@ -254,6 +249,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
 
 			Point2D p0; Point2D p1;  boolean first = true; DataModel m;
+
 
 			@Override
 			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {

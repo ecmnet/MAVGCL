@@ -11,20 +11,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.comino.flight.control.ControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import me.drton.jmavlib.log.px4.PX4LogReader;
 import javafx.stage.Stage;
+import me.drton.jmavlib.log.px4.PX4LogReader;
 
 
 public class FileHandler {

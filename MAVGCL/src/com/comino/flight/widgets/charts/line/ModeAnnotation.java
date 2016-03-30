@@ -4,9 +4,7 @@ import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.geometry.Orientation;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 public class ModeAnnotation implements XYAnnotation {

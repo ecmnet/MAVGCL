@@ -18,7 +18,6 @@ package com.comino.flight.widgets.charts.line;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -27,12 +26,9 @@ import com.comino.flight.widgets.MovingAxis;
 import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.MSTYPE;
+import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
-import com.emxsys.chart.extension.XYAnnotation;
-import com.emxsys.chart.extension.XYAnnotations.Layer;
-import com.emxsys.chart.extension.XYFieldAnnotation;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -47,9 +43,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -57,8 +51,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.util.StringConverter;
 
 
 public class LineChartWidget extends BorderPane implements IChartControl {

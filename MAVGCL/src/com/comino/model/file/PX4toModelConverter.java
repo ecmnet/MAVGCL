@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.MSTYPE;
 
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.px4.PX4LogReader;

@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.MSTYPE;
+import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 

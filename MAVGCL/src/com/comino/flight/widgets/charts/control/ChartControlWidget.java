@@ -18,9 +18,7 @@ package com.comino.flight.widgets.charts.control;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.comino.flight.control.ControlProperties;
 import com.comino.flight.widgets.status.StatusWidget;
@@ -31,8 +29,6 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
