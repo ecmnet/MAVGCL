@@ -392,7 +392,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		this.frame_secs = frame;
 
 		if(frame > 600)
-			resolution_ms = 500;
+			resolution_ms = 1000;
 		else if(frame > 200)
 			resolution_ms = 250;
 		else if(frame > 30)

@@ -501,7 +501,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		this.frame_secs = frame;
 
 		if(frame > 600)
-			resolution_ms = 500;
+			resolution_ms = 1000;
 		else if(frame > 200)
 			resolution_ms = 250;
 		else if(frame > 30)
@@ -510,7 +510,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			resolution_ms = 100;
 		else
 			resolution_ms = 50;
-
 
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
