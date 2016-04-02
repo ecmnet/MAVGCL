@@ -211,7 +211,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(150);
+						Thread.sleep(100);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -452,14 +452,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		rotation.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-		    @Override
-		    public void handle(MouseEvent click) {
-		        if (click.getClickCount() == 2) {
-		           rotation_rad = 0;
-		           rotation.setValue(0);
-		           rot_label.setText("Rotation: [ 0°]");
-		        }
-		    }
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					rotation_rad = 0;
+					rotation.setValue(0);
+					rot_label.setText("Rotation: [ 0°]");
+				}
+			}
 		});
 
 		rotation.setTooltip(new Tooltip("Double-click to set to 0°"));
@@ -555,54 +555,57 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(!isCollecting.get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			while(current_x_pt<max_x) {
+			synchronized(this) {
+
+				while(current_x_pt<max_x) {
 
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+					if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
-					if(current_x_pt > current_x1_pt) {
+						if(current_x_pt > current_x1_pt) {
 
-						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
-						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
+							current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
+							current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
 
-						if(series1.getData().size()>0)
-							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
-					}
+							if(series1.getData().size()>0)
+								series1.getData().remove(0);
+							if(series2.getData().size()>0)
+								series2.getData().remove(0);
+						}
 
 
-					if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE) {
-						if(rotation_rad==0) {
-							series1.getData().add(new XYChart.Data<Number,Number>(
-									MSTYPE.getValue(mList.get(current_x_pt),type1_x),
-									MSTYPE.getValue(mList.get(current_x_pt),type1_y))
-									);
-						} else {
-							float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type1_x),
-									MSTYPE.getValue(mList.get(current_x_pt),type1_y),
-									rotation_rad);
-							series1.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+						if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE) {
+							if(rotation_rad==0) {
+								series1.getData().add(new XYChart.Data<Number,Number>(
+										MSTYPE.getValue(mList.get(current_x_pt),type1_x),
+										MSTYPE.getValue(mList.get(current_x_pt),type1_y))
+										);
+							} else {
+								float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type1_x),
+										MSTYPE.getValue(mList.get(current_x_pt),type1_y),
+										rotation_rad);
+								series1.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+							}
+						}
+
+						if(type2_x!=MSTYPE.MSP_NONE && type2_y!=MSTYPE.MSP_NONE) {
+							if(rotation_rad==0) {
+								series2.getData().add(new XYChart.Data<Number,Number>(
+										MSTYPE.getValue(mList.get(current_x_pt),type2_x),
+										MSTYPE.getValue(mList.get(current_x_pt),type2_y))
+										);
+							} else {
+								float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type2_x),
+										MSTYPE.getValue(mList.get(current_x_pt),type2_y),
+										rotation_rad);
+								series2.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+
+							}
 						}
 					}
 
-					if(type2_x!=MSTYPE.MSP_NONE && type2_y!=MSTYPE.MSP_NONE) {
-						if(rotation_rad==0) {
-							series2.getData().add(new XYChart.Data<Number,Number>(
-									MSTYPE.getValue(mList.get(current_x_pt),type2_x),
-									MSTYPE.getValue(mList.get(current_x_pt),type2_y))
-									);
-						} else {
-							float[] r = rotateRad(MSTYPE.getValue(mList.get(current_x_pt),type2_x),
-									MSTYPE.getValue(mList.get(current_x_pt),type2_y),
-									rotation_rad);
-							series2.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
-
-						}
-					}
+					current_x_pt++;
 				}
-
-				current_x_pt++;
 			}
 		}
 	}
@@ -646,7 +649,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = 0;
 
 		if(!disabledProperty().get())
-		  updateGraph(true);
+			updateGraph(true);
 	}
 
 	private  float[] rotateRad(float posx, float posy, float heading_rad) {
