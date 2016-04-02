@@ -4,7 +4,7 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC.
 
-**Status:** Last updated 30/03/2016 
+**Status:** Last updated 02/04/2016 
 
 **Features:**
 
@@ -19,12 +19,12 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
 - Save and Load of collected data 
-- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation) 
+- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
 
 **Requirements:**
 
 - requires Java 8 JRE
-- Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion
+- Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
 - [MAVComm library](https://github.com/ecmnet/MAVComm) (included in package)
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
