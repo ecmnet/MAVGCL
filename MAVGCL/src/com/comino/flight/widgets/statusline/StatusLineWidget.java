@@ -66,6 +66,9 @@ public class StatusLineWidget extends Pane  {
 	private Label elapsedtime;
 
 	@FXML
+	private Label sitl;
+
+	@FXML
 	private Label filename;
 
 	private Task<Long> task;
@@ -122,6 +125,9 @@ public class StatusLineWidget extends Pane  {
 					driver.setText("not connected");
 
 				elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
+
+				if(control.isSimulation())
+					sitl.setText("SITL");
 
 		        filename.setText(FileHandler.getInstance().getName());
 
