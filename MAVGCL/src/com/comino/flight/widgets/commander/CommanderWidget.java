@@ -38,6 +38,8 @@ import java.io.IOException;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_msp_command;
+import org.mavlink.messages.lquac.msg_rc_channels_override;
+import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.flight.control.ControlProperties;
 import com.comino.mav.control.IMAVController;
@@ -136,8 +138,17 @@ public class CommanderWidget extends Pane  {
 
 		left.setOnAction((ActionEvent event)-> {
 
-			msg_msp_command cmd = new msg_msp_command();
+			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(255,1);
+			cmd.usec = System.nanoTime()/1000;
+			cmd.x = 1;
 			control.sendMAVLinkMessage(cmd);
+
+
+		});
+
+		right.setOnAction((ActionEvent event)-> {
+
+			
 
 
 		});

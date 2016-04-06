@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.lquac.msg_rc_channels_override;
 
 import com.comino.flight.control.ControlProperties;
 import com.comino.flight.control.integration.AnalysisIntegration;
@@ -115,12 +116,13 @@ public class MainApp extends Application {
 		else {
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
 				if(proxy==null)
-				control = new MAVUdpController(peerAddress,14556,14550);
+				    control = new MAVUdpController(peerAddress,14556,14550, true);
 				else
-					control = new MAVUdpController(peerAddress,14558,14550);
+					control = new MAVUdpController(peerAddress,14558,14550, true);
+
 			}
 			else {
-				control = new MAVUdpController(peerAddress,14555,14550);
+				control = new MAVUdpController(peerAddress,14555,14550, false);
 			}
 		}
 
