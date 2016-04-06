@@ -38,7 +38,8 @@ public class VisionPositionSimulationUpdater implements Runnable {
 			cmd.x = (float)Math.random();
 			cmd.y = (float)Math.random();
 			cmd.z = -5;
-			control.sendMAVLinkMessage(cmd);
+			if(!control.sendMAVLinkMessage(cmd))
+				stop();
 
 
 		}

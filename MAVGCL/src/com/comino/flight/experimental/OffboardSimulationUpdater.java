@@ -18,6 +18,13 @@ public class OffboardSimulationUpdater implements Runnable {
 	}
 
 	public void start() {
+
+		if(!control.isSimulation()) {
+			System.out.println("OFFBOARD only for SITL !");
+			return;
+		}
+
+
 		System.out.println("Offboard updater started");
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
@@ -44,7 +51,8 @@ public class OffboardSimulationUpdater implements Runnable {
 			cmd.x = 1;
 			cmd.y = 1;
 			cmd.z = -2;
-			control.sendMAVLinkMessage(cmd);
+			if(!control.sendMAVLinkMessage(cmd))
+				stop();
 
 			try {
 				Thread.sleep(250);

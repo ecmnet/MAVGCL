@@ -39,9 +39,13 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_msp_command;
 import org.mavlink.messages.lquac.msg_rc_channels_override;
+import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
+import org.mavlink.messages.lquac.msg_vision_position_estimate;
 import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.flight.control.ControlProperties;
+import com.comino.flight.experimental.OffboardSimulationUpdater;
+import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -80,6 +84,9 @@ public class CommanderWidget extends Pane  {
 	private IMAVController control;
 	private DataModel model;
 
+	private VisionPositionSimulationUpdater vision = null;
+	private OffboardSimulationUpdater offboard = null;
+
 
 	public CommanderWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CommanderWidget.fxml"));
@@ -104,7 +111,7 @@ public class CommanderWidget extends Pane  {
 
 		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-			System.out.println("Rejected");
+
 		});
 
 		althold_command.setOnAction((ActionEvent event)-> {
@@ -137,18 +144,14 @@ public class CommanderWidget extends Pane  {
 		});
 
 		left.setOnAction((ActionEvent event)-> {
-
-			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(255,1);
-			cmd.usec = System.nanoTime()/1000;
-			cmd.x = 1;
-			control.sendMAVLinkMessage(cmd);
+			offboard.start();
 
 
 		});
 
 		right.setOnAction((ActionEvent event)-> {
+			offboard.stop();
 
-			
 
 
 		});
@@ -166,6 +169,14 @@ public class CommanderWidget extends Pane  {
 	public void setup(IMAVController control) {
 		this.model = control.getCurrentModel();
 		this.control = control;
+
+		if(!control.isSimulation()) {
+			left.setDisable(true);
+			right.setDisable(true);
+		}
+
+		vision = new VisionPositionSimulationUpdater(control);
+		offboard = new OffboardSimulationUpdater(control);
 	}
 
 }
