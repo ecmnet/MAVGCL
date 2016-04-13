@@ -51,7 +51,7 @@
 
             <Label layoutX="20.0" layoutY="368.0" text="Scale:" />
             <ChoiceBox fx:id="scale" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
-            <CheckBox fx:id="center_origin" layoutX="15.0" layoutY="422.0" mnemonicParsing="false" text="Center origin" />
+            <CheckBox fx:id="force_zero" layoutX="15.0" layoutY="422.0" mnemonicParsing="false" text="Origin always visible" />
             <Label fx:id="rot_label" layoutX="20.0" layoutY="452.0" text="Rotation: [ 0°]" />
             <Slider fx:id="rotation" blockIncrement="10.0" layoutX="13.0" prefWidth="126.0"
 					layoutY="467" majorTickUnit="10.0" max="90" min="-90" prefHeight="13.0" value="0"/>

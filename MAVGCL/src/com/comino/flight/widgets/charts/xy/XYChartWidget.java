@@ -159,7 +159,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private Button export;
 
 	@FXML
-	private CheckBox center_origin;
+	private CheckBox force_zero;
 
 
 
@@ -252,6 +252,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
+		xAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
+		yAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
+
 	}
 
 	@FXML
@@ -291,7 +294,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
 
-		center_origin.setDisable(true);
+//		center_origin.setDisable(true);
 
 		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
@@ -410,9 +413,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 				if(newValue.intValue()>0) {
 					float scale = Float.parseFloat(SCALES[newValue.intValue()]);
-					// TODO 1.0: Implement center origin
-					center_origin.setDisable(true);
-
+					force_zero.setDisable(true);
 					xAxis.setAutoRanging(false);
 					yAxis.setAutoRanging(false);
 
@@ -429,7 +430,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
 					}
 				} else {
-					center_origin.setDisable(true);
+					force_zero.setDisable(false);
 					xAxis.setAutoRanging(true);
 					yAxis.setAutoRanging(true);
 				}
