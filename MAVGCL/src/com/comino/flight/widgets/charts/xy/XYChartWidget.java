@@ -110,7 +110,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private final static String[] SCALES = {
-			"Auto", "0.5","1", "2", "5", "10", "50", "100", "500"
+			"Auto", "0.2", "0.5","1", "2", "5", "10", "50", "100", "200"
 	};
 
 
@@ -144,7 +144,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private ChoiceBox<String> cseries2_y;
 
 	@FXML
-	private ChoiceBox<String> scale;
+	private ChoiceBox<String> scale_select;
 
 	@FXML
 	private Slider rotation;
@@ -183,6 +183,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private DoubleProperty scroll        = new SimpleDoubleProperty(0);
 
 	private int resolution_ms 	= 50;
+	private float scale = 0;
 
 
 	private int current_x_pt=0;
@@ -284,8 +285,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
 
-		scale.getItems().addAll(SCALES);
-		scale.getSelectionModel().select(0);
+		scale_select.getItems().addAll(SCALES);
+		scale_select.getSelectionModel().select(0);
 
 		xAxis.setLowerBound(-5);
 		xAxis.setUpperBound(5);
@@ -406,37 +407,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		});
 
-		scale.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		scale_select.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-				if(newValue.intValue()>0) {
-					float scale = Float.parseFloat(SCALES[newValue.intValue()]);
-					force_zero.setDisable(true);
-					xAxis.setAutoRanging(false);
-					yAxis.setAutoRanging(false);
-
-					xAxis.setLowerBound(-scale);
-					xAxis.setUpperBound(+scale);
-					yAxis.setLowerBound(-scale);
-					yAxis.setUpperBound(+scale);
-
-					if(scale>10) {
-						xAxis.setTickUnit(10); yAxis.setTickUnit(10);
-					} else if(scale>1) {
-						xAxis.setTickUnit(1); yAxis.setTickUnit(1);
-					} else {
-						xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
-					}
-				} else {
-					force_zero.setDisable(false);
-					xAxis.setAutoRanging(true);
-					yAxis.setAutoRanging(true);
-				}
-
-				updateGraph(true);
-
+				if(newValue.intValue()>0)
+				  scale = Float.parseFloat(SCALES[newValue.intValue()]);
+				else
+				  scale = 0;
+				 setScaling(scale);
+				 updateGraph(true);
 			}
 
 		});
@@ -649,8 +629,39 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
 
+		setScaling(scale);
+
 		if(!disabledProperty().get())
 			updateGraph(true);
+	}
+
+
+	private void setScaling(float scale) {
+		if(scale>0) {
+			force_zero.setDisable(true);
+			xAxis.setAutoRanging(false);
+			yAxis.setAutoRanging(false);
+
+			xAxis.setLowerBound(-scale);
+			xAxis.setUpperBound(+scale);
+			yAxis.setLowerBound(-scale);
+			yAxis.setUpperBound(+scale);
+
+			if(scale>10) {
+				xAxis.setTickUnit(10); yAxis.setTickUnit(10);
+			} else if(scale>2) {
+				xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+			} else if(scale>0.5f) {
+				xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
+			} else {
+				xAxis.setTickUnit(0.1); yAxis.setTickUnit(0.1);
+			}
+		} else {
+			force_zero.setDisable(false);
+			xAxis.setAutoRanging(true);
+			yAxis.setAutoRanging(true);
+		}
+
 	}
 
 	private  float[] rotateRad(float posx, float posy, float heading_rad) {
