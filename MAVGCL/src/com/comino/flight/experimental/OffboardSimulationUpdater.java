@@ -48,8 +48,8 @@ public class OffboardSimulationUpdater implements Runnable {
 			msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
 			cmd.target_component = 1;
 			cmd.target_system = 1;
-			cmd.x = 1;
-			cmd.y = 1;
+			cmd.x = 5;
+			cmd.y = 5;
 			cmd.z = -2;
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
@@ -58,9 +58,11 @@ public class OffboardSimulationUpdater implements Runnable {
 				Thread.sleep(250);
 			} catch (InterruptedException e) { }
 
-
-
 		}
+
+		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
 
 
 

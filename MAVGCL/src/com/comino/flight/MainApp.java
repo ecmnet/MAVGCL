@@ -40,9 +40,9 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 
-import com.comino.flight.control.MAVPreferences;
 import com.comino.flight.control.ObservableControlProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
