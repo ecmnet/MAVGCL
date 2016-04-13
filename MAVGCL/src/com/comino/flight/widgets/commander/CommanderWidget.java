@@ -43,7 +43,7 @@ import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
 import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
-import com.comino.flight.control.ControlProperties;
+import com.comino.flight.control.ObservableControlProperties;
 import com.comino.flight.experimental.OffboardSimulationUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.mav.control.IMAVController;
@@ -103,7 +103,7 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
-		this.disableProperty().bind(ControlProperties.getInstance().getArmedProperty().not());
+		this.disableProperty().bind(ObservableControlProperties.getInstance().getArmedProperty().not());
 
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );

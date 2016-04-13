@@ -36,7 +36,7 @@ package com.comino.flight.widgets.battery;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import com.comino.flight.control.ControlProperties;
+import com.comino.flight.control.ObservableControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
@@ -139,7 +139,7 @@ public class BatteryWidget extends Pane  {
 		gauge.setDecimals(1);
 	    gauge.setTitle(unit);
 	    gauge.setUnit("Battery");
-	    gauge.disableProperty().bind(ControlProperties.getInstance().getConnectedProperty().not());
+	    gauge.disableProperty().bind(ObservableControlProperties.getInstance().getConnectedProperty().not());
 		gauge.setValueColor(Color.WHITE);
 		gauge.setTitleColor(Color.WHITE);
 		gauge.setUnitColor(Color.WHITE);
