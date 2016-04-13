@@ -1,4 +1,4 @@
-package com.comino.flight.control;
+package com.comino.flight.prefs;
 
 import java.util.prefs.Preferences;
 
