@@ -34,12 +34,14 @@
 package com.comino.flight;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.lquac.msg_rc_channels_override;
 
-import com.comino.flight.control.ControlProperties;
+import com.comino.flight.control.MAVPreferences;
+import com.comino.flight.control.ObservableControlProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -85,6 +87,9 @@ public class MainApp extends Application {
 	private MenuItem m_px4log;
 
 	@FXML
+	private MenuItem m_prefs;
+
+	@FXML
 	private MenuBar menubar;
 
 
@@ -99,7 +104,7 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
 		String peerAddress = null;
-        String proxy = null;
+		String proxy = null;
 
 		Map<String,String> args = getParameters().getNamed();
 
@@ -115,7 +120,7 @@ public class MainApp extends Application {
 		else {
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
 				if(proxy==null)
-				    control = new MAVUdpController(peerAddress,14556,14550, true);
+					control = new MAVUdpController(peerAddress,14556,14550, true);
 				else
 					control = new MAVUdpController(peerAddress,14558,14550, true);
 
@@ -126,9 +131,12 @@ public class MainApp extends Application {
 		}
 
 		MSPLogger.getInstance(control);
-		ControlProperties.getInstance(control);
+		ObservableControlProperties.getInstance(control);
 
 		FileHandler.getInstance(primaryStage,control);
+
+		System.out.println(MAVPreferences.getInstance().get("LastRun", "none"));
+		MAVPreferences.getInstance().put("LastRun", new Date().toLocaleString());
 
 		initRootLayout();
 		showMAVGCLApplication();
@@ -138,6 +146,11 @@ public class MainApp extends Application {
 	@Override
 	public void stop() throws Exception {
 		control.close();
+		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
+		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());
+		MAVPreferences.getInstance().putDouble("stage.width", primaryStage.getWidth());
+		MAVPreferences.getInstance().putDouble("stage.height", primaryStage.getHeight());
+		MAVPreferences.getInstance().flush();
 		super.stop();
 		System.exit(0);
 	}
@@ -159,13 +172,20 @@ public class MainApp extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 
-	        scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-	            @Override
-	            public void handle(KeyEvent event) {
+			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent event) {
 					if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
 						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
-	            }
-	        });
+				}
+			});
+
+			Preferences userPrefs = MAVPreferences.getInstance();
+
+			primaryStage.setX(userPrefs.getDouble("stage.x", 100));
+			primaryStage.setY(userPrefs.getDouble("stage.y", 100));
+			primaryStage.setWidth(userPrefs.getDouble("stage.width", 1220));
+			primaryStage.setHeight(userPrefs.getDouble("stage.height", 853));
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -207,6 +227,14 @@ public class MainApp extends Application {
 					FileHandler.getInstance().fileExport();
 			}
 		});
+
+		m_prefs.setDisable(true);
+		m_prefs.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("Preferences Dialog");
+			}
+		});
 	}
 
 
@@ -239,7 +267,7 @@ public class MainApp extends Application {
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
-		//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());
+			//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());
 
 
 

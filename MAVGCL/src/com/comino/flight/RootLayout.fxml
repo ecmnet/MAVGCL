@@ -36,6 +36,14 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_prefs" mnemonicParsing="false"
+							text="Preferences...">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="P"
+									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+							</accelerator>
+						</MenuItem>
 					</items>
 				</Menu>
 			</menus>
