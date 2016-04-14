@@ -43,6 +43,7 @@ import org.mavlink.messages.MAV_CMD;
 import com.comino.flight.control.ObservableControlProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -220,20 +221,14 @@ public class MainApp extends Application {
 
 		});
 
-		m_export.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		m_export.setOnAction(event -> {
 				if(control.getCollector().getModelList().size()>0)
 					FileHandler.getInstance().fileExport();
-			}
 		});
 
 		m_prefs.setDisable(true);
-		m_prefs.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				System.out.println("Preferences Dialog");
-			}
+		m_prefs.setOnAction(event -> {
+			new PreferencesDialog().show();
 		});
 	}
 
