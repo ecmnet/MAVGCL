@@ -304,8 +304,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				map.setZoom(zoom.getValue());
-				canvasLayer.redraw(true);
+				Platform.runLater(() -> {
+					map.setZoom(zoom.getValue());
+					canvasLayer.redraw(true);
+				});
 			}
 		});
 
@@ -315,8 +317,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
 					zoom.setValue(19.5f);
-					map.setZoom(zoom.getValue());
-					canvasLayer.redraw(true);
+					Platform.runLater(() -> {
+						map.setZoom(zoom.getValue());
+						canvasLayer.redraw(true);
+					});
 				}
 			}
 		});
@@ -327,7 +331,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type = newValue.intValue();
-				canvasLayer.redraw(true);
+				Platform.runLater(() -> {
+					canvasLayer.redraw(true);
+				});
 			}
 
 		});
@@ -341,7 +347,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 					else
 						map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
-					canvasLayer.redraw(true);
+					Platform.runLater(() -> {
+						canvasLayer.redraw(true);
+					});
 				}
 			}
 		});
@@ -360,7 +368,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					current_x0_pt = 0;
 
 				if(collector.getModelList().size()>0 && current_x0_pt > 0)
-                    model = collector.getModelList().get(current_x0_pt);
+					model = collector.getModelList().get(current_x0_pt);
 				else
 					model = control.getCurrentModel();
 
@@ -424,7 +432,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		else
 			model = control.getCurrentModel();
 
-		canvasLayer.redraw(true);
+		Platform.runLater(() -> {
+			canvasLayer.redraw(true);
+		});
 	}
 
 }

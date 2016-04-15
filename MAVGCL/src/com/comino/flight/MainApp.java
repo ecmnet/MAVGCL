@@ -183,10 +183,12 @@ public class MainApp extends Application {
 
 			Preferences userPrefs = MAVPreferences.getInstance();
 
-			primaryStage.setX(userPrefs.getDouble("stage.x", 100));
-			primaryStage.setY(userPrefs.getDouble("stage.y", 100));
-			primaryStage.setWidth(userPrefs.getDouble("stage.width", 1220));
-			primaryStage.setHeight(userPrefs.getDouble("stage.height", 853));
+			if(userPrefs.getDouble("stage.width", 100)>0 && userPrefs.getDouble("stage.height", 100) > 0 ) {
+				primaryStage.setX(userPrefs.getDouble("stage.x", 100));
+				primaryStage.setY(userPrefs.getDouble("stage.y", 100));
+				primaryStage.setWidth(userPrefs.getDouble("stage.width", 1220));
+				primaryStage.setHeight(userPrefs.getDouble("stage.height", 853));
+			}
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -222,8 +224,8 @@ public class MainApp extends Application {
 		});
 
 		m_export.setOnAction(event -> {
-				if(control.getCollector().getModelList().size()>0)
-					FileHandler.getInstance().fileExport();
+			if(control.getCollector().getModelList().size()>0)
+				FileHandler.getInstance().fileExport();
 		});
 
 		m_prefs.setDisable(true);
