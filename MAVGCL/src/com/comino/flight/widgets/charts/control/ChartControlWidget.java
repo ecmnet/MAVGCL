@@ -313,6 +313,15 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
+         ObservableControlProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(!newValue.booleanValue())
+					recording(false, 0);
+			}
+         });
+
 	}
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
