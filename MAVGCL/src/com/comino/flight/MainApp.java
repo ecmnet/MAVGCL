@@ -139,9 +139,6 @@ public class MainApp extends Application {
 
 		FileHandler.getInstance(primaryStage,control);
 
-		System.out.println(MAVPreferences.getInstance().get("LastRun", "none"));
-		MAVPreferences.getInstance().put("LastRun", new Date().toLocaleString());
-
 		initRootLayout();
 		showMAVGCLApplication();
 

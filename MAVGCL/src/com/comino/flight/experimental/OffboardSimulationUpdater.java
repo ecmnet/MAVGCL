@@ -48,9 +48,9 @@ public class OffboardSimulationUpdater implements Runnable {
 			msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
 			cmd.target_component = 1;
 			cmd.target_system = 1;
-			cmd.x = 5;
-			cmd.y = 5;
-			cmd.z = -2;
+			cmd.x =  5;
+			cmd.y =  5;
+			cmd.z = -13;
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
