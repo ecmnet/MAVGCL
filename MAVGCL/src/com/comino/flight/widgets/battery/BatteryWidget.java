@@ -36,7 +36,7 @@ package com.comino.flight.widgets.battery;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import com.comino.flight.control.ObservableControlProperties;
+import com.comino.flight.observables.ObservableControlProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;

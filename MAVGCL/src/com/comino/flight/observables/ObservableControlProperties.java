@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.control;
+package com.comino.flight.observables;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;

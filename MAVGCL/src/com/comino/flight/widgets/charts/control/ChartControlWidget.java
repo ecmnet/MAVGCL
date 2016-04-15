@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comino.flight.control.ObservableControlProperties;
+import com.comino.flight.observables.ObservableControlProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;

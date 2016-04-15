@@ -40,7 +40,8 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 
-import com.comino.flight.control.ObservableControlProperties;
+import com.comino.flight.control.SITLController;
+import com.comino.flight.observables.ObservableControlProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
@@ -120,10 +121,12 @@ public class MainApp extends Application {
 		}
 		else {
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
+
 				if(proxy==null)
 					control = new MAVUdpController(peerAddress,14556,14550, true);
 				else
 					control = new MAVUdpController(peerAddress,14558,14550, true);
+				new SITLController(control);
 
 			}
 			else {
@@ -258,6 +261,7 @@ public class MainApp extends Application {
 
 			if(!control.isConnected())
 				control.connect();
+
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
