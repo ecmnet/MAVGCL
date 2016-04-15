@@ -47,6 +47,7 @@ import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -149,7 +150,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 
 					if(isCollecting.get() && control.isConnected())
-						updateValue(control.getCollector().getModelList().size());
+						Platform.runLater(() -> {
+							updateGraph(false);
+						});
 
 
 
@@ -158,13 +161,6 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 			}
 		};
 
-		task.valueProperty().addListener(new ChangeListener<Integer>() {
-			@Override
-			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-				updateGraph(false);
-
-			}
-		});
 
 		setOnMousePressed((MouseEvent me) -> {
 			mousePosX = me.getSceneX();
@@ -349,9 +345,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					if(Math.abs(x-old_x)>20 || Math.abs(y-old_y)>20 || Math.abs(z-old_z)>20) {
 						old_x = x; old_y = y; old_z = z;
 
-						synchronized(this) {
-							cubeViewer.addData(x,z,y);
-						}
+						cubeViewer.addData(x,z,y);
 
 						if(current_x_pt > current_x1_pt) {
 
@@ -387,7 +381,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
 		if(!disabledProperty().get())
-		  updateGraph(true);
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 	}
 
 }
