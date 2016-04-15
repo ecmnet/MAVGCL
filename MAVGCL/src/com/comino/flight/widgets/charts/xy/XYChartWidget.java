@@ -227,22 +227,22 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 
-						if(!isCollecting.get() && control.getCollector().isCollecting()) {
-							synchronized(this) {
-								series1.getData().clear();
-								series2.getData().clear();
-							}
-							current_x_pt = 0;
-							scroll.setValue(0);
-							updateGraph(true);
+					if(!isCollecting.get() && control.getCollector().isCollecting()) {
+						synchronized(this) {
+							series1.getData().clear();
+							series2.getData().clear();
 						}
+						current_x_pt = 0;
+						scroll.setValue(0);
+						updateGraph(true);
+					}
 
-						isCollecting.set(control.getCollector().isCollecting());
+					isCollecting.set(control.getCollector().isCollecting());
 
-						if(isCollecting.get() && control.isConnected())
-							Platform.runLater(() -> {
-								updateGraph(false);
-							});
+					if(isCollecting.get() && control.isConnected())
+						Platform.runLater(() -> {
+							updateGraph(false);
+						});
 				}
 				return control.getCollector().getModelList().size();
 			}
@@ -493,21 +493,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
 		this.frame_secs = frame;
-
-		if(frame > 600)
-			resolution_ms = 1000;
-		else if(frame > 200)
-			resolution_ms = 250;
-		else if(frame > 30)
-			resolution_ms = 200;
-		else if(frame > 20)
-			resolution_ms = 100;
-		else
-			resolution_ms = 50;
-
-		xAxis.setTickUnit(resolution_ms/20);
-		xAxis.setMinorTickCount(10);
-
+		resolution_ms = 50;
 		scroll.setValue(0);
 		refreshChart();
 	}
@@ -641,7 +627,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = 0;
 
 		setScaling(scale);
-
 		if(!disabledProperty().get())
 			Platform.runLater(() -> {
 				updateGraph(true);
