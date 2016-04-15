@@ -492,6 +492,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
+		if(frame > 60)
+			frame = 60;
 		this.frame_secs = frame;
 		resolution_ms = 50;
 		scroll.setValue(0);
