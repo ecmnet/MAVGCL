@@ -132,10 +132,12 @@ public class CommanderWidget extends Pane  {
 
 		poshold_command.setOnAction((ActionEvent event)-> {
 
-			if(!model.sys.isStatus(Status.MSP_MODE_POSITION))
+			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
+
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+			}
 			else
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,

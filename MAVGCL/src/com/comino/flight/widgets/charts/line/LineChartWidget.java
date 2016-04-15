@@ -36,6 +36,7 @@ package com.comino.flight.widgets.charts.line;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -47,6 +48,7 @@ import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -142,13 +144,15 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private ModeAnnotation altHoldAnnotation;
 
 
-	private XYChart.Series<Number,Number> series1;
-	private XYChart.Series<Number,Number> series2;
-	private XYChart.Series<Number,Number> series3;
+	private volatile XYChart.Series<Number,Number> series1;
+	private volatile XYChart.Series<Number,Number> series2;
+	private volatile XYChart.Series<Number,Number> series3;
 
 	private Task<Integer> task;
 
 	private IMAVController control;
+
+	private List<DataModel> mList = null;
 
 	private MSTYPE type1=MSTYPE.MSP_NONE;
 	private MSTYPE type2=MSTYPE.MSP_NONE;
@@ -186,14 +190,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		task = new Task<Integer>() {
 
-
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(66);
 					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
+						continue;
 					}
 
 					if(isDisabled()) {
@@ -204,36 +207,31 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						break;
 					}
 
-
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
 							series3.getData().clear();
+							current_x_pt = 0; current_x0_pt=0;
+							setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 						}
-						current_x_pt = 0; current_x0_pt=0;
-						setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 						scroll.setValue(0);
 						updateGraph(true);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
 
-					if((isCollecting.get() && control.isConnected()))
-						updateValue(control.getCollector().getModelList().size());
 
+					if((isCollecting.get() && control.isConnected()))
+						Platform.runLater(() -> {
+							updateGraph(false);
+						});
+					//						updateValue(control.getCollector().getModelList().size());
 
 				}
 				return control.getCollector().getModelList().size();
 			}
 		};
-
-		task.valueProperty().addListener(new ChangeListener<Integer>() {
-			@Override
-			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-				updateGraph(false);
-			}
-		});
 
 	}
 
@@ -278,7 +276,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type1 = MSTYPE.values()[newValue.intValue()];
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
-				updateGraph(true);
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 
 			}
 
@@ -291,7 +291,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type2 = MSTYPE.values()[newValue.intValue()];
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
-				updateGraph(true);
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 
 			}
 
@@ -304,7 +306,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				type3 = MSTYPE.values()[newValue.intValue()];
 				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
 				linechart.setLegendVisible(true);
-				updateGraph(true);
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 
 			}
 
@@ -326,10 +330,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
 
-
 				linechart.setLegendVisible(true);
 
-				updateGraph(true);
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 			}
 
 		});
@@ -355,7 +360,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					current_x0_pt = 0;
 
 				if(!disabledProperty().get())
-					updateGraph(true);
+					Platform.runLater(() -> {
+						updateGraph(true);
+					});
 
 			}
 		});
@@ -368,10 +375,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				refreshChart();
 			}
 		});
-
-
-
-
 	}
 
 
@@ -427,9 +430,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
-
-			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
+
+
+		setXAxisBounds(current_x0_pt,current_x1_pt);
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
@@ -458,12 +462,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
 
+
 					if(type1!=MSTYPE.MSP_NONE)
 						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
 					if(type2!=MSTYPE.MSP_NONE)
 						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
 					if(type3!=MSTYPE.MSP_NONE)
 						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
+
 				}
 
 
@@ -472,7 +478,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private synchronized void setXAxisBounds(int lower_pt, int upper_pt) {
+	private  void setXAxisBounds(int lower_pt, int upper_pt) {
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
@@ -495,6 +501,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		setXResolution(30);
 
 		ExecutorService.get().execute(task);
+
 		return this;
 	}
 
@@ -519,7 +526,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
 		if(!disabledProperty().get())
-		  updateGraph(true);
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 	}
 
 

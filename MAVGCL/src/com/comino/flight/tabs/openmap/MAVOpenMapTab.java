@@ -56,6 +56,7 @@ import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -179,43 +180,32 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					}
 					isCollecting.set(collector.isCollecting());
 
-					updateValue(System.currentTimeMillis());
+					Platform.runLater(() -> {
+						try {
+							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
+								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+								homeLayer.setVisible(true);
+								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+							} else
+								homeLayer.setVisible(false);
+
+							if(model.gps.numsat>3) {
+
+								if(mapfollow.selectedProperty().get()) {
+									map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+									canvasLayer.redraw(true);
+								} else {
+									canvasLayer.redraw(false);
+								}
+								positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
+							}
+
+						} catch(Exception e) { e.printStackTrace(); }
+					});
 				}
 				return System.currentTimeMillis();
 			}
 		};
-
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-				try {
-
-
-					if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
-						//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-						homeLayer.setVisible(true);
-						homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
-					} else
-						homeLayer.setVisible(false);
-
-					if(model.gps.numsat>3) {
-
-						if(mapfollow.selectedProperty().get()) {
-							map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
-							canvasLayer.redraw(true);
-						} else {
-							canvasLayer.redraw(false);
-						}
-						positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
-					}
-
-				} catch(Exception e) { e.printStackTrace(); }
-
-			}
-		});
-
-
 	}
 
 

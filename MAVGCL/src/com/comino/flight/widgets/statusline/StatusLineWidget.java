@@ -42,6 +42,7 @@ import com.comino.model.file.FileHandler;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -64,6 +65,9 @@ public class StatusLineWidget extends Pane  {
 
 	@FXML
 	private Label elapsedtime;
+
+	@FXML
+	private Label currenttime;
 
 	@FXML
 	private Label sitl;
@@ -107,37 +111,30 @@ public class StatusLineWidget extends Pane  {
 					if (isCancelled()) {
 						break;
 					}
-					updateValue(System.currentTimeMillis());
+					Platform.runLater(() -> {
+
+						if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
+							driver.setText(control.getCurrentModel().sys.getSensorString());
+							if(control.getMessageList().size()>0)
+								messages.setText(control.getMessageList().remove(0).msg);
+						} else
+							driver.setText("not connected");
+
+						elapsedtime.setText("Total time: "+fo.format(control.getCurrentModel().tms/1000));
+
+						if(control.isSimulation())
+							sitl.setText("SITL");
+
+				        filename.setText(FileHandler.getInstance().getName());
+
+
+					});
 				}
 				return System.currentTimeMillis();
 			}
 		};
 
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-				if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
-					driver.setText(control.getCurrentModel().sys.getSensorString());
-					if(control.getMessageList().size()>0)
-						messages.setText(control.getMessageList().remove(0).msg);
-				} else
-					driver.setText("not connected");
-
-				elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
-
-				if(control.isSimulation())
-					sitl.setText("SITL");
-
-		        filename.setText(FileHandler.getInstance().getName());
-
-			}
-		});
-
 		messages.setTooltip(new Tooltip("Click to show messagee"));
-
-
-
 	}
 
 

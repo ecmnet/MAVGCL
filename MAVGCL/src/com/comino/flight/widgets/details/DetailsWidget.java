@@ -44,6 +44,7 @@ import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -140,21 +141,15 @@ public class DetailsWidget extends FadePane  {
 					if (isCancelled()) {
 						break;
 					}
-					updateValue(System.currentTimeMillis());
+					Platform.runLater(() -> {
+						for(KeyFigure figure : figures) {
+							figure.setValue(model);
+						}
+					});
 				}
 				return model.battery.tms;
 			}
 		};
-
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-				for(KeyFigure figure : figures) {
-					figure.setValue(model);
-				}
-			}
-		});
 
 	}
 

@@ -43,6 +43,7 @@ import com.comino.msp.utils.ExecutorService;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -102,22 +103,16 @@ public class BatteryWidget extends Pane  {
 					if (isCancelled()) {
 						break;
 					}
-					updateValue(System.currentTimeMillis());
+
+					Platform.runLater(() -> {
+					g_voltage.setValue(model.battery.b0);
+					g_capacity.setValue(model.battery.p);
+					});
 				}
 				return model.battery.tms;
 			}
 		};
 
-		task.valueProperty().addListener(new ChangeListener<Long>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Long> observableValue, Long oldData, Long newData) {
-
-				g_voltage.setValue(model.battery.b0);
-				g_capacity.setValue(model.battery.p);
-
-			}
-		});
 
 	}
 

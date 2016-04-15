@@ -241,7 +241,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				trigdelay.setDisable(old_val);
 				trigstop.setDisable(old_val);
 				trigstart.setDisable(old_val);
-				recording.setDisable(new_val);
+			//	recording.setDisable(new_val);
 
 			}
 		});
@@ -375,10 +375,15 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 		} else {
 			switch(triggerStopMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);         break;
-			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay); 		break;
-			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE),triggerDelay); break;
-			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay); break;
+			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);
+			  break;
+			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			  break;
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE)
+					                        | newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
+			  break;
+			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
+			  break;
 			}
 
 		}
