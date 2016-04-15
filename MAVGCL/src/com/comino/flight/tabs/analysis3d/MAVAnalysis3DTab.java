@@ -168,6 +168,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 			mouseOldX = me.getSceneX();
 			mouseOldY = me.getSceneY();
 		});
+		
 		setOnMouseDragged((MouseEvent me) -> {
 			mouseOldX = mousePosX;
 			mouseOldY = mousePosY;
