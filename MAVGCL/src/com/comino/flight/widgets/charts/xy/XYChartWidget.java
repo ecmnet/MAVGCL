@@ -454,6 +454,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			setXResolution(nv.intValue());
 		});
 
+		force_zero.setOnAction((ActionEvent event)-> {
+			refreshChart();
+		});
+
 
 		scroll.addListener((v, ov, nv) -> {
 			if(!isCollecting.get()) {
