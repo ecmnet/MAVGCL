@@ -14,9 +14,10 @@
 	<center>
 		<TreeTableView fx:id="treetableview" layoutX="14.0" layoutY="14.0">
 			<columns>
-				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="320.0" text="Message" />
-				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
+				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="170.0" text="Group" />
+				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Parameter" />
 				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0" sortable="false" text="Value" />
+				<TreeTableColumn fx:id="desc_col" editable="false" prefWidth="300.0" sortable="false" text="Description" />
 			</columns>
 		</TreeTableView>
 	</center>

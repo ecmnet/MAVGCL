@@ -78,12 +78,17 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	@FXML
 	private TreeTableColumn<Parameter, String>  value_col;
 
+	@FXML
+	private TreeTableColumn<Parameter, String>  desc_col;
 
-	final ObservableMap<String,ParameterGroup> groups = FXCollections.observableHashMap();
+
+	private final ObservableMap<String,ParameterGroup> groups = FXCollections.observableHashMap();
 
 	private Task<Boolean> task;
 
 	private IMAVController control;
+
+	private ParameterFactMetaData metadata = null;
 
 
 	public MAVParametersTab() {
@@ -96,6 +101,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 			throw new RuntimeException(exception);
 		}
+
+		metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
 
 		task = new Task<Boolean>() {
 
@@ -112,7 +119,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private void initialize() {
 
 
-		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter("",""));
+		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter("","",""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
@@ -121,6 +128,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
 		});
 
+		message_col.setSortType(SortType.ASCENDING);
+
 		variable_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
@@ -128,7 +137,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			}
 		});
 
-		variable_col.setSortType(SortType.ASCENDING);
+
 
 		value_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
 			@Override
@@ -138,6 +147,15 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		});
 
 		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
+
+		desc_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
+				return param.getValue().getValue().getDescription();
+			}
+		});
+
+		desc_col.setStyle("-fx-padding: 0 0 0 30");
 
 
 	}
@@ -165,25 +183,33 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	}
 
 	private synchronized void parseMessageString(msg_param_value msg) {
-		String group_name = "Default group";
+
+		if(msg.param_id[0]=='_')
+			return;
+
+		ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
+		if(attributes == null) {
+			attributes = new ParameterAttributes(msg.getParam_id(),"(DefaultGroup)");
+		}
 
 		TreeItem<Parameter> p = null;
 		ParameterGroup group = null;
 		Parameter parameter = null;
 
-		group = groups.get(group_name);
+		group = groups.get(attributes.group_name);
 		if(group == null) {
-			group = new ParameterGroup(group_name);
-			groups.put(group_name, group);
-			p = new TreeItem<Parameter>(new Parameter(group_name,""));
+			p = new TreeItem<Parameter>(new Parameter(attributes.group_name,"",""));
 			p.setExpanded(false);
 			treetableview.getRoot().getChildren().add(p);
-		} else
-			p = treetableview.getRoot().getChildren().get(0);
+			group = new ParameterGroup(attributes.group_name, p);
+			groups.put(attributes.group_name, group);
+		} else {
+			p = group.getTreeItem();
+		}
 
 		parameter = group.get(msg.getParam_id());
 		if(parameter == null) {
-			parameter = new Parameter(msg.getParam_id(), Float.toString(msg.param_value));
+			parameter = new Parameter(msg.getParam_id(), String.valueOf(msg.param_value),attributes.description);
 			group.getData().put(msg.getParam_id(), parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
@@ -195,11 +221,9 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 
 	private void getParameterList() {
-		System.out.println("Parameter read");
 		msg_param_request_list msg = new msg_param_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
-		//       msg.param_index = 1;
 		control.sendMAVLinkMessage(msg);
 
 	}
@@ -207,15 +231,21 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 	class ParameterGroup {
 
+		private TreeItem<Parameter> p = null;
 		private StringProperty name = new SimpleStringProperty();
 		private Map<String,Parameter> data = FXCollections.observableHashMap();
 
-		public ParameterGroup(String name) {
+		public ParameterGroup(String name,TreeItem<Parameter> p ) {
+			this.p = p;
 			this.name.set(name);
 		}
 
 		public Map<String,Parameter> getData() {
 			return data;
+		}
+
+		public TreeItem<Parameter> getTreeItem() {
+			return p;
 		}
 
 		public StringProperty strProperty() {
@@ -236,17 +266,23 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		long tms = 0;
 
 		StringProperty str = new SimpleStringProperty();
+		StringProperty desc = new SimpleStringProperty();
 		StringProperty value = new SimpleStringProperty();
 
-		public Parameter(String s, String n) {
+		public Parameter(String s, String n, String d) {
 			str.set(s);
 			value.set(n);
+			desc.set(d);
 		}
 
 
 
 		public StringProperty getValue() {
 			return value;
+		}
+
+		public StringProperty getDescription() {
+			return desc;
 		}
 
 		public void setValue(String no) {
