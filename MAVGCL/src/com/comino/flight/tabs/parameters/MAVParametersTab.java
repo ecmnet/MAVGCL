@@ -142,7 +142,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		value_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
-				return param.getValue().getValue().getValue();
+				return param.getValue().getValue().getParamValue();
 			}
 		});
 
@@ -277,7 +277,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 
 
-		public StringProperty getValue() {
+		public StringProperty getParamValue() {
 			return value;
 		}
 
