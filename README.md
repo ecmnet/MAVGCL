@@ -4,9 +4,9 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC.
 
-**Status:** Last updated 15/04/2016 
+**Status:** Last updated 16/04/2016 
 
-A lot of performance and stability fixes.
+Display device parameters. Performance and stability fixes.
 
 **Features:**
 
@@ -77,3 +77,5 @@ Experimental 3D Analysis (relative Local position in NED only):
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot4.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot5.png)
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot6.png)
