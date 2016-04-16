@@ -266,6 +266,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries2.getItems().addAll(PRESET_NAMES);
 
 		linechart.setLegendVisible(false);
+		linechart.prefWidthProperty().bind(heightProperty().multiply(1.05f));
+		linechart.prefHeightProperty().bind(heightProperty());
 
 		cseries1_x.getItems().addAll(MSTYPE.getList());
 		cseries1_y.getItems().addAll(MSTYPE.getList());
