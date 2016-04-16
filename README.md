@@ -8,6 +8,8 @@ Any comments and contributions are welcome.
 
 **Status:** Last updated 16/04/2016 
 
+Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
+
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
@@ -32,7 +34,7 @@ Any comments and contributions are welcome.
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
-- Clone repository
+- Clone repository (for stable use https://github.com/ecmnet/MAVGCL/releases)
 - Goto main directory  `cd MAVGCL-master/MAVGCL`
 - Run `ant all`
 

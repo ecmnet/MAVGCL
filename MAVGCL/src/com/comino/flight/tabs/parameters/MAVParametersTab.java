@@ -209,13 +209,19 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		parameter = group.get(msg.getParam_id());
 		if(parameter == null) {
-			parameter = new Parameter(msg.getParam_id(), String.valueOf(msg.param_value),attributes.description);
+			if(attributes.decimals>0)
+			  parameter = new Parameter(msg.getParam_id(), String.valueOf(msg.param_value),attributes.description);
+			else
+			  parameter = new Parameter(msg.getParam_id(), String.valueOf((int)msg.param_value),attributes.description);
 			group.getData().put(msg.getParam_id(), parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
 
 		} else {
-			parameter.setValue(Float.toString(msg.param_value));
+			if(attributes.decimals>0)
+			  parameter.setValue(Float.toString(msg.param_value));
+			else
+			  parameter.setValue(String.valueOf((int)msg.param_value));
 		}
 	}
 
