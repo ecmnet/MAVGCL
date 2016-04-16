@@ -137,26 +137,17 @@ public class StatusLineWidget extends Pane  {
 		messages.setTooltip(new Tooltip("Click to show messagee"));
 	}
 
-
-
 	public void setup(IMAVController control) {
 
 		this.control = control;
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
 		ExecutorService.get().execute(task);
-
 	}
-
-
 
 	public void registerMessageWidget(MessagesWidget m) {
 		messages.setOnMousePressed(value -> {
 			m.showMessages();
-
 		});
-
 	}
-
-
 
 }

@@ -4,15 +4,15 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="30.0" maxHeight="30.0" prefWidth="1600.0" styleClass="status"
+<fx:root prefHeight="30.0" maxHeight="30.0" styleClass="status"
     type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label  fx:id="version" layoutX="1100.0" layoutY="10.0" prefHeight="18.0" prefWidth="80.0" text="" />
-      <Label  fx:id="driver" layoutX="200.0" layoutY="10.0" prefHeight="18.0" prefWidth="180.0" text="no sensors available" />
+      <Label  fx:id="driver" layoutX="200.0" layoutY="10.0" prefHeight="18.0" prefWidth="150.0" text="no sensors available" />
       <Label  styleClass="message" fx:id="messages" layoutX="400.0" layoutY="10.0" prefHeight="18.0" prefWidth="300" text="" />
       <Label  fx:id="elapsedtime" layoutX="700.0" layoutY="10.0" prefHeight="18.0" prefWidth="130.0" text="" />
       <Label  fx:id="currenttime" layoutX="850.0" layoutY="10.0" prefHeight="18.0" prefWidth="130.0" text="" />
       <Label  fx:id="filename" layoutX="1000.0" layoutY="10.0" prefHeight="18.0" prefWidth="100.0" text="" />
-      <Label  fx:id="sitl" layoutX="350.0" layoutY="10.0" prefHeight="18.0" prefWidth="283.0" text="" />
+      <Label  fx:id="sitl" layoutX="1200.0" layoutY="10.0" prefHeight="18.0" prefWidth="283.0" text="" />
    </children>
 </fx:root>
