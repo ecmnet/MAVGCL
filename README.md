@@ -4,9 +4,9 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC.
 
-**Status:** Last updated 16/04/2016 
+Any comments and contributions are welcome.
 
-Display device parameters. Performance and stability fixes.
+**Status:** Last updated 16/04/2016 
 
 **Features:**
 
@@ -17,6 +17,7 @@ Display device parameters. Performance and stability fixes.
 - Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
+- Display of parameter set
 - Map viewer of global position and raw gps data with option to record path (cached)
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
