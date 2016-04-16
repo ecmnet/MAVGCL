@@ -135,13 +135,14 @@
 	 -fx-text-fill: #F0F0F0;
 }
 
-.button:pressed {
-	-fx-background-color: #505050;
-}
-
 .button:hover {
 	-fx-background-color: #505058;
 }
+
+.button:pressed {
+    -fx-background-color: #405058;
+}
+
 
 .check-box {
 	-fx-background-color: #303030;
@@ -164,24 +165,24 @@
 	 -fx-background-color: #606060;
 }
 
-.toggle-button:pressed {
-	-fx-background-color: #505050;
-}
-
 .toggle-button:hover {
 	-fx-background-color: #505058;
+}
+
+.toggle-button:pressed {
+	-fx-background-color: #505050;
 }
 
 .emergency   {
 	 -fx-background-color: #600000;
 }
 
-#emergency:pressed   {
-	-fx-background-color: #500000;
-}
-
 .emergency:hover  {
 	-fx-background-color: #A00000;
+}
+
+.emergency:pressed   {
+	-fx-background-color: #500000;
 }
 
 .check-box *.box {
