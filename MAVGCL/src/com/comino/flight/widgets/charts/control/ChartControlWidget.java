@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.comino.flight.observables.ObservableControlProperties;
+import com.comino.flight.observables.DeviceStateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -211,7 +211,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		totaltime.getSelectionModel().select(1);
 
 
-		recording.disableProperty().bind(ObservableControlProperties.getInstance().getConnectedProperty().not());
+		recording.disableProperty().bind(DeviceStateProperties.getInstance().getConnectedProperty().not());
 		recording.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov,
 					Boolean old_val, Boolean new_val) {
@@ -313,7 +313,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-         ObservableControlProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
+         DeviceStateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

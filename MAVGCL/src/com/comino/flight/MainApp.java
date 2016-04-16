@@ -41,7 +41,7 @@ import java.util.prefs.Preferences;
 import org.mavlink.messages.MAV_CMD;
 
 import com.comino.flight.control.SITLController;
-import com.comino.flight.observables.ObservableControlProperties;
+import com.comino.flight.observables.DeviceStateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
@@ -135,7 +135,7 @@ public class MainApp extends Application {
 		}
 
 		MSPLogger.getInstance(control);
-		ObservableControlProperties.getInstance(control);
+		DeviceStateProperties.getInstance(control);
 
 		FileHandler.getInstance(primaryStage,control);
 

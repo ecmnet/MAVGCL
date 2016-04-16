@@ -40,6 +40,7 @@ import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
+import com.comino.flight.tabs.parameters.MAVParametersTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.camera.CameraWidget;
@@ -82,6 +83,9 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVAnalysis3DTab mavanalysis3Dtab;
 
+	@FXML
+	private MAVParametersTab mavparameterstab;
+
 
 	private List<Node> tabs = new ArrayList<Node>();
 
@@ -92,8 +96,10 @@ public class FlightTabs extends Pane {
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
 		tabs.add(mavanalysis3Dtab);
-		tabs.add(mavinspectortab);
 		tabs.add(mavmaptab);
+		tabs.add(mavinspectortab);
+		tabs.add(mavparameterstab);
+
 		//		tabs.add(mavworldtab);
 
 	}
@@ -130,12 +136,14 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
 		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
+		mavparameterstab.setup(control);
 
 		xtanalysistab.setDisable(false);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
 		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
+		mavparameterstab.setDisable(true);
 		//		mavworldtab.setDisable(true);
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
