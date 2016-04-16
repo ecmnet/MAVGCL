@@ -241,7 +241,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				trigdelay.setDisable(old_val);
 				trigstop.setDisable(old_val);
 				trigstart.setDisable(old_val);
-			//	recording.setDisable(new_val);
 
 			}
 		});
@@ -363,7 +362,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@Override
 	public void update(Status oldStat, Status newStat) {
-		if(!modetrigger)
+		if(!modetrigger || ( newStat.isEqual(oldStat)))
 			return;
 
 		if(!control.getCollector().isCollecting()) {
