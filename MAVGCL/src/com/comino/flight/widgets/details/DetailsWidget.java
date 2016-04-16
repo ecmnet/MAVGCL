@@ -35,6 +35,7 @@ package com.comino.flight.widgets.details;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +111,9 @@ public class DetailsWidget extends FadePane  {
 
 	public DetailsWidget() {
 
+		DecimalFormatSymbols f_symbols = new DecimalFormatSymbols();
+		f_symbols.setNaN("-");
+		f.setDecimalFormatSymbols(f_symbols);
 
 		figures = new ArrayList<KeyFigure>();
 
