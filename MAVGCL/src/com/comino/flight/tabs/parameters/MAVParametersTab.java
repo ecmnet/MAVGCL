@@ -76,6 +76,9 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private TreeTableColumn<Parameter, Parameter>  value_col;
 
 	@FXML
+	private TreeTableColumn<Parameter, Parameter>  unit_col;
+
+	@FXML
 	private TreeTableColumn<Parameter, Parameter>  desc_col;
 
 
@@ -201,6 +204,26 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			};
 		});
 
+		unit_col.setCellValueFactory(cellData -> {
+			if(cellData.getValue().isLeaf())
+				return cellData.getValue().getValue();
+			else
+				return new Parameter("");
+		});
+
+		unit_col.setCellFactory(column -> {
+			return new TreeTableCell<Parameter, Parameter>() {
+
+				@Override
+				protected void updateItem(Parameter item, boolean empty) {
+					if(!empty && item.att!=null) {
+						setText(item.getUnit());
+					} else
+						setText("");
+				}
+			};
+		});
+
 
 		desc_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
@@ -222,10 +245,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				}
 			};
 		});
-
-
-
-		desc_col.setStyle("-fx-padding: 0 0 0 30");
 
 	}
 
@@ -366,6 +385,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		public String getDescription() {
 			return att.description;
+		}
+
+		public String getUnit() {
+			return att.unit;
 		}
 
 		public boolean isDefault() {
