@@ -11,8 +11,8 @@
       <Label  fx:id="driver" layoutX="200.0" layoutY="10.0" prefHeight="18.0" prefWidth="150.0" text="no sensors available" />
       <Label  styleClass="message" fx:id="messages" layoutX="400.0" layoutY="10.0" prefHeight="18.0" prefWidth="300" text="" />
       <Label  fx:id="elapsedtime" layoutX="700.0" layoutY="10.0" prefHeight="18.0" prefWidth="90.0" text="" />
-      <Label  fx:id="currenttime" layoutX="790.0" layoutY="10.0" prefHeight="18.0" prefWidth="100.0" text="" />
+      <Label  fx:id="currenttime" layoutX="790.0" layoutY="10.0" prefHeight="18.0" prefWidth="90.0" text="" />
       <Label  fx:id="filename" layoutX="1000.0" layoutY="10.0" prefHeight="18.0" prefWidth="300.0" text="" />
-      <Label  fx:id="sitl" layoutX="950.0" layoutY="10.0" prefHeight="18.0" prefWidth="283.0" text="" />
+      <Label  fx:id="sitl" layoutX="950.0" layoutY="10.0" prefHeight="18.0" prefWidth="50.0" text="" />
    </children>
 </fx:root>

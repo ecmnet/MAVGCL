@@ -127,12 +127,12 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 							driver.setText("not connected");
 
 
-						elapsedtime.setText("Total: "+fo.format(control.getCurrentModel().tms/1000));
+						elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
 						int current_x0_pt = scroll.intValue();
 						if(control.getCollector().getModelList().size()>0 && !control.getCollector().isCollecting())
-							currenttime.setText("Current: "+fo.format(control.getCollector().getModelList().get(current_x0_pt).tms/1000));
+							currenttime.setText(fo.format(control.getCollector().getModelList().get(current_x0_pt).tms/1000));
 						else
-							currenttime.setText("Current: -");
+							currenttime.setText("");
 
 						if(control.isSimulation())
 							sitl.setText("SITL");
