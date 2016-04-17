@@ -358,12 +358,14 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		scroll.addListener((v, ov, nv) -> {
 			if(!isCollecting.get()) {
 
-				int current_x0_pt = (int)(
-						( collector.getModelList().size()-1)
-						- nv.intValue());
+//				int current_x0_pt = (int)(
+//						( collector.getModelList().size()-1)
+//						- nv.intValue());
+//
+//				if(current_x0_pt<0)
+//					current_x0_pt = 0;
 
-				if(current_x0_pt<0)
-					current_x0_pt = 0;
+				int current_x0_pt = nv.intValue() + timeFrame.intValue() * 1000 / control.getCollector().getCollectorInterval_ms() - 1;
 
 				if(collector.getModelList().size()>0 && current_x0_pt > 0)
 					model = collector.getModelList().get(current_x0_pt);
