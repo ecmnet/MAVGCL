@@ -122,6 +122,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private ModelCollectorService collector;
 
 	private long scroll_tms = 0;
+	private int current_x0_pt = 0;
 
 
 	public ChartControlWidget() {
@@ -155,6 +156,13 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 						break;
 					}
 
+					current_x0_pt = (int)(
+							( control.getCollector().getModelList().size()
+									- totalTime_sec *  1000f
+									/ control.getCollector().getCollectorInterval_ms()));
+
+					if(current_x0_pt<0)
+						current_x0_pt = 0;
 
 					updateValue(control.getCollector().getMode());
 				}
@@ -186,6 +194,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
+
+
 			}
 		});
 
@@ -218,17 +228,22 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				recording(new_val, 0);
 				if(new_val.booleanValue()) {
 					scroll.setValue(0);
+					current_x0_pt = 0;
 				}
 			}
 		});
 
 		clear.setOnAction((ActionEvent event)-> {
-				FileHandler.getInstance().clear();
-				scroll.setValue(0);
-				scroll.setDisable(true);
-				control.getCollector().clearModelList();
-				for(IChartControl chart : charts)
-					chart.refreshChart();
+			FileHandler.getInstance().clear();
+			scroll.setValue(0);
+			current_x0_pt = 0;
+			scroll.setDisable(true);
+			control.getCollector().clearModelList();
+			for(IChartControl chart : charts) {
+				if(chart.getScrollProperty()!=null)
+					chart.getScrollProperty().set(current_x0_pt);
+				chart.refreshChart();
+			}
 		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
@@ -270,13 +285,21 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
-			for(IChartControl chart : charts)
-				chart.getTimeFrameProperty().set(newValue.intValue());
+
+			calculateX0Time(1);
+
+			for(IChartControl chart : charts) {
+				if(chart.getTimeFrameProperty()!=null)
+					chart.getTimeFrameProperty().set(newValue.intValue());
+				if(chart.getScrollProperty()!=null)
+					chart.getScrollProperty().set(current_x0_pt);
+			}
 
 			if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
+			current_x0_pt = 0;
 			scroll.setValue(0);
 		});
 
@@ -285,12 +308,15 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 
+				calculateX0Time(1d-new_val.doubleValue()/1000d);
+
+
 				if((System.currentTimeMillis() - scroll_tms)>20) {
-					  scroll_tms = System.currentTimeMillis();
-						for(IChartControl chart : charts) {
-							if(chart.getScrollProperty()!=null)
-								chart.getScrollProperty().set(1d-new_val.doubleValue()/1000d);
-						}
+					scroll_tms = System.currentTimeMillis();
+					for(IChartControl chart : charts) {
+						if(chart.getScrollProperty()!=null)
+							chart.getScrollProperty().set(current_x0_pt);
+					}
 				}
 			}
 		});
@@ -302,24 +328,25 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					scroll.setValue(100);
+					scroll.setValue(1000);
+					current_x0_pt = 0;
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(100);
+							chart.getScrollProperty().set(current_x0_pt);
 					}
 				}
 			}
 		});
 
 
-         DeviceStateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
+		DeviceStateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue.booleanValue())
 					recording(false, 0);
 			}
-         });
+		});
 
 	}
 
@@ -337,8 +364,17 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	}
 
 	public void refreshCharts() {
-		for(IChartControl chart : charts)
+		calculateX0Time(1);
+
+		if(collector.getModelList().size() > 0)
+			control.getCurrentModel().set(collector.getModelList().get(collector.getModelList().size()-1));
+
+		for(IChartControl chart : charts) {
+			if(chart.getScrollProperty()!=null)
+				chart.getScrollProperty().set(current_x0_pt);
 			chart.refreshChart();
+		}
+
 		if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
 			scroll.setDisable(false);
 
@@ -347,6 +383,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private void recording(boolean start, int delay) {
 		if(start) {
+			current_x0_pt = 0;
 			control.getMessageList().clear();
 			control.getCollector().start();
 			scroll.setDisable(true);
@@ -356,8 +393,23 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
 				scroll.setDisable(false);
 		}
-		for(IChartControl chart : charts)
+		for(IChartControl chart : charts) {
+			if(chart.getScrollProperty()!=null)
+				chart.getScrollProperty().set(current_x0_pt);
 			chart.refreshChart();
+		}
+	}
+
+
+	private void calculateX0Time(double factor) {
+		current_x0_pt = (int)(
+				( control.getCollector().getModelList().size()
+						- totalTime_sec *  1000f
+						/ control.getCollector().getCollectorInterval_ms())
+				* factor);
+
+		if(current_x0_pt<0)
+			current_x0_pt = 0;
 	}
 
 	@Override
@@ -370,23 +422,23 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
 			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE)
-					                       && !newStat.isStatus(Status.MSP_LANDED),0); break;
+					&& !newStat.isStatus(Status.MSP_LANDED),0); break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)
-					                       && !newStat.isStatus(Status.MSP_LANDED),0); break;
+					&& !newStat.isStatus(Status.MSP_LANDED),0); break;
 			}
 		} else {
 			switch(triggerStopMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);
-			  break;
+			break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
-			  break;
+			break;
 			case TRIG_ALTHOLD:		recording((newStat.isStatus(Status.MSP_MODE_ALTITUDE)
-					                        | newStat.isStatus(Status.MSP_MODE_POSITION))
-					                        && !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
-			  break;
+					| newStat.isStatus(Status.MSP_MODE_POSITION))
+					&& !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)
-					                        && !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
-			  break;
+					&& !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			break;
 			}
 
 		}

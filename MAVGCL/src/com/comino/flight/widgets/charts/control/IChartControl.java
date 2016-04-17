@@ -24,7 +24,7 @@ public interface IChartControl {
 
 	public BooleanProperty getCollectingProperty();
 	public IntegerProperty getTimeFrameProperty();
-	public DoubleProperty  getScrollProperty();
+	public IntegerProperty  getScrollProperty();
 
 	public boolean isVisible();
 

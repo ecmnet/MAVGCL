@@ -136,7 +136,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
-	private DoubleProperty  scroll       = new SimpleDoubleProperty(0);
+	private IntegerProperty  scroll       = new SimpleIntegerProperty(0);
 
 
 	private ModelCollectorService collector;
@@ -354,15 +354,13 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			}
 		});
 
+
 		scroll.addListener((v, ov, nv) -> {
 			if(!isCollecting.get()) {
 
 				int current_x0_pt = (int)(
 						( collector.getModelList().size()-1)
-						* nv.doubleValue())	;
-
-				if(current_x0_pt<0)
-					current_x0_pt = 0;
+						- nv.intValue());
 
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
@@ -421,7 +419,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 	@Override
-	public DoubleProperty getScrollProperty() {
+	public IntegerProperty getScrollProperty() {
 		return scroll;
 	}
 

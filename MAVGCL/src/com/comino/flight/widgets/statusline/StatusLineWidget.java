@@ -36,6 +36,8 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
+import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -43,6 +45,9 @@ import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -52,7 +57,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
-public class StatusLineWidget extends Pane  {
+public class StatusLineWidget extends Pane implements IChartControl  {
 
 	@FXML
 	private Label version;
@@ -80,6 +85,7 @@ public class StatusLineWidget extends Pane  {
 
 
 	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss.SSS");
+	private IntegerProperty scroll       = new SimpleIntegerProperty(0);
 
 
 	public StatusLineWidget() {
@@ -120,12 +126,18 @@ public class StatusLineWidget extends Pane  {
 						} else
 							driver.setText("not connected");
 
-						elapsedtime.setText("Total time: "+fo.format(control.getCurrentModel().tms/1000));
+
+						elapsedtime.setText("Total: "+fo.format(control.getCurrentModel().tms/1000));
+						int current_x0_pt = scroll.intValue();
+						if(control.getCollector().getModelList().size()>0 && !control.getCollector().isCollecting())
+							currenttime.setText("Current: "+fo.format(control.getCollector().getModelList().get(current_x0_pt).tms/1000));
+						else
+							currenttime.setText("Current: -");
 
 						if(control.isSimulation())
 							sitl.setText("SITL");
 
-				        filename.setText(FileHandler.getInstance().getName());
+						filename.setText(FileHandler.getInstance().getName());
 
 
 					});
@@ -137,17 +149,40 @@ public class StatusLineWidget extends Pane  {
 		messages.setTooltip(new Tooltip("Click to show messagee"));
 	}
 
-	public void setup(IMAVController control) {
-
+	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
+		chartControlWidget.addChart(this);
 		this.control = control;
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
 		ExecutorService.get().execute(task);
+	}
+
+	@Override
+	public IntegerProperty getScrollProperty() {
+		return scroll;
 	}
 
 	public void registerMessageWidget(MessagesWidget m) {
 		messages.setOnMousePressed(value -> {
 			m.showMessages();
 		});
+	}
+
+	@Override
+	public BooleanProperty getCollectingProperty() {
+
+		return null;
+	}
+
+	@Override
+	public IntegerProperty getTimeFrameProperty() {
+
+		return null;
+	}
+
+	@Override
+	public void refreshChart() {
+
+
 	}
 
 }

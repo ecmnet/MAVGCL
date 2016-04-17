@@ -251,12 +251,12 @@ public class MainApp extends Application {
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
 
-			statusline.setup(control);
 
 			controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
-
+			
+			statusline.setup(controlpanel.getRecordControl(),control);
 
 			if(!control.isConnected())
 				control.connect();
