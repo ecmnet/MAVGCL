@@ -156,13 +156,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 						break;
 					}
 
-					current_x0_pt = (int)(
-							( control.getCollector().getModelList().size()
-									- totalTime_sec *  1000f
-									/ control.getCollector().getCollectorInterval_ms()));
-
-					if(current_x0_pt<0)
-						current_x0_pt = 0;
+					calculateX0Time(1);
 
 					updateValue(control.getCollector().getMode());
 				}
@@ -194,8 +188,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
-
-
 			}
 		});
 
@@ -310,7 +302,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 				calculateX0Time(1d-new_val.doubleValue()/1000d);
 
-
 				if((System.currentTimeMillis() - scroll_tms)>20) {
 					scroll_tms = System.currentTimeMillis();
 					for(IChartControl chart : charts) {
@@ -322,7 +313,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 		scroll.setDisable(true);
-
 		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -377,39 +367,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
 			scroll.setDisable(false);
-
-	}
-
-
-	private void recording(boolean start, int delay) {
-		if(start) {
-			current_x0_pt = 0;
-			control.getMessageList().clear();
-			control.getCollector().start();
-			scroll.setDisable(true);
-		}
-		else {
-			control.getCollector().stop(delay);
-			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
-				scroll.setDisable(false);
-		}
-		for(IChartControl chart : charts) {
-			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(current_x0_pt);
-			chart.refreshChart();
-		}
-	}
-
-
-	private void calculateX0Time(double factor) {
-		current_x0_pt = (int)(
-				( control.getCollector().getModelList().size()
-						- totalTime_sec *  1000f
-						/ control.getCollector().getCollectorInterval_ms())
-				* factor);
-
-		if(current_x0_pt<0)
-			current_x0_pt = 0;
 	}
 
 	@Override
@@ -442,6 +399,38 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			}
 
 		}
+	}
+
+
+	private void recording(boolean start, int delay) {
+		if(start) {
+			current_x0_pt = 0;
+			control.getMessageList().clear();
+			control.getCollector().start();
+			scroll.setDisable(true);
+		}
+		else {
+			control.getCollector().stop(delay);
+			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
+				scroll.setDisable(false);
+		}
+		for(IChartControl chart : charts) {
+			if(chart.getScrollProperty()!=null)
+				chart.getScrollProperty().set(current_x0_pt);
+			chart.refreshChart();
+		}
+	}
+
+
+	private void calculateX0Time(double factor) {
+		current_x0_pt = (int)(
+				( control.getCollector().getModelList().size()
+						- totalTime_sec *  1000f
+						/ control.getCollector().getCollectorInterval_ms())
+				* factor);
+
+		if(current_x0_pt<0)
+			current_x0_pt = 0;
 	}
 
 }
