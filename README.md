@@ -2,11 +2,11 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC.
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. 
 
 Any comments and contributions are welcome.
 
-**Status:** Last updated 16/04/2016 
+**Status:** Last updated 17/04/2016 
 
 Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 
@@ -19,7 +19,7 @@ Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 - Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- Display of parameter set
+- Display of current parameter set
 - Map viewer of global position and raw gps data with option to record path (cached)
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
@@ -28,7 +28,7 @@ Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 
 **Requirements:**
 
-- requires Java 8 JRE
+- requires **Java 8** JRE
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
 - [MAVComm library](https://github.com/ecmnet/MAVComm) (included in package)
 
