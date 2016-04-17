@@ -115,6 +115,13 @@ public class FlightTabs extends Pane {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
 
+		xtanalysistab.setDisable(true);
+		xyanalysistab.setDisable(true);
+		mavinspectortab.setDisable(true);
+		mavanalysis3Dtab.setDisable(true);
+		mavmaptab.setDisable(true);
+		mavparameterstab.setDisable(true);
+
 		if(camera!=null) {
 			if(control.getConnectedAddress()!=null && !control.getConnectedAddress().contains("127.0.0") )
 			  camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
@@ -138,18 +145,14 @@ public class FlightTabs extends Pane {
 		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
 		mavparameterstab.setup(control);
 
-		xtanalysistab.setDisable(false);
-		xyanalysistab.setDisable(true);
-		mavinspectortab.setDisable(true);
-		mavanalysis3Dtab.setDisable(true);
-		mavmaptab.setDisable(true);
-		mavparameterstab.setDisable(true);
 		//		mavworldtab.setDisable(true);
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 			for(int i =0; i<tabs.size();i++)
 				tabs.get(i).setDisable(i!=nv.intValue());
 		});
+
+		xtanalysistab.setDisable(false);
 	}
 
 

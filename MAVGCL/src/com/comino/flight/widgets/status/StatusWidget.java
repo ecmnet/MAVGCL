@@ -40,6 +40,7 @@ import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -110,11 +111,13 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);
+		this.details.selectedProperty().set(true);
 		update(model.sys,model.sys);
 	}
 
 	@Override
 	public void update(Status arg0, Status newStat) {
+
 
 		if(newStat.isStatus(Status.MSP_CONNECTED))
 			connected.setFill(Color.DARKORANGE);

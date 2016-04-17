@@ -105,8 +105,8 @@ public class BatteryWidget extends Pane  {
 					}
 
 					Platform.runLater(() -> {
-					g_voltage.setValue(model.battery.b0);
-					g_capacity.setValue(model.battery.p);
+						g_voltage.setValue(model.battery.b0);
+						g_capacity.setValue(model.battery.p);
 					});
 				}
 				return model.battery.tms;
@@ -119,10 +119,10 @@ public class BatteryWidget extends Pane  {
 
 	@FXML
 	private void initialize() {
-         setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
-         g_voltage.setDecimals(1);
-         setupGauge(g_capacity,0,100,"%",Color.DEEPSKYBLUE);
-         g_capacity.setDecimals(0);
+		setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
+		g_voltage.setDecimals(1);
+		setupGauge(g_capacity,0,100,"%",Color.DEEPSKYBLUE);
+		g_capacity.setDecimals(0);
 	}
 
 
@@ -132,9 +132,9 @@ public class BatteryWidget extends Pane  {
 		gauge.setMinValue(min);
 		gauge.setMaxValue(max);
 		gauge.setDecimals(1);
-	    gauge.setTitle(unit);
-	    gauge.setUnit("Battery");
-	    gauge.disableProperty().bind(DeviceStateProperties.getInstance().getConnectedProperty().not());
+		gauge.setTitle(unit);
+		gauge.setUnit("Battery");
+		gauge.disableProperty().bind(DeviceStateProperties.getInstance().getConnectedProperty().not());
 		gauge.setValueColor(Color.WHITE);
 		gauge.setTitleColor(Color.WHITE);
 		gauge.setUnitColor(Color.WHITE);

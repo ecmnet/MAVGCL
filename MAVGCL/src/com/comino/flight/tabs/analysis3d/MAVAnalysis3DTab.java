@@ -168,7 +168,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 			mouseOldX = me.getSceneX();
 			mouseOldY = me.getSceneY();
 		});
-		
+
 		setOnMouseDragged((MouseEvent me) -> {
 			mouseOldX = mousePosX;
 			mouseOldY = mousePosY;
@@ -210,6 +210,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 		Group sceneRoot = new Group();
 		SubScene scene = new SubScene(sceneRoot, sceneWidth, sceneHeight, true, SceneAntialiasing.BALANCED);
 		scene.setFill(Color.BLACK);
+
 		//Setup camera and scatterplot cubeviewer
 		camera = new PerspectiveCamera(true);
 		cubeViewer = new FlightCubeViewer(2000,100, false);
@@ -253,7 +254,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 				if(current_x0_pt<0)
 					current_x0_pt = 0;
 				if(!disabledProperty().get())
-					updateGraph(true);
+					Platform.runLater(() -> {
+					    updateGraph(true);
+					});
 			}
 		});
 
@@ -273,7 +276,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	public MAVAnalysis3DTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.control = control;
 		recordControl.addChart(this);
-		ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 		return this;
 	}
 

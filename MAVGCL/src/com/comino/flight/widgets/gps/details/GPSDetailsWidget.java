@@ -135,7 +135,10 @@ public class GPSDetailsWidget extends FadePane  {
 
 		this.collector = control.getCollector();
 		this.model = control.getCurrentModel();
-		ExecutorService.get().execute(task);
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 
 	private class KeyFigure {

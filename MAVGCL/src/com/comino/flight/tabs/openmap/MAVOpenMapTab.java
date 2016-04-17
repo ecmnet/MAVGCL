@@ -404,7 +404,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		gpsdetails.setup(control);
 		recordControl.addChart(this);
 
-		ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 		return this;
 	}
 

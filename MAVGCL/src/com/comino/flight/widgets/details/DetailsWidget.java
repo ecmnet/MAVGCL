@@ -99,8 +99,8 @@ public class DetailsWidget extends FadePane  {
 
 	};
 
-    @FXML
-    private GridPane grid;
+	@FXML
+	private GridPane grid;
 
 	private Task<Long> task;
 	private DataModel model;
@@ -133,7 +133,7 @@ public class DetailsWidget extends FadePane  {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(200);
+						Thread.sleep(250);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}
@@ -145,6 +145,7 @@ public class DetailsWidget extends FadePane  {
 					if (isCancelled()) {
 						break;
 					}
+
 					Platform.runLater(() -> {
 						for(KeyFigure figure : figures) {
 							figure.setValue(model);
@@ -168,6 +169,7 @@ public class DetailsWidget extends FadePane  {
 
 		this.model = control.getCurrentModel();
 		ExecutorService.get().execute(task);
+
 	}
 
 	private class KeyFigure {
@@ -179,19 +181,19 @@ public class DetailsWidget extends FadePane  {
 			if(k==MSTYPE.MSP_NONE) {
 				grid.add(new Label(),0,row);
 			} else {
-			Label l1 = new Label(k.getDescription()+" :");
-			l1.setPrefWidth(85); l1.setPrefHeight(19);
-			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(45); value.setAlignment(Pos.CENTER_RIGHT);
-			grid.add(value, 1, row);
-			Label l3 = new Label(" "+k.getUnit()); l3.setPrefWidth(35);
-			grid.add(l3, 2, row);
+				Label l1 = new Label(k.getDescription()+" :");
+				l1.setPrefWidth(85); l1.setPrefHeight(19);
+				grid.add(l1, 0, row);
+				value = new Label("-"); value.setPrefWidth(45); value.setAlignment(Pos.CENTER_RIGHT);
+				grid.add(value, 1, row);
+				Label l3 = new Label(" "+k.getUnit()); l3.setPrefWidth(35);
+				grid.add(l3, 2, row);
 			}
 		}
 
 		public void setValue(DataModel model) {
 			if(type!=MSTYPE.MSP_NONE)
-			  value.setText(f.format(MSTYPE.getValue(model, type)));
+				value.setText(f.format(MSTYPE.getValue(model, type)));
 		}
 	}
 

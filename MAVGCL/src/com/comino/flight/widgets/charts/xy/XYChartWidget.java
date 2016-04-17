@@ -605,7 +605,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		yAxis.setLowerBound(-1);
 		yAxis.setUpperBound(+1);
 
-		ExecutorService.get().execute(task);
+		//ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 		return this;
 	}
 

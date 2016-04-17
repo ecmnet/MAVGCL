@@ -194,7 +194,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(66);
+						Thread.sleep(75);
 					} catch (InterruptedException iex) {
 						continue;
 					}
@@ -336,6 +336,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					updateGraph(true);
 				});
 			}
+
 
 		});
 
@@ -500,7 +501,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		setXResolution(30);
 
-		ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 
 		return this;
 	}
@@ -525,13 +528,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		current_x0_pt = control.getCollector().getModelList().size() - frame_secs * 1000 / COLLECTOR_CYCLE;
 		if(current_x0_pt < 0)
 			current_x0_pt = 0;
+
 		if(!disabledProperty().get())
 			Platform.runLater(() -> {
 				updateGraph(true);
 			});
 	}
-
-
-
 
 }
