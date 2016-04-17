@@ -34,6 +34,7 @@
 package com.comino.flight.tabs.parameters;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeSortMode;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.SortType;
@@ -119,8 +121,19 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
 
+		message_col.setSortType(SortType.ASCENDING);
 		message_col.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
+		});
+
+		message_col.setComparator(new Comparator<Parameter>() {
+
+			@Override
+			public int compare(Parameter o1, Parameter o2) {
+				if(o1.group!=null && o2.group!=null)
+				  return o1.group.compareTo(o2.group);
+				return 0;
+			}
 		});
 
 		message_col.setCellFactory(column -> {
@@ -177,18 +190,17 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 						else
 							setText(String.valueOf(item.getParamValue()));
 						if(item.isDefault()) {
-							setStyle("-fx-text-fill: #F0F0F0;");
+							setStyle("-fx-text-fill: #F0F0F0; -fx-alignment: CENTER-RIGHT;");
 						}
 						else {
-							setStyle("-fx-text-fill: #F0D080;");
+							setStyle("-fx-text-fill: #F0D080; -fx-alignment: CENTER-RIGHT;");
 						}
 					} else
 						setText("");
 				}
 			};
 		});
-		value_col.setEditable(true);
-		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
+
 
 		desc_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
