@@ -1,7 +1,7 @@
 .root{
     -fx-font-size: 8.0pt;
     -fx-background-color: #303030;
-    -fx-text-fill: #FFFFFF;
+
 }
 
 .tab-pane {
@@ -251,7 +251,7 @@
 
 .tree-table-view {
   -fx-background-color: #303030;
-  -fx-text-fill: #F0F0F0;
+
 }
 
 .menu-bar {

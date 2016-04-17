@@ -269,6 +269,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					first = true;
 				}
 
+				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
 
 				if(isCollecting.get() &&
 						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {

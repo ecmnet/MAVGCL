@@ -47,6 +47,8 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.application.Platform;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -56,12 +58,16 @@ import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Skin;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 
 public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
@@ -70,19 +76,19 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private TreeTableView<Parameter> treetableview;
 
 	@FXML
-	private TreeTableColumn<Parameter, String> message_col;
+	private TreeTableColumn<Parameter, Parameter> message_col;
 
 	@FXML
-	private TreeTableColumn<Parameter, String> variable_col;
+	private TreeTableColumn<Parameter, Parameter> variable_col;
 
 	@FXML
-	private TreeTableColumn<Parameter, String>  value_col;
+	private TreeTableColumn<Parameter, Parameter>  value_col;
 
 	@FXML
-	private TreeTableColumn<Parameter, String>  desc_col;
+	private TreeTableColumn<Parameter, Parameter>  desc_col;
 
 
-	private final ObservableMap<String,ParameterGroup> groups = FXCollections.observableHashMap();
+	private final Map<String,ParameterGroup> groups = new HashMap<String,ParameterGroup>();;
 
 	private Task<Boolean> task;
 
@@ -119,41 +125,101 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private void initialize() {
 
 
-		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter("","",""));
+		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter(""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
 
-		message_col.setCellValueFactory((param) -> {
-			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
+		message_col.setCellValueFactory(cellData -> {
+			     return cellData.getValue().getValue();
+		});
+
+		message_col.setCellFactory(column -> {
+		    return new TreeTableCell<Parameter, Parameter>() {
+
+				@Override
+				protected void updateItem(Parameter item, boolean empty) {
+					if(!empty) {
+					   setText(item.getGroupName());
+					} else
+						 setText("");
+				}
+		    };
 		});
 
 		message_col.setSortType(SortType.ASCENDING);
 
-		variable_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
-				return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
-			}
+		variable_col.setCellValueFactory(cellData -> {
+			if(cellData.getValue().isLeaf())
+			     return cellData.getValue().getValue();
+			 else
+			   return new Parameter("");
+		});
+
+		variable_col.setCellFactory(column -> {
+		    return new TreeTableCell<Parameter, Parameter>() {
+
+				@Override
+				protected void updateItem(Parameter item, boolean empty) {
+					if(!empty && item.att!=null) {
+					   setText(item.getName());
+					} else
+						 setText("");
+				}
+		    };
 		});
 
 
 
-		value_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
-				return param.getValue().getValue().getParamValue();
-			}
+		value_col.setCellValueFactory(cellData -> {
+			if(cellData.getValue().isLeaf())
+			     return cellData.getValue().getValue();
+			 else
+			   return new Parameter("");
 		});
 
+
+		value_col.setCellFactory(column -> {
+		    return new TreeTableCell<Parameter, Parameter>() {
+
+				@Override
+				protected void updateItem(Parameter item, boolean empty) {
+					if(!empty && item.att!=null) {
+					   setText(String.valueOf(item.getParamValue()));
+					   if(item.isDefault())
+					     setStyle("-fx-text-fill: #F0F0F0;");
+					   else
+						   setStyle("-fx-text-fill: #F0D080;");
+					} else
+						 setText("");
+				}
+		    };
+		});
+		value_col.setEditable(true);
 		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
 
-		desc_col.setCellValueFactory(new Callback<CellDataFeatures<Parameter, String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Parameter, String> param) {
-				return param.getValue().getValue().getDescription();
-			}
+		desc_col.setCellValueFactory(cellData -> {
+			if(cellData.getValue().isLeaf())
+			     return cellData.getValue().getValue();
+			 else
+			   return new Parameter("");
 		});
+
+
+		desc_col.setCellFactory(column -> {
+		    return new TreeTableCell<Parameter, Parameter>() {
+
+				@Override
+				protected void updateItem(Parameter item, boolean empty) {
+					if(!empty && item.att!=null) {
+					   setText(item.getDescription());
+					} else
+						 setText("");
+				}
+		    };
+		});
+
+
 
 		desc_col.setStyle("-fx-padding: 0 0 0 30");
 
@@ -198,7 +264,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		group = groups.get(attributes.group_name);
 		if(group == null) {
-			p = new TreeItem<Parameter>(new Parameter(attributes.group_name,"",""));
+			p = new TreeItem<Parameter>(new Parameter(attributes.group_name));
 			p.setExpanded(false);
 			treetableview.getRoot().getChildren().add(p);
 			group = new ParameterGroup(attributes.group_name, p);
@@ -209,19 +275,13 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		parameter = group.get(msg.getParam_id());
 		if(parameter == null) {
-			if(attributes.decimals>0)
-			  parameter = new Parameter(msg.getParam_id(), String.valueOf(msg.param_value),attributes.description);
-			else
-			  parameter = new Parameter(msg.getParam_id(), String.valueOf((int)msg.param_value),attributes.description);
-			group.getData().put(msg.getParam_id(), parameter);
+			parameter = new Parameter(attributes, msg.param_value);
+			group.getData().put(msg.getParam_id(), new Parameter(attributes, msg.param_value));
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
 
 		} else {
-			if(attributes.decimals>0)
-			  parameter.setValue(Float.toString(msg.param_value));
-			else
-			  parameter.setValue(String.valueOf((int)msg.param_value));
+			parameter.setValue(msg.param_value);
 		}
 	}
 
@@ -239,7 +299,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		private TreeItem<Parameter> p = null;
 		private StringProperty name = new SimpleStringProperty();
-		private Map<String,Parameter> data = FXCollections.observableHashMap();
+		private Map<String,Parameter> data = new HashMap<String,Parameter>();
 
 		public ParameterGroup(String name,TreeItem<Parameter> p ) {
 			this.p = p;
@@ -267,47 +327,51 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		}
 	}
 
-	class Parameter {
 
-		long tms = 0;
 
-		StringProperty str = new SimpleStringProperty();
-		StringProperty desc = new SimpleStringProperty();
-		StringProperty value = new SimpleStringProperty();
+	class Parameter extends ObjectBinding<Parameter> {
 
-		public Parameter(String s, String n, String d) {
-			str.set(s);
-			value.set(n);
-			desc.set(d);
+		private ParameterAttributes att = null;
+		private String group = null;
+		private float value = 0;
+
+		public Parameter(ParameterAttributes att, float value) {
+			this.att = att;
+			this.value = value;
 		}
 
+		public Parameter(String group) {
+			this.group = group;
+		}
 
-
-		public StringProperty getParamValue() {
+		public float getParamValue() {
 			return value;
 		}
 
-		public StringProperty getDescription() {
-			return desc;
+
+		public void setValue(float no) {
+				value = no;
 		}
 
-		public void setValue(String no) {
-			if((System.currentTimeMillis() - tms)> 100) {
-				tms = System.currentTimeMillis();
-				this.value.set(no);
-			}
+		public String getName() {
+			return att.name;
 		}
 
-		public String getStr() {
-			return str.get();
+		public String getGroupName() {
+			return group;
 		}
 
-		public StringProperty strProperty() {
-			return str;
+		public String getDescription() {
+			return att.description;
 		}
 
-		public void setStr(String str) {
-			this.str.set(str);
+		public boolean isDefault() {
+			return value == att.default_val;
+		}
+
+		@Override
+		protected Parameter computeValue() {
+			return this;
 		}
 	}
 
