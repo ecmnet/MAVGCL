@@ -185,11 +185,16 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
 					if(!empty && item.att!=null) {
-					   setText(String.valueOf(item.getParamValue()));
-					   if(item.isDefault())
+						if(item.att.type.contains("INT"))
+							setText(String.valueOf((int)item.getParamValue()));
+						else
+							setText(String.valueOf(item.getParamValue()));
+					   if(item.isDefault()) {
 					     setStyle("-fx-text-fill: #F0F0F0;");
-					   else
+					   }
+					   else {
 						   setStyle("-fx-text-fill: #F0D080;");
+					   }
 					} else
 						 setText("");
 				}
