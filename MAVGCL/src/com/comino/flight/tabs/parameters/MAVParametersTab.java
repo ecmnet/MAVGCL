@@ -37,38 +37,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mavlink.messages.MAVLinkMessage;
 import org.mavlink.messages.lquac.msg_param_request_list;
-import org.mavlink.messages.lquac.msg_param_request_read;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.DeviceStateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
-import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Skin;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.util.Callback;
 
 public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
@@ -131,56 +120,54 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		root.setExpanded(true);
 
 		message_col.setCellValueFactory(cellData -> {
-			     return cellData.getValue().getValue();
+			return cellData.getValue().getValue();
 		});
 
 		message_col.setCellFactory(column -> {
-		    return new TreeTableCell<Parameter, Parameter>() {
+			return new TreeTableCell<Parameter, Parameter>() {
 
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
 					if(!empty) {
-					   setText(item.getGroupName());
+						setText(item.getGroupName());
+						setStyle("-fx-text-fill: #D0D0F0;");
 					} else
-						 setText("");
+						setText("");
 				}
-		    };
+			};
 		});
-
-		message_col.setSortType(SortType.ASCENDING);
 
 		variable_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
-			     return cellData.getValue().getValue();
-			 else
-			   return new Parameter("");
+				return cellData.getValue().getValue();
+			else
+				return new Parameter("");
 		});
 
 		variable_col.setCellFactory(column -> {
-		    return new TreeTableCell<Parameter, Parameter>() {
+			return new TreeTableCell<Parameter, Parameter>() {
 
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
 					if(!empty && item.att!=null) {
-					   setText(item.getName());
+						setText(item.getName());
+						setStyle("-fx-text-fill: #80F080;");
 					} else
-						 setText("");
+						setText("");
 				}
-		    };
+			};
 		});
-
-
 
 		value_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
-			     return cellData.getValue().getValue();
-			 else
-			   return new Parameter("");
+				return cellData.getValue().getValue();
+			else
+				return new Parameter("");
 		});
 
 
 		value_col.setCellFactory(column -> {
-		    return new TreeTableCell<Parameter, Parameter>() {
+			return new TreeTableCell<Parameter, Parameter>() {
 
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
@@ -189,45 +176,44 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 							setText(String.valueOf((int)item.getParamValue()));
 						else
 							setText(String.valueOf(item.getParamValue()));
-					   if(item.isDefault()) {
-					     setStyle("-fx-text-fill: #F0F0F0;");
-					   }
-					   else {
-						   setStyle("-fx-text-fill: #F0D080;");
-					   }
+						if(item.isDefault()) {
+							setStyle("-fx-text-fill: #F0F0F0;");
+						}
+						else {
+							setStyle("-fx-text-fill: #F0D080;");
+						}
 					} else
-						 setText("");
+						setText("");
 				}
-		    };
+			};
 		});
 		value_col.setEditable(true);
 		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
 
 		desc_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
-			     return cellData.getValue().getValue();
-			 else
-			   return new Parameter("");
+				return cellData.getValue().getValue();
+			else
+				return new Parameter("");
 		});
 
 
 		desc_col.setCellFactory(column -> {
-		    return new TreeTableCell<Parameter, Parameter>() {
+			return new TreeTableCell<Parameter, Parameter>() {
 
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
 					if(!empty && item.att!=null) {
-					   setText(item.getDescription());
+						setText(item.getDescription());
 					} else
-						 setText("");
+						setText("");
 				}
-		    };
+			};
 		});
 
 
 
 		desc_col.setStyle("-fx-padding: 0 0 0 30");
-
 
 	}
 
@@ -355,7 +341,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 
 		public void setValue(float no) {
-				value = no;
+			value = no;
 		}
 
 		public String getName() {
