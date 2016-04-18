@@ -37,14 +37,13 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
+import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.DeviceStateProperties;
-import com.comino.flight.tabs.parameters.MAVParametersTab.Parameter;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -58,16 +57,13 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeSortMode;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeTableView.TreeTableViewFocusModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -400,10 +396,16 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 								msg_param_set msg = new msg_param_set(255,1);
 								msg.target_component = 1;
 								msg.target_system = 1;
+
+								if(att.type.contains("FLOAT"))
+									msg.param_type = MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
+								else
+									msg.param_type = MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
+
 								msg.setParam_id(att.name);
 								msg.param_value = value;
 
-							//	control.sendMAVLinkMessage(msg);
+								control.sendMAVLinkMessage(msg);
 								log.writeLocalMsg(att.name+" set to  "+value+" on device");
 
 								checkDefault();
