@@ -263,6 +263,7 @@
   -fx-background: -fx-control-inner-background ;
   -fx-background-color: -fx-control-inner-background  ;
   -fx-border-style: none;
+  -fx-alignment: center-left ;
 }
 
 
