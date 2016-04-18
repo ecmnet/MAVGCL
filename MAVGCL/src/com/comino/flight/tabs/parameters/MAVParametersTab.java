@@ -40,6 +40,7 @@ import java.util.Map;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.lquac.msg_param_request_list;
+import org.mavlink.messages.lquac.msg_param_request_read;
 import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
@@ -48,15 +49,21 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
+import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
@@ -313,12 +320,12 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		parameter = group.get(msg.getParam_id());
 		if(parameter == null) {
 			parameter = new Parameter(attributes, msg.param_value);
-			group.getData().put(msg.getParam_id(), new Parameter(attributes, msg.param_value));
+			group.getData().put(msg.getParam_id(), parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
 
 		} else {
-			parameter.setValue(msg.param_value);
+			parameter.changeValue(msg.param_value);
 		}
 	}
 
@@ -373,25 +380,39 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private float value = 0;
 		private TextField textField = null;
 
-		public Parameter(ParameterAttributes att, float v) {
-			this.att = att;
+		public Parameter(ParameterAttributes a, float v) {
+			this.att = a;
 			this.value = v;
+
 			this.textField = new TextField(getStringOfValue());
+
 			if(att.description_long!=null)
 				this.textField.setTooltip(new Tooltip(att.description_long));
-			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
+			ContextMenu ctxm = new ContextMenu();
+			MenuItem cmItem1 = new MenuItem("Set default");
+			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+			    public void handle(ActionEvent e) {
+			    	textField.setText(getStringOfDefault());
+			    }
+			});
+
+			ctxm.getItems().add(cmItem1);
+			this.textField.setContextMenu(ctxm);
+
+			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 					if(!newValue.booleanValue()) {
 						try {
+
 							float val =  Float.parseFloat(textField.getText());
 							if(val!=value) {
 
 								if((val >= att.min_val && val <= att.max_val) ||
 										att.min_val == att.max_val ) {
 
-								value= val;
+								textField.setStyle("-fx-text-fill: #80D0F0;");
 
 								msg_param_set msg = new msg_param_set(255,1);
 								msg.target_component = 1;
@@ -403,12 +424,11 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 									msg.param_type = MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
 
 								msg.setParam_id(att.name);
-								msg.param_value = value;
+								msg.param_value = val;
 
 								control.sendMAVLinkMessage(msg);
-								log.writeLocalMsg(att.name+" set to  "+value+" on device");
+								textField.commitValue();
 
-								checkDefault();
 								}
 								else {
 									log.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")");
@@ -430,10 +450,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				public void handle(KeyEvent keyEvent)
 				{
 					if(keyEvent.getCode() == KeyCode.ENTER)
-						textField.getParent().requestFocus();
+						textField.getParent().getParent().requestFocus();
 					if(keyEvent.getCode() == KeyCode.ESCAPE) {
 						textField.setText(getStringOfValue());
-						textField.getParent().requestFocus();
+						textField.getParent().getParent().requestFocus();
 					}
 				}
 			});
@@ -455,8 +475,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		}
 
 
-		public void setValue(float no) {
-			value = no;
+		public void changeValue(float val) {
+			this.value = val;
+			this.textField.setText(getStringOfValue());
+			checkDefault();
 		}
 
 		public String getName() {
@@ -478,6 +500,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private void checkDefault() {
 			if(att==null)
 				return;
+
 			if(value==att.default_val)
 				textField.setStyle("-fx-text-fill: #F0F0F0;");
 			else
@@ -494,6 +517,13 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				return String.valueOf((int)value);
 			else
 				return String.valueOf(value);
+		}
+
+		private String getStringOfDefault() {
+			if(att.type.contains("INT"))
+				return String.valueOf((int)att.default_val);
+			else
+				return String.valueOf(att.default_val);
 		}
 
 	}
