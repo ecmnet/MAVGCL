@@ -37,12 +37,16 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 import org.mavlink.messages.lquac.msg_param_request_list;
+import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.DeviceStateProperties;
+import com.comino.flight.tabs.parameters.MAVParametersTab.Parameter;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.beans.binding.ObjectBinding;
@@ -51,14 +55,21 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeSortMode;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TreeTableView.TreeTableViewFocusModel;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
 public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
@@ -108,6 +119,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 			@Override
 			protected Boolean call() throws Exception {
+				groups.clear();
 				getParameterList();
 				return true;
 			}
@@ -122,6 +134,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter(""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
+		treetableview.setEditable(false);
 		root.setExpanded(true);
 
 		message_col.setSortType(SortType.ASCENDING);
@@ -134,7 +147,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			@Override
 			public int compare(Parameter o1, Parameter o2) {
 				if(o1.group!=null && o2.group!=null)
-				  return o1.group.compareTo(o2.group);
+					return o1.group.compareTo(o2.group);
 				return 0;
 			}
 		});
@@ -181,26 +194,21 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				return new Parameter("");
 		});
 
-
 		value_col.setCellFactory(column -> {
 			return new TreeTableCell<Parameter, Parameter>() {
 
+
 				@Override
 				protected void updateItem(Parameter item, boolean empty) {
-					if(!empty && item.att!=null) {
-						if(item.att.type.contains("INT"))
-							setText(String.valueOf((int)item.getParamValue()));
-						else
-							setText(String.valueOf(item.getParamValue()));
-						if(item.isDefault()) {
-							setStyle("-fx-text-fill: #F0F0F0; -fx-alignment: CENTER-RIGHT;");
-						}
-						else {
-							setStyle("-fx-text-fill: #F0D080; -fx-alignment: CENTER-RIGHT;");
-						}
-					} else
-						setText("");
+					if(!empty && item!=null && item.att!=null) {
+						setGraphic(item.getField());
+						setText(null);
+					} else {
+						setGraphic(null);
+						setText(null);
+					}
 				}
+
 			};
 		});
 
@@ -259,6 +267,15 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				new Thread(task).start();
 			}
 		});
+
+		DeviceStateProperties.getInstance().getArmedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				treetableview.setDisable(newValue.booleanValue());
+			}
+		});
+
+
 		return this;
 	}
 
@@ -356,14 +373,68 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private ParameterAttributes att = null;
 		private String group = null;
 		private float value = 0;
+		private TextField textField = null;
 
-		public Parameter(ParameterAttributes att, float value) {
+		public Parameter(ParameterAttributes att, float v) {
 			this.att = att;
-			this.value = value;
+			this.value = v;
+			this.textField = new TextField(getStringOfValue());
+			if(att.description_long!=null)
+				this.textField.setTooltip(new Tooltip(att.description_long));
+			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					if(!newValue.booleanValue()) {
+						try {
+							float val =  Float.parseFloat(textField.getText());
+							if(val!=value) {
+								value= val;
+
+								msg_param_set msg = new msg_param_set(255,1);
+								msg.target_component = 1;
+								msg.target_system = 1;
+								msg.setParam_id(att.name);
+								msg.param_value = value;
+
+								control.sendMAVLinkMessage(msg);
+
+								MSPLogger.getInstance().writeLocalMsg(att.name+" set to  "+value+" on device");
+
+								checkDefault();
+							}
+						} catch(NumberFormatException e) {
+						}
+						treetableview.getSelectionModel().clearSelection();
+					}
+				}
+
+			});
+
+			this.textField.setOnKeyPressed(new EventHandler<KeyEvent>()
+			{
+				@Override
+				public void handle(KeyEvent keyEvent)
+				{
+					if(keyEvent.getCode() == KeyCode.ENTER)
+						textField.getParent().requestFocus();
+					if(keyEvent.getCode() == KeyCode.ESCAPE) {
+						textField.setText(getStringOfValue());
+						textField.getParent().requestFocus();
+					}
+				}
+			});
+
+
+			checkDefault();
 		}
 
 		public Parameter(String group) {
 			this.group = group;
+		}
+
+		public TextField getField() {
+			return textField;
 		}
 
 		public float getParamValue() {
@@ -391,14 +462,27 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			return att.unit;
 		}
 
-		public boolean isDefault() {
-			return value == att.default_val;
+		private void checkDefault() {
+			if(att==null)
+				return;
+			if(value==att.default_val)
+				textField.setStyle("-fx-text-fill: #F0F0F0;");
+			else
+				textField.setStyle("-fx-text-fill: #F0D080;");
 		}
 
 		@Override
 		protected Parameter computeValue() {
 			return this;
 		}
+
+		private String getStringOfValue() {
+			if(att.type.contains("INT"))
+				return String.valueOf((int)value);
+			else
+				return String.valueOf(value);
+		}
+
 	}
 
 

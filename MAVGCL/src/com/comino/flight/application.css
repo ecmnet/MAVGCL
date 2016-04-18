@@ -211,9 +211,6 @@
     -fx-base: #1d1d1d;
     -fx-control-inner-background: #202020;
     -fx-background-color: #303030;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
 }
 
 
@@ -250,9 +247,24 @@
 }
 
 .tree-table-view {
+  -fx-background: -fx-control-inner-background ;
   -fx-background-color: #303030;
+  -fx-border-style: none;
 
 }
+
+.tree-table-row-cell {
+  -fx-background: -fx-control-inner-background ;
+  -fx-background-color: -fx-control-inner-background  ;
+  -fx-border-style: none;
+}
+
+.tree-table-cell {
+  -fx-background: -fx-control-inner-background ;
+  -fx-background-color: -fx-control-inner-background  ;
+  -fx-border-style: none;
+}
+
 
 .menu-bar {
 	 -fx-background-color: #404040;
