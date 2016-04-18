@@ -101,6 +101,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
+	private MSPLogger log = MSPLogger.getInstance();
+
 
 	public MAVParametersTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVParametersTab.fxml"));
@@ -389,6 +391,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 						try {
 							float val =  Float.parseFloat(textField.getText());
 							if(val!=value) {
+
+								if((val >= att.min_val && val <= att.max_val) ||
+										att.min_val == att.max_val ) {
+
 								value= val;
 
 								msg_param_set msg = new msg_param_set(255,1);
@@ -398,12 +404,17 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 								msg.param_value = value;
 
 								control.sendMAVLinkMessage(msg);
-
-								MSPLogger.getInstance().writeLocalMsg(att.name+" set to  "+value+" on device");
+								log.writeLocalMsg(att.name+" set to  "+value+" on device");
 
 								checkDefault();
+								}
+								else {
+									log.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")");
+									textField.setText(getStringOfValue());
+								}
 							}
 						} catch(NumberFormatException e) {
+							textField.setText(getStringOfValue());
 						}
 						treetableview.getSelectionModel().clearSelection();
 					}

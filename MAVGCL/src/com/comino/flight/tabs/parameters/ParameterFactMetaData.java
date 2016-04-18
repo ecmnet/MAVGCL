@@ -97,10 +97,10 @@ public class ParameterFactMetaData {
 				attributes.unit = node.getTextContent();
 			if(node.getNodeName().equals("decimal"))
 				attributes.decimals = Integer.parseInt(node.getTextContent());
-			if(node.getNodeName().equals("min_val"))
+			if(node.getNodeName().equals("min"))
 				attributes.min_val = Float.parseFloat(node.getTextContent());
-			if(node.getNodeName().equals("max_val"))
-				attributes.min_val = Float.parseFloat(node.getTextContent());
+			if(node.getNodeName().equals("max"))
+				attributes.max_val = Float.parseFloat(node.getTextContent());
 		}
 
 		parameterList.put(attributes.name, attributes);

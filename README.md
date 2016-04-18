@@ -6,7 +6,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any comments and contributions are welcome.
 
-**Status:** Last updated 17/04/2016 
+**Status:** Last updated 18/04/2016 
+
+- Editable parameters, changes are sent to vehicle
 
 Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 
