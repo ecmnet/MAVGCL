@@ -21,7 +21,7 @@ Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 - Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- Display of current parameter set
+- Parameter editor
 - Map viewer of global position and raw gps data with option to record path (cached)
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
