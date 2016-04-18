@@ -403,7 +403,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 								msg.setParam_id(att.name);
 								msg.param_value = value;
 
-								control.sendMAVLinkMessage(msg);
+							//	control.sendMAVLinkMessage(msg);
 								log.writeLocalMsg(att.name+" set to  "+value+" on device");
 
 								checkDefault();
