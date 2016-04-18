@@ -62,10 +62,12 @@ Stable: V0.2 https://github.com/ecmnet/MAVGCL/releases
 **How to deploy on OSX:**
 
 - Modify `build.xml` to adjust  `peer` property.
-
 - Run `ant_deploy`
 
-  ​
+
+**Known issues:**
+
+- Setting parameters might result in wrong values as params are set as float but represented in other types (used generator cannot handle this in MAVLink)
 
 **Screenshots** (from PX4Log / Online acquisition):
 
