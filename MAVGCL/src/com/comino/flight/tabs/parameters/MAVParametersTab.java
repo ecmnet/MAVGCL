@@ -143,20 +143,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		treetableview.setEditable(false);
 		root.setExpanded(true);
 
-		message_col.setSortType(SortType.ASCENDING);
 		message_col.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
 		});
 
-		message_col.setComparator(new Comparator<Parameter>() {
-
-			@Override
-			public int compare(Parameter o1, Parameter o2) {
-				if(o1.group!=null && o2.group!=null)
-					return o1.group.compareTo(o2.group);
-				return 0;
-			}
-		});
 
 		message_col.setCellFactory(column -> {
 			return new TreeTableCell<Parameter, Parameter>() {
@@ -171,6 +161,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				}
 			};
 		});
+
 
 		variable_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
