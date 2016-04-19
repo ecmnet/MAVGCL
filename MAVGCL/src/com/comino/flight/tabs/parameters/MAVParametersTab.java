@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
@@ -48,6 +49,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
+import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -103,7 +105,11 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 	private IMAVController control;
 
+	private TreeItem<Parameter> root;
+
 	private ParameterFactMetaData metadata = null;
+
+	private int param_count;
 
 	private MSPLogger log = MSPLogger.getInstance();
 
@@ -137,11 +143,19 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private void initialize() {
 
 
-		TreeItem<Parameter> root = new TreeItem<Parameter>(new Parameter(""));
+	    root = new TreeItem<Parameter>(new Parameter(""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		treetableview.setEditable(false);
-		root.setExpanded(true);
+
+		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+					treetableview.getSelectionModel().clearSelection();
+			}
+		});
+
 
 		message_col.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
@@ -162,6 +176,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			};
 		});
 
+		message_col.setSortType(SortType.ASCENDING);
+
 
 		variable_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
@@ -169,6 +185,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			else
 				return new Parameter("");
 		});
+
+		variable_col.setSortType(SortType.ASCENDING);
 
 		variable_col.setCellFactory(column -> {
 			return new TreeTableCell<Parameter, Parameter>() {
@@ -315,7 +333,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			group.getData().put(msg.getParam_id(), parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
-
 		} else {
 			parameter.changeValue(msg.param_value);
 		}
