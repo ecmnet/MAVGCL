@@ -196,6 +196,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private void initialize() {
 
+
 		trigstart.getItems().addAll(TRIG_START_OPTIONS);
 		trigstart.getSelectionModel().select(0);
 		trigstart.setDisable(true);
@@ -337,6 +338,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					recording(false, 0);
 			}
 		});
+
+		enablemodetrig.selectedProperty().set(true);
 
 	}
 
