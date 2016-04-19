@@ -198,10 +198,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		trigstart.getItems().addAll(TRIG_START_OPTIONS);
-		trigstart.getSelectionModel().select(0);
+		trigstart.getSelectionModel().select(1);
 		trigstart.setDisable(true);
 		trigstop.getItems().addAll(TRIG_STOP_OPTIONS);
-		trigstop.getSelectionModel().select(0);
+		trigstop.getSelectionModel().select(1);
 		trigstop.setDisable(true);
 		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
 		trigdelay.getSelectionModel().select(0);
