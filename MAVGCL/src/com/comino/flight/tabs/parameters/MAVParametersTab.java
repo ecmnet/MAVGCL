@@ -40,7 +40,6 @@ import java.util.Map;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.lquac.msg_param_request_list;
-import org.mavlink.messages.lquac.msg_param_request_read;
 import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
@@ -49,7 +48,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
-import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -57,9 +55,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
@@ -74,6 +70,11 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+
+/*
+ * Note: Get PX4ParameterFactMetaData.xml from
+ * https://github.com/mavlink/qgroundcontrol/tree/master/src/FirmwarePlugin/PX4
+ */
 
 public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
@@ -378,11 +379,13 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private ParameterAttributes att = null;
 		private String group = null;
 		private float value = 0;
+		private float old_val = 0;
 		private TextField textField = null;
 
 		public Parameter(ParameterAttributes a, float v) {
 			this.att = a;
 			this.value = v;
+			this.old_val = v;
 
 			this.textField = new TextField(getStringOfValue());
 
@@ -397,7 +400,14 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			    }
 			});
 
-			ctxm.getItems().add(cmItem1);
+			MenuItem cmItem2 = new MenuItem("Reset to previous");
+			cmItem2.setOnAction(new EventHandler<ActionEvent>() {
+			    public void handle(ActionEvent e) {
+			    	textField.setText(getStringOfOld());
+			    }
+			});
+
+			ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
 			this.textField.setContextMenu(ctxm);
 
 			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -476,6 +486,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 
 		public void changeValue(float val) {
+			this.old_val = value;
 			this.value = val;
 			this.textField.setText(getStringOfValue());
 			checkDefault();
@@ -524,6 +535,13 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				return String.valueOf((int)att.default_val);
 			else
 				return String.valueOf(att.default_val);
+		}
+
+		private String getStringOfOld() {
+			if(att.type.contains("INT"))
+				return String.valueOf((int)old_val);
+			else
+				return String.valueOf(old_val);
 		}
 
 	}
