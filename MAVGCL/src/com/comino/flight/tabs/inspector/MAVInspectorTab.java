@@ -96,8 +96,27 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
 
-		message_col.setCellValueFactory((param) -> {
+//		message_col.setCellValueFactory((param) -> {
+//			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
+//		});
+
+		message_col.setCellValueFactory(param -> {
 			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
+		});
+
+
+		message_col.setCellFactory(column -> {
+			return new TreeTableCell<Dataset, String>() {
+
+				@Override
+				protected void updateItem(String item, boolean empty) {
+					if(!empty) {
+						setText(item);
+						setStyle("-fx-text-fill: #D0D0F0;");
+					} else
+						setText("");
+				}
+			};
 		});
 
 
@@ -106,6 +125,20 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 			public ObservableValue<String> call(CellDataFeatures<Dataset, String> param) {
 				return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
 			}
+		});
+
+		variable_col.setCellFactory(column -> {
+			return new TreeTableCell<Dataset, String>() {
+
+				@Override
+				protected void updateItem(String item, boolean empty) {
+					if(!empty) {
+						setText(item);
+						setStyle("-fx-text-fill: #80F080;");
+					} else
+						setText("");
+				}
+			};
 		});
 
 		variable_col.setSortType(SortType.ASCENDING);
@@ -117,8 +150,19 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 			}
 		});
 
-		value_col.setStyle( "-fx-alignment: CENTER-RIGHT;");
+		value_col.setCellFactory(column -> {
+			return new TreeTableCell<Dataset, String>() {
 
+				@Override
+				protected void updateItem(String item, boolean empty) {
+					if(!empty) {
+						setText(item);
+						setStyle("-fx-text-fill: #F0F080;-fx-alignment: CENTER-RIGHT;");
+					} else
+						setText("");
+				}
+			};
+		});
 
 	}
 
