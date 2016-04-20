@@ -33,6 +33,8 @@
 
 package com.comino.flight.tabs.parameters;
 
+import org.mavlink.messages.MAV_PARAM_TYPE;
+
 public class ParameterAttributes {
 
 	public float   default_val = 0;
@@ -56,6 +58,12 @@ public class ParameterAttributes {
 		this.type = "none";
 		this.description = "none";
 		this.description_long = "none";
+	}
+
+	public int getTypeVal() {
+		if(type.contains("INT"))
+			return MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
+		return MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
 	}
 
 	public String toString() {

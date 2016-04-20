@@ -151,7 +151,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
 					treetableview.getSelectionModel().clearSelection();
 			}
 		});
@@ -435,13 +434,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 								msg_param_set msg = new msg_param_set(255,1);
 								msg.target_component = 1;
 								msg.target_system = 1;
-
-								if(att.type.contains("FLOAT"))
-									msg.param_type = MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
-								else
-									msg.param_type = MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
-
-								msg.setParam_id(att.name);
+								msg.param_type = att.getTypeVal();
+						        msg.setParam_id(att.name);
 								msg.param_value = val;
 
 								control.sendMAVLinkMessage(msg);

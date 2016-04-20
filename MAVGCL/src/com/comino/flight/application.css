@@ -254,7 +254,6 @@
 	 -fx-border-color: transparent;
 }
 
-
 .tree-table-view  {
   -fx-background: -fx-control-inner-background ;
   -fx-background-color: #303030;
@@ -267,8 +266,6 @@
 
 
 }
-
-
 
 
 .menu-bar {
