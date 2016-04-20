@@ -2,11 +2,11 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. 
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Tested on OS X and Ubuntu.
 
 Any comments and contributions are welcome.
 
-**Status:** Last updated 19/04/2016 
+**Status:** Last updated 20/04/2016 
 
 - Editable parameters, changes are sent to vehicle
 
@@ -19,7 +19,7 @@ Any comments and contributions are welcome.
 - Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- Parameter editor
+- Easy to use parameter editor
 - Map viewer of global position and raw gps data with option to record path (cached)
 - 3D Analysis of selected key figures
 - Import of selected key-figures from PX4Log
@@ -41,7 +41,6 @@ Any comments and contributions are welcome.
 **How to start (all platforms):**
 
 - Goto directory `/dist`
-  ​
 
 - Start either UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
 
@@ -52,7 +51,6 @@ Any comments and contributions are welcome.
   or just `java -jar MAVGAnalysis.jar`for a basic demo.
   ​
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
-  ​
 - For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
   ​
   `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
@@ -62,10 +60,6 @@ Any comments and contributions are welcome.
 - Modify `build.xml` to adjust  `peer` property.
 - Run `ant_deploy`
 
-
-**Known issues:**
-
-- Setting parameters might result in wrong values as params are set as float but represented in other types (used generator cannot handle this in MAVLink)
 
 **Screenshots** (from PX4Log / Online acquisition):
 
