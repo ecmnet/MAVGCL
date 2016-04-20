@@ -113,11 +113,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private IMAVController control;
 	private List<IChartControl> charts = null;
 
-	private int triggerStartMode =0;
-	private int triggerStopMode  =0;
+	private int triggerStartMode =1;
+	private int triggerStopMode  =1;
 	private int triggerDelay =0;
 
-	private boolean modetrigger  = false;
+	private boolean modetrigger  = true;
 	protected int totalTime_sec = 30;
 	private ModelCollectorService collector;
 
@@ -374,7 +374,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@Override
 	public void update(Status oldStat, Status newStat) {
-		if(!modetrigger || ( newStat.isEqual(oldStat)))
+		if(!modetrigger)
 			return;
 
 		if(!control.getCollector().isCollecting()) {

@@ -631,6 +631,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = 0;
 
 		setScaling(scale);
+
 		if(!disabledProperty().get())
 			Platform.runLater(() -> {
 				updateGraph(true);
