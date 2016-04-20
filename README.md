@@ -8,7 +8,7 @@ Any comments and contributions are welcome.
 
 **Status:** Last updated 20/04/2016 
 
-- Editable parameters, changes are sent to vehicle
+- Stable release 0.21
 
 **Features:**
 
