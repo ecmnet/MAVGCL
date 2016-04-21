@@ -33,6 +33,7 @@
 
 package com.comino.flight.widgets.charts.control;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +279,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
+			collector.setTotalTimeSec(totalTime_sec);
+
 
 			calculateX0Time(1);
 
@@ -359,9 +362,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	public void refreshCharts() {
 		calculateX0Time(1);
 
-		if(collector.getModelList().size() > 0)
-			control.getCurrentModel().set(collector.getModelList().get(collector.getModelList().size()-1));
-
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
 				chart.getScrollProperty().set(current_x0_pt);
@@ -424,7 +424,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 	}
 
-
+	// calculate
 	private void calculateX0Time(double factor) {
 		current_x0_pt = (int)(
 				( control.getCollector().getModelList().size()

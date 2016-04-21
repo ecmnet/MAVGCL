@@ -35,12 +35,14 @@ package com.comino.flight.widgets.statusline;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -101,6 +103,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 		task = new Task<Long>() {
 
+			List<DataModel> list = null;
+
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
@@ -126,13 +130,17 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						} else
 							driver.setText("not connected");
 
+						list = control.getCollector().getModelList();
 
-						elapsedtime.setText("Time: "+fo.format(control.getCurrentModel().tms/1000));
-						int current_x0_pt = scroll.intValue();
-						if(control.getCollector().getModelList().size()>0 && !control.getCollector().isCollecting())
-							currenttime.setText(fo.format(control.getCollector().getModelList().get(current_x0_pt).tms/1000));
-						else
+						if(list.size()>0) {
+							int current_x0_pt = scroll.intValue();
+							elapsedtime.setText("Time: "+fo.format(list.get(list.size()-1).tms/1000));
+							currenttime.setText(fo.format(list.get(current_x0_pt).tms/1000));
+						} else {
+							elapsedtime.setText("");
 							currenttime.setText("");
+
+						}
 
 						if(control.isSimulation())
 							sitl.setText("SITL");
