@@ -42,6 +42,7 @@ import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -96,9 +97,12 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
 
-//		message_col.setCellValueFactory((param) -> {
-//			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
-//		});
+		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					treetableview.getSelectionModel().clearSelection();
+			}
+		});
 
 		message_col.setCellValueFactory(param -> {
 			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
