@@ -46,7 +46,7 @@ public class PositionLayer extends Parent implements MapLayer {
     private double lat;
     private double lon;
     private double rotation;
-    private final Node icon;
+    private ImageView icon;
     private final double iconTranslateX, iconTranslateY;
     private LayeredMap layeredMap;
 
@@ -69,7 +69,7 @@ public class PositionLayer extends Parent implements MapLayer {
      *
      * @param icon the icon Node.
      */
-    public PositionLayer(Node icon) {
+    public PositionLayer(ImageView icon) {
         this(icon, 0.0, 0.0);
     }
 
@@ -83,7 +83,7 @@ public class PositionLayer extends Parent implements MapLayer {
      * @param translateX extra x translation to add to the icon
      * @param translateY extra y translation to add to the icon
      */
-    public PositionLayer(Node icon, double translateX, double translateY) {
+    public PositionLayer(ImageView icon, double translateX, double translateY) {
         this.icon = icon;
         this.icon.setVisible(false);
         this.iconTranslateX = translateX;
@@ -94,6 +94,10 @@ public class PositionLayer extends Parent implements MapLayer {
     @Override
     public Node getView() {
         return this;
+    }
+
+    public ImageView getIcon() {
+    	return icon;
     }
 
     public void updatePosition(double lat, double lon) {
