@@ -90,6 +90,7 @@ public enum MSTYPE {
 	MSP_RC1			("RC.1",1,"","RC.C1"),
 	MSP_RC2			("RC.2",1,"","RC.C2"),
 	MSP_RC3			("RC.3",1,"","RC.C3"),
+	MSP_RSSI        ("RSSI",1,"",""),
 	MSP_GLOBRELX	("Global.rel.PosX",1,"m",""),
 	MSP_GLOBRELY 	("Global.rel.PosY",1,"m",""),
 	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m",""),
@@ -193,6 +194,7 @@ public enum MSTYPE {
 		case MSP_RC1:			return m.rc.s1;
 		case MSP_RC2:			return m.rc.s2;
 		case MSP_RC3:			return m.rc.s3;
+		case MSP_RSSI:			return m.rc.rssi;
 		case MSP_RAW_DI:	    return m.raw.di;
 		case MSP_RAW_FLOWX:	    return m.raw.fX;
 		case MSP_RAW_FLOWY:	    return m.raw.fY;
@@ -272,6 +274,7 @@ public enum MSTYPE {
 		case MSP_RC1:			 m.rc.s1 = (short) value; break;
 		case MSP_RC2:			 m.rc.s2 = (short) value; break;
 		case MSP_RC3:			 m.rc.s3 = (short) value; break;
+		case MSP_RSSI:           m.rc.rssi = (short) value; break;
 		case MSP_RAW_DI:	     m.raw.di = value; break;
 		case MSP_RAW_FLOWX:	     m.raw.fX = value; break;
 		case MSP_RAW_FLOWY:	     m.raw.fY = value; break;

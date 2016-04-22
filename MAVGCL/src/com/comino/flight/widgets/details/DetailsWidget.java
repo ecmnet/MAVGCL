@@ -85,7 +85,6 @@ public class DetailsWidget extends FadePane  {
 			MSTYPE.MSP_RC3,
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_CURRENT,
-			MSTYPE.MSP_CONSPOWER,
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_DEBUGX,
 			MSTYPE.MSP_DEBUGY,
@@ -95,6 +94,7 @@ public class DetailsWidget extends FadePane  {
 			MSTYPE.MSP_NONE,
 			MSTYPE.MSP_IMUTEMP,
 			MSTYPE.MSP_CPULOAD,
+			MSTYPE.MSP_RSSI,
 
 
 	};
