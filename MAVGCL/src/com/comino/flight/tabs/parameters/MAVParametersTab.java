@@ -193,6 +193,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 				protected void updateItem(Parameter item, boolean empty) {
 					if(!empty && item.att!=null) {
 						setText(item.getName());
+						setTooltip(item.getTooltip());
 						setStyle("-fx-text-fill: #80F080;");
 					} else
 						setText("");
@@ -387,6 +388,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private float value = 0;
 		private float old_val = 0;
 		private TextField textField = null;
+		private Tooltip tip = null;
 
 		public Parameter(ParameterAttributes a, float v) {
 			this.att = a;
@@ -395,7 +397,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 			this.textField = new TextField(getStringOfValue());
 
-			Tooltip tip = new Tooltip();
+			tip = new Tooltip();
 			if(att.description_long!=null)
 				tip.setText(att.description_long+"\n\nMin= "+att.min_val+" Max= "+att.max_val);
 			else
@@ -403,7 +405,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 			tip.setMaxWidth(250);
 			tip.setWrapText(true);
-			this.textField.setTooltip(tip);
 
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
@@ -486,6 +487,10 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		public TextField getField() {
 			return textField;
+		}
+
+		public Tooltip getTooltip() {
+			return tip;
 		}
 
 		public float getParamValue() {
