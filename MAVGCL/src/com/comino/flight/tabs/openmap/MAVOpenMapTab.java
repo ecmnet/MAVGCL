@@ -79,6 +79,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -137,6 +138,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private FloatProperty  scroll       = new SimpleFloatProperty(0);
 
+	private Image plane_valid, plane_invalid;
 
 	private ModelCollectorService collector;
 
@@ -189,7 +191,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 								homeLayer.setVisible(false);
 
 							if(model.gps.numsat>3) {
-
+								if(model.gps.hdop > 2.5)
+								  positionLayer.getIcon().setImage(plane_invalid);
+								else
+								  positionLayer.getIcon().setImage(plane_valid);
 								if(mapfollow.selectedProperty().get()) {
 									map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 									canvasLayer.redraw(true);
@@ -243,7 +248,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(homeLayer);
 
-		positionLayer = new PositionLayer(new Image(getClass().getResource("airplane.png").toString()));
+		plane_valid   = new Image(getClass().getResource("airplane_g.png").toString());
+		plane_invalid = new Image(getClass().getResource("airplane_r.png").toString());
+
+		positionLayer = new PositionLayer(plane_valid);
 		map.getLayers().add(positionLayer);
 		positionLayer.setVisible(true);
 
