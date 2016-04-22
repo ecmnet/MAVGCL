@@ -27,6 +27,12 @@
     -fx-background-color: #303030;
 }
 
+.tooltip {
+	-fx-text-fill: rgb(255,248,182);
+	-fx-font-size: 7.0pt;
+	-fx-background-color: darkgray;
+}
+
 
 .label {
 	-fx-text-fill: #F0F0F0;

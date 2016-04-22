@@ -396,7 +396,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			this.textField = new TextField(getStringOfValue());
 
 			Tooltip tip = new Tooltip();
-			tip.setStyle("-fx-font-size: 7.0pt;");
 			if(att.description_long!=null)
 				tip.setText(att.description_long+"\n\nMin= "+att.min_val+" Max= "+att.max_val);
 			else
