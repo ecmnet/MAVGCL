@@ -48,7 +48,9 @@ import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -87,7 +89,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 
 	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss.SSS");
-	private IntegerProperty scroll       = new SimpleIntegerProperty(0);
+	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 
 	public StatusLineWidget() {
@@ -133,9 +135,10 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						list = control.getCollector().getModelList();
 
 						if(list.size()>0) {
-							int current_x0_pt = scroll.intValue();
-							elapsedtime.setText("Time: "+fo.format(list.get(list.size()-1).tms/1000));
-							currenttime.setText(fo.format(list.get(current_x0_pt).tms/1000));
+							int current_x0_pt = control.getCollector().calculateX0Index(scroll.floatValue());
+							int current_x1_pt = control.getCollector().calculateX1Index(scroll.floatValue());
+							elapsedtime.setText("Time: "+fo.format(list.get(current_x0_pt).tms/1000));
+							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000));
 						} else {
 							elapsedtime.setText("");
 							currenttime.setText("");
@@ -165,7 +168,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	}
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
 

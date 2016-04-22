@@ -45,17 +45,14 @@ import com.comino.fxyz.ext.FlightCubeViewer;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -99,7 +96,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private IntegerProperty scroll       = new SimpleIntegerProperty(0);
+	private FloatProperty scroll         = new SimpleFloatProperty(0);
 
 	private int resolution_ms 	= 50;
 
@@ -247,7 +244,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt = nv.intValue();
+			current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
@@ -372,7 +369,7 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 	}
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
 

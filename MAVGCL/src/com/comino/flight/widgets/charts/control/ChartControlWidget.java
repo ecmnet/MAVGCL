@@ -123,7 +123,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private ModelCollectorService collector;
 
 	private long scroll_tms = 0;
-	private int current_x0_pt = 0;
 
 
 	public ChartControlWidget() {
@@ -156,8 +155,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					if (isCancelled()) {
 						break;
 					}
-
-					calculateX0Time(1);
 
 					updateValue(control.getCollector().getMode());
 				}
@@ -221,8 +218,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					Boolean old_val, Boolean new_val) {
 				recording(new_val, 0);
 				if(new_val.booleanValue()) {
-					scroll.setValue(0);
-					current_x0_pt = 0;
+					scroll.setValue(1);
 				}
 			}
 		});
@@ -230,12 +226,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		clear.setOnAction((ActionEvent event)-> {
 			FileHandler.getInstance().clear();
 			scroll.setValue(0);
-			current_x0_pt = 0;
 			scroll.setDisable(true);
 			control.getCollector().clearModelList();
 			for(IChartControl chart : charts) {
 				if(chart.getScrollProperty()!=null)
-					chart.getScrollProperty().set(current_x0_pt);
+					chart.getScrollProperty().set(1);
 				chart.refreshChart();
 			}
 		});
@@ -281,22 +276,18 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			totalTime_sec  = newValue.intValue();
 			collector.setTotalTimeSec(totalTime_sec);
 
-
-			calculateX0Time(1);
-
 			for(IChartControl chart : charts) {
 				if(chart.getTimeFrameProperty()!=null)
 					chart.getTimeFrameProperty().set(newValue.intValue());
 				if(chart.getScrollProperty()!=null)
-					chart.getScrollProperty().set(current_x0_pt);
+					chart.getScrollProperty().set(1);
 			}
 
 			if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
-			current_x0_pt = 0;
-			scroll.setValue(0);
+			scroll.setValue(1);
 		});
 
 
@@ -304,13 +295,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
 
-				calculateX0Time(1d-new_val.doubleValue()/1000d);
-
 				if((System.currentTimeMillis() - scroll_tms)>20) {
 					scroll_tms = System.currentTimeMillis();
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(current_x0_pt);
+							chart.getScrollProperty().set(1f-new_val.floatValue()/1000);
 					}
 				}
 			}
@@ -323,10 +312,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
 					scroll.setValue(1000);
-					current_x0_pt = 0;
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(current_x0_pt);
+							chart.getScrollProperty().set(0);
 					}
 				}
 			}
@@ -350,6 +338,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		this.control = control;
 		this.collector = control.getCollector();
 		this.control.addModeChangeListener(this);
+		this.collector.setTotalTimeSec(totalTime_sec);
 		ExecutorService.get().execute(task);
 
 	}
@@ -360,11 +349,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	}
 
 	public void refreshCharts() {
-		calculateX0Time(1);
 
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(current_x0_pt);
+				chart.getScrollProperty().set(1);
 			chart.refreshChart();
 		}
 
@@ -407,7 +395,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private void recording(boolean start, int delay) {
 		if(start) {
-			current_x0_pt = 0;
 			control.getMessageList().clear();
 			control.getCollector().start();
 			scroll.setDisable(true);
@@ -419,21 +406,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(current_x0_pt);
+				chart.getScrollProperty().set(0);
 			chart.refreshChart();
 		}
-	}
-
-	// calculate
-	private void calculateX0Time(double factor) {
-		current_x0_pt = (int)(
-				( control.getCollector().getModelList().size()
-						- totalTime_sec *  1000f
-						/ control.getCollector().getCollectorInterval_ms())
-				* factor);
-
-		if(current_x0_pt<0)
-			current_x0_pt = 0;
 	}
 
 }

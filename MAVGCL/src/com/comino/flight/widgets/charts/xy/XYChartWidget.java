@@ -44,14 +44,13 @@ import com.comino.mav.control.IMAVController;
 import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.utils.Utils;
-import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -181,7 +180,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private IntegerProperty scroll       = new SimpleIntegerProperty(0);
+	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 
 	private int resolution_ms 	= 50;
 	private float scale = 0;
@@ -470,7 +469,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt = nv.intValue();
+			current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
@@ -482,7 +481,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				current_x_pt = 0;
-				scroll.setValue(0);
+				scroll.setValue(1);
 				refreshChart();
 			}
 		});
@@ -492,7 +491,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		this.current_x_pt = 0;
 		this.frame_secs = frame;
 		resolution_ms = 50;
-		scroll.setValue(0);
+		scroll.setValue(1);
 		refreshChart();
 	}
 
@@ -617,7 +616,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
 
@@ -626,10 +625,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(frame_secs > 60)
 			frame_secs = 60;
 
-		current_x0_pt = control.getCollector().getModelList().size() - frame_secs * 1000 / COLLECTOR_CYCLE;
-		if(current_x0_pt < 0)
-			current_x0_pt = 0;
-
+		current_x0_pt = control.getCollector().calculateX0Index(1);
 		setScaling(scale);
 
 		if(!disabledProperty().get())

@@ -52,16 +52,15 @@ import com.comino.model.file.FileHandler;
 import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
-import com.comino.msp.utils.ExecutorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -136,7 +135,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
-	private IntegerProperty  scroll       = new SimpleIntegerProperty(0);
+	private FloatProperty  scroll       = new SimpleFloatProperty(0);
 
 
 	private ModelCollectorService collector;
@@ -366,10 +365,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 //				if(current_x0_pt<0)
 //					current_x0_pt = 0;
 
-				int current_x0_pt = nv.intValue() + timeFrame.intValue() * 1000 / control.getCollector().getCollectorInterval_ms() - 1;
+				int current_x1_pt = control.getCollector().calculateX1Index(nv.floatValue());
 
-				if(collector.getModelList().size()>0 && current_x0_pt > 0)
-					model = collector.getModelList().get(current_x0_pt);
+				if(collector.getModelList().size()>0 && current_x1_pt > 0)
+					model = collector.getModelList().get(current_x1_pt);
 				else
 					model = control.getCurrentModel();
 
@@ -422,7 +421,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 	@Override
-	public IntegerProperty getScrollProperty() {
+	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
 
