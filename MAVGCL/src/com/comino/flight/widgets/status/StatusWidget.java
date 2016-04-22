@@ -115,17 +115,6 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		this.control = control;
 		this.control.addModeChangeListener(this);
 		this.details.selectedProperty().set(true);
-
-		StateProperties.getInstance().getRecordingProperty().addListener(new ChangeListener<Boolean>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(newValue.booleanValue())
-					details.selectedProperty().set(false);
-			}
-
-		});
-
 		update(model.sys,model.sys);
 	}
 
