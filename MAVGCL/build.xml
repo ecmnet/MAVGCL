@@ -3,6 +3,7 @@
 	<!-- Upodate your vehicle address here -->
 
 	<property name="peer" value="172.168.178.1" />
+	<property name="peer_sitl" value="127.0.0.1" />
 
 
 	<!-- Works at least on OSX, to determine JDK -->
@@ -88,7 +89,7 @@
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="exe">
 			<fx:info title="MAVGAnalysiss" />
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
-				<fx:argument>--peerAddress=${peer}</fx:argument>
+				<fx:argument>--peerAddress=${peer_sitl}</fx:argument>
 			</fx:application>
 			<fx:resources>
 				<fx:fileset dir="dist" includes="*.jar" />
