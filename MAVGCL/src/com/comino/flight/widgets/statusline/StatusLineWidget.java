@@ -88,7 +88,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private IMAVController control;
 
 
-	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss.SSS");
+	private final SimpleDateFormat fo = new SimpleDateFormat("mmm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 
@@ -137,11 +137,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						if(list.size()>0) {
 							int current_x0_pt = control.getCollector().calculateX0Index(scroll.floatValue());
 							int current_x1_pt = control.getCollector().calculateX1Index(scroll.floatValue());
-							elapsedtime.setText("Time: "+fo.format(list.get(current_x0_pt).tms/1000));
+							elapsedtime.setText("TimeFrame: "+fo.format(list.get(current_x0_pt).tms/1000));
 							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000));
 						} else {
-							elapsedtime.setText("");
-							currenttime.setText("");
+							elapsedtime.setText("TimeFrame: "+fo.format(list.get(0).tms/1000));
+							currenttime.setText(fo.format(list.get(0).tms/1000));
 
 						}
 

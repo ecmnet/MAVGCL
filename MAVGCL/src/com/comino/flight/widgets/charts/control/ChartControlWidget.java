@@ -406,7 +406,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(0);
+				chart.getScrollProperty().set(1);
 			chart.refreshChart();
 		}
 	}
