@@ -339,6 +339,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		this.collector = control.getCollector();
 		this.control.addModeChangeListener(this);
 		this.collector.setTotalTimeSec(totalTime_sec);
+		this.collector.clearModelList();
 		ExecutorService.get().execute(task);
 
 	}

@@ -137,11 +137,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						if(list.size()>0) {
 							int current_x0_pt = control.getCollector().calculateX0Index(scroll.floatValue());
 							int current_x1_pt = control.getCollector().calculateX1Index(scroll.floatValue());
-							elapsedtime.setText("TimeFrame: "+fo.format(list.get(current_x0_pt).tms/1000));
-							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000));
+							elapsedtime.setText("TimeFrame: ["+fo.format(list.get(current_x0_pt).tms/1000));
+							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000)+"] sec");
 						} else {
-							elapsedtime.setText("TimeFrame: "+fo.format(list.get(0).tms/1000));
-							currenttime.setText(fo.format(list.get(0).tms/1000));
+							elapsedtime.setText("TimeFrame: [ "+fo.format(0));
+							currenttime.setText(fo.format(0)+"] sec");
 
 						}
 
