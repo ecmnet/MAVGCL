@@ -395,8 +395,16 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 			this.textField = new TextField(getStringOfValue());
 
+			Tooltip tip = new Tooltip();
+			tip.setStyle("-fx-font-size: 7.0pt;");
 			if(att.description_long!=null)
-				this.textField.setTooltip(new Tooltip(att.description_long));
+				tip.setText(att.description_long+"\n\nMin= "+att.min_val+" Max= "+att.max_val);
+			else
+				tip.setText("Min= "+att.min_val+" Max= "+att.max_val);
+
+			tip.setMaxWidth(250);
+			tip.setWrapText(true);
+			this.textField.setTooltip(tip);
 
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
