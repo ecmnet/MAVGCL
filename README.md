@@ -6,9 +6,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any comments and contributions are welcome.
 
-**Status:** Last updated 21/04/2016 
+**Status:** Last updated 22/04/2016 
 
-- Reconnect issue fixed
+- Displayed timeframe shown in status line
 
 **Features:**
 
