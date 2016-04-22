@@ -155,6 +155,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			}
 		});
 
+		message_col.setSortable(false);
+
 
 		message_col.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
@@ -175,8 +177,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			};
 		});
 
-		message_col.setSortType(SortType.ASCENDING);
-
+		variable_col.setSortable(false);
 
 		variable_col.setCellValueFactory(cellData -> {
 			if(cellData.getValue().isLeaf())
@@ -184,8 +185,6 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			else
 				return new Parameter("");
 		});
-
-		variable_col.setSortType(SortType.ASCENDING);
 
 		variable_col.setCellFactory(column -> {
 			return new TreeTableCell<Parameter, Parameter>() {
