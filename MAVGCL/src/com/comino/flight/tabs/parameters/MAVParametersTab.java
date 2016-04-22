@@ -44,7 +44,7 @@ import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
-import com.comino.flight.observables.DeviceStateProperties;
+import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -275,14 +275,14 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		this.control = control;
 		control.addMAVLinkListener(this);
 
-		DeviceStateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
+		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				new Thread(task).start();
 			}
 		});
 
-		DeviceStateProperties.getInstance().getArmedProperty().addListener(new ChangeListener<Boolean>() {
+		StateProperties.getInstance().getArmedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				treetableview.setDisable(newValue.booleanValue());

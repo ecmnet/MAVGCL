@@ -40,9 +40,9 @@ import com.comino.msp.model.segment.Status;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class DeviceStateProperties implements IMSPModeChangedListener{
+public class StateProperties implements IMSPModeChangedListener{
 
-	private static DeviceStateProperties instance = null;
+	private static StateProperties instance = null;
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
@@ -50,17 +50,19 @@ public class DeviceStateProperties implements IMSPModeChangedListener{
 	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
 
-	public static DeviceStateProperties getInstance() {
+	private BooleanProperty recordingProperty = new SimpleBooleanProperty();
+
+	public static StateProperties getInstance() {
 		return instance;
 	}
 
-	public static DeviceStateProperties getInstance(IMAVController control) {
+	public static StateProperties getInstance(IMAVController control) {
 		if(instance == null)
-			instance = new DeviceStateProperties(control);
+			instance = new StateProperties(control);
 		return instance;
 	}
 
-	private DeviceStateProperties(IMAVController control) {
+	private StateProperties(IMAVController control) {
 		 control.addModeChangeListener(this);
 	}
 
@@ -92,6 +94,10 @@ public class DeviceStateProperties implements IMSPModeChangedListener{
 
 	public BooleanProperty getPosHoldProperty() {
 		return posholdProperty;
+	}
+
+	public BooleanProperty getRecordingProperty() {
+		return recordingProperty;
 	}
 
 }

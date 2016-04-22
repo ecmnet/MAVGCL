@@ -281,6 +281,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 						m = collector.getModelList().get(i);
 
+						if(MSTYPE.getValue(m,TYPES[type][0])==0 && MSTYPE.getValue(m,TYPES[type][1]) == 0)
+							continue;
+
 						if(first) {
 							p0 = map.getMapArea().getMapPoint(
 									MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
