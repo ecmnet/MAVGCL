@@ -469,7 +469,7 @@ velocity</short_desc>
       <min>0.0</min>
       <max>50.0</max>
       <unit>A</unit>
-      <decimal>2</decimal>
+      <decimal>2</decimal>BAT
       <increment>1</increment>
     </parameter>
     <parameter default="10.0" name="COM_EF_TIME" type="FLOAT">

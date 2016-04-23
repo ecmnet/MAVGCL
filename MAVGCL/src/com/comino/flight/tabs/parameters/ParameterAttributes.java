@@ -61,7 +61,7 @@ public class ParameterAttributes {
 	}
 
 	public int getTypeVal() {
-		if(type.contains("REAL"))
+		if(type.contains("FLOAT"))
 			return MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
 		return MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
 	}
