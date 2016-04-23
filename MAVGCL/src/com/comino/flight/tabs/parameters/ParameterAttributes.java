@@ -61,9 +61,9 @@ public class ParameterAttributes {
 	}
 
 	public int getTypeVal() {
-		if(type.contains("INT"))
-			return MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
-		return MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
+		if(type.contains("REAL"))
+			return MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
+		return MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
 	}
 
 	public String toString() {
