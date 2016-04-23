@@ -213,14 +213,15 @@
 
 .tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
 	 -fx-background-color:#404040;
-	  -fx-border-style: none;
+	 -fx-border-style: none;
+	 -fx-font-size: 8.0pt;
 }
 
 .tree-table-view {
     -fx-base: #1d1d1d;
     -fx-control-inner-background: #202020;
     -fx-background-color: #303030;
-     -fx-border-style: none;
+    -fx-border-style: none;
 }
 
 

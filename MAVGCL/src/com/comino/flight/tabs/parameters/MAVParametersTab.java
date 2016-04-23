@@ -67,7 +67,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -76,6 +75,8 @@ import javafx.scene.layout.BorderPane;
 /*
  * Note: Get PX4ParameterFactMetaData.xml from
  * https://github.com/mavlink/qgroundcontrol/tree/master/src/FirmwarePlugin/PX4
+ *
+ * TODO 1.0: Refactoring, its really ugly
  */
 
 public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
