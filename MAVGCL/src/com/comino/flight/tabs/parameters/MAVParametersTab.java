@@ -328,7 +328,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 
 		parameter = group.get(msg.getParam_id());
 		if(parameter == null) {
-			parameter = new Parameter(attributes, msg.param_value);
+			parameter = new Parameter(attributes, msg.param_type, msg.param_value);
 			group.getData().put(msg.getParam_id(), parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
@@ -387,13 +387,15 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		private String group = null;
 		private float value = 0;
 		private float old_val = 0;
+		private int  type = 0;
 		private TextField textField = null;
 		private Tooltip tip = null;
 
-		public Parameter(ParameterAttributes a, float v) {
+		public Parameter(ParameterAttributes a, int type, float v) {
 			this.att = a;
-			this.value = v;
-			this.old_val = v;
+			this.value = ParamUtils.paramToVal(type,v);
+			this.type = type;
+			this.old_val = value;
 
 			this.textField = new TextField(getStringOfValue());
 
@@ -441,9 +443,9 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 								msg_param_set msg = new msg_param_set(255,1);
 								msg.target_component = 1;
 								msg.target_system = 1;
-								msg.param_type = att.getTypeVal();
+								msg.param_type = type;
 						        msg.setParam_id(att.name);
-								msg.param_value = val;
+								msg.param_value = ParamUtils.valToParam(type, val);
 
 								control.sendMAVLinkMessage(msg);
 								textField.commitValue();
@@ -498,9 +500,9 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		}
 
 
-		public void changeValue(float val) {
+		public void changeValue(float v) {
 			this.old_val = value;
-			this.value = val;
+			this.value = ParamUtils.paramToVal(type,v);;
 			this.textField.setText(getStringOfValue());
 			checkDefault();
 		}
@@ -537,25 +539,26 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 		}
 
 		private String getStringOfValue() {
-			if(att.type.contains("INT"))
+			if(type==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 				return String.valueOf((int)value);
 			else
 				return String.valueOf(value);
 		}
 
 		private String getStringOfDefault() {
-			if(att.type.contains("INT"))
+			if(type==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 				return String.valueOf((int)att.default_val);
 			else
 				return String.valueOf(att.default_val);
 		}
 
 		private String getStringOfOld() {
-			if(att.type.contains("INT"))
+			if(type==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 				return String.valueOf((int)old_val);
 			else
 				return String.valueOf(old_val);
 		}
+
 
 	}
 

@@ -60,11 +60,6 @@ public class ParameterAttributes {
 		this.description_long = "none";
 	}
 
-	public int getTypeVal() {
-		if(type.contains("FLOAT"))
-			return MAV_PARAM_TYPE.MAV_PARAM_TYPE_REAL32;
-		return MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32;
-	}
 
 	public String toString() {
 		return "group="+group_name+" name="+name+" description="+description+" type="+type;
