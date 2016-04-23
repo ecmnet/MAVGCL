@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.lquac.msg_message_interval;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.observables.StateProperties;
@@ -172,7 +173,7 @@ public class MainApp extends Application {
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-//			ScenicView.show(scene);
+			//			ScenicView.show(scene);
 
 			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 				@Override

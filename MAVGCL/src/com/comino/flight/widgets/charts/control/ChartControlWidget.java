@@ -213,14 +213,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		recording.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
-		recording.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			public void changed(ObservableValue<? extends Boolean> ov,
-					Boolean old_val, Boolean new_val) {
-				recording(new_val, 0);
-				if(new_val.booleanValue()) {
+
+		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+			recording(newvalue, 0);
+			if(!newvalue.booleanValue())
 					scroll.setValue(1);
-				}
-			}
 		});
 
 		clear.setOnAction((ActionEvent event)-> {
@@ -238,38 +235,26 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
 
-		enablemodetrig.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			public void changed(ObservableValue<? extends Boolean> ov,
-					Boolean old_val, Boolean new_val) {
-				modetrigger = new_val;
-				trigdelay.setDisable(old_val);
-				trigstop.setDisable(old_val);
-				trigstart.setDisable(old_val);
-
-			}
+		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+				modetrigger = newvalue;
+				trigdelay.setDisable(oldvalue);
+				trigstop.setDisable(oldvalue);
+				trigstart.setDisable(oldvalue);
 		});
 
-		trigstart.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				triggerStartMode = newValue.intValue();
-				triggerStopMode  = newValue.intValue();
+		trigstart.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
+				triggerStartMode = newvalue.intValue();
+				triggerStopMode  = newvalue.intValue();
 				trigstop.getSelectionModel().select(triggerStopMode);
-			}
 		});
 
-		trigstop.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				triggerStopMode = newValue.intValue();
-			}
+		trigstop.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
+			triggerStopMode = newvalue.intValue();
 		});
 
-		trigdelay.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				triggerDelay = newValue.intValue();
-			}
+
+		trigdelay.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
+				triggerDelay = newvalue.intValue();
 		});
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -291,18 +276,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-		scroll.valueProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> ov,
-					Number old_val, Number new_val) {
-
+		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 				if((System.currentTimeMillis() - scroll_tms)>20) {
 					scroll_tms = System.currentTimeMillis();
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(1f-new_val.floatValue()/1000);
+							chart.getScrollProperty().set(1f-newvalue.floatValue()/1000);
 					}
 				}
-			}
 		});
 
 		scroll.setDisable(true);
@@ -321,14 +302,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean> () {
-
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(!newValue.booleanValue())
-					recording(false, 0);
-			}
+		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(!newvalue.booleanValue())
+				recording(false, 0);
 		});
+
 
 		enablemodetrig.selectedProperty().set(true);
 
