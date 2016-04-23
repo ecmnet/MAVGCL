@@ -29,7 +29,7 @@
 
 .tooltip {
 	-fx-text-fill: rgb(255,248,182);
-	-fx-font-size: 7.0pt;
+	-fx-font-size: 8.0pt;
 	-fx-background-color: #404040;
 }
 
@@ -90,7 +90,7 @@
 
 .widget {
     -fx-font-size: 7.0pt;
-     -fx-border-color: #B0B0B0;
+    -fx-border-color: #B0B0B0;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
     -fx-border-insets: 2px;
