@@ -2,7 +2,7 @@
 <parameters>
   <version>3</version>
   <parameter_version_major>1</parameter_version_major>
-  <parameter_version_minor>4</parameter_version_minor>
+  <parameter_version_minor>6</parameter_version_minor>
   <group name="UAVCAN Motor Parameters" no_code_generation="true">
     <parameter default="75" name="ctl_bw" type="INT32">
       <short_desc>Speed controller bandwidth</short_desc>
@@ -244,7 +244,24 @@ velocity</short_desc>
     </parameter>
   </group>
   <group name="Battery Calibration">
-    <parameter default="3.4" name="BAT_V_EMPTY" type="FLOAT">
+    <parameter default="10000" name="BAT_V_SCALE_IO" type="INT32">
+      <short_desc>Scaling factor for battery voltage sensor on PX4IO</short_desc>
+      <min>1</min>
+      <max>100000</max>
+    </parameter>
+    <parameter default="-1.0" name="BAT_V_SCALING" type="FLOAT">
+      <short_desc>Scaling factor for battery voltage sensor on FMU v2</short_desc>
+      <decimal>8</decimal>
+    </parameter>
+    <parameter default="-1.0" name="BAT_C_SCALING" type="FLOAT">
+      <short_desc>Scaling factor for battery current sensor</short_desc>
+      <decimal>8</decimal>
+    </parameter>
+    <parameter default="-1.0" name="BAT_C_OFFSET" type="FLOAT">
+      <short_desc>Offset for battery current sensor</short_desc>
+      <decimal>8</decimal>
+    </parameter>
+    <parameter default="3.35" name="BAT_V_EMPTY" type="FLOAT">
       <short_desc>Empty cell voltage</short_desc>
       <long_desc>Defines the voltage where a single cell of the battery is considered empty.</long_desc>
       <unit>V</unit>
@@ -255,6 +272,24 @@ velocity</short_desc>
       <short_desc>Full cell voltage</short_desc>
       <long_desc>Defines the voltage where a single cell of the battery is considered full.</long_desc>
       <unit>V</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+    </parameter>
+    <parameter default="0.18" name="BAT_LOW_THR" type="FLOAT">
+      <short_desc>Low threshold</short_desc>
+      <long_desc>Sets the threshold (between 0 and 1, which is equivalent to between 0 and 100%) when the battery will be reported as low. This has to be higher than the critical threshold.</long_desc>
+      <min>0.15</min>
+      <max>0.5</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+    </parameter>
+    <parameter default="0.09" name="BAT_CRIT_THR" type="FLOAT">
+      <short_desc>Critical threshold</short_desc>
+      <long_desc>Sets the threshold (between 0 and 1, which is equivalent to between 0 and 100%) when the battery will be reported as critically low. This has to be lower than the low threshold. This threshold commonly will trigger RTL or landing.</long_desc>
+      <min>0.05</min>
+      <max>0.14</max>
+      <unit>norm</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
     </parameter>
@@ -270,8 +305,6 @@ velocity</short_desc>
     <parameter default="3" name="BAT_N_CELLS" type="INT32">
       <short_desc>Number of cells</short_desc>
       <long_desc>Defines the number of cells the attached battery consists of.</long_desc>
-      <min>2</min>
-      <max>10</max>
       <unit>S</unit>
       <values>
         <value code="11">11S Battery</value>
@@ -299,23 +332,6 @@ velocity</short_desc>
       <unit>mA</unit>
       <decimal>0</decimal>
       <increment>50</increment>
-    </parameter>
-    <parameter default="10000" name="BAT_V_SCALE_IO" type="INT32">
-      <short_desc>Scaling factor for battery voltage sensor on PX4IO</short_desc>
-      <min>1</min>
-      <max>100000</max>
-    </parameter>
-    <parameter default="-1.0" name="BAT_V_SCALING" type="FLOAT">
-      <short_desc>Scaling factor for battery voltage sensor on FMU v2</short_desc>
-      <decimal>8</decimal>
-    </parameter>
-    <parameter default="-1.0" name="BAT_C_SCALING" type="FLOAT">
-      <short_desc>Scaling factor for battery current sensor</short_desc>
-      <decimal>8</decimal>
-    </parameter>
-    <parameter default="-1.0" name="BAT_C_OFFSET" type="FLOAT">
-      <short_desc>Offset for battery current sensor</short_desc>
-      <decimal>8</decimal>
     </parameter>
   </group>
   <group name="Camera trigger">
@@ -432,15 +448,10 @@ velocity</short_desc>
     </parameter>
   </group>
   <group name="Commander">
-    <parameter default="0" name="COM_DL_LOSS_EN" type="INT32">
-      <short_desc>Datalink loss failsafe</short_desc>
-      <long_desc>Set to 1 to enable actions triggered when the datalink is lost.</long_desc>
-      <boolean />
-    </parameter>
     <parameter default="10" name="COM_DL_LOSS_T" type="INT32">
       <short_desc>Datalink loss time threshold</short_desc>
       <long_desc>After this amount of seconds without datalink the data link lost mode triggers</long_desc>
-      <min>0</min>
+      <min>5</min>
       <max>300</max>
       <unit>s</unit>
       <decimal>1</decimal>
@@ -450,7 +461,7 @@ velocity</short_desc>
       <short_desc>Datalink regain time threshold</short_desc>
       <long_desc>After a data link loss: after this this amount of seconds with a healthy datalink the 'datalink loss' flag is set back to false</long_desc>
       <min>0</min>
-      <max>30</max>
+      <max>3</max>
       <unit>s</unit>
       <decimal>1</decimal>
       <increment>0.5</increment>
@@ -469,7 +480,7 @@ velocity</short_desc>
       <min>0.0</min>
       <max>50.0</max>
       <unit>A</unit>
-      <decimal>2</decimal>BAT
+      <decimal>2</decimal>
       <increment>1</increment>
     </parameter>
     <parameter default="10.0" name="COM_EF_TIME" type="FLOAT">
@@ -532,6 +543,16 @@ velocity</short_desc>
       <unit>s</unit>
       <decimal>0</decimal>
       <increment>1</increment>
+    </parameter>
+    <parameter default="0" name="COM_LOW_BAT_ACT" type="INT32">
+      <short_desc>Battery failsafe mode</short_desc>
+      <long_desc>Action the system takes on low battery. Defaults to off</long_desc>
+      <decimal>0</decimal>
+      <increment>1</increment>
+      <values>
+        <value code="1">RTL on low battery</value>
+        <value code="0">No action</value>
+      </values>
     </parameter>
   </group>
   <group name="Data Link Loss">
@@ -606,24 +627,43 @@ velocity</short_desc>
       <min>0</min>
       <max>300</max>
       <unit>ms</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0" name="EKF2_BARO_DELAY" type="FLOAT">
       <short_desc>Barometer measurement delay relative to IMU measurements</short_desc>
       <min>0</min>
       <max>300</max>
       <unit>ms</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="200" name="EKF2_GPS_DELAY" type="FLOAT">
       <short_desc>GPS measurement delay relative to IMU measurements</short_desc>
       <min>0</min>
       <max>300</max>
       <unit>ms</unit>
+      <decimal>1</decimal>
+    </parameter>
+    <parameter default="5" name="EKF2_OF_DELAY" type="FLOAT">
+      <short_desc>Optical flow measurement delay relative to IMU measurements
+Assumes measurement is timestamped at trailing edge of integration period</short_desc>
+      <min>0</min>
+      <max>300</max>
+      <unit>ms</unit>
+      <decimal>1</decimal>
+    </parameter>
+    <parameter default="5" name="EKF2_RNG_DELAY" type="FLOAT">
+      <short_desc>Range finder measurement delay relative to IMU measurements</short_desc>
+      <min>0</min>
+      <max>300</max>
+      <unit>ms</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="200" name="EKF2_ASP_DELAY" type="FLOAT">
       <short_desc>Airspeed measurement delay relative to IMU measurements</short_desc>
       <min>0</min>
       <max>300</max>
       <unit>ms</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="21" name="EKF2_GPS_CHECK" type="INT32">
       <short_desc>Integer bitmask controlling GPS checks</short_desc>
@@ -636,18 +676,21 @@ velocity</short_desc>
       <min>2</min>
       <max>100</max>
       <unit>m</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="8.0" name="EKF2_REQ_EPV" type="FLOAT">
       <short_desc>Required EPV to use GPS</short_desc>
       <min>2</min>
       <max>100</max>
       <unit>m</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="1.0" name="EKF2_REQ_SACC" type="FLOAT">
       <short_desc>Required speed accuracy to use GPS</short_desc>
       <min>0.5</min>
       <max>5.0</max>
       <unit>m/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="6" name="EKF2_REQ_NSATS" type="INT32">
       <short_desc>Required satellite count to use GPS</short_desc>
@@ -658,121 +701,142 @@ velocity</short_desc>
       <short_desc>Required GDoP to use GPS</short_desc>
       <min>1.5</min>
       <max>5.0</max>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0.3" name="EKF2_REQ_HDRIFT" type="FLOAT">
       <short_desc>Maximum horizontal drift speed to use GPS</short_desc>
       <min>0.1</min>
       <max>1.0</max>
       <unit>m/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.5" name="EKF2_REQ_VDRIFT" type="FLOAT">
       <short_desc>Maximum vertical drift speed to use GPS</short_desc>
       <min>0.1</min>
       <max>1.5</max>
       <unit>m/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="6.0e-2" name="EKF2_GYR_NOISE" type="FLOAT">
       <short_desc>Rate gyro noise for covariance prediction</short_desc>
       <min>0.0001</min>
       <max>0.1</max>
       <unit>rad/s</unit>
+      <decimal>4</decimal>
     </parameter>
     <parameter default="0.25" name="EKF2_ACC_NOISE" type="FLOAT">
       <short_desc>Accelerometer noise for covariance prediction</short_desc>
       <min>0.01</min>
       <max>1.0</max>
       <unit>m/s/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="2.5e-6" name="EKF2_GYR_B_NOISE" type="FLOAT">
       <short_desc>Process noise for delta angle bias prediction</short_desc>
       <min>0.0</min>
       <max>0.0001</max>
       <unit>rad/s</unit>
+      <decimal>8</decimal>
     </parameter>
     <parameter default="3.0e-5" name="EKF2_ACC_B_NOISE" type="FLOAT">
       <short_desc>Process noise for delta velocity z bias prediction</short_desc>
       <min>0.0</min>
       <max>0.01</max>
       <unit>m/s/s</unit>
+      <decimal>7</decimal>
     </parameter>
     <parameter default="3.0e-4" name="EKF2_GYR_S_NOISE" type="FLOAT">
       <short_desc>Process noise for delta angle scale factor prediction</short_desc>
       <min>0.0</min>
       <max>0.01</max>
+      <decimal>6</decimal>
     </parameter>
     <parameter default="5.0e-4" name="EKF2_MAG_B_NOISE" type="FLOAT">
       <short_desc>Process noise for body magnetic field prediction</short_desc>
       <min>0.0</min>
       <max>0.1</max>
       <unit>Gauss/s</unit>
+      <decimal>6</decimal>
     </parameter>
     <parameter default="2.5e-3" name="EKF2_MAG_E_NOISE" type="FLOAT">
       <short_desc>Process noise for earth magnetic field prediction</short_desc>
       <min>0.0</min>
       <max>0.1</max>
       <unit>Gauss/s</unit>
+      <decimal>6</decimal>
     </parameter>
     <parameter default="1.0e-1" name="EKF2_WIND_NOISE" type="FLOAT">
       <short_desc>Process noise for wind velocity prediction</short_desc>
       <min>0.0</min>
       <max>1.0</max>
       <unit>m/s/s</unit>
+      <decimal>3</decimal>
     </parameter>
     <parameter default="0.5" name="EKF2_GPS_V_NOISE" type="FLOAT">
       <short_desc>Measurement noise for gps horizontal velocity</short_desc>
       <min>0.01</min>
       <max>5.0</max>
       <unit>m/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.5" name="EKF2_GPS_P_NOISE" type="FLOAT">
       <short_desc>Measurement noise for gps position</short_desc>
       <min>0.01</min>
       <max>10.0</max>
       <unit>m</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="10.0" name="EKF2_NOAID_NOISE" type="FLOAT">
       <short_desc>Measurement noise for non-aiding position hold</short_desc>
       <min>0.5</min>
       <max>50.0</max>
       <unit>m</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="3.0" name="EKF2_BARO_NOISE" type="FLOAT">
       <short_desc>Measurement noise for barometric altitude</short_desc>
       <min>0.01</min>
       <max>15.0</max>
       <unit>m</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.3" name="EKF2_HEAD_NOISE" type="FLOAT">
       <short_desc>Measurement noise for magnetic heading fusion</short_desc>
       <min>0.01</min>
       <max>1.0</max>
       <unit>rad</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="5.0e-2" name="EKF2_MAG_NOISE" type="FLOAT">
       <short_desc>Measurement noise for magnetometer 3-axis fusion</short_desc>
       <min>0.001</min>
       <max>1.0</max>
       <unit>Gauss</unit>
+      <decimal>3</decimal>
     </parameter>
     <parameter default="1.4" name="EKF2_EAS_NOISE" type="FLOAT">
       <short_desc>Measurement noise for airspeed fusion</short_desc>
       <min>0.5</min>
       <max>5.0</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0" name="EKF2_MAG_DECL" type="FLOAT">
       <short_desc>Magnetic declination</short_desc>
       <unit>deg</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="2.6" name="EKF2_HDG_GATE" type="FLOAT">
       <short_desc>Gate size for magnetic heading fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="3.0" name="EKF2_MAG_GATE" type="FLOAT">
       <short_desc>Gate size for magnetometer XYZ component fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="7" name="EKF2_DECL_TYPE" type="INT32">
       <short_desc>Integer bitmask controlling handling of magnetic declination</short_desc>
@@ -795,16 +859,19 @@ velocity</short_desc>
       <short_desc>Gate size for barometric height fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="5.0" name="EKF2_GPS_P_GATE" type="FLOAT">
       <short_desc>Gate size for GPS horizontal position fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="5.0" name="EKF2_GPS_V_GATE" type="FLOAT">
       <short_desc>Gate size for GPS velocity fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0" name="EKF2_REC_RPL" type="INT32">
       <short_desc>Replay mode</short_desc>
@@ -830,27 +897,32 @@ velocity</short_desc>
       <short_desc>Measurement noise for range finder fusion</short_desc>
       <min>0.01</min>
       <unit>m</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="5.0" name="EKF2_RNG_GATE" type="FLOAT">
       <short_desc>Gate size for range finder fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0.1" name="EKF2_MIN_RNG" type="FLOAT">
       <short_desc>Minimum valid range for the range finder</short_desc>
       <min>0.01</min>
       <unit>m</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.15" name="EKF2_OF_N_MIN" type="FLOAT">
       <short_desc>Measurement noise for the optical flow sensor when it's reported quality metric is at the maximum</short_desc>
       <min>0.05</min>
       <unit>rad/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.5" name="EKF2_OF_N_MAX" type="FLOAT">
       <short_desc>Measurement noise for the optical flow sensor</short_desc>
       <long_desc>(when it's reported quality metric is at the minimum set by EKF2_OF_QMIN). The following condition must be met: EKF2_OF_N_MAXN &gt;= EKF2_OF_N_MIN</long_desc>
       <min>0.05</min>
       <unit>rad/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="1" name="EKF2_OF_QMIN" type="INT32">
       <short_desc>Optical Flow data will only be used if the sensor reports a quality metric &gt;= EKF2_OF_QMIN</short_desc>
@@ -861,21 +933,85 @@ velocity</short_desc>
       <short_desc>Gate size for optical flow fusion</short_desc>
       <min>1.0</min>
       <unit>SD</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="2.5" name="EKF2_OF_RMAX" type="FLOAT">
       <short_desc>Optical Flow data will not fused if the magnitude of the flow rate &gt; EKF2_OF_RMAX</short_desc>
       <min>1.0</min>
       <unit>rad/s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="5.0" name="EKF2_TERR_NOISE" type="FLOAT">
       <short_desc>Terrain altitude process noise - accounts for instability in vehicle height estimate</short_desc>
       <min>0.5</min>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0.5" name="EKF2_TERR_GRAD" type="FLOAT">
       <short_desc>Magnitude of terrain gradient</short_desc>
       <min>0.0</min>
       <unit>m/m</unit>
+      <decimal>2</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_IMU_POS_X" type="FLOAT">
+      <short_desc>X position of IMU in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_IMU_POS_Y" type="FLOAT">
+      <short_desc>Y position of IMU in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_IMU_POS_Z" type="FLOAT">
+      <short_desc>Z position of IMU in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_GPS_POS_X" type="FLOAT">
+      <short_desc>X position of GPS antenna in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_GPS_POS_Y" type="FLOAT">
+      <short_desc>Y position of GPS antenna in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_GPS_POS_Z" type="FLOAT">
+      <short_desc>Z position of GPS antenna in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_RNG_POS_X" type="FLOAT">
+      <short_desc>X position of range finder origin in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_RNG_POS_Y" type="FLOAT">
+      <short_desc>Y position of range finder origin in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_RNG_POS_Z" type="FLOAT">
+      <short_desc>Z position of range finder origin in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_OF_POS_X" type="FLOAT">
+      <short_desc>X position of optical flow focal point in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_OF_POS_Y" type="FLOAT">
+      <short_desc>Y position of optical flow focal point in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
+    </parameter>
+    <parameter default="0.0" name="EKF2_OF_POS_Z" type="FLOAT">
+      <short_desc>Z position of optical flow focal point in body frame</short_desc>
+      <unit>m</unit>
+      <decimal>3</decimal>
     </parameter>
   </group>
   <group name="FW Attitude Control">
@@ -1134,6 +1270,7 @@ velocity</short_desc>
       <long_desc>This is the throttle setting required to achieve the desired cruise speed. Most airframes have a value of 0.5-0.7.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
+      <unit>norm</unit>
     </parameter>
     <parameter default="0.0" name="FW_THR_SLEW_MAX" type="FLOAT">
       <short_desc>Throttle max slew rate</short_desc>
@@ -1167,24 +1304,28 @@ velocity</short_desc>
       <long_desc>This is the maximum throttle % that can be used by the controller. For overpowered aircraft, this should be reduced to a value that provides sufficient thrust to climb at the maximum pitch angle PTCH_MAX.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
+      <unit>norm</unit>
     </parameter>
     <parameter default="0.0" name="FW_THR_MIN" type="FLOAT">
       <short_desc>Throttle limit min</short_desc>
       <long_desc>This is the minimum throttle % that can be used by the controller. For electric aircraft this will normally be set to zero, but can be set to a small non-zero value if a folding prop is fitted to prevent the prop from folding and unfolding repeatedly in-flight or to provide some aerodynamic drag from a turning prop to improve the descent rate. For aircraft with internal combustion engine this parameter should be set for desired idle rpm.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
+      <unit>norm</unit>
     </parameter>
     <parameter default="0.15" name="FW_THR_IDLE" type="FLOAT">
       <short_desc>Idle throttle</short_desc>
       <long_desc>This is the minimum throttle while on the ground For aircraft with internal combustion engine this parameter should be set above desired idle rpm.</long_desc>
       <min>0.0</min>
       <max>0.4</max>
+      <unit>norm</unit>
     </parameter>
     <parameter default="1.0" name="FW_THR_LND_MAX" type="FLOAT">
       <short_desc>Throttle limit value before flare</short_desc>
       <long_desc>This throttle value will be set as throttle limit at FW_LND_TLALT, before arcraft will flare.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
+      <unit>norm</unit>
     </parameter>
     <parameter default="10.0" name="FW_CLMBOUT_DIFF" type="FLOAT">
       <short_desc>Climbout Altitude difference</short_desc>
@@ -1428,22 +1569,43 @@ velocity</short_desc>
       <short_desc>Multicopter max climb rate</short_desc>
       <long_desc>Maximum vertical velocity allowed in the landed state (m/s up and down)</long_desc>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="1.50" name="LNDMC_XY_VEL_MAX" type="FLOAT">
       <short_desc>Multicopter max horizontal velocity</short_desc>
       <long_desc>Maximum horizontal velocity allowed in the landed state (m/s)</long_desc>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="20.0" name="LNDMC_ROT_MAX" type="FLOAT">
       <short_desc>Multicopter max rotation</short_desc>
       <long_desc>Maximum allowed angular velocity around each axis allowed in the landed state.</long_desc>
       <unit>deg/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="0.15" name="LNDMC_THR_MAX" type="FLOAT">
       <short_desc>Multicopter max throttle</short_desc>
       <long_desc>Maximum actuator output on throttle allowed in the landed state</long_desc>
       <min>0.1</min>
       <max>0.5</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+    </parameter>
+    <parameter default="2.0" name="LNDMC_FFALL_THR" type="FLOAT">
+      <short_desc>Multicopter specific force threshold</short_desc>
+      <long_desc>Multicopter threshold on the specific force measured by accelerometers in m/s^2 for free-fall detection</long_desc>
+      <min>0.1</min>
+      <max>10</max>
+      <unit>m/s^2</unit>
+      <decimal>2</decimal>
+    </parameter>
+    <parameter default="0.3" name="LNDMC_FFALL_TTRI" type="FLOAT">
+      <short_desc>Multicopter free-fall trigger time</short_desc>
+      <long_desc>Milliseconds that freefall conditions have to hold before triggering a freefall. Minimal value is limited by LAND_DETECTOR_UPDATE_RATE=50Hz in landDetector.h</long_desc>
+      <min>0.02</min>
+      <max>5</max>
+      <unit>s</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="5.0" name="LNDFW_VEL_XY_MAX" type="FLOAT">
       <short_desc>Fixedwing max horizontal velocity</short_desc>
@@ -1451,6 +1613,7 @@ velocity</short_desc>
       <min>0.5</min>
       <max>10</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="10.0" name="LNDFW_VEL_Z_MAX" type="FLOAT">
       <short_desc>Fixedwing max climb rate</short_desc>
@@ -1458,6 +1621,7 @@ velocity</short_desc>
       <min>5</min>
       <max>20</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="4.0" name="LNDFW_VELI_MAX" type="FLOAT">
       <short_desc>Fixedwing max short-term velocity</short_desc>
@@ -1465,6 +1629,7 @@ velocity</short_desc>
       <min>2</min>
       <max>10</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="8.00" name="LNDFW_AIRSPD_MAX" type="FLOAT">
       <short_desc>Airspeed max</short_desc>
@@ -1472,6 +1637,7 @@ velocity</short_desc>
       <min>4</min>
       <max>20</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
     </parameter>
   </group>
   <group name="Launch detection">
@@ -1508,10 +1674,6 @@ velocity</short_desc>
     </parameter>
   </group>
   <group name="Local Position Estimator">
-    <parameter default="1" name="LPE_ENABLED" type="INT32">
-      <short_desc>Enable local position estimator</short_desc>
-      <boolean />
-    </parameter>
     <parameter default="1" name="LPE_INTEGRATE" type="INT32">
       <short_desc>Enable accelerometer integration for prediction</short_desc>
       <boolean />
@@ -1587,6 +1749,10 @@ velocity</short_desc>
       <unit>m</unit>
       <decimal>2</decimal>
     </parameter>
+    <parameter default="1" name="LPE_GPS_ON" type="INT32">
+      <short_desc>Enable GPS</short_desc>
+      <boolean />
+    </parameter>
     <parameter default="0.25" name="LPE_GPS_DELAY" type="FLOAT">
       <short_desc>GPS delay compensaton</short_desc>
       <min>0</min>
@@ -1643,12 +1809,9 @@ velocity</short_desc>
       <unit>m</unit>
       <decimal>3</decimal>
     </parameter>
-    <parameter default="0" name="LPE_NO_VISION" type="INT32">
-      <short_desc>Circuit breaker to disable vision input</short_desc>
-      <long_desc>Set to the appropriate key (328754) to disable vision input.</long_desc>
-      <min>0</min>
-      <max>1</max>
-      <decimal>0</decimal>
+    <parameter default="1" name="LPE_VIS_ON" type="INT32">
+      <short_desc>Enabled vision correction</short_desc>
+      <boolean />
     </parameter>
     <parameter default="0.05" name="LPE_VIC_P" type="FLOAT">
       <short_desc>Vicon position standard deviation</short_desc>
@@ -1691,6 +1854,20 @@ velocity</short_desc>
       <max>2</max>
       <unit>Hz</unit>
       <decimal>3</decimal>
+    </parameter>
+    <parameter default="40.430" name="LPE_LAT" type="FLOAT">
+      <short_desc>Home latitude for nav w/o GPS</short_desc>
+      <min>-90</min>
+      <max>90</max>
+      <unit>deg</unit>
+      <decimal>8</decimal>
+    </parameter>
+    <parameter default="-86.929" name="LPE_LON" type="FLOAT">
+      <short_desc>Home longitude for nav w/o GPS</short_desc>
+      <min>-180</min>
+      <max>180</max>
+      <unit>deg</unit>
+      <decimal>8</decimal>
     </parameter>
   </group>
   <group name="MAVLink">
@@ -1820,15 +1997,25 @@ velocity</short_desc>
       <max>200.0</max>
       <unit>m</unit>
     </parameter>
-    <parameter default="0" name="NAV_DLL_OBC" type="INT32">
-      <short_desc>Set OBC mode for data link loss</short_desc>
-      <long_desc>If set to 1 the behaviour on data link loss is set to a mode according to the Outback Challenge (OBC) rules</long_desc>
-      <boolean />
+    <parameter default="0" name="NAV_DLL_ACT" type="INT32">
+      <short_desc>Set data link loss failsafe mode</short_desc>
+      <long_desc>The data link loss failsafe will only be entered after a timeout, set by COM_DL_LOSS_T in seconds. Once the timeout occurs the selected action will be executed. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Disabled</value>
+        <value code="3">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
     </parameter>
-    <parameter default="0" name="NAV_RCL_OBC" type="INT32">
-      <short_desc>Set OBC mode for rc loss</short_desc>
-      <long_desc>If set to 1 the behaviour on data link loss is set to a mode according to the Outback Challenge (OBC) rules</long_desc>
-      <boolean />
+    <parameter default="0" name="NAV_RCL_ACT" type="INT32">
+      <short_desc>Set RC loss failsafe mode</short_desc>
+      <long_desc>The RC loss failsafe will only be entered after a timeout, set by COM_RC_LOSS_T in seconds. If RC input checks have been disabled by setting the COM_RC_IN_MODE param it will not be triggered. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Disabled</value>
+        <value code="3">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
     </parameter>
   </group>
   <group name="Multicopter Attitude Control">
@@ -2154,31 +2341,38 @@ velocity</short_desc>
       <long_desc>It's recommended to set it &gt; 0 to avoid free fall with zero thrust.</long_desc>
       <min>0.05</min>
       <max>1.0</max>
-      <decimal>3</decimal>
+      <unit>norm</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.5" name="MPC_THR_HOVER" type="FLOAT">
       <short_desc>Hover thrust</short_desc>
       <long_desc>Vertical thrust required to hover. This value is mapped to center stick for manual throttle control. With this value set to the thrust required to hover, transition from manual to ALTCTL mode while hovering will occur with the throttle stick near center, which is then interpreted as (near) zero demand for vertical speed.</long_desc>
       <min>0.2</min>
       <max>0.8</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.1" name="MPC_ALTCTL_DZ" type="FLOAT">
       <short_desc>ALTCTL throttle curve breakpoint</short_desc>
       <long_desc>Halfwidth of deadband or reduced sensitivity center portion of curve. This is the halfwidth of the center region of the ALTCTL throttle curve. It extends from center-dz to center+dz.</long_desc>
       <min>0.0</min>
       <max>0.2</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.0" name="MPC_ALTCTL_DY" type="FLOAT">
       <short_desc>ALTCTL throttle curve breakpoint height</short_desc>
       <long_desc>Controls the slope of the reduced sensitivity region. This is the height of the ALTCTL throttle curve at center-dz and center+dz.</long_desc>
       <min>0.0</min>
       <max>0.2</max>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.9" name="MPC_THR_MAX" type="FLOAT">
       <short_desc>Maximum thrust in auto thrust control</short_desc>
       <long_desc>Limit max allowed thrust. Setting a value of one can put the system into actuator saturation as no spread between the motors is possible any more. A value of 0.8 - 0.9 is recommended.</long_desc>
       <min>0.0</min>
       <max>0.95</max>
+      <unit>norm</unit>
       <decimal>2</decimal>
     </parameter>
     <parameter default="0.08" name="MPC_MANTHR_MIN" type="FLOAT">
@@ -2186,13 +2380,15 @@ velocity</short_desc>
       <long_desc>Minimum vertical thrust. It's recommended to set it &gt; 0 to avoid free fall with zero thrust.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
-      <decimal>3</decimal>
+      <unit>norm</unit>
+      <decimal>2</decimal>
     </parameter>
     <parameter default="0.9" name="MPC_MANTHR_MAX" type="FLOAT">
       <short_desc>Maximum manual thrust</short_desc>
       <long_desc>Limit max allowed thrust. Setting a value of one can put the system into actuator saturation as no spread between the motors is possible any more. A value of 0.8 - 0.9 is recommended.</long_desc>
       <min>0.0</min>
       <max>1.0</max>
+      <unit>norm</unit>
       <decimal>2</decimal>
     </parameter>
     <parameter default="1.0" name="MPC_Z_P" type="FLOAT">
@@ -2354,6 +2550,15 @@ velocity</short_desc>
       <unit>m/s/s</unit>
       <decimal>2</decimal>
       <increment>1</increment>
+    </parameter>
+    <parameter default="0" name="MPC_ALT_MODE" type="INT32">
+      <short_desc>Altitude control mode, note mode 1 only tested with LPE</short_desc>
+      <min>0</min>
+      <max>1</max>
+      <values>
+        <value code="1">Terrain following</value>
+        <value code="0">Altitude following</value>
+      </values>
     </parameter>
     <parameter default="0.1" name="MPP_THR_MIN" type="FLOAT">
       <short_desc>Minimum thrust</short_desc>
@@ -2933,11 +3138,6 @@ velocity</short_desc>
       <min>0</min>
       <max>328754</max>
       <reboot_required>true</reboot_required>
-    </parameter>
-    <parameter default="1" name="INAV_ENABLED" type="INT32">
-      <short_desc>INAV enabled</short_desc>
-      <long_desc>If set to 1, use INAV for position estimation. Else the system uses the combined attitude / position filter framework.</long_desc>
-      <boolean />
     </parameter>
   </group>
   <group name="Radio Calibration">
@@ -3916,6 +4116,8 @@ velocity</short_desc>
       <long_desc>The amount of time in seconds the system should loiter at current position before termination Set to -1 to make the system skip loitering</long_desc>
       <min>-1.0</min>
       <unit>s</unit>
+      <decimal>1</decimal>
+      <increment>0.1</increment>
     </parameter>
   </group>
   <group name="Radio Switches">
@@ -4243,6 +4445,8 @@ velocity</short_desc>
       <min>0</min>
       <max>150</max>
       <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
     </parameter>
     <parameter default="30" name="RTL_DESCEND_ALT" type="FLOAT">
       <short_desc>RTL loiter altitude</short_desc>
@@ -4250,6 +4454,8 @@ velocity</short_desc>
       <min>2</min>
       <max>100</max>
       <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
     </parameter>
     <parameter default="-1.0" name="RTL_LAND_DELAY" type="FLOAT">
       <short_desc>RTL delay</short_desc>
@@ -4257,6 +4463,17 @@ velocity</short_desc>
       <min>-1</min>
       <max>300</max>
       <unit>s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+    </parameter>
+    <parameter default="5.0" name="RTL_MIN_DIST" type="FLOAT">
+      <short_desc>Minimum distance to trigger rising to a safe altitude</short_desc>
+      <long_desc>If the system is horizontally closer than this distance to home it will land straight on home instead of raising to the return altitude first.</long_desc>
+      <min>0.5</min>
+      <max>20</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
     </parameter>
   </group>
   <group name="Runway Takeoff">
@@ -4856,6 +5073,11 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <boolean />
       <reboot_required>true</reboot_required>
     </parameter>
+    <parameter default="0" name="SENS_EN_SF0X" type="INT32">
+      <short_desc>Enable sf0x driver</short_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+    </parameter>
   </group>
   <group name="Subscriber Example">
     <parameter default="100" name="SUB_INTERV" type="INT32">
@@ -4895,6 +5117,18 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <long_desc>Set by px4io to indicate type of restart</long_desc>
       <min>0</min>
       <max>2</max>
+    </parameter>
+    <parameter default="0" name="SYS_MC_EST_GROUP" type="INT32">
+      <short_desc>Set multicopter estimator group</short_desc>
+      <long_desc>Set the group of estimators used for multicopters and vtols</long_desc>
+      <min>0</min>
+      <max>2</max>
+      <reboot_required>true</reboot_required>
+      <values>
+        <value code="1">local_position_estimator, attitude_estimator_q</value>
+        <value code="0">position_estimator_inav, attitude_estimator_q</value>
+        <value code="2">ekf2</value>
+      </values>
     </parameter>
     <parameter default="157600" name="SYS_COMPANION" type="INT32">
       <short_desc>Companion computer interface</short_desc>
@@ -4949,6 +5183,19 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <max>1.0</max>
       <decimal>3</decimal>
       <increment>0.01</increment>
+    </parameter>
+    <parameter default="5.0" name="VT_DWN_PITCH_MAX" type="FLOAT">
+      <short_desc>Maximum allowed down-pitch the controller is able to demand. This prevents large, negative
+lift values being created when facing strong winds. The vehicle will use the pusher motor
+to accelerate forward if necessary</short_desc>
+      <min>0.0</min>
+      <max>45.0</max>
+    </parameter>
+    <parameter default="0.0" name="VT_FWD_THRUST_SC" type="FLOAT">
+      <short_desc>Fixed wing thrust scale for hover forward flight</short_desc>
+      <long_desc>Scale applied to fixed wing thrust being used as source for forward acceleration in multirotor mode. This technique can be used to avoid the plane having to pitch down a lot in order to move forward. Setting this value to 0 (default) will disable this strategy.</long_desc>
+      <min>0.0</min>
+      <max>2.0</max>
     </parameter>
     <parameter default="0.0" name="VT_TILT_MC" type="FLOAT">
       <short_desc>Position of tilt servo in mc mode</short_desc>
@@ -5395,6 +5642,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
@@ -5414,6 +5662,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
@@ -5433,6 +5682,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
@@ -5452,6 +5702,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
@@ -5471,6 +5722,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
@@ -5490,6 +5742,7 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
       <values>
         <value code="11">Land</value>
         <value code="10">Takeoff</value>
+        <value code="12">Follow Me</value>
         <value code="1">Altitude</value>
         <value code="0">Manual</value>
         <value code="3">Mission</value>
