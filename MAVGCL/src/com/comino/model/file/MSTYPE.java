@@ -189,7 +189,7 @@ public enum MSTYPE {
 		case MSP_LERRZ:		    return m.state.z - m.target_state.z;
 		case MSP_RNEDX:			return m.state.x - m.state.hx;
 		case MSP_RNEDY:			return m.state.y - m.state.hy;
-		case MSP_RNEDZ:			return m.state.z - m.state.hz;
+		case MSP_RNEDZ:			return m.attitude.ag - m.attitude.at;
 		case MSP_RC0:			return m.rc.s0;
 		case MSP_RC1:			return m.rc.s1;
 		case MSP_RC2:			return m.rc.s2;
