@@ -31,13 +31,14 @@
  *
  ****************************************************************************/
 
-package com.comino.model.file;
+package com.comino.flight.px4log;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.comino.model.file.MSTYPE;
 import com.comino.msp.model.DataModel;
 
 import me.drton.jmavlib.log.FormatErrorException;

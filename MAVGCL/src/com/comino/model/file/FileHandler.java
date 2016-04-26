@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.comino.flight.px4log.PX4toModelConverter;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.google.gson.Gson;
@@ -60,6 +61,7 @@ import me.drton.jmavlib.log.px4.PX4LogReader;
 public class FileHandler {
 
 	private static final String BASEPATH = "/.MAVGCL";
+	private static final String TMPFILE  =  "/px4tmp.tmp";
 
 	private static FileHandler handler = null;
 
@@ -144,6 +146,7 @@ public class FileHandler {
 
 	}
 
+
 	public void fileExport() {
 		String defaultName = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
@@ -166,6 +169,18 @@ public class FileHandler {
 		}
 
 	}
+
+
+	public File getTempFile() throws IOException {
+		File f = new File(getBasePath()+TMPFILE);
+		if(f.exists())
+			f.delete();
+		f.createNewFile();
+		return f;
+
+	}
+
+
 
 	private FileChooser getFileDialog(String title, ExtensionFilter filter) {
 		FileChooser fileChooser = new FileChooser();

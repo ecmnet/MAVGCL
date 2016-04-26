@@ -46,6 +46,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
+import com.comino.flight.px4log.MAVPX4LogReader;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -89,6 +90,9 @@ public class MainApp extends Application {
 
 	@FXML
 	private MenuItem m_px4log;
+
+	@FXML
+	private MenuItem r_px4log;
 
 	@FXML
 	private MenuItem m_prefs;
@@ -221,6 +225,17 @@ public class MainApp extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImportPX4Log();
+				controlpanel.getRecordControl().refreshCharts();
+
+			}
+
+		});
+
+		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				MAVPX4LogReader log = new MAVPX4LogReader(control);
+				log.requestLastLog();
 				controlpanel.getRecordControl().refreshCharts();
 
 			}
