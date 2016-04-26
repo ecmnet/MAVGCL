@@ -8,8 +8,6 @@ Any comments and contributions are welcome.
 
 **Status:** Last updated 26/04/2016 
 
-- px4Log import direct from vehicle via MAVLink
-
 **Features:**
 
 - Realtime data acquisition (50ms sampling)
