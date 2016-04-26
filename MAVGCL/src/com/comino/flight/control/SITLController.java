@@ -62,8 +62,10 @@ public class SITLController implements Runnable {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {	}
 
-			if(control.isConnected())
+			if(control.isConnected()){
+			  System.out.println("OFFBOARD");
 			   control.sendMAVLinkMessage(rc);
+			}
 
 		}
 
