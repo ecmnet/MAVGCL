@@ -6,9 +6,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any comments and contributions are welcome.
 
-**Status:** Last updated 23/04/2016 
+**Status:** Last updated 26/04/2016 
 
-- Displayed timeframe shown in status line
+- px4Log import direct from vehicle via MAVLink
 
 **Features:**
 

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
@@ -17,6 +18,7 @@ import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
+
 
 import me.drton.jmavlib.log.px4.PX4LogReader;
 
@@ -31,6 +33,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private File tmpfile = null;
 	private BufferedOutputStream out = null;
 
+	private long tms = 0;
 
 	public MAVPX4LogReader(IMAVController control) {
 		this.control = control;
@@ -74,17 +77,24 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		if( o instanceof msg_log_data) {
 			msg_log_data data = (msg_log_data) o;
-			System.out.println(getProgress()+"%");
+
 			for(int i=0;i< data.count;i++) {
 				try {
 					out.write(data.data[i]);
 				} catch (IOException e) { e.printStackTrace(); }
 			}
+			log_bytes_read = data.ofs;
+
+			if((System.currentTimeMillis()-tms)>5000) {
+				 MSPLogger.getInstance().writeLocalMsg("Loading px4log from device: "+getProgress()+"%",
+						 MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				 tms = System.currentTimeMillis();
+				}
+
 			if(data.count < 90) {
 				try {
 					out.close();
-				} catch (IOException e) { e.printStackTrace(); }
-				log_bytes_read = data.ofs;
+				} catch (IOException e) { e.printStackTrace();  }
 				try {
 					ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 					PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
@@ -100,7 +110,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public int getProgress() {
-		return (int)(log_bytes_read * 100 / log_bytes_total);
+		return (int)((log_bytes_read * 100) / log_bytes_total);
 	}
 
 	public boolean isCollecting() {

@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
@@ -83,14 +85,14 @@ public class MessagesWidget extends FadePane  {
 
 	public void setup(IMAVController control) {
 
-        this.setOnMouseEntered(event -> {
-        	if(f!=null)
-        	  f.cancel(true);
-        });
+		this.setOnMouseEntered(event -> {
+			if(f!=null)
+				f.cancel(true);
+		});
 
-        this.setOnMouseExited(event -> {
-        	fadeProperty().setValue(false);
-        });
+		this.setOnMouseExited(event -> {
+			fadeProperty().setValue(false);
+		});
 
 		fadeProperty().setValue(false);
 
@@ -99,7 +101,6 @@ public class MessagesWidget extends FadePane  {
 
 			@Override
 			public void messageReceived(List<LogMessage> ml, LogMessage m) {
-				fadeProperty().setValue(true);
 
 				if(f!=null)
 					f.cancel(true);
@@ -108,28 +109,29 @@ public class MessagesWidget extends FadePane  {
 
 					@Override
 					public void run() {
-						listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
-						listview.scrollTo(listview.getItems().size()-1);
+						if(m.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+							fadeProperty().setValue(true);
+							listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
+							listview.scrollTo(listview.getItems().size()-1);
+							showMessages();
+						}
 					}
 
 				});
-
-				showMessages();
-
 			}
 
 		});
 
 		listview.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
-            @Override
-            public void changed(ObservableValue<?> observable, Object oldvalue, Object newValue) {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        listview.getSelectionModel().select(-1);
-                    }
-                });
-            }
-        });
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldvalue, Object newValue) {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						listview.getSelectionModel().select(-1);
+					}
+				});
+			}
+		});
 	}
 
 	public void showMessages() {
