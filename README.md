@@ -67,9 +67,8 @@ Any comments and contributions are welcome.
 
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it)
 
-- PX4Log Keyfigures mapping not complete
+- PX4Log keyfigure mapping not complete (let me know, which missing I should add)
 
-  ​
 
 **Screenshots** (from PX4Log / Online acquisition):
 
