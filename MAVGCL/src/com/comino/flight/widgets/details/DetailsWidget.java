@@ -96,6 +96,7 @@ public class DetailsWidget extends FadePane  {
 			MSTYPE.MSP_IMUTEMP,
 			MSTYPE.MSP_CPULOAD,
 			MSTYPE.MSP_RSSI,
+			MSTYPE.MSP_TIME_ARMED,
 
 
 	};

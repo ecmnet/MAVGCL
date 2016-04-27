@@ -120,6 +120,7 @@ public enum MSTYPE {
 	MSP_REF_GPSLAT  ("Home.Latitude",0,"°",""),
 	MSP_REF_GPSLON  ("Home.Longitude",0,"°",""),
 	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh",""),
+	MSP_TIME_ARMED  ("Time armed",0,"s","");
 
 	;
 
@@ -228,6 +229,7 @@ public enum MSTYPE {
 		case MSP_ABSPRESSURE:   return m.imu.abs_pressure;
 		case MSP_IMUTEMP:       return m.sys.imu_temp;
 		case MSP_CPULOAD:       return m.sys.load_p;
+		case MSP_TIME_ARMED:    return m.sys.t_armed_ms / 1000;
 
 
 		default:
@@ -308,6 +310,7 @@ public enum MSTYPE {
 		case MSP_ABSPRESSURE:    m.imu.abs_pressure = value; break;
 		case MSP_IMUTEMP:        m.sys.imu_temp = (int) value; break;
 		case MSP_CPULOAD:        m.sys.load_p = value; break;
+		case MSP_TIME_ARMED:     m.sys.t_armed_ms = (long)(value * 1000); break;
 
 		}
 	}
