@@ -145,11 +145,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						if(list.size()>0) {
 							int current_x0_pt = control.getCollector().calculateX0Index(scroll.floatValue());
 							int current_x1_pt = control.getCollector().calculateX1Index(scroll.floatValue());
-							elapsedtime.setText("TimeFrame: ["+fo.format(list.get(current_x0_pt).tms/1000));
-							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000)+"] sec");
+							elapsedtime.setText("TimeFrame: [ "+fo.format(list.get(current_x0_pt).tms/1000));
+							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000)+" ] sec");
 						} else {
 							elapsedtime.setText("TimeFrame: [ "+fo.format(0));
-							currenttime.setText(fo.format(0)+"] sec");
+							currenttime.setText(fo.format(0)+" ] sec");
 
 						}
 
@@ -165,7 +165,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 			}
 		};
 
-		messages.setTooltip(new Tooltip("Click to show messagee"));
+		messages.setTooltip(new Tooltip("Click to show messages"));
 	}
 
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {

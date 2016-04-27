@@ -51,6 +51,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public void requestLastLog() {
+		control.getCollector().clearModelList();
 		isCollecting.set(true);
 		StatusLineWidget.showProgressIndicator(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
@@ -83,7 +84,8 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { e.printStackTrace(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
-					MSPLogger.getInstance().writeLocalMsg("Loading px4log from device ("+last_log_id+") - Size: "+entry.size);
+					MSPLogger.getInstance().writeLocalMsg(
+							"Loading px4log from device ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
