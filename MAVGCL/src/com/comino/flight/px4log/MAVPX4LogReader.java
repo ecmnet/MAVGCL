@@ -60,6 +60,9 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	@Override
 	public void received(Object o) {
 
+		if(!isCollecting.get())
+			return;
+
 		if( o instanceof msg_log_entry) {
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;

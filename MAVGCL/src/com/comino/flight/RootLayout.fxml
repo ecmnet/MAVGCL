@@ -37,7 +37,7 @@
 							</accelerator>
 						</MenuItem>
 						<MenuItem fx:id="r_px4log" mnemonicParsing="false"
-							text="Import Px4log from device...">
+							text="Import latest Px4log from device...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="D"
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
