@@ -11,6 +11,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
+import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
 import com.comino.mav.control.IMAVController;
@@ -109,6 +110,13 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					out.close();
 				} catch (IOException e) { e.printStackTrace();  }
 				try {
+
+					msg_log_request_end msg = new msg_log_request_end(255,1);
+					msg.target_component = 1;
+					msg.target_system = 1;
+					control.sendMAVLinkMessage(msg);
+
+
 					ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 					PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
 					PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
