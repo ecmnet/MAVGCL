@@ -232,6 +232,10 @@ public class MainApp extends Application {
 		});
 
 		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
+
+			String m_text = r_px4log.getText();
+			MAVPX4LogReader log = new MAVPX4LogReader(control);
+
 			@Override
 			public void handle(ActionEvent event) {
 				if(StateProperties.getInstance().getArmedProperty().get()) {
@@ -239,12 +243,20 @@ public class MainApp extends Application {
 					return;
 				}
 
-				MAVPX4LogReader log = new MAVPX4LogReader(control);
-				log.requestLastLog();
+				r_px4log.setText("Cancel import from device...");
+
 				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
-					if(!newvalue.booleanValue())
+					if(!newvalue.booleanValue()) {
+						r_px4log.setText(m_text);
 						controlpanel.getRecordControl().refreshCharts();
+					}
 				});
+
+				if(log.isCollecting().get())
+					log.cancel();
+				else
+					log.requestLastLog();
+
 			}
 
 		});
