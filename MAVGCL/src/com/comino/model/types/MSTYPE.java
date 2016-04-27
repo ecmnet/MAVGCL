@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.model.file;
+package com.comino.model.types;
 
 import java.util.ArrayList;
 

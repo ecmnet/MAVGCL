@@ -40,7 +40,7 @@ import java.util.List;
 
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.file.MSTYPE;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.utils.ExecutorService;
