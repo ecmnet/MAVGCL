@@ -2,9 +2,9 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Runnable on OS X, Ubuntu and Windows.
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Runnable on OS X, Ubuntu and Windows. Basically I started it, just to get used to the PX4 stack.
 
-Any comments and contributions are welcome.
+Any comments and contributions are very welcome.
 
 **Status:** Last updated 27/04/2016 
 
@@ -67,7 +67,7 @@ Any comments and contributions are welcome.
 
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it)
 
-- PX4Log keyfigure mapping not complete (let me know, which missing I should add)
+- PX4Log keyfigure mapping not complete (let me know, which I should add)
 
 
 **Screenshots** (from PX4Log / Online acquisition):
