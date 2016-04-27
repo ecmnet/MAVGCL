@@ -8,7 +8,7 @@ Any comments and contributions are welcome.
 
 **Status:** Last updated 27/04/2016 
 
-- Import latest log directly from your device and analyze it
+- Import latest log wireless from your device and analyze it directly
 
 **Features:**
 

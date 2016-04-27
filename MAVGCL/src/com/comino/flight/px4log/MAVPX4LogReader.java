@@ -83,7 +83,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { e.printStackTrace(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
-					MSPLogger.getInstance().writeLocalMsg("Get data from Log "+last_log_id+" Size: "+entry.size);
+					MSPLogger.getInstance().writeLocalMsg("Loading px4log from device ("+last_log_id+") - Size: "+entry.size);
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;

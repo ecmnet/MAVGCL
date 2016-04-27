@@ -40,6 +40,7 @@ import java.util.List;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
+import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
@@ -169,6 +170,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
 					clear.setDisable(false);
+					StatusLineWidget.showProgressIndicator(false);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
@@ -183,6 +185,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				case ModelCollectorService.COLLECTING:
 					clear.setDisable(true);
 					FileHandler.getInstance().clear();
+					StatusLineWidget.showProgressIndicator(true);
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED); break;
 				}
@@ -383,8 +386,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 		else {
 			control.getCollector().stop(delay);
-			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
+			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms()) {
 				scroll.setDisable(false);
+			}
 		}
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
