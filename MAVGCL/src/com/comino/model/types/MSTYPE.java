@@ -261,8 +261,8 @@ public enum MSTYPE {
 		case MSP_ALTAMSL: 		 m.attitude.ag = value; break;
 		case MSP_ALTTERRAIN:	 m.attitude.at = value; break;
 		case MSP_NEDX:			 m.state.x = value; if(m.state.hx==0) m.state.hx = value; break;
-		case MSP_NEDY:			 m.state.y = value; if(m.state.hy==0) m.state.hy = value;break;
-		case MSP_NEDZ:			 m.state.z = value; if(m.state.hz==0) m.state.hz = value;break;
+		case MSP_NEDY:			 m.state.y = value; if(m.state.hy==0) m.state.hy = value; break;
+		case MSP_NEDZ:			 m.state.z = value; if(m.state.hz==0) m.state.hz = value; break;
 		case MSP_NEDVX:			 m.state.vx = value; break;
 		case MSP_NEDVY:			 m.state.vy = value; break;
 		case MSP_NEDVZ:			 m.state.vz = value; break;

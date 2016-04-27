@@ -67,7 +67,7 @@ public class FileHandler {
 
 	private Stage stage;
 	private IMAVController control;
-	private String name;
+	private String name="";
 
 
 	public static FileHandler getInstance() {
@@ -93,6 +93,10 @@ public class FileHandler {
 
 	public void clear() {
 		name = "";
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 
@@ -148,10 +152,14 @@ public class FileHandler {
 
 
 	public void fileExport() {
-		String defaultName = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
-		fileChooser.setInitialFileName(defaultName);
+
+		if(name.length()<2)
+		      name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+
+		fileChooser.setInitialFileName(name);
 		File file = fileChooser.showSaveDialog(stage);
 		try {
 			if(file!=null) {

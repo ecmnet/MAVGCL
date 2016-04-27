@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
@@ -38,6 +40,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 
 	private long tms = 0;
+	private long time_utc=0;
 
 	public MAVPX4LogReader(IMAVController control) {
 		this.control = control;
@@ -80,6 +83,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					control.sendMAVLinkMessage(msg);
 				}
 				else {
+					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -131,7 +135,10 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					control.getCollector().setModelList(modelList);
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");
 				} catch (Exception e) { e.printStackTrace(); }
+
+				FileHandler.getInstance().setName("PX4Log-"+last_log_id+"-"+time_utc);
 				StatusLineWidget.showProgressIndicator(false);
+
 				isCollecting.set(false);;
 			}
 		}
