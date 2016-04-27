@@ -234,6 +234,11 @@ public class MainApp extends Application {
 		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				if(StateProperties.getInstance().getArmedProperty().get()) {
+					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
+					return;
+				}
+
 				MAVPX4LogReader log = new MAVPX4LogReader(control);
 				log.requestLastLog();
 				controlpanel.getRecordControl().refreshCharts();

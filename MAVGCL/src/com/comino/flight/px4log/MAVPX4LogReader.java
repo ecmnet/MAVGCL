@@ -114,7 +114,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
 					converter.doConversion();
 					control.getCollector().setModelList(modelList);
-					MSPLogger.getInstance().writeLocalMsg("Reding log from device finished");
+					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");
 				} catch (Exception e) { e.printStackTrace(); }
 
 				isCollecting.set(false);;
