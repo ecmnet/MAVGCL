@@ -241,8 +241,10 @@ public class MainApp extends Application {
 
 				MAVPX4LogReader log = new MAVPX4LogReader(control);
 				log.requestLastLog();
-				controlpanel.getRecordControl().refreshCharts();
-
+				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
+					if(!newvalue.booleanValue())
+						controlpanel.getRecordControl().refreshCharts();
+				});
 			}
 
 		});
