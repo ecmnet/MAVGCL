@@ -64,7 +64,12 @@ Any comments and contributions are welcome.
 **Limitations:**
 
 - Limited to one device (MAVLink-ID '1')
+
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it)
+
+- PX4Log Keyfigures mapping not complete
+
+  ​
 
 **Screenshots** (from PX4Log / Online acquisition):
 
