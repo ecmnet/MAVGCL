@@ -19,19 +19,21 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 
-
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 
 public class MAVPX4LogReader implements IMAVLinkListener {
 
 	private IMAVController control = null;
-	private boolean isCollecting  = false;
 	private int     last_log_id   = 0;
 	private long  log_bytes_read  = 0;
 	private long  log_bytes_total = 0;
 
 	private File tmpfile = null;
 	private BufferedOutputStream out = null;
+
+	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 
 	private long tms = 0;
 
@@ -47,7 +49,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public void requestLastLog() {
-		isCollecting = true;
+		isCollecting.set(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -60,18 +62,29 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		if( o instanceof msg_log_entry) {
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;
+
 			if(last_log_id > -1) {
-				try {
-					out = new BufferedOutputStream(new FileOutputStream(tmpfile));
-				} catch (FileNotFoundException e) { e.printStackTrace(); }
-				log_bytes_read = 0; log_bytes_total = entry.size;
-				System.out.println("Get data from Log "+last_log_id+" Size: "+entry.size);
-				msg_log_request_data msg = new msg_log_request_data(255,1);
-				msg.target_component = 1;
-				msg.target_system = 1;
-				msg.id = last_log_id;
-				msg.count = entry.size;
-				control.sendMAVLinkMessage(msg);
+				if(entry.id != last_log_id) {
+					msg_log_request_list msg = new msg_log_request_list(255,1);
+					msg.target_component = 1;
+					msg.target_system = 1;
+					msg.start= last_log_id;
+					msg.end = last_log_id;
+					control.sendMAVLinkMessage(msg);
+				}
+				else {
+					try {
+						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
+					} catch (FileNotFoundException e) { e.printStackTrace(); }
+					log_bytes_read = 0; log_bytes_total = entry.size;
+					MSPLogger.getInstance().writeLocalMsg("Get data from Log "+last_log_id+" Size: "+entry.size);
+					msg_log_request_data msg = new msg_log_request_data(255,1);
+					msg.target_component = 1;
+					msg.target_system = 1;
+					msg.id = last_log_id;
+					msg.count = Long.MAX_VALUE;
+					control.sendMAVLinkMessage(msg);
+				}
 			}
 		}
 
@@ -86,10 +99,10 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			log_bytes_read = data.ofs;
 
 			if((System.currentTimeMillis()-tms)>5000) {
-				 MSPLogger.getInstance().writeLocalMsg("Loading px4log from device: "+getProgress()+"%",
-						 MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				 tms = System.currentTimeMillis();
-				}
+				MSPLogger.getInstance().writeLocalMsg("Loading px4log from device: "+getProgress()+"%",
+						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				tms = System.currentTimeMillis();
+			}
 
 			if(data.count < 90) {
 				try {
@@ -104,7 +117,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					MSPLogger.getInstance().writeLocalMsg("Reding log from device finished");
 				} catch (Exception e) { e.printStackTrace(); }
 
-				isCollecting = false;
+				isCollecting.set(false);;
 			}
 		}
 	}
@@ -113,7 +126,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		return (int)((log_bytes_read * 100) / log_bytes_total);
 	}
 
-	public boolean isCollecting() {
+	public BooleanProperty isCollecting() {
 		return isCollecting;
 	}
 
