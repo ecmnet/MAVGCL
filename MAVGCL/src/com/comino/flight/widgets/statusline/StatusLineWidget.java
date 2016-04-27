@@ -58,6 +58,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 
@@ -65,6 +66,9 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 	@FXML
 	private Label version;
+
+	@FXML
+	private ProgressIndicator indicator;
 
 	@FXML
 	private Label driver;
@@ -90,6 +94,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 	private final SimpleDateFormat fo = new SimpleDateFormat("mmm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
+
+	private static boolean showProgress = false;
 
 
 	public StatusLineWidget() {
@@ -124,6 +130,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						break;
 					}
 					Platform.runLater(() -> {
+
+						indicator.setVisible(showProgress);
 
 						if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
 							driver.setText(control.getCurrentModel().sys.getSensorString());
@@ -164,6 +172,10 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 		chartControlWidget.addChart(this);
 		this.control = control;
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
+
+		indicator.setVisible(false);
+		indicator.layoutXProperty().bind(this.widthProperty().subtract(50));
+
 		ExecutorService.get().execute(task);
 	}
 
@@ -193,7 +205,10 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	@Override
 	public void refreshChart() {
 
+	}
 
+	public static void showProgressIndicator(boolean show) {
+		showProgress = show;
 	}
 
 }

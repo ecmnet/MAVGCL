@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.Pane?>
 
@@ -10,6 +11,7 @@
       <Label  fx:id="version" layoutX="1100.0" layoutY="10.0" prefHeight="18.0" prefWidth="80.0" text="" />
       <Label  fx:id="driver" layoutX="200.0" layoutY="10.0" prefHeight="18.0" prefWidth="150.0" text="no sensors available" />
       <Label  styleClass="message" fx:id="messages" layoutX="400.0" layoutY="10.0" prefHeight="18.0" prefWidth="300" text="" />
+      <ProgressIndicator fx:id="indicator" prefHeight="19.0" layoutX="330.0" layoutY="7.0" />
       <Label  fx:id="elapsedtime" layoutX="700.0" layoutY="10.0" prefHeight="18.0" prefWidth="100.0" text="" />
       <Label  layoutX="800.0" layoutY="10.0" prefHeight="18.0" prefWidth="10.0" text="-" />
       <Label  fx:id="currenttime" layoutX="810.0" layoutY="10.0" prefHeight="18.0" prefWidth="70.0" text="" />

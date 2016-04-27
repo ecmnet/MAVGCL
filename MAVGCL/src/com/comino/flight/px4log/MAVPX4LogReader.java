@@ -14,6 +14,7 @@ import org.mavlink.messages.lquac.msg_log_request_data;
 import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
+import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
@@ -51,6 +52,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 	public void requestLastLog() {
 		isCollecting.set(true);
+		StatusLineWidget.showProgressIndicator(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -127,7 +129,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					control.getCollector().setModelList(modelList);
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");
 				} catch (Exception e) { e.printStackTrace(); }
-
+				StatusLineWidget.showProgressIndicator(false);
 				isCollecting.set(false);;
 			}
 		}

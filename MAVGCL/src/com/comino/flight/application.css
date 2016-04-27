@@ -284,4 +284,8 @@
 	  -fx-background-radius: 10.0;
 }
 
+.progress-indicator {
+	-fx-progress-color: white;
+}
+
 
