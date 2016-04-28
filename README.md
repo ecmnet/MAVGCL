@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any comments and contributions are very welcome.
 
-**Status:** Last updated 27/04/2016 
+**Status:** Last updated 28/04/2016 
 
 - Import latest log from your device via WiFi and analyze it directly
 
