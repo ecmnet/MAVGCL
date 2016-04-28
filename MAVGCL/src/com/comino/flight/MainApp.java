@@ -227,7 +227,6 @@ public class MainApp extends Application {
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImportPX4Log();
 				controlpanel.getRecordControl().refreshCharts();
-
 			}
 
 		});
@@ -304,8 +303,6 @@ public class MainApp extends Application {
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
-			//	fvController.prefHeightProperty().bind(rootLayout.heightProperty());
-
 
 
 		} catch (IOException e) {

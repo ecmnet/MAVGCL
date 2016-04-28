@@ -179,6 +179,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					if(!isCollecting.get() && collector.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
+					
 					isCollecting.set(collector.isCollecting());
 
 					Platform.runLater(() -> {

@@ -118,10 +118,11 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	@Override
 	public void received(Object o) {
 
-		if(!isCollecting.get())
-			return;
-
 		if( o instanceof msg_log_entry) {
+
+			if(!isCollecting.get())
+				return;
+
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;
 
@@ -139,7 +140,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
-					} catch (FileNotFoundException e) { e.printStackTrace(); }
+					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
 					MSPLogger.getInstance().writeLocalMsg(
 							"Loading px4log from device ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
@@ -154,12 +155,16 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		}
 
 		if( o instanceof msg_log_data) {
+
+			if(!isCollecting.get())
+				return;
+
 			msg_log_data data = (msg_log_data) o;
 
 			for(int i=0;i< data.count;i++) {
 				try {
 					out.write(data.data[i]);
-				} catch (IOException e) { e.printStackTrace(); }
+				} catch (IOException e) { cancel(); }
 			}
 			log_bytes_read = data.ofs;
 
@@ -172,7 +177,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			if(data.count < 90) {
 				try {
 					out.close();
-				} catch (IOException e) { e.printStackTrace();  }
+				} catch (IOException e) { cancel();  }
 				try {
 
 					msg_log_request_end msg = new msg_log_request_end(255,1);
