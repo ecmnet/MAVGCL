@@ -57,6 +57,7 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -247,8 +248,10 @@ public class MainApp extends Application {
 
 				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
 					if(!newvalue.booleanValue()) {
+						Platform.runLater(() -> {
 						r_px4log.setText(m_text);
 						controlpanel.getRecordControl().refreshCharts();
+						});
 					}
 				});
 
@@ -256,9 +259,7 @@ public class MainApp extends Application {
 					log.cancel();
 				else
 					log.requestLastLog();
-
 			}
-
 		});
 
 		m_export.setOnAction(event -> {

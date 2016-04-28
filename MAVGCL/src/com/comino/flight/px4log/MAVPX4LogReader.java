@@ -90,7 +90,6 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	public void requestLastLog() {
 		control.getCollector().clearModelList();
 		isCollecting.set(true);
-		StatusLineWidget.showProgressIndicator(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -101,6 +100,10 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		if(!isCollecting.get())
 			return;
+
+		try {
+			out.close();
+		} catch (IOException e) { e.printStackTrace();  }
 
 		control.getCollector().clearModelList();
 		isCollecting.set(false);
@@ -124,6 +127,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 			if(last_log_id > -1) {
 				if(entry.id != last_log_id) {
+					StatusLineWidget.showProgressIndicator(true);
 					msg_log_request_list msg = new msg_log_request_list(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
@@ -188,7 +192,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 				FileHandler.getInstance().setName("PX4Log-"+last_log_id+"-"+time_utc);
 				StatusLineWidget.showProgressIndicator(false);
 
-				isCollecting.set(false);;
+				isCollecting.set(false);
 			}
 		}
 	}
