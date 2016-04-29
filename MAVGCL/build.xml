@@ -26,7 +26,12 @@
 		<mkdir dir="bin" />
 	</target>
 
-	<target name="compile" depends="clean">
+	<target name="dependencies" depends="clean">
+		<get src="http://github.com/mavlink/qgroundcontrol/raw/master/src/FirmwarePlugin/PX4/PX4ParameterFactMetaData.xml"
+					dest="src/com/comino/flight/tabs/parameters/PX4ParameterFactMetaData.xml"/>
+	</target>
+
+	<target name="compile" depends="dependencies">
 		<copy todir="bin">
 			<fileset dir="src">
 				<exclude name="**/*.java" />
