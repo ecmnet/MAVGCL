@@ -62,7 +62,6 @@ public class ParameterFactMetaData {
 
 				System.out.println("ParameterFactMetaData Version: "+v_major+"."+v_minor);
 
-
 				buildParameterList(doc.getElementsByTagName("group"));
 			}
 		} catch (Exception e) {
