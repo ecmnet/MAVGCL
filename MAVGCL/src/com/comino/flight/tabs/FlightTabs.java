@@ -80,8 +80,8 @@ public class FlightTabs extends Pane {
 	@FXML
 	private CameraWidget camera;
 
-	@FXML
-	private MAVAnalysis3DTab mavanalysis3Dtab;
+//	@FXML
+//	private MAVAnalysis3DTab mavanalysis3Dtab;
 
 	@FXML
 	private MAVParametersTab mavparameterstab;
@@ -95,7 +95,7 @@ public class FlightTabs extends Pane {
 
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
-		tabs.add(mavanalysis3Dtab);
+//		tabs.add(mavanalysis3Dtab);
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavparameterstab);
@@ -118,7 +118,7 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
-		mavanalysis3Dtab.setDisable(true);
+//		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mavparameterstab.setDisable(true);
 
@@ -142,7 +142,7 @@ public class FlightTabs extends Pane {
 		mavinspectortab.setup(control);
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
-		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
+//		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
 		mavparameterstab.setup(control);
 
 		//		mavworldtab.setDisable(true);

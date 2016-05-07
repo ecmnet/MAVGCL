@@ -52,6 +52,7 @@
 								</AnchorPane>
 							</content>
 						</Tab>
+						<!--
 						<Tab text="3D Analysis">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
@@ -64,6 +65,7 @@
 								</AnchorPane>
 							</content>
 						</Tab>
+						-->
 						<Tab text="Map">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
