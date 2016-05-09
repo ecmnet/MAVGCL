@@ -90,7 +90,7 @@ public class PX4toModelConverter {
 							try {
 								val = data.get(px4Name);
 								if(val == null) {
-									System.err.println(px4Name+" not found in file");
+								//	System.err.println(px4Name+" not found in file");
 									continue;
 								}
 
