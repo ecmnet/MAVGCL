@@ -58,7 +58,7 @@ public class PX4toModelConverter {
 
 	public void doConversion() throws FormatErrorException {
 
-		long tms_slot = 0; long tms = 0;
+		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
@@ -90,7 +90,7 @@ public class PX4toModelConverter {
 							try {
 								val = data.get(px4Name);
 								if(val == null) {
-								//	System.err.println(px4Name+" not found in file");
+								    errorFlag = true;
 									continue;
 								}
 
@@ -116,6 +116,8 @@ public class PX4toModelConverter {
 			}
 
 		} catch(IOException e) {
+			if(errorFlag)
+				System.out.println("WARNING: Some of the key-figures were not available in the PX4Log");
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		}
