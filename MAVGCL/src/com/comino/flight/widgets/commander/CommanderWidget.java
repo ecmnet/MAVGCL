@@ -100,9 +100,10 @@ public class CommanderWidget extends Pane  {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
-		takeoff_command.setDisable(true);
+		takeoff_command.setDisable(false);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF_LOCAL);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
+					500);
 		});
 
 		althold_command.setOnAction((ActionEvent event)-> {
@@ -128,6 +129,13 @@ public class CommanderWidget extends Pane  {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+				msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
+				cmd.target_component = 1;
+				cmd.target_system = 1;
+				cmd.x =  0;
+				cmd.y =  0;
+				cmd.z = -13;
+				control.sendMAVLinkMessage(cmd);
 			}
 			else
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,

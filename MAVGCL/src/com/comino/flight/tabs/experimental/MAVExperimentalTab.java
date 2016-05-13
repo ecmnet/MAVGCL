@@ -107,7 +107,7 @@ public class MAVExperimentalTab extends BorderPane  {
 
 
 	public MAVExperimentalTab setup(IMAVController control) {
-		vision = new VisionPositionSimulationUpdater(control);
+	//	vision = new VisionPositionSimulationUpdater(control);
 		offboard = new OffboardSimulationUpdater(control);
 		return this;
 	}

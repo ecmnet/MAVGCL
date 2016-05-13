@@ -40,10 +40,13 @@ import com.comino.mav.control.IMAVController;
 public class SITLController implements Runnable {
 
 	private IMAVController control;
-	private msg_rc_channels_override rc = new msg_rc_channels_override(1,1);
+	private msg_rc_channels_override rc = new msg_rc_channels_override(255,1);
 
 	public SITLController(IMAVController control) {
 		this.control = control;
+
+		rc.target_component = 1;
+		rc.target_system = 1;
 
 		rc.chan1_raw = 1500;
 		rc.chan2_raw = 1500;
