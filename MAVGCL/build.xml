@@ -5,7 +5,6 @@
 	<property name="peer" value="172.168.178.1" />
 	<property name="peer_sitl" value="127.0.0.1" />
 
-
 	<!-- Works at least on OSX, to determine JDK -->
 
 	<script language="javascript">
@@ -89,16 +88,18 @@
 		</fx:deploy>
 	</target>
 
-	<target name="deploy_win" depends="build">
-		<echo>Refer to http://docs.oracle.com/javafx/2/deployment/self-contained-packaging.htm for prerequisites</echo>
-		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="exe">
-			<fx:info title="MAVGAnalysiss" />
-			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp">
+	<target name="deploy_osx_sitl" depends="build">
+		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
+			<fx:info title="MAVGAnalysiss SITL" />
+			<fx:application name="MAVGAnalysis SITL" mainClass="com.comino.flight.MainApp">
 				<fx:argument>--peerAddress=${peer_sitl}</fx:argument>
 			</fx:application>
 			<fx:resources>
 				<fx:fileset dir="dist" includes="*.jar" />
 			</fx:resources>
+			<fx:info title="MAVGAnalysis" vendor="ecmnet">
+				<fx:icon href="MAVGAnalysis_SITL.icns" />
+			</fx:info>
 		</fx:deploy>
 	</target>
 
