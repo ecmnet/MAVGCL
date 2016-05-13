@@ -73,19 +73,10 @@ public class CommanderWidget extends Pane  {
 	private Button poshold_command;
 
 	@FXML
-	private Button left;
-
-	@FXML
-	private Button right;
-
-	@FXML
 	private Button emergency;
 
 	private IMAVController control;
 	private DataModel model;
-
-	private VisionPositionSimulationUpdater vision = null;
-	private OffboardSimulationUpdater offboard = null;
 
 
 	public CommanderWidget() {
@@ -103,7 +94,7 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
-		this.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
+	//	this.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
 
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
@@ -111,7 +102,7 @@ public class CommanderWidget extends Pane  {
 
 		takeoff_command.setDisable(true);
 		takeoff_command.setOnAction((ActionEvent event)-> {
-
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF_LOCAL);
 		});
 
 		althold_command.setOnAction((ActionEvent event)-> {
@@ -145,18 +136,7 @@ public class CommanderWidget extends Pane  {
 
 		});
 
-		left.setOnAction((ActionEvent event)-> {
-			offboard.start();
 
-
-		});
-
-		right.setOnAction((ActionEvent event)-> {
-			offboard.stop();
-
-
-
-		});
 
 		emergency.setOnAction((ActionEvent event)-> {
 			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
@@ -172,13 +152,6 @@ public class CommanderWidget extends Pane  {
 		this.model = control.getCurrentModel();
 		this.control = control;
 
-		if(!control.isSimulation()) {
-			left.setDisable(true);
-			right.setDisable(true);
-		}
-
-		vision = new VisionPositionSimulationUpdater(control);
-		offboard = new OffboardSimulationUpdater(control);
 	}
 
 }

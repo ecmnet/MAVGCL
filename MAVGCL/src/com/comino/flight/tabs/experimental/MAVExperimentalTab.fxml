@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+	<top>
+		<Pane prefHeight="10"/>
+	</top>
+	<center>
+	 <Pane>
+	 <children>
+	 <Button fx:id="exp1"  layoutX="15.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp1"/>
+     <Button fx:id="exp2"  layoutX="95.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp2"/>
+     </children>
+     </Pane>
+	</center>
+	<bottom>
+		<Pane prefHeight="10" />
+	</bottom>
+	<left>
+		<Pane prefWidth="10" />
+	</left>
+	<right>
+		<Pane prefWidth="10" />
+	</right>
+</fx:root>
