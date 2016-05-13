@@ -6,7 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 12/05/2016 
+**Status:** Last updated 13/05/2016 
 
 **Features:**
 
@@ -19,7 +19,6 @@ Any feedback, comments and contributions are very welcome.
 - MAVLink inspector
 - Easy to use parameter editor
 - Map viewer of global position and raw gps data with option to record path (cached)
-- 3D Analysis of selected key figures (experimental)
 - Import of selected key-figures from PX4Log (file or last log from device via WiFi)
 - Save and load of collected data 
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
@@ -78,10 +77,6 @@ Any feedback, comments and contributions are very welcome.
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot2.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot3.png)
-
-Experimental 3D Analysis (relative Local position in NED only):
-
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot4.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot5.png)
 
