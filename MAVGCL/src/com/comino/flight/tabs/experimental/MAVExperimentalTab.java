@@ -168,7 +168,7 @@ public class MAVExperimentalTab extends BorderPane  {
 	    this.control = control;
 	    this.model   = control.getCurrentModel();
 	//	vision = new VisionPositionSimulationUpdater(control);
-		offboard = new OffboardSimulationUpdater(control);
+	//	offboard = new OffboardSimulationUpdater(control);
 		return this;
 	}
 
