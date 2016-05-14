@@ -16,6 +16,8 @@
 	 <children>
 	 <Button fx:id="exp1"  layoutX="15.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp1"/>
      <Button fx:id="exp2"  layoutX="95.0" layoutY="75" prefHeight="19" prefWidth="70.0" text="exp2"/>
+      <Button fx:id="althold_command" layoutX="15.0" layoutY="45" prefHeight="19" prefWidth="70.0" text="Alt.hold"/>
+       <Button fx:id="poshold_command" layoutX="95.0" layoutY="45" prefHeight="19" prefWidth="70.0" text="Pos.hold"/>
      </children>
      </Pane>
 	</center>

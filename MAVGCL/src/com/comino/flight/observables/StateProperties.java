@@ -85,7 +85,7 @@ public class StateProperties implements IMSPModeChangedListener{
 	}
 
 	public BooleanProperty getLandedProperty() {
-		return connectedProperty;
+		return landedProperty;
 	}
 
 	public BooleanProperty getAltHoldProperty() {

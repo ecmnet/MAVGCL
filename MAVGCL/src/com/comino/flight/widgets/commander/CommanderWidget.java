@@ -52,6 +52,7 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -61,16 +62,13 @@ import javafx.scene.layout.Pane;
 public class CommanderWidget extends Pane  {
 
 	@FXML
+	private Button arm_command;
+
+	@FXML
 	private Button land_command;
 
 	@FXML
 	private Button takeoff_command;
-
-	@FXML
-	private Button althold_command;
-
-	@FXML
-	private Button poshold_command;
 
 	@FXML
 	private Button emergency;
@@ -94,72 +92,51 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
-	//	this.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
+		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
+		StateProperties.getInstance().getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
+			Platform.runLater(() -> {
+			if(newvalue.booleanValue())
+				arm_command.setText("Disarm motors");
+			else
+				arm_command.setText("Arm motors");
+			});
+		});
+
+		arm_command.disableProperty().bind(StateProperties.getInstance().getLandedProperty().not());
+		arm_command.setOnAction((ActionEvent event)-> {
+			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+			} else {
+				if(model.sys.isStatus(Status.MSP_LANDED))
+				   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+			}
+
+		});
+
+		land_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
-		takeoff_command.setDisable(false);
+		takeoff_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
-					500);
+					Float.NaN);
 		});
-
-		althold_command.setOnAction((ActionEvent event)-> {
-			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-			else {
-				if(!model.sys.isStatus(Status.MSP_LANDED))
-					MSPLogger.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
-				else
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
-			}
-
-		});
-
-		poshold_command.setOnAction((ActionEvent event)-> {
-
-			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
-
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-				msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
-				cmd.target_component = 1;
-				cmd.target_system = 1;
-				cmd.x =  0;
-				cmd.y =  0;
-				cmd.z = -13;
-				control.sendMAVLinkMessage(cmd);
-			}
-			else
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-
-		});
-
-
 
 		emergency.setOnAction((ActionEvent event)-> {
 			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
 				MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
 		});
-
 	}
-
-
-
 
 	public void setup(IMAVController control) {
 		this.model = control.getCurrentModel();
 		this.control = control;
-
 	}
 
 }

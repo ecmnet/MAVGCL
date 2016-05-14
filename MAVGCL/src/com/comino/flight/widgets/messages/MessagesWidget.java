@@ -102,8 +102,9 @@ public class MessagesWidget extends FadePane  {
 			@Override
 			public void messageReceived(List<LogMessage> ml, LogMessage m) {
 
-				if(f!=null)
+				if(f!=null) {
 					f.cancel(true);
+				}
 
 				Platform.runLater(new Runnable() {
 
@@ -138,6 +139,10 @@ public class MessagesWidget extends FadePane  {
 
 		if(listview.getItems().size()<1)
 			return;
+
+		if(fadeProperty().get() && f!=null) {
+			f.cancel(true);
+		}
 
 		fadeProperty().setValue(true);
 		f = ExecutorService.get().schedule(new Runnable() {

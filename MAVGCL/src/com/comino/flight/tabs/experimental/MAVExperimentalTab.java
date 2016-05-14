@@ -37,10 +37,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
+
 import com.comino.flight.experimental.OffboardSimulationUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -70,9 +78,19 @@ public class MAVExperimentalTab extends BorderPane  {
 	@FXML
 	private Button exp2;
 
+	@FXML
+	private Button althold_command;
+
+	@FXML
+	private Button poshold_command;
+
 
 	private VisionPositionSimulationUpdater vision = null;
 	private OffboardSimulationUpdater offboard = null;
+
+	private IMAVController control;
+
+	private DataModel model;
 
 
 	public MAVExperimentalTab() {
@@ -103,10 +121,52 @@ public class MAVExperimentalTab extends BorderPane  {
 
 
 		});
+
+		althold_command.setOnAction((ActionEvent event)-> {
+			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+			else {
+				if(!model.sys.isStatus(Status.MSP_LANDED))
+					MSPLogger.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
+				else
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+			}
+
+		});
+
+		poshold_command.setOnAction((ActionEvent event)-> {
+
+			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
+
+				msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
+				cmd.target_component = 1;
+				cmd.target_system = 1;
+				cmd.x =  0;
+				cmd.y =  0;
+				cmd.z = -2;
+				control.sendMAVLinkMessage(cmd);
+
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+			}
+			else
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+
+		});
+
 	}
 
 
 	public MAVExperimentalTab setup(IMAVController control) {
+	    this.control = control;
+	    this.model   = control.getCurrentModel();
 	//	vision = new VisionPositionSimulationUpdater(control);
 		offboard = new OffboardSimulationUpdater(control);
 		return this;
