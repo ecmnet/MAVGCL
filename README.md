@@ -6,7 +6,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 13/05/2016 
+**Status:** Last updated 14/05/2016 
+
+- Landing/Takeoff command added
 
 **Features:**
 
