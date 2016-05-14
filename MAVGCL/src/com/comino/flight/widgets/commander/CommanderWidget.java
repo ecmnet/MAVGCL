@@ -117,12 +117,14 @@ public class CommanderWidget extends Pane  {
 
 		});
 
-		land_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
+		land_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+				.or(StateProperties.getInstance().getLandedProperty()));
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
-		takeoff_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
+		takeoff_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 					Float.NaN);
