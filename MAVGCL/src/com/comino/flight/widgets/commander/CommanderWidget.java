@@ -126,11 +126,11 @@ public class CommanderWidget extends Pane  {
 		takeoff_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
-			if(model.attitude.ag!=Float.NaN)
+			if(model.attitude.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY))
 			   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 					  model.attitude.ag+1);
 			else
-				MSPLogger.getInstance().writeLocalMsg("REJECTED: AMSL altitude not available");
+				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position not available");
 
 		});
 

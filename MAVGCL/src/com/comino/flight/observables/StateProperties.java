@@ -52,6 +52,7 @@ public class StateProperties implements IMSPModeChangedListener{
 
 	private BooleanProperty recordingProperty = new SimpleBooleanProperty();
 
+
 	public static StateProperties getInstance() {
 		return instance;
 	}
