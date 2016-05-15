@@ -119,6 +119,7 @@ public class MessagesWidget extends FadePane  {
 								listview.scrollTo(listview.getItems().size()-1);
 							}
 						}
+						fadeProperty().setValue(true);
 					}
 				});
 				showMessages();
@@ -140,12 +141,12 @@ public class MessagesWidget extends FadePane  {
 
 	public void showMessages() {
 
+		fadeProperty().setValue(true);
 
 		if(f!=null) {
 			f.cancel(true);
 		}
 
-		fadeProperty().setValue(true);
 		f = ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
