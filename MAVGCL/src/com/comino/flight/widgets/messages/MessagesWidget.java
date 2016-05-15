@@ -35,8 +35,10 @@ package com.comino.flight.widgets.messages;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -97,25 +99,27 @@ public class MessagesWidget extends FadePane  {
 
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
+			ConcurrentLinkedQueue<LogMessage> list = new ConcurrentLinkedQueue<LogMessage>();
+
 
 			@Override
-			public void messageReceived(List<LogMessage> ml, LogMessage m) {
+			public void messageReceived(List<LogMessage> ml, LogMessage message) {
 
-				if(f!=null) {
-					f.cancel(true);
-				}
+				list.add(message);
 
 				Platform.runLater(new Runnable() {
 
 					@Override
 					public void run() {
-						if(m.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
-							fadeProperty().setValue(true);
-							listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
-							listview.scrollTo(listview.getItems().size()-1);
+						while(!list.isEmpty()) {
+							LogMessage m = list.poll();
+							if(m.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+								fadeProperty().setValue(true);
+								listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
+								listview.scrollTo(listview.getItems().size()-1);
+							}
 						}
 					}
-
 				});
 				showMessages();
 			}
@@ -136,10 +140,8 @@ public class MessagesWidget extends FadePane  {
 
 	public void showMessages() {
 
-		if(listview.getItems().size()<1)
-			return;
 
-		if(fadeProperty().get() && f!=null) {
+		if(f!=null) {
 			f.cancel(true);
 		}
 
