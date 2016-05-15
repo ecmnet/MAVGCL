@@ -71,7 +71,6 @@ public class MessagesWidget extends FadePane  {
 
 		super(300);
 
-
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MessagesWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -114,11 +113,11 @@ public class MessagesWidget extends FadePane  {
 							fadeProperty().setValue(true);
 							listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
 							listview.scrollTo(listview.getItems().size()-1);
-							showMessages();
 						}
 					}
 
 				});
+				showMessages();
 			}
 
 		});

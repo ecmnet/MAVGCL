@@ -129,8 +129,11 @@ public class CommanderWidget extends Pane  {
 			if(model.attitude.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY))
 			   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 					  model.attitude.ag+1);
-			else
+			else {
+				if(model.sys.isStatus(Status.MSP_LANDED))
+					   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position not available");
+			}
 
 		});
 
