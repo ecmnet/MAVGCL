@@ -105,24 +105,25 @@ public class MessagesWidget extends FadePane  {
 			@Override
 			public void messageReceived(List<LogMessage> ml, LogMessage message) {
 
-				list.add(message);
+				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+					list.add(message);
 
-				Platform.runLater(new Runnable() {
+					Platform.runLater(new Runnable() {
 
-					@Override
-					public void run() {
-						while(!list.isEmpty()) {
-							LogMessage m = list.poll();
-							if(m.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+						@Override
+						public void run() {
+							while(!list.isEmpty()) {
+								LogMessage m = list.poll();
 								fadeProperty().setValue(true);
 								listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
 								listview.scrollTo(listview.getItems().size()-1);
+								fadeProperty().setValue(true);
 							}
+							fadeProperty().setValue(true);
 						}
-						fadeProperty().setValue(true);
-					}
-				});
-				showMessages();
+					});
+					showMessages();
+				}
 			}
 
 		});
@@ -140,6 +141,7 @@ public class MessagesWidget extends FadePane  {
 	}
 
 	public void showMessages() {
+
 
 		fadeProperty().setValue(true);
 
