@@ -35,6 +35,7 @@ package com.comino.flight.tabs.experimental;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_CMD;
@@ -110,13 +111,16 @@ public class MAVExperimentalTab extends BorderPane  {
 	private void initialize() {
 
 		exp1.setOnAction((ActionEvent event)-> {
-			offboard.start();
+			List<DataModel> l = control.getCollector().getModelList();
+			for(DataModel m : l) {
+				System.out.println(m.tms/1000+": "+m.msg.msg);
+			}
 
 
 		});
 
 		exp2.setOnAction((ActionEvent event)-> {
-			offboard.stop();
+
 
 
 
