@@ -36,6 +36,11 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+		<copy todir="bin">
+			<fileset dir="native">
+				<include name="*.*" />
+			</fileset>
+		</copy>
 		<javac destdir="bin" includeantruntime="false">
 			<src path="src" />
 			<classpath>
@@ -60,12 +65,17 @@
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
+			<fileset dir="native">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+		<copy todir="dist">
 			<fileset dir="lib/">
 				<include name="mavcomm.jar" />
 				<include name="jssc.jar" />
 				<include name="jna-4.1.0.jar" />
 				<include name="poly2tri-core.jar" />
-			    <include name="JCSG.jar" />
+				<include name="JCSG.jar" />
 				<include name="medusa-4.7.jar" />
 				<include name="gson-2.4.jar" />
 				<include name="jinput.jar" />
@@ -82,7 +92,7 @@
 				<fx:argument>--peerAddress=${peer}</fx:argument>
 			</fx:application>
 			<fx:resources>
-				<fx:fileset dir="dist" includes="*.jar" />
+				<fx:fileset dir="dist" includes="*.*" />
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis.icns" />
@@ -97,7 +107,7 @@
 				<fx:argument>--peerAddress=${peer_sitl}</fx:argument>
 			</fx:application>
 			<fx:resources>
-				<fx:fileset dir="dist" includes="*.jar" />
+				<fx:fileset dir="dist" includes="*.*" />
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis_SITL.icns" />

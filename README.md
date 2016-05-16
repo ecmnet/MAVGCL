@@ -6,9 +6,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 15/05/2016 
+**Status:** Last updated 16/05/2016 
 
 - Arm/Disarm/Landing/Takeoff commands added
+- FrSky Tatanis USB supported in SITL
 
 **Features:**
 
