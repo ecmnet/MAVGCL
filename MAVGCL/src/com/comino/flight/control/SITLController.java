@@ -121,7 +121,7 @@ public class SITLController implements Runnable {
 				if(control.isConnected())
 				  control.sendMAVLinkMessage(rc);
 
-				Thread.sleep(20);
+				Thread.sleep(50);
 
 			} catch(Exception e ) {  }
 		}

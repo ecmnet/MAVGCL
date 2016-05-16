@@ -133,7 +133,8 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		else
 			armed.setFill(Color.LIGHTGRAY);
 
-		if(newStat.isStatus(Status.MSP_RC_ATTACHED) && newStat.isStatus(Status.MSP_CONNECTED))
+		 if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
+				 && newStat.isStatus(Status.MSP_CONNECTED))
 			rcavailable.setFill(Color.DARKORANGE);
 		else
 			rcavailable.setFill(Color.LIGHTGRAY);
