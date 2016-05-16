@@ -33,9 +33,12 @@
 
 package com.comino.flight.control;
 
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.mavlink.MAV_CUST_MODE;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -85,14 +88,35 @@ public class SITLController implements Runnable {
 
 	@Override
 	public void run() {
+
+		while(!control.isConnected()) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
+		}
+
 		while(true) {
 			try {
 				pad.poll();
 
-				rc.z = (int)(components[THROTTLE].getPollData()*1000);
+				rc.z = (int)(components[THROTTLE].getPollData()*500+500);
 				rc.r = (int)(components[YAW].getPollData()*1000);
 				rc.x = (int)(components[PITCH].getPollData()*1000);
 				rc.y = (int)(components[ROLL].getPollData()*1000);
+
+				if(rc.z<20 && rc.r > 980) {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+				}
+
+				if(rc.z<20 && rc.r < -980) {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+				}
+
+
 
 				if(control.isConnected())
 				  control.sendMAVLinkMessage(rc);
