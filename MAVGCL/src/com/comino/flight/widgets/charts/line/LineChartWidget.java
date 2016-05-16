@@ -45,6 +45,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
+import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -242,8 +243,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
-
-		//		linechart.getAnnotations().add(posHoldAnnotation,Layer.FOREGROUND);
 		//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
 		//
 		//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
@@ -417,6 +416,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.getData().clear();
 				series2.getData().clear();
 				series3.getData().clear();
+				//  linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			}
 			current_x_pt = current_x0_pt;
@@ -453,6 +453,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
 
+//					if(mList.get(current_x_pt).msg.msg!=null) {
+//					  linechart.getAnnotations().add(new MessageAnnotation(current_x_pt* COLLECTOR_CYCLE / 1000,mList.get(current_x_pt).msg.msg),
+//							Layer.FOREGROUND);
+//					}
 
 					if(type1!=MSTYPE.MSP_NONE)
 						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));

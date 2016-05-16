@@ -33,25 +33,51 @@
 
 package com.comino.flight.control;
 
-import org.mavlink.messages.lquac.msg_rc_channels_override;
+import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
 
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+
 public class SITLController implements Runnable {
 
+
+	private static final int 	ROLL     = 25;
+	private static final int 	PITCH    = 26;
+	private static final int 	YAW      = 27;
+	private static final int 	THROTTLE = 24;
+
+	private Controller        pad		   = null;
+
 	private IMAVController control;
-	private msg_rc_channels_override rc = new msg_rc_channels_override(255,1);
+	private msg_manual_control rc = new msg_manual_control(255,1);
+	private Component[] components;
 
 	public SITLController(IMAVController control) {
+
 		this.control = control;
 
-		rc.target_component = 1;
-		rc.target_system = 1;
+		Controller[] ca = null;
+		try {
+			ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		} catch( java.lang.UnsatisfiedLinkError u) {
+			u.printStackTrace();
+			return;
+		}
 
-		rc.chan1_raw = 1500;
-		rc.chan2_raw = 1500;
-		rc.chan3_raw = 1500;
-		rc.chan4_raw = 1500;
+		for(int i=0;i<ca.length && pad==null;i++) {
+			if(ca[i].getType()==Controller.Type.GAMEPAD)
+				pad = ca[i];
+		}
+
+		if(pad==null)
+			return;
+
+		System.out.println(pad.getName()+" connected");
+
+		this.components = pad.getComponents();
 
 		new Thread(this).start();
 	}
@@ -59,17 +85,21 @@ public class SITLController implements Runnable {
 
 	@Override
 	public void run() {
-
 		while(true) {
 			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {	}
+				pad.poll();
 
-			if(control.isConnected())
-			   control.sendMAVLinkMessage(rc);
+				rc.z = (int)(components[THROTTLE].getPollData()*1000);
+				rc.r = (int)(components[YAW].getPollData()*1000);
+				rc.x = (int)(components[PITCH].getPollData()*1000);
+				rc.y = (int)(components[ROLL].getPollData()*1000);
 
+				if(control.isConnected())
+				  control.sendMAVLinkMessage(rc);
+
+				Thread.sleep(20);
+
+			} catch(Exception e ) {  }
 		}
-
 	}
-
 }
