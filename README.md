@@ -9,7 +9,7 @@ Any feedback, comments and contributions are very welcome.
 **Status:** Last updated 16/05/2016 
 
 - Arm/Disarm/Landing/Takeoff commands added
-- FrSky Tatanis USB supported in SITL
+- FrSky Taranis USB supported in SITL
 
 **Features:**
 
