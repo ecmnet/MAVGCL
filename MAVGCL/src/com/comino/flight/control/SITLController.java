@@ -37,6 +37,9 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_manual_control;
 
+import com.comino.flight.control.joystick.FrSkyAdapter;
+import com.comino.flight.control.joystick.JoyStickController;
+import com.comino.flight.control.joystick.PS4Adapter;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 
@@ -44,86 +47,16 @@ import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
-public class SITLController implements Runnable {
+public class SITLController  {
 
-
-	private static final int 	ROLL     = 25;
-	private static final int 	PITCH    = 26;
-	private static final int 	YAW      = 27;
-	private static final int 	THROTTLE = 24;
-
-	private Controller        pad		   = null;
-
-	private IMAVController control;
-	private msg_manual_control rc = new msg_manual_control(255,1);
-	private Component[] components;
 
 	public SITLController(IMAVController control) {
 
-		this.control = control;
 
-		Controller[] ca = null;
-		try {
-			ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
-		} catch( java.lang.UnsatisfiedLinkError u) {
-			u.printStackTrace();
-			return;
-		}
+		JoyStickController joystick = new JoyStickController(control,FrSkyAdapter.class, PS4Adapter.class);
+		joystick.connect();
 
-		for(int i=0;i<ca.length && pad==null;i++) {
-			if(ca[i].getType()==Controller.Type.GAMEPAD)
-				pad = ca[i];
-		}
 
-		if(pad==null)
-			return;
-
-		System.out.println(pad.getName()+" connected");
-
-		this.components = pad.getComponents();
-
-		new Thread(this).start();
 	}
 
-
-	@Override
-	public void run() {
-
-		while(!control.isConnected()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-			}
-		}
-
-		while(true) {
-			try {
-				pad.poll();
-
-				rc.z = (int)(components[THROTTLE].getPollData()*500+500);
-				rc.r = (int)(components[YAW].getPollData()*1000);
-				rc.x = (int)(components[PITCH].getPollData()*1000);
-				rc.y = (int)(components[ROLL].getPollData()*1000);
-
-				if(rc.z<20 && rc.r > 980) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-				}
-
-				if(rc.z<20 && rc.r < -980) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-				}
-
-
-
-				if(control.isConnected())
-				  control.sendMAVLinkMessage(rc);
-
-				Thread.sleep(50);
-
-			} catch(Exception e ) {  }
-		}
-	}
 }

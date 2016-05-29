@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.lquac.msg_manual_control;
 import org.mavlink.messages.lquac.msg_msp_command;
 import org.mavlink.messages.lquac.msg_rc_channels_override;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
@@ -71,6 +72,9 @@ public class CommanderWidget extends Pane  {
 	private Button takeoff_command;
 
 	@FXML
+	private Button rtl_command;
+
+	@FXML
 	private Button emergency;
 
 	private IMAVController control;
@@ -96,12 +100,35 @@ public class CommanderWidget extends Pane  {
 
 		StateProperties.getInstance().getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
 			Platform.runLater(() -> {
-			if(newvalue.booleanValue())
-				arm_command.setText("Disarm motors");
-			else
-				arm_command.setText("Arm motors");
+				if(newvalue.booleanValue())
+					arm_command.setText("Disarm motors");
+				else
+					arm_command.setText("Arm motors");
 			});
 		});
+
+		StateProperties.getInstance().getLandedProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(control.isSimulation()) {
+				msg_manual_control rc = new msg_manual_control(255,1);
+				if(newvalue.booleanValue())
+					rc.z = 0;
+				else
+					rc.z = 500;
+				control.sendMAVLinkMessage(rc);
+			}
+		});
+
+
+		rtl_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+				.or(StateProperties.getInstance().getLandedProperty()));
+		rtl_command.setOnAction((ActionEvent event)-> {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+					MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+					MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL);
+
+
+		});
+
 
 		arm_command.disableProperty().bind(StateProperties.getInstance().getLandedProperty().not());
 		arm_command.setOnAction((ActionEvent event)-> {
@@ -112,7 +139,7 @@ public class CommanderWidget extends Pane  {
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
 			} else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
-				   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 			}
 
 		});
@@ -127,11 +154,11 @@ public class CommanderWidget extends Pane  {
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.attitude.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY))
-			   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
-					  model.attitude.ag+1);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
+						model.attitude.ag+1);
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
-					   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position not available");
 			}
 

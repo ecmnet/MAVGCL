@@ -94,8 +94,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 	private final static MSTYPE TYPES[][] =
-		{ { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON },
-				{ MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON } };
+			  { { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON     },
+				{ MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON }
+			  };
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -179,7 +180,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					if(!isCollecting.get() && collector.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
-					
+
 					isCollecting.set(collector.isCollecting());
 
 					Platform.runLater(() -> {

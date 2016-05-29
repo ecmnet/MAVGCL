@@ -120,8 +120,9 @@ public class MAVExperimentalTab extends BorderPane  {
 		});
 
 		exp2.setOnAction((ActionEvent event)-> {
-
-
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+					MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+					MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL);
 
 
 		});
@@ -146,13 +147,6 @@ public class MAVExperimentalTab extends BorderPane  {
 
 			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
 
-				msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
-				cmd.target_component = 1;
-				cmd.target_system = 1;
-				cmd.x =  0;
-				cmd.y =  0;
-				cmd.z = -2;
-				control.sendMAVLinkMessage(cmd);
 
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
