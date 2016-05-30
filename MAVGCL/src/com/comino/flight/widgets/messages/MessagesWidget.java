@@ -67,11 +67,14 @@ public class MessagesWidget extends FadePane  {
 	private ScheduledFuture f = null;
 
 	private final SimpleDateFormat fo = new SimpleDateFormat("HH:mm:ss");
+	private ConcurrentLinkedQueue<LogMessage> list = null;
 
 
 	public MessagesWidget() {
 
 		super(300);
+		list = new ConcurrentLinkedQueue<LogMessage>();
+
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MessagesWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -98,8 +101,6 @@ public class MessagesWidget extends FadePane  {
 		fadeProperty().setValue(false);
 
 		control.addMAVMessageListener( new IMAVMessageListener() {
-
-			ConcurrentLinkedQueue<LogMessage> list = new ConcurrentLinkedQueue<LogMessage>();
 
 
 			@Override
@@ -141,6 +142,11 @@ public class MessagesWidget extends FadePane  {
 	}
 
 	public void showMessages() {
+
+		if(list.isEmpty()) {
+			fadeProperty().setValue(false);
+			return;
+		}
 
 
 		fadeProperty().setValue(true);
