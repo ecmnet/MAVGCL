@@ -118,9 +118,9 @@ public class JoyStickController implements Runnable {
 				if(control.isConnected())
 					control.sendMAVLinkMessage(rc);
 
-								 for(int i =14; i < components.length; i++)
-								    System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
-								 System.out.println();
+//								 for(int i =14; i < components.length; i++)
+//								    System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
+//								 System.out.println();
 
 
 				Thread.sleep(50);
