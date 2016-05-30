@@ -143,7 +143,7 @@ public class MessagesWidget extends FadePane  {
 
 	public void showMessages() {
 
-		if(list.isEmpty()) {
+		if(listview.getItems().isEmpty()) {
 			fadeProperty().setValue(false);
 			return;
 		}
