@@ -21,6 +21,10 @@ public class JoyStickController implements Runnable {
 	private int ch_yaw=0;
 	private int ch_pitch=0;
 	private int ch_roll=0;
+	private int ch_sw1 = 0;
+	private int ch_sw2 = 0;
+
+	private int state_sw2 = -1;
 
 	private int ch_sign= 1;
 
@@ -64,13 +68,15 @@ public class JoyStickController implements Runnable {
 					this.ch_pitch = adapter.getField("PITCH").getInt(null);
 					this.ch_roll = adapter.getField("ROLL").getInt(null);
 					this.ch_sign = adapter.getField("SIGN").getInt(null);
+					this.ch_sw1 = adapter.getField("SW1").getInt(null);
+					this.ch_sw2 = adapter.getField("SW2").getInt(null);
 					found = true;
 					System.out.println(pad.getName()+" connected to adapter "+adapter.getSimpleName());
 					break;
 				}
 			}
 			if(!found)
-			   throw new Exception("Controller "+pad.getName()+" not registered");
+				throw new Exception("Controller "+pad.getName()+" not registered");
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			return false;
@@ -118,9 +124,30 @@ public class JoyStickController implements Runnable {
 				if(control.isConnected())
 					control.sendMAVLinkMessage(rc);
 
-//								 for(int i =14; i < components.length; i++)
-//								    System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
-//								 System.out.println();
+				// Simple switch mapping for ALT/POS-CTL
+
+				if(state_sw2 != components[ch_sw2].getPollData() ) {
+					if(components[ch_sw1].getPollData() == 0 ) {
+						if((int)components[ch_sw2].getPollData()==0) {
+							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+						} else {
+							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+						}
+					} else {
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+					}
+				}
+
+
+				//								 for(int i =14; i < components.length; i++)
+				//								    System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
+				//								 System.out.println();
 
 
 				Thread.sleep(50);
