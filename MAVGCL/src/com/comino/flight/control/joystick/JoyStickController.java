@@ -126,9 +126,10 @@ public class JoyStickController implements Runnable {
 
 				// Simple switch mapping for ALT/POS-CTL
 
-				if(state_sw2 != components[ch_sw2].getPollData() ) {
-					if(components[ch_sw1].getPollData() == 0 ) {
-						if((int)components[ch_sw2].getPollData()==0) {
+				if(state_sw2 != (int)components[ch_sw2].getPollData() ) {
+					state_sw2 = (int)components[ch_sw2].getPollData();
+					if(components[ch_sw1].getPollData() > -0.5 ) {
+						if((int)components[ch_sw2].getPollData() != 0) {
 							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
