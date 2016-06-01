@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
@@ -162,11 +163,11 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
 			landed.setFill(Color.GREEN);
 		else {
-//			if(newStat.isStatus(Status.MSP_MODE_TAKEOFF) && newStat.isStatus(Status.MSP_CONNECTED))
-//				landed.setFill(Color.LIGHTBLUE);
-//			else if(newStat.isStatus(Status.MSP_MODE_LANDING) && newStat.isStatus(Status.MSP_CONNECTED))
-//				landed.setFill(Color.LIGHTYELLOW);
-//			else
+			if(newStat.isStatus(Status.MSP_MODE_TAKEOFF) && newStat.isStatus(Status.MSP_CONNECTED))
+				landed.setFill(Color.LIGHTGRAY);
+			else if(newStat.isStatus(Status.MSP_MODE_LANDING) && newStat.isStatus(Status.MSP_CONNECTED))
+				landed.setFill(Color.LIGHTGREEN);
+			else
 				landed.setFill(Color.LIGHTGRAY);
 		}
 
