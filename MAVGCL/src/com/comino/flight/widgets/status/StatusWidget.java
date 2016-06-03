@@ -36,6 +36,7 @@ package com.comino.flight.widgets.status;
 import java.io.IOException;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.LEDControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
@@ -56,28 +57,28 @@ import javafx.scene.shape.Circle;
 public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 	@FXML
-	private Circle armed;
+	private LEDControl armed;
 
 	@FXML
-	private Circle connected;
+	private LEDControl connected;
 
 	@FXML
-	private Circle rcavailable;
+	private LEDControl rcavailable;
 
 	@FXML
-	private Circle althold;
+	private LEDControl althold;
 
 	@FXML
-	private Circle poshold;
+	private LEDControl poshold;
 
 	@FXML
-	private Circle mission;
+	private LEDControl mission;
 
 	@FXML
-	private Circle offboard;
+	private LEDControl offboard;
 
 	@FXML
-	private Circle landed;
+	private LEDControl landed;
 
 	@FXML
 	private CheckBox details;
@@ -112,6 +113,18 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 
 	public void setup(IMAVController control) {
+
+		this.landed.init(Color.DARKCYAN, 300);
+		this.mission.init(Color.DARKCYAN, 300);
+		this.offboard.init(Color.DARKCYAN, 300);
+
+		this.althold.init(Color.DARKGOLDENROD, 300);
+		this.poshold.init(Color.DARKGOLDENROD, 300);
+
+		this.connected.init(Color.DARKORANGE, 300);
+		this.rcavailable.init(Color.DARKORANGE, 300);
+		this.armed.init(Color.DARKORANGE, 300);
+
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);
@@ -124,53 +137,50 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 
 		if(newStat.isStatus(Status.MSP_CONNECTED))
-			connected.setFill(Color.DARKORANGE);
+			connected.setMode(LEDControl.MODE_ON);
 		else {
-			connected.setFill(Color.LIGHTGRAY);
+			connected.setMode(LEDControl.MODE_OFF);
 		}
 
 		if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
-			armed.setFill(Color.DARKORANGE);
+			armed.setMode(LEDControl.MODE_ON);
 		else
-			armed.setFill(Color.LIGHTGRAY);
+			armed.setMode(LEDControl.MODE_OFF);
 
 		 if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
 				 && newStat.isStatus(Status.MSP_CONNECTED))
-			rcavailable.setFill(Color.DARKORANGE);
+			rcavailable.setMode(LEDControl.MODE_ON);
 		else
-			rcavailable.setFill(Color.LIGHTGRAY);
+			rcavailable.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
-			althold.setFill(Color.GREEN);
+			althold.setMode(LEDControl.MODE_ON);
 		else
-			althold.setFill(Color.LIGHTGRAY);
+			althold.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
-			poshold.setFill(Color.GREEN);
+			poshold.setMode(LEDControl.MODE_ON);
 		else
-			poshold.setFill(Color.LIGHTGRAY);
+			poshold.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
-			mission.setFill(Color.GREEN);
+			mission.setMode(LEDControl.MODE_ON);
 		else
-			mission.setFill(Color.LIGHTGRAY);
+			mission.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
-			offboard.setFill(Color.GREEN);
+			offboard.setMode(LEDControl.MODE_ON);
 		else
-			offboard.setFill(Color.LIGHTGRAY);
+			offboard.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-			landed.setFill(Color.GREEN);
+			landed.setMode(LEDControl.MODE_ON);
 		else {
-			if(newStat.isStatus(Status.MSP_MODE_TAKEOFF) && newStat.isStatus(Status.MSP_CONNECTED))
-				landed.setFill(Color.LIGHTGRAY);
-			else if(newStat.isStatus(Status.MSP_MODE_LANDING) && newStat.isStatus(Status.MSP_CONNECTED))
-				landed.setFill(Color.LIGHTGREEN);
-			else
-				landed.setFill(Color.LIGHTGRAY);
+		 if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
+			 landed.setMode(LEDControl.MODE_BLINK);
+		else
+			 landed.setMode(LEDControl.MODE_OFF);
 		}
-
 	}
 
 }

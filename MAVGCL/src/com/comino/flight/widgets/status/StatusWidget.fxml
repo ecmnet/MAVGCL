@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.control.CheckBox?>
+<?import com.comino.flight.widgets.LEDControl?>
 
 <fx:root prefHeight="265.0" prefWidth="183.0"
  type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
@@ -33,21 +34,22 @@
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Circle fx:id="connected" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" />
+            <LEDControl fx:id="connected" GridPane.rowIndex="0" />
             <Label prefHeight="184.0" prefWidth="89.0" text="Connected" GridPane.columnIndex="1" />
-            <Circle fx:id="rcavailable" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="1" />
+            <LEDControl fx:id="rcavailable" GridPane.rowIndex="1" />
             <Label prefHeight="184.0" prefWidth="89.0" text="RC available" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Circle fx:id="armed" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="2" />
+            <LEDControl fx:id="armed" GridPane.rowIndex="2" />
             <Label prefHeight="184.0" prefWidth="89.0" text="Motors armed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Separator maxWidth="-Infinity" prefHeight="0.0" prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Circle fx:id="althold" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="4" />
-            <Circle fx:id="poshold" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="5" />
+            <LEDControl fx:id="althold" GridPane.rowIndex="4" />
+            <LEDControl fx:id="poshold" GridPane.rowIndex="5" />
             <Label text="Altitude hold" GridPane.columnIndex="1" GridPane.rowIndex="4"  styleClass="status-cmd" />
             <Label text="Position hold" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="6" />
-            <Circle fx:id="mission" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="7" />
-            <Circle fx:id="offboard" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="8" />
-            <Circle fx:id="landed" fill="#eaecee" radius="8.0" stroke="#000000" strokeType="INSIDE" GridPane.rowIndex="9" />
+            <LEDControl fx:id="mission" GridPane.rowIndex="7" />
+            <LEDControl fx:id="offboard" GridPane.rowIndex="8" />
+            <LEDControl fx:id="landed" GridPane.rowIndex="9" />
+
             <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Offboard" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label text="Landed" GridPane.columnIndex="1" GridPane.rowIndex="9" />
