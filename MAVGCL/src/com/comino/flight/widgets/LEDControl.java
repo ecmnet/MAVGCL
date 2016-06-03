@@ -25,7 +25,9 @@ public class LEDControl extends Circle implements Runnable {
 
 
 	public void setMode(int mode) {
-		this.mode = mode;
+		if(this.mode==mode)
+			return;
+
 		switch(mode) {
 		   case 0:
 			   setFill(Color.LIGHTGRAY); break;
@@ -34,6 +36,7 @@ public class LEDControl extends Circle implements Runnable {
 		   case 2:
 			   setFill(color); new Thread(this).start(); break;
 		}
+		this.mode = mode;
 	}
 
 	@Override
