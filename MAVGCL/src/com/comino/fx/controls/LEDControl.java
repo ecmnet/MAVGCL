@@ -1,13 +1,8 @@
-package com.comino.flight.widgets;
+package com.comino.fx.controls;
 
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
@@ -33,7 +28,7 @@ public class LEDControl extends GridPane implements Runnable {
 		this.color = Color.RED;
 		this.rate_ms = 300;
 
-		setPadding(new Insets(5));
+		setPadding(new Insets(3,0,3,0));
         setHgap(10);
 
 		this.circle = new Circle();
