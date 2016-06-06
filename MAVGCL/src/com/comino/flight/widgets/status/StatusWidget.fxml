@@ -33,20 +33,20 @@
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <LEDControl fx:id="connected"    text="Connected"     GridPane.rowIndex="0" />
-            <LEDControl fx:id="rcavailable"  text="RC available"  GridPane.rowIndex="1" />
-            <LEDControl fx:id="armed"        text="Motors armed"  GridPane.rowIndex="2" />
+            <LEDControl fx:id="connected"    text="Connected"     color="DARKORANGE" GridPane.rowIndex="0" />
+            <LEDControl fx:id="rcavailable"  text="RC available"  color="DARKORANGE" GridPane.rowIndex="1" />
+            <LEDControl fx:id="armed"        text="Motors armed"  color="DARKORANGE" GridPane.rowIndex="2" />
 
             <Separator maxWidth="-Infinity" prefHeight="0.0" prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
 
-            <LEDControl fx:id="althold"      text="Altitude hold" GridPane.rowIndex="4" />
-            <LEDControl fx:id="poshold"      text="Position hold" GridPane.rowIndex="5" />
+            <LEDControl fx:id="althold"      text="Altitude hold" color="DARKCYAN" GridPane.rowIndex="4" />
+            <LEDControl fx:id="poshold"      text="Position hold" color="DARKCYAN" GridPane.rowIndex="5" />
 
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="6" />
 
-            <LEDControl fx:id="mission"  text="Mission"  GridPane.rowIndex="7" />
-            <LEDControl fx:id="offboard" text="Offboard" GridPane.rowIndex="8" />
-            <LEDControl fx:id="landed"   text="Landed"   GridPane.rowIndex="9" />
+            <LEDControl fx:id="mission"  text="Mission"  color="DARKCYAN" GridPane.rowIndex="7" />
+            <LEDControl fx:id="offboard" text="Offboard" color="DARKCYAN" GridPane.rowIndex="8" />
+            <LEDControl fx:id="landed"   text="Landed"   color="DARKCYAN" GridPane.rowIndex="9" />
 
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="10" />
             <CheckBox fx:id="details" GridPane.rowIndex="11" text="Details" GridPane.columnSpan="2"/>

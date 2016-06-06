@@ -114,17 +114,6 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 	public void setup(IMAVController control) {
 
-		this.landed.init(Color.DARKCYAN, 300);
-		this.mission.init(Color.DARKCYAN, 300);
-		this.offboard.init(Color.DARKCYAN, 300);
-
-		this.althold.init(Color.DARKGOLDENROD, 300);
-		this.poshold.init(Color.DARKGOLDENROD, 300);
-
-		this.connected.init(Color.DARKORANGE, 300);
-		this.rcavailable.init(Color.DARKORANGE, 300);
-		this.armed.init(Color.DARKORANGE, 300);
-
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);

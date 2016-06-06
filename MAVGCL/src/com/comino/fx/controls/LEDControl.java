@@ -55,6 +55,14 @@ public class LEDControl extends GridPane implements Runnable {
         label.setText(value);
     }
 
+    public String getColor() {
+        return color.toString();
+    }
+
+    public void setColor(String value) {
+       this.color = Color.valueOf(value);
+    }
+
 
 	public void setMode(int mode) {
 
