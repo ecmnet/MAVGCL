@@ -33,7 +33,8 @@ public class LEDControl extends GridPane implements Runnable {
 		this.color = Color.RED;
 		this.rate_ms = 300;
 
-        this.setHgap(10);
+		setPadding(new Insets(5));
+        setHgap(10);
 
 		this.circle = new Circle();
 		this.circle.setFill(Color.LIGHTGRAY);
@@ -41,7 +42,7 @@ public class LEDControl extends GridPane implements Runnable {
 		this.circle.setStrokeType(StrokeType.INSIDE);
 		this.addColumn(0, circle);
 
-		this.label  = new Label("test");
+		this.label  = new Label();
 		this.addColumn(1, label);
 
 	}
