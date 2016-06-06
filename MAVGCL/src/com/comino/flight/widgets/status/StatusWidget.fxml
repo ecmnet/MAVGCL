@@ -15,8 +15,7 @@
    <children>
       <GridPane layoutX="16.0" layoutY="16.0" prefHeight="231.0" prefWidth="157.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="29.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="128.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0" minWidth="10.0" prefWidth="240.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -34,25 +33,21 @@
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <LEDControl fx:id="connected" GridPane.rowIndex="0" />
-            <Label prefHeight="184.0" prefWidth="89.0" text="Connected" GridPane.columnIndex="1" />
-            <LEDControl fx:id="rcavailable" GridPane.rowIndex="1" />
-            <Label prefHeight="184.0" prefWidth="89.0" text="RC available" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <LEDControl fx:id="armed" GridPane.rowIndex="2" />
-            <Label prefHeight="184.0" prefWidth="89.0" text="Motors armed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Separator maxWidth="-Infinity" prefHeight="0.0" prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <LEDControl fx:id="althold" GridPane.rowIndex="4" />
-            <LEDControl fx:id="poshold" GridPane.rowIndex="5" />
-            <Label text="Altitude hold" GridPane.columnIndex="1" GridPane.rowIndex="4"  styleClass="status-cmd" />
-            <Label text="Position hold" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="6" />
-            <LEDControl fx:id="mission" GridPane.rowIndex="7" />
-            <LEDControl fx:id="offboard" GridPane.rowIndex="8" />
-            <LEDControl fx:id="landed" GridPane.rowIndex="9" />
+            <LEDControl fx:id="connected"    text="Connected"     GridPane.rowIndex="0" />
+            <LEDControl fx:id="rcavailable"  text="RC available"  GridPane.rowIndex="1" />
+            <LEDControl fx:id="armed"        text="Motors armed"  GridPane.rowIndex="2" />
 
-            <Label text="Mission" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label text="Offboard" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label text="Landed" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Separator maxWidth="-Infinity" prefHeight="0.0" prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+
+            <LEDControl fx:id="althold"      text="Altitude hold" GridPane.rowIndex="4" />
+            <LEDControl fx:id="poshold"      text="Position hold" GridPane.rowIndex="5" />
+
+            <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="6" />
+
+            <LEDControl fx:id="mission"  text="Mission"  GridPane.rowIndex="7" />
+            <LEDControl fx:id="offboard" text="Offboard" GridPane.rowIndex="8" />
+            <LEDControl fx:id="landed"   text="Landed"   GridPane.rowIndex="9" />
+
             <Separator maxWidth="-Infinity" prefHeight="0.0"  prefWidth="145.0" GridPane.columnSpan="2"  GridPane.rowIndex="10" />
             <CheckBox fx:id="details" GridPane.rowIndex="11" text="Details" GridPane.columnSpan="2"/>
             <CheckBox fx:id="video" GridPane.rowIndex="12" text="Video" GridPane.columnSpan="2"/>

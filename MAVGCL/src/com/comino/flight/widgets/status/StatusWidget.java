@@ -147,8 +147,8 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		else
 			armed.setMode(LEDControl.MODE_OFF);
 
-		 if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
-				 && newStat.isStatus(Status.MSP_CONNECTED))
+		if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
+				&& newStat.isStatus(Status.MSP_CONNECTED))
 			rcavailable.setMode(LEDControl.MODE_ON);
 		else
 			rcavailable.setMode(LEDControl.MODE_OFF);
@@ -166,7 +166,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
 			mission.setMode(LEDControl.MODE_ON);
 		else
-			mission.setMode(LEDControl.MODE_OFF);
+			if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
+				mission.setMode(LEDControl.MODE_BLINK);
+			else
+				mission.setMode(LEDControl.MODE_OFF);
 
 		if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
 			offboard.setMode(LEDControl.MODE_ON);
@@ -176,10 +179,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
 			landed.setMode(LEDControl.MODE_ON);
 		else {
-		 if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
-			 landed.setMode(LEDControl.MODE_BLINK);
-		else
-			 landed.setMode(LEDControl.MODE_OFF);
+			if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
+				landed.setMode(LEDControl.MODE_BLINK);
+			else
+				landed.setMode(LEDControl.MODE_OFF);
 		}
 	}
 
