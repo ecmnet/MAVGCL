@@ -58,7 +58,7 @@ import javafx.scene.layout.GridPane;
 public class DetailsWidget extends FadePane  {
 
 
-	private static MSTYPE[] key_figures = {
+	private static MSTYPE[] key_figures_details = {
 			MSTYPE.MSP_ANGLEX,
 			MSTYPE.MSP_ANGLEY,
 			MSTYPE.MSP_GRSPEED,
@@ -164,7 +164,7 @@ public class DetailsWidget extends FadePane  {
 	public void setup(IMAVController control) {
 
 		int i=0;
-		for(MSTYPE k : key_figures) {
+		for(MSTYPE k : key_figures_details) {
 			figures.add(new KeyFigure(grid,k,i));
 			i++;
 		}

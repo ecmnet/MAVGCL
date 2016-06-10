@@ -69,12 +69,9 @@ public enum MSTYPE {
 	MSP_SPNEDVX		("Sp.Loc.SpeedX",1,"m/s","LPSP.VX"),
 	MSP_SPNEDVY		("Sp.Loc.SpeedY",1,"m/s","LPSP.VY"),
 	MSP_SPNEDVZ		("Sp.Loc.SpeedZ",1,"m/s","LPSP.VZ"),
-	MSP_LERRX		("Loc.ErrX",1,"m",""),
-	MSP_LERRY		("Loc.ErrY",1,"m",""),
-	MSP_LERRZ		("Loc.ErrZ",1,"m",""),
-	MSP_RNEDX		("Loc.PosX.rel.",1,"m",""),
-	MSP_RNEDY		("Loc.PosY.rel.",1,"m",""),
-	MSP_RNEDZ		("Loc.PosZ.rel.",1,"m",""),
+	MSP_NEDAX		("Loc.AccX",1,"m/s^2",""),
+	MSP_NEDAY		("Loc.AccY",1,"m/s^2",""),
+	MSP_NEDAZ		("Loc.AccZ",1,"m/s^2",""),
 	MSP_RAW_DI		("Raw.Distance.",1,"m","DIST.Distance"),
 	MSP_DEBUGX		("DebugX",1,"-",""),
 	MSP_DEBUGY		("DebugY",1,"-",""),
@@ -91,9 +88,6 @@ public enum MSTYPE {
 	MSP_RC2			("RC.2",1,"","RC.C2"),
 	MSP_RC3			("RC.3",1,"","RC.C3"),
 	MSP_RSSI        ("RSSI",1,"",""),
-	MSP_GLOBRELX	("Global.rel.PosX",1,"m",""),
-	MSP_GLOBRELY 	("Global.rel.PosY",1,"m",""),
-	MSP_GLOBRELZ	("Global.rel.PosZ",1,"m",""),
 	MSP_GLOBRELVX	("Global.rel.SpeedX",1,"cm/s","GPOS.VelN"),
 	MSP_GLOBRELVY   ("Global.rel.SpeedY",1,"cm/s","GPOS.VelE"),
 	MSP_GLOBRELVZ	("Global.rel.SpeedZ",1,"cm/s","GPOS.VelD"),
@@ -173,24 +167,21 @@ public enum MSTYPE {
 		case MSP_ALTLOCAL: 		return m.attitude.al;
 		case MSP_ALTAMSL: 		return m.attitude.ag;
 		case MSP_ALTTERRAIN:	return m.attitude.at;
-		case MSP_NEDX:			return m.state.x;
-		case MSP_NEDY:			return m.state.y;
-		case MSP_NEDZ:			return m.state.z;
-		case MSP_NEDVX:			return m.state.vx;
-		case MSP_NEDVY:			return m.state.vy;
-		case MSP_NEDVZ:			return m.state.vz;
-		case MSP_SPNEDX:		return m.target_state.x;
-		case MSP_SPNEDY:		return m.target_state.y;
-		case MSP_SPNEDZ:		return m.target_state.z;
-		case MSP_SPNEDVX:		return m.target_state.vx;
-		case MSP_SPNEDVY:		return m.target_state.vy;
-		case MSP_SPNEDVZ:		return m.target_state.vz;
-		case MSP_LERRX:		    return m.state.x - m.target_state.x;
-		case MSP_LERRY:		    return m.state.y - m.target_state.y;
-		case MSP_LERRZ:		    return m.state.z - m.target_state.z;
-		case MSP_RNEDX:			return m.state.x - m.state.hx;
-		case MSP_RNEDY:			return m.state.y - m.state.hy;
-		case MSP_RNEDZ:			return m.attitude.ag - m.attitude.at;
+		case MSP_NEDX:			return m.state.l_x;
+		case MSP_NEDY:			return m.state.l_y;
+		case MSP_NEDZ:			return m.state.l_z;
+		case MSP_NEDVX:			return m.state.l_vx;
+		case MSP_NEDVY:			return m.state.l_vy;
+		case MSP_NEDVZ:			return m.state.l_vz;
+		case MSP_SPNEDX:		return m.target_state.l_x;
+		case MSP_SPNEDY:		return m.target_state.l_y;
+		case MSP_SPNEDZ:		return m.target_state.l_z;
+		case MSP_SPNEDVX:		return m.target_state.l_vx;
+		case MSP_SPNEDVY:		return m.target_state.l_vy;
+		case MSP_SPNEDVZ:		return m.target_state.l_vz;
+		case MSP_NEDAX:		    return m.state.l_ax;
+		case MSP_NEDAY:		    return m.state.l_ay;
+		case MSP_NEDAZ:		    return m.state.l_az;
 		case MSP_RC0:			return m.rc.s0;
 		case MSP_RC1:			return m.rc.s1;
 		case MSP_RC2:			return m.rc.s2;
@@ -208,14 +199,11 @@ public enum MSTYPE {
 		case MSP_S1:			return m.servo.s1;
 		case MSP_S2:			return m.servo.s2;
 		case MSP_S3:			return m.servo.s3;
-		case MSP_GLOBRELX:		return m.state.g_x;
-		case MSP_GLOBRELY:		return m.state.g_y;
-		case MSP_GLOBRELZ:		return m.state.g_z;
 		case MSP_GLOBRELVX:		return m.state.g_vx;
 		case MSP_GLOBRELVY:		return m.state.g_vy;
 		case MSP_GLOBRELVZ:		return m.state.g_vz;
-		case MSP_GLOBPLAT:		return m.state.lat;
-		case MSP_GLOBPLON:		return m.state.lon;
+		case MSP_GLOBPLAT:		return m.state.g_lat;
+		case MSP_GLOBPLON:		return m.state.g_lon;
 		case MSP_RAW_GPSLAT:	return (float) m.gps.latitude;
 		case MSP_RAW_GPSLON:	return (float) m.gps.longitude;
 		case MSP_REF_GPSLAT:    return (float) m.gps.ref_lat;
@@ -260,18 +248,21 @@ public enum MSTYPE {
 		case MSP_ALTLOCAL: 		 m.attitude.al = value; break;
 		case MSP_ALTAMSL: 		 m.attitude.ag = value; break;
 		case MSP_ALTTERRAIN:	 m.attitude.at = value; break;
-		case MSP_NEDX:			 m.state.x = value; if(m.state.hx==0) m.state.hx = value; break;
-		case MSP_NEDY:			 m.state.y = value; if(m.state.hy==0) m.state.hy = value; break;
-		case MSP_NEDZ:			 m.state.z = value; if(m.state.hz==0) m.state.hz = value; break;
-		case MSP_NEDVX:			 m.state.vx = value; break;
-		case MSP_NEDVY:			 m.state.vy = value; break;
-		case MSP_NEDVZ:			 m.state.vz = value; break;
-		case MSP_SPNEDX:		 m.target_state.x = value; break;
-		case MSP_SPNEDY:		 m.target_state.y = value; break;
-		case MSP_SPNEDZ:		 m.target_state.z = value; break;
-		case MSP_SPNEDVX:		 m.target_state.vx = value; break;
-		case MSP_SPNEDVY:		 m.target_state.vy = value; break;
-		case MSP_SPNEDVZ:		 m.target_state.vz = value; break;
+		case MSP_NEDX:			 m.state.l_x = value; break;
+		case MSP_NEDY:			 m.state.l_y = value; break;
+		case MSP_NEDZ:			 m.state.l_z = value; break;
+		case MSP_NEDVX:			 m.state.l_vx = value; break;
+		case MSP_NEDVY:			 m.state.l_vy = value; break;
+		case MSP_NEDVZ:			 m.state.l_vz = value; break;
+		case MSP_NEDAX:			 m.state.l_vx = value; break;
+		case MSP_NEDAY:			 m.state.l_vy = value; break;
+		case MSP_NEDAZ:			 m.state.l_vz = value; break;
+		case MSP_SPNEDX:		 m.target_state.l_x = value; break;
+		case MSP_SPNEDY:		 m.target_state.l_y = value; break;
+		case MSP_SPNEDZ:		 m.target_state.l_z = value; break;
+		case MSP_SPNEDVX:		 m.target_state.l_vx = value; break;
+		case MSP_SPNEDVY:		 m.target_state.l_vy = value; break;
+		case MSP_SPNEDVZ:		 m.target_state.l_vz = value; break;
 		case MSP_RC0:			 m.rc.s0 = (short) value; break;
 		case MSP_RC1:			 m.rc.s1 = (short) value; break;
 		case MSP_RC2:			 m.rc.s2 = (short) value; break;
@@ -289,14 +280,11 @@ public enum MSTYPE {
 		case MSP_S1:			 m.servo.s1 = (short) value; break;
 		case MSP_S2:			 m.servo.s2 = (short) value; break;
 		case MSP_S3:			 m.servo.s3 = (short) value; break;
-		case MSP_GLOBRELX:		 m.state.g_x = value; break;
-		case MSP_GLOBRELY:		 m.state.g_y = value; break;
-		case MSP_GLOBRELZ:		 m.state.g_z = value; break;
 		case MSP_GLOBRELVX:		 m.state.g_vx = value; break;
 		case MSP_GLOBRELVY:		 m.state.g_vy = value; break;
 		case MSP_GLOBRELVZ:		 m.state.g_vz = value; break;
-		case MSP_GLOBPLAT:		 m.state.lat = value; break;
-		case MSP_GLOBPLON:		 m.state.lon = value; break;
+		case MSP_GLOBPLAT:		 m.state.g_lat = value; break;
+		case MSP_GLOBPLON:		 m.state.g_lon = value; break;
 		case MSP_RAW_GPSLAT:	 m.gps.latitude = value; break;
 		case MSP_RAW_GPSLON:	 m.gps.longitude = value; break;
 		case MSP_REF_GPSLAT:     m.gps.ref_lat = value; break;

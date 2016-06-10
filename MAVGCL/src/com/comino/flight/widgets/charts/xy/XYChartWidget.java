@@ -81,11 +81,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private static MSTYPE[][] PRESETS = {
 			{ MSTYPE.MSP_NONE,			MSTYPE.MSP_NONE							},
-			{ MSTYPE.MSP_RNEDX, 		MSTYPE.MSP_RNEDY,		},
 			{ MSTYPE.MSP_NEDX, 		    MSTYPE.MSP_NEDY,		},
 			{ MSTYPE.MSP_NEDVX, 		MSTYPE.MSP_NEDVY,		},
-			{ MSTYPE.MSP_LERRX, 		MSTYPE.MSP_LERRY,		},
-			{ MSTYPE.MSP_GLOBRELX,      MSTYPE.MSP_GLOBRELY, },
+			{ MSTYPE.MSP_NEDAX, 		MSTYPE.MSP_NEDAY,		},
 			{ MSTYPE.MSP_GLOBRELVX,     MSTYPE.MSP_GLOBRELVY, },
 			{ MSTYPE.MSP_ANGLEX, 		MSTYPE.MSP_ANGLEY,	},
 			{ MSTYPE.MSP_DEBUGX,        MSTYPE.MSP_DEBUGY, },
@@ -97,11 +95,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private final static String[] PRESET_NAMES = {
 			"None",
-			"Loc.Pos.rel.",
 			"Loc.Pos.",
 			"Loc.Speed",
-			"Loc.Pos.Error",
-			"Glob.Pos.rel",
+			"Loc.Accel.",
 			"Glob.Speed",
 			"Angle",
 			"Debug XY",

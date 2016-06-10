@@ -335,9 +335,9 @@ public class MAVAnalysis3DTab extends BorderPane  implements IChartControl {
 					current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
 
 
-					double x = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDX);
-					double z = (250.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDZ))+999.0;
-					double y = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_RNEDY);
+					double x = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_NEDX);
+					double z = (250.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_NEDZ))+999.0;
+					double y = 500.0 * MSTYPE.getValue(mList.get(current_x_pt),MSTYPE.MSP_NEDY);
 
 
 					if(Math.abs(x-old_x)>20 || Math.abs(y-old_y)>20 || Math.abs(z-old_z)>20) {
