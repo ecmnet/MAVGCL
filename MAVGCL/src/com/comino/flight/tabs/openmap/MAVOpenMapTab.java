@@ -185,10 +185,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 					Platform.runLater(() -> {
 						try {
-							if(model.gps.ref_lat!=0 && model.gps.ref_lon!=0) {
+							if(model.home_state.g_lat!=0 && model.home_state.g_lon!=0) {
 								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 								homeLayer.setVisible(true);
-								homeLayer.updatePosition(model.gps.ref_lat, model.gps.ref_lon);
+								homeLayer.updatePosition(model.home_state.g_lat, model.home_state.g_lon);
 							} else
 								homeLayer.setVisible(false);
 
@@ -356,8 +356,8 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(oldValue.booleanValue() && !newValue) {
-					if(model.gps.ref_lat!=0)
-						map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+					if(model.home_state.g_lat!=0)
+						map.setCenter(model.home_state.g_lat, model.home_state.g_lon);
 					else
 						map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
 					Platform.runLater(() -> {

@@ -35,7 +35,7 @@
 				<BorderPane fx:id="mapviewpane" prefWidth="800" />
 				<GPSDetailsWidget fx:id="gpsdetails"
 				    prefWidth="185"
-				    maxHeight="195" maxWidth="185" visible="false"
+				    maxHeight="215" maxWidth="185" visible="false"
 					styleClass="glass">
 					<StackPane.margin>
 						<Insets left="10.0" top="13.0" />

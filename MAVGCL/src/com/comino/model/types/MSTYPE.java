@@ -111,8 +111,9 @@ public enum MSTYPE {
 	MSP_GLOBPLON	("Global.Longitude",0,"°","GPOS.Lon"),
 	MSP_RAW_GPSLAT  ("Raw.Latitude",0,"°","GPOS.Lat"),
 	MSP_RAW_GPSLON  ("Raw.Longitude",0,"°","GPOS.Lon"),
-	MSP_REF_GPSLAT  ("Home.Latitude",0,"°",""),
-	MSP_REF_GPSLON  ("Home.Longitude",0,"°",""),
+	MSP_HOME_LAT    ("Home.Latitude",0,"°",""),
+	MSP_HOME_LON    ("Home.Longitude",0,"°",""),
+	MSP_HOME_ALT    ("Home.Altitude",0,"m",""),
 	MSP_CONSPOWER	("Bat.Cons.Power",0,"mAh",""),
 	MSP_TIME_ARMED  ("Time armed",0,"s","");
 
@@ -206,8 +207,9 @@ public enum MSTYPE {
 		case MSP_GLOBPLON:		return m.state.g_lon;
 		case MSP_RAW_GPSLAT:	return (float) m.gps.latitude;
 		case MSP_RAW_GPSLON:	return (float) m.gps.longitude;
-		case MSP_REF_GPSLAT:    return (float) m.gps.ref_lat;
-		case MSP_REF_GPSLON:    return (float) m.gps.ref_lon;
+		case MSP_HOME_LAT:      return (float) m.home_state.g_lat;
+		case MSP_HOME_LON:      return (float) m.home_state.g_lon;
+		case MSP_HOME_ALT:      return (float) m.home_state.g_alt;
 		case MSP_GPSEPH: 		return (float) m.gps.eph;
 		case MSP_GPSHDOP: 		return (float) m.gps.hdop;
 		case MSP_RAW_SATNUM:    return m.gps.numsat;
@@ -287,8 +289,9 @@ public enum MSTYPE {
 		case MSP_GLOBPLON:		 m.state.g_lon = value; break;
 		case MSP_RAW_GPSLAT:	 m.gps.latitude = value; break;
 		case MSP_RAW_GPSLON:	 m.gps.longitude = value; break;
-		case MSP_REF_GPSLAT:     m.gps.ref_lat = value; break;
-		case MSP_REF_GPSLON:     m.gps.ref_lon = value; break;
+		case MSP_HOME_LAT:       m.home_state.g_lat = value; break;
+		case MSP_HOME_LON:       m.home_state.g_lon = value; break;
+		case MSP_HOME_ALT:       m.home_state.g_alt = value; break;
 		case MSP_GPSEPH: 		 m.gps.eph = value; break;
 		case MSP_GPSHDOP: 		 m.gps.hdop = value; break;
 		case MSP_RAW_SATNUM:     m.gps.numsat = (byte) value; break;

@@ -147,6 +147,7 @@
 						<Insets left="0.0" top="32.0" />
 					</StackPane.margin>
 				</MessagesWidget>
+
 			</children>
 		</StackPane>
 	</children>
