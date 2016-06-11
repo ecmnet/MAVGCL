@@ -6,10 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 10/06/2016 
-
-- Arm/Disarm/Landing/Takeoff commands added
-- FrSky Taranis USB supported in SITL
+**Status:** Last updated 11/06/2016 
 
 **Features:**
 
@@ -24,6 +21,7 @@ Any feedback, comments and contributions are very welcome.
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Import of selected key-figures from PX4Log (file or last log from device via WiFi)
 - Save and load of collected data 
+- FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
 
 **Requirements:**
