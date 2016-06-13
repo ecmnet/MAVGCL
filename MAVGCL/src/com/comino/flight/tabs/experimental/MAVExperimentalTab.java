@@ -39,11 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_DO_REPOSITION_FLAGS;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
 import com.comino.flight.experimental.OffboardSimulationUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
+import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -61,6 +63,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -84,6 +87,15 @@ public class MAVExperimentalTab extends BorderPane  {
 
 	@FXML
 	private Button poshold_command;
+
+	@FXML
+	private Slider alt_control;
+
+	@FXML
+	private Slider x_control;
+
+	@FXML
+	private Slider y_control;
 
 
 	private VisionPositionSimulationUpdater vision = null;
@@ -111,12 +123,10 @@ public class MAVExperimentalTab extends BorderPane  {
 	private void initialize() {
 
 		exp1.setOnAction((ActionEvent event)-> {
-			List<DataModel> l = control.getCollector().getModelList();
-			for(DataModel m : l) {
-				System.out.println(m.tms/1000+": "+m.msg.msg);
-			}
-
-
+			if(!offboard.isRunning())
+				offboard.start();
+			else
+				offboard.stop();
 		});
 
 		exp2.setOnAction((ActionEvent event)-> {
@@ -156,17 +166,30 @@ public class MAVExperimentalTab extends BorderPane  {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+		});
 
+		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			offboard.setAltitude(-newvalue.intValue()/100f-1.0f);
+		});
+
+		x_control.setValue(500);
+		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			offboard.setX(newvalue.intValue()/100f-5.0f);
+		});
+
+		y_control.setValue(500);
+		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			offboard.setY(newvalue.intValue()/100f-5.0f);
 		});
 
 	}
 
 
 	public MAVExperimentalTab setup(IMAVController control) {
-	    this.control = control;
-	    this.model   = control.getCurrentModel();
-	//	vision = new VisionPositionSimulationUpdater(control);
-	//	offboard = new OffboardSimulationUpdater(control);
+		this.control = control;
+		this.model   = control.getCurrentModel();
+		//	vision = new VisionPositionSimulationUpdater(control);
+		offboard = new OffboardSimulationUpdater(control);
 		return this;
 	}
 

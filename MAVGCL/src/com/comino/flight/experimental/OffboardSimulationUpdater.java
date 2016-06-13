@@ -34,20 +34,30 @@
 package com.comino.flight.experimental;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_FRAME;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.model.segment.Status;
 
 public class OffboardSimulationUpdater implements Runnable {
 
 	private IMAVController control = null;
 	private boolean isRunning = false;
 
+	private float altitude = -1.5f;
+	private float x_pos = 0f;
+	private float y_pos = 0f;
+
 	public OffboardSimulationUpdater(IMAVController control) {
 		this.control = control;
+		this.control.addModeChangeListener((oldstatus, newstatus) -> {
+			if(!newstatus.isStatus(Status.MSP_MODE_OFFBOARD))
+				isRunning = false;
+		});
 	}
 
 	public void start() {
@@ -56,46 +66,82 @@ public class OffboardSimulationUpdater implements Runnable {
 			System.out.println("OFFBOARD only for SITL !");
 			return;
 		}
-
-
-		System.out.println("Offboard updater started");
-		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
 		isRunning = true;
+
 		new Thread(this).start();
+
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) { }
+
+		if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+					MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+					MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
 
 	}
 
+	public boolean isRunning() {
+		return isRunning;
+	}
+
 	public void stop() {
-		System.out.println("Offboard updater stopped");
-        isRunning = false;
+		isRunning = false;
+	}
+
+	public void setAltitude(float altitude) {
+		this.altitude = altitude;
+	}
+
+	public void setX(float x) {
+		this.x_pos = x;;
+	}
+
+	public void setY(float y) {
+		this.y_pos = y;;
 	}
 
 
 	@Override
 	public void run() {
 
+
+		if(!isRunning)
+			return;
+
+
+		System.out.println("Offboard updater started");
+
 		while(isRunning) {
+
 
 			msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
 			cmd.target_component = 1;
 			cmd.target_system = 1;
-			cmd.x =  5;
-			cmd.y =  5;
-			cmd.z = -13;
+			cmd.type_mask = 0b000111111111000;
+			cmd.x =  x_pos;
+			cmd.y =  y_pos;
+			cmd.z =  altitude;
+			cmd.coordinate_frame = MAV_FRAME.MAV_FRAME_LOCAL_NED;
+
+
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
 			try {
-				Thread.sleep(250);
+				Thread.sleep(100);
 			} catch (InterruptedException e) { }
 
+//			if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
+//				stop();
 		}
 
+		System.out.println("Offboard updater stopped");
+
+		if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
 
 
 
