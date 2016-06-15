@@ -13,9 +13,9 @@
 <?import com.comino.flight.tabs.world.MAVWorldTab?>
 <?import com.comino.flight.tabs.openmap.MAVOpenMapTab?>
 <?import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab?>
-<?import com.comino.flight.tabs.experimental.MAVExperimentalTab?>
 
 <?import com.comino.flight.widgets.details.DetailsWidget?>
+<?import com.comino.flight.widgets.experimental.ExperimentalWidget?>
 <?import com.comino.flight.widgets.camera.CameraWidget?>
 <?import com.comino.flight.widgets.messages.MessagesWidget?>
 
@@ -107,19 +107,7 @@
 									</children>
 								</AnchorPane>
 							</content>
-						</Tab>
-							<Tab text="Experimental">
-							<content>
-								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-									xmlns:fx="http://javafx.com/fxml/1">
-									<children>
-										<MAVExperimentalTab fx:id="experimentaltab"
-											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
-									</children>
-								</AnchorPane>
-							</content>
-						</Tab>
+							</Tab>
 				</TabPane>
 				<DetailsWidget fx:id="details"
 				    StackPane.alignment="TOP_RIGHT"
@@ -138,6 +126,15 @@
 						<Insets left="0.0" bottom="32.0"  right="10.0"/>
 					</StackPane.margin>
 				</CameraWidget>
+
+				<ExperimentalWidget fx:id="experimental"
+				    StackPane.alignment="BOTTOM_LEFT"
+				    maxWidth="185"  visible="false" maxHeight="240"
+					styleClass="control">
+					<StackPane.margin>
+						<Insets left="30.0" bottom="120.0" />
+					</StackPane.margin>
+				</ExperimentalWidget>
 
 				<MessagesWidget fx:id="messages"
 				    StackPane.alignment="TOP_LEFT"

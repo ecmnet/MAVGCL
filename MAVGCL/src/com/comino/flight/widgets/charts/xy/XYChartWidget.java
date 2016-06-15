@@ -57,6 +57,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -253,6 +254,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
+		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					System.out.println(xAxis.getValueForDisplay(click.getX())+":"
+				                      +yAxis.getValueForDisplay(click.getY()));
+				}
+			}
+		});
 
 		xAxis.setAutoRanging(true);
 		xAxis.setForceZeroInRange(false);

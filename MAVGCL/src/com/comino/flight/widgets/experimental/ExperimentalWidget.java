@@ -31,56 +31,49 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.tabs.experimental;
+package com.comino.flight.widgets.experimental;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_DO_REPOSITION_FLAGS;
 import org.mavlink.messages.MAV_MODE_FLAG;
-import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
 import com.comino.flight.experimental.OffboardSimulationUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
-import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.ExecutorService;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableColumn.CellDataFeatures;
-import javafx.scene.control.TreeTableColumn.SortType;
-import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.BorderPane;
-import javafx.util.Callback;
+import javafx.scene.layout.GridPane;
 
-public class MAVExperimentalTab extends BorderPane  {
+public class ExperimentalWidget extends FadePane  {
 
 
 	@FXML
-	private Button exp1;
+	private GridPane grid;
 
 	@FXML
-	private Button exp2;
+	private Button offboard_command;
 
 	@FXML
 	private Button althold_command;
@@ -97,17 +90,15 @@ public class MAVExperimentalTab extends BorderPane  {
 	@FXML
 	private Slider y_control;
 
-
+	private DataModel model;
 	private VisionPositionSimulationUpdater vision = null;
 	private OffboardSimulationUpdater offboard = null;
-
 	private IMAVController control;
 
-	private DataModel model;
 
+	public ExperimentalWidget() {
 
-	public MAVExperimentalTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVExperimentalTab.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ExperimentalWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -122,20 +113,13 @@ public class MAVExperimentalTab extends BorderPane  {
 	@FXML
 	private void initialize() {
 
-		exp1.setOnAction((ActionEvent event)-> {
+		offboard_command.setOnAction((ActionEvent event)-> {
 			if(!offboard.isRunning())
 				offboard.start();
 			else
 				offboard.stop();
 		});
 
-		exp2.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-					MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-					MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL);
-
-
-		});
 
 		althold_command.setOnAction((ActionEvent event)-> {
 			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
@@ -185,13 +169,13 @@ public class MAVExperimentalTab extends BorderPane  {
 	}
 
 
-	public MAVExperimentalTab setup(IMAVController control) {
+	public void setup(IMAVController control) {
+
 		this.control = control;
 		this.model   = control.getCurrentModel();
 		//	vision = new VisionPositionSimulationUpdater(control);
 		offboard = new OffboardSimulationUpdater(control);
-		return this;
-	}
 
+	}
 
 }

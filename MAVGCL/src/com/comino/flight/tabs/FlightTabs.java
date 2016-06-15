@@ -38,7 +38,6 @@ import java.util.List;
 
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
-import com.comino.flight.tabs.experimental.MAVExperimentalTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.parameters.MAVParametersTab;
@@ -46,6 +45,7 @@ import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.camera.CameraWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
+import com.comino.flight.widgets.experimental.ExperimentalWidget;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -76,6 +76,9 @@ public class FlightTabs extends Pane {
 	private DetailsWidget details;
 
 	@FXML
+	private ExperimentalWidget experimental;
+
+	@FXML
 	private MessagesWidget messages;
 
 	@FXML
@@ -87,8 +90,7 @@ public class FlightTabs extends Pane {
 	@FXML
 	private MAVParametersTab mavparameterstab;
 
-	@FXML
-	private MAVExperimentalTab experimentaltab;
+
 
 
 	private List<Node> tabs = new ArrayList<Node>();
@@ -103,7 +105,7 @@ public class FlightTabs extends Pane {
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavparameterstab);
-		tabs.add(experimentaltab);
+
 
 		//		tabs.add(mavworldtab);
 
@@ -126,20 +128,24 @@ public class FlightTabs extends Pane {
 //		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mavparameterstab.setDisable(true);
-		experimentaltab.setDisable(true);
+
 
 		if(camera!=null) {
 			if(control.getConnectedAddress()!=null && !control.getConnectedAddress().contains("127.0.0") )
 			  camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
 			else
 			  camera.setup(control, "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240");
-			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoProperty());
+			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoVisibility());
 		}
 
 
-		details.fadeProperty().bind(flightControl.getStatusControl().getDetailsProperty());
+		details.fadeProperty().bind(flightControl.getStatusControl().getDetailVisibility());
 		details.setup(control);
 		messages.setup(control);
+
+
+		experimental.fadeProperty().bind(flightControl.getStatusControl().getExperimentalVisibility());
+		experimental.setup(control);
 
 		statusline.registerMessageWidget(messages);
 
@@ -149,7 +155,6 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
 //		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
-		experimentaltab.setup(control);
 		mavparameterstab.setup(control);
 
 		//		mavworldtab.setDisable(true);
