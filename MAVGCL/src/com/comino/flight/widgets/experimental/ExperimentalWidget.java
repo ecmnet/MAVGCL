@@ -42,7 +42,7 @@ import java.util.List;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 
-import com.comino.flight.experimental.OffboardSimulationUpdater;
+import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
@@ -92,7 +92,7 @@ public class ExperimentalWidget extends FadePane  {
 
 	private DataModel model;
 	private VisionPositionSimulationUpdater vision = null;
-	private OffboardSimulationUpdater offboard = null;
+	private OffboardUpdater offboard = null;
 	private IMAVController control;
 
 
@@ -174,7 +174,7 @@ public class ExperimentalWidget extends FadePane  {
 		this.control = control;
 		this.model   = control.getCurrentModel();
 		//	vision = new VisionPositionSimulationUpdater(control);
-		offboard = new OffboardSimulationUpdater(control);
+		offboard = new OffboardUpdater(control);
 
 	}
 

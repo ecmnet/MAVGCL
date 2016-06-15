@@ -44,7 +44,7 @@ import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
 import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
-import com.comino.flight.experimental.OffboardSimulationUpdater;
+import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;

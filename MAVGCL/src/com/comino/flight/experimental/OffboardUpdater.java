@@ -43,16 +43,16 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.model.segment.Status;
 
-public class OffboardSimulationUpdater implements Runnable {
+public class OffboardUpdater implements Runnable {
 
 	private IMAVController control = null;
 	private boolean isRunning = false;
 
-	private float altitude = -1.5f;
+	private float altitude = -1.0f;
 	private float x_pos = 0f;
 	private float y_pos = 0f;
 
-	public OffboardSimulationUpdater(IMAVController control) {
+	public OffboardUpdater(IMAVController control) {
 		this.control = control;
 		this.control.addModeChangeListener((oldstatus, newstatus) -> {
 			if(!newstatus.isStatus(Status.MSP_MODE_OFFBOARD))
@@ -62,10 +62,11 @@ public class OffboardSimulationUpdater implements Runnable {
 
 	public void start() {
 
-		if(!control.isSimulation()) {
-			System.out.println("OFFBOARD only for SITL !");
-			return;
-		}
+//		if(!control.isSimulation()) {
+//			System.out.println("OFFBOARD only for SITL !");
+//			return;
+//		}
+
 		isRunning = true;
 
 		new Thread(this).start();
