@@ -58,12 +58,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 public class ExperimentalWidget extends FadePane  {
@@ -153,17 +155,36 @@ public class ExperimentalWidget extends FadePane  {
 		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setAltitude(-newvalue.intValue()/100f-1.0f);
+			offboard.setAltitude(-newvalue.intValue());
 		});
 
-		x_control.setValue(500);
+		x_control.setValue(0);
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setX(newvalue.intValue()/100f-5.0f);
+			offboard.setX(newvalue.intValue());
 		});
 
-		y_control.setValue(500);
+		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					x_control.setValue(0);
+				}
+			}
+		});
+
+
+		y_control.setValue(0);
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setY(newvalue.intValue()/100f-5.0f);
+			offboard.setY(newvalue.intValue());
+		});
+
+		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					y_control.setValue(0);
+				}
+			}
 		});
 
 	}
