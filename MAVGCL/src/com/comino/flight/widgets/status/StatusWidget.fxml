@@ -95,7 +95,7 @@
 						<CheckBox fx:id="video" GridPane.rowIndex="1"
 							GridPane.columnIndex="0" text="Video" />
 					    <CheckBox fx:id="experimental" GridPane.rowIndex="0"
-							GridPane.columnIndex="1" text="Ext.Control" />
+							GridPane.columnIndex="1" text="Control" />
 					</children>
 				</GridPane>
 			</children>

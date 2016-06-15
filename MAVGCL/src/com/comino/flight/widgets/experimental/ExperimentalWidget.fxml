@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Label?>
 
 <fx:root prefWidth="183.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
@@ -17,18 +18,20 @@
 			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
 			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
 			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
+			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
 		</rowConstraints>
 
 		<children>
-			<Button fx:id="offboard_command" prefWidth="161.0" text="Offboard" GridPane.rowIndex="0" />
-			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="1" />
-			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="2" />
+		    <Label text="Experimental vehicle control" GridPane.rowIndex="0"/>
+			<Button fx:id="offboard_command" prefWidth="161.0" text="Offboard" GridPane.rowIndex="1" />
+			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="2" />
+			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="3" />
 			<Slider fx:id="alt_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="1000" min="0" prefHeight="13.0" value="0" GridPane.rowIndex="4" />
-			<Slider fx:id="x_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
 				max="1000" min="0" prefHeight="13.0" value="0" GridPane.rowIndex="5" />
-			<Slider fx:id="y_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
+			<Slider fx:id="x_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
 				max="1000" min="0" prefHeight="13.0" value="0" GridPane.rowIndex="6" />
+			<Slider fx:id="y_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
+				max="1000" min="0" prefHeight="13.0" value="0" GridPane.rowIndex="7" />
 		</children>
 	</GridPane>
 </fx:root>
