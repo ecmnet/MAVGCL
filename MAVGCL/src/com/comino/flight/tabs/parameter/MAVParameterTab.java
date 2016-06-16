@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.tabs.parameters;
+package com.comino.flight.tabs.parameter;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -45,6 +45,8 @@ import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.parameter.ParameterFactMetaData;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -79,7 +81,7 @@ import javafx.scene.layout.BorderPane;
  * TODO 1.0: Refactoring, its really ugly
  */
 
-public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
+public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 
 	@FXML
 	private TreeTableView<Parameter> treetableview;
@@ -115,8 +117,8 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	private MSPLogger log = MSPLogger.getInstance();
 
 
-	public MAVParametersTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVParametersTab.fxml"));
+	public MAVParameterTab() {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVParameterTab.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -126,7 +128,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 			throw new RuntimeException(exception);
 		}
 
-		metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
+		metadata = ParameterFactMetaData.getInstance();
 
 		task = new Task<Boolean>() {
 
@@ -272,7 +274,7 @@ public class MAVParametersTab extends BorderPane implements IMAVLinkListener {
 	}
 
 
-	public MAVParametersTab setup(IMAVController control) {
+	public MAVParameterTab setup(IMAVController control) {
 		this.control = control;
 		control.addMAVLinkListener(this);
 

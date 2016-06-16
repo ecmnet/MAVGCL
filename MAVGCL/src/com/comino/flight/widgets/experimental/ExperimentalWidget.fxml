@@ -27,11 +27,11 @@
 			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="2" />
 			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="3" />
 			<Slider fx:id="alt_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="10" min="1" prefHeight="13.0" value="0" GridPane.rowIndex="5" />
+				max="1000" min="100" prefHeight="13.0" value="0" GridPane.rowIndex="5" />
 			<Slider fx:id="x_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="5.0" min="-5.0" prefHeight="13.0" value="0" GridPane.rowIndex="6" />
+				max="500.0" min="-500.0" prefHeight="13.0" value="0" GridPane.rowIndex="6" />
 			<Slider fx:id="y_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="5.0" min="-5.0" prefHeight="13.0" value="0" GridPane.rowIndex="7" />
+				max="500.0" min="-500.0" prefHeight="13.0" value="0" GridPane.rowIndex="7" />
 		</children>
 	</GridPane>
 </fx:root>

@@ -155,12 +155,12 @@ public class ExperimentalWidget extends FadePane  {
 		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setAltitude(-newvalue.intValue());
+			offboard.setAltitude(-newvalue.intValue()/100f);
 		});
 
 		x_control.setValue(0);
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setX(newvalue.intValue());
+			offboard.setX(newvalue.intValue()/100f);
 		});
 
 		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -175,7 +175,7 @@ public class ExperimentalWidget extends FadePane  {
 
 		y_control.setValue(0);
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setY(newvalue.intValue());
+			offboard.setY(newvalue.intValue()/100f);
 		});
 
 		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {

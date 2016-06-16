@@ -39,10 +39,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class FadePane extends Pane {
@@ -53,8 +56,8 @@ public class FadePane extends Pane {
 
 	private BooleanProperty fade = new SimpleBooleanProperty();
 
-	 private final BooleanProperty dragModeActiveProperty =
-	            new SimpleBooleanProperty(this, "dragModeActive", true);
+	private final BooleanProperty dragModeActiveProperty =
+			new SimpleBooleanProperty(this, "dragModeActive", true);
 
 	public FadePane() {
 		this(150);
@@ -91,6 +94,8 @@ public class FadePane extends Pane {
 
 		});
 
+		makeDraggable(this);
+
 
 
 	}
@@ -100,66 +105,55 @@ public class FadePane extends Pane {
 	}
 
 	private Node makeDraggable(final Node node) {
-        final DragContext dragContext = new DragContext();
-        final Group wrapGroup = new Group(node);
+		final DragContext dragContext = new DragContext();
 
-        wrapGroup.addEventFilter(
-                MouseEvent.ANY,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // disable mouse events for all children
-                            mouseEvent.consume();
-                        }
-                    }
-                });
+		//        node.addEventFilter(
+		//                MouseEvent.ANY,
+		//                new EventHandler<MouseEvent>() {
+		//                    public void handle(final MouseEvent mouseEvent) {
+		//                        if (dragModeActiveProperty.get()) {
+		//                            // disable mouse events for all children
+		//                            mouseEvent.consume();
+		//                        }
+		//                    }
+		//                });
 
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_PRESSED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // remember initial mouse cursor coordinates
-                            // and node position
-                            dragContext.mouseAnchorX = mouseEvent.getX();
-                            dragContext.mouseAnchorY = mouseEvent.getY();
-                            dragContext.initialTranslateX =
-                                    node.getTranslateX();
-                            dragContext.initialTranslateY =
-                                    node.getTranslateY();
-                        }
-                    }
-                });
 
-        wrapGroup.addEventFilter(
-                MouseEvent.MOUSE_DRAGGED,
-                new EventHandler<MouseEvent>() {
-                    public void handle(final MouseEvent mouseEvent) {
-                        if (dragModeActiveProperty.get()) {
-                            // shift node from its initial position by delta
-                            // calculated from mouse cursor movement
-                            node.setTranslateX(
-                                    dragContext.initialTranslateX
-                                        + mouseEvent.getX()
-                                        - dragContext.mouseAnchorX);
-                            node.setTranslateY(
-                                    dragContext.initialTranslateY
-                                        + mouseEvent.getY()
-                                        - dragContext.mouseAnchorY);
-                        }
-                    }
-                });
 
-        return wrapGroup;
-    }
+		node.setOnMousePressed(me -> {
+			if (!dragModeActiveProperty.get()) {
+				dragModeActiveProperty.set(true);
+				node.getScene().setCursor(Cursor.HAND);
+				// remember initial mouse cursor coordinates
+				// and node position
+				dragContext.mouseAnchorX = me.getX();
+				dragContext.mouseAnchorY = me.getY();
+
+			}
+		});
+
+		node.setOnMouseReleased(me -> {
+			if (!me.isPrimaryButtonDown()) {
+				node.getScene().setCursor(Cursor.DEFAULT);
+				dragModeActiveProperty.set(false);
+			}
+		});
+
+		node.setOnMouseDragged(me -> {
+			if (dragModeActiveProperty.get()) {
+				node.setLayoutX(node.getLayoutX() + me.getX() - dragContext.mouseAnchorX);
+				node.setLayoutY(node.getLayoutY() + me.getY() - dragContext.mouseAnchorY);
+			}
+		});
+
+
+
+		return node;
+	}
 
 	private static final class DragContext {
-        public double mouseAnchorX;
-        public double mouseAnchorY;
-        public double initialTranslateX;
-        public double initialTranslateY;
-    }
+		public double mouseAnchorX;
+		public double mouseAnchorY;
 
-
-
+	}
 }

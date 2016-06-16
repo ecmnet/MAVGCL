@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.tabs.parameters;
+package com.comino.flight.tabs.parameter;
 
 import java.nio.ByteBuffer;
 

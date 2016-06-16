@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.tabs.parameters;
+package com.comino.flight.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,9 +46,17 @@ import org.w3c.dom.NodeList;
 
 public class ParameterFactMetaData {
 
+	private static ParameterFactMetaData metadata = null;
+
 	private Map<String,ParameterAttributes> parameterList = null;
 
-	public ParameterFactMetaData(String filename) {
+	public static ParameterFactMetaData getInstance() {
+		if(metadata==null)
+			metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
+		return metadata;
+	}
+
+	private ParameterFactMetaData(String filename) {
 
 		parameterList = new HashMap<String,ParameterAttributes>();
 
