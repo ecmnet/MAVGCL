@@ -23,7 +23,7 @@
 
 		<children>
 		    <Label text="Experimental vehicle control" GridPane.rowIndex="0"/>
-			<Button fx:id="offboard_command" prefWidth="161.0" text="Offboard" GridPane.rowIndex="1" />
+			<CheckBox fx:id="offboard_command" prefWidth="161.0" text="Offboard" GridPane.rowIndex="1" />
 			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="2" />
 			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="3" />
 			<Slider fx:id="alt_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"

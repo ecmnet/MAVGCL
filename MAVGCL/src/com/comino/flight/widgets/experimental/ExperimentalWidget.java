@@ -63,6 +63,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -75,7 +76,7 @@ public class ExperimentalWidget extends FadePane  {
 	private GridPane grid;
 
 	@FXML
-	private Button offboard_command;
+	private CheckBox offboard_command;
 
 	@FXML
 	private Button althold_command;
@@ -115,9 +116,17 @@ public class ExperimentalWidget extends FadePane  {
 	@FXML
 	private void initialize() {
 
-		offboard_command.setOnAction((ActionEvent event)-> {
-			if(!offboard.isRunning())
-				offboard.start();
+		offboard_command.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.booleanValue()) {
+				if(!offboard.isRunning())
+					offboard.start();
+				if(control.isSimulation()) {
+					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
+				}
+			}
 			else
 				offboard.stop();
 		});
