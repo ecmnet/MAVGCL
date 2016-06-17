@@ -107,7 +107,7 @@ public class OffboardUpdater implements Runnable {
 		if(!isRunning)
 			return;
 
-		//MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
+		MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
 
 		while(isRunning) {
 
@@ -129,7 +129,7 @@ public class OffboardUpdater implements Runnable {
 			} catch (InterruptedException e) { }
 		}
 
-		//MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
+	    MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
 
 		if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,

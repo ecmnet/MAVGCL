@@ -76,7 +76,7 @@ public class ExperimentalWidget extends FadePane  {
 	private GridPane grid;
 
 	@FXML
-	private CheckBox offboard_command;
+	private Button offboard_command;
 
 	@FXML
 	private Button althold_command;
@@ -116,9 +116,8 @@ public class ExperimentalWidget extends FadePane  {
 	@FXML
 	private void initialize() {
 
-		offboard_command.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.booleanValue()) {
-				if(!offboard.isRunning())
+		offboard_command.setOnAction((ActionEvent event)-> {
+			if(!offboard.isRunning()) {
 					offboard.start();
 
 				if(control.isSimulation()) {
