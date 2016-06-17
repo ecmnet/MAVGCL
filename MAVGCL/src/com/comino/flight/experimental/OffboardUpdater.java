@@ -107,7 +107,7 @@ public class OffboardUpdater implements Runnable {
 		if(!isRunning)
 			return;
 
-		MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
+		//MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
 
 		while(isRunning) {
 
@@ -125,18 +125,16 @@ public class OffboardUpdater implements Runnable {
 				stop();
 
 			try {
-				Thread.sleep(100);
+				Thread.sleep(200);
 			} catch (InterruptedException e) { }
 		}
 
-		MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
+		//MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
 
 		if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-
-
 
 	}
 
