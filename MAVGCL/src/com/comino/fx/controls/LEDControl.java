@@ -33,7 +33,7 @@ public class LEDControl extends GridPane implements Runnable {
 
 		this.circle = new Circle();
 		this.circle.setFill(Color.LIGHTGRAY);
-		this.circle.setRadius(6);
+		this.circle.setRadius(7);
 		this.circle.setStrokeType(StrokeType.INSIDE);
 		this.addColumn(0, circle);
 

@@ -311,7 +311,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-		//enablemodetrig.selectedProperty().set(true);
+		enablemodetrig.selectedProperty().set(true);
 
 	}
 

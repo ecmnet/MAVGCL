@@ -161,7 +161,7 @@ public class MAVLinkMessage {
     }
 
     public Object get(MAVLinkField field) {
-        if (field.arraySize > 1) {
+        if (field.isArray()) {
             if (field.type == MAVLinkDataType.CHAR) {
                 // Char array (string)
                 byte[] buf = new byte[field.arraySize];
@@ -173,6 +173,12 @@ public class MAVLinkMessage {
                     n++;
                 }
                 return new String(buf, 0, n, charset);
+            } else if (field.type == MAVLinkDataType.UINT8) {
+                // Byte array
+                byte[] buf = new byte[field.arraySize];
+                payloadBB.position(field.offset);
+                payloadBB.get(buf);
+                return buf;
             } else {
                 Object[] res = new Object[field.arraySize];
                 int offs = field.offset;
@@ -217,23 +223,32 @@ public class MAVLinkMessage {
     }
 
     public void set(MAVLinkField field, Object value) {
-        if (field.arraySize > 1) {
+        if (field.isArray()) {
             Object[] valueArray;
             if (value instanceof String) {
+                // String (array of chars)
                 String valueStr = (String) value;
                 valueArray = new Byte[field.arraySize];
                 for (int i = 0; i < field.arraySize; i++) {
-                    valueArray[i] = i < valueStr.length() ? (byte) valueStr.charAt(i) : 0;
+                    payloadBB.put(field.offset + i, i < valueStr.length() ? (byte) valueStr.charAt(i) : 0);
+                }
+            } else if (value instanceof byte[]) {
+                // Array of bytes, binary data
+                byte[] valueBytes = (byte[]) value;
+                for (int i = 0; i < field.arraySize; i++) {
+                    payloadBB.put(field.offset + i, i < valueBytes.length ? valueBytes[i] : 0);
                 }
             } else {
+                // Generic array
                 valueArray = (Object[]) value;
-            }
-            int offset = field.offset;
-            for (int i = 0; i < field.arraySize; i++) {
-                setValue(field.type, offset, valueArray[i]);
-                offset += field.type.size;
+                int offset = field.offset;
+                for (int i = 0; i < field.arraySize; i++) {
+                    setValue(field.type, offset, valueArray[i]);
+                    offset += field.type.size;
+                }
             }
         } else {
+            // Single value
             setValue(field.type, field.offset, value);
         }
     }

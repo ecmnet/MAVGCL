@@ -1,16 +1,11 @@
 package me.drton.jmavlib.log.px4;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * User: ton Date: 03.06.13 Time: 14:18
@@ -34,6 +29,8 @@ public class PX4LogReader extends BinaryLogReader {
     private Map<String, Object> version = new HashMap<String, Object>();
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private List<Exception> errors = new ArrayList<Exception>();
+    private String tsName = null;
+    private boolean tsMicros;
 
     private static Set<String> hideMsgs = new HashSet<String>();
     private static Map<String, String> formatNames = new HashMap<String, String>();
@@ -186,7 +183,10 @@ public class PX4LogReader extends BinaryLogReader {
                         } else {
                             int fix = ((Number) msg.get("Status")).intValue();
                             int week = ((Number) msg.get("Week")).intValue();
-                            long ms = ((Number) msg.get("TimeMS")).longValue();
+                            long ms = ((Number) msg.get(tsName)).longValue();
+                            if (tsMicros) {
+                                ms = ms / 1000;
+                            }
                             if (fix >= 3 && (week > 0 || ms > 0)) {
                                 long leapSeconds = 16;
                                 long gpsT = ((315964800L + week * 7L * 24L * 3600L - leapSeconds) * 1000 + ms) * 1000L;
@@ -230,7 +230,7 @@ public class PX4LogReader extends BinaryLogReader {
                     fillBuffer(bodyLen);
                 } catch (EOFException e) {
                     errors.add(new FormatErrorException(pos, "Unexpected end of file"));
-                    throw e;
+                    return false;
                 }
                 if (formatPX4) {
                     if ("TIME".equals(messageDescription.name)) {
@@ -247,10 +247,13 @@ public class PX4LogReader extends BinaryLogReader {
                         buffer.position(buffer.position() + bodyLen);
                     }
                 } else {
-                    Integer idx = messageDescription.fieldsMap.get("TimeMS");
+                    Integer idx = messageDescription.fieldsMap.get(tsName);
                     if (idx != null && idx == 0) {
                         PX4LogMessage msg = messageDescription.parseMessage(buffer);
-                        long t = msg.getLong(idx) * 1000;
+                        long t = msg.getLong(idx);
+                        if (!tsMicros) {
+                            t *= 1000;
+                        }
                         if (t > seekTime) {
                             // Time found
                             time = t;
@@ -268,10 +271,26 @@ public class PX4LogReader extends BinaryLogReader {
         }
     }
 
+    // return ts in micros
     private long getAPMTimestamp(PX4LogMessage msg) {
-        Integer idx = msg.description.fieldsMap.get("TimeMS");
+        if (null == tsName) {
+            // detect APM's timestamp format on first timestamp seen
+            if (null != msg.description.fieldsMap.get("TimeUS")) {
+                // new format, timestamps in micros
+                tsMicros = true;
+                tsName = "TimeUS";
+            } else if (null != msg.description.fieldsMap.get("TimeMS")) {
+                // old format, timestamps in millis
+                tsMicros = false;
+                tsName = "TimeMS";
+            } else {
+                return 0;
+            }
+        }
+
+        Integer idx = msg.description.fieldsMap.get(tsName);
         if (idx != null && idx == 0) {
-            return msg.getLong(idx) * 1000;
+            return tsMicros ? msg.getLong(idx) : (msg.getLong(idx) * 1000);
         }
         return 0;
     }
@@ -280,9 +299,12 @@ public class PX4LogReader extends BinaryLogReader {
         String[] fields = msg.description.fields;
         for (int i = 0; i < fields.length; i++) {
             String field = fields[i];
-            if (i != 0 || !"TimeMS".equals(field)) {
-                update.put(msg.description.name + "." + field, msg.get(i));
+            if (!formatPX4) {
+                if (i == 0 && tsName.equals(field)) {
+                    continue;   // Don't apply timestamp field
+                }
             }
+            update.put(msg.description.name + "." + field, msg.get(i));
         }
     }
 
@@ -362,7 +384,7 @@ public class PX4LogReader extends BinaryLogReader {
                             for (int i = 0; i < msgDescr.fields.length; i++) {
                                 String field = msgDescr.fields[i];
                                 String format = formatNames.get(Character.toString(msgDescr.format.charAt(i)));
-                                if (i != 0 || !"TimeMS".equals(field)) {
+                                if (i != 0 || !("TimeMS".equals(field) || "TimeUS".equals(field))) {
                                     fieldsList.put(msgDescr.name + "." + field, format);
                                 }
                             }

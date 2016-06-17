@@ -10,18 +10,28 @@ public class MAVLinkField {
     public final int size;
     public final int arraySize;
 
-    public MAVLinkField(MAVLinkDataType type, String name, int offset) {
-        this(type, 1, name);
-    }
-
+    /**
+     * MAVLink field constructor.
+     * @param type field type
+     * @param arraySize number of elements in array (-1 if it's not an array)
+     * @param name field name
+     */
     public MAVLinkField(MAVLinkDataType type, int arraySize, String name) {
         this.name = name;
         this.type = type;
-        this.size = type.size * arraySize;
+        if (arraySize >= 0) {
+            this.size = type.size * arraySize;
+        } else {
+            this.size = type.size;
+        }
         this.arraySize = arraySize;
     }
 
+    /**
+     * Check if field contains array.
+     * @return true for array field, false for single value field
+     */
     public boolean isArray() {
-        return arraySize > 1;
+        return arraySize >= 0;  // Array of size 0 or 1 is not very useful, but still possible
     }
 }

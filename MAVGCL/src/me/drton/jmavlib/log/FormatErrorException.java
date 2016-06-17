@@ -11,4 +11,8 @@ public class FormatErrorException extends Exception {
     public FormatErrorException(long position, String s) {
         super(position + ": " + s);
     }
+
+    public FormatErrorException(long position, String s, Throwable cause) {
+        super(position + ": " + s, cause);
+    }
 }

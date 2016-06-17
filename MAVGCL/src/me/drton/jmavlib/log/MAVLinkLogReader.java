@@ -1,21 +1,11 @@
 package me.drton.jmavlib.log;
 
+import me.drton.jmavlib.mavlink.*;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import me.drton.jmavlib.mavlink.MAVLinkDataType;
-import me.drton.jmavlib.mavlink.MAVLinkField;
-import me.drton.jmavlib.mavlink.MAVLinkMessage;
-import me.drton.jmavlib.mavlink.MAVLinkMessageDefinition;
-import me.drton.jmavlib.mavlink.MAVLinkSchema;
-import me.drton.jmavlib.mavlink.MAVLinkStream;
+import java.util.*;
 
 /**
  * User: ton Date: 25.07.14 Time: 21:43
