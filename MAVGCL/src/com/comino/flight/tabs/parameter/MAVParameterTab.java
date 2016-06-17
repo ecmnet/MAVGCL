@@ -45,6 +45,7 @@ import org.mavlink.messages.lquac.msg_param_set;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.parameter.ParameterFactMetaData;
 import com.comino.mav.control.IMAVController;
@@ -81,7 +82,7 @@ import javafx.scene.layout.BorderPane;
  * TODO 1.0: Refactoring, its really ugly
  */
 
-public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
+public class MAVParameterTab extends BorderPane {
 
 	@FXML
 	private TreeTableView<Parameter> treetableview;
@@ -104,7 +105,6 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 
 	private final Map<String,ParameterGroup> groups = new HashMap<String,ParameterGroup>();;
 
-	private Task<Boolean> task;
 
 	private IMAVController control;
 
@@ -112,7 +112,6 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
-	private int param_count;
 
 	private MSPLogger log = MSPLogger.getInstance();
 
@@ -128,25 +127,14 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 			throw new RuntimeException(exception);
 		}
 
-		metadata = ParameterFactMetaData.getInstance();
-
-		task = new Task<Boolean>() {
-
-			@Override
-			protected Boolean call() throws Exception {
-				groups.clear();
-				getParameterList();
-				return true;
-			}
-		};
-
+		metadata = PX4Parameters.getInstance().getMetaData();
 	}
 
 	@FXML
 	private void initialize() {
 
 
-	    root = new TreeItem<Parameter>(new Parameter(""));
+		root = new TreeItem<Parameter>(new Parameter(""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		treetableview.setEditable(false);
@@ -154,7 +142,7 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-					treetableview.getSelectionModel().clearSelection();
+				treetableview.getSelectionModel().clearSelection();
 			}
 		});
 
@@ -276,14 +264,6 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 
 	public MAVParameterTab setup(IMAVController control) {
 		this.control = control;
-		control.addMAVLinkListener(this);
-
-		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				new Thread(task).start();
-			}
-		});
 
 		StateProperties.getInstance().getArmedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -293,26 +273,23 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 		});
 
 
+		PX4Parameters.getInstance().isReadyProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(newValue) {
+					Platform.runLater(() -> {
+						for(ParameterAttributes p : PX4Parameters.getInstance().getList())
+							buildParameterTree(p);
+					});
+				}
+			}
+		});
+
 		return this;
 	}
 
-	@Override
-	public void received(Object _msg) {
 
-		if( _msg instanceof msg_param_value)
-			parseMessageString((msg_param_value)_msg);
-
-	}
-
-	private synchronized void parseMessageString(msg_param_value msg) {
-
-		if(msg.param_id[0]=='_')
-			return;
-
-		ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
-		if(attributes == null) {
-			attributes = new ParameterAttributes(msg.getParam_id(),"(DefaultGroup)");
-		}
+	private void buildParameterTree(ParameterAttributes attributes) {
 
 		TreeItem<Parameter> p = null;
 		ParameterGroup group = null;
@@ -329,25 +306,17 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 			p = group.getTreeItem();
 		}
 
-		parameter = group.get(msg.getParam_id());
+		parameter = group.get(attributes.name);
 		if(parameter == null) {
-			parameter = new Parameter(attributes, msg.param_type, msg.param_value);
-			group.getData().put(msg.getParam_id(), parameter);
+			parameter = new Parameter(attributes, attributes.vtype, attributes.value);
+			group.getData().put(attributes.name, parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
 		} else {
-			parameter.changeValue(msg.param_value);
+			parameter.changeValue(attributes.value);
 		}
 	}
 
-
-	private void getParameterList() {
-		msg_param_request_list msg = new msg_param_request_list(255,1);
-		msg.target_component = 1;
-		msg.target_system = 1;
-		control.sendMAVLinkMessage(msg);
-
-	}
 
 
 	class ParameterGroup {
@@ -414,16 +383,16 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
 			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
-			    public void handle(ActionEvent e) {
-			    	textField.setText(getStringOfDefault());
-			    }
+				public void handle(ActionEvent e) {
+					textField.setText(getStringOfDefault());
+				}
 			});
 
 			MenuItem cmItem2 = new MenuItem("Reset to previous");
 			cmItem2.setOnAction(new EventHandler<ActionEvent>() {
-			    public void handle(ActionEvent e) {
-			    	textField.setText(getStringOfOld());
-			    }
+				public void handle(ActionEvent e) {
+					textField.setText(getStringOfOld());
+				}
 			});
 
 			ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
@@ -441,17 +410,17 @@ public class MAVParameterTab extends BorderPane implements IMAVLinkListener {
 								if((val >= att.min_val && val <= att.max_val) ||
 										att.min_val == att.max_val ) {
 
-								textField.setStyle("-fx-text-fill: #80D0F0;");
+									textField.setStyle("-fx-text-fill: #80D0F0;");
 
-								msg_param_set msg = new msg_param_set(255,1);
-								msg.target_component = 1;
-								msg.target_system = 1;
-								msg.param_type = type;
-						        msg.setParam_id(att.name);
-								msg.param_value = ParamUtils.valToParam(type, val);
+									msg_param_set msg = new msg_param_set(255,1);
+									msg.target_component = 1;
+									msg.target_system = 1;
+									msg.param_type = type;
+									msg.setParam_id(att.name);
+									msg.param_value = ParamUtils.valToParam(type, val);
 
-								control.sendMAVLinkMessage(msg);
-								textField.commitValue();
+									control.sendMAVLinkMessage(msg);
+									textField.commitValue();
 
 								}
 								else {

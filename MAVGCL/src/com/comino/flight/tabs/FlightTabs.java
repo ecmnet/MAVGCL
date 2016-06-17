@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.comino.flight.panel.control.FlightControlPanel;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
@@ -156,6 +157,7 @@ public class FlightTabs extends Pane {
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
 //		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
 		mavparametertab.setup(control);
+
 
 		//		mavworldtab.setDisable(true);
 

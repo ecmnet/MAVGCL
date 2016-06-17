@@ -40,6 +40,8 @@ public class ParameterAttributes {
 	public float   default_val = 0;
 	public float   min_val = 0;
 	public float   max_val = 0;
+	public float   value = 0;
+	public int     vtype = 0;
 	public int     decimals = 0;
 	public String  name = null;
 	public String  type = null;

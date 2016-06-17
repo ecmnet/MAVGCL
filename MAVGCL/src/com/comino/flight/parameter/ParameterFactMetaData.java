@@ -46,17 +46,11 @@ import org.w3c.dom.NodeList;
 
 public class ParameterFactMetaData {
 
-	private static ParameterFactMetaData metadata = null;
+	private int count=0;
 
 	private Map<String,ParameterAttributes> parameterList = null;
 
-	public static ParameterFactMetaData getInstance() {
-		if(metadata==null)
-			metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
-		return metadata;
-	}
-
-	private ParameterFactMetaData(String filename) {
+	public ParameterFactMetaData(String filename) {
 
 		parameterList = new HashMap<String,ParameterAttributes>();
 
@@ -118,12 +112,20 @@ public class ParameterFactMetaData {
 				attributes.max_val = Float.parseFloat(node.getTextContent());
 		}
 
+		++count;
+
+		System.out.println(count+":"+attributes.name);
+
 		parameterList.put(attributes.name, attributes);
 
 	}
 
 	public ParameterAttributes getMetaData(String parameterName) {
 		return parameterList.get(parameterName.toUpperCase());
+	}
+
+	public int getSize() {
+		return parameterList.size();
 	}
 
 }

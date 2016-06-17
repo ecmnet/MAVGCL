@@ -44,6 +44,7 @@ import org.mavlink.messages.lquac.msg_message_interval;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.px4log.MAVPX4LogReader;
@@ -145,6 +146,8 @@ public class MainApp extends Application {
 		StateProperties.getInstance(control);
 
 		FileHandler.getInstance(primaryStage,control);
+
+		PX4Parameters.getInstance(control);
 
 		initRootLayout();
 		showMAVGCLApplication();

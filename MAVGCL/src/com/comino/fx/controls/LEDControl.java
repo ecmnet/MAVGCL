@@ -85,7 +85,7 @@ public class LEDControl extends GridPane implements Runnable {
 
 	@Override
 	public void run() {
-		while(mode == MODE_BLINK ) {
+		while(mode == MODE_BLINK) {
 			try {
 				Thread.sleep(rate_ms);
 			} catch (InterruptedException e) { }
