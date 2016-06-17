@@ -120,6 +120,7 @@ public class ExperimentalWidget extends FadePane  {
 			if(newvalue.booleanValue()) {
 				if(!offboard.isRunning())
 					offboard.start();
+
 				if(control.isSimulation()) {
 					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -164,12 +165,12 @@ public class ExperimentalWidget extends FadePane  {
 		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setAltitude(-newvalue.intValue()/100f);
+			offboard.setNEDZ(-newvalue.intValue()/100f);
 		});
 
 		x_control.setValue(0);
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setX(newvalue.intValue()/100f);
+			offboard.setNEDX(newvalue.intValue()/100f);
 		});
 
 		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -184,7 +185,7 @@ public class ExperimentalWidget extends FadePane  {
 
 		y_control.setValue(0);
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setY(newvalue.intValue()/100f);
+			offboard.setNEDY(newvalue.intValue()/100f);
 		});
 
 		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {

@@ -41,6 +41,7 @@ import org.mavlink.messages.lquac.msg_vision_position_estimate;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.Status;
 
 public class OffboardUpdater implements Runnable {
@@ -48,9 +49,11 @@ public class OffboardUpdater implements Runnable {
 	private IMAVController control = null;
 	private boolean isRunning = false;
 
-	private float altitude = -1.0f;
+	private float z_pos = -1.0f;
 	private float x_pos = 0f;
 	private float y_pos = 0f;
+
+	private float yaw = 0f;
 
 	public OffboardUpdater(IMAVController control) {
 		this.control = control;
@@ -62,9 +65,7 @@ public class OffboardUpdater implements Runnable {
 
 	public void start() {
 
-
 		isRunning = true;
-
 		new Thread(this).start();
 
 		try {
@@ -82,16 +83,20 @@ public class OffboardUpdater implements Runnable {
 		isRunning = false;
 	}
 
-	public void setAltitude(float altitude) {
-		this.altitude = altitude;
+	public void setNEDZ(float z) {
+		this.z_pos = z;
 	}
 
-	public void setX(float x) {
-		this.x_pos = x;;
+	public void setNEDX(float x) {
+		this.x_pos = x;
 	}
 
-	public void setY(float y) {
-		this.y_pos = y;;
+	public void setNEDY(float y) {
+		this.y_pos = y;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
 	}
 
 
@@ -102,11 +107,9 @@ public class OffboardUpdater implements Runnable {
 		if(!isRunning)
 			return;
 
-
-		System.out.println("Offboard updater started");
+		MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
 
 		while(isRunning) {
-
 
 			msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
 			cmd.target_component = 1;
@@ -114,9 +117,9 @@ public class OffboardUpdater implements Runnable {
 			cmd.type_mask = 0b000111111111000;
 			cmd.x =  x_pos;
 			cmd.y =  y_pos;
-			cmd.z =  altitude;
+			cmd.z =  z_pos;
+			cmd.yaw = yaw;
 			cmd.coordinate_frame = MAV_FRAME.MAV_FRAME_LOCAL_NED;
-
 
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
@@ -124,12 +127,9 @@ public class OffboardUpdater implements Runnable {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) { }
-
-//			if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
-//				stop();
 		}
 
-		System.out.println("Offboard updater stopped");
+		MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
 
 		if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
