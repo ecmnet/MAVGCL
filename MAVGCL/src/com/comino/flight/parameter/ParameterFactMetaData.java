@@ -46,7 +46,6 @@ import org.w3c.dom.NodeList;
 
 public class ParameterFactMetaData {
 
-	private int count=0;
 
 	private Map<String,ParameterAttributes> parameterList = null;
 
@@ -111,10 +110,6 @@ public class ParameterFactMetaData {
 			if(node.getNodeName().equals("max"))
 				attributes.max_val = Float.parseFloat(node.getTextContent());
 		}
-
-		++count;
-
-		System.out.println(count+":"+attributes.name);
 
 		parameterList.put(attributes.name, attributes);
 

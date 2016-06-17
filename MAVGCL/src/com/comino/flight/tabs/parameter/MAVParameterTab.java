@@ -64,6 +64,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -138,6 +139,8 @@ public class MAVParameterTab extends BorderPane {
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		treetableview.setEditable(false);
+
+		treetableview.setPlaceholder(new Label("Parameters are loaded when connected"));
 
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
