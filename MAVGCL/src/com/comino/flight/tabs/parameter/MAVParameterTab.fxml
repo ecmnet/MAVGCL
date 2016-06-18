@@ -6,13 +6,11 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-	<top>
-		<Pane prefHeight="10"/>
-	</top>
-	<center>
-		<TreeTableView fx:id="treetableview" layoutX="14.0" layoutY="14.0">
+<fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65"  xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+			<TreeTableView fx:id="treetableview" layoutX="2.0" layoutY="5.0"  styleClass="widget">
 			<columns>
 				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="170.0" text="Group" />
 				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Parameter" />
@@ -21,14 +19,5 @@
 				<TreeTableColumn fx:id="desc_col" editable="false" prefWidth="300.0" sortable="false" text="Description" />
 			</columns>
 		</TreeTableView>
-	</center>
-	<bottom>
-		<Pane prefHeight="10" />
-	</bottom>
-	<left>
-		<Pane prefWidth="10" />
-	</left>
-	<right>
-		<Pane prefWidth="10" />
-	</right>
+	</children>
 </fx:root>

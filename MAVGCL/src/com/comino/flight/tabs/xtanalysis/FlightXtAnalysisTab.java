@@ -80,8 +80,8 @@ public class FlightXtAnalysisTab extends Pane {
 
 	public void setup(ChartControlWidget recordControl,IMAVController control) {
 
-		chart1.prefWidthProperty().bind(widthProperty());
-		chart2.prefWidthProperty().bind(widthProperty());
+		chart1.prefWidthProperty().bind(widthProperty().subtract(188));
+		chart2.prefWidthProperty().bind(widthProperty().subtract(188));
 //		chart3.prefWidthProperty().bind(widthProperty());
 
 		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));

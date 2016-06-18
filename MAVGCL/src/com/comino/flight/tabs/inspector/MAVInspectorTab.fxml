@@ -7,26 +7,14 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root styleClass="widget" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-	<top>
-		<Pane prefHeight="10"/>
-	</top>
-	<center>
-		<TreeTableView fx:id="treetableview" layoutX="14.0" layoutY="14.0">
+<fx:root  type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+		<children>
+		<TreeTableView fx:id="treetableview" layoutX="2.0" layoutY="5.0"  styleClass="widget">
 			<columns>
 				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="320.0" text="Message" />
 				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
 				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0" sortable="false" text="Value" />
 			</columns>
 		</TreeTableView>
-	</center>
-	<bottom>
-		<Pane prefHeight="10" />
-	</bottom>
-	<left>
-		<Pane prefWidth="10" />
-	</left>
-	<right>
-		<Pane prefWidth="10" />
-	</right>
+		</children>
 </fx:root>

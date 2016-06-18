@@ -34,15 +34,11 @@
 package com.comino.flight.tabs.parameter;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
-import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_set;
-import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
@@ -50,7 +46,6 @@ import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.parameter.ParameterFactMetaData;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
@@ -58,7 +53,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -74,7 +68,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 /*
  * Note: Get PX4ParameterFactMetaData.xml from
@@ -83,7 +77,7 @@ import javafx.scene.layout.BorderPane;
  * TODO 1.0: Refactoring, its really ugly
  */
 
-public class MAVParameterTab extends BorderPane {
+public class MAVParameterTab extends Pane {
 
 	@FXML
 	private TreeTableView<Parameter> treetableview;
@@ -262,6 +256,9 @@ public class MAVParameterTab extends BorderPane {
 			};
 		});
 
+
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
+		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
 	}
 
 

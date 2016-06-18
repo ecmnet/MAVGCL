@@ -48,16 +48,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
-public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
+public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@FXML
 	private TreeTableView<Dataset> treetableview;
@@ -167,6 +168,11 @@ public class MAVInspectorTab extends BorderPane implements IMAVLinkListener {
 				}
 			};
 		});
+
+		treetableview.setPlaceholder(new Label("Messages are shown when published"));
+
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
+		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
 
 	}
 
