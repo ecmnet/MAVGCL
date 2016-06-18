@@ -6,9 +6,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 15/06/2016 
-
-- Offboard control from MAVGCL (experimental) - use in SITL only
+**Status:** Last updated 18/06/2016 
 
 **Features:**
 
