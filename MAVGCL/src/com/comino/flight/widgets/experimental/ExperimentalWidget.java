@@ -117,6 +117,8 @@ public class ExperimentalWidget extends FadePane  {
 	private void initialize() {
 
 		offboard_command.setOnAction((ActionEvent event)-> {
+
+
 			if(!offboard.isRunning()) {
 					offboard.start();
 
@@ -133,6 +135,10 @@ public class ExperimentalWidget extends FadePane  {
 
 
 		althold_command.setOnAction((ActionEvent event)-> {
+
+			if(!model.sys.isStatus(Status.MSP_ARMED))
+				return;
+
 			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
@@ -149,6 +155,9 @@ public class ExperimentalWidget extends FadePane  {
 		});
 
 		poshold_command.setOnAction((ActionEvent event)-> {
+
+			if(!model.sys.isStatus(Status.MSP_ARMED))
+				return;
 
 			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
 
