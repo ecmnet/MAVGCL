@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 import org.mavlink.messages.lquac.msg_msp_command;
 import org.mavlink.messages.lquac.msg_rc_channels_override;
@@ -133,8 +134,10 @@ public class CommanderWidget extends Pane  {
 		arm_command.disableProperty().bind(StateProperties.getInstance().getLandedProperty().not());
 		arm_command.setOnAction((ActionEvent event)-> {
 
-			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation())
+			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation()) {
+				MSPLogger.getInstance().writeLocalMsg("Attach RC before arming", MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				return;
+			}
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
