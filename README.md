@@ -62,12 +62,14 @@ Any feedback, comments and contributions are very welcome.
 **Limitations:**
 
 - Limited to one device (MAVLink-ID '1')
-
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it)
-
 - PX4Log keyfigure mapping not complete (let me know, which I should add)
-  ​
 
+
+**Note for developers:**
+
+MAVGAnalysis depends heavily on https://github.com/ecmnet/MAVComm for MAVLink parsing.
+​
 
 **Screenshots** (from PX4Log / Online acquisition):
 
