@@ -43,7 +43,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.utils.Utils;
+import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -439,7 +439,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				rotation_rad = Utils.toRad(new_val.intValue());
+				rotation_rad = MSPMathUtils.toRad(new_val.intValue());
 				rot_label.setText("Rotation: ["+new_val.intValue()+"°]");
 				Platform.runLater(() -> {
 					updateGraph(true);

@@ -49,8 +49,20 @@ public enum MSTYPE {
 	MSP_MAGX		("MagX",1,"mT","IMU.MagX"),
 	MSP_MAGY		("MagY",1,"mT","IMU.MagY"),
 	MSP_MAGZ		("MagZ",1,"mT","IMU.MagZ"),
-	MSP_ANGLEX		("AngleX",1,"rad","ATT.Roll"),
-	MSP_ANGLEY		("AngleY",1,"rad","ATT.Pitch"),
+	MSP_ATTROLL     ("Roll",1,"°","ATT.Roll"),
+	MSP_ATTPITCH    ("Pitch",1,"°","ATT.Pitch"),
+	MSP_ATTYAW      ("Yaw",1,"°","ATT.Yaw"),
+	MSP_ATTROLL_R   ("RollRate",1,"°/s",""),
+	MSP_ATTPITCH_R  ("PitchRate",1,"°/s",""),
+	MSP_ATTYAW_R    ("YawRate",1,"°/s",""),
+	MSP_SPATTROLL   ("Sp.Roll",1,"°",""),
+	MSP_SPATTPIT    ("Sp.Pitch",1,"°",""),
+	MSP_SPATTYAW    ("Sp.Yaw",1,"°",""),
+	MSP_SPATTROLL_R ("Sp.RollRate",1,"°/s",""),
+	MSP_SPATTPIT_R  ("Sp.PitchRate",1,"°/s",""),
+	MSP_SPATTYAW_R  ("Sp.YawRate",1,"°/s",""),
+	MSP_ANGLEX		("AngleX",0,"rad","ATT.Roll"),
+	MSP_ANGLEY		("AngleY",0,"rad","ATT.Pitch"),
 	MSP_GRSPEED     ("Groundspeed",1,"m/s",""),
 	MSP_CLIMBRATE   ("Climb.Rate",1,"m/s",""),
 	MSP_COMPASS		("Compass",1,"°",""),
@@ -160,14 +172,26 @@ public enum MSTYPE {
 		case MSP_DEBUGY: 		return m.debug.y;
 		case MSP_DEBUGZ: 		return m.debug.z;
 		case MSP_DEBUGH: 		return m.debug.h;
-		case MSP_ANGLEX: 		return m.attitude.aX;
-		case MSP_ANGLEY: 		return m.attitude.aY;
-		case MSP_GRSPEED: 		return m.attitude.s;
-		case MSP_CLIMBRATE:     return m.attitude.vs;
-		case MSP_COMPASS: 		return m.attitude.h;
-		case MSP_ALTLOCAL: 		return m.attitude.al;
-		case MSP_ALTAMSL: 		return m.attitude.ag;
-		case MSP_ALTTERRAIN:	return m.attitude.at;
+		case MSP_ATTROLL:       return m.attitude.r;
+		case MSP_ATTPITCH:      return m.attitude.p;
+		case MSP_ATTYAW:        return m.attitude.y;
+		case MSP_ATTROLL_R:     return m.attitude.rr;
+		case MSP_ATTPITCH_R:    return m.attitude.pr;
+		case MSP_ATTYAW_R:      return m.attitude.yr;
+		case MSP_SPATTROLL:     return m.attitude.sr;
+		case MSP_SPATTPIT:      return m.attitude.sp;
+		case MSP_SPATTYAW:      return m.attitude.sy;
+		case MSP_SPATTROLL_R:   return m.attitude.srr;
+		case MSP_SPATTPIT_R:    return m.attitude.spr;
+		case MSP_SPATTYAW_R:    return m.attitude.syr;
+		case MSP_ANGLEX: 		return m.hud.aX;
+		case MSP_ANGLEY: 		return m.hud.aY;
+		case MSP_GRSPEED: 		return m.hud.s;
+		case MSP_CLIMBRATE:     return m.hud.vs;
+		case MSP_COMPASS: 		return m.hud.h;
+		case MSP_ALTLOCAL: 		return m.hud.al;
+		case MSP_ALTAMSL: 		return m.hud.ag;
+		case MSP_ALTTERRAIN:	return m.hud.at;
 		case MSP_NEDX:			return m.state.l_x;
 		case MSP_NEDY:			return m.state.l_y;
 		case MSP_NEDZ:			return m.state.l_z;
@@ -242,14 +266,26 @@ public enum MSTYPE {
 		case MSP_DEBUGY: 		 m.debug.y = value; break;
 		case MSP_DEBUGZ: 		 m.debug.z = value; break;
 		case MSP_DEBUGH: 		 m.debug.h = value; break;
-		case MSP_ANGLEX: 		 m.attitude.aX = value; break;
-		case MSP_ANGLEY: 		 m.attitude.aY = value; break;
-		case MSP_GRSPEED: 		 m.attitude.s = value; break;
-		case MSP_CLIMBRATE:      m.attitude.vs = value; break;
-		case MSP_COMPASS: 		 m.attitude.h = value; break;
-		case MSP_ALTLOCAL: 		 m.attitude.al = value; break;
-		case MSP_ALTAMSL: 		 m.attitude.ag = value; break;
-		case MSP_ALTTERRAIN:	 m.attitude.at = value; break;
+		case MSP_ATTROLL:       m.attitude.r = value; break;
+		case MSP_ATTPITCH:      m.attitude.p = value; break;
+		case MSP_ATTYAW:        m.attitude.y = value; break;
+		case MSP_ATTROLL_R:     m.attitude.rr = value; break;
+		case MSP_ATTPITCH_R:    m.attitude.pr = value; break;
+		case MSP_ATTYAW_R:      m.attitude.yr = value; break;
+		case MSP_SPATTROLL:     m.attitude.sr = value; break;
+		case MSP_SPATTPIT:      m.attitude.sp = value; break;
+		case MSP_SPATTYAW:      m.attitude.sy = value; break;
+		case MSP_SPATTROLL_R:   m.attitude.srr = value; break;
+		case MSP_SPATTPIT_R:    m.attitude.spr = value; break;
+		case MSP_SPATTYAW_R:    m.attitude.syr = value; break;
+		case MSP_ANGLEX: 		 m.hud.aX = value; break;
+		case MSP_ANGLEY: 		 m.hud.aY = value; break;
+		case MSP_GRSPEED: 		 m.hud.s = value; break;
+		case MSP_CLIMBRATE:      m.hud.vs = value; break;
+		case MSP_COMPASS: 		 m.hud.h = value; break;
+		case MSP_ALTLOCAL: 		 m.hud.al = value; break;
+		case MSP_ALTAMSL: 		 m.hud.ag = value; break;
+		case MSP_ALTTERRAIN:	 m.hud.at = value; break;
 		case MSP_NEDX:			 m.state.l_x = value; break;
 		case MSP_NEDY:			 m.state.l_y = value; break;
 		case MSP_NEDZ:			 m.state.l_z = value; break;

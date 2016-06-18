@@ -203,7 +203,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 								} else {
 									canvasLayer.redraw(false);
 								}
-								positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.attitude.h);
+								positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.hud.h);
 							}
 
 						} catch(Exception e) { e.printStackTrace(); }
