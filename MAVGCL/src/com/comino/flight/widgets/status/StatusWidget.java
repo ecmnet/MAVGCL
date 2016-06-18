@@ -84,6 +84,9 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	private CheckBox details;
 
 	@FXML
+	private CheckBox tuning;
+
+	@FXML
 	private CheckBox video;
 
 	@FXML
@@ -116,6 +119,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 	public BooleanProperty getExperimentalVisibility() {
 		return experimental.selectedProperty();
+	}
+
+	public BooleanProperty getTuningVisibility() {
+		return tuning.selectedProperty();
 	}
 
 

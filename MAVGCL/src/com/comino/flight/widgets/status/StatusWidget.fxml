@@ -88,14 +88,17 @@
 							vgrow="SOMETIMES" />
 						<RowConstraints minHeight="18.0"
 							vgrow="SOMETIMES" />
+
 					</rowConstraints>
 					<children>
 						<CheckBox fx:id="details" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" text="Details" />
-						<CheckBox fx:id="video" GridPane.rowIndex="1"
+						<CheckBox fx:id="video" GridPane.rowIndex="2"
 							GridPane.columnIndex="0" text="Video" />
 					    <CheckBox fx:id="experimental" GridPane.rowIndex="0"
 							GridPane.columnIndex="1" text="Control" />
+						<CheckBox fx:id="tuning" GridPane.rowIndex="1"
+							GridPane.columnIndex="0" text="Tuning" />
 					</children>
 				</GridPane>
 			</children>

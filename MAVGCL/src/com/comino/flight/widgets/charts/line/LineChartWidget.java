@@ -203,7 +203,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(75);
+						Thread.sleep(50);
 					} catch (InterruptedException iex) {
 						continue;
 					}
@@ -225,7 +225,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 							setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
 						}
 						scroll.setValue(0);
-						updateGraph(true);
+						Platform.runLater(() -> {
+							updateGraph(false);
+						});
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());

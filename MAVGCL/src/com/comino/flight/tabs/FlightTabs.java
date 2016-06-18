@@ -49,6 +49,7 @@ import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.experimental.ExperimentalWidget;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
+import com.comino.flight.widgets.tuning.TuningWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -75,6 +76,9 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private DetailsWidget details;
+
+	@FXML
+	private TuningWidget tuning;
 
 	@FXML
 	private ExperimentalWidget experimental;
@@ -142,6 +146,10 @@ public class FlightTabs extends Pane {
 
 		details.fadeProperty().bind(flightControl.getStatusControl().getDetailVisibility());
 		details.setup(control);
+
+		tuning.fadeProperty().bind(flightControl.getStatusControl().getTuningVisibility());
+		tuning.setup(control);
+
 		messages.setup(control);
 
 
