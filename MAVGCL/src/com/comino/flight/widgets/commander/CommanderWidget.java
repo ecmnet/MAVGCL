@@ -132,6 +132,10 @@ public class CommanderWidget extends Pane  {
 
 		arm_command.disableProperty().bind(StateProperties.getInstance().getLandedProperty().not());
 		arm_command.setOnAction((ActionEvent event)-> {
+
+			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation())
+				return;
+
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
