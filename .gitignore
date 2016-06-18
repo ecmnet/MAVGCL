@@ -1,0 +1,4 @@
+*.DS_Store
+*~
+MAVGCL/bin
+MAVGCL/dist

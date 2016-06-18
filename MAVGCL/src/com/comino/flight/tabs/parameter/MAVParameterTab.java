@@ -72,7 +72,7 @@ import javafx.scene.layout.Pane;
 
 /*
  * Note: Get PX4ParameterFactMetaData.xml from
- * https://github.com/mavlink/qgroundcontrol/tree/master/src/FirmwarePlugin/PX4
+ * https://s3.amazonaws.com/px4-travis/Firmware/master/parameters.xml
  *
  * TODO 1.0: Refactoring, its really ugly
  */
