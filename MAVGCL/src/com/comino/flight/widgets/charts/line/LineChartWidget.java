@@ -61,6 +61,8 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -251,6 +253,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
+		linechart.setLegendVisible(true);
+		linechart.setLegendSide(Side.TOP);
+
 		//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
 		//
 		//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
@@ -280,7 +285,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = MSTYPE.values()[newValue.intValue()];
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
-				linechart.setLegendVisible(true);
+//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -295,7 +300,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = MSTYPE.values()[newValue.intValue()];
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
-				linechart.setLegendVisible(true);
+//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -309,8 +314,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type3 = MSTYPE.values()[newValue.intValue()];
-				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-				linechart.setLegendVisible(true);
+//				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
+//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -334,8 +339,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-
-				linechart.setLegendVisible(true);
+//
+//				linechart.setLegendVisible(true);
 
 				Platform.runLater(() -> {
 					updateGraph(true);

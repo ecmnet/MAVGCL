@@ -52,6 +52,9 @@ public class FlightXtAnalysisTab extends Pane {
 	@FXML
 	private LineChartWidget chart2;
 
+//	@FXML
+//	private LineChartWidget chart3;
+
 
 	public FlightXtAnalysisTab() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FlightXtAnalysisTab.fxml"));
@@ -70,6 +73,7 @@ public class FlightXtAnalysisTab extends Pane {
 	private void initialize() {
 		chart1.disableProperty().bind(this.disabledProperty());
 		chart2.disableProperty().bind(this.disabledProperty());
+//		chart3.disableProperty().bind(this.disabledProperty());
 	}
 
 
@@ -78,12 +82,15 @@ public class FlightXtAnalysisTab extends Pane {
 
 		chart1.prefWidthProperty().bind(widthProperty());
 		chart2.prefWidthProperty().bind(widthProperty());
+//		chart3.prefWidthProperty().bind(widthProperty());
 
-		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(1));
-		chart2.prefHeightProperty().bind(heightProperty().divide(2).subtract(1));
+		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
+		chart2.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
+//		chart3.prefHeightProperty().bind(heightProperty().divide(3).subtract(2));
 
 		recordControl.addChart(chart1.setup(control));
 		recordControl.addChart(chart2.setup(control));
+//		recordControl.addChart(chart3.setup(control));
 
 
 

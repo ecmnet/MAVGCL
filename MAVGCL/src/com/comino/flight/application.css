@@ -72,6 +72,11 @@
     -fx-stroke-width: 0.0;
 }
 
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-padding: 5px;
+}
+
 .axis {
     -fx-tick-label-fill: #F0F0F0;
 }
