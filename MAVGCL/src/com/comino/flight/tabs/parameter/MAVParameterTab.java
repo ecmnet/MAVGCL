@@ -276,15 +276,12 @@ public class MAVParameterTab extends BorderPane {
 		});
 
 
-		PX4Parameters.getInstance().isReadyProperty().addListener(new ChangeListener<Boolean>() {
+		PX4Parameters.getInstance().getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(newValue) {
-					Platform.runLater(() -> {
-						for(ParameterAttributes p : PX4Parameters.getInstance().getList())
-							buildParameterTree(p);
-					});
-				}
+			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+				Platform.runLater(() -> {
+					buildParameterTree((ParameterAttributes)newValue);
+				});
 			}
 		});
 

@@ -36,15 +36,17 @@ package com.comino.flight.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -53,7 +55,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private static PX4Parameters px4params = null;
 
-	private BooleanProperty isReadyProperty = new SimpleBooleanProperty();
+	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
 
 	private List<ParameterAttributes> parameterList = null;
 
@@ -90,8 +92,8 @@ public class PX4Parameters implements IMAVLinkListener {
 	}
 
 	public void refreshParameterList() {
+		MSPLogger.getInstance().writeLocalMsg("Reading params from vehicle", MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		parameterList.clear();
-		isReadyProperty().setValue(false);
 		msg_param_request_list msg = new msg_param_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -99,8 +101,8 @@ public class PX4Parameters implements IMAVLinkListener {
 	}
 
 
-	public BooleanProperty isReadyProperty() {
-		return isReadyProperty;
+	public ObjectProperty<ParameterAttributes> getAttributeProperty() {
+		return property;
 	}
 
 	@Override
@@ -108,19 +110,21 @@ public class PX4Parameters implements IMAVLinkListener {
 
 		if( _msg instanceof msg_param_value) {
 			msg_param_value msg = (msg_param_value)_msg;
-			this.totalCount = msg.param_count;
 
 			if(msg.param_id[0]=='_')
 				return;
+
+			this.totalCount = msg.param_count;
 
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
 				attributes = new ParameterAttributes(msg.getParam_id(),"(DefaultGroup)");
 			attributes.value = msg.param_value;
 			attributes.vtype = msg.param_type;
+
 			parameterList.add(attributes);
-			if(parameterList.size() == totalCount)
-				isReadyProperty().setValue(true);
+			property.setValue(attributes);
+
 		}
 	}
 
