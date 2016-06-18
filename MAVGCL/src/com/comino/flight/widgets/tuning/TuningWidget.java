@@ -37,8 +37,12 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
@@ -52,33 +56,23 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 public class TuningWidget extends FadePane  {
 
 
-	private static MSTYPE[] key_figures_details = {
-			MSTYPE.MSP_TIME_ARMED
-	};
-
 	@FXML
 	private GridPane grid;
 
-	private Task<Long> task;
 	private DataModel model;
 
-	private List<KeyFigure> figures = null;
+	@FXML
+	private ChoiceBox<String> groups;
 
-	private DecimalFormat f = new DecimalFormat("#0.#");
 
 	public TuningWidget() {
-
-		DecimalFormatSymbols f_symbols = new DecimalFormatSymbols();
-		f_symbols.setNaN("-");
-		f.setDecimalFormatSymbols(f_symbols);
-
-		figures = new ArrayList<KeyFigure>();
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TuningWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -86,78 +80,27 @@ public class TuningWidget extends FadePane  {
 		try {
 			fxmlLoader.load();
 		} catch (IOException exception) {
-
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Long>() {
-
+		PX4Parameters.getInstance().getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					try {
-						Thread.sleep(333);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
-					if(isDisabled() || !isVisible()) {
-						continue;
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-
-					Platform.runLater(() -> {
-						for(KeyFigure figure : figures) {
-							figure.setValue(model);
-						}
-					});
-				}
-				return model.battery.tms;
+			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+				Platform.runLater(() -> {
+					ParameterAttributes p = (ParameterAttributes)newValue;
+					if(!groups.getItems().contains(p.group_name))
+						groups.getItems().add(p.group_name);
+				});
 			}
-		};
+		});
+
+
 
 	}
 
 
 	public void setup(IMAVController control) {
-
-		int i=0;
-		for(MSTYPE k : key_figures_details) {
-			figures.add(new KeyFigure(grid,k,i));
-			i++;
-		}
-
 		this.model = control.getCurrentModel();
-		ExecutorService.get().execute(task);
 
 	}
-
-	private class KeyFigure {
-		MSTYPE type  = null;
-		Label  value = null;
-
-		public KeyFigure(GridPane grid, MSTYPE k, int row) {
-			this.type = k;
-			if(k==MSTYPE.MSP_NONE) {
-				grid.add(new Label(),0,row);
-			} else {
-				Label l1 = new Label(k.getDescription()+" :");
-				l1.setPrefWidth(85); l1.setPrefHeight(19);
-				grid.add(l1, 0, row);
-				value = new Label("-"); value.setPrefWidth(45); value.setAlignment(Pos.CENTER_RIGHT);
-				grid.add(value, 1, row);
-				Label l3 = new Label(" "+k.getUnit()); l3.setPrefWidth(35);
-				grid.add(l3, 2, row);
-			}
-		}
-
-		public void setValue(DataModel model) {
-			if(type!=MSTYPE.MSP_NONE)
-				value.setText(f.format(MSTYPE.getValue(model, type)));
-		}
-	}
-
 }
