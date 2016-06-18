@@ -135,7 +135,7 @@ public class DetailsWidget extends FadePane  {
 			protected Long call() throws Exception {
 				while(true) {
 					try {
-						Thread.sleep(250);
+						Thread.sleep(333);
 					} catch (InterruptedException iex) {
 						Thread.currentThread().interrupt();
 					}

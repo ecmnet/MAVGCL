@@ -61,8 +61,6 @@ public enum MSTYPE {
 	MSP_SPATTROLL_R ("Sp.RollRate",1,"°/s",""),
 	MSP_SPATTPIT_R  ("Sp.PitchRate",1,"°/s",""),
 	MSP_SPATTYAW_R  ("Sp.YawRate",1,"°/s",""),
-	MSP_ANGLEX		("AngleX",0,"rad","ATT.Roll"),
-	MSP_ANGLEY		("AngleY",0,"rad","ATT.Pitch"),
 	MSP_GRSPEED     ("Groundspeed",1,"m/s",""),
 	MSP_CLIMBRATE   ("Climb.Rate",1,"m/s",""),
 	MSP_COMPASS		("Compass",1,"°",""),
@@ -112,6 +110,8 @@ public enum MSTYPE {
 
 	// now  keyfigures that are not selectable
 
+	MSP_ANGLEX		("AngleX",0,"rad","ATT.Roll"),
+	MSP_ANGLEY		("AngleY",0,"rad","ATT.Pitch"),
 	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa",""),
 	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C",""),
 	MSP_CPULOAD     ("CPU Load",0,"%",""),

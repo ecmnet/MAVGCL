@@ -95,7 +95,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			{ MSTYPE.MSP_ACCX, 		 MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
 			{ MSTYPE.MSP_GYROX, 	 MSTYPE.MSP_GYROY, 		MSTYPE.MSP_GYROZ 	},
 			{ MSTYPE.MSP_MAGX,	     MSTYPE.MSP_MAGY, 		MSTYPE.MSP_MAGZ		},
-			{ MSTYPE.MSP_RAW_FLOWX,  MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_NONE		},
+			{ MSTYPE.MSP_RAW_FLOWX,  MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_RAW_DI	},
 			{ MSTYPE.MSP_VOLTAGE, 	 MSTYPE.MSP_CURRENT, 	MSTYPE.MSP_NONE		},
 	};
 
@@ -465,11 +465,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
-
-//					if(mList.get(current_x_pt).msg.msg!=null) {
-//					  linechart.getAnnotations().add(new MessageAnnotation(current_x_pt* COLLECTOR_CYCLE / 1000,mList.get(current_x_pt).msg.msg),
-//							Layer.FOREGROUND);
-//					}
 
 					if(type1!=MSTYPE.MSP_NONE)
 						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
