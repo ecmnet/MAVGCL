@@ -21,6 +21,9 @@ before_install:
 script:
   - git submodule update --quiet --init --recursive
   - cd MAVGCL && ant all
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      ant deploy_osx_sitl;
+    fi
 
 # On tags upload jar to Github
 deploy:
