@@ -34,6 +34,8 @@
 package com.comino.flight.widgets.tuning;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -62,12 +64,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
+import javafx.util.StringConverter;
 
 public class TuningWidget extends FadePane  {
 
@@ -97,6 +101,7 @@ public class TuningWidget extends FadePane  {
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
+
 
 		params = PX4Parameters.getInstance();
 
@@ -174,7 +179,7 @@ public class TuningWidget extends FadePane  {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32) {
 					this.editor = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
 				} else {
-					this.editor = new Spinner<Double>(att.min_val, att.max_val, 0 ,att.increment);
+					this.editor = new Spinner<Double>(new SpinnerAttributeFactory(att));
 				}
 			} else {
 				this.editor = new TextField();
@@ -254,8 +259,10 @@ public class TuningWidget extends FadePane  {
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 					((TextField)p).setText(String.valueOf((int)v));
-				else
-					((TextField)p).setText(String.valueOf(v));
+				else {
+					BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+					((TextField)p).setText(bd.toPlainString());
+				}
 			}
 			else
 				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
@@ -273,6 +280,39 @@ public class TuningWidget extends FadePane  {
 			ctxm.getItems().add(cmItem1);
 			editor.setContextMenu(ctxm);
 		}
+	}
+
+	private class SpinnerAttributeFactory extends DoubleSpinnerValueFactory {
+
+		private ParameterAttributes att = null;
+
+		public SpinnerAttributeFactory(ParameterAttributes att) {
+			super(att.min_val, att.max_val, att.value, att.increment);
+			this.att = att;
+			if(att.increment==0)
+			   this.setAmountToStepBy(1);
+
+			setConverter(new StringConverter<Double>() {
+
+			     @Override public String toString(Double value) {
+			    	 BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+
+			       return bd.toPlainString();
+			     }
+
+				@Override
+				public Double fromString(String string) {
+					if(string!=null)
+						return Double.valueOf(string);
+					return 0.0;
+				}
+			});
+		}
+
+
+
+
+
 	}
 
 

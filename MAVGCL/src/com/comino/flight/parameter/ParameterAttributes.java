@@ -34,7 +34,7 @@
 package com.comino.flight.parameter;
 
 
-public class ParameterAttributes {
+public class ParameterAttributes  implements Comparable<ParameterAttributes> {
 
 	public float   default_val = 0;
 	public float   min_val = 0;
@@ -67,7 +67,8 @@ public class ParameterAttributes {
 		return "group="+group_name+" name="+name+" description="+description+" type="+type;
 	}
 
-
-
-
+	@Override
+	public int compareTo(ParameterAttributes o) {
+       return this.name.compareTo(o.name);
+	}
 }

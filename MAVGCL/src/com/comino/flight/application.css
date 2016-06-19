@@ -318,8 +318,8 @@
     -fx-control-inner-background: #202020;
     -fx-background-color: cyan;
     -fx-border-width: 5px;
-
 }
+
 
 .spinner > .selected .focus-indicator {
     -fx-border-color: #303030;
