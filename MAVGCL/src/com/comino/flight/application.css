@@ -131,6 +131,17 @@
     -fx-padding: 4;
 }
 
+.tuning {
+  -fx-background: rgba(40.0, 40.0, 60.0, 0.95);
+  -fx-box-border:transparent;
+}
+
+
+.tuning .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
 .list-view .scroll-bar:vertical {
     -fx-opacity: 0;
     -fx-padding:-7;

@@ -39,6 +39,7 @@ import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
@@ -49,17 +50,23 @@ import com.comino.msp.log.MSPLogger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 
 public class TuningWidget extends FadePane  {
@@ -67,6 +74,9 @@ public class TuningWidget extends FadePane  {
 
 	@FXML
 	private GridPane grid;
+
+	@FXML
+	private ScrollPane scroll;
 
 	@FXML
 	private ChoiceBox<String> groups;
@@ -114,34 +124,40 @@ public class TuningWidget extends FadePane  {
 
 	@FXML
 	public void initialize() {
-
+	    scroll.setBorder(Border.EMPTY);
+		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scroll.prefHeightProperty().bind(this.heightProperty().subtract(80));
 		grid.setVgap(4); grid.setHgap(6);
+
+	}
+
+	private ParamItem createParamItem(ParameterAttributes p) {
+		ParamItem item = new ParamItem(p);
+		return item;
+	}
+
+
+	public void setup(IMAVController control) {
+		this.control = control;
 
 		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
 				grid.getChildren().clear();
 				int i = 0;
 				for(ParameterAttributes p : params.getList()) {
 					if(newValue.contains(p.group_name)) {
 						Label unit = new Label(p.unit); unit.setPrefWidth(30);
 						Label name = new Label(p.name); name.setPrefWidth(100); name.setTooltip(new Tooltip(p.description));
-						grid.addRow(i++, name,createParamControl(p),unit);
+						ParamItem item = createParamItem(p);
+						grid.addRow(i++, name,item.editor,unit);
 					}
 				}
 			}
 		});
 
-	}
-
-	private Control createParamControl(ParameterAttributes p) {
-		ParamItem item = new ParamItem(p);
-		return item.editor;
-	}
-
-
-	public void setup(IMAVController control) {
-		this.control = control;
+		groups.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
 	}
 
@@ -164,6 +180,7 @@ public class TuningWidget extends FadePane  {
 				this.editor = new TextField();
 			}
 
+			setContextMenu(editor);
 			setValueOf(editor,att.value);
 
 
@@ -244,22 +261,18 @@ public class TuningWidget extends FadePane  {
 				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
 		}
 
-		//		private void setContextMenue(Control editor) {
-		//					ContextMenu ctxm = new ContextMenu();
-		//					MenuItem cmItem1 = new MenuItem("Set default");
-		//					cmItem1.setOnAction(new EventHandler<ActionEvent>() {
-		//						public void handle(ActionEvent e) {
-		//							textField.setText(getStringOfDefault());
-		//						}
-		//					});
-		//
-		//					MenuItem cmItem2 = new MenuItem("Reset to previous");
-		//					cmItem2.setOnAction(new EventHandler<ActionEvent>() {
-		//						public void handle(ActionEvent e) {
-		//							textField.setText(getStringOfOld());
-		//						}
-		//					});
-		//		}
+
+		private void setContextMenu(Control editor) {
+			ContextMenu ctxm = new ContextMenu();
+			MenuItem cmItem1 = new MenuItem("Set default");
+			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					setValueOf(editor,att.default_val);
+				}
+			});
+			ctxm.getItems().add(cmItem1);
+			editor.setContextMenu(ctxm);
+		}
 	}
 
 

@@ -6,9 +6,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root  prefWidth="283.0"  type="javafx.scene.layout.Pane"
-xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
- <Label prefHeight="19.0" prefWidth="158.0"  text="Parameter group:" layoutX="10" layoutY="10"/>
- <ChoiceBox fx:id="groups" prefHeight="19.0" prefWidth="225.0" layoutX="10" layoutY="30"/>
-  <GridPane fx:id="grid" layoutX="15.0" layoutY="70.0"  prefWidth="263.0"/>
+<fx:root prefWidth="283.0" type="javafx.scene.layout.Pane"
+	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+	<Label prefHeight="19.0" prefWidth="158.0" text="Parameter group:"
+		layoutX="10" layoutY="10" />
+	<ChoiceBox fx:id="groups" prefHeight="19.0" prefWidth="225.0"
+		layoutX="10" layoutY="30" />
+	<ScrollPane fx:id="scroll" layoutX="15.0" layoutY="70.0" styleClass="tuning">
+		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="225.0" />
+	</ScrollPane>
 </fx:root>
