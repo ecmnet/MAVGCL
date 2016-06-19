@@ -1,5 +1,7 @@
 # MAVGAnalysis
 
+[![Join the chat at https://gitter.im/ecmnet/MAVGCL](https://badges.gitter.im/ecmnet/MAVGCL.svg)](https://gitter.im/ecmnet/MAVGCL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## In-Flight/PX4Log Analysis for PX4
 
 [![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL)
