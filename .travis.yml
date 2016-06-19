@@ -2,15 +2,25 @@ language: java
 
 sudo: required
 
-jdk:
-  - oraclejdk8
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      jdk: oraclejdk8
+      sudo: required
+    - os: osx
+      osx_image: xcode7.3
 
 before_install:
-  - git submodule update --quiet --init --recursive
-  - sudo apt-get update && sudo apt-get install oracle-java8-installer
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+      sudo apt-get update && sudo apt-get install oracle-java8-installer;
+    elif [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      brew update && brew install ant;
+    fi
 
 script:
-  cd MAVGCL && ant all
+  - git submodule update --quiet --init --recursive
+  - cd MAVGCL && ant all
 
 # On tags upload jar to Github
 deploy:
