@@ -183,16 +183,6 @@ public class MainApp extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			//			ScenicView.show(scene);
 
-			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent event) {
-					if(control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) {
-						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
-					}
-				}
-			});
-
 			Preferences userPrefs = MAVPreferences.getInstance();
 
 			if(userPrefs.getDouble("stage.width", 100)>0 && userPrefs.getDouble("stage.height", 100) > 0 ) {
