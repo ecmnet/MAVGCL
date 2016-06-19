@@ -118,7 +118,8 @@ public class TuningWidget extends FadePane  {
 							groups.getItems().add(p.group_name);
 
 						if(waitingForAcknowledge) {
-							MSPLogger.getInstance().writeLocalMsg(p.name+" is updated on device with "+p.value,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+							MSPLogger.getInstance().writeLocalMsg(p.name+" is updated on device with "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 							waitingForAcknowledge = false;
 						}
 					});
@@ -162,7 +163,7 @@ public class TuningWidget extends FadePane  {
 			}
 		});
 
-		groups.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
 	}
 
