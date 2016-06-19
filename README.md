@@ -2,7 +2,7 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL)[![Gitter](https://badges.gitter.im/ecmnet/MAVGCL.svg)](https://gitter.im/ecmnet/MAVGCL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL)   [![Gitter](https://badges.gitter.im/ecmnet/MAVGCL.svg)](https://gitter.im/ecmnet/MAVGCL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Runnable on OS X, Ubuntu and Windows. 
 
