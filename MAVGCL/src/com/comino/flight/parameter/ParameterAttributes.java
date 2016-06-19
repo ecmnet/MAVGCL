@@ -33,7 +33,6 @@
 
 package com.comino.flight.parameter;
 
-import org.mavlink.messages.MAV_PARAM_TYPE;
 
 public class ParameterAttributes {
 

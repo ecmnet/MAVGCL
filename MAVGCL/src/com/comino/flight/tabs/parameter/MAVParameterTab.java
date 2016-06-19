@@ -277,9 +277,10 @@ public class MAVParameterTab extends Pane {
 		PX4Parameters.getInstance().getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-				Platform.runLater(() -> {
-					buildParameterTree((ParameterAttributes)newValue);
-				});
+				if(newValue!=null)
+					Platform.runLater(() -> {
+						buildParameterTree((ParameterAttributes)newValue);
+					});
 			}
 		});
 

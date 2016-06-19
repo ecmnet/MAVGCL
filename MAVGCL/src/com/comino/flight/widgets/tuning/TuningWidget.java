@@ -49,18 +49,13 @@ import com.comino.msp.log.MSPLogger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
@@ -79,6 +74,7 @@ public class TuningWidget extends FadePane  {
 	private IMAVController control;
 	private PX4Parameters  params;
 
+	private boolean waitingForAcknowledge = false;
 
 
 	public TuningWidget() {
@@ -95,16 +91,22 @@ public class TuningWidget extends FadePane  {
 		params = PX4Parameters.getInstance();
 
 		groups.getItems().add("None");
+		groups.getSelectionModel().clearAndSelect(0);
 
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-				Platform.runLater(() -> {
-					ParameterAttributes p = (ParameterAttributes)newValue;
-					if(!groups.getItems().contains(p.group_name))
-						groups.getItems().add(p.group_name);
-					groups.getSelectionModel().clearAndSelect(0);
-				});
+				if(newValue!=null)
+					Platform.runLater(() -> {
+						ParameterAttributes p = (ParameterAttributes)newValue;
+						if(!groups.getItems().contains(p.group_name))
+							groups.getItems().add(p.group_name);
+
+						if(waitingForAcknowledge) {
+							MSPLogger.getInstance().writeLocalMsg(p.name+" is updated on device with "+p.value,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							waitingForAcknowledge = false;
+						}
+					});
 			}
 		});
 
@@ -156,7 +158,6 @@ public class TuningWidget extends FadePane  {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32) {
 					this.editor = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
 				} else {
-					//				float increment = att.increment != 0 ? att.increment : (float)Math.pow(10, -att.decimals);
 					this.editor = new Spinner<Double>(att.min_val, att.max_val, 0 ,att.increment);
 				}
 			} else {
@@ -175,10 +176,10 @@ public class TuningWidget extends FadePane  {
 				public void handle(KeyEvent keyEvent)
 				{
 					if(keyEvent.getCode() == KeyCode.ENTER)
-						editor.getParent().getParent().requestFocus();
+						editor.getParent().requestFocus();
 					if(keyEvent.getCode() == KeyCode.ESCAPE) {
 						setValueOf(editor,att.value);
-						editor.getParent().getParent().requestFocus();
+						editor.getParent().requestFocus();
 					}
 				}
 			});
@@ -190,7 +191,7 @@ public class TuningWidget extends FadePane  {
 						try {
 
 							float val =  getValueOf(editor);
-							if(val!=att.value) {
+							if(val!=att.value && !waitingForAcknowledge ) {
 
 								if((val >= att.min_val && val <= att.max_val) ||
 										att.min_val == att.max_val ) {
@@ -203,9 +204,7 @@ public class TuningWidget extends FadePane  {
 									msg.param_value = ParamUtils.valToParam(att.vtype, val);
 
 									control.sendMAVLinkMessage(msg);
-									MSPLogger.getInstance().writeLocalMsg(att.name+" is updated on device",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-
-									System.out.println("Value changed: "+val+" prev: "+ParamUtils.paramToVal(att.vtype,att.value));
+									waitingForAcknowledge = true;
 
 								}
 								else {

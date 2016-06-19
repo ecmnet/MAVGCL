@@ -59,7 +59,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
 
-	private List<ParameterAttributes> parameterList = null;
+	private Set<ParameterAttributes> parameterList = null;
 
 	private IMAVController control;
 
@@ -83,7 +83,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		this.control.addMAVLinkListener(this);
 
 		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
-		this.parameterList = new ArrayList<ParameterAttributes>();
+		this.parameterList = new HashSet<ParameterAttributes>();
 
 		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -111,6 +111,8 @@ public class PX4Parameters implements IMAVLinkListener {
 	public void received(Object _msg) {
 
 		if( _msg instanceof msg_param_value) {
+			property.setValue(null);
+
 			msg_param_value msg = (msg_param_value)_msg;
 
 			if(msg.param_id[0]=='_')
@@ -134,7 +136,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		return this.metadata;
 	}
 
-	public List<ParameterAttributes> getList() {
+	public Set<ParameterAttributes> getList() {
 		return this.parameterList;
 	}
 
