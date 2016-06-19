@@ -39,7 +39,7 @@ public class ParameterAttributes {
 
 	public float   default_val = 0;
 	public float   min_val = 0;
-	public float   max_val = 0;
+	public float   max_val = Float.MAX_VALUE;
 	public float   value = 0;
 	public float   increment = 0;
 	public int     vtype = 0;

@@ -121,7 +121,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
 				attributes = new ParameterAttributes(msg.getParam_id(),"(DefaultGroup)");
-			attributes.value = msg.param_value;
+			attributes.value = ParamUtils.paramToVal(msg.param_type, msg.param_value);
 			attributes.vtype = msg.param_type;
 
 			parameterList.add(attributes);

@@ -121,7 +121,7 @@
 
 				<TuningWidget fx:id="tuning"
 				    StackPane.alignment="TOP_RIGHT"
-				    maxWidth="185"  visible="false"
+				    maxWidth="245"  visible="false"
 					styleClass="control">
 					<StackPane.margin>
 						<Insets right="10.0" top="32.0" bottom="0.0" />

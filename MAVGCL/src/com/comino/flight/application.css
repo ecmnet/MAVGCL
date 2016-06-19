@@ -241,7 +241,7 @@
 
 .tab-pane > .tab-header-area > .headers-region > .tab:selected  {
      -fx-background-color: #606060;
-       -fx-shadow-highlight-color: #303030;
+     -fx-shadow-highlight-color: #303030;
 }
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
@@ -302,4 +302,15 @@
 	-fx-progress-color: white;
 }
 
+.spinner {
+    -fx-border-insets: 0.0px;
+    -fx-control-inner-background: #202020;
+    -fx-background-color: cyan;
+    -fx-border-width: 5px;
+
+}
+
+.spinner > .selected .focus-indicator {
+    -fx-border-color: #303030;
+  }
 

@@ -31,13 +31,16 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.tabs.parameter;
+package com.comino.flight.parameter;
 
 import java.nio.ByteBuffer;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 
 public class ParamUtils {
+
+
+	// WEIRD: Representation of int32 in the float field ....
 
 
 	public static float paramToVal (int type, float val)
