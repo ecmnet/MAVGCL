@@ -257,6 +257,7 @@ public class TuningWidget extends FadePane  {
 
 		@SuppressWarnings("unchecked")
 		private void setValueOf(Control p, float v) {
+			TextField e = null;
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 					((TextField)p).setText(String.valueOf((int)v));
@@ -264,22 +265,35 @@ public class TuningWidget extends FadePane  {
 					BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
 					((TextField)p).setText(bd.toPlainString());
 				}
+				if(v==att.default_val)
+					p.setStyle("-fx-text-fill: #F0F0F0;");
+				else
+					p.setStyle("-fx-text-fill: #F0D080;");
 			}
-			else
+			else {
 				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
+				if(v==att.default_val)
+					((Spinner<Double>)p).getEditor().setStyle("-fx-text-fill: #F0F0F0;");
+				else
+					((Spinner<Double>)p).getEditor().setStyle("-fx-text-fill: #F0D080;");
+			}
 		}
 
 
-		private void setContextMenu(Control editor) {
+		private void setContextMenu(Control p) {
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
 			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent e) {
-					setValueOf(editor,att.default_val);
+					setValueOf(p,att.default_val);
 				}
 			});
 			ctxm.getItems().add(cmItem1);
-			editor.setContextMenu(ctxm);
+			if(p instanceof TextField)
+			     p.setContextMenu(ctxm);
+			else
+				((Spinner<Double>)p).getEditor().setContextMenu(ctxm);
+
 		}
 	}
 
@@ -309,12 +323,5 @@ public class TuningWidget extends FadePane  {
 				}
 			});
 		}
-
-
-
-
-
 	}
-
-
 }
