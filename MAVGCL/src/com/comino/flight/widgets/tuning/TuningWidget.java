@@ -164,7 +164,6 @@ public class TuningWidget extends FadePane  {
 		});
 
 		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
-
 	}
 
 	private class ParamItem {
@@ -229,6 +228,8 @@ public class TuningWidget extends FadePane  {
 									control.sendMAVLinkMessage(msg);
 									waitingForAcknowledge = true;
 
+									checkDefaultOf(editor,val);
+
 								}
 								else {
 									MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
@@ -244,7 +245,6 @@ public class TuningWidget extends FadePane  {
 			});
 		}
 
-
 		@SuppressWarnings("unchecked")
 		private float getValueOf(Control p) throws NumberFormatException {
 			if(p instanceof TextField) {
@@ -257,7 +257,6 @@ public class TuningWidget extends FadePane  {
 
 		@SuppressWarnings("unchecked")
 		private void setValueOf(Control p, float v) {
-			TextField e = null;
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 					((TextField)p).setText(String.valueOf((int)v));
@@ -265,21 +264,24 @@ public class TuningWidget extends FadePane  {
 					BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
 					((TextField)p).setText(bd.toPlainString());
 				}
-				if(v==att.default_val)
-					p.setStyle("-fx-text-fill: #F0F0F0;");
-				else
-					p.setStyle("-fx-text-fill: #F0D080;");
 			}
-			else {
+			else
 				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
-				if(v==att.default_val)
-					((Spinner<Double>)p).getEditor().setStyle("-fx-text-fill: #F0F0F0;");
-				else
-					((Spinner<Double>)p).getEditor().setStyle("-fx-text-fill: #F0D080;");
-			}
+			checkDefaultOf(p,v);
 		}
 
+		@SuppressWarnings("unchecked")
+		private void checkDefaultOf(Control p, float v) {
+			Control e = p;
+			if(p instanceof Spinner)
+				e = ((Spinner<Double>)p).getEditor();
+			if(v==att.default_val)
+				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #202020;");
+			else
+				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #202020;");
+		}
 
+		@SuppressWarnings("unchecked")
 		private void setContextMenu(Control p) {
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
