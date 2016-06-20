@@ -8,9 +8,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 19/06/2016 
+**Status:** Last updated 20/06/2016 
 
-- Tuning widget added
+- Timechart annotated by messages (10 sec frame only)
 
 **Features:**
 
