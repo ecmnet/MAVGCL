@@ -364,7 +364,7 @@ public class MAVParameterTab extends Pane {
 
 		public Parameter(ParameterAttributes a, int type, float v) {
 			this.att = a;
-			this.value = ParamUtils.paramToVal(type,v);
+			this.value = v;//ParamUtils.paramToVal(type,v);
 			this.type = type;
 			this.old_val = value;
 
@@ -473,7 +473,7 @@ public class MAVParameterTab extends Pane {
 
 		public void changeValue(float v) {
 			this.old_val = value;
-			this.value = ParamUtils.paramToVal(type,v);;
+			this.value = v; //ParamUtils.paramToVal(type,v);;
 			this.textField.setText(getStringOfValue());
 			checkDefault();
 		}
