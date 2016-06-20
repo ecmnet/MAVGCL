@@ -25,9 +25,6 @@ public class MessageAnnotation  implements XYAnnotation {
 	private float      xpos   = 0;
 	private Label      label  = null;
 
-	private FadeTransition     out =  null;
-	private long       tms    = 0;
-
 	public MessageAnnotation(float xpos, LogMessage message) {
 		this.xpos = xpos;
 		this.msg  = message;
@@ -41,23 +38,13 @@ public class MessageAnnotation  implements XYAnnotation {
 		pane.getChildren().add(circle);
 		pane.getChildren().add(label);
 
-		out = new FadeTransition(Duration.millis(100), label);
-		out.setFromValue(1.0);
-		out.setToValue(0.0);
-
-		out.setOnFinished(value -> {
-			label.setVisible(false);
-		});
-
-		this.circle.setOnMouseEntered(event -> {
+		this.circle.setOnMouseClicked(event -> {
 			this.label.setVisible(true);
+			ExecutorService.get().schedule(() -> {
+				label.setVisible(false);
+			  }, 3, TimeUnit.SECONDS);
 		});
 
-		this.circle.setOnMouseExited(event -> {
-			  ExecutorService.get().schedule(() -> {
-				  this.out.play();
-			  }, 2, TimeUnit.SECONDS);
-		});
 
 	}
 
@@ -68,7 +55,7 @@ public class MessageAnnotation  implements XYAnnotation {
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		pane.setLayoutX(xAxis.getDisplayPosition(xpos)-10);
+		pane.setLayoutX(xAxis.getDisplayPosition(xpos));
 		pane.setLayoutY(2);
 	}
 
