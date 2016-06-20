@@ -234,7 +234,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						Platform.runLater(() -> {
 							updateGraph(true);
 						});
-						continue;
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
