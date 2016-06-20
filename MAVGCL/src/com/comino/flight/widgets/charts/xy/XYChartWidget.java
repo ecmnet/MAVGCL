@@ -36,6 +36,7 @@ package com.comino.flight.widgets.charts.xy;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -210,13 +211,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
+
+					LockSupport.parkNanos(25000000);
 
 					if(isDisabled()) {
+						LockSupport.parkNanos(500000000);
 						continue;
 					}
 
@@ -232,7 +231,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						}
 						current_x_pt = 0;
 						scroll.setValue(0);
-						updateGraph(true);
+						Platform.runLater(() -> {
+							updateGraph(true);
+						});
+						continue;
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
@@ -260,7 +262,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
 					System.out.println(xAxis.getValueForDisplay(click.getX())+":"
-				                      +yAxis.getValueForDisplay(click.getY()));
+							+yAxis.getValueForDisplay(click.getY()));
 				}
 			}
 		});

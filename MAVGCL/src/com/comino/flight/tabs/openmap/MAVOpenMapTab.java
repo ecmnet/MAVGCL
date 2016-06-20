@@ -35,6 +35,7 @@ package com.comino.flight.tabs.openmap;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -163,13 +164,11 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
+
+					LockSupport.parkNanos(100000000);
 
 					if(isDisabled()) {
+						LockSupport.parkNanos(500000000);
 						continue;
 					}
 

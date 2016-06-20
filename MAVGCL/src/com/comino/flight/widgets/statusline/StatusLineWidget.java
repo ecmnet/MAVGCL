@@ -36,6 +36,7 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
@@ -122,16 +123,12 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						Thread.currentThread().interrupt();
 					}
 
-					if(isDisabled()) {
-						continue;
-					}
-
 					if (isCancelled()) {
 						break;
 					}
 					Platform.runLater(() -> {
 
-						indicator.setVisible(showProgress);
+						// indicator.setVisible(showProgress);
 
 						if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
 							driver.setText(control.getCurrentModel().sys.getSensorString());

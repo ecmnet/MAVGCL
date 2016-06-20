@@ -645,6 +645,15 @@ velocity</short_desc>
         <value code="2">Land at current position</value>
       </values>
     </parameter>
+    <parameter default="0.0" name="COM_OF_LOSS_T" type="FLOAT">
+      <short_desc>Time-out to wait when offboard connection is lost before triggering offboard lost action.
+See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
+      <min>0</min>
+      <max>60</max>
+      <unit>second</unit>
+      <increment>1</increment>
+      <scope>modules/commander</scope>
+    </parameter>
   </group>
   <group name="Data Link Loss">
     <parameter default="120.0" name="NAV_DLL_CH_T" type="FLOAT">
@@ -2615,6 +2624,28 @@ but also ignore less noise</short_desc>
     </parameter>
   </group>
   <group name="Mission">
+    <parameter default="0" name="COM_OBL_ACT" type="INT32">
+      <short_desc>Set offboard loss failsafe mode</short_desc>
+      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="COM_OBL_RC_ACT" type="INT32">
+      <short_desc>Set offboard loss failsafe mode when RC is available</short_desc>
+      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Altitude control</value>
+        <value code="0">Position control</value>
+        <value code="3">Return to Land</value>
+        <value code="2">Manual</value>
+        <value code="4">Land at current position</value>
+      </values>
+    </parameter>
     <parameter default="50.0" name="NAV_LOITER_RAD" type="FLOAT">
       <short_desc>Loiter radius (FW only)</short_desc>
       <long_desc>Default value of loiter radius for missions, loiter, RTL, etc. (fixedwing only).</long_desc>

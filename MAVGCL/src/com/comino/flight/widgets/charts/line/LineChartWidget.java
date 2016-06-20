@@ -36,6 +36,7 @@ package com.comino.flight.widgets.charts.line;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -199,13 +200,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException iex) {
-						continue;
-					}
+						LockSupport.parkNanos(resolution_ms*250000);
 
 					if(isDisabled()) {
+						LockSupport.parkNanos(500000000);
 						continue;
 					}
 
@@ -469,15 +467,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
                         linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
 					}
 
+					synchronized(this) {
+
 					if(type1!=MSTYPE.MSP_NONE)
 						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
 					if(type2!=MSTYPE.MSP_NONE)
 						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
 					if(type3!=MSTYPE.MSP_NONE)
 						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
-
+					}
 				}
-
 
 				current_x_pt++;
 			}
