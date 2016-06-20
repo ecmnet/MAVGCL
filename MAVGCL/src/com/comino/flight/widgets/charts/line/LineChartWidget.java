@@ -149,9 +149,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private Button export;
 
-	private ModeAnnotation posHoldAnnotation;
-	private ModeAnnotation altHoldAnnotation;
-
 
 	private volatile XYChart.Series<Number,Number> series1;
 	private volatile XYChart.Series<Number,Number> series2;
@@ -431,7 +428,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.getData().clear();
 				series2.getData().clear();
 				series3.getData().clear();
-				//  linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			}
 			current_x_pt = current_x0_pt;
@@ -466,6 +463,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 							series3.getData().remove(0);
 
 						setXAxisBounds(current_x0_pt,current_x1_pt);
+					}
+
+					if(mList.get(current_x_pt).msg.msg!=null && resolution_ms == 50) {
+                        linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
 					}
 
 					if(type1!=MSTYPE.MSP_NONE)
