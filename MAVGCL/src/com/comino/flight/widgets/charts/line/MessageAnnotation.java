@@ -1,26 +1,25 @@
 package com.comino.flight.widgets.charts.line;
 
-import java.util.concurrent.TimeUnit;
-
 import com.comino.msp.model.segment.LogMessage;
-import com.comino.msp.utils.ExecutorService;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import javafx.animation.Animation.Status;
-import javafx.animation.FadeTransition;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
-import javafx.util.Duration;
+import javafx.scene.transform.Rotate;
 
 public class MessageAnnotation  implements XYAnnotation {
 
 	private Circle     circle = null;
-	private Pane       pane   = new Pane();
+	private GridPane   pane   = new GridPane();
 	private LogMessage msg    = null;
 	private float      xpos   = 0;
 	private Label      label  = null;
@@ -33,18 +32,14 @@ public class MessageAnnotation  implements XYAnnotation {
 		this.circle.setFill(Color.RED);
 		this.circle.setStrokeType(StrokeType.INSIDE);
 		this.label = new Label(msg.msg);
-		this.label.setVisible(false);
+		this.label.setVisible(true);
+		this.label.setRotate(180);
 
-		pane.getChildren().add(circle);
-		pane.getChildren().add(label);
+		pane.setHgap(3);
+		GridPane.setMargin(circle,new Insets(5,2,5,0));
 
-		this.circle.setOnMouseClicked(event -> {
-			this.label.setVisible(true);
-			ExecutorService.get().schedule(() -> {
-				label.setVisible(false);
-			  }, 3, TimeUnit.SECONDS);
-		});
-
+		pane.addRow(0,circle, label);
+		pane.getTransforms().add(new Rotate(90,0,0));
 
 	}
 
