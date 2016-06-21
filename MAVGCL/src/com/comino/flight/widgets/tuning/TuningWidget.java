@@ -119,7 +119,7 @@ public class TuningWidget extends FadePane  {
 
 						if(waitingForAcknowledge) {
 							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-							MSPLogger.getInstance().writeLocalMsg(p.name+" is updated on device with "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 							waitingForAcknowledge = false;
 						}
 					});
