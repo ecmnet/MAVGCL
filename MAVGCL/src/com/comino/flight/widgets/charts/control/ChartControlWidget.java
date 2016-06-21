@@ -85,7 +85,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@FXML
 	private Button clear;
 
-
 	@FXML
 	private CheckBox enablemodetrig;
 

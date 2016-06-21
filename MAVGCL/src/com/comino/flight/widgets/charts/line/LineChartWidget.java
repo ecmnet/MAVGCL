@@ -68,6 +68,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
@@ -150,6 +151,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private Button export;
 
+	@FXML
+	private CheckBox annotations;
+
+
 
 	private volatile XYChart.Series<Number,Number> series1;
 	private volatile XYChart.Series<Number,Number> series2;
@@ -195,7 +200,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-						LockSupport.parkNanos(resolution_ms*250000);
+					LockSupport.parkNanos(resolution_ms*250000);
 
 					if(isDisabled()) {
 						LockSupport.parkNanos(500000000);
@@ -239,6 +244,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
+		annotations.setSelected(true);
+
+		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
+		});
+
 		xAxis.setAutoRanging(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
@@ -277,7 +290,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = MSTYPE.values()[newValue.intValue()];
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
-//				linechart.setLegendVisible(true);
+				//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -292,7 +305,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = MSTYPE.values()[newValue.intValue()];
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
-//				linechart.setLegendVisible(true);
+				//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -306,8 +319,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type3 = MSTYPE.values()[newValue.intValue()];
-//				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-//				linechart.setLegendVisible(true);
+				//				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
+				//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -331,8 +344,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-//
-//				linechart.setLegendVisible(true);
+				//
+				//				linechart.setLegendVisible(true);
 
 				Platform.runLater(() -> {
 					updateGraph(true);
@@ -354,12 +367,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-				current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());;
+			current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());;
 
-				if(!disabledProperty().get())
-					Platform.runLater(() -> {
-						updateGraph(true);
-					});
+			if(!disabledProperty().get())
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 		});
 
 
@@ -398,6 +411,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			resolution_ms = 100;
 		else
 			resolution_ms = 50;
+
+		if(resolution_ms > 50) {
+			annotations.setDisable(true);
+			annotations.setSelected(false);
+		} else {
+			annotations.setSelected(true);
+			annotations.setDisable(false);
+		}
 
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
@@ -459,18 +480,19 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 					if(current_x_pt>1 && mList.get(current_x_pt).msg.msg!=null &&
-							 resolution_ms == 50 && mList.get(current_x_pt-1).msg.msg==null) {
-                        linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
+							mList.get(current_x_pt-1).msg.msg==null &&
+							annotations.isSelected()) {
+						linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
 					}
 
 					synchronized(this) {
 
-					if(type1!=MSTYPE.MSP_NONE)
-						series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
-					if(type2!=MSTYPE.MSP_NONE)
-						series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
-					if(type3!=MSTYPE.MSP_NONE)
-						series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
+						if(type1!=MSTYPE.MSP_NONE)
+							series1.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type1)));
+						if(type2!=MSTYPE.MSP_NONE)
+							series2.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type2)));
+						if(type3!=MSTYPE.MSP_NONE)
+							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
 					}
 				}
 
