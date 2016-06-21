@@ -30,7 +30,7 @@ deploy:
   provider: releases
   api_key:
     secure: JWdIk6+Q9Kd1CjMJHqkGzxQ8jgnbNxO+ZfzbRXIkL1NQb9E0mtqZGf6MoBKgSa5jLcsx/v5bP4jIygyolnybCYgzK4WAeNJhE3mTkTFJLzj4RBx9xRJluLHMb54YG+QPzppefjcMRNmbyGQs8gq5hcCDlDPpBiGq5j3gGHIBZENqjz20PLOQVV643Ua8soAef5gIAdkVfAvdHz/RxowBto0K2Le2EDwBSXxtpyIuc8it8NQcRYDfX11+5a82HdoI3sV/NV0h8EcQGmfR7BCqqHqbCreIGHU5DByDTY9FmopsutWSuH+4LIsEzjo8xi6oJu/jQjFhXT8q4TOcEpj6GYE9XAhe/v9rMi9vAW8BWf0zPeC4tivm4wqzU2ySWDJshyes8oUvDKlrPfdF8t30S5JzXLOuhOO904EPbPejjWNT461FoWZTTo3wMOHds4bpvM4QHIR2lkFNdQzVSs7fIBtmzTuv7YEBBF68H1aDMrycksuf912JhdZ+peEIG/zXNYREssIt+dcXCr/MTBvEl3jYV59peMmC5YEuKArorfXKYYymjjLMHjbP7X8khZeM4CJZMsxVL4N8cO7BHg8uX5MQi1H+ZxNU1kM+2TA/Yhc8BaQFnIxEcikvtPk/0sTn5q5seDbtDivyNyK2e/mrahRdy8nE9aRLBMGExzDUvLQ=
-  file: MAVGCL/dist/MAVGAnalysis.jar
+  file: ${TRAVIS_BUILD_DIR}/MAVGCL/dist/MAVGAnalysis.jar
   skip_cleanup: true
   on:
     tags: true
