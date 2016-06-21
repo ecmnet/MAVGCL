@@ -159,7 +159,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private IMAVController control;
 
-	private List<DataModel> mList = null;
 
 	private MSTYPE type1=MSTYPE.MSP_NONE;
 	private MSTYPE type2=MSTYPE.MSP_NONE;
@@ -177,10 +176,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
-
-	private int frame_secs = 30;
-
-
 
 	public LineChartWidget() {
 
@@ -392,7 +387,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
-		this.frame_secs = frame;
 
 		if(frame > 600)
 			resolution_ms = 2000;
@@ -463,7 +457,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
 
-					if(mList.get(current_x_pt).msg.msg!=null && resolution_ms == 50) {
+
+					if(current_x_pt>1 && mList.get(current_x_pt).msg.msg!=null &&
+							 resolution_ms == 50 && mList.get(current_x_pt-1).msg.msg==null) {
                         linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
 					}
 

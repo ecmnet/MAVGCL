@@ -1,5 +1,7 @@
 package com.comino.flight.widgets.charts.line;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.msp.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -29,14 +31,27 @@ public class MessageAnnotation  implements XYAnnotation {
 		this.msg  = message;
 
 		this.circle = new Circle(5);
-		this.circle.setFill(Color.RED);
+		switch(message.severity) {
+		case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
+			this.circle.setFill(Color.CADETBLUE); break;
+		case MAV_SEVERITY.MAV_SEVERITY_INFO:
+			this.circle.setFill(Color.GREEN); break;
+		case MAV_SEVERITY.MAV_SEVERITY_WARNING:
+			this.circle.setFill(Color.YELLOW); break;
+		case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
+			this.circle.setFill(Color.RED); break;
+		default:
+			this.circle.setFill(Color.DARKGREY);
+		}
 		this.circle.setStrokeType(StrokeType.INSIDE);
 		this.label = new Label(msg.msg);
 		this.label.setVisible(true);
 		this.label.setRotate(180);
 
+		label.setStyle("-fx-background-color: rgba(30, 30, 30, 0.2);");
+
 		pane.setHgap(3);
-		GridPane.setMargin(circle,new Insets(5,2,5,0));
+		GridPane.setMargin(circle,new Insets(4,2,4,0));
 
 		pane.addRow(0,circle, label);
 		pane.getTransforms().add(new Rotate(90,0,0));

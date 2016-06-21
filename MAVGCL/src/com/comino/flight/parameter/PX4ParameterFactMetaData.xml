@@ -492,7 +492,7 @@ velocity</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
-    <parameter default="240024" name="CBRK_GPSFAIL" type="INT32">
+    <parameter default="0" name="CBRK_GPSFAIL" type="INT32">
       <short_desc>Circuit breaker for GPS failure detection</short_desc>
       <long_desc>Setting this parameter to 240024 will disable the GPS failure detection. If this check is enabled, then the sensor check will fail if the GPS module is missing. It will also check for excessive signal noise on the GPS receiver and warn the user if detected. WARNING: ENABLING THIS CIRCUIT BREAKER IS AT OWN RISK</long_desc>
       <min>0</min>
@@ -632,6 +632,17 @@ velocity</short_desc>
       <decimal>0</decimal>
       <increment>1</increment>
       <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="1" name="COM_ARM_WO_GPS" type="INT32">
+      <short_desc>Allow arming without GPS</short_desc>
+      <long_desc>The default allows to arm the vehicle without GPS signal.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Allow arming without GPS</value>
+        <value code="0">Don't allow arming without GPS</value>
+      </values>
     </parameter>
     <parameter default="0" name="COM_LOW_BAT_ACT" type="INT32">
       <short_desc>Battery failsafe mode</short_desc>
@@ -2677,7 +2688,7 @@ but also ignore less noise</short_desc>
         <value code="2">Return to Land</value>
       </values>
     </parameter>
-    <parameter default="0" name="NAV_RCL_ACT" type="INT32">
+    <parameter default="2" name="NAV_RCL_ACT" type="INT32">
       <short_desc>Set RC loss failsafe mode</short_desc>
       <long_desc>The RC loss failsafe will only be entered after a timeout, set by COM_RC_LOSS_T in seconds. If RC input checks have been disabled by setting the COM_RC_IN_MODE param it will not be triggered. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
       <scope>modules/navigator</scope>
