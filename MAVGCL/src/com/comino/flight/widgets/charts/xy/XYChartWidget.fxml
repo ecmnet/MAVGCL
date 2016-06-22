@@ -12,19 +12,20 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.CheckBox?>
+<?import com.comino.flight.widgets.SectionLineChart?>
 
 <fx:root minHeight="600.0" styleClass="widget" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <children>
-            <LineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minWidth="510.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
+            <SectionLineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minWidth="510.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
                <xAxis>
                   <NumberAxis animated="false" lowerBound="-5.0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="5.0" fx:id="xAxis" />
                </xAxis>
                <yAxis>
                   <NumberAxis fx:id="yAxis" animated="false" lowerBound="-5.0" side="LEFT" upperBound="5.0" />
                </yAxis>
-            </LineChart>
+            </SectionLineChart>
          </children>
       </Pane>
    </center>

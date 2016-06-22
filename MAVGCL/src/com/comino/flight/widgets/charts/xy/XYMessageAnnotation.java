@@ -1,4 +1,4 @@
-package com.comino.flight.widgets.charts.line;
+package com.comino.flight.widgets.charts.xy;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
@@ -18,7 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
 
-public class MessageAnnotation  implements XYAnnotation {
+public class XYMessageAnnotation  implements XYAnnotation {
 
 	private Circle     circle = null;
 	private GridPane   pane   = new GridPane();
@@ -26,7 +26,7 @@ public class MessageAnnotation  implements XYAnnotation {
 	private float      xpos   = 0;
 	private Label      label  = null;
 
-	public MessageAnnotation(float xpos, LogMessage message) {
+	public XYMessageAnnotation(float xpos, LogMessage message) {
 		this.xpos = xpos;
 		this.msg  = message;
 
