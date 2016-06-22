@@ -104,9 +104,18 @@ public enum MSTYPE {
 	MSP_GPSEPH  	("GPS.eph",1,"","GPS.EPH"),
 	MSP_GPSHDOP     ("GPS.hdop",1,"","GPS.HDOP"),
 	MSP_RAW_SATNUM  ("Satellites",1,"","GPS.nSat"),
+	MSP_ACT0		("Actuator.0",1,"",""),
+	MSP_ACT1		("Actuator.1",1,"",""),
+	MSP_ACT2		("Actuator.2",1,"",""),
+	MSP_ACT3		("Actuator.3",1,"",""),
+	MSP_SPACT0		("Sp.Actuat.0",1,"",""),
+	MSP_SPACT1		("Sp.Actuat.1",1,"",""),
+	MSP_SPACT2		("Sp.Actuat.2",1,"",""),
+	MSP_SPACT3		("Sp.Actuat.3",1,"",""),
 	MSP_VIBX        ("VibrationX",1,"",""),
 	MSP_VIBY        ("VibrationY",1,"",""),
 	MSP_VIBZ        ("VibrationZ",1,"",""),
+
 
 	// now  keyfigures that are not selectable
 
@@ -115,10 +124,6 @@ public enum MSTYPE {
 	MSP_ABSPRESSURE ("Abs.Pressure",0,"hPa",""),
 	MSP_IMUTEMP	    ("Imu.Temp.",0,"°C",""),
 	MSP_CPULOAD     ("CPU Load",0,"%",""),
-	MSP_S0			("Servo.0",0,"",""),
-	MSP_S1			("Servo.1",0,"",""),
-	MSP_S2			("Servo.2",0,"",""),
-	MSP_S3			("Servo.3",0,"",""),
 	MSP_GLOBPLAT	("Global.Latitude",0,"°","GPOS.Lat"),
 	MSP_GLOBPLON	("Global.Longitude",0,"°","GPOS.Lon"),
 	MSP_RAW_GPSLAT  ("Raw.Latitude",0,"°","GPOS.Lat"),
@@ -220,10 +225,14 @@ public enum MSTYPE {
 		case MSP_VOLTAGE:	    return m.battery.b0;
 		case MSP_CURRENT:	    return m.battery.c0;
 		case MSP_CONSPOWER:     return m.battery.a0;
-		case MSP_S0:			return m.servo.s0;
-		case MSP_S1:			return m.servo.s1;
-		case MSP_S2:			return m.servo.s2;
-		case MSP_S3:			return m.servo.s3;
+		case MSP_ACT0:			return m.servo.actuators[0];
+		case MSP_ACT1:			return m.servo.actuators[1];
+		case MSP_ACT2:			return m.servo.actuators[2];
+		case MSP_ACT3:			return m.servo.actuators[3];
+		case MSP_SPACT0:	    return m.servo.controls[0];
+		case MSP_SPACT1:     	return m.servo.controls[1];
+		case MSP_SPACT2:		return m.servo.controls[2];
+		case MSP_SPACT3:		return m.servo.controls[3];
 		case MSP_GLOBRELVX:		return m.state.g_vx;
 		case MSP_GLOBRELVY:		return m.state.g_vy;
 		case MSP_GLOBRELVZ:		return m.state.g_vz;
@@ -314,10 +323,14 @@ public enum MSTYPE {
 		case MSP_VOLTAGE:	     m.battery.b0 = value; break;
 		case MSP_CURRENT:	     m.battery.c0 = value; break;
 		case MSP_CONSPOWER:      m.battery.a0 = value; break;
-		case MSP_S0:			 m.servo.s0 = (short) value; break;
-		case MSP_S1:			 m.servo.s1 = (short) value; break;
-		case MSP_S2:			 m.servo.s2 = (short) value; break;
-		case MSP_S3:			 m.servo.s3 = (short) value; break;
+		case MSP_ACT0:			 m.servo.actuators[0] = value; break;
+		case MSP_ACT1:		     m.servo.actuators[1] = value; break;
+		case MSP_ACT2:			 m.servo.actuators[2] = value; break;
+		case MSP_ACT3:			 m.servo.actuators[3] = value; break;
+		case MSP_SPACT0:		 m.servo.controls[0] = value; break;
+		case MSP_SPACT1:	     m.servo.controls[1] = value; break;
+		case MSP_SPACT2:		 m.servo.controls[2] = value; break;
+		case MSP_SPACT3:		 m.servo.controls[3] = value; break;
 		case MSP_GLOBRELVX:		 m.state.g_vx = value; break;
 		case MSP_GLOBRELVY:		 m.state.g_vy = value; break;
 		case MSP_GLOBRELVZ:		 m.state.g_vz = value; break;
