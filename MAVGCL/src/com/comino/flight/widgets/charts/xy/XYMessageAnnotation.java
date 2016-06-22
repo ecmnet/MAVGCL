@@ -24,10 +24,12 @@ public class XYMessageAnnotation  implements XYAnnotation {
 	private GridPane   pane   = new GridPane();
 	private LogMessage msg    = null;
 	private float      xpos   = 0;
+	private float      ypos   = 0;
 	private Label      label  = null;
 
-	public XYMessageAnnotation(float xpos, LogMessage message) {
+	public XYMessageAnnotation(float xpos, float ypos, LogMessage message) {
 		this.xpos = xpos;
+		this.ypos = ypos;
 		this.msg  = message;
 
 		this.circle = new Circle(5);
@@ -44,17 +46,17 @@ public class XYMessageAnnotation  implements XYAnnotation {
 			this.circle.setFill(Color.DARKGREY);
 		}
 		this.circle.setStrokeType(StrokeType.INSIDE);
-		this.label = new Label(msg.msg);
-		this.label.setVisible(true);
-		this.label.setRotate(180);
-
-		label.setStyle("-fx-background-color: rgba(30, 30, 30, 0.2);");
+//		this.label = new Label(msg.msg);
+//		this.label.setVisible(true);
+//		this.label.setRotate(180);
+//
+//		label.setStyle("-fx-background-color: rgba(30, 30, 30, 0.2);");
 
 		pane.setHgap(3);
 		GridPane.setMargin(circle,new Insets(4,2,4,0));
 
-		pane.addRow(0,circle, label);
-		pane.getTransforms().add(new Rotate(90,0,0));
+		pane.addRow(0,circle);
+//		pane.getTransforms().add(new Rotate(90,0,0));
 
 	}
 
@@ -66,7 +68,7 @@ public class XYMessageAnnotation  implements XYAnnotation {
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		pane.setLayoutX(xAxis.getDisplayPosition(xpos));
-		pane.setLayoutY(2);
+		pane.setLayoutY(yAxis.getDisplayPosition(ypos));
 	}
 
 }
