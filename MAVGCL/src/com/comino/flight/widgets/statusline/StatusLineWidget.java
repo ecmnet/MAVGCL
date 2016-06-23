@@ -132,6 +132,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 							driver.setText("not connected");
+						else
+							driver.setText(control.getCurrentModel().sys.getSensorString());
 
 						list = control.getCollector().getModelList();
 
