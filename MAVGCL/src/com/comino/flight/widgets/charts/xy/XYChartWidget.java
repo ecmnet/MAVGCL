@@ -40,7 +40,6 @@ import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
-import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
@@ -59,10 +58,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -116,7 +117,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private static int COLLECTOR_CYCLE = 50;
 
 	@FXML
-	private SectionLineChart<Number,Number> linechart;
+	private LineChart<Number,Number> linechart;
 
 	@FXML
 	private NumberAxis xAxis;
@@ -555,11 +556,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						if(series2.getData().size()>0)
 							series2.getData().remove(0);
 					}
-
-//					if(current_x_pt>1 && mList.get(current_x_pt).msg.msg!=null &&
-//							mList.get(current_x_pt-1).msg.msg==null) {
-//						linechart.getAnnotations().add(new MessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
-//					}
 
 
 					if(type1_x!=MSTYPE.MSP_NONE && type1_y!=MSTYPE.MSP_NONE) {

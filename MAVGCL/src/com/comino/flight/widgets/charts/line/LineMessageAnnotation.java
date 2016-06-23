@@ -2,6 +2,7 @@ package com.comino.flight.widgets.charts.line;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+
 import com.comino.msp.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotation;
 
