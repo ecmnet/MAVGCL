@@ -379,7 +379,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private void recording(boolean start, int delay) {
 		if(start) {
-			control.getMessageList().clear();
 			control.getCollector().start();
 			scroll.setDisable(true);
 		}

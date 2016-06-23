@@ -130,11 +130,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 						// indicator.setVisible(showProgress);
 
-						if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
-							driver.setText(control.getCurrentModel().sys.getSensorString());
-							if(control.getMessageList().size()>0)
-								messages.setText(control.getMessageList().remove(0).msg);
-						} else
+						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 							driver.setText("not connected");
 
 						list = control.getCollector().getModelList();
@@ -172,6 +168,12 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 		indicator.setVisible(false);
 		indicator.layoutXProperty().bind(this.widthProperty().subtract(50));
+
+		control.addMAVMessageListener(msg -> {
+			Platform.runLater(() -> {
+				messages.setText(msg.msg);
+			});
+		});
 
 		ExecutorService.get().execute(task);
 	}
