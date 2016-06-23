@@ -111,6 +111,17 @@ public class ParameterFactMetaData {
 				attributes.min_val = Float.parseFloat(node.getTextContent());
 			if(node.getNodeName().equals("max"))
 				attributes.max_val = Float.parseFloat(node.getTextContent());
+			if(node.getNodeName().equals("reboot_required"))
+				attributes.reboot_required = Boolean.parseBoolean(node.getTextContent());
+			if(node.getNodeName().equals("values")) {
+				for(int j=0; j<node.getChildNodes().getLength();j++) {
+					Node value = node.getChildNodes().item(j);
+					if(value.getNodeName().equals("value")) {
+						int code = Integer.parseInt(value.getAttributes().getNamedItem("code").getNodeValue());
+						attributes.valueList.put(value.getTextContent(),code);
+					}
+				}
+			}
 		}
 
 		parameterList.put(attributes.name, attributes);
