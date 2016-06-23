@@ -118,7 +118,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private int triggerStopMode  =1;
 	private int triggerDelay =0;
 
-	private boolean modetrigger  = true;
+	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private ModelCollectorService collector;
 
@@ -310,7 +310,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-		enablemodetrig.selectedProperty().set(true);
+		enablemodetrig.selectedProperty().set(false);
 
 	}
 
