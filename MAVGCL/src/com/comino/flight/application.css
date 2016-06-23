@@ -164,6 +164,7 @@
 	 -fx-background-color: #606060;
 }
 
+
 .button {
 	 -fx-background-color: #606060;
 	 -fx-text-fill: #F0F0F0;
@@ -315,7 +316,7 @@
 
 .spinner {
     -fx-border-insets: 0.0px;
-    -fx-control-inner-background: #202020;
+    -fx-control-inner-background: #606060;
     -fx-background-color: cyan;
     -fx-border-width: 5px;
 }

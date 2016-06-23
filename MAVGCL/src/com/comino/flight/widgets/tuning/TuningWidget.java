@@ -36,6 +36,12 @@ package com.comino.flight.widgets.tuning;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -47,6 +53,7 @@ import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
+import com.comino.model.types.MSTYPE;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Platform;
@@ -118,8 +125,12 @@ public class TuningWidget extends FadePane  {
 							groups.getItems().add(p.group_name);
 
 						if(waitingForAcknowledge) {
-							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-							MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							if(p.valueList.size()==0) {
+								BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+								MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							}
+							else
+								MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+p.valueList.get((int)p.value),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 							waitingForAcknowledge = false;
 						}
 					});
@@ -130,7 +141,7 @@ public class TuningWidget extends FadePane  {
 
 	@FXML
 	public void initialize() {
-	    scroll.setBorder(Border.EMPTY);
+		scroll.setBorder(Border.EMPTY);
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(80));
 		grid.setVgap(4); grid.setHgap(6);
@@ -182,7 +193,24 @@ public class TuningWidget extends FadePane  {
 					this.editor = new Spinner<Double>(new SpinnerAttributeFactory(att));
 				}
 			} else {
-				this.editor = new TextField();
+				if(att.valueList.size()>0) {
+					this.editor = new ChoiceBox<Entry<Integer,String>>();
+
+					((ChoiceBox<Entry<Integer,String>>)editor).getItems().addAll(att.valueList.entrySet());
+					((ChoiceBox<Entry<Integer,String>>)editor).setConverter(new StringConverter<Entry<Integer,String>>() {
+						@Override
+						public String toString(Entry<Integer, String> o) {
+							return o.getValue();
+						}
+						@Override
+						public Entry<Integer, String> fromString(String o) {
+							return null;
+						}
+
+					});
+				}
+				else
+					this.editor = new TextField();
 			}
 
 			setContextMenu(editor);
@@ -191,7 +219,7 @@ public class TuningWidget extends FadePane  {
 
 			this.editor.setPrefWidth(80);
 			this.editor.setPrefHeight(19);
-			this.editor.setStyle("-fx-control-inner-background: #202020;");
+			this.editor.setStyle("-fx-control-inner-background: #606060;");
 
 			this.editor.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				@Override
@@ -251,8 +279,11 @@ public class TuningWidget extends FadePane  {
 				((TextField)p).commitValue();
 				return Float.parseFloat(((TextField)p).getText());
 			}
-			else
+			else if(p instanceof Spinner)
 				return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
+			else {
+				return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
+			}
 		}
 
 		@SuppressWarnings("unchecked")
@@ -265,8 +296,14 @@ public class TuningWidget extends FadePane  {
 					((TextField)p).setText(bd.toPlainString());
 				}
 			}
-			else
+			else if(p instanceof Spinner)
 				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
+			else {
+				for(Entry<Integer,String> e : att.valueList.entrySet())
+					if(e.getKey()==(int)v)
+						((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().select(e);
+			}
+
 			checkDefaultOf(p,v);
 		}
 
@@ -276,9 +313,9 @@ public class TuningWidget extends FadePane  {
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
 			if(v==att.default_val)
-				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #202020;");
+				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
 			else
-				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #202020;");
+				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
 		}
 
 		@SuppressWarnings("unchecked")
@@ -291,10 +328,10 @@ public class TuningWidget extends FadePane  {
 				}
 			});
 			ctxm.getItems().add(cmItem1);
-			if(p instanceof TextField)
-			     p.setContextMenu(ctxm);
-			else
+			if(p instanceof Spinner)
 				((Spinner<Double>)p).getEditor().setContextMenu(ctxm);
+			else
+				p.setContextMenu(ctxm);
 
 		}
 	}
@@ -307,15 +344,15 @@ public class TuningWidget extends FadePane  {
 			super(att.min_val, att.max_val, att.value, att.increment);
 			this.att = att;
 			if(att.increment==0)
-			   this.setAmountToStepBy(1);
+				this.setAmountToStepBy(1);
 
 			setConverter(new StringConverter<Double>() {
 
-			     @Override public String toString(Double value) {
-			    	 BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+				@Override public String toString(Double value) {
+					BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
 
-			       return bd.toPlainString();
-			     }
+					return bd.toPlainString();
+				}
 
 				@Override
 				public Double fromString(String string) {

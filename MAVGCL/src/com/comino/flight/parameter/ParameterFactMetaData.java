@@ -35,6 +35,7 @@ package com.comino.flight.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -118,7 +119,7 @@ public class ParameterFactMetaData {
 					Node value = node.getChildNodes().item(j);
 					if(value.getNodeName().equals("value")) {
 						int code = Integer.parseInt(value.getAttributes().getNamedItem("code").getNodeValue());
-						attributes.valueList.put(value.getTextContent(),code);
+						attributes.valueList.put(code, value.getTextContent());
 					}
 				}
 			}

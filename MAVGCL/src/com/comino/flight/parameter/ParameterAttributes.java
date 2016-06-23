@@ -35,8 +35,10 @@ package com.comino.flight.parameter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class ParameterAttributes  implements Comparable<ParameterAttributes> {
@@ -56,11 +58,11 @@ public class ParameterAttributes  implements Comparable<ParameterAttributes> {
 	public String  group_name = null;
 
 	public boolean reboot_required = false;
-	public Map<String,Integer> valueList = null;
+	public HashMap<Integer,String> valueList = null;
 
 	public ParameterAttributes(String group_name) {
 		this.group_name = group_name;
-		this.valueList = new HashMap<String, Integer>();
+		this.valueList = new HashMap<Integer,String>();
 	}
 
 	public ParameterAttributes(String name, String group_name) {
