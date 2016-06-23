@@ -100,13 +100,19 @@ public class MessagesWidget extends FadePane  {
 
 		fadeProperty().setValue(false);
 
+		disableProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.booleanValue())
+				fadeProperty().setValue(false);
+
+		});
+
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
 
 			@Override
 			public void messageReceived(List<LogMessage> ml, LogMessage message) {
 
-				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG  && !isDisabled()) {
 					list.add(message);
 
 					Platform.runLater(new Runnable() {

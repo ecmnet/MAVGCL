@@ -150,6 +150,7 @@ public class FlightTabs extends Pane {
 		tuning.fadeProperty().bind(flightControl.getStatusControl().getTuningVisibility());
 		tuning.setup(control);
 
+		messages.disableProperty().bind(flightControl.getStatusControl().getMessageVisibility().not());
 		messages.setup(control);
 
 

@@ -90,6 +90,9 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	private CheckBox video;
 
 	@FXML
+	private CheckBox messages;
+
+	@FXML
 	private CheckBox experimental;
 
 	private IMAVController control;
@@ -125,6 +128,10 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		return tuning.selectedProperty();
 	}
 
+	public BooleanProperty getMessageVisibility() {
+		return messages.selectedProperty();
+	}
+
 
 	public void setup(IMAVController control) {
 
@@ -132,6 +139,7 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		this.control = control;
 		this.control.addModeChangeListener(this);
 		this.details.selectedProperty().set(true);
+		this.messages.selectedProperty().set(true);
 		update(model.sys,model.sys);
 	}
 
