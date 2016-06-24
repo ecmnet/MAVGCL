@@ -52,13 +52,14 @@ public enum MSTYPE {
 	MSP_SPATTROLL_R ("Sp.RollRate",1,"°/s",""),
 	MSP_SPATTPIT_R  ("Sp.PitchRate",1,"°/s",""),
 	MSP_SPATTYAW_R  ("Sp.YawRate",1,"°/s",""),
-	MSP_GRSPEED     ("Groundspeed",1,"m/s",""),
-	MSP_CLIMBRATE   ("Climb.Rate",1,"m/s",""),
+	MSP_GRSPEED     ("GroundSpeed",1,"m/s",""),
+	MSP_CLIMBRATE   ("ClimbRate",1,"m/s",""),
+	MSP_AIRSPEED    ("AirSpeed",1,"m/s",""),
 	MSP_COMPASS		("Compass",1,"°",""),
-	MSP_ALTLOCAL	("Alt.local",1,"m",""),
-	MSP_ALTAMSL		("Alt.amsl",1,"m","GPOS.Alt"),
-	MSP_ALTTERRAIN  ("Alt.terrain",1,"m","GPOS.TALT"),
-    MSP_ALTRELATIVE ("Alt.rel.",1,"m",""),
+	MSP_ALTLOCAL	("Alt.Local",1,"m",""),
+	MSP_ALTAMSL		("Alt.Asl",1,"m","GPOS.Alt"),
+	MSP_ALTTERRAIN  ("Alt.Terrain",1,"m","GPOS.TALT"),
+    MSP_ALTRELATIVE ("Alt.Rel.",1,"m",""),
     MSP_ALTGND	    ("Alt.Ground",1,"m",""),
 	MSP_NEDX		("Loc.PosX",1,"m","LPOS.X"),
 	MSP_NEDY		("Loc.PosY",1,"m","LPOS.Y"),
@@ -195,6 +196,7 @@ public enum MSTYPE {
 		case MSP_ANGLEY: 		return m.hud.aY;
 		case MSP_GRSPEED: 		return m.hud.s;
 		case MSP_CLIMBRATE:     return m.hud.vs;
+		case MSP_AIRSPEED:      return m.hud.as;
 		case MSP_COMPASS: 		return m.hud.h;
 		case MSP_ALTLOCAL: 		return m.hud.al;
 		case MSP_ALTAMSL: 		return m.hud.ag;
@@ -279,22 +281,23 @@ public enum MSTYPE {
 		case MSP_DEBUGY: 		 m.debug.y = value; break;
 		case MSP_DEBUGZ: 		 m.debug.z = value; break;
 		case MSP_DEBUGH: 		 m.debug.h = value; break;
-		case MSP_ATTROLL:       m.attitude.r = value; break;
-		case MSP_ATTPITCH:      m.attitude.p = value; break;
-		case MSP_ATTYAW:        m.attitude.y = value; break;
-		case MSP_ATTROLL_R:     m.attitude.rr = value; break;
-		case MSP_ATTPITCH_R:    m.attitude.pr = value; break;
-		case MSP_ATTYAW_R:      m.attitude.yr = value; break;
-		case MSP_SPATTROLL:     m.attitude.sr = value; break;
-		case MSP_SPATTPIT:      m.attitude.sp = value; break;
-		case MSP_SPATTYAW:      m.attitude.sy = value; break;
-		case MSP_SPATTROLL_R:   m.attitude.srr = value; break;
-		case MSP_SPATTPIT_R:    m.attitude.spr = value; break;
-		case MSP_SPATTYAW_R:    m.attitude.syr = value; break;
+		case MSP_ATTROLL:        m.attitude.r = value; break;
+		case MSP_ATTPITCH:       m.attitude.p = value; break;
+		case MSP_ATTYAW:         m.attitude.y = value; break;
+		case MSP_ATTROLL_R:      m.attitude.rr = value; break;
+		case MSP_ATTPITCH_R:     m.attitude.pr = value; break;
+		case MSP_ATTYAW_R:       m.attitude.yr = value; break;
+		case MSP_SPATTROLL:      m.attitude.sr = value; break;
+		case MSP_SPATTPIT:       m.attitude.sp = value; break;
+		case MSP_SPATTYAW:       m.attitude.sy = value; break;
+		case MSP_SPATTROLL_R:    m.attitude.srr = value; break;
+		case MSP_SPATTPIT_R:     m.attitude.spr = value; break;
+		case MSP_SPATTYAW_R:     m.attitude.syr = value; break;
 		case MSP_ANGLEX: 		 m.hud.aX = value; break;
 		case MSP_ANGLEY: 		 m.hud.aY = value; break;
 		case MSP_GRSPEED: 		 m.hud.s = value; break;
 		case MSP_CLIMBRATE:      m.hud.vs = value; break;
+		case MSP_AIRSPEED:       m.hud.as = value; break;
 		case MSP_COMPASS: 		 m.hud.h = value; break;
 		case MSP_ALTLOCAL: 		 m.hud.al = value; break;
 		case MSP_ALTAMSL: 		 m.hud.ag = value; break;
@@ -357,7 +360,6 @@ public enum MSTYPE {
 		case MSP_IMUTEMP:        m.sys.imu_temp = (int) value; break;
 		case MSP_CPULOAD:        m.sys.load_p = value; break;
 		case MSP_TIME_ARMED:     m.sys.t_armed_ms = (long)(value * 1000); break;
-
 		}
 	}
 
