@@ -166,7 +166,7 @@ public class TuningWidget extends FadePane  {
 				for(ParameterAttributes p : params.getList()) {
 					if(newValue.contains(p.group_name)) {
 						Label unit = new Label(p.unit); unit.setPrefWidth(30);
-						Label name = new Label(p.name); name.setPrefWidth(100); name.setTooltip(new Tooltip(p.description));
+						Label name = new Label(p.name); name.setPrefWidth(95); name.setTooltip(new Tooltip(p.description));
 						ParamItem item = createParamItem(p);
 						grid.addRow(i++, name,item.editor,unit);
 					}
@@ -213,13 +213,11 @@ public class TuningWidget extends FadePane  {
 					this.editor = new TextField();
 			}
 
+			this.editor.setPrefWidth(85);
+			this.editor.setPrefHeight(19);
+
 			setContextMenu(editor);
 			setValueOf(editor,att.value);
-
-
-			this.editor.setPrefWidth(80);
-			this.editor.setPrefHeight(19);
-			this.editor.setStyle("-fx-control-inner-background: #606060;");
 
 			this.editor.setOnKeyPressed(new EventHandler<KeyEvent>() {
 				@Override
@@ -313,9 +311,9 @@ public class TuningWidget extends FadePane  {
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
 			if(v==att.default_val)
-				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
-			else
 				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
+			else
+				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
 		}
 
 		@SuppressWarnings("unchecked")
