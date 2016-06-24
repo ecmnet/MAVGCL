@@ -8,7 +8,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 23/06/2016 
+**Status:** Last updated 24/06/2016 
+
+- Preferences added: Maintain IP address and port
 
 **Features:**
 
@@ -42,15 +44,8 @@ Any feedback, comments and contributions are very welcome.
 **How to start (all platforms):**
 
 - Goto directory `/dist`
-
-- Start either UDP with `java -jar MAVGAnalysis.jar --peerAddress=172.168.178.1`
-
-   *(PX4 standard ports used, replace IP with yours)*
-
-  or `java -jar MAVGAnalysis.jar --peerAddress=127.0.0.1` for SITL (jMAVSim)
-
-  or just `java -jar MAVGAnalysis.jar`for a basic demo.
-  ​
+- Start with `java -jar MAVGAnalysis.jar`
+- ​Set IP address and port in `File->Preferences` and restart (Use 127.0.0.1 for SITL on local machine)
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 - For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
   ​
@@ -58,7 +53,6 @@ Any feedback, comments and contributions are very welcome.
 
 **How to deploy on OSX:**
 
-- Modify `build.xml` to adjust  `peer` property.
 - Run `ant_deploy`
 
 
