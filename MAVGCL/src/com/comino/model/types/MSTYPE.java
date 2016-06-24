@@ -59,7 +59,7 @@ public enum MSTYPE {
 	MSP_ALTAMSL		("Alt.amsl",1,"m","GPOS.Alt"),
 	MSP_ALTTERRAIN  ("Alt.terrain",1,"m","GPOS.TALT"),
     MSP_ALTRELATIVE ("Alt.rel.",1,"m",""),
-    MSP_BOTCLEAR	("Bottom clear.",1,"m",""),
+    MSP_ALTGND	    ("Alt.Ground",1,"m",""),
 	MSP_NEDX		("Loc.PosX",1,"m","LPOS.X"),
 	MSP_NEDY		("Loc.PosY",1,"m","LPOS.Y"),
 	MSP_NEDZ		("Loc.PosZ",1,"m","LPOS.Z"),
@@ -200,7 +200,7 @@ public enum MSTYPE {
 		case MSP_ALTAMSL: 		return m.hud.ag;
 		case MSP_ALTTERRAIN:	return m.hud.at;
 		case MSP_ALTRELATIVE:	return m.hud.ar;
-		case MSP_BOTCLEAR:	    return m.hud.bc;
+		case MSP_ALTGND:	    return m.hud.bc;
 		case MSP_NEDX:			return m.state.l_x;
 		case MSP_NEDY:			return m.state.l_y;
 		case MSP_NEDZ:			return m.state.l_z;
@@ -300,7 +300,7 @@ public enum MSTYPE {
 		case MSP_ALTAMSL: 		 m.hud.ag = value; break;
 		case MSP_ALTTERRAIN:	 m.hud.at = value; break;
 		case MSP_ALTRELATIVE:	 m.hud.ar = value; break;
-		case MSP_BOTCLEAR:	     m.hud.bc = value; break;
+		case MSP_ALTGND:	     m.hud.bc = value; break;
 		case MSP_NEDX:			 m.state.l_x = value; break;
 		case MSP_NEDY:			 m.state.l_y = value; break;
 		case MSP_NEDZ:			 m.state.l_z = value; break;
