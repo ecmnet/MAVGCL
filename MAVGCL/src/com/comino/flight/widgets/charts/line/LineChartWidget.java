@@ -200,10 +200,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-					LockSupport.parkNanos(resolution_ms*250000);
+					try { Thread.sleep(resolution_ms); } catch (InterruptedException e) { }
 
 					if(isDisabled()) {
-						LockSupport.parkNanos(500000000);
+						try { Thread.sleep(500); } catch (InterruptedException e) { }
 						continue;
 					}
 
@@ -478,13 +478,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						setXAxisBounds(current_x0_pt,current_x1_pt);
 					}
 
-
 					if(current_x_pt>1 && mList.get(current_x_pt).msg.msg!=null &&
-							annotations.isSelected()) {
+					   annotations.isSelected()) {
 
 						if(mList.get(current_x_pt-1).msg.msg==null)
 						  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
-
 					}
 
 					synchronized(this) {
@@ -497,7 +495,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 							series3.getData().add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(mList.get(current_x_pt),type3)));
 					}
 				}
-
 				current_x_pt++;
 			}
 		}

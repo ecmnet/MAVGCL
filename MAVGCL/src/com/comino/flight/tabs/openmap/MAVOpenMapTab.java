@@ -165,10 +165,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			protected Long call() throws Exception {
 				while(true) {
 
-					LockSupport.parkNanos(100000000);
+					try { Thread.sleep(100); } catch (InterruptedException e) { }
 
 					if(isDisabled()) {
-						LockSupport.parkNanos(500000000);
+						try { Thread.sleep(500); } catch (InterruptedException e) { }
 						continue;
 					}
 
