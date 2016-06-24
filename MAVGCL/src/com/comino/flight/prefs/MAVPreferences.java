@@ -37,6 +37,9 @@ import java.util.prefs.Preferences;
 
 public class MAVPreferences {
 
+	public final static String PREFS_IP_ADDRESS = "IP_ADDRESS";
+	public final static String PREFS_IP_PORT    = "IP_PORT";
+
 	private static Preferences prefs = null;
 
 	public static Preferences getInstance() {

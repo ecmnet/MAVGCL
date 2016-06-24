@@ -114,32 +114,18 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
 		String peerAddress = null;
-		String proxy = null;
+		int port = 14555;
 
-		Map<String,String> args = getParameters().getNamed();
+		Preferences userPrefs = MAVPreferences.getInstance();
+		peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
+		port = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 
-		if(args.size()> 0) {
-			peerAddress  = args.get("peerAddress");
-			proxy = args.get("proxy");
-		}
-
-		if(peerAddress ==null) {
-			control = new MAVSimController();
-			control.connect();
+		if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
+			control = new MAVUdpController(peerAddress,port,14550, true);
+			new SITLController(control);
 		}
 		else {
-			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
-
-				if(proxy==null)
-					control = new MAVUdpController(peerAddress,14556,14550, true);
-				else
-					control = new MAVUdpController(peerAddress,14558,14550, true);
-				new SITLController(control);
-
-			}
-			else {
-				control = new MAVUdpController(peerAddress,14555,14550, false);
-			}
+			control = new MAVUdpController(peerAddress,port,14550, false);
 		}
 
 		MSPLogger.getInstance(control);
@@ -241,8 +227,8 @@ public class MainApp extends Application {
 				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
 					if(!newvalue.booleanValue()) {
 						Platform.runLater(() -> {
-						r_px4log.setText(m_text);
-						controlpanel.getRecordControl().refreshCharts();
+							r_px4log.setText(m_text);
+							controlpanel.getRecordControl().refreshCharts();
 						});
 					}
 				});
@@ -259,9 +245,9 @@ public class MainApp extends Application {
 				FileHandler.getInstance().fileExport();
 		});
 
-		m_prefs.setDisable(true);
+		m_prefs.setDisable(false);
 		m_prefs.setOnAction(event -> {
-			new PreferencesDialog().show();
+			new PreferencesDialog(control).show();
 		});
 	}
 

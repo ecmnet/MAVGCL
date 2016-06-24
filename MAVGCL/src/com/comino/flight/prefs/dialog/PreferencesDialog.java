@@ -33,57 +33,59 @@
 
 package com.comino.flight.prefs.dialog;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.util.Callback;
 
-public class PreferencesDialog {
+public class PreferencesDialog  {
+
 
 	private Dialog<Boolean> prefDialog;
 
-	public PreferencesDialog() {
+	@FXML
+	private GridPane dialog;
+
+	@FXML
+	private TextField ip_address;
+
+	@FXML
+	private TextField ip_port;
+
+	private IMAVController control;
+	private Preferences userPrefs;
+
+	public PreferencesDialog(IMAVController control) {
+		this.control = control;
 		prefDialog = new Dialog<Boolean>();
 		prefDialog.setTitle("MAVAnalysis preferences");
+
+		userPrefs = MAVPreferences.getInstance();
+
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Preferences.fxml"));
+		fxmlLoader.setController(this);
+		try {
+			fxmlLoader.load();
+		} catch (IOException exception) {
+
+			throw new RuntimeException(exception);
+		}
 		prefDialog.getDialogPane().getStylesheets().add(getClass().getResource("preferences.css").toExternalForm());
+		prefDialog.setHeight(500);
 
-		Label label1 = new Label("Data storage to: ");
-		Label label2 = new Label("Video URL: ");
-		TextField path = new TextField(); path.setPrefWidth(300);
-		TextField text2 = new TextField();
-
-		Button browse = new Button("Browse...");
-		browse.setOnAction(event -> {
-			DirectoryChooser fc = new DirectoryChooser();
-			fc.setTitle("Store data to...");
-			path.setText(fc.showDialog(prefDialog.getOwner()).getAbsolutePath());
-		});
-
-		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 35, 20, 35));
-		grid.add(label1, 1, 1);
-		grid.add(path, 2, 1);
-		grid.add(browse, 3, 1);
-		grid.add(label2, 1, 2);
-		grid.add(text2, 2, 2);
-		prefDialog.getDialogPane().setContent(grid);
+		prefDialog.getDialogPane().setContent(dialog);
 
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 		prefDialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
@@ -93,21 +95,29 @@ public class PreferencesDialog {
 		prefDialog.setResultConverter(new Callback<ButtonType, Boolean>() {
 		    @Override
 		    public Boolean call(ButtonType b) {
-
-		        if (b == buttonTypeOk) {
-
+		        if (b == buttonTypeOk)
 		            return true;
-		        }
-
 		        return false;
 		    }
 		});
 	}
 
 	public void show() {
-		if(prefDialog.showAndWait().get().booleanValue()) {
 
+		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "172.168.178.1"));
+		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, "14555"));
+
+		if(prefDialog.showAndWait().get().booleanValue()) {
+			userPrefs.put(MAVPreferences.PREFS_IP_ADDRESS, ip_address.getText());
+			userPrefs.put(MAVPreferences.PREFS_IP_PORT, ip_port.getText());
+			try {
+				userPrefs.flush();
+			} catch (BackingStoreException e) {
+				e.printStackTrace();
+			}
+          MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
 		}
 	}
+
 
 }
