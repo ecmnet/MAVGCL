@@ -22,7 +22,7 @@ script:
   - git submodule update --quiet --init --recursive
   - cd MAVGCL && ant all
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
-      ant deploy_osx_sitl;
+      ant deploy_osx;
     fi
 
 # On tags upload jar to Github
