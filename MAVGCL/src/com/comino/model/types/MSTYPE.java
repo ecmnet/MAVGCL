@@ -40,15 +40,6 @@ import com.comino.msp.model.DataModel;
 public enum MSTYPE {
 
 	MSP_NONE 		("none",1,"",""),
-	MSP_ACCX 		("AccX",1,"m/s2","IMU.AccX"),
-	MSP_ACCY 		("AccY",1,"m/s2","IMU.AccY"),
-	MSP_ACCZ 		("AccZ",1,"m/s2","IMU.AccZ"),
-	MSP_GYROX		("GyroX",1,"rad/s","IMU.GyroX"),
-	MSP_GYROY		("GyroY",1,"rad/s","IMU.GyroY"),
-	MSP_GYROZ		("GyroZ",1,"rad/s","IMU.GyroZ"),
-	MSP_MAGX		("MagX",1,"mT","IMU.MagX"),
-	MSP_MAGY		("MagY",1,"mT","IMU.MagY"),
-	MSP_MAGZ		("MagZ",1,"mT","IMU.MagZ"),
 	MSP_ATTROLL     ("Roll",1,"°","ATT.Roll"),
 	MSP_ATTPITCH    ("Pitch",1,"°","ATT.Pitch"),
 	MSP_ATTYAW      ("Yaw",1,"°","ATT.Yaw"),
@@ -67,6 +58,8 @@ public enum MSTYPE {
 	MSP_ALTLOCAL	("Alt.local",1,"m",""),
 	MSP_ALTAMSL		("Alt.amsl",1,"m","GPOS.Alt"),
 	MSP_ALTTERRAIN  ("Alt.terrain",1,"m","GPOS.TALT"),
+    MSP_ALTRELATIVE ("Alt.rel.",1,"m",""),
+    MSP_BOTCLEAR	("Bottom clear.",1,"m",""),
 	MSP_NEDX		("Loc.PosX",1,"m","LPOS.X"),
 	MSP_NEDY		("Loc.PosY",1,"m","LPOS.Y"),
 	MSP_NEDZ		("Loc.PosZ",1,"m","LPOS.Z"),
@@ -115,6 +108,15 @@ public enum MSTYPE {
 	MSP_VIBX        ("VibrationX",1,"",""),
 	MSP_VIBY        ("VibrationY",1,"",""),
 	MSP_VIBZ        ("VibrationZ",1,"",""),
+	MSP_ACCX 		("AccX",1,"m/s2","IMU.AccX"),
+	MSP_ACCY 		("AccY",1,"m/s2","IMU.AccY"),
+	MSP_ACCZ 		("AccZ",1,"m/s2","IMU.AccZ"),
+	MSP_GYROX		("GyroX",1,"rad/s","IMU.GyroX"),
+	MSP_GYROY		("GyroY",1,"rad/s","IMU.GyroY"),
+	MSP_GYROZ		("GyroZ",1,"rad/s","IMU.GyroZ"),
+	MSP_MAGX		("MagX",1,"mT","IMU.MagX"),
+	MSP_MAGY		("MagY",1,"mT","IMU.MagY"),
+	MSP_MAGZ		("MagZ",1,"mT","IMU.MagZ"),
 
 
 	// now  keyfigures that are not selectable
@@ -197,6 +199,8 @@ public enum MSTYPE {
 		case MSP_ALTLOCAL: 		return m.hud.al;
 		case MSP_ALTAMSL: 		return m.hud.ag;
 		case MSP_ALTTERRAIN:	return m.hud.at;
+		case MSP_ALTRELATIVE:	return m.hud.ar;
+		case MSP_BOTCLEAR:	    return m.hud.bc;
 		case MSP_NEDX:			return m.state.l_x;
 		case MSP_NEDY:			return m.state.l_y;
 		case MSP_NEDZ:			return m.state.l_z;
@@ -295,6 +299,8 @@ public enum MSTYPE {
 		case MSP_ALTLOCAL: 		 m.hud.al = value; break;
 		case MSP_ALTAMSL: 		 m.hud.ag = value; break;
 		case MSP_ALTTERRAIN:	 m.hud.at = value; break;
+		case MSP_ALTRELATIVE:	 m.hud.ar = value; break;
+		case MSP_BOTCLEAR:	     m.hud.bc = value; break;
 		case MSP_NEDX:			 m.state.l_x = value; break;
 		case MSP_NEDY:			 m.state.l_y = value; break;
 		case MSP_NEDZ:			 m.state.l_z = value; break;
