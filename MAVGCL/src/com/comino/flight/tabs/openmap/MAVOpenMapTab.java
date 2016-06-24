@@ -417,6 +417,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		recordControl.addChart(this);
 
 		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
 		return this;

@@ -523,6 +523,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		setXResolution(30);
 
 		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
 

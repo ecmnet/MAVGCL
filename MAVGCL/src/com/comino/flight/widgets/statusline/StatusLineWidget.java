@@ -177,7 +177,10 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 			});
 		});
 
-		ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
 	}
 
 	@Override

@@ -170,7 +170,11 @@ public class DetailsWidget extends FadePane  {
 		}
 
 		this.model = control.getCurrentModel();
-		ExecutorService.get().execute(task);
+
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
 
 	}
 

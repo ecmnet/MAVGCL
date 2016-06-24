@@ -138,6 +138,7 @@ public class GPSDetailsWidget extends FadePane  {
 		this.model = control.getCurrentModel();
 
 		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
 	}
