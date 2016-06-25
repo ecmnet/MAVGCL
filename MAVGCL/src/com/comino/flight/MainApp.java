@@ -113,8 +113,12 @@ public class MainApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
+
 		String peerAddress = null;
 		int port = 14555;
+
+		Map<String,String> args = getParameters().getNamed();
+
 
 		Preferences userPrefs = MAVPreferences.getInstance();
 		peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
@@ -124,9 +128,12 @@ public class MainApp extends Application {
 			control = new MAVUdpController(peerAddress,port,14550, true);
 			new SITLController(control);
 		}
-		else {
+		else
+		if(args.size()> 0 && args.get("SITL")!=null)
+			control = new MAVUdpController("127.0.0.1",14556,14550, false);
+		else
 			control = new MAVUdpController(peerAddress,port,14550, false);
-		}
+
 
 		MSPLogger.getInstance(control);
 		StateProperties.getInstance(control);
