@@ -130,7 +130,7 @@ public class MainApp extends Application {
 		}
 		else
 		if(args.size()> 0 && args.get("SITL")!=null)
-			control = new MAVUdpController("127.0.0.1",14556,14550, false);
+			control = new MAVUdpController("127.0.0.1",14556,14550, true);
 		else
 			control = new MAVUdpController(peerAddress,port,14550, false);
 
