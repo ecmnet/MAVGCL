@@ -15,7 +15,7 @@ Any feedback, comments and contributions are very welcome.
 **Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
-- Timechart annotated by messages (in 10secs framing)
+- Timechart annotated by messages and parameter changes (in 10secs framing)
 - Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
@@ -43,7 +43,7 @@ Any feedback, comments and contributions are very welcome.
 
 - Goto directory `/dist`
 - Start with `java -jar MAVGAnalysis.jar`
-- ​Set IP address and port in `File->Preferences` and restart (Use 127.0.0.1 for SITL on local machine)
+- Set IP address and port in `File->Preferences` and restart (F or local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 - For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
   ​
