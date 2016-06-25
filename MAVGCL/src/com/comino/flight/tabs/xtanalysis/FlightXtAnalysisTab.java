@@ -72,7 +72,7 @@ public class FlightXtAnalysisTab extends Pane {
 		chart2.disableProperty().bind(this.disabledProperty());
 	}
 
-	public void setWidthBinding(int horizontal_space) {
+	public void setWidthBinding(double horizontal_space) {
 		chart1.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
 		chart2.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
 	}

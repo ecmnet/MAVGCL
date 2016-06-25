@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.comino.flight.panel.control.FlightControlPanel;
-import com.comino.flight.parameter.PX4Parameters;
-import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.parameter.MAVParameterTab;
@@ -52,7 +50,6 @@ import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.flight.widgets.tuning.TuningWidget;
 import com.comino.mav.control.IMAVController;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
@@ -174,27 +171,21 @@ public class FlightTabs extends Pane {
 			if(tuning.isVisible())
 				return;
 			if(newvalue.booleanValue())
-				xtanalysistab.setWidthBinding(188);
+				xtanalysistab.setWidthBinding(details.getWidth()+3);
 			else
 				xtanalysistab.setWidthBinding(0);
 		});
 
 		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue())
-				xtanalysistab.setWidthBinding(250);
+				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 			else {
 				if(details.isVisible())
-					xtanalysistab.setWidthBinding(188);
+					xtanalysistab.setWidthBinding(details.getWidth()+3);
 				else
 					xtanalysistab.setWidthBinding(0);
 			}
 		});
-
-
-
-
-
-		//		mavworldtab.setDisable(true);
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 			for(int i =0; i<tabs.size();i++)
@@ -204,8 +195,5 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setDisable(false);
 		control.getCollector().clearModelList();
 	}
-
-
-
 
 }
