@@ -8,21 +8,19 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 24/06/2016 
+**Status:** Last updated 25/06/2016 
 
 - Preferences added: Maintain IP address and port
 
 **Features:**
 
-- Realtime data acquisition (50ms sampling)
+- Realtime data acquisition (50ms sampling) based on MAVLink messages
 - Timechart annotated by messages (in 10secs framing)
-- Trigger recording manually or by selectable flight-mode/state changes
-- Choosable stop-recording delay
+- Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
-- Display of basic vehicle information (online), like mode, battery status, messages and sensor availability
 - XY Analysis for selected key-figures
 - MAVLink inspector
-- Easy to use parameter editor
+- Easy to use parameter editor and In-Flight-Tuning-Widget
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Import of selected key-figures from PX4Log (file or last log from device via WiFi)
 - Save and load of collected data 
