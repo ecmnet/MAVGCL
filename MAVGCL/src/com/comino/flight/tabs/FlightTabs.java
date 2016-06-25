@@ -52,6 +52,7 @@ import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.flight.widgets.tuning.TuningWidget;
 import com.comino.mav.control.IMAVController;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
@@ -89,8 +90,8 @@ public class FlightTabs extends Pane {
 	@FXML
 	private CameraWidget camera;
 
-//	@FXML
-//	private MAVAnalysis3DTab mavanalysis3Dtab;
+	//	@FXML
+	//	private MAVAnalysis3DTab mavanalysis3Dtab;
 
 	@FXML
 	private MAVParameterTab mavparametertab;
@@ -106,7 +107,7 @@ public class FlightTabs extends Pane {
 
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
-//		tabs.add(mavanalysis3Dtab);
+		//		tabs.add(mavanalysis3Dtab);
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavparametertab);
@@ -130,16 +131,16 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
-//		mavanalysis3Dtab.setDisable(true);
+		//		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mavparametertab.setDisable(true);
 
 
 		if(camera!=null) {
 			if(control.getConnectedAddress()!=null && !control.getConnectedAddress().contains("127.0.0") )
-			  camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
+				camera.setup(control, "http://"+control.getConnectedAddress()+":8080/stream/video.mjpeg");
 			else
-			  camera.setup(control, "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240");
+				camera.setup(control, "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240");
 			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoVisibility());
 		}
 
@@ -163,9 +164,34 @@ public class FlightTabs extends Pane {
 		mavmaptab.setup(flightControl.getRecordControl(),control);
 		mavinspectortab.setup(control);
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
+		xtanalysistab.setWidthBinding(188);
+
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
-//		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
+		//		mavanalysis3Dtab.setup(flightControl.getRecordControl(),control);
 		mavparametertab.setup(control);
+
+		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
+			if(tuning.isVisible())
+				return;
+			if(newvalue.booleanValue())
+				xtanalysistab.setWidthBinding(188);
+			else
+				xtanalysistab.setWidthBinding(0);
+		});
+
+		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.booleanValue())
+				xtanalysistab.setWidthBinding(250);
+			else {
+				if(details.isVisible())
+					xtanalysistab.setWidthBinding(188);
+				else
+					xtanalysistab.setWidthBinding(0);
+			}
+		});
+
+
+
 
 
 		//		mavworldtab.setDisable(true);

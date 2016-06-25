@@ -348,7 +348,6 @@ public class TuningWidget extends FadePane  {
 
 				@Override public String toString(Double value) {
 					BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
-
 					return bd.toPlainString();
 				}
 
