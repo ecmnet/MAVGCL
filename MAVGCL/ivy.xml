@@ -1,0 +1,12 @@
+<ivy-module version="2.0">
+    <info organisation="org.apache" module="mavgcl-ivy"/>
+    <dependencies>
+	<dependency org="com.google.code.gson" name="gson" rev="2.4"/>
+	<dependency org="com.neuronrobotics" name="JCSG" rev="0.1.7"/>
+	<dependency org="eu.hansolo" name="Medusa" rev="4.7"/>
+	<dependency org="net.java.dev.jna" name="jna" rev="4.1.0"/>
+	<dependency org="net.java.jinput" name="jinput" rev="2.0.5"/>
+	<dependency org="org.apache.lucene" name="lucene-core" rev="4.7.0"/>
+	<dependency org="org.scream3r" name="jssc" rev="2.8.0"/>
+    </dependencies>
+</ivy-module>
