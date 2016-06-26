@@ -8,9 +8,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 25/06/2016 
+**Status:** Last updated 26/06/2016 
 
-- Preferences added: Maintain IP address and port
+- Binaries available with realeases
 
 **Features:**
 
@@ -33,13 +33,17 @@ Any feedback, comments and contributions are very welcome.
 - A companion proxy (either MAVComm or MAVROS, not required for PIXRacer)
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
 
+**Binaries:**
+
+Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
+
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
-- Clone repository (for stable use https://github.com/ecmnet/MAVGCL/releases)
+- Clone repository
 - Goto main directory  `cd MAVGCL-master/MAVGCL`
 - Run `ant all`
 
-**How to start (all platforms):**
+**How to start after build  (all platforms):**
 
 - Goto directory `/dist`
 - Start with `java -jar MAVGAnalysis.jar`
