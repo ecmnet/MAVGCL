@@ -125,12 +125,10 @@ public class TuningWidget extends FadePane  {
 							groups.getItems().add(p.group_name);
 
 						if(waitingForAcknowledge) {
-						//	if(p.valueList.size()==0) {
 								BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
 								MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-//							}
-//							else
-//								MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+p.valueList.get((int)p.value),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+                            if(p.reboot_required)
+                            	MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_INFO);
 							waitingForAcknowledge = false;
 						}
 					});
