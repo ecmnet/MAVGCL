@@ -2,7 +2,7 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL)
+[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl)
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Runnable on OS X, Ubuntu and Windows. 
 
@@ -43,7 +43,7 @@ Any feedback, comments and contributions are very welcome.
 
 - Goto directory `/dist`
 - Start with `java -jar MAVGAnalysis.jar`
-- Set IP address and port in `File->Preferences` and restart (F or local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
+- Set IP address and port in `File->Preferences` and restart (For local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 - For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
   ​
