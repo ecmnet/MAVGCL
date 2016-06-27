@@ -12,7 +12,7 @@ install:
 
 build_script:
   - cd MAVGCL
-  - ant build
+  - ant deploy_windows
 
 artifacts:
   - path: MAVGCL/dist/MAVGAnalysis.jar
