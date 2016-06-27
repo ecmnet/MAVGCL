@@ -39,6 +39,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
@@ -175,6 +176,8 @@ public class DetailsWidget extends FadePane  {
 		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
+
+		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
 	}
 

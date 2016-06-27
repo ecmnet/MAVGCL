@@ -10,9 +10,7 @@
 <?import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab?>
 <?import com.comino.flight.tabs.inspector.MAVInspectorTab?>
 <?import com.comino.flight.tabs.parameter.MAVParameterTab?>
-<?import com.comino.flight.tabs.world.MAVWorldTab?>
 <?import com.comino.flight.tabs.openmap.MAVOpenMapTab?>
-<?import com.comino.flight.tabs.analysis3d.MAVAnalysis3DTab?>
 
 <?import com.comino.flight.widgets.details.DetailsWidget?>
 <?import com.comino.flight.widgets.tuning.TuningWidget?>
@@ -54,20 +52,6 @@
 								</AnchorPane>
 							</content>
 						</Tab>
-						<!--
-						<Tab text="3D Analysis">
-							<content>
-								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-									xmlns:fx="http://javafx.com/fxml/1">
-									<children>
-										<MAVAnalysis3DTab fx:id="mavanalysis3Dtab"
-											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
-									</children>
-								</AnchorPane>
-							</content>
-						</Tab>
-						-->
 						<Tab text="Map">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
@@ -80,10 +64,6 @@
 								</AnchorPane>
 							</content>
 						</Tab>
-						<!-- <Tab text="World"> <content> <AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-							xmlns:fx="http://javafx.com/fxml/1"> <children> <MAVWorldTab fx:id="mavworldtab"
-							AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="2.0"
-							AnchorPane.topAnchor="0.0"/> </children> </AnchorPane> </content> </Tab> -->
 					</tabs>
 					<Tab text="Inspector">
 							<content>

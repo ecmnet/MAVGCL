@@ -70,7 +70,6 @@
 				<include name="mavcomm.jar" />
 				<include name="jssc.jar" />
 				<include name="jna-4.1.0.jar" />
-				<include name="poly2tri-core.jar" />
 				<include name="JCSG.jar" />
 				<include name="medusa-4.7.jar" />
 				<include name="gson-2.4.jar" />
