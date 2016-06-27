@@ -114,8 +114,8 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private IMAVController control;
 	private List<IChartControl> charts = null;
 
-	private int triggerStartMode =1;
-	private int triggerStopMode  =1;
+	private int triggerStartMode =0;
+	private int triggerStopMode  =0;
 	private int triggerDelay =0;
 
 	private boolean modetrigger  = false;
@@ -198,10 +198,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		trigstart.getItems().addAll(TRIG_START_OPTIONS);
-		trigstart.getSelectionModel().select(1);
+		trigstart.getSelectionModel().select(0);
 		trigstart.setDisable(true);
 		trigstop.getItems().addAll(TRIG_STOP_OPTIONS);
-		trigstop.getSelectionModel().select(1);
+		trigstop.getSelectionModel().select(0);
 		trigstop.setDisable(true);
 		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
 		trigdelay.getSelectionModel().select(0);
@@ -310,7 +310,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 
-		enablemodetrig.selectedProperty().set(false);
+		enablemodetrig.selectedProperty().set(true);
 
 	}
 
