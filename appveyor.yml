@@ -16,7 +16,7 @@ build_script:
   - ant deploy_windows
 
 artifacts:
-  - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.*
+  - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.msi
 
 cache:
   - C:\Users\appveyor\.m2
