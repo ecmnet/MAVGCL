@@ -11,6 +11,7 @@ install:
   - ant -version
 
 build_script:
+  - cmd: SET PATH=C:\Program Files (x86)\WiX Toolset v3.10\bin;%PATH%
   - cd MAVGCL
   - ant deploy_windows
 
