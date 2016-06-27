@@ -16,7 +16,7 @@ build_script:
   - ant deploy_windows
 
 artifacts:
-  - path: MAVGCL/dist/MAVGAnalysis.jar
+  - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.*
 
 cache:
   - C:\Users\appveyor\.m2
