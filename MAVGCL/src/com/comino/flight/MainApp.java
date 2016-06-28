@@ -34,12 +34,8 @@
 package com.comino.flight;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.prefs.Preferences;
-
-import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.lquac.msg_message_interval;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.observables.StateProperties;
@@ -51,11 +47,9 @@ import com.comino.flight.px4log.MAVPX4LogReader;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.segment.Status;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -67,7 +61,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -110,6 +103,8 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
+		try {
+
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MAVGCL Analysis");
 
@@ -144,6 +139,10 @@ public class MainApp extends Application {
 
 		initRootLayout();
 		showMAVGCLApplication();
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
