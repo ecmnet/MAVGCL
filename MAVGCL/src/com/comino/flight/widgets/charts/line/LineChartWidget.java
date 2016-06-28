@@ -199,6 +199,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			@Override
 			protected Integer call() throws Exception {
+
 				while(true) {
 					try { Thread.sleep(resolution_ms); } catch (InterruptedException e) { }
 
@@ -207,9 +208,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						continue;
 					}
 
-					if (isCancelled()) {
+					if (isCancelled())
 						break;
-					}
 
 					if(!isCollecting.get() && control.getCollector().isCollecting()) {
 						synchronized(this) {
@@ -223,19 +223,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						Platform.runLater(() -> {
 							updateGraph(false);
 						});
+
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
 
-
-					if((isCollecting.get() && control.isConnected()))
+					if(isCollecting.get() && control.isConnected())
 						Platform.runLater(() -> {
 							updateGraph(false);
 						});
-					//						updateValue(control.getCollector().getModelList().size());
-
 				}
-				return control.getCollector().getModelList().size();
+				return 0;
 			}
 		};
 
@@ -247,9 +245,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		annotations.setSelected(true);
 
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 		});
 
 		xAxis.setAutoRanging(false);
@@ -261,25 +259,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
 
-		//		linechart.getAnnotations().add(altHoldAnnotation,Layer.FOREGROUND);
-		//
-		//		posHoldAnnotation = new ModeAnnotation(0, 0, Orientation.VERTICAL, 0, null, new Color(0, 1, 0, 0.1));
-		//		altHoldAnnotation = new ModeAnnotation(0, 3, Orientation.VERTICAL, 0, null, new Color(1, 0, 0, 0.1));
-
-
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
-
 
 		cseries1.getItems().addAll(MSTYPE.getList());
 		cseries2.getItems().addAll(MSTYPE.getList());
 		cseries3.getItems().addAll(MSTYPE.getList());
 
-
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
 		cseries3.getSelectionModel().select(0);
-
 
 		preset.getItems().addAll(PRESET_NAMES);
 		preset.getSelectionModel().select(0);
@@ -290,7 +279,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type1 = MSTYPE.values()[newValue.intValue()];
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
-				//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -305,13 +293,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type2 = MSTYPE.values()[newValue.intValue()];
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
-				//				linechart.setLegendVisible(true);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
 
 			}
-
 		});
 
 		cseries3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -319,14 +305,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type3 = MSTYPE.values()[newValue.intValue()];
-				//				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-				//				linechart.setLegendVisible(true);
+				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
 
 			}
-
 		});
 
 		preset.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -344,15 +328,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
 				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
 				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-				//
-				//				linechart.setLegendVisible(true);
 
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
 			}
-
-
 		});
 
 		export.setOnAction((ActionEvent event)-> {
@@ -479,10 +459,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(current_x_pt>1 && mList.get(current_x_pt).msg.msg!=null &&
-					   annotations.isSelected()) {
+							annotations.isSelected()) {
 
 						if(mList.get(current_x_pt-1).msg.msg==null)
-						  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
+							linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,mList.get(current_x_pt).msg), Layer.FOREGROUND);
 					}
 
 					synchronized(this) {
