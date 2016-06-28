@@ -17,6 +17,17 @@ build_script:
 
 artifacts:
   - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.msi
+    name: mavgclinstaller
 
 cache:
   - C:\Users\appveyor\.m2
+
+deploy:
+  - provider: GitHub
+    auth_token:
+      secure: Hq5VDnfPj9yDRim502Eyhn7rFSgjfo3TiRs2xM+qP/wm/Wav6q/XeVNIGEEdXbtN
+    artifact: mavgclinstaller
+    draft: false
+    prerelease: false
+    on:
+      appveyor_repo_tag: true
