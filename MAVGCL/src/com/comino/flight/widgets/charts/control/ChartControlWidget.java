@@ -346,6 +346,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@Override
 	public void update(Status oldStat, Status newStat) {
+
+		System.out.println("X");
+
 		if(!modetrigger)
 			return;
 
@@ -378,6 +381,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 	private void recording(boolean start, int delay) {
+
+		// Workaround: Status update called too often
+//		if(start && control.getCollector().isCollecting())
+//			return;
+//
+//		if(!start && !control.getCollector().isCollecting())
+//			return;
+
 		if(start) {
 			control.getCollector().start();
 			scroll.setDisable(true);
@@ -388,10 +399,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				scroll.setDisable(false);
 			}
 		}
+
 		for(IChartControl chart : charts) {
 			if(chart.getScrollProperty()!=null)
 				chart.getScrollProperty().set(1);
-			chart.refreshChart();
 		}
 	}
 

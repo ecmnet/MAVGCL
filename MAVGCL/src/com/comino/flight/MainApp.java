@@ -47,6 +47,7 @@ import com.comino.flight.px4log.MAVPX4LogReader;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
@@ -124,8 +125,12 @@ public class MainApp extends Application {
 			new SITLController(control);
 		}
 		else
-		if(args.size()> 0 && args.get("SITL")!=null)
-			control = new MAVUdpController("127.0.0.1",14556,14550, true);
+		if(args.size()>0) {
+			if(args.get("SITL")!=null)
+			   control = new MAVUdpController("127.0.0.1",14556,14550, true);
+			else if(args.get("SIM")!=null)
+			        control = new MAVSimController();
+		}
 		else
 			control = new MAVUdpController(peerAddress,port,14550, false);
 
