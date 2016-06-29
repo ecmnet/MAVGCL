@@ -17,7 +17,7 @@ Any feedback, comments and contributions are very welcome.
 **Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
-- Timechart annotated by messages and parameter changes (in 10secs framing)
+- Timechart annotated by messages and parameter changes
 - Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
