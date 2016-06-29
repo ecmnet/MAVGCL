@@ -347,8 +347,6 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		System.out.println("X");
-
 		if(!modetrigger)
 			return;
 

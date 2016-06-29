@@ -414,7 +414,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	private void updateGraph(boolean refresh) {
-		float dt_sec = 0; DataModel m =null;
+		float dt_sec = 0; DataModel m =null; int remove_count=0;
 
 		List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 		List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
@@ -431,10 +431,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
 
-		setXAxisBounds(current_x0_pt,current_x1_pt);
+//		setXAxisBounds(current_x0_pt,current_x1_pt);
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
@@ -448,17 +449,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
-				    m = mList.get(current_x_pt);
+					m = mList.get(current_x_pt);
 
 					if(current_x_pt > current_x1_pt) {
 						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
 						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
-						if(series1.getData().size()>0)
-							series1.getData().remove(0);
-						if(series2.getData().size()>0)
-							series2.getData().remove(0);
-						if(series3.getData().size()>0)
-							series3.getData().remove(0);
+						remove_count++;
 					}
 
 					if(type1!=MSTYPE.MSP_NONE)
@@ -480,11 +476,20 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				current_x_pt++;
 			}
 
-            series1.getData().addAll(series1_list);
-            series2.getData().addAll(series2_list);
-            series3.getData().addAll(series3_list);
+			if(remove_count > 0) {
+				if(series1.getData().size()>remove_count)
+					series1.getData().remove(0, remove_count);
+				if(series2.getData().size()>remove_count)
+					series2.getData().remove(0, remove_count);
+				if(series3.getData().size()>remove_count)
+					series3.getData().remove(0, remove_count);
+				setXAxisBounds(current_x0_pt,current_x1_pt);
+			}
 
-            setXAxisBounds(current_x0_pt,current_x1_pt);
+			series1.getData().addAll(series1_list);
+			series2.getData().addAll(series2_list);
+			series3.getData().addAll(series3_list);
+
 		}
 	}
 

@@ -33,27 +33,18 @@
 
 package com.comino.flight.control;
 
-import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_MODE_FLAG;
-import org.mavlink.messages.lquac.msg_manual_control;
-
 import com.comino.flight.control.joystick.FrSkyAdapter;
 import com.comino.flight.control.joystick.JoyStickController;
 import com.comino.flight.control.joystick.PS4Adapter;
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
-
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
 
 public class SITLController  {
 
+	private JoyStickController joystick = null;
 
 	public SITLController(IMAVController control) {
 
-
-		JoyStickController joystick = new JoyStickController(control,FrSkyAdapter.class, PS4Adapter.class);
+		joystick = new JoyStickController(control,FrSkyAdapter.class, PS4Adapter.class);
 		joystick.connect();
 
 
