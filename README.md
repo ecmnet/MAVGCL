@@ -4,13 +4,13 @@
 
 [![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl)
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. Runnable on OS X, Ubuntu and Windows. 
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. 
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 27/06/2016 
+**Status:** Last updated 29/06/2016 
 
-- Binaries available with releases
+- Binaries for Linux, OSX and Windows available 
 
 **Features:**
 
