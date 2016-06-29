@@ -87,9 +87,7 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar jssc-2.8.0.jar jna-4.1.0.jar JCSG-0.1.7.jar
-										Medusa-4.7.jar gson-2.4.jar jfxchartext-1.1.jar
-										jinput-2.0.5.jar" />
+				<attribute name="Class-Path" value="gson-2.4.jar JCSG-0.1.7.jar jfxchartext-1.1.jar jinput-2.0.5.jar jinput-platform-2.0.5-natives-osx.jar jna-4.1.0.jar jssc-2.8.0.jar jutils-1.0.0.jar lucene-core-4.7.0.jar mavcomm.jar Medusa-4.7.jar slf4j-api-1.6.1.jar slf4j-simple-1.6.1.jar vecmath-1.3.1.jar" />
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
@@ -99,14 +97,20 @@
 		</copy>
 		<copy todir="dist">
 			<fileset dir="lib/">
-				<include name="mavcomm.jar" />
-				<include name="jssc-2.8.0.jar" />
-				<include name="jna-4.1.0.jar" />
-				<include name="JCSG-0.1.7.jar" />
-				<include name="Medusa-4.7.jar" />
 				<include name="gson-2.4.jar" />
-				<include name="jinput-2.0.5.jar" />
+				<include name="JCSG-0.1.7.jar" />
 				<include name="jfxchartext-1.1.jar" />
+				<include name="jinput-2.0.5.jar" />
+				<include name="jinput-platform-2.0.5-natives-osx.jar" />
+				<include name="jna-4.1.0.jar" />
+				<include name="jssc-2.8.0.jar" />
+				<include name="jutils-1.0.0.jar" />
+				<include name="lucene-core-4.7.0.jar" />
+				<include name="mavcomm.jar" />
+				<include name="Medusa-4.7.jar" />
+				<include name="slf4j-api-1.6.1.jar" />
+				<include name="slf4j-simple-1.6.1.jar" />
+				<include name="vecmath-1.3.1.jar" />
 			</fileset>
 		</copy>
 
