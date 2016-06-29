@@ -185,12 +185,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
+	private int last_msg_pt = 0;
+
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
 	private List<DataModel> mList = null;
-	private DataModel old = new DataModel();
 
 	public LineChartWidget() {
 
@@ -468,11 +469,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if(type3!=MSTYPE.MSP_NONE)
 						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type3)));
 
-					if(m.msg!=null) {
-						if(m.msg.msg!=null && annotations.isSelected() &&
-							(m.tms-old.tms)>resolution_ms*1000) {
-						        old = m;
-								linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
+					if(m.msg!=null && current_x_pt > 0) {
+						if(m.msg.msg!=null && annotations.isSelected()) {
+							  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
 						}
 					}
 				}

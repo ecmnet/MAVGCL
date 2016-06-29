@@ -42,61 +42,51 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
 
 public class LineMessageAnnotation  implements XYAnnotation {
 
-	private Circle     circle = null;
-	private GridPane   pane   = new GridPane();
-	private LogMessage msg    = null;
+	private  Polygon triangle = null;
 	private float      xpos   = 0;
-	private Label      label  = null;
 
 	public LineMessageAnnotation(float xpos, LogMessage message) {
 		this.xpos = xpos;
-		this.msg  = message;
 
-		this.circle = new Circle(5);
+		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
+
 		switch(message.severity) {
 		case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
-			this.circle.setFill(Color.CADETBLUE); break;
+			this.triangle.setFill(Color.CADETBLUE); break;
 		case MAV_SEVERITY.MAV_SEVERITY_INFO:
-			this.circle.setFill(Color.GREEN); break;
+			this.triangle.setFill(Color.GREEN); break;
 		case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-			this.circle.setFill(Color.YELLOW); break;
+			this.triangle.setFill(Color.YELLOW); break;
 		case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-			this.circle.setFill(Color.RED); break;
+			this.triangle.setFill(Color.RED); break;
 		default:
-			this.circle.setFill(Color.DARKGREY);
+			this.triangle.setFill(Color.DARKGREY);
 		}
-		this.circle.setStrokeType(StrokeType.INSIDE);
-		this.label = new Label(msg.msg);
-		this.label.setVisible(true);
-		this.label.setRotate(180);
-
-		label.setStyle("-fx-background-color: rgba(30, 30, 30, 0.2);");
-
-		pane.setHgap(3);
-		GridPane.setMargin(circle,new Insets(4,2,4,0));
-
-		pane.addRow(0,circle, label);
-		pane.getTransforms().add(new Rotate(90,0,0));
-
+		this.triangle.setStrokeType(StrokeType.INSIDE);
+		Tooltip t = new Tooltip(message.msg);
+		Tooltip.install(triangle, t);
 	}
 
 	@Override
 	public Node getNode() {
-		return pane;
+		return triangle;
 	}
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		pane.setLayoutX(xAxis.getDisplayPosition(xpos));
-		pane.setLayoutY(2);
+		triangle.setLayoutX(xAxis.getDisplayPosition(xpos));
+		triangle.setLayoutY(0);
+
 	}
 
 }
