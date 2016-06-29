@@ -374,6 +374,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				refreshChart();
 			}
 		});
+
+		annotations.setSelected(true);
 	}
 
 
@@ -403,14 +405,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		else
 			resolution_ms = 50;
 
-		if(resolution_ms > 100) {
-			annotations.setDisable(true);
-			annotations.setSelected(false);
-		} else {
-			annotations.setSelected(true);
-			annotations.setDisable(false);
-		}
-
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
@@ -439,9 +433,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
-
-//		setXAxisBounds(current_x0_pt,current_x1_pt);
-
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();
@@ -452,9 +443,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+				m = mList.get(current_x_pt);
 
-					m = mList.get(current_x_pt);
+				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
+					  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
+			}
+
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
 					if(current_x_pt > current_x1_pt) {
 						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
@@ -469,11 +464,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if(type3!=MSTYPE.MSP_NONE)
 						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type3)));
 
-					if(m.msg!=null && current_x_pt > 0) {
-						if(m.msg.msg!=null && annotations.isSelected()) {
-							  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
-						}
-					}
 				}
 				current_x_pt++;
 			}
