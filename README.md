@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl)
 
+
+
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or based on PX4Logs. It is not intended to replace the QGC. 
 
 Any feedback, comments and contributions are very welcome.
@@ -34,6 +36,8 @@ Any feedback, comments and contributions are very welcome.
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
 
 **Binaries:**
+
+![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
