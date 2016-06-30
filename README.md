@@ -10,7 +10,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 29/06/2016 
+**Status:** Last updated 30/06/2016 
 
 - Binaries for Linux, OSX and Windows available 
 
@@ -77,3 +77,8 @@ MAVGAnalysis depends heavily on https://github.com/ecmnet/MAVComm for MAVLink pa
 **Screenshot**:
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
+
+
+
+Please note the [License terms](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/LICENSE.md).
+
