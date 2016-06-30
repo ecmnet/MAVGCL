@@ -34,18 +34,12 @@
 package com.comino.flight.widgets;
 
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public class FadePane extends Pane {
@@ -53,16 +47,10 @@ public class FadePane extends Pane {
 	private FadeTransition in = null;
 	private FadeTransition out = null;
 
-
 	private BooleanProperty fade = new SimpleBooleanProperty();
-
-	private final BooleanProperty dragModeActiveProperty =
-			new SimpleBooleanProperty(this, "dragModeActive", true);
 
 	public FadePane() {
 		this(150);
-		makeDraggable(this);
-
 	}
 
 	public FadePane(int duration_ms) {
@@ -78,11 +66,17 @@ public class FadePane extends Pane {
 		out = new FadeTransition(Duration.millis(duration_ms), this);
 		out.setFromValue(1.0);
 		out.setToValue(0.0);
-
+		this.setVisible(visible);
 		this.fade.set(visible);
 
+		if(visible) {
+			Platform.runLater(() -> {
+				out.play();
+			});
+		}
+
 		out.setOnFinished(value -> {
-			setVisible(visible);
+			setVisible(false);
 		});
 
 		this.fade.addListener(new ChangeListener<Boolean>() {
@@ -90,76 +84,15 @@ public class FadePane extends Pane {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue.booleanValue()) {
-					setVisible(true);
-					in.play();
+					setVisible(true); in.play();
 				}
-				else {
+				else
 					out.play();
-				}
 			}
-
 		});
-
-		makeDraggable(this);
-
-
-
 	}
 
 	public BooleanProperty fadeProperty() {
 		return fade;
-	}
-
-	private Node makeDraggable(final Node node) {
-		final DragContext dragContext = new DragContext();
-
-		//        node.addEventFilter(
-		//                MouseEvent.ANY,
-		//                new EventHandler<MouseEvent>() {
-		//                    public void handle(final MouseEvent mouseEvent) {
-		//                        if (dragModeActiveProperty.get()) {
-		//                            // disable mouse events for all children
-		//                            mouseEvent.consume();
-		//                        }
-		//                    }
-		//                });
-
-
-
-		node.setOnMousePressed(me -> {
-			if (!dragModeActiveProperty.get()) {
-				dragModeActiveProperty.set(true);
-				node.getScene().setCursor(Cursor.HAND);
-				// remember initial mouse cursor coordinates
-				// and node position
-				dragContext.mouseAnchorX = me.getX();
-				dragContext.mouseAnchorY = me.getY();
-
-			}
-		});
-
-		node.setOnMouseReleased(me -> {
-			if (!me.isPrimaryButtonDown()) {
-				node.getScene().setCursor(Cursor.DEFAULT);
-				dragModeActiveProperty.set(false);
-			}
-		});
-
-		node.setOnMouseDragged(me -> {
-			if (dragModeActiveProperty.get()) {
-				node.setLayoutX(node.getLayoutX() + me.getX() - dragContext.mouseAnchorX);
-				node.setLayoutY(node.getLayoutY() + me.getY() - dragContext.mouseAnchorY);
-			}
-		});
-
-
-
-		return node;
-	}
-
-	private static final class DragContext {
-		public double mouseAnchorX;
-		public double mouseAnchorY;
-
 	}
 }

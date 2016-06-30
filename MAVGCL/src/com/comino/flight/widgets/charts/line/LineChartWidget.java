@@ -129,6 +129,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	};
 
 	private static int COLLECTOR_CYCLE = 50;
+	private static int REFRESH_RATE    = 50;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -156,7 +157,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@FXML
 	private CheckBox annotations;
-
 
 
 	private  XYChart.Series<Number,Number> series1;
@@ -212,7 +212,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 
 				while(true) {
-					try { Thread.sleep(resolution_ms); } catch (InterruptedException e) { }
+
+					try { Thread.sleep(REFRESH_RATE); } catch (InterruptedException e) { }
 
 					if(isDisabled()) {
 						try { Thread.sleep(500); } catch (InterruptedException e) { }
@@ -433,6 +434,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
+		if(current_x_pt > current_x1_pt) {
+			current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+			current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+			setXAxisBounds(current_x0_pt,current_x1_pt);
+		}
+
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();
@@ -446,16 +453,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				m = mList.get(current_x_pt);
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
-					  linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
-			}
+					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
+				}
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
 
-					if(current_x_pt > current_x1_pt) {
-						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
-						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
+					if(current_x_pt > current_x1_pt)
 						remove_count++;
-					}
 
 					if(type1!=MSTYPE.MSP_NONE)
 						series1_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type1)));
@@ -475,7 +479,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					series2.getData().remove(0, remove_count);
 				if(series3.getData().size()>remove_count)
 					series3.getData().remove(0, remove_count);
-				setXAxisBounds(current_x0_pt,current_x1_pt);
 			}
 
 			series1.getData().addAll(series1_list);
@@ -485,7 +488,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private  void setXAxisBounds(int lower_pt, int upper_pt) {
+	private  void setXAxisBounds(float lower_pt, float upper_pt) {
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
