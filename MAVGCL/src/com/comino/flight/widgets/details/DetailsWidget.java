@@ -38,6 +38,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.FadePane;
@@ -135,12 +136,7 @@ public class DetailsWidget extends FadePane  {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(333);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
+					LockSupport.parkNanos(333000000L);
 					if(isDisabled() || !isVisible()) {
 						continue;
 					}

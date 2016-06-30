@@ -212,7 +212,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			protected Integer call() throws Exception {
 				while(true) {
 
-					try { Thread.sleep(100); } catch (InterruptedException e) { }
+					LockSupport.parkNanos(100000000L);
 
 					if(isDisabled()) {
 						try { Thread.sleep(500); } catch (InterruptedException e) { }

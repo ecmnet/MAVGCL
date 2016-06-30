@@ -213,10 +213,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				while(true) {
 
-					try { Thread.sleep(REFRESH_RATE); } catch (InterruptedException e) { }
+					LockSupport.parkNanos(REFRESH_RATE*1000000);
 
 					if(isDisabled()) {
-						try { Thread.sleep(500); } catch (InterruptedException e) { }
+						LockSupport.parkNanos(500000000L);
 						continue;
 					}
 
@@ -230,12 +230,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 							series3.getData().clear();
 							current_x_pt = 0; current_x0_pt=0;
 							setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
+							scroll.setValue(0);
 						}
-						scroll.setValue(0);
-						Platform.runLater(() -> {
-							updateGraph(false);
-						});
-
+						updateGraph(false);
 					}
 
 					isCollecting.set(control.getCollector().isCollecting());
@@ -488,7 +485,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private  void setXAxisBounds(float lower_pt, float upper_pt) {
+	private  void setXAxisBounds(int lower_pt, int upper_pt) {
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}

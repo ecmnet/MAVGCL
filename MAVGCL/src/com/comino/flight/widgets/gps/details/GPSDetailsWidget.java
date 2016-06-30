@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
@@ -101,12 +102,7 @@ public class GPSDetailsWidget extends FadePane  {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(200);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
+					LockSupport.parkNanos(500000000L);
 					if(isDisabled()) {
 						continue;
 					}

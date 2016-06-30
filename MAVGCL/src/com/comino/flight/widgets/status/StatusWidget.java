@@ -146,55 +146,56 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	@Override
 	public void update(Status arg0, Status newStat) {
 
+		Platform.runLater(() -> {
+			if(newStat.isStatus(Status.MSP_CONNECTED))
+				connected.setMode(LEDControl.MODE_ON);
+			else {
+				connected.setMode(LEDControl.MODE_OFF);
+			}
 
-		if(newStat.isStatus(Status.MSP_CONNECTED))
-			connected.setMode(LEDControl.MODE_ON);
-		else {
-			connected.setMode(LEDControl.MODE_OFF);
-		}
-
-		if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
-			armed.setMode(LEDControl.MODE_ON);
-		else
-			armed.setMode(LEDControl.MODE_OFF);
-
-		if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
-				&& newStat.isStatus(Status.MSP_CONNECTED))
-			rcavailable.setMode(LEDControl.MODE_ON);
-		else
-			rcavailable.setMode(LEDControl.MODE_OFF);
-
-		if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
-			althold.setMode(LEDControl.MODE_ON);
-		else
-			althold.setMode(LEDControl.MODE_OFF);
-
-		if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
-			poshold.setMode(LEDControl.MODE_ON);
-		else
-			poshold.setMode(LEDControl.MODE_OFF);
-
-		if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
-			mission.setMode(LEDControl.MODE_ON);
-		else
-			if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
-				mission.setMode(LEDControl.MODE_BLINK);
+			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
+				armed.setMode(LEDControl.MODE_ON);
 			else
-				mission.setMode(LEDControl.MODE_OFF);
+				armed.setMode(LEDControl.MODE_OFF);
 
-		if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
-			offboard.setMode(LEDControl.MODE_ON);
-		else
-			offboard.setMode(LEDControl.MODE_OFF);
-
-		if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-			landed.setMode(LEDControl.MODE_ON);
-		else {
-			if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
-				landed.setMode(LEDControl.MODE_BLINK);
+			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
+					&& newStat.isStatus(Status.MSP_CONNECTED))
+				rcavailable.setMode(LEDControl.MODE_ON);
 			else
-				landed.setMode(LEDControl.MODE_OFF);
-		}
+				rcavailable.setMode(LEDControl.MODE_OFF);
+
+			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
+				althold.setMode(LEDControl.MODE_ON);
+			else
+				althold.setMode(LEDControl.MODE_OFF);
+
+			if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
+				poshold.setMode(LEDControl.MODE_ON);
+			else
+				poshold.setMode(LEDControl.MODE_OFF);
+
+			if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
+				mission.setMode(LEDControl.MODE_ON);
+			else
+				if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
+					mission.setMode(LEDControl.MODE_BLINK);
+				else
+					mission.setMode(LEDControl.MODE_OFF);
+
+			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
+				offboard.setMode(LEDControl.MODE_ON);
+			else
+				offboard.setMode(LEDControl.MODE_OFF);
+
+			if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
+				landed.setMode(LEDControl.MODE_ON);
+			else {
+				if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
+					landed.setMode(LEDControl.MODE_BLINK);
+				else
+					landed.setMode(LEDControl.MODE_OFF);
+			}
+		});
 	}
 
 }

@@ -35,6 +35,7 @@ package com.comino.flight.widgets.battery;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
@@ -90,12 +91,7 @@ public class BatteryWidget extends Pane  {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
+					LockSupport.parkNanos(1000000000L);
 					if(isDisabled()) {
 						continue;
 					}
@@ -127,6 +123,7 @@ public class BatteryWidget extends Pane  {
 
 
 	private void setupGauge(Gauge gauge, float min, float max, String unit, Color color) {
+		gauge.animatedProperty().set(false);
 		gauge.setSkinType(SkinType.SLIM);
 		gauge.setBarColor(color);
 		gauge.setMinValue(min);

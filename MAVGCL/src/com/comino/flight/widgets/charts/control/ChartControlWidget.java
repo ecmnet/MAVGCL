@@ -37,6 +37,7 @@ package com.comino.flight.widgets.charts.control;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
@@ -142,12 +143,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
-					}
-
+					LockSupport.parkNanos(500000000L);
 					if(isDisabled()) {
 						continue;
 					}
@@ -373,19 +369,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					&& !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
 			break;
 			}
-
 		}
 	}
 
 
 	private void recording(boolean start, int delay) {
-
-		// Workaround: Status update called too often
-//		if(start && control.getCollector().isCollecting())
-//			return;
-//
-//		if(!start && !control.getCollector().isCollecting())
-//			return;
 
 		if(start) {
 			control.getCollector().start();
