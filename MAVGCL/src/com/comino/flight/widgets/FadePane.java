@@ -66,6 +66,10 @@ public class FadePane extends Pane {
 	}
 
 	public FadePane(int duration_ms) {
+		this(duration_ms,false);
+	}
+
+	public FadePane(int duration_ms, boolean visible) {
 
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
@@ -75,8 +79,10 @@ public class FadePane extends Pane {
 		out.setFromValue(1.0);
 		out.setToValue(0.0);
 
+		this.fade.set(visible);
+
 		out.setOnFinished(value -> {
-			setVisible(false);
+			setVisible(visible);
 		});
 
 		this.fade.addListener(new ChangeListener<Boolean>() {

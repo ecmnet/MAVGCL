@@ -38,17 +38,12 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.msp.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
-import javafx.scene.transform.Rotate;
 
 public class LineMessageAnnotation  implements XYAnnotation {
 
@@ -86,7 +81,6 @@ public class LineMessageAnnotation  implements XYAnnotation {
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		triangle.setLayoutX(xAxis.getDisplayPosition(xpos));
 		triangle.setLayoutY(0);
-
 	}
 
 }
