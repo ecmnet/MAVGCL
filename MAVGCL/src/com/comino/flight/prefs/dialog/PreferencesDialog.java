@@ -52,6 +52,10 @@ import javafx.util.Callback;
 
 public class PreferencesDialog  {
 
+	private static final String DEF_IP_ADDRESS 		= "172.168.178.1";
+	private static final String DEF_IP_PORT 		= "14555";
+	private static final String DEF_VIDEO_URL       =  "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
+
 
 	private Dialog<Boolean> prefDialog;
 
@@ -107,10 +111,9 @@ public class PreferencesDialog  {
 
 	public void show() {
 
-		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "172.168.178.1"));
-		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, "14555"));
-		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,
-				"http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240"));
+		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, DEF_IP_ADDRESS));
+		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
+		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 			userPrefs.put(MAVPreferences.PREFS_IP_ADDRESS, ip_address.getText());

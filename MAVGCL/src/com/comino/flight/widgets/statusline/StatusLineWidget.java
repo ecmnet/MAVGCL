@@ -69,9 +69,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private Label version;
 
 	@FXML
-	private ProgressIndicator indicator;
-
-	@FXML
 	private Label driver;
 
 	@FXML
@@ -93,7 +90,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private IMAVController control;
 
 
-	private final SimpleDateFormat fo = new SimpleDateFormat("mmm:ss");
+	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 	private static boolean showProgress = false;
@@ -128,7 +125,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 					}
 					Platform.runLater(() -> {
 
-						// indicator.setVisible(showProgress);
 
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 							driver.setText("not connected");
@@ -167,9 +163,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 		chartControlWidget.addChart(this);
 		this.control = control;
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
-
-		indicator.setVisible(false);
-		indicator.layoutXProperty().bind(this.widthProperty().subtract(50));
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
@@ -212,7 +205,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	}
 
 	public static void showProgressIndicator(boolean show) {
-		showProgress = show;
+
 	}
 
 }
