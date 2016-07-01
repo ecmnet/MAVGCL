@@ -2,7 +2,7 @@
 
 ## In-Flight/PX4Log Analysis for PX4
 
-[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl)
+[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 
 
@@ -36,8 +36,6 @@ Any feedback, comments and contributions are very welcome.
 - Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
 
 **Binaries:**
-
-![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
