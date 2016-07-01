@@ -39,6 +39,7 @@ public class MAVPreferences {
 
 	public final static String PREFS_IP_ADDRESS = "IP_ADDRESS";
 	public final static String PREFS_IP_PORT    = "IP_PORT";
+	public final static String PREFS_VIDEO      = "VIDEOURL";
 
 	private static Preferences prefs = null;
 

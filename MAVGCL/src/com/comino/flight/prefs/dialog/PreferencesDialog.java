@@ -64,6 +64,9 @@ public class PreferencesDialog  {
 	@FXML
 	private TextField ip_port;
 
+	@FXML
+	private TextField video;
+
 	private IMAVController control;
 	private Preferences userPrefs;
 
@@ -106,10 +109,13 @@ public class PreferencesDialog  {
 
 		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "172.168.178.1"));
 		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, "14555"));
+		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,
+				"http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240"));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 			userPrefs.put(MAVPreferences.PREFS_IP_ADDRESS, ip_address.getText());
 			userPrefs.put(MAVPreferences.PREFS_IP_PORT, ip_port.getText());
+			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			try {
 				userPrefs.flush();
 			} catch (BackingStoreException e) {

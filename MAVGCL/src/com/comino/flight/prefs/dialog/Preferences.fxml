@@ -14,6 +14,10 @@
 	     GridPane.rowIndex="1" GridPane.columnIndex="0"/>
 	  <TextField fx:id="ip_address" prefHeight="19.0" prefWidth="90.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 	  <TextField fx:id="ip_port" prefHeight="19.0" prefWidth="50.0" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+	  <Label prefHeight="19.0" prefWidth="158.0" text="Video URL:"
+	     GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+	  <TextField fx:id="video" prefHeight="19.0" prefWidth="340.0" GridPane.rowIndex="2" GridPane.columnIndex="1"
+	   GridPane.columnSpan="3" />
 
 	</children>
 </GridPane>

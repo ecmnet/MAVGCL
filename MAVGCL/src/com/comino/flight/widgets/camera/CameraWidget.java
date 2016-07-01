@@ -36,7 +36,9 @@ package com.comino.flight.widgets.camera;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.prefs.Preferences;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.video.src.IMWVideoSource;
@@ -73,23 +75,32 @@ public class CameraWidget extends FadePane  {
 	@FXML
 	private void initialize() {
 		image.setOpacity(0.90);
-        fadeProperty().addListener((observable, oldvalue, newvalue) -> {
-        		if(newvalue.booleanValue())
-					source.start();
-				else
-					source.stop();
-        });
+		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(source==null && !connect()) {
+				return;
+			}
+			if(newvalue.booleanValue())
+				source.start();
+			else
+				source.stop();
+		});
 
-        image.setOnMouseClicked(event -> {
+		image.setOnMouseClicked(event -> {
 
-        });
+		});
 
 
 	}
 
 
-	public void setup(IMAVController control, String url_string) {
+	public void setup(IMAVController control) {
 
+	}
+
+
+	private boolean connect() {
+		Preferences userPrefs = MAVPreferences.getInstance();
+		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url);
@@ -97,8 +108,10 @@ public class CameraWidget extends FadePane  {
 				image.setImage(im);
 			});
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			System.out.println("Camera "+e.getMessage());
+			return false;
 		}
+		return true;
 	}
 
 
