@@ -85,13 +85,28 @@ public class CameraWidget extends FadePane  {
 				source.stop();
 		});
 
+		resize(false,400,300);
+
 		image.setOnMouseClicked(event -> {
+			if(!big_size)
+				big_size=true;
+			else
+				big_size=false;
+			resize(big_size,400,300);
 
 		});
-
-
 	}
 
+	private void resize(boolean big, int maxX, int maxY) {
+		if(big) {
+			image.setLayoutX(0); image.setFitWidth(maxX);
+			image.setLayoutY(0); image.setFitHeight(maxY);
+		} else
+		{
+			image.setLayoutX(maxX/2); image.setFitWidth(maxX/2);
+			image.setLayoutY(maxY/2); image.setFitHeight(maxY/2);
+		}
+	}
 
 	public void setup(IMAVController control) {
 
@@ -113,7 +128,4 @@ public class CameraWidget extends FadePane  {
 		}
 		return true;
 	}
-
-
-
 }

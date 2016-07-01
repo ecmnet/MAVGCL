@@ -110,10 +110,10 @@
 
 				<CameraWidget fx:id="camera"
 				    StackPane.alignment="BOTTOM_RIGHT"
-				    maxWidth="320"  visible="false" maxHeight="240"
+				    maxWidth="400"  visible="false" maxHeight="300"
 					>
 					<StackPane.margin>
-						<Insets left="0.0" bottom="32.0"  right="10.0"/>
+						<Insets left="0.0" bottom="32.0"  right="20.0"/>
 					</StackPane.margin>
 				</CameraWidget>
 

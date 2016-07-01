@@ -3,9 +3,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="300.0" prefWidth="800.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0" layoutX="83.0" layoutY="67.0"
+      <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0"
            pickOnBounds="true" preserveRatio="true" styleClass="glass" />
    </children>
 </fx:root>
