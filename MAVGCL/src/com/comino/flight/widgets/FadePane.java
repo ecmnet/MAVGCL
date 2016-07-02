@@ -44,8 +44,8 @@ import javafx.util.Duration;
 
 public class FadePane extends Pane {
 
-	private FadeTransition in = null;
-	private FadeTransition out = null;
+	protected FadeTransition in = null;
+	protected FadeTransition out = null;
 
 	private BooleanProperty fade = new SimpleBooleanProperty();
 

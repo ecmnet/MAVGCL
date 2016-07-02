@@ -2314,11 +2314,6 @@ but also ignore less noise</short_desc>
     </parameter>
   </group>
   <group name="Local Position Estimator">
-    <parameter default="1" name="LPE_INTEGRATE" type="INT32">
-      <short_desc>Accelerometer integration for prediction</short_desc>
-      <boolean />
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
     <parameter default="0.0" name="LPE_FLW_OFF_Z" type="FLOAT">
       <short_desc>Optical flow z offset from center</short_desc>
       <min>-1</min>
@@ -2374,21 +2369,21 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0454" name="LPE_ACC_XY" type="FLOAT">
-      <short_desc>Accelerometer xy standard deviation</short_desc>
-      <long_desc>Data sheet sqrt(Noise power) = 150ug/sqrt(Hz) std dev = (150*9.8*1e-6)*sqrt(1000 Hz) m/s^2 Since accels sampled at 1000 Hz. should be 0.0464</long_desc>
+    <parameter default="0.0015" name="LPE_ACC_XY" type="FLOAT">
+      <short_desc>Accelerometer xy noise density</short_desc>
+      <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz) Larger than data sheet to account for tilt error.</long_desc>
       <min>0.00001</min>
       <max>2</max>
-      <unit>m/s^2</unit>
+      <unit>m/s^2/srqt(Hz)</unit>
       <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0454" name="LPE_ACC_Z" type="FLOAT">
-      <short_desc>Accelerometer z standard deviation</short_desc>
-      <long_desc>(see Accel x comments)</long_desc>
+    <parameter default="0.0015" name="LPE_ACC_Z" type="FLOAT">
+      <short_desc>Accelerometer z noise density</short_desc>
+      <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz)</long_desc>
       <min>0.00001</min>
       <max>2</max>
-      <unit>m/s^2</unit>
+      <unit>m/s^2/srqt(Hz)</unit>
       <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
@@ -2405,7 +2400,7 @@ but also ignore less noise</short_desc>
       <boolean />
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.25" name="LPE_GPS_DELAY" type="FLOAT">
+    <parameter default="0.29" name="LPE_GPS_DELAY" type="FLOAT">
       <short_desc>GPS delay compensaton</short_desc>
       <min>0</min>
       <max>0.4</max>
@@ -2413,16 +2408,16 @@ but also ignore less noise</short_desc>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="2.0" name="LPE_GPS_XY" type="FLOAT">
-      <short_desc>GPS xy standard deviation</short_desc>
+    <parameter default="1.0" name="LPE_GPS_XY" type="FLOAT">
+      <short_desc>Minimum GPS xy standard deviation, uses reported EPH if greater</short_desc>
       <min>0.01</min>
       <max>5</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="100.0" name="LPE_GPS_Z" type="FLOAT">
-      <short_desc>GPS z standard deviation</short_desc>
+    <parameter default="3.0" name="LPE_GPS_Z" type="FLOAT">
+      <short_desc>Minimum GPS z standard deviation, uses reported EPV if greater</short_desc>
       <min>0.01</min>
       <max>200</max>
       <unit>m</unit>
@@ -2430,7 +2425,8 @@ but also ignore less noise</short_desc>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="0.25" name="LPE_GPS_VXY" type="FLOAT">
-      <short_desc>GPS xy velocity standard deviation</short_desc>
+      <short_desc>GPS xy velocity standard deviation.
+EPV used if greater than this value</short_desc>
       <min>0.01</min>
       <max>2</max>
       <unit>m/s</unit>
@@ -2446,7 +2442,7 @@ but also ignore less noise</short_desc>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="3.0" name="LPE_EPH_MAX" type="FLOAT">
-      <short_desc>GPS max eph</short_desc>
+      <short_desc>Max EPH allowed for GPS initialization</short_desc>
       <min>1.0</min>
       <max>5.0</max>
       <unit>m</unit>
@@ -2454,7 +2450,7 @@ but also ignore less noise</short_desc>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="5.0" name="LPE_EPV_MAX" type="FLOAT">
-      <short_desc>GPS max epv</short_desc>
+      <short_desc>Max EPV allowed for GPS initialization</short_desc>
       <min>1.0</min>
       <max>5.0</max>
       <unit>m</unit>
@@ -2490,16 +2486,18 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0" name="LPE_PN_P" type="FLOAT">
+    <parameter default="0.1" name="LPE_PN_P" type="FLOAT">
       <short_desc>Position propagation noise density</short_desc>
+      <long_desc>Increase to trust measurements more. Decrease to trust model more.</long_desc>
       <min>0</min>
       <max>1</max>
       <unit>m/s/sqrt(Hz)</unit>
       <decimal>8</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0" name="LPE_PN_V" type="FLOAT">
+    <parameter default="0.1" name="LPE_PN_V" type="FLOAT">
       <short_desc>Velocity propagation noise density</short_desc>
+      <long_desc>Increase to trust measurements more. Decrease to trust model more.</long_desc>
       <min>0</min>
       <max>1</max>
       <unit>(m/s)/s/sqrt(Hz)</unit>
@@ -2544,6 +2542,30 @@ but also ignore less noise</short_desc>
       <max>180</max>
       <unit>deg</unit>
       <decimal>8</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="5.0" name="LPE_X_LP" type="FLOAT">
+      <short_desc>Cut frequency for state publication</short_desc>
+      <min>5</min>
+      <max>1000</max>
+      <unit>Hz</unit>
+      <decimal>0</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="1.0" name="LPE_XY_PUB" type="FLOAT">
+      <short_desc>Required xy standard deviation to publish position</short_desc>
+      <min>0.3</min>
+      <max>5.0</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="1.0" name="LPE_Z_PUB" type="FLOAT">
+      <short_desc>Required z standard deviation to publish altitude/ terrain</short_desc>
+      <min>0.3</min>
+      <max>5.0</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
   </group>
