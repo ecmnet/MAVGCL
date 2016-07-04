@@ -65,8 +65,9 @@
 			</fileset>
 		</copy>
 		<copy todir="bin">
-			<fileset dir="native">
-				<include name="*.*" />
+			<fileset dir="lib">
+				<include name="*.so" />
+				<include name="*.jnilib" />
 			</fileset>
 		</copy>
 		<javac destdir="bin" includeantruntime="false">
@@ -91,17 +92,12 @@
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
-			<fileset dir="native">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-		<copy todir="dist">
 			<fileset dir="lib/">
 				<include name="gson-2.4.jar" />
 				<include name="JCSG-0.1.7.jar" />
 				<include name="jfxchartext-1.1.jar" />
 				<include name="jinput-2.0.5.jar" />
-				<include name="jinput-platform-2.0.5-natives-osx.jar" />
+				<include name="jinput-platform-*.jar" />
 				<include name="jna-4.1.0.jar" />
 				<include name="jssc-2.8.0.jar" />
 				<include name="jutils-1.0.0.jar" />

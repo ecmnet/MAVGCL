@@ -310,7 +310,7 @@ velocity</short_desc>
       <increment>0.01</increment>
       <scope>modules/systemlib</scope>
     </parameter>
-    <parameter default="3" name="BAT_N_CELLS" type="INT32">
+    <parameter default="0" name="BAT_N_CELLS" type="INT32">
       <short_desc>Number of cells</short_desc>
       <long_desc>Defines the number of cells the attached battery consists of.</long_desc>
       <unit>S</unit>
@@ -323,6 +323,7 @@ velocity</short_desc>
         <value code="15">15S Battery</value>
         <value code="14">14S Battery</value>
         <value code="16">16S Battery</value>
+        <value code="0">Unconfigured</value>
         <value code="3">3S Battery</value>
         <value code="2">2S Battery</value>
         <value code="5">5S Battery</value>
