@@ -367,9 +367,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x_pt = 0;
+				current_x0_pt = control.getCollector().calculateX0Index(1);
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 				scroll.setValue(0);
-				refreshChart();
+
 			}
 		});
 
@@ -414,11 +417,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	private void updateGraph(boolean refresh) {
-		float dt_sec = 0; DataModel m =null; int remove_count=0;
+		float dt_sec = 0; DataModel m =null; int remove_count=0; boolean set_bounds = false;
 
 		series1_list.clear();
 		series2_list.clear();
 		series3_list.clear();
+
 
 		if(refresh) {
 			series1.getData().clear();
@@ -431,11 +435,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
-		if(current_x_pt > current_x1_pt) {
-			current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
-			current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
-			setXAxisBounds(current_x0_pt,current_x1_pt);
-		}
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
@@ -444,6 +443,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				max_x = current_x1_pt;
 
 			while(current_x_pt<max_x ) {
+
+				if(current_x_pt > current_x1_pt) {
+					set_bounds = true;
+					current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+					current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+				}
 
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
@@ -477,6 +482,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				if(series3.getData().size()>remove_count)
 					series3.getData().remove(0, remove_count);
 			}
+
+			if(set_bounds)
+			   setXAxisBounds(current_x0_pt,current_x1_pt);
 
 			series1.getData().addAll(series1_list);
 			series2.getData().addAll(series2_list);
