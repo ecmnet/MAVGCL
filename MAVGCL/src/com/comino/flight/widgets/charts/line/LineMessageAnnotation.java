@@ -58,6 +58,12 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		switch(message.severity) {
 		case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
 			this.triangle.setFill(Color.CADETBLUE); break;
+		case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
+			this.triangle.setFill(Color.BISQUE); break;
+		case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
+			this.triangle.setFill(Color.CORAL); break;
+		case MAV_SEVERITY.MAV_SEVERITY_ERROR:
+			this.triangle.setFill(Color.DARKRED); break;
 		case MAV_SEVERITY.MAV_SEVERITY_INFO:
 			this.triangle.setFill(Color.GREEN); break;
 		case MAV_SEVERITY.MAV_SEVERITY_WARNING:

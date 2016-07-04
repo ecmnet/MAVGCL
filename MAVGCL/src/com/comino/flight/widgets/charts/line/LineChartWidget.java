@@ -174,7 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
-	private IntegerProperty timeFrame    = new SimpleIntegerProperty(20);
+	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty  scroll        = new SimpleFloatProperty(0);
 
 
@@ -184,6 +184,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+
+	private int last_msg_pt = 0;
 
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
@@ -390,12 +392,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
 
-		if(frame > 200)
-			resolution_ms = 1000;
-		else if(frame > 100)
+		if(frame > 600)
+			resolution_ms = 2000;
+		else if(frame > 200)
 			resolution_ms = 500;
 		else if(frame > 50)
-			resolution_ms = 200;
+			resolution_ms = 250;
 		else if(frame > 20)
 			resolution_ms = 100;
 		else

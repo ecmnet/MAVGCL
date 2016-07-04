@@ -78,7 +78,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private static final String[]  TRIG_STOP_OPTIONS = { "unarmed", "landed", "altHold left", "posHold left" };
 
 	private static final Integer[] TRIG_DELAY_OPTIONS = { 0, 2, 5, 10, 30 };
-	private static final Integer[] TOTAL_TIME = { 10, 20, 50, 100, 200, 500 };
+	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 240, 1200 };
 
 	@FXML
 	private ToggleButton recording;
