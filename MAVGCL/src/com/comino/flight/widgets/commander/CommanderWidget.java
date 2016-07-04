@@ -173,7 +173,8 @@ public class CommanderWidget extends Pane  {
 
 		emergency.setOnAction((ActionEvent event)-> {
 			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-				MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
+				MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+						MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
 		});
 	}
 
