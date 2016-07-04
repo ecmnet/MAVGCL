@@ -369,7 +369,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				scroll.setValue(0);
 				refreshChart();
-
 			}
 		});
 
