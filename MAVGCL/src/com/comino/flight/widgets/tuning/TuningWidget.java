@@ -35,13 +35,7 @@ package com.comino.flight.widgets.tuning;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -53,7 +47,6 @@ import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSTYPE;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Platform;

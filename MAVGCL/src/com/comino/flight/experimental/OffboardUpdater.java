@@ -37,7 +37,6 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_FRAME;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
-import org.mavlink.messages.lquac.msg_vision_position_estimate;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;

@@ -47,7 +47,6 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.application.Platform;
@@ -65,7 +64,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
-import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;

@@ -39,14 +39,7 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
-import org.mavlink.messages.lquac.msg_msp_command;
-import org.mavlink.messages.lquac.msg_rc_channels_override;
-import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
-import org.mavlink.messages.lquac.msg_vision_position_estimate;
-import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
-import com.comino.flight.experimental.OffboardUpdater;
-import com.comino.flight.experimental.VisionPositionSimulationUpdater;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;

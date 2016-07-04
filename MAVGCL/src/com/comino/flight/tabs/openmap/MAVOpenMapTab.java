@@ -35,7 +35,6 @@ package com.comino.flight.tabs.openmap;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -80,7 +79,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;

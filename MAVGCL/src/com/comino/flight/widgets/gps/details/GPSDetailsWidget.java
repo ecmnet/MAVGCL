@@ -44,11 +44,8 @@ import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
-import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -39,9 +39,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
@@ -103,7 +101,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		try {
 			out.close();
-		} catch (IOException e) { e.printStackTrace();  }
+		} catch (IOException e) { return;  }
 
 		control.getCollector().clearModelList();
 		isCollecting.set(false);
