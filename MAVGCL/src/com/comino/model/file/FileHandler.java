@@ -43,7 +43,9 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.prefs.Preferences;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.px4log.PX4toModelConverter;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -68,6 +70,7 @@ public class FileHandler {
 	private Stage stage;
 	private IMAVController control;
 	private String name="";
+	private Preferences userPrefs;
 
 
 	public static FileHandler getInstance() {
@@ -85,6 +88,7 @@ public class FileHandler {
 		super();
 		this.stage = stage;
 		this.control = control;
+		this.userPrefs = MAVPreferences.getInstance();
 	}
 
 	public String getName() {
@@ -108,6 +112,7 @@ public class FileHandler {
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
+
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
@@ -131,6 +136,7 @@ public class FileHandler {
 	public void fileImportPX4Log() {
 		FileChooser fileChooser = getFileDialog("Import PX4Log...",
 				new ExtensionFilter("PX4Log Files", "*.px4log"));
+
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
@@ -195,7 +201,7 @@ public class FileHandler {
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(filter);
 		fileChooser.setInitialDirectory(
-				new File(System.getProperty("user.home")));
+				new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))));
 		return fileChooser;
 	}
 

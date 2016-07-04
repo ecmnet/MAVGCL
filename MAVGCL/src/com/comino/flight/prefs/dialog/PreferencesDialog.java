@@ -33,6 +33,7 @@
 
 package com.comino.flight.prefs.dialog;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -41,13 +42,18 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
 import javafx.util.Callback;
 
 public class PreferencesDialog  {
@@ -70,6 +76,12 @@ public class PreferencesDialog  {
 
 	@FXML
 	private TextField video;
+
+	@FXML
+	private ComboBox<?> path;
+
+	@FXML
+	private CheckBox autosave;
 
 	private IMAVController control;
 	private Preferences userPrefs;
@@ -94,37 +106,56 @@ public class PreferencesDialog  {
 
 		prefDialog.getDialogPane().setContent(dialog);
 
+		path.setEditable(true);
+		path.setOnShowing(event -> {
+			DirectoryChooser dir = new DirectoryChooser();
+			if(!path.getEditor().getText().isEmpty())
+				dir.setInitialDirectory(new File(path.getEditor().getText()));
+			File file = dir.showDialog(null);
+			Platform.runLater(() -> {
+				if(file!=null)
+					path.getEditor().setText(file.getAbsolutePath());
+				path.hide();
+			});
+		});
+
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 		prefDialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
 		ButtonType buttonTypeOk =     new ButtonType("Save", ButtonData.OK_DONE);
 		prefDialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
 
 		prefDialog.setResultConverter(new Callback<ButtonType, Boolean>() {
-		    @Override
-		    public Boolean call(ButtonType b) {
-		        if (b == buttonTypeOk)
-		            return true;
-		        return false;
-		    }
+			@Override
+			public Boolean call(ButtonType b) {
+				if (b == buttonTypeOk)
+					return true;
+				return false;
+			}
 		});
 	}
 
 	public void show() {
 
+		autosave.setDisable(true);
+
 		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, DEF_IP_ADDRESS));
 		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
+		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
+
 			userPrefs.put(MAVPreferences.PREFS_IP_ADDRESS, ip_address.getText());
 			userPrefs.put(MAVPreferences.PREFS_IP_PORT, ip_port.getText());
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
+			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
+
 			try {
 				userPrefs.flush();
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
-          MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
+			MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
 		}
 	}
 

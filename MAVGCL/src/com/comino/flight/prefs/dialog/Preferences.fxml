@@ -20,5 +20,15 @@
 			GridPane.rowIndex="2" GridPane.columnIndex="0" />
 		<TextField fx:id="video" prefHeight="19.0" prefWidth="380.0"
 			GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+		<Separator maxWidth="-Infinity" prefHeight="14.0"
+					prefWidth="590.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Path to store data:"
+			GridPane.rowIndex="4" GridPane.columnIndex="0" />
+		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"
+			GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+		<CheckBox fx:id="autosave" GridPane.rowIndex="5" GridPane.columnIndex="0"
+	        GridPane.columnSpan="3" text="Save automatically when recording stopped" />
+	    <Separator maxWidth="-Infinity" prefHeight="14.0"
+					prefWidth="590.0" GridPane.columnSpan="4" GridPane.rowIndex="6" />
 	</children>
 </GridPane>
