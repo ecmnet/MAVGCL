@@ -317,8 +317,27 @@
 .spinner {
     -fx-border-insets: 0.0px;
     -fx-control-inner-background: #606060;
-    -fx-background-color: cyan;
     -fx-border-width: 5px;
+}
+
+.spinner > .increment-arrow-button {
+	-fx-background-color: #909090;
+	-fx-padding: 2;
+	-fx-background-radius: 2.0;
+}
+
+.spinner > .decrement-arrow-button {
+	-fx-background-color: #909090;
+    -fx-padding: 2;
+    -fx-background-radius: 2.0;
+}
+
+.spinner > .increment-arrow-button > .increment-arrow {
+	-fx-background-color: white;
+}
+
+.spinner > .decrement-arrow-button > .decrement-arrow {
+	-fx-background-color: white;
 }
 
 
