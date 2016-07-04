@@ -74,7 +74,7 @@ public class CameraWidget extends FadePane  {
 
 	@FXML
 	private void initialize() {
-		image.setOpacity(0.90);
+
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(source==null && !connect()) {
 				return;
