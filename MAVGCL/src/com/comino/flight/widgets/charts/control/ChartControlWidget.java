@@ -309,6 +309,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		enablemodetrig.selectedProperty().set(true);
 
+
 	}
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
@@ -321,6 +322,13 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		StateProperties.getInstance().getRecordingProperty().bind(recording.selectedProperty());
 
 		ExecutorService.get().execute(task);
+
+		for(IChartControl chart : charts) {
+			if(chart.getTimeFrameProperty()!=null)
+				chart.getTimeFrameProperty().set(30);
+			if(chart.getScrollProperty()!=null)
+				chart.getScrollProperty().set(1);
+		}
 
 	}
 
