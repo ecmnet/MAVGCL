@@ -367,11 +367,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x0_pt = control.getCollector().calculateX0Index(1);
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
 				scroll.setValue(0);
+				refreshChart();
 
 			}
 		});
