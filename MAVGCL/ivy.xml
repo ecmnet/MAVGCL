@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+  <info organisation="org.apache" module="mavgcl-ivy"/>
+  <configurations>
+    <conf name="default"/>
+    <conf name="build" extends="default" visibility="private"/>
+  </configurations>
+  <dependencies>
+    <dependency org="com.google.code.gson" name="gson" rev="2.4"/>
+    <dependency org="com.neuronrobotics" name="JCSG" rev="0.1.7"/>
+    <dependency org="eu.hansolo" name="Medusa" rev="4.7"/>
+    <dependency org="net.java.dev.jna" name="jna" rev="4.1.0"/>
+    <dependency org="net.java.jinput" name="jinput" rev="2.0.5"/>
+    <dependency org="net.java.jinput" name="jinput-platform" rev="2.0.5" conf="default">
+      <artifact name="jinput-platform" e:classifier="natives-linux"/>
+      <artifact name="jinput-platform" e:classifier="natives-osx"/>
+      <artifact name="jinput-platform" e:classifier="natives-windows"/>
+    </dependency>
+    <dependency org="org.apache.lucene" name="lucene-core" rev="4.7.0"/>
+    <dependency org="org.scream3r" name="jssc" rev="2.8.0"/>
+  </dependencies>
+</ivy-module>

@@ -2,3 +2,7 @@
 *~
 MAVGCL/bin
 MAVGCL/dist
+
+MAVGCL/lib/*
+!MAVGCL/lib/jfxchartext-1.1.jar
+!MAVGCL/lib/mavcomm.jar

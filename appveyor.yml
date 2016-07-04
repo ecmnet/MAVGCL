@@ -13,7 +13,7 @@ install:
 build_script:
   - cmd: SET PATH=C:\Program Files (x86)\WiX Toolset v3.10\bin;C:\Program Files (x86)\Inno Setup 5;%PATH%
   - cd MAVGCL
-  - ant deploy_windows
+  - ant deploy
 
 artifacts:
   - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.msi
