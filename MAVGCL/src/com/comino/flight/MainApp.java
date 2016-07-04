@@ -126,8 +126,10 @@ public class MainApp extends Application {
 		}
 		else
 		if(args.size()>0) {
-			if(args.get("SITL")!=null)
+			if(args.get("SITL")!=null) {
 			   control = new MAVUdpController("127.0.0.1",14556,14550, true);
+			   new SITLController(control);
+			}
 			else if(args.get("SIM")!=null)
 			        control = new MAVSimController();
 		}
