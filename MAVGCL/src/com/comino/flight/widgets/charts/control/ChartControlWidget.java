@@ -216,6 +216,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			recording(newvalue, 0);
 			if(!newvalue.booleanValue())
 					scroll.setValue(1);
+			enablemodetrig.selectedProperty().set(false);
 		});
 
 		clear.setOnAction((ActionEvent event)-> {
