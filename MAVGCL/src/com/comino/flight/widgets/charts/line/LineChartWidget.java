@@ -438,13 +438,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			while(current_x_pt<max_x ) {
 
-				if(current_x_pt > current_x1_pt) {
-					set_bounds = true;
-					current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
-					current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
-				}
-
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
+
 
 				m = mList.get(current_x_pt);
 
@@ -465,6 +460,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type3)));
 
 				}
+
+				if(current_x_pt > current_x1_pt) {
+					set_bounds = true;
+					current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+					current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+				}
+
 				current_x_pt++;
 			}
 
