@@ -4,7 +4,6 @@
   <configurations>
     <conf name="default"/>
     <conf name="build" extends="default" visibility="private"/>
-    <conf name="test" extends="build" visibility="private"/>
   </configurations>
   <dependencies>
     <dependency org="com.google.code.gson" name="gson" rev="2.4"/>
