@@ -2715,7 +2715,7 @@ EPV used if greater than this value</short_desc>
     </parameter>
     <parameter default="10.0" name="NAV_ACC_RAD" type="FLOAT">
       <short_desc>Acceptance Radius</short_desc>
-      <long_desc>Default acceptance radius, overridden by acceptance radius of waypoint if set.</long_desc>
+      <long_desc>Default acceptance radius, overridden by acceptance radius of waypoint if set. For fixed wing NAV_ACC_RAD is the vertical acceptance, as the L1 turning distance is used for horizontal acceptance.</long_desc>
       <min>0.05</min>
       <max>200.0</max>
       <unit>m</unit>
