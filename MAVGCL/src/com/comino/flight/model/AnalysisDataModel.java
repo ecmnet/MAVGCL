@@ -5,11 +5,13 @@ import java.util.Map;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.LogMessage;
+import com.comino.msp.model.segment.Status;
 
 public class AnalysisDataModel {
 
-	public long       tms = 0;
-	public LogMessage msg = null;
+	public long       tms  = 0;
+	public LogMessage msg  = null;
+	public Status   status = null;
 
 	private Map<Integer,Float> data = null;
 
@@ -26,8 +28,17 @@ public class AnalysisDataModel {
 		AnalysisDataModel d = new AnalysisDataModel(data);
 		d.tms = tms;
 		d.msg = msg;
+		d.status = status;
 		return d;
 	}
+
+	public void clear()  {
+		data.clear();
+		tms = 0;
+		msg = null;
+		status = null;
+	}
+
 
 	public float getValue(String kf) {
 		return data.get(kf.toLowerCase().hashCode());
