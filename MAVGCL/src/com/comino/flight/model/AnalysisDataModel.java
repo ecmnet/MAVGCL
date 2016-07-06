@@ -23,7 +23,10 @@ public class AnalysisDataModel {
 	}
 
 	public AnalysisDataModel clone() {
-		return new AnalysisDataModel(data);
+		AnalysisDataModel d = new AnalysisDataModel(data);
+		d.tms = tms;
+		d.msg = msg;
+		return d;
 	}
 
 	public float getValue(String kf) {

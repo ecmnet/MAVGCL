@@ -268,7 +268,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					chart.getScrollProperty().set(1);
 			}
 
-			if(collector.getModelList().size() < totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms() || collector.isCollecting())
+			if(collector.getModelList().size() < totalTime_sec * 1000 /  collector.getCollectorInterval_ms() || collector.isCollecting())
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
@@ -346,7 +346,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			chart.refreshChart();
 		}
 
-		if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms())
+		if(collector.getModelList().size() > totalTime_sec * 1000 /  collector.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
 
@@ -391,7 +391,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 		else {
 			collector.stop(delay);
-			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms()) {
+			if(collector.getModelList().size() > totalTime_sec * 1000 / collector.getCollectorInterval_ms()) {
 				scroll.setDisable(false);
 			}
 		}

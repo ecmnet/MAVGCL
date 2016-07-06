@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.collector.AnalysisCollectorService;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
@@ -87,6 +89,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
+	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+
 	private static boolean showProgress = false;
 
 
@@ -103,7 +107,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 		task = new Task<Long>() {
 
-			List<DataModel> list = null;
+			List<AnalysisDataModel> list = null;
 
 			@Override
 			protected Long call() throws Exception {
@@ -125,11 +129,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						else
 							driver.setText(control.getCurrentModel().sys.getSensorString());
 
-						list = control.getCollector().getModelList();
+						list = collector.getModelList();
 
 						if(list.size()>0) {
-							int current_x0_pt = control.getCollector().calculateX0Index(scroll.floatValue());
-							int current_x1_pt = control.getCollector().calculateX1Index(scroll.floatValue());
+							int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
+							int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
 							elapsedtime.setText("TimeFrame: [ "+fo.format(list.get(current_x0_pt).tms/1000));
 							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000)+" ] sec");
 						} else {

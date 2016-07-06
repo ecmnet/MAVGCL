@@ -120,13 +120,13 @@ public class FileHandler {
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
-				Type listType = new TypeToken<ArrayList<DataModel>>() {}.getType();
+				Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 				Reader reader = new FileReader(file);
 				Gson gson = new GsonBuilder().create();
 				stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
-				ArrayList<DataModel>modelList = gson.fromJson(reader,listType);
+				ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
 				reader.close();
-				control.getCollector().setModelList(modelList);
+				collector.setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 

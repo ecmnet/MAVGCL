@@ -137,7 +137,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+	private AnalysisCollectorService  collector = AnalysisCollectorService.getInstance();
 
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
@@ -291,7 +291,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());;
+			current_x0_pt =  collector.calculateX0Index(nv.floatValue());;
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {

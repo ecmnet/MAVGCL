@@ -1,13 +1,35 @@
-<AnalysisDataModel version="1.0">
+<AnalysisDataModel version="0.1">
 
     <!-- Altitudes -->
 
-	<KeyFigure desc="Alt.Gnd.Level" uom="m" mask="#0.0" key="ALTGL">
+	<KeyFigure desc="Alt.SL" uom="m" mask="#0.0" key="ALTSL">
 		<MSPSource class="hud" field="ag"></MSPSource>
 		<PX4Source field="GPOS.Alt"></PX4Source>
 		<Groups>
+		    <Group>Frequently used</Group>
 			<Group>Altitude</Group>
 			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.GL" uom="m" mask="#0.0" key="ALTGL">
+		<MSPSource class="hud" field="al"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
+		<MSPSource class="hud" field="at"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
+		</Groups>
+	</KeyFigure>
+
+		<KeyFigure desc="Bottom Clearance" uom="m" mask="#0.0" key="BOTCL">
+		<MSPSource class="hud" field="bc"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -17,6 +39,7 @@
 		<MSPSource class="state" field="l_x"></MSPSource>
 		<PX4Source field="LPOS.X"></PX4Source>
 		<Groups>
+		    <Group>Frequently used</Group>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
@@ -24,6 +47,7 @@
 		<MSPSource class="state" field="l_y"></MSPSource>
 		<PX4Source field="LPOS.Y"></PX4Source>
 		<Groups>
+		    <Group>Frequently used</Group>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
@@ -134,6 +158,179 @@
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Local Position Setpoint</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Attitude  -->
+
+	<KeyFigure desc="Roll" uom="deg" mask="#0.00" key="ROLL">
+		<MSPSource class="attitude" field="r"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Pitch" uom="deg" mask="#0.00" key="PITCH">
+		<MSPSource class="attitude" field="p"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Yaw" uom="deg" mask="#0.00" key="YAW">
+		<MSPSource class="attitude" field="y"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Attitude rates -->
+
+	<KeyFigure desc="RollRate" uom="deg/s" mask="#0.00" key="ROLLR">
+		<MSPSource class="attitude" field="rr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="PitchRate" uom="deg/s" mask="#0.00" key="PITCHR">
+		<MSPSource class="attitude" field="pr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="YawRate" uom="deg/s" mask="#0.00" key="YAWR">
+		<MSPSource class="attitude" field="yr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+		<!-- Attitude  setpoint -->
+
+	<KeyFigure desc="Sp.Roll" uom="deg" mask="#0.00" key="SPROLL">
+		<MSPSource class="attitude" field="sr"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Sp.Pitch" uom="deg" mask="#0.00" key="SPPITCH">
+		<MSPSource class="attitude" field="sp"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.Yaw" uom="deg" mask="#0.00" key="SPYAW">
+		<MSPSource class="attitude" field="sy"></MSPSource>
+		<Groups>
+		    <Group>Frequently used</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Attitude rates setpoint -->
+
+	<KeyFigure desc="Sp.RollRate" uom="deg/s" mask="#0.00" key="SPROLLR">
+		<MSPSource class="attitude" field="srr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Sp.PitchRate" uom="deg/s" mask="#0.00" key="SPPITCHR">
+		<MSPSource class="attitude" field="spr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.YawRate" uom="deg/s" mask="#0.00" key="SPYAWR">
+		<MSPSource class="attitude" field="syr"></MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Raw data -->
+
+	<KeyFigure desc="Flow X" uom="deg/s" mask="#0.00" key="FLOWX">
+		<MSPSource class="raw" field="fX"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Flow Y" uom="deg/s" mask="#0.00" key="FLOWY">
+		<MSPSource class="raw" field="fY"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="FLow Dist." uom="m" mask="#0.00" key="FLOWDI">
+		<MSPSource class="raw" field="fd"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
+		<MSPSource class="raw" field="di"></MSPSource>
+		<PX4Source field="DIST.Distance"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Acc.X" uom="m/s^2" mask="#0.00" key="ACCX">
+		<MSPSource class="imu" field="accx"></MSPSource>
+		<PX4Source field="IMU.AccX"></PX4Source>
+		<Groups>
+		    <Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCYY">
+		<MSPSource class="imu" field="accy"></MSPSource>
+		<PX4Source field="IMU.AccY"></PX4Source>
+		<Groups>
+		    <Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="Acc.Z" uom="m/s^2" mask="#0.00" key="ACCZ">
+		<MSPSource class="imu" field="accz"></MSPSource>
+		<PX4Source field="IMU.AccZ"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Gyro.X" uom="rad/s" mask="#0.00" key="GYROX">
+		<MSPSource class="imu" field="gyrox"></MSPSource>
+		<PX4Source field="IMU.GyroX"></PX4Source>
+		<Groups>
+		    <Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="Gyro.Y" uom="rad/s" mask="#0.00" key="GYROY">
+		<MSPSource class="imu" field="gyroy"></MSPSource>
+		<PX4Source field="IMU.GyroY"></PX4Source>
+		<Groups>
+		    <Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="Gyro.Z" uom="rad/s" mask="#0.00" key="GYROZ">
+		<MSPSource class="imu" field="gyroz"></MSPSource>
+		<PX4Source field="IMU.GyroZ"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
 		</Groups>
 	</KeyFigure>
 

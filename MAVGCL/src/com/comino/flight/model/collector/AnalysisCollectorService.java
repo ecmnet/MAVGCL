@@ -53,8 +53,6 @@ public class AnalysisCollectorService {
 	public static  final int COLLECTING     	= 2;
 	public static  final int POST_COLLECTING    = 3;
 
-
-	private static final int MAX_SIZE = 120000;
 	private static final int MODELCOLLECTOR_INTERVAL_US = 50000;
 
 	private DataModel								model      = null;
@@ -78,7 +76,6 @@ public class AnalysisCollectorService {
 
 	private AnalysisCollectorService(DataModel model) {
 		this.modelList     = new ArrayList<AnalysisDataModel>();
-		this.current       = new AnalysisDataModel();
 		this.model         = model;
 
 	}
@@ -94,8 +91,6 @@ public class AnalysisCollectorService {
 	}
 
 	public boolean start() {
-
-		current.tms = 0;
 
 		if(mode==PRE_COLLECTING) {
 			mode = COLLECTING;
@@ -145,7 +140,6 @@ public class AnalysisCollectorService {
 
 	public void clearModelList() {
 		mode = STOPPED;
-		current.tms = 0;
 		modelList.clear();
 	}
 
@@ -225,17 +219,18 @@ public class AnalysisCollectorService {
 			long tms = System.nanoTime() / 1000;
 			while(mode!=STOPPED) {
 				synchronized(this) {
-					current.tms = System.nanoTime() / 1000 - tms;
-					current.msg = model.msg;
-					current.setValues(model, AnalysisDataModelMetaData.getInstance());
-					modelList.add(current.clone());
-					current.msg = null;
-					if(modelList.size()>MAX_SIZE)
-						modelList.remove(0);
+				    current = new AnalysisDataModel();
 
+				    current.tms = System.nanoTime() / 1000 - tms;
+					current.msg = model.msg.clone();
+					model.msg.clear();
+
+					current.setValues(model, AnalysisDataModelMetaData.getInstance());
+					modelList.add(current);
 					count++;
 				}
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
+
 				if(mode==PRE_COLLECTING) {
 					int _delcount = count - pre_delay_count;
 					if(_delcount > 0) {

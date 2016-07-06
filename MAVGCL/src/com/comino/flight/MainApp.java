@@ -257,7 +257,7 @@ public class MainApp extends Application {
 		});
 
 		m_export.setOnAction(event -> {
-			if(control.getCollector().getModelList().size()>0)
+			if(AnalysisCollectorService.getInstance().getModelList().size()>0)
 				FileHandler.getInstance().fileExport();
 		});
 

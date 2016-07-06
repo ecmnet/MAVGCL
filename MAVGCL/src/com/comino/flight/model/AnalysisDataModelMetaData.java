@@ -39,7 +39,7 @@ public class AnalysisDataModelMetaData {
 			if (doc.hasChildNodes()) {
 				String version = doc.getElementsByTagName("AnalysisDataModel")
 						.item(0).getAttributes().getNamedItem("version").getTextContent();
-				System.out.println("KeyFigureMetaData Version "+version);
+				System.out.print("KeyFigureMetaData Version "+version+" ");
 
 				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
 			}
@@ -89,7 +89,7 @@ public class AnalysisDataModelMetaData {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println(count+" Keyfigures registered");
+		System.out.println("with "+count+" keyfigures registered");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {
