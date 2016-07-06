@@ -1,6 +1,7 @@
 package com.comino.flight.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,11 +49,11 @@ public class AnalysisDataModelMetaData {
 		}
 	}
 
-	public Map<Integer,KeyFigureMetaData> getKeyFigures() {
+	public Map<Integer,KeyFigureMetaData> getKeyFigureMap() {
 		return meta;
 	}
 
-	public Map<String,List<KeyFigureMetaData>> getGroups() {
+	public Map<String,List<KeyFigureMetaData>> getGroupMap() {
 		return groups;
 	}
 
@@ -65,12 +66,30 @@ public class AnalysisDataModelMetaData {
 		return meta.get(kf.toLowerCase().hashCode());
 	}
 
+	public List<KeyFigureMetaData> getKeyFigures() {
+		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
+		meta.forEach((i,p) -> {
+			list.add(p);
+		});
+		list.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
+		return list;
+	}
+
+	public List<String> getGroups() {
+		List<String> list = new ArrayList<String>();
+		groups.forEach((i,p) -> {
+			list.add(i);
+		});
+		Collections.sort(list);
+		return list;
+	}
+
 	private void buildKeyFigureList(NodeList keyfigures) {
 		for (count = 0; count < keyfigures.getLength(); count++) {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println(count+" Keyfigures loaded");
+		System.out.println(count+" Keyfigures registered");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {

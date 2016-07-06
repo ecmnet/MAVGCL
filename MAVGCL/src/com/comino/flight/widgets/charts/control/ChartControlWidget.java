@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.model.collector.AnalysisCollectorService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -121,7 +122,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
-	private ModelCollectorService collector;
+	private AnalysisCollectorService collector;
 
 	private long scroll_tms = 0;
 
@@ -152,9 +153,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 						break;
 					}
 
-					updateValue(control.getCollector().getMode());
+					updateValue(collector.getMode());
 				}
-				return control.getCollector().getMode();
+				return collector.getMode();
 			}
 		};
 
@@ -314,7 +315,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
-		this.collector = control.getCollector();
+		this.collector =  AnalysisCollectorService.getInstance(control.getCurrentModel());
 		this.control.addModeChangeListener(this);
 		this.collector.setTotalTimeSec(totalTime_sec);
 		this.collector.clearModelList();
@@ -385,11 +386,11 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private void recording(boolean start, int delay) {
 
 		if(start) {
-			control.getCollector().start();
+			collector.start();
 			scroll.setDisable(true);
 		}
 		else {
-			control.getCollector().stop(delay);
+			collector.stop(delay);
 			if(collector.getModelList().size() > totalTime_sec * 1000 / control.getCollector().getCollectorInterval_ms()) {
 				scroll.setDisable(false);
 			}

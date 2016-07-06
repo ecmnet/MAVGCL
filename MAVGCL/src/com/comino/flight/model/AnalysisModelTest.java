@@ -29,12 +29,12 @@ public class AnalysisModelTest {
 		 System.out.println(model2.getValue("LPOSZ"));
 		 System.out.println(model2.getValue("SPLPOSZ"));
 
-		 md.getKeyFigures().forEach((i,e) -> {
+		 md.getKeyFigureMap().forEach((i,e) -> {
 			System.out.println( e.desc2 );
 		 });
 
 
-		 md.getGroups().forEach((g,p) -> {
+		 md.getGroupMap().forEach((g,p) -> {
 			 System.out.println(g);
 			 p.forEach(k -> {
 				 System.out.println("---> "+k.desc1);

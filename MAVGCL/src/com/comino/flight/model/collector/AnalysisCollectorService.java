@@ -40,6 +40,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
 public class AnalysisCollectorService {
@@ -55,6 +57,7 @@ public class AnalysisCollectorService {
 	private static final int MAX_SIZE = 120000;
 	private static final int MODELCOLLECTOR_INTERVAL_US = 50000;
 
+	private DataModel								model      = null;
 	private AnalysisDataModel				    	current     = null;
 	private ArrayList<AnalysisDataModel> 		    modelList   = null;
 
@@ -62,9 +65,9 @@ public class AnalysisCollectorService {
 
 	private  int  totalTime_sec = 30;
 
-	public static AnalysisCollectorService getInstance(AnalysisDataModel current) {
+	public static AnalysisCollectorService getInstance(DataModel model) {
 		if(instance==null)
-		  instance = new AnalysisCollectorService(current);
+		  instance = new AnalysisCollectorService(model);
 		return instance;
 	}
 
@@ -73,9 +76,10 @@ public class AnalysisCollectorService {
 	}
 
 
-	private AnalysisCollectorService(AnalysisDataModel current) {
+	private AnalysisCollectorService(DataModel model) {
 		this.modelList     = new ArrayList<AnalysisDataModel>();
-		this.current = current;
+		this.current       = new AnalysisDataModel();
+		this.model         = model;
 
 	}
 
@@ -222,7 +226,10 @@ public class AnalysisCollectorService {
 			while(mode!=STOPPED) {
 				synchronized(this) {
 					current.tms = System.nanoTime() / 1000 - tms;
+					current.msg = model.msg;
+					current.setValues(model, AnalysisDataModelMetaData.getInstance());
 					modelList.add(current.clone());
+					current.msg = null;
 					if(modelList.size()>MAX_SIZE)
 						modelList.remove(0);
 

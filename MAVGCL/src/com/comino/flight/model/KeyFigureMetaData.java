@@ -19,6 +19,12 @@ public class KeyFigureMetaData {
 	private String px4field;
 
 
+	public KeyFigureMetaData(String desc) {
+		this.desc1  = desc;
+		this.hash   = 0;
+	}
+
+
 	public KeyFigureMetaData(String key, String desc, String uom, String mask) {
 		this.desc1  = desc;
 		this.uom    = uom;
@@ -48,9 +54,8 @@ public class KeyFigureMetaData {
 		return (float) data.get(px4field);
 	}
 
-
 	public String toString() {
-		return desc1+" ("+mspfield+","+px4field+")";
+		return desc1;
 	}
 
 
