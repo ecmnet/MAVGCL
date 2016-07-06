@@ -46,7 +46,7 @@ import java.util.Date;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.px4log.PX4toModelConverter;
 import com.comino.mav.control.IMAVController;
@@ -74,7 +74,7 @@ public class FileHandler {
 	private String name="";
 	private Preferences userPrefs;
 
-	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 
 	public static FileHandler getInstance() {

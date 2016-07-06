@@ -43,7 +43,7 @@ import javax.imageio.ImageIO;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.types.MSTYPE;
@@ -181,7 +181,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private float rotation_rad = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	public XYChartWidget() {
 
@@ -213,7 +213,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 
-					if(!isCollecting.get() && collector.isCollecting()) {
+					if(!isCollecting.get() && dataService.isCollecting()) {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
@@ -225,14 +225,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						});
 					}
 
-					isCollecting.set(collector.isCollecting());
+					isCollecting.set(dataService.isCollecting());
 
 					if(isCollecting.get() && control.isConnected())
 						Platform.runLater(() -> {
 							updateGraph(false);
 						});
 				}
-				return collector.getModelList().size();
+				return dataService.getModelList().size();
 			}
 		};
 
@@ -450,7 +450,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt =  collector.calculateX0Index(nv.floatValue());
+			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
@@ -509,7 +509,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
 
-		List<AnalysisDataModel> mList = collector.getModelList();
+		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
@@ -659,10 +659,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries1_y.getItems().clear();
 		cseries2_y.getItems().clear();
 
-		type1_x = new KeyFigureMetaData("None");
-		type2_x = new KeyFigureMetaData("None");
-		type1_y = new KeyFigureMetaData("None");
-		type2_y = new KeyFigureMetaData("None");
+		type1_x = new KeyFigureMetaData();
+		type2_x = new KeyFigureMetaData();
+		type1_y = new KeyFigureMetaData();
+		type2_y = new KeyFigureMetaData();
 
 		cseries1_x.getItems().add((type1_x));
 		cseries1_x.getItems().addAll(kfl);

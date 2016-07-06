@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
@@ -89,7 +89,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
-	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 	private static boolean showProgress = false;
 

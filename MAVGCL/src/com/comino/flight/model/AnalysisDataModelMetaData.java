@@ -63,8 +63,11 @@ public class AnalysisDataModelMetaData {
 	}
 
 	public KeyFigureMetaData getMetaData(String kf) {
-		return meta.get(kf.toLowerCase().hashCode());
+		if(kf!=null)
+		  return meta.get(kf.toLowerCase().hashCode());
+		return null;
 	}
+
 
 	public List<KeyFigureMetaData> getKeyFigures() {
 		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
@@ -89,7 +92,7 @@ public class AnalysisDataModelMetaData {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println("with "+count+" keyfigures registered");
+		System.out.println("with "+count+" keyfigures registered ");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {

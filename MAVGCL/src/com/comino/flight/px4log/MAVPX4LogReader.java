@@ -48,7 +48,7 @@ import org.mavlink.messages.lquac.msg_log_request_data;
 import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -71,7 +71,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private BufferedOutputStream out = null;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
-	private AnalysisCollectorService collector = AnalysisCollectorService.getInstance();
+	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 	private long tms = 0;
 	private long time_utc=0;

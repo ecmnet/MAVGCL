@@ -39,7 +39,6 @@
 		<MSPSource class="state" field="l_x"></MSPSource>
 		<PX4Source field="LPOS.X"></PX4Source>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
@@ -47,7 +46,6 @@
 		<MSPSource class="state" field="l_y"></MSPSource>
 		<PX4Source field="LPOS.Y"></PX4Source>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
@@ -166,7 +164,6 @@
 	<KeyFigure desc="Roll" uom="deg" mask="#0.00" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -174,7 +171,6 @@
 	<KeyFigure desc="Pitch" uom="deg" mask="#0.00" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -182,7 +178,6 @@
 	<KeyFigure desc="Yaw" uom="deg" mask="#0.00" key="YAW">
 		<MSPSource class="attitude" field="y"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -215,7 +210,6 @@
 	<KeyFigure desc="Sp.Roll" uom="deg" mask="#0.00" key="SPROLL">
 		<MSPSource class="attitude" field="sr"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -223,7 +217,6 @@
 	<KeyFigure desc="Sp.Pitch" uom="deg" mask="#0.00" key="SPPITCH">
 		<MSPSource class="attitude" field="sp"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -231,7 +224,6 @@
 	<KeyFigure desc="SP.Yaw" uom="deg" mask="#0.00" key="SPYAW">
 		<MSPSource class="attitude" field="sy"></MSPSource>
 		<Groups>
-		    <Group>Frequently used</Group>
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
@@ -258,6 +250,70 @@
 			<Group>Attitude</Group>
 		</Groups>
 	</KeyFigure>
+
+	<!-- Global position -->
+
+	<KeyFigure desc="Global Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
+		<MSPSource class="state" field="g_lat"></MSPSource>
+		<PX4Source field="GPOS.Lat"></PX4Source>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Global Lon." uom="°" mask="#0.0000000" key="GLOBLON">
+		<MSPSource class="state" field="g_lon"></MSPSource>
+		<PX4Source field="GPOS.Lon"></PX4Source>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Home Lat." uom="°" mask="#0.0000000" key="HOMLAT">
+		<MSPSource class="home_state" field="g_lat"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Home Lon." uom="°" mask="#0.0000000" key="HOMLON">
+		<MSPSource class="home_state" field="g_lon"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Global VX" uom="cm/s" mask="#0.00" key="GLOBVX">
+		<MSPSource class="state" field="g_vx"></MSPSource>
+		<PX4Source field="GPOS.VelN"></PX4Source>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Global VY" uom="cm/s" mask="#0.00" key="GLOBVY">
+		<MSPSource class="state" field="g_vy"></MSPSource>
+		<PX4Source field="GPOS.VelE"></PX4Source>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Global VZ" uom="cm/s" mask="#0.00" key="GLOBVZ">
+		<MSPSource class="state" field="g_vz"></MSPSource>
+		<PX4Source field="GPOS.VelD"></PX4Source>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Heading" uom="deg" mask="#0.0" key="HEAD">
+		<MSPSource class="hud" field="h"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
 
 	<!-- Raw data -->
 
@@ -331,6 +387,66 @@
 		<PX4Source field="IMU.GyroZ"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Raw GPS Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
+		<MSPSource class="gps" field="latitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Raw GPS Lon." uom="°" mask="#0.0000000" key="RGPSLON">
+		<MSPSource class="gps" field="longitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
+		<MSPSource class="gps" field="numsat"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS HDOP." uom="m" mask="#0.0" key="RGPSHDOP">
+		<MSPSource class="gps" field="hdop"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- System & Power -->
+
+	<KeyFigure desc="Voltage" uom="V" mask="#0.0" key="BATV">
+		<MSPSource class="battery" field="b0"></MSPSource>
+		<PX4Source field="BATT.V"></PX4Source>
+		<Groups>
+			<Group>Power / System</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Current" uom="mA" mask="#0.0" key="BATC">
+		<MSPSource class="battery" field="c0"></MSPSource>
+		<PX4Source field="BATT.C"></PX4Source>
+		<Groups>
+			<Group>Power / System</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Cons.Power" uom="mAH" mask="#0.0" key="BATH">
+		<MSPSource class="battery" field="a0"></MSPSource>
+		<Groups>
+			<Group>Power / System</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
+		<MSPSource class="battery" field="p"></MSPSource>
+		<Groups>
+			<Group>Power / System</Group>
 		</Groups>
 	</KeyFigure>
 

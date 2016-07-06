@@ -19,8 +19,8 @@ public class KeyFigureMetaData {
 	private String px4field;
 
 
-	public KeyFigureMetaData(String desc) {
-		this.desc1  = desc;
+	public KeyFigureMetaData() {
+		this.desc1  = "None";
 		this.hash   = 0;
 	}
 

@@ -44,7 +44,7 @@ import javax.imageio.ImageIO;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.MovingAxis;
 import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
@@ -137,7 +137,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisCollectorService  collector = AnalysisCollectorService.getInstance();
+	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
@@ -174,7 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if (isCancelled())
 						break;
 
-					if(!isCollecting.get() && collector.isCollecting()) {
+					if(!isCollecting.get() && dataService.isCollecting()) {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
@@ -186,7 +186,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						updateGraph(false);
 					}
 
-					isCollecting.set(collector.isCollecting());
+					isCollecting.set(dataService.isCollecting());
 
 					if(isCollecting.get() && control.isConnected())
 						Platform.runLater(() -> {
@@ -291,7 +291,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt =  collector.calculateX0Index(nv.floatValue());;
+			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());;
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
@@ -366,9 +366,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
-		if(current_x_pt<collector.getModelList().size() && collector.getModelList().size()>0 ) {
+		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
-			int max_x = collector.getModelList().size();
+			int max_x = dataService.getModelList().size();
 			if(!isCollecting.get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
@@ -376,7 +376,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
-				m = collector.getModelList().get(current_x_pt);
+				m = dataService.getModelList().get(current_x_pt);
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
 					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
@@ -483,9 +483,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		cseries2.getItems().clear();
 		cseries3.getItems().clear();
 
-		type1 = new KeyFigureMetaData("None");
-		type2 = new KeyFigureMetaData("None");
-		type3 = new KeyFigureMetaData("None");
+		type1 = new KeyFigureMetaData();
+		type2 = new KeyFigureMetaData();
+		type3 = new KeyFigureMetaData();
 
 		cseries1.getItems().add(type1);
 		cseries1.getItems().addAll(kfl);

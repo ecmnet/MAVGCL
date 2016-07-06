@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 
-package com.comino.flight.model.collector;
+package com.comino.flight.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +44,9 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
-public class AnalysisCollectorService {
+public class AnalysisModelService {
 
-	private static AnalysisCollectorService instance = null;
+	private static AnalysisModelService instance = null;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
@@ -55,7 +55,7 @@ public class AnalysisCollectorService {
 
 	private static final int MODELCOLLECTOR_INTERVAL_US = 50000;
 
-	private DataModel								model      = null;
+	private DataModel								model       = null;
 	private AnalysisDataModel				    	current     = null;
 	private ArrayList<AnalysisDataModel> 		    modelList   = null;
 
@@ -63,26 +63,31 @@ public class AnalysisCollectorService {
 
 	private  int  totalTime_sec = 30;
 
-	public static AnalysisCollectorService getInstance(DataModel model) {
+	public static AnalysisModelService getInstance(DataModel model) {
 		if(instance==null)
-		  instance = new AnalysisCollectorService(model);
+		  instance = new AnalysisModelService(model);
 		return instance;
 	}
 
-	public static AnalysisCollectorService getInstance() {
+	public static AnalysisModelService getInstance() {
 		return instance;
 	}
 
 
-	private AnalysisCollectorService(DataModel model) {
+	private AnalysisModelService(DataModel model) {
 		this.modelList     = new ArrayList<AnalysisDataModel>();
 		this.model         = model;
-
+		this.current       =  new AnalysisDataModel();
+		new Thread(new Converter()).start();
 	}
 
 
 	public List<AnalysisDataModel> getModelList() {
 		return modelList;
+	}
+
+	public AnalysisDataModel getCurrent() {
+		return current;
 	}
 
 
@@ -202,6 +207,18 @@ public class AnalysisCollectorService {
 		return mode;
 	}
 
+	private class Converter implements Runnable {
+
+		@Override
+		public void run() {
+			while(true) {
+				current.setValues(model, AnalysisDataModelMetaData.getInstance());
+				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
+			}
+		}
+
+	}
+
 
 	private class Collector implements Runnable {
 
@@ -219,14 +236,10 @@ public class AnalysisCollectorService {
 			long tms = System.nanoTime() / 1000;
 			while(mode!=STOPPED) {
 				synchronized(this) {
-				    current = new AnalysisDataModel();
-
 				    current.tms = System.nanoTime() / 1000 - tms;
 					current.msg = model.msg.clone();
 					model.msg.clear();
-
-					current.setValues(model, AnalysisDataModelMetaData.getInstance());
-					modelList.add(current);
+					modelList.add(current.clone());
 					count++;
 				}
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);

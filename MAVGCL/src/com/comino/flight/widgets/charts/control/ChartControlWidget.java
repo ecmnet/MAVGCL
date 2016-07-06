@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
-import com.comino.flight.model.collector.AnalysisCollectorService;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -122,7 +122,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
-	private AnalysisCollectorService collector;
+	private AnalysisModelService collector;
 
 	private long scroll_tms = 0;
 
@@ -315,7 +315,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
-		this.collector =  AnalysisCollectorService.getInstance(control.getCurrentModel());
+		this.collector =  AnalysisModelService.getInstance(control.getCurrentModel());
 		this.control.addModeChangeListener(this);
 		this.collector.setTotalTimeSec(totalTime_sec);
 		this.collector.clearModelList();
