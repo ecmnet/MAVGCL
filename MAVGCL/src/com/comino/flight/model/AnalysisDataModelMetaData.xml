@@ -342,6 +342,7 @@
 		<MSPSource class="raw" field="fX"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -349,6 +350,7 @@
 		<MSPSource class="raw" field="fY"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -356,18 +358,23 @@
 		<MSPSource class="raw" field="fd"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQ">
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<Groups>
-			<Group>Raw data</Group></Groups></KeyFigure>
+			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
+		</Groups>
+	</KeyFigure>
 
 	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
 		<MSPSource class="raw" field="di"></MSPSource>
 		<PX4Source field="DIST.Distance"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -376,6 +383,7 @@
 		<PX4Source field="IMU.AccX"></PX4Source>
 		<Groups>
 		    <Group>Raw data</Group>
+		   <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCYY">
@@ -383,6 +391,7 @@
 		<PX4Source field="IMU.AccY"></PX4Source>
 		<Groups>
 		    <Group>Raw data</Group>
+		    <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Acc.Z" uom="m/s^2" mask="#0.00" key="ACCZ">
@@ -390,6 +399,7 @@
 		<PX4Source field="IMU.AccZ"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -398,6 +408,7 @@
 		<PX4Source field="IMU.GyroX"></PX4Source>
 		<Groups>
 		    <Group>Raw data</Group>
+		  <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Gyro.Y" uom="rad/s" mask="#0.00" key="GYROY">
@@ -405,6 +416,7 @@
 		<PX4Source field="IMU.GyroY"></PX4Source>
 		<Groups>
 		    <Group>Raw data</Group>
+		    <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Gyro.Z" uom="rad/s" mask="#0.00" key="GYROZ">
@@ -412,6 +424,7 @@
 		<PX4Source field="IMU.GyroZ"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -455,6 +468,7 @@
 		<PX4Source field="SENS.BaroPres"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -464,49 +478,77 @@
 		<PX4Source field="SENS.BaroAlt"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s0" uom="" mask="#0.00" key="EST0S0">
 		<PX4Source field="EST0.s0"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s1" uom="" mask="#0.00" key="EST0S1">
 		<PX4Source field="EST0.s1"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s2" uom="" mask="#0.00" key="EST0S2">
 		<PX4Source field="EST0.s2"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s3" uom="" mask="#0.00" key="EST0S3">
 		<PX4Source field="EST0.s3"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s4" uom="" mask="#0.00" key="EST0S4">
 		<PX4Source field="EST0.s4"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="EST0.s5" uom="" mask="#0.00" key="EST0S5">
 		<PX4Source field="EST0.s5"></PX4Source>
 		<Groups>
-			<Group>PX4Log figures</Group>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s6" uom="" mask="#0.00" key="EST0S6">
+		<PX4Source field="EST0.s6"></PX4Source>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s7" uom="" mask="#0.00" key="EST0S7">
+		<PX4Source field="EST0.s7"></PX4Source>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s8" uom="" mask="#0.00" key="EST0S8">
+		<PX4Source field="EST0.s8"></PX4Source>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.Fault" uom="" mask="#0.00" key="EST0FAULT">
+		<PX4Source field="EST0.fFault"></PX4Source>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
