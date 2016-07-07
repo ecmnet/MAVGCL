@@ -228,8 +228,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		group.getItems().add("All");
-		group.getItems().add("Recently used...");
 		group.getItems().addAll(meta.getGroups());
+		group.getItems().add("Recently used...");
 		group.getSelectionModel().select(0);
 
 		initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
@@ -512,8 +512,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series.getItems().clear();
 			series.getItems().add(none);
 
-			if(kfl.size()==0)
+			if(kfl.size()==0) {
+				series.getSelectionModel().select(0);
 				return;
+			}
 
 			if(type!=null && type.hash!=0) {
 				if(!kfl.contains(type))
