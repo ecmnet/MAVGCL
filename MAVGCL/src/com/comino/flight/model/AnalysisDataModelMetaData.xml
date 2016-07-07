@@ -458,6 +458,58 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- PX4 only figures (https://github.com/PX4/Firmware/blob/master/src/modules/sdlog2/sdlog2_messages.h#L614-L673)-->
+
+	<KeyFigure desc="Baro Altitude" uom="m" mask="#0.0" key="BAROALT">
+		<PX4Source field="SENS.BaroAlt"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s0" uom="" mask="#0.00" key="EST0S0">
+		<PX4Source field="EST0.s0"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s1" uom="" mask="#0.00" key="EST0S1">
+		<PX4Source field="EST0.s1"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s2" uom="" mask="#0.00" key="EST0S2">
+		<PX4Source field="EST0.s2"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s3" uom="" mask="#0.00" key="EST0S3">
+		<PX4Source field="EST0.s3"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s4" uom="" mask="#0.00" key="EST0S4">
+		<PX4Source field="EST0.s4"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EST0.s5" uom="" mask="#0.00" key="EST0S5">
+		<PX4Source field="EST0.s5"></PX4Source>
+		<Groups>
+			<Group>PX4Log figures</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- Radio -->
 
 	<KeyFigure desc="RC Channel 0" uom="" mask="#0" key="RC0">
@@ -517,7 +569,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0.0" key="BATH">
+	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0" key="BATH">
 		<MSPSource class="battery" field="a0"></MSPSource>
 		<Groups>
 			<Group>Power / System</Group>

@@ -229,7 +229,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		group.getItems().add("All");
 		group.getItems().addAll(meta.getGroups());
-		group.getItems().add("Recently used...");
+		group.getItems().add("...used recently");
 		group.getSelectionModel().select(0);
 
 		initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
@@ -244,7 +244,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
 				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
 				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
-			} else if(nv.contains("Recent")) {
+			} else if(nv.contains("recent")) {
 				initKeyFigureSelection(cseries1, type1, recent);
 				initKeyFigureSelection(cseries2, type2, recent);
 				initKeyFigureSelection(cseries3, type3, recent);
@@ -255,6 +255,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				initKeyFigureSelection(cseries3, type3, meta.getGroupMap().get(nv));
 			}
 		});
+
 
 		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 			if(nv!=null && ov != nv) {
