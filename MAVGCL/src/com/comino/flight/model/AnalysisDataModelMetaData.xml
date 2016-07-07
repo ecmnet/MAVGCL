@@ -29,6 +29,7 @@
 		<MSPSource class="hud" field="bc"></MSPSource>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>Global Position</Group>
 		</Groups>
 	</KeyFigure>
 

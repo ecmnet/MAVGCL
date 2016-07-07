@@ -123,8 +123,8 @@
 
 .list-view  {
     -fx-background-radius: 10.0;
-    -fx-background-color: rgba(130, 0, 0.0, 0.6);
-    -fx-control-inner-background: rgba(100.0, 0.0, 0.0, 0.0);
+    -fx-background-color: rgba(130, 120, 0, 0.8);
+    -fx-control-inner-background: rgba(130, 120, 0, 0.0);
     -fx-box-border: #B0B0B0;
     -fx-border-radius: 10.0px;
     -fx-border-insets: 0.0px;
