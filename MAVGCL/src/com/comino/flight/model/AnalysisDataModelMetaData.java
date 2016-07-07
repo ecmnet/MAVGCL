@@ -53,6 +53,8 @@ public class AnalysisDataModelMetaData {
 	private Map<Integer,KeyFigureMetaData>        meta   = null;
 	private Map<String,List<KeyFigureMetaData>> groups   = null;
 
+	private List<KeyFigureMetaData> sortedMetaList       = null;
+
 	private int count = 0;
 
 	public static AnalysisDataModelMetaData getInstance() {
@@ -75,6 +77,8 @@ public class AnalysisDataModelMetaData {
 				System.out.print("KeyFigureMetaData Version "+version+" ");
 
 				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
+
+				sortedMetaList = buildSortedList();
 			}
 
 		} catch (Exception e) {
@@ -101,14 +105,8 @@ public class AnalysisDataModelMetaData {
 		return null;
 	}
 
-
 	public List<KeyFigureMetaData> getKeyFigures() {
-		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
-		meta.forEach((i,p) -> {
-			list.add(p);
-		});
-		list.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
-		return list;
+		return sortedMetaList;
 	}
 
 	public List<String> getGroups() {
@@ -117,6 +115,15 @@ public class AnalysisDataModelMetaData {
 			list.add(i);
 		});
 		Collections.sort(list);
+		return list;
+	}
+
+	private List<KeyFigureMetaData> buildSortedList() {
+		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
+		meta.forEach((i,p) -> {
+			list.add(p);
+		});
+		list.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
 		return list;
 	}
 

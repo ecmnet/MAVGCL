@@ -78,6 +78,8 @@ import javafx.scene.paint.Color;
 
 public class LineChartWidget extends BorderPane implements IChartControl {
 
+	private static int MAXRECENT = 10;
+
 
 	private static int COLLECTOR_CYCLE = 50;
 	private static int REFRESH_RATE    = 50;
@@ -139,6 +141,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
+	private List<KeyFigureMetaData> recent = null;
+
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
@@ -156,6 +160,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
+		recent = new ArrayList<KeyFigureMetaData>();
 
 		task = new Task<Integer>() {
 
@@ -223,31 +228,39 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		group.getItems().add("All");
+		group.getItems().add("Recently used...");
 		group.getItems().addAll(meta.getGroups());
 		group.getSelectionModel().select(0);
 
-		type1 = new KeyFigureMetaData();
-		type2 = new KeyFigureMetaData();
-		type3 = new KeyFigureMetaData();
+		initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
+		initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
+		initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
 
-		initKeyFigureSelection(meta.getKeyFigures());
+		type1 = type2 = type3 = new KeyFigureMetaData();
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
-			if(nv.contains("All"))
-				initKeyFigureSelection(meta.getKeyFigures());
-			else
-				initKeyFigureSelection(meta.getGroupMap().get(nv));
-
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
+			if(nv.contains("All")) {
+				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
+				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
+				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
+			} else if(nv.contains("Recent")) {
+				initKeyFigureSelection(cseries1, type1, recent);
+				initKeyFigureSelection(cseries2, type2, recent);
+				initKeyFigureSelection(cseries3, type3, recent);
+			}
+			else {
+				initKeyFigureSelection(cseries1, type1, meta.getGroupMap().get(nv));
+				initKeyFigureSelection(cseries2, type2, meta.getGroupMap().get(nv));
+				initKeyFigureSelection(cseries3, type3, meta.getGroupMap().get(nv));
+			}
 		});
 
 		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
-			if(nv!=null) {
-				if(nv.hash!=0)
-					series1.setName(nv.desc1+" ["+nv.uom+"]   ");
+			if(nv!=null && ov != nv) {
+				if(nv.hash!=0) {
+					addToRecent(nv);
+					series1.setName(nv.desc1+" ["+nv.uom+"]   "); }
 				else
 					series1.setName(nv.desc1+"   ");
 				type1 = nv;
@@ -258,9 +271,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		cseries2.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
-			if(nv!=null) {
-				if(nv.hash!=0)
-					series2.setName(nv.desc1+" ["+nv.uom+"]   ");
+			if(nv!=null && ov != nv) {
+				if(nv.hash!=0) {
+					addToRecent(nv);
+					series2.setName(nv.desc1+" ["+nv.uom+"]   "); }
 				else
 					series2.setName(nv.desc1+"   ");
 				type2 = nv;
@@ -271,9 +285,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		cseries3.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
-			if(nv!=null) {
-				if(nv.hash!=0)
-					series3.setName(nv.desc1+" ["+nv.uom+"]   ");
+			if(nv!=null && ov != nv) {
+				if(nv.hash!=0) {
+					addToRecent(nv);
+					series3.setName(nv.desc1+" ["+nv.uom+"]   "); }
 				else
 					series3.setName(nv.desc1+"   ");
 				type3 = nv;
@@ -314,6 +329,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		annotations.setSelected(true);
 	}
 
+
+	private void addToRecent(KeyFigureMetaData nv) {
+		if(recent.size()>MAXRECENT)
+			recent.remove(0);
+		if(!recent.contains(nv))
+		    recent.add(nv);
+	}
 
 	public void saveAsPng(String path) {
 		SnapshotParameters param = new SnapshotParameters();
@@ -481,22 +503,29 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 	}
 
-	private void initKeyFigureSelection(List<KeyFigureMetaData> kfl) {
+	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 
-		cseries1.getItems().clear();
-		cseries2.getItems().clear();
-		cseries3.getItems().clear();
+		KeyFigureMetaData none = new KeyFigureMetaData();
 
-		cseries1.getItems().add(type1);
-		cseries1.getItems().addAll(kfl);
-		cseries2.getItems().add(type2);
-		cseries2.getItems().addAll(kfl);
-		cseries3.getItems().add(type3);
-		cseries3.getItems().addAll(kfl);
+		Platform.runLater(() -> {
 
-		cseries1.getSelectionModel().select(0);
-		cseries2.getSelectionModel().select(0);
-		cseries3.getSelectionModel().select(0);
+			series.getItems().clear();
+			series.getItems().add(none);
+
+			if(kfl.size()==0)
+				return;
+
+			if(type!=null && type.hash!=0) {
+				if(!kfl.contains(type))
+				  series.getItems().add(type);
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(type);
+			} else {
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(0);
+			}
+
+		});
 	}
 
 }
