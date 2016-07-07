@@ -213,11 +213,14 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		recording.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
+		recording.setOnMousePressed(event -> {
+			enablemodetrig.selectedProperty().set(false);
+		});
+
 		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			recording(newvalue, 0);
 			if(!newvalue.booleanValue())
 					scroll.setValue(1);
-			enablemodetrig.selectedProperty().set(false);
 		});
 
 		clear.setOnAction((ActionEvent event)-> {

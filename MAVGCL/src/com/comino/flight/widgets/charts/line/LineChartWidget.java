@@ -226,6 +226,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		group.getItems().addAll(meta.getGroups());
 		group.getSelectionModel().select(0);
 
+		type1 = new KeyFigureMetaData();
+		type2 = new KeyFigureMetaData();
+		type3 = new KeyFigureMetaData();
+
 		initKeyFigureSelection(meta.getKeyFigures());
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
@@ -382,7 +386,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
 				}
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
 
 					if(current_x_pt > current_x1_pt)
 						remove_count++;
@@ -412,11 +416,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					series3.getData().remove(0, remove_count);
 			}
 
-			try {
+			synchronized(this) {
 				series1.getData().addAll(series1_list);
 				series2.getData().addAll(series2_list);
 				series3.getData().addAll(series3_list);
-			} catch(Exception e) { System.err.println(e.getMessage()); }
+			}
 
 			if(set_bounds)
 				setXAxisBounds(current_x0_pt,current_x1_pt);
@@ -482,10 +486,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		cseries1.getItems().clear();
 		cseries2.getItems().clear();
 		cseries3.getItems().clear();
-
-		type1 = new KeyFigureMetaData();
-		type2 = new KeyFigureMetaData();
-		type3 = new KeyFigureMetaData();
 
 		cseries1.getItems().add(type1);
 		cseries1.getItems().addAll(kfl);

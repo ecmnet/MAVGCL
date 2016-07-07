@@ -47,7 +47,6 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 
 import javafx.application.Platform;
@@ -64,9 +63,10 @@ public class DetailsWidget extends FadePane  {
 	private static String[] key_figures_details = {
 			"ROLL",
 			"PITCH",
-			//MSTYPE.MSP_GRSPEED,
-			//MSTYPE.MSP_CLIMBRATE,
-			//MSTYPE.MSP_AIRSPEED,
+			null,
+			"GNDV",
+			"CLIMB",
+			"AIRV",
 			null,
 			"HEAD",
 			"RGPSNO",
@@ -83,19 +83,19 @@ public class DetailsWidget extends FadePane  {
 			"LPOSY",
 			"LPOSZ",
 			null,
-			//MSTYPE.MSP_RC0,
-			//MSTYPE.MSP_RC1,
-			//MSTYPE.MSP_RC2,
-			//MSTYPE.MSP_RC3,
+			"RC0",
+			"RC1",
+			"RC2",
+			"RC3",
 			null,
 			"BATC",
 			"BATH",
 			null,
 			//MSTYPE.MSP_ABSPRESSURE,
 			null,
-			//MSTYPE.MSP_IMUTEMP,
-			//MSTYPE.MSP_CPULOAD,
-			//MSTYPE.MSP_RSSI,
+			"TEMP",
+			"CPU",
+			"RSSI",
 			//MSTYPE.MSP_TIME_ARMED,
 	};
 

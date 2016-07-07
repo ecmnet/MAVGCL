@@ -40,7 +40,6 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
-import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 
 import me.drton.jmavlib.log.FormatErrorException;

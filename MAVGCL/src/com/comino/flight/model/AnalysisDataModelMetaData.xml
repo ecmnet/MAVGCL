@@ -313,6 +313,27 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Ground Speed" uom="m/s" mask="#0.0" key="GNDV">
+		<MSPSource class="hud" field="s"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Climb rate" uom="m/s" mask="#0.0" key="CLIMB">
+		<MSPSource class="hud" field="vs"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Air speed" uom="m/s" mask="#0.0" key="AIRV">
+		<MSPSource class="hud" field="as"></MSPSource>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
 
 	<!-- Raw data -->
 
@@ -336,7 +357,7 @@
 			<Group>Raw data</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Flow Quality" mask="#0" uom="" key="FLOWQ">
+	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQ">
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group></Groups></KeyFigure>
@@ -414,10 +435,66 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS HDOP." uom="m" mask="#0.0" key="RGPSHDOP">
+	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
 		<MSPSource class="gps" field="hdop"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS Speed" uom="m/s" mask="#0.0" key="RGPSV">
+		<MSPSource class="gps" field="speed"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Abs.Pressure" uom="hPa" mask="#0.0" key="ABSPRES">
+		<MSPSource class="imu" field="abs_pressure"></MSPSource>
+		<PX4Source field="SENS.BaroPres"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Radio -->
+
+	<KeyFigure desc="RC Channel 0" uom="" mask="#0" key="RC0">
+		<MSPSource class="rc" field="s0"></MSPSource>
+		<PX4Source field="RC.C0"></PX4Source>
+		<Groups>
+			<Group>Radio Control</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="RC Channel 1" uom="" mask="#0" key="RC1">
+		<MSPSource class="rc" field="s1"></MSPSource>
+		<PX4Source field="RC.C1"></PX4Source>
+		<Groups>
+			<Group>Radio Control</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="RC Channel 2" uom="" mask="#0" key="RC2">
+		<MSPSource class="rc" field="s2"></MSPSource>
+		<PX4Source field="RC.C2"></PX4Source>
+		<Groups>
+			<Group>Radio Control</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="RC Channel 3" uom="" mask="#0" key="RC3">
+		<MSPSource class="rc" field="s3"></MSPSource>
+		<PX4Source field="RC.C3"></PX4Source>
+		<Groups>
+			<Group>Radio Control</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="RSSI" uom="" mask="#0" key="RSSI">
+		<MSPSource class="rc" field="rssi"></MSPSource>
+		<Groups>
+			<Group>Radio Control</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -448,6 +525,20 @@
 
 	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
 		<MSPSource class="battery" field="p"></MSPSource>
+		<Groups>
+			<Group>Power / System</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">
+		<MSPSource class="sys" field="load_p"></MSPSource>
+		<Groups>
+			<Group>Power / System</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
+		<MSPSource class="sys" field="imu_temp"></MSPSource>
 		<Groups>
 			<Group>Power / System</Group>
 		</Groups>

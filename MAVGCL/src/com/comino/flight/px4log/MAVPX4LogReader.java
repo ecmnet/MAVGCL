@@ -103,7 +103,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		try {
 			out.close();
-		} catch (IOException e) { return;  }
+		} catch (Exception e) { return;  }
 
 		collector.clearModelList();
 		isCollecting.set(false);
