@@ -35,15 +35,17 @@ package com.comino.flight.widgets.gps.details;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.KeyFigureMetaData;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSTYPE;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.collector.ModelCollectorService;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -55,34 +57,36 @@ import javafx.scene.layout.GridPane;
 
 public class GPSDetailsWidget extends FadePane  {
 
-	private static MSTYPE[] key_figures = {
-			MSTYPE.MSP_GLOBPLAT,
-			MSTYPE.MSP_GLOBPLON,
-			MSTYPE.MSP_HOME_LAT,
-			MSTYPE.MSP_HOME_LON,
-			MSTYPE.MSP_HOME_ALT,
-			MSTYPE.MSP_RAW_GPSLAT,
-			MSTYPE.MSP_RAW_GPSLON,
-			MSTYPE.MSP_RAW_SATNUM,
-			MSTYPE.MSP_GPSHDOP,
-			MSTYPE.MSP_GPSEPH,
+	private static String[] key_figures = {
+			"GLOBLAT",
+			"GLOBLON",
+			"HOMLAT",
+			"HOMLON",
+			"ALTSL",
+			"RGPSLAT",
+			"RGPSLON",
+			"RGPSNO",
+			"RGPSHDOP"
 	};
 
 	 @FXML
 	 private GridPane gps_grid;
 
 	private Task<Long> task;
-	private DataModel model;
+	private AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
 
 	private List<KeyFigure> figures = null;
 
-	private DecimalFormat f = new DecimalFormat("#0.######");
-
-	private ModelCollectorService collector;
+	private DecimalFormat f = new DecimalFormat("0");
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
 	public GPSDetailsWidget() {
 		figures = new ArrayList<KeyFigure>();
+
+		DecimalFormatSymbols f_symbols = new DecimalFormatSymbols();
+		f_symbols.setNaN("-");
+		f.setDecimalFormatSymbols(f_symbols);
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GPSDetailsWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -108,13 +112,13 @@ public class GPSDetailsWidget extends FadePane  {
 						break;
 					}
 					Platform.runLater(() -> {
-						DataModel m = model;
+						AnalysisDataModel m = model;
 						for(KeyFigure figure : figures) {
 							figure.setValue(m);
 						}
 					});
 				}
-				return model.battery.tms;
+				return model.tms;
 			}
 		};
 	}
@@ -122,13 +126,10 @@ public class GPSDetailsWidget extends FadePane  {
 
 	public void setup(IMAVController control) {
 		int i=0;
-		for(MSTYPE k : key_figures) {
+		for(String k : key_figures) {
 			figures.add(new KeyFigure(gps_grid,k,i));
 			i++;
 		}
-
-		this.collector = control.getCollector();
-		this.model = control.getCurrentModel();
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);
@@ -137,27 +138,29 @@ public class GPSDetailsWidget extends FadePane  {
 	}
 
 	private class KeyFigure {
-		MSTYPE type  = null;
+		KeyFigureMetaData kf  = null;
 		Label  value = null;
 
-		public KeyFigure(GridPane grid, MSTYPE k, int row) {
-			this.type = k;
-			if(k==MSTYPE.MSP_NONE) {
+		public KeyFigure(GridPane grid, String k, int row) {
+			this.kf = meta.getMetaData(k);
+			if(kf==null) {
 				grid.add(new Label(),0,row);
 			} else {
-			Label l1 = new Label(k.getDescription()+" :");
+			Label l1 = new Label(kf.desc1+" :");
 			l1.setPrefWidth(95); l1.setPrefHeight(19);
 			grid.add(l1, 0, row);
 			value = new Label("-"); value.setPrefWidth(70); value.setAlignment(Pos.CENTER_RIGHT);
 			grid.add(value, 1, row);
-			Label l3 = new Label(" "+k.getUnit()); l3.setPrefWidth(20);
+			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(20);
 			grid.add(l3, 2, row);
 			}
 		}
 
-		public void setValue(DataModel model) {
-			if(type!=MSTYPE.MSP_NONE)
-			  value.setText(f.format(MSTYPE.getValue(model, type)));
+		public void setValue(AnalysisDataModel model) {
+			if(kf!=null) {
+				f.applyPattern(kf.mask);
+			    value.setText(f.format(model.getValue(kf)));
+			}
 		}
 	}
 

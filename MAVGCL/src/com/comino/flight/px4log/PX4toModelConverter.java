@@ -38,7 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.comino.model.types.MSTYPE;
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.msp.model.DataModel;
 
 import me.drton.jmavlib.log.FormatErrorException;
@@ -47,10 +48,12 @@ import me.drton.jmavlib.log.px4.PX4LogReader;
 public class PX4toModelConverter {
 
 	private PX4LogReader reader;
-	private List<DataModel> list;
+	private List<AnalysisDataModel> list;
+
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
-	public PX4toModelConverter(PX4LogReader reader, List<DataModel> list) {
+	public PX4toModelConverter(PX4LogReader reader, List<AnalysisDataModel> list) {
 		this.reader = reader;
 		this.list = list;
 	}
@@ -62,19 +65,8 @@ public class PX4toModelConverter {
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
-		MSTYPE[] types = MSTYPE.values();
-		for(int i=0; i< types.length;i++) {
-			if(MSTYPE.getPX4LogName(types[i]).length()>0) {
-				data.put(MSTYPE.getPX4LogName(types[i]), null);
-			}
-		}
-
-
-
 		list.clear();
-		DataModel model = new DataModel();
-
-		Object val=null;
+		AnalysisDataModel model = new AnalysisDataModel();
 
 		try {
 
@@ -83,37 +75,11 @@ public class PX4toModelConverter {
 				if(tms > tms_slot) {
 					model.tms = tms;
 					tms_slot += 50000;
-					for(int i=0; i< types.length;i++) {
-						if(MSTYPE.getPX4LogName(types[i]).length()>0) {
-							String px4Name = MSTYPE.getPX4LogName(types[i]);
-
-							try {
-								val = data.get(px4Name);
-								if(val == null) {
-								    errorFlag = true;
-									continue;
-								}
-
-								if(val instanceof Double) {
-									MSTYPE.putValue(model, types[i], ((Double)val).floatValue());
-								}
-								else if(val instanceof Float) {
-									MSTYPE.putValue(model, types[i], ((Float)val).floatValue());
-								}
-								else if(val instanceof Integer) {
-									MSTYPE.putValue(model, types[i], ((Integer)val).floatValue());
-								} else {
-									MSTYPE.putValue(model, types[i], ((float)val));
-								}
-
-							} catch(Exception e) {
-								   System.err.println(px4Name+":"+ val.getClass().getSimpleName()+" : "+e.getMessage());
-							}
-						}
-					}
+					model.setValues(data, meta);
 					list.add(model.clone());
 				}
 			}
+			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {
 			if(errorFlag)

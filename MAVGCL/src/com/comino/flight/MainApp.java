@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.control.SITLController;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.parameter.PX4Parameters;
@@ -136,6 +137,7 @@ public class MainApp extends Application {
 		else
 			control = new MAVUdpController(peerAddress,port,14550, false);
 
+		AnalysisModelService.getInstance(control.getCurrentModel());
 
 		MSPLogger.getInstance(control);
 		StateProperties.getInstance(control);
@@ -143,6 +145,7 @@ public class MainApp extends Application {
 		FileHandler.getInstance(primaryStage,control);
 
 		PX4Parameters.getInstance(control);
+
 
 		initRootLayout();
 		showMAVGCLApplication();
@@ -254,7 +257,7 @@ public class MainApp extends Application {
 		});
 
 		m_export.setOnAction(event -> {
-			if(control.getCollector().getModelList().size()>0)
+			if(AnalysisModelService.getInstance().getModelList().size()>0)
 				FileHandler.getInstance().fileExport();
 		});
 

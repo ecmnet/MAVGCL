@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.px4log.PX4toModelConverter;
 import com.comino.mav.control.IMAVController;
@@ -71,6 +73,8 @@ public class FileHandler {
 	private IMAVController control;
 	private String name="";
 	private Preferences userPrefs;
+
+	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 
 	public static FileHandler getInstance() {
@@ -116,13 +120,13 @@ public class FileHandler {
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
-				Type listType = new TypeToken<ArrayList<DataModel>>() {}.getType();
+				Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 				Reader reader = new FileReader(file);
 				Gson gson = new GsonBuilder().create();
 				stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
-				ArrayList<DataModel>modelList = gson.fromJson(reader,listType);
+				ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
 				reader.close();
-				control.getCollector().setModelList(modelList);
+				collector.setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 
@@ -140,12 +144,10 @@ public class FileHandler {
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
-				ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 				PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
 				stage.getScene().setCursor(Cursor.WAIT);
-				PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
+				PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
 				converter.doConversion();
-				control.getCollector().setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 
@@ -172,7 +174,7 @@ public class FileHandler {
 				Writer writer = new FileWriter(file);
 				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 				stage.getScene().setCursor(Cursor.WAIT);
-				gson.toJson(control.getCollector().getModelList(), writer);
+				gson.toJson(collector.getModelList(), writer);
 				writer.close();
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();

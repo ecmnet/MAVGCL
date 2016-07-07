@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -65,13 +67,12 @@ public class BatteryWidget extends Pane  {
 	@FXML
 	private Gauge g_capacity;
 
-
+	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
 	private final DecimalFormat fo = new DecimalFormat("#0.0");
 
-	private Task<Long> task;
-	private IMAVController control;
-	private DataModel model;
+	private Task<Integer> task;
+	private AnalysisDataModel model;
 
 	public BatteryWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BatteryWidget.fxml"));
@@ -84,10 +85,10 @@ public class BatteryWidget extends Pane  {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Long>() {
+		task = new Task<Integer>() {
 
 			@Override
-			protected Long call() throws Exception {
+			protected Integer call() throws Exception {
 				while(true) {
 					LockSupport.parkNanos(1000000000L);
 					if(isDisabled()) {
@@ -99,11 +100,11 @@ public class BatteryWidget extends Pane  {
 					}
 
 					Platform.runLater(() -> {
-						g_voltage.setValue(model.battery.b0);
-						g_capacity.setValue(model.battery.p);
+						g_voltage.setValue(model.getValue("BATV"));
+						g_capacity.setValue(model.getValue("BATP"));
 					});
 				}
-				return model.battery.tms;
+				return 0;
 			}
 		};
 
@@ -138,8 +139,7 @@ public class BatteryWidget extends Pane  {
 
 
 	public void setup(IMAVController control) {
-		this.model = control.getCurrentModel();
-		this.control = control;
+		this.model = dataService.getCurrent();
 		ExecutorService.get().execute(task);
 	}
 

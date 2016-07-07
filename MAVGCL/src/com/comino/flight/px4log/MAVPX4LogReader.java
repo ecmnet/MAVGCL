@@ -48,6 +48,7 @@ import org.mavlink.messages.lquac.msg_log_request_data;
 import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
@@ -70,6 +71,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private BufferedOutputStream out = null;
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 	private long tms = 0;
 	private long time_utc=0;
@@ -86,7 +88,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public void requestLastLog() {
-		control.getCollector().clearModelList();
+		collector.clearModelList();
 		isCollecting.set(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
 		msg.target_component = 1;
@@ -101,9 +103,9 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		try {
 			out.close();
-		} catch (IOException e) { return;  }
+		} catch (Exception e) { return;  }
 
-		control.getCollector().clearModelList();
+		collector.clearModelList();
 		isCollecting.set(false);
 		StatusLineWidget.showProgressIndicator(false);
 		msg_log_request_end msg = new msg_log_request_end(255,1);
@@ -186,7 +188,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 					ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 					PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
-					PX4toModelConverter converter = new PX4toModelConverter(reader,modelList);
+					PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
 					converter.doConversion();
 					control.getCollector().setModelList(modelList);
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");

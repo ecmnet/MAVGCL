@@ -44,12 +44,14 @@ import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.model.file.FileHandler;
-import com.comino.model.types.MSTYPE;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.openmapfx.ext.CanvasLayer;
@@ -92,9 +94,9 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
 
 
-	private final static MSTYPE TYPES[][] =
-			  { { MSTYPE.MSP_GLOBPLAT, MSTYPE.MSP_GLOBPLON     },
-				{ MSTYPE.MSP_RAW_GPSLAT, MSTYPE.MSP_RAW_GPSLON }
+	private final static String TYPES[][] =
+			  { { "GLOBLAT",  "GLOBLON" },
+				{ "RGPSLAT",  "RGPSLON" }
 			  };
 
 	@FXML
@@ -127,7 +129,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private Task<Long> task;
 
-	private DataModel model;
+	private AnalysisDataModel model;
 	private int type = 0;
 
 
@@ -140,7 +142,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	private Image plane_valid, plane_invalid;
 
-	private ModelCollectorService collector;
+	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
 	private IMAVController control;
 
@@ -174,33 +176,34 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting.get() && collector.isCollecting()) {
+					if(!isCollecting.get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
 
-					isCollecting.set(collector.isCollecting());
+					isCollecting.set(dataService.isCollecting());
 
 					Platform.runLater(() -> {
 						try {
-							if(model.home_state.g_lat!=0 && model.home_state.g_lon!=0) {
+							if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
 								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 								homeLayer.setVisible(true);
-								homeLayer.updatePosition(model.home_state.g_lat, model.home_state.g_lon);
+								homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 							} else
 								homeLayer.setVisible(false);
 
-							if(model.gps.numsat>3) {
-								if(model.gps.hdop > 2.5)
+							if(model.getValue("RGPSNO")>3) {
+								if(model.getValue("RGPSHDOP") > 2.5)
 								  positionLayer.getIcon().setImage(plane_invalid);
 								else
 								  positionLayer.getIcon().setImage(plane_valid);
 								if(mapfollow.selectedProperty().get()) {
-									map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+									map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 									canvasLayer.redraw(true);
 								} else {
 									canvasLayer.redraw(false);
 								}
-								positionLayer.updatePosition(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]),model.hud.h);
+								positionLayer.updatePosition(
+									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
 							}
 
 						} catch(Exception e) { e.printStackTrace(); }
@@ -263,7 +266,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		// Test paintlistener
 		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
 
-			Point2D p0; Point2D p1;  boolean first = true; DataModel m;
+			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
 
 
 			@Override
@@ -278,34 +281,34 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
 
 				if(isCollecting.get() &&
-						(collector.getModelList().size()-index)>2*MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
+						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
 					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
 					gc.setLineWidth(2);
-					for(int i=index; i<collector.getModelList().size();
-							i += MAP_UPDATE_MS/collector.getCollectorInterval_ms()) {
+					for(int i=index; i<dataService.getModelList().size();
+							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
-						m = collector.getModelList().get(i);
+						m = dataService.getModelList().get(i);
 
-						if(MSTYPE.getValue(m,TYPES[type][0])==0 && MSTYPE.getValue(m,TYPES[type][1]) == 0)
+						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
 							continue;
 
 						if(first) {
 							p0 = map.getMapArea().getMapPoint(
-									MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
 
 							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
 							first = false; continue;
 						}
 						p1 = map.getMapArea().getMapPoint(
-								MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
 
 						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
 						p0 = map.getMapArea().getMapPoint(
-								MSTYPE.getValue(m,TYPES[type][0]),MSTYPE.getValue(m,TYPES[type][1]));
+								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
 					}
-					index = collector.getModelList().size();
+					index = dataService.getModelList().size();
 				}
 			}
 
@@ -353,10 +356,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(oldValue.booleanValue() && !newValue) {
-					if(model.home_state.g_lat!=0)
-						map.setCenter(model.home_state.g_lat, model.home_state.g_lon);
+					if(model.getValue("HOMLAT")!=0)
+						map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 					else
-						map.setCenter(MSTYPE.getValue(model,TYPES[type][0]),MSTYPE.getValue(model,TYPES[type][1]));
+						map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 					Platform.runLater(() -> {
 						canvasLayer.redraw(true);
 					});
@@ -377,10 +380,10 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 				int current_x1_pt = control.getCollector().calculateX1Index(nv.floatValue());
 
-				if(collector.getModelList().size()>0 && current_x1_pt > 0)
-					model = collector.getModelList().get(current_x1_pt);
+				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+					model = dataService.getModelList().get(current_x1_pt);
 				else
-					model = control.getCurrentModel();
+					model = dataService.getCurrent();
 
 			}
 		});
@@ -407,8 +410,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
-		this.collector = control.getCollector();
-		this.model=control.getCurrentModel();
+		this.model=dataService.getCurrent();
 		this.control = control;
 
 		gpsdetails.setup(control);
@@ -439,11 +441,6 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-
-		if(collector.getModelList().size()>0 && !collector.isCollecting())
-			model = collector.getModelList().get(collector.getModelList().size()-1);
-		else
-			model = control.getCurrentModel();
 
 		Platform.runLater(() -> {
 			canvasLayer.redraw(true);

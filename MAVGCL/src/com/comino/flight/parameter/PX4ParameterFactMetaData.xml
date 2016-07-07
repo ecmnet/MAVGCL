@@ -2056,7 +2056,7 @@ but also ignore less noise</short_desc>
   <group name="GPS">
     <parameter default="0" name="GPS_DUMP_COMM" type="INT32">
       <short_desc>Dump GPS communication to a file</short_desc>
-      <long_desc>If this is set to 1, all GPS communication data will be written to a file. Two files will be created, for reading and writing. All communication from startup until device disarm will be dumped.</long_desc>
+      <long_desc>If this is set to 1, all GPS communication data will be published via uORB, and written to the log file as gps_dump message.</long_desc>
       <min>0</min>
       <max>1</max>
       <scope>drivers/gps</scope>

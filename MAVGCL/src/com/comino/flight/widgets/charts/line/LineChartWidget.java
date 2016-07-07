@@ -41,12 +41,14 @@ import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.KeyFigureMetaData;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.MovingAxis;
 import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.types.MSTYPE;
-import com.comino.msp.model.DataModel;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.application.Platform;
@@ -56,8 +58,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -79,53 +79,6 @@ import javafx.scene.paint.Color;
 public class LineChartWidget extends BorderPane implements IChartControl {
 
 
-	private static MSTYPE[][] PRESETS = {
-			{ MSTYPE.MSP_NONE,		 MSTYPE.MSP_NONE,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTROLL, 	 MSTYPE.MSP_SPATTROLL,	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTPITCH, 	 MSTYPE.MSP_SPATTPIT,	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTYAW, 	 MSTYPE.MSP_SPATTYAW,	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTROLL_R,  MSTYPE.MSP_SPATTROLL_R,MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTPITCH_R, MSTYPE.MSP_SPATTPIT_R,	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_ATTYAW_R, 	 MSTYPE.MSP_SPATTYAW_R,	MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDX, 		 MSTYPE.MSP_NEDY,		MSTYPE.MSP_NEDZ		},
-			{ MSTYPE.MSP_NEDX, 		 MSTYPE.MSP_SPNEDX,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDY, 		 MSTYPE.MSP_SPNEDY,		MSTYPE.MSP_NONE		},
-			{ MSTYPE.MSP_NEDZ, 		 MSTYPE.MSP_SPNEDZ,		MSTYPE.MSP_NONE 	},
-			{ MSTYPE.MSP_NEDVX, 	 MSTYPE.MSP_NEDVY,		MSTYPE.MSP_NEDVZ	},
-			{ MSTYPE.MSP_NEDAX, 	 MSTYPE.MSP_NEDAY,		MSTYPE.MSP_NEDAZ	 },
-			{ MSTYPE.MSP_GLOBRELVX,  MSTYPE.MSP_GLOBRELVY,	MSTYPE.MSP_GLOBRELVZ },
-			{ MSTYPE.MSP_DEBUGX,     MSTYPE.MSP_DEBUGY,     MSTYPE.MSP_DEBUGZ    },
-			{ MSTYPE.MSP_ACCX, 		 MSTYPE.MSP_ACCY, 		MSTYPE.MSP_ACCZ 	},
-			{ MSTYPE.MSP_GYROX, 	 MSTYPE.MSP_GYROY, 		MSTYPE.MSP_GYROZ 	},
-			{ MSTYPE.MSP_MAGX,	     MSTYPE.MSP_MAGY, 		MSTYPE.MSP_MAGZ		},
-			{ MSTYPE.MSP_RAW_FLOWX,  MSTYPE.MSP_RAW_FLOWY, 	MSTYPE.MSP_RAW_DI	},
-			{ MSTYPE.MSP_VOLTAGE, 	 MSTYPE.MSP_CURRENT, 	MSTYPE.MSP_NONE		},
-	};
-
-	private static String[] PRESET_NAMES = {
-			"None",
-			"Att.Roll",
-			"Att.Pitch",
-			"Att.Yaw",
-			"Att.RollRate",
-			"Att.PitchRate",
-			"Att.YawRate",
-			"Loc.Pos.NED",
-			"Loc.Pos.NED X",
-			"Loc.Pos.NED Y",
-			"Loc.Pos.NED Z",
-			"Loc. Speed",
-			"Loc. Accel.",
-			"Rel.GPS.Speed",
-			"Debug Values",
-			"Raw Accelerator",
-			"Raw Gyroskope",
-			"Raw Magnetometer",
-			"Raw Flow",
-			"Battery",
-
-	};
-
 	private static int COLLECTOR_CYCLE = 50;
 	private static int REFRESH_RATE    = 50;
 
@@ -139,16 +92,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private NumberAxis yAxis;
 
 	@FXML
-	private ChoiceBox<String> cseries1;
+	private ChoiceBox<String> group;
 
 	@FXML
-	private ChoiceBox<String> cseries2;
+	private ChoiceBox<KeyFigureMetaData> cseries1;
 
 	@FXML
-	private ChoiceBox<String> cseries3;
+	private ChoiceBox<KeyFigureMetaData> cseries2;
 
 	@FXML
-	private ChoiceBox<String> preset;
+	private ChoiceBox<KeyFigureMetaData> cseries3;
 
 	@FXML
 	private Button export;
@@ -166,9 +119,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private IMAVController control;
 
 
-	private MSTYPE type1=MSTYPE.MSP_NONE;
-	private MSTYPE type2=MSTYPE.MSP_NONE;
-	private MSTYPE type3=MSTYPE.MSP_NONE;
+	private KeyFigureMetaData type1 = null;
+	private KeyFigureMetaData type2=  null;
+	private KeyFigureMetaData type3=  null;
 
 
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
@@ -183,13 +136,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int current_x0_pt = 0;
 	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
-	private int last_msg_pt = 0;
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
-	private List<DataModel> mList = null;
 
 	public LineChartWidget() {
 
@@ -221,7 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if (isCancelled())
 						break;
 
-					if(!isCollecting.get() && control.getCollector().isCollecting()) {
+					if(!isCollecting.get() && dataService.isCollecting()) {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
@@ -233,7 +186,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						updateGraph(false);
 					}
 
-					isCollecting.set(control.getCollector().isCollecting());
+					isCollecting.set(dataService.isCollecting());
 
 					if(isCollecting.get() && control.isConnected())
 						Platform.runLater(() -> {
@@ -269,73 +222,61 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-		cseries1.getItems().addAll(MSTYPE.getList());
-		cseries2.getItems().addAll(MSTYPE.getList());
-		cseries3.getItems().addAll(MSTYPE.getList());
+		group.getItems().add("All");
+		group.getItems().addAll(meta.getGroups());
+		group.getSelectionModel().select(0);
 
-		cseries1.getSelectionModel().select(0);
-		cseries2.getSelectionModel().select(0);
-		cseries3.getSelectionModel().select(0);
+		type1 = new KeyFigureMetaData();
+		type2 = new KeyFigureMetaData();
+		type3 = new KeyFigureMetaData();
 
-		preset.getItems().addAll(PRESET_NAMES);
-		preset.getSelectionModel().select(0);
+		initKeyFigureSelection(meta.getKeyFigures());
 
-		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = MSTYPE.values()[newValue.intValue()];
-				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
+			if(nv.contains("All"))
+				initKeyFigureSelection(meta.getKeyFigures());
+			else
+				initKeyFigureSelection(meta.getGroupMap().get(nv));
+
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
+		});
+
+		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
+			if(nv!=null) {
+				if(nv.hash!=0)
+					series1.setName(nv.desc1+" ["+nv.uom+"]   ");
+				else
+					series1.setName(nv.desc1+"   ");
+				type1 = nv;
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
-
 			}
-
 		});
 
-		cseries2.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type2 = MSTYPE.values()[newValue.intValue()];
-				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
+		cseries2.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
+			if(nv!=null) {
+				if(nv.hash!=0)
+					series2.setName(nv.desc1+" ["+nv.uom+"]   ");
+				else
+					series2.setName(nv.desc1+"   ");
+				type2 = nv;
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
-
 			}
 		});
 
-		cseries3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type3 = MSTYPE.values()[newValue.intValue()];
-				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
-
-			}
-		});
-
-		preset.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				type1 = PRESETS[newValue.intValue()][0];
-				type2 = PRESETS[newValue.intValue()][1];
-				type3 = PRESETS[newValue.intValue()][2];
-
-				cseries1.getSelectionModel().select(type1.getDescription());
-				cseries2.getSelectionModel().select(type2.getDescription());
-				cseries3.getSelectionModel().select(type3.getDescription());
-
-				series1.setName(type1.getDescription()+" ["+type1.getUnit()+"]   ");
-				series2.setName(type2.getDescription()+" ["+type2.getUnit()+"]   ");
-				series3.setName(type3.getDescription()+" ["+type3.getUnit()+"]   ");
-
+		cseries3.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
+			if(nv!=null) {
+				if(nv.hash!=0)
+					series3.setName(nv.desc1+" ["+nv.uom+"]   ");
+				else
+					series3.setName(nv.desc1+"   ");
+				type3 = nv;
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -354,7 +295,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt = control.getCollector().calculateX0Index(nv.floatValue());;
+			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());;
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
@@ -411,7 +352,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	private void updateGraph(boolean refresh) {
-		float dt_sec = 0; DataModel m =null; int remove_count=0; boolean set_bounds = false;
+		float dt_sec = 0; AnalysisDataModel m =null; int remove_count=0; boolean set_bounds = false;
 
 		series1_list.clear();
 		series2_list.clear();
@@ -429,10 +370,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
+		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
-		if(current_x_pt<mList.size() && mList.size()>0 ) {
-
-			int max_x = mList.size();
+			int max_x = dataService.getModelList().size();
 			if(!isCollecting.get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
@@ -440,23 +380,23 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
-				m = mList.get(current_x_pt);
+				m = dataService.getModelList().get(current_x_pt);
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
 					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
 				}
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
 
 					if(current_x_pt > current_x1_pt)
 						remove_count++;
 
-					if(type1!=MSTYPE.MSP_NONE)
-						series1_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type1)));
-					if(type2!=MSTYPE.MSP_NONE)
-						series2_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type2)));
-					if(type3!=MSTYPE.MSP_NONE)
-						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,MSTYPE.getValue(m,type3)));
+					if(type1.hash!=0)
+						series1_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type1)));
+					if(type2.hash!=0)
+						series2_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type2)));
+					if(type3.hash!=0)
+						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type3)));
 				}
 
 				if(current_x_pt > current_x1_pt) {
@@ -476,13 +416,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					series3.getData().remove(0, remove_count);
 			}
 
-			series1.getData().addAll(series1_list);
-			series2.getData().addAll(series2_list);
-			series3.getData().addAll(series3_list);
+			synchronized(this) {
+				series1.getData().addAll(series1_list);
+				series2.getData().addAll(series2_list);
+				series3.getData().addAll(series3_list);
+			}
 
 			if(set_bounds)
-				   setXAxisBounds(current_x0_pt,current_x1_pt);
-
+				setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 	}
 
@@ -502,13 +443,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		this.control = control;
 
 
-		series1.setName(type1.getDescription());
-		series2.setName(type2.getDescription());
-		series3.setName(type3.getDescription());
+		series1.setName(type1.desc1);
+		series2.setName(type2.desc1);
+		series3.setName(type3.desc1);
 
 		setXResolution(30);
-
-		mList = control.getCollector().getModelList();
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);
@@ -540,6 +479,24 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			Platform.runLater(() -> {
 				updateGraph(true);
 			});
+	}
+
+	private void initKeyFigureSelection(List<KeyFigureMetaData> kfl) {
+
+		cseries1.getItems().clear();
+		cseries2.getItems().clear();
+		cseries3.getItems().clear();
+
+		cseries1.getItems().add(type1);
+		cseries1.getItems().addAll(kfl);
+		cseries2.getItems().add(type2);
+		cseries2.getItems().addAll(kfl);
+		cseries3.getItems().add(type3);
+		cseries3.getItems().addAll(kfl);
+
+		cseries1.getSelectionModel().select(0);
+		cseries2.getSelectionModel().select(0);
+		cseries3.getSelectionModel().select(0);
 	}
 
 }
