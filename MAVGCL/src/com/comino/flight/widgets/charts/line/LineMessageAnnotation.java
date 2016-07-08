@@ -57,12 +57,12 @@ public class LineMessageAnnotation  implements XYAnnotation {
 	private  Polygon triangle 	= null;
 	private float    xpos   	= 0;
 
-	public LineMessageAnnotation(float xpos, int ypos, LogMessage message) {
+	public LineMessageAnnotation(float xpos, int ypos, LogMessage message, boolean displayLabel) {
 		this.xpos = xpos;
 
-        this.pane = new Pane();
-        this.pane.setPrefSize(300, 200);
-        this.pane.setBackground(null);
+		this.pane = new Pane();
+		this.pane.setPrefSize(300, 200);
+		this.pane.setBackground(null);
 
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
 
@@ -85,11 +85,15 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			this.triangle.setFill(Color.DARKGREY);
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
-		label = new Label(message.msg);
-		label.setLayoutY(15+ypos*18);
-		label.setLayoutX(7);
-		label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
-		this.pane.getChildren().addAll(triangle, label);
+		if(displayLabel) {
+			label = new Label(message.msg);
+			label.setLayoutY(15+ypos*18);
+			label.setLayoutX(7);
+			label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
+			this.pane.getChildren().addAll(triangle, label);
+		} else
+			this.pane.getChildren().addAll(triangle);
+
 	}
 
 	@Override
