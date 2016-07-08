@@ -84,11 +84,19 @@ public class KeyFigureMetaData {
 
 
 	public float getValueFromPX4Model(Map<String,Object> data) {
-		return (float) data.get(px4field);
+		Object o = data.get(px4field);
+		if(o instanceof Integer)
+			return (float)(Integer)data.get(px4field);
+		else
+		    return (float)(Float)data.get(px4field);
 	}
 
 	public String toString() {
 		return desc1;
+	}
+
+	public String toStringAll() {
+		return desc1+": "+mspfield+"/"+px4field;
 	}
 
 

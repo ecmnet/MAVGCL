@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.control.SITLController;
+import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -93,6 +94,9 @@ public class MainApp extends Application {
 
 	@FXML
 	private MenuItem m_prefs;
+
+	@FXML
+	private MenuItem m_keyfigures;
 
 	@FXML
 	private MenuBar menubar;
@@ -264,6 +268,10 @@ public class MainApp extends Application {
 		m_prefs.setDisable(false);
 		m_prefs.setOnAction(event -> {
 			new PreferencesDialog(control).show();
+		});
+
+		m_keyfigures.setOnAction(event -> {
+			AnalysisDataModelMetaData.getInstance().dump();
 		});
 	}
 

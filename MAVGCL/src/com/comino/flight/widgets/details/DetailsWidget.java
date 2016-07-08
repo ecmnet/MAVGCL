@@ -76,7 +76,7 @@ public class DetailsWidget extends FadePane  {
 			"ALTTR",
 			"BOTCL",
 			null,
-			"FLOWQ",
+			"FLOWQL",
 			"LIDAR",
 			null,
 			"LPOSX",

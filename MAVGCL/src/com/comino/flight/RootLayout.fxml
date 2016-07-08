@@ -51,6 +51,10 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_keyfigures" mnemonicParsing="false"
+							text="Dump key figures to console">
+						</MenuItem>
 					</items>
 				</Menu>
 			</menus>

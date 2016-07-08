@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
  * User: ton Date: 03.06.14 Time: 12:31
  */
 public class MAVLinkMessage {
+    public final static byte START_OF_FRAME = (byte) 0xFE;
     public final static int HEADER_LENGTH = 6;
     public final static int CRC_LENGTH = 2;
     public final static int NON_PAYLOAD_LENGTH = HEADER_LENGTH + CRC_LENGTH;
@@ -74,9 +75,9 @@ public class MAVLinkMessage {
         }
         int startPos = buffer.position();
         byte startSign = buffer.get();
-        if (startSign != schema.getStartSign()) {
+        if (startSign != START_OF_FRAME) {
             throw new MAVLinkProtocolException(
-                    String.format("Invalid start sign: %02x, should be %02x", startSign, schema.getStartSign()));
+                    String.format("Invalid start sign: %02x, should be %02x", startSign, START_OF_FRAME));
         }
         int payloadLen = buffer.get() & 0xff;
         if (buffer.remaining() < payloadLen + NON_PAYLOAD_LENGTH - 2) { // 2 bytes was read already
@@ -120,7 +121,7 @@ public class MAVLinkMessage {
         this.sequence = sequence;
         ByteBuffer buf = ByteBuffer.allocate(payload.length + NON_PAYLOAD_LENGTH);
         buf.order(schema.getByteOrder());
-        buf.put(schema.getStartSign());
+        buf.put(START_OF_FRAME);
         buf.put((byte) definition.payloadLength);
         buf.put(sequence);
         buf.put((byte) systemID);

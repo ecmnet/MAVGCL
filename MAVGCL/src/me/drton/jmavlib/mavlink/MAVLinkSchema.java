@@ -1,5 +1,13 @@
 package me.drton.jmavlib.mavlink;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -8,20 +16,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 /**
  * User: ton Date: 03.06.14 Time: 12:31
  */
 public class MAVLinkSchema {
-    private byte startSign = (byte) 0xFE;
     private ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
     private final MAVLinkMessageDefinition[] definitions = new MAVLinkMessageDefinition[256];
     private final Map<String, MAVLinkMessageDefinition> definitionsByName
@@ -30,10 +28,6 @@ public class MAVLinkSchema {
 
     public MAVLinkSchema(String xmlFileName) throws ParserConfigurationException, IOException, SAXException {
         processXMLFile(xmlFileName);
-    }
-
-    public byte getStartSign() {
-        return startSign;
     }
 
     public ByteOrder getByteOrder() {

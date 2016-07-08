@@ -340,6 +340,7 @@
 
 	<KeyFigure desc="Flow X" uom="deg/s" mask="#0.00" key="FLOWX">
 		<MSPSource class="raw" field="fX"></MSPSource>
+		<PX4Source field="FLOW.RawX"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -348,6 +349,7 @@
 
 	<KeyFigure desc="Flow Y" uom="deg/s" mask="#0.00" key="FLOWY">
 		<MSPSource class="raw" field="fY"></MSPSource>
+		<PX4Source field="FLOW.RawY"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -356,13 +358,16 @@
 
 	<KeyFigure desc="FLow Dist." uom="m" mask="#0.00" key="FLOWDI">
 		<MSPSource class="raw" field="fd"></MSPSource>
+		<PX4Source field="FLOW.Dist"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQ">
+
+	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
 		<MSPSource class="raw" field="fq"></MSPSource>
+		<PX4Source field="FLOW.Qlty"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -476,6 +481,22 @@
 
 	<KeyFigure desc="Baro Altitude" uom="m" mask="#0.0" key="BAROALT">
 		<PX4Source field="SENS.BaroAlt"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Raw GPS EPH" uom="m" mask="#0.0" key="RGPSEPH">
+		<PX4Source field="LPOS.EPH"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Raw GPS EPV" uom="m" mask="#0.0" key="RGPSEPV">
+		<PX4Source field="LPOS.EPV"></PX4Source>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -599,7 +620,7 @@
 		<MSPSource class="battery" field="b0"></MSPSource>
 		<PX4Source field="BATT.V"></PX4Source>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -607,35 +628,35 @@
 		<MSPSource class="battery" field="c0"></MSPSource>
 		<PX4Source field="BATT.C"></PX4Source>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0" key="BATH">
 		<MSPSource class="battery" field="a0"></MSPSource>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
 		<MSPSource class="battery" field="p"></MSPSource>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">
 		<MSPSource class="sys" field="load_p"></MSPSource>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>
 		<Groups>
-			<Group>Power / System</Group>
+			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
 

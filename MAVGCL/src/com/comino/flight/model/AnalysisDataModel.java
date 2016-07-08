@@ -100,7 +100,7 @@ public class AnalysisDataModel {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
 				data.put(e.hash,e.getValueFromPX4Model(d));
-			} catch (Exception e1) { }
+			} catch (Exception e1) {  }
 		});
 	}
 

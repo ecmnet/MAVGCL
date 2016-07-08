@@ -118,6 +118,12 @@ public class AnalysisDataModelMetaData {
 		return list;
 	}
 
+	public void dump() {
+		for(KeyFigureMetaData m : sortedMetaList) {
+			System.out.println(m.toStringAll());
+		}
+	}
+
 	private List<KeyFigureMetaData> buildSortedList() {
 		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
 		meta.forEach((i,p) -> {

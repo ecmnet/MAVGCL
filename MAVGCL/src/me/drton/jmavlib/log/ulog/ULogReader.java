@@ -1,15 +1,12 @@
 package me.drton.jmavlib.log.ulog;
 
+import me.drton.jmavlib.log.BinaryLogReader;
+import me.drton.jmavlib.log.FormatErrorException;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import me.drton.jmavlib.log.BinaryLogReader;
-import me.drton.jmavlib.log.FormatErrorException;
+import java.util.*;
 
 /**
  * User: ton Date: 03.06.13 Time: 14:18
@@ -166,9 +163,11 @@ public class ULogReader extends BinaryLogReader {
             while (true) {
                 fillBuffer(headerSize);
                 long pos = position();
-                byte sync = buffer.get();
-                if (sync != SYNC_BYTE) {
-                    continue;
+                if (logVersion > 0) {
+                    byte sync = buffer.get();
+                    if (sync != SYNC_BYTE) {
+                        continue;
+                    }
                 }
                 int msgType = buffer.get() & 0xFF;
                 int msgSize;
@@ -246,10 +245,12 @@ public class ULogReader extends BinaryLogReader {
         while (true) {
             fillBuffer(headerSize);
             long pos = position();
-            byte sync = buffer.get();
-            if (sync != SYNC_BYTE) {
-                errors.add(new FormatErrorException(pos, String.format("Wrong sync byte: 0x%02X (expected 0x%02X)", sync & 0xFF, SYNC_BYTE & 0xFF)));
-                continue;
+            if (logVersion > 0) {
+                byte sync = buffer.get();
+                if (sync != SYNC_BYTE) {
+                    errors.add(new FormatErrorException(pos, String.format("Wrong sync byte: 0x%02X (expected 0x%02X)", sync & 0xFF, SYNC_BYTE & 0xFF)));
+                    continue;
+                }
             }
             int msgType = buffer.get() & 0xFF;
             int msgSize;
