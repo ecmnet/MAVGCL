@@ -330,9 +330,11 @@
 
 	<KeyFigure desc="Air speed" uom="m/s" mask="#0.0" key="AIRV">
 		<MSPSource class="hud" field="as"></MSPSource>
+		<PX4Source field="AIRS.TrueSpeed"></PX4Source>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
+		
 	</KeyFigure>
 
 
@@ -651,6 +653,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<PX4Source field="LOAD.CPU"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
