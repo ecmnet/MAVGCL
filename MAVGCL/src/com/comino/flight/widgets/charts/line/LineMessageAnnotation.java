@@ -88,7 +88,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		label = new Label(message.msg);
 		label.setLayoutY(15+ypos*18);
 		label.setLayoutX(7);
-		label.setStyle("-fx-border-color: #707070; -fx-background-color: #303030; -fx-padding:2;");
+		label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
 		this.pane.getChildren().addAll(triangle, label);
 	}
 
