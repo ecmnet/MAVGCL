@@ -78,7 +78,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 MAVGAnalysis depends heavily on https://github.com/ecmnet/MAVComm for MAVLink parsing.
 ​
 
-**Screenshot**:
+**Screenshot** (latest master):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
 
