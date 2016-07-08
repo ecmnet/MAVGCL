@@ -23,6 +23,7 @@
 		<Groups>
 			<Group>Altitude</Group>
 		</Groups>
+		<PX4Source field="GPOS.TALT"></PX4Source>
 	</KeyFigure>
 
 		<KeyFigure desc="Bottom Clearance" uom="m" mask="#0.0" key="BOTCL">
@@ -252,6 +253,7 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
+		<PX4Source field="ARSP.RollRateSP"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="Sp.PitchRate" uom="deg/s" mask="#0.00" key="SPPITCHR">
@@ -259,6 +261,7 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
+		<PX4Source field="ARSP.PitchRateSP"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="SP.YawRate" uom="deg/s" mask="#0.00" key="SPYAWR">
@@ -266,6 +269,7 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
+		<PX4Source field="ARSP.YawRateSP"></PX4Source>
 	</KeyFigure>
 
 	<!-- Global position -->
@@ -471,6 +475,7 @@
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
+		<PX4Source field="GPS.nSat"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
