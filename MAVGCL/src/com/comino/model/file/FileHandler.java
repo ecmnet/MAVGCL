@@ -74,7 +74,7 @@ public class FileHandler {
 	private String name="";
 	private Preferences userPrefs;
 
-	private AnalysisModelService collector = AnalysisModelService.getInstance();
+	private AnalysisModelService modelService = AnalysisModelService.getInstance();
 
 
 	public static FileHandler getInstance() {
@@ -126,7 +126,7 @@ public class FileHandler {
 				stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
 				ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
 				reader.close();
-				collector.setModelList(modelList);
+				modelService.setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 
@@ -146,7 +146,7 @@ public class FileHandler {
 			if(file!=null) {
 				PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
 				stage.getScene().setCursor(Cursor.WAIT);
-				PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
+				PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
 				converter.doConversion();
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
@@ -174,7 +174,7 @@ public class FileHandler {
 				Writer writer = new FileWriter(file);
 				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 				stage.getScene().setCursor(Cursor.WAIT);
-				gson.toJson(collector.getModelList(), writer);
+				gson.toJson(modelService.getModelList(), writer);
 				writer.close();
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();

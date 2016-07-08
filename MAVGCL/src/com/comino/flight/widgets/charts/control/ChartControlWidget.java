@@ -122,7 +122,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
-	private AnalysisModelService collector;
+	private AnalysisModelService modelService;
 
 	private long scroll_tms = 0;
 
@@ -153,9 +153,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 						break;
 					}
 
-					updateValue(collector.getMode());
+					updateValue(modelService.getMode());
 				}
-				return collector.getMode();
+				return modelService.getMode();
 			}
 		};
 
@@ -227,7 +227,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			FileHandler.getInstance().clear();
 			scroll.setValue(0);
 			scroll.setDisable(true);
-			control.getCollector().clearModelList();
+			modelService.clearModelList();
 			for(IChartControl chart : charts) {
 				if(chart.getScrollProperty()!=null)
 					chart.getScrollProperty().set(1);
@@ -262,7 +262,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
-			collector.setTotalTimeSec(totalTime_sec);
+			modelService.setTotalTimeSec(totalTime_sec);
 
 			for(IChartControl chart : charts) {
 				if(chart.getTimeFrameProperty()!=null)
@@ -271,7 +271,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 					chart.getScrollProperty().set(1);
 			}
 
-			if(collector.getModelList().size() < totalTime_sec * 1000 /  collector.getCollectorInterval_ms() || collector.isCollecting())
+			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
@@ -318,10 +318,10 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
-		this.collector =  AnalysisModelService.getInstance(control.getCurrentModel());
+		this.modelService =  AnalysisModelService.getInstance(control.getCurrentModel());
 		this.control.addModeChangeListener(this);
-		this.collector.setTotalTimeSec(totalTime_sec);
-		this.collector.clearModelList();
+		this.modelService.setTotalTimeSec(totalTime_sec);
+		this.modelService.clearModelList();
 
 		StateProperties.getInstance().getRecordingProperty().bind(recording.selectedProperty());
 
@@ -349,7 +349,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			chart.refreshChart();
 		}
 
-		if(collector.getModelList().size() > totalTime_sec * 1000 /  collector.getCollectorInterval_ms())
+		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
 
@@ -389,12 +389,12 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 	private void recording(boolean start, int delay) {
 
 		if(start) {
-			collector.start();
+			modelService.start();
 			scroll.setDisable(true);
 		}
 		else {
-			collector.stop(delay);
-			if(collector.getModelList().size() > totalTime_sec * 1000 / collector.getCollectorInterval_ms()) {
+			modelService.stop(delay);
+			if(modelService.getModelList().size() > totalTime_sec * 1000 / modelService.getCollectorInterval_ms()) {
 				scroll.setDisable(false);
 			}
 		}
