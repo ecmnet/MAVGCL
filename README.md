@@ -10,12 +10,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Status:** Last updated 04/07/2016 
+**Development Status:** Last updated 08/07/2016 
 
-- Binaries for Linux, OSX and Windows available 
-- Stability and performance
+- Int: Dynamic datamodel based on model meta data.
+- Int: Mapping and consolidation between PX4Log and MAVLink key figures
+- UI: Selection of key figures via key figure groups
 
-**Features:**
+**********Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
 - Timechart annotated by messages and parameter changes
@@ -71,7 +72,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 - Limited to one device (MAVLink-ID '1')
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it). Note: Serial via radio might be too slow.
-- PX4Log keyfigure mapping not complete (let me know, which I should add)
+- PX4Log keyfigure mapping still not [complete](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml).
 
 
 **Note for developers:**
