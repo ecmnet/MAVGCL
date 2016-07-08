@@ -16,7 +16,7 @@ Any feedback, comments and contributions are very welcome.
 - Int: Mapping and consolidation between PX4Log and MAVLink key figures
 - UI: Selection of key figures via key figure groups
 
-**********Features:**
+**Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
 - Timechart annotated by messages and parameter changes
