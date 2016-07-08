@@ -12,7 +12,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 08/07/2016 
 
-- Pre-Release 0.4 (V0.391) published
+- [Pre-Release 0.4 published](https://github.com/ecmnet/MAVGCL/releases)
 
 **Features:**
 
