@@ -40,18 +40,29 @@ import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
 public class LineMessageAnnotation  implements XYAnnotation {
 
-	private  Polygon triangle = null;
-	private float      xpos   = 0;
+	private  Pane    pane 		= null;
+	private  Label   label 		= null;
+	private  Polygon triangle 	= null;
+	private float    xpos   	= 0;
 
-	public LineMessageAnnotation(float xpos, LogMessage message) {
+	public LineMessageAnnotation(float xpos, int ypos, LogMessage message) {
 		this.xpos = xpos;
+
+        this.pane = new Pane();
+        this.pane.setPrefSize(300, 200);
+        this.pane.setBackground(null);
 
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
 
@@ -74,19 +85,22 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			this.triangle.setFill(Color.DARKGREY);
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
-		Tooltip t = new Tooltip(message.msg);
-		Tooltip.install(triangle, t);
+		label = new Label(message.msg);
+		label.setLayoutY(15+ypos*18);
+		label.setLayoutX(7);
+		label.setStyle("-fx-border-color: #707070; -fx-background-color: #303030; -fx-padding:2;");
+		this.pane.getChildren().addAll(triangle, label);
 	}
 
 	@Override
 	public Node getNode() {
-		return triangle;
+		return pane;
 	}
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		triangle.setLayoutX(xAxis.getDisplayPosition(xpos));
-		triangle.setLayoutY(0);
+		pane.setLayoutX(xAxis.getDisplayPosition(xpos));
+		pane.setLayoutY(0);
 	}
 
 }

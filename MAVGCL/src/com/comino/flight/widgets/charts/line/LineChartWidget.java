@@ -153,6 +153,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
 	private Gson gson = new GsonBuilder().create();
+	private int   yoffset = 0;
+	private int   last_annotation_pos = 0;
 
 	public LineChartWidget() {
 
@@ -397,6 +399,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			last_annotation_pos = 0;
+			yoffset = 0;
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -416,7 +420,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				m = dataService.getModelList().get(current_x_pt);
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
-					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,m.msg), Layer.FOREGROUND);
+					if((current_x_pt - last_annotation_pos) > 150)
+						yoffset=0;
+					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg), Layer.FOREGROUND);
+					last_annotation_pos = current_x_pt;
 				}
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
