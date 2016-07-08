@@ -12,9 +12,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 08/07/2016 
 
-- Int: Dynamic datamodel based on model meta data.
-- Int: Mapping and consolidation between PX4Log and MAVLink key figures
-- UI: Selection of key figures via key figure groups
+- Pre-Release 0.4 (V0.391) published
 
 **Features:**
 
