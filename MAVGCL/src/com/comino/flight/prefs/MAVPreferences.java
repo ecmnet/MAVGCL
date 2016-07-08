@@ -41,6 +41,7 @@ public class MAVPreferences {
 	public final static String PREFS_IP_PORT    = "IP_PORT";
 	public final static String PREFS_VIDEO      = "VIDEOURL";
 	public final static String PREFS_DIR        = "DIRECTORY";
+	public final static String RECENT_FIGS      = "RECENTFIGS";
 
 	private static Preferences prefs = null;
 

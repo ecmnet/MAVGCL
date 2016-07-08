@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
@@ -45,11 +46,15 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.MovingAxis;
 import com.comino.flight.widgets.SectionLineChart;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -78,7 +83,7 @@ import javafx.scene.paint.Color;
 
 public class LineChartWidget extends BorderPane implements IChartControl {
 
-	private static int MAXRECENT = 10;
+	private static int MAXRECENT = 20;
 
 
 	private static int COLLECTOR_CYCLE = 50;
@@ -141,12 +146,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
-	private List<KeyFigureMetaData> recent = null;
+	private ArrayList<KeyFigureMetaData> recent = null;
 
 	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
 	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
+	private Gson gson = new GsonBuilder().create();
 
 	public LineChartWidget() {
 
@@ -160,7 +166,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
-		recent = new ArrayList<KeyFigureMetaData>();
+		readRecentList();
+		if(recent==null)
+			System.err.println("ERROR");
 
 		task = new Task<Integer>() {
 
@@ -334,8 +342,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void addToRecent(KeyFigureMetaData nv) {
 		if(recent.size()>MAXRECENT)
 			recent.remove(0);
-		if(!recent.contains(nv))
-		    recent.add(nv);
+		if(!recent.contains(nv)) {
+			recent.add(nv);
+			storeRecentList();
+		}
 	}
 
 	public void saveAsPng(String path) {
@@ -520,7 +530,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			if(type!=null && type.hash!=0) {
 				if(!kfl.contains(type))
-				  series.getItems().add(type);
+					series.getItems().add(type);
 				series.getItems().addAll(kfl);
 				series.getSelectionModel().select(type);
 			} else {
@@ -529,6 +539,23 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 
 		});
+	}
+
+	private void storeRecentList() {
+		Preferences prefs = MAVPreferences.getInstance();
+		String rc = gson.toJson(recent);
+		prefs.put(MAVPreferences.RECENT_FIGS, rc);
+	}
+
+	private void readRecentList() {
+		Preferences prefs = MAVPreferences.getInstance();
+		String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
+		if(rc!=null)
+			recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
+
+		if(recent==null)
+			recent = new ArrayList<KeyFigureMetaData>();
+
 	}
 
 }
