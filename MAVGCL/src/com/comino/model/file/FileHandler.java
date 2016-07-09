@@ -70,7 +70,6 @@ public class FileHandler {
 	private static FileHandler handler = null;
 
 	private Stage stage;
-	private IMAVController control;
 	private String name="";
 	private Preferences userPrefs;
 
@@ -91,7 +90,6 @@ public class FileHandler {
 	private FileHandler(Stage stage, IMAVController control) {
 		super();
 		this.stage = stage;
-		this.control = control;
 		this.userPrefs = MAVPreferences.getInstance();
 	}
 
