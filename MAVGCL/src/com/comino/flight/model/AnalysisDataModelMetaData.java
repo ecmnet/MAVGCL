@@ -138,7 +138,7 @@ public class AnalysisDataModelMetaData {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println("with "+count+" keyfigures registered ");
+		System.out.println("with "+count+" keyfigures ");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {

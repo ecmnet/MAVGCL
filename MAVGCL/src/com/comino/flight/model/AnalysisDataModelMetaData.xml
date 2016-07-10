@@ -18,6 +18,13 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Alt.baro" uom="m" mask="#0.0" key="ALTBARO">
+		<MSPSource class="hud" field="ap"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
 		<MSPSource class="hud" field="at"></MSPSource>
 		<Groups>
