@@ -161,6 +161,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int   last_annotation_pos = 0;
 
 	private double dx;
+	private long scroll_tms;
 
 	public LineChartWidget() {
 
@@ -173,10 +174,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			throw new RuntimeException(exception);
 		}
-
-		readRecentList();
-		if(recent==null)
-			System.err.println("ERROR");
 
 		task = new Task<Integer>() {
 
@@ -244,40 +241,44 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		linechart.setOnMousePressed(mouseEvent -> {
-				dx = mouseEvent.getSceneX()-linechart.getLayoutX();
-				current_x0_pt_dragged = current_x0_pt;
-				linechart.setCursor(Cursor.HAND);
+			dx = mouseEvent.getSceneX()-linechart.getLayoutX();
+			current_x0_pt_dragged = current_x0_pt;
+			linechart.setCursor(Cursor.H_RESIZE);
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
-				linechart.setCursor(Cursor.DEFAULT);
+			linechart.setCursor(Cursor.DEFAULT);
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-				double delta = xAxis.getValueForDisplay(mouseEvent.getSceneX()-linechart.getLayoutX()).doubleValue()
-						- xAxis.getValueForDisplay(dx).doubleValue();
+			double delta = xAxis.getValueForDisplay(mouseEvent.getSceneX()-linechart.getLayoutX()).doubleValue()
+					- xAxis.getValueForDisplay(dx).doubleValue();
 
-				if(dataService.isCollecting())
-					return;
+			if(dataService.isCollecting() || (System.currentTimeMillis() - scroll_tms)<20)
+				return;
 
-				current_x0_pt = current_x0_pt_dragged - (int)(delta * 1000f / COLLECTOR_CYCLE);
-				if(current_x0_pt<0)
-					current_x0_pt = 0;
+			scroll_tms = System.currentTimeMillis();
 
-				if(!disabledProperty().get())
-					Platform.runLater(() -> {
-						updateGraph(true);
-					});
+			current_x0_pt = current_x0_pt_dragged - (int)(delta * 1000f / COLLECTOR_CYCLE);
+			if(current_x0_pt<0)
+				current_x0_pt = 0;
+
+			if(!disabledProperty().get())
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
 		});
 
+		readRecentList();
+
+		group.getItems().add("Last used...");
 		group.getItems().add("All");
 		group.getItems().addAll(meta.getGroups());
-		group.getItems().add("...used recently");
 		group.getSelectionModel().select(0);
 
-		initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
-		initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
-		initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
+		initKeyFigureSelection(cseries1, type1, recent);
+		initKeyFigureSelection(cseries2, type2, recent);
+		initKeyFigureSelection(cseries3, type3, recent);
 
 		type1 = type2 = type3 = new KeyFigureMetaData();
 
@@ -287,7 +288,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
 				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
 				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
-			} else if(nv.contains("recent")) {
+			} else if(nv.contains("used")) {
 				initKeyFigureSelection(cseries1, type1, recent);
 				initKeyFigureSelection(cseries2, type2, recent);
 				initKeyFigureSelection(cseries3, type3, recent);
