@@ -351,7 +351,7 @@
 
 	<KeyFigure desc="Air speed" uom="m/s" mask="#0.0" key="AIRV">
 		<MSPSource class="hud" field="as"></MSPSource>
-		<PX4Source field="AIRS.TrueSpeed">AATATSATSPATSP.ATSP.PATSP.PiATSP.PitATSP.PitcATSP.PitchATSP.PitchSATSP.PitchSPATSP.PitchSP</PX4Source>
+		<PX4Source field="AIRS.TrueSpeed"></PX4Source>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -589,6 +589,21 @@
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
+
+	<KeyFigure desc="LPosXY valid" uom="" mask="#0" key="LPOSXYVAL">
+		<PX4Source field="LPOS.PFlg"></PX4Source>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="LPosZ valid" uom="" mask="#0" key="LPOSZVAL">
+		<PX4Source field="LPOS.GFlg"></PX4Source>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
 
 	<KeyFigure desc="EST0.Fault" uom="" mask="#0.00" key="EST0FAULT">
 		<PX4Source field="EST0.fFault"></PX4Source>
