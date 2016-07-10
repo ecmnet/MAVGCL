@@ -453,10 +453,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				m = dataService.getModelList().get(current_x_pt);
 
-				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && annotations.isSelected()) {
+				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 					if((current_x_pt - last_annotation_pos) > 150)
 						yoffset=0;
-					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg, resolution_ms<200),
+					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg,
+							(resolution_ms<200) && annotations.isSelected()),
 							Layer.FOREGROUND);
 					last_annotation_pos = current_x_pt;
 				}
@@ -549,7 +550,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		current_x0_pt = control.getCollector().calculateX0Index(1);
+		current_x0_pt = dataService.calculateX0Index(1);
 		if(!disabledProperty().get())
 			Platform.runLater(() -> {
 				updateGraph(true);
