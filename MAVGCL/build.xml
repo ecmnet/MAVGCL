@@ -61,6 +61,11 @@
 			</manifest>
 		</fx:jar>
 		<copy todir="dist">
+			<fileset dir=".">
+						<include name="*.icns" />
+			</fileset>
+		</copy>
+		<copy todir="dist">
 			<fileset dir="native">
 				<include name="*.*" />
 			</fileset>
