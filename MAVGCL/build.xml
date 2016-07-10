@@ -62,7 +62,7 @@
 		</fx:jar>
 		<copy todir="dist">
 			<fileset dir=".">
-						<include name="*.icns" />
+				<include name="*.icns" />
 			</fileset>
 		</copy>
 		<copy todir="dist">

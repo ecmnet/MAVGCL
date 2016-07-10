@@ -413,6 +413,15 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="LIDAR Dist.Cov." uom="m" mask="#0.00" key="LIDARCOV">
+		<MSPSource class="raw" field="dicov"></MSPSource>
+		<PX4Source field="DIST.Covariance"></PX4Source>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Acc.X" uom="m/s^2" mask="#0.00" key="ACCX">
 		<MSPSource class="imu" field="accx"></MSPSource>
 		<PX4Source field="IMU.AccX"></PX4Source>

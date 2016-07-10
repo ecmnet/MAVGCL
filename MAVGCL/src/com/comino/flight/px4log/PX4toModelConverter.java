@@ -72,6 +72,7 @@ public class PX4toModelConverter {
 
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
+
 				if(tms > tms_slot) {
 					model.tms = tms;
 					tms_slot += 50000;
