@@ -89,8 +89,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private static int MAXRECENT = 20;
 
 
-	private static int COLLECTOR_CYCLE = 50;
-	private static int REFRESH_RATE    = 50;
+	private final static int COLLECTOR_CYCLE = 50;
+	private final static int REFRESH_RATE    = 50;
+	private final static int REFRESH_STEP    = REFRESH_RATE / COLLECTOR_CYCLE;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -371,7 +372,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
-		annotations.setSelected(true);
+		annotations.setSelected(false);
 	}
 
 
@@ -467,18 +468,18 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if(current_x_pt > current_x1_pt)
 						remove_count++;
 
-					if(type1.hash!=0)
+					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
 						series1_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type1)));
-					if(type2.hash!=0)
+					if(type2.hash!=0 && m.getValue(type2)!=Float.NaN)
 						series2_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type2)));
-					if(type3.hash!=0)
+					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
 						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type3)));
 				}
 
 				if(current_x_pt > current_x1_pt) {
 					set_bounds = true;
-					current_x0_pt += REFRESH_RATE/COLLECTOR_CYCLE;
-					current_x1_pt += REFRESH_RATE/COLLECTOR_CYCLE;
+					current_x0_pt += REFRESH_STEP;
+					current_x1_pt += REFRESH_STEP;
 				}
 				current_x_pt++;
 			}
