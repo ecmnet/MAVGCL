@@ -35,8 +35,10 @@ package com.comino.flight.model;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.comino.flight.model.converter.SourceConverter;
 import com.comino.msp.model.DataModel;
 
 public class KeyFigureMetaData {
@@ -50,6 +52,8 @@ public class KeyFigureMetaData {
 	private String mspclass;
 	private String mspfield;
 	private String px4field;
+
+	private SourceConverter converter = null;
 
 
 	public KeyFigureMetaData() {
@@ -70,25 +74,41 @@ public class KeyFigureMetaData {
 		this.mspfield = mspfield;
 	}
 
+	public void setConverter(String type, List<String> parameters) {
+		try {
+			Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+type);
+			converter = (SourceConverter) clazz.newInstance();
+		} catch(Exception e) { System.err.println(e.getMessage()); }
+	}
+
 	public void setPX4Source(String px4field) {
 		this.px4field = px4field;
 		this.desc2    = px4field;
 	}
 
 	public float getValueFromMSPModel(DataModel m) throws Exception {
+		float value = 0;
 		Field mclass_field = m.getClass().getField(mspclass);
 		Object mclass = mclass_field.get(m);
 		Field mfield_field = mclass.getClass().getField(mspfield);
-		return mfield_field.getFloat(mclass);
+		value = mfield_field.getFloat(mclass);
+		if(converter != null)
+			return converter.convert(value);
+		return value;
 	}
 
 
 	public float getValueFromPX4Model(Map<String,Object> data) {
+		float value = 0;
 		Object o = data.get(px4field);
 		if(o instanceof Integer)
-			return (float)(Integer)data.get(px4field);
+			value = (float)(Integer)data.get(px4field);
 		else
-		    return (float)(Float)data.get(px4field);
+			value = (float)(Float)data.get(px4field);
+
+		if(converter != null)
+			return converter.convert(value);
+		return value;
 	}
 
 	public String toString() {

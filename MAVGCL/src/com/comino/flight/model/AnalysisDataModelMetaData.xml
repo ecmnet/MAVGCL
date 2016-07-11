@@ -628,6 +628,15 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="lIDAR Timeout" uom="" mask="#0.00" key="EST0TO">
+		<PX4Source field="EST0.fTOut">
+		    <Converter class="BitMaskConverter" p1="4"/>
+		</PX4Source>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- Radio -->
 
 	<KeyFigure desc="RC Channel 0" uom="" mask="#0" key="RC0">
