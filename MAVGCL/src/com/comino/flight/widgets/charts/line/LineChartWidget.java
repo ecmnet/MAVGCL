@@ -458,7 +458,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if((current_x_pt - last_annotation_pos) > 150)
 						yoffset=0;
 					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg,
-							(resolution_ms<200) && annotations.isSelected()),
+							(resolution_ms<300) && annotations.isSelected()),
 							Layer.FOREGROUND);
 					last_annotation_pos = current_x_pt;
 				}
