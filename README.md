@@ -10,7 +10,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 10/07/2016 
+**Development Status:** Last updated 11/07/2016 
 
 - [Release 0.4 published](https://github.com/ecmnet/MAVGCL/releases)
 
@@ -38,6 +38,10 @@ Any feedback, comments and contributions are very welcome.
 **Binaries:**
 
 Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
+
+**Screenshot** (latest master):
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
@@ -76,12 +80,6 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 **Note for developers:**
 
 MAVGAnalysis depends heavily on https://github.com/ecmnet/MAVComm for MAVLink parsing.
-​
-
-**Screenshot** (latest master):
-
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
-
 
 
 Please note the [License terms](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/LICENSE.md).
