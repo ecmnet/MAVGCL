@@ -379,10 +379,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void addToRecent(KeyFigureMetaData nv) {
 		if(recent.size()>MAXRECENT)
 			recent.remove(0);
-		if(!recent.contains(nv)) {
-			recent.add(nv);
-			storeRecentList();
-		}
+		if(recent.contains(nv))
+			recent.remove(nv);
+		recent.add(nv);
+		storeRecentList();
 	}
 
 	public void saveAsPng(String path) {
