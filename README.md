@@ -10,11 +10,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
+**Current Release:** [0.4](https://github.com/ecmnet/MAVGCL/releases)
+
 **Development Status:** Last updated 12/07/2016 
 
-- LPE health keyfigures added
-- In-Flight tunding enhanced
-- [Release 0.4 published](https://github.com/ecmnet/MAVGCL/releases)
+- LPE health keyfigures added (PX4Logs only)
+- In-Flight tuning enhanced
+- LineChart now draggable
 
 **Features:**
 
