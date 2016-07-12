@@ -106,9 +106,6 @@ public class FlightTabs extends Pane {
 		tabs.add(mavinspectortab);
 		tabs.add(mavparametertab);
 
-
-		//		tabs.add(mavworldtab);
-
 	}
 
 	public void activateCurrentTab(boolean disable) {
@@ -125,7 +122,6 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
-		//		mavanalysis3Dtab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mavparametertab.setDisable(true);
 
