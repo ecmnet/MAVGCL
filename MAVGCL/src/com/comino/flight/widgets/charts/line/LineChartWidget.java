@@ -251,6 +251,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			linechart.setCursor(Cursor.DEFAULT);
 		});
 
+		linechart.setOnMouseClicked(click -> {
+			if (click.getClickCount() == 2) {
+				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+				if(!disabledProperty().get())
+					Platform.runLater(() -> {
+						updateGraph(true);
+					});
+			}
+		});
+
 		linechart.setOnMouseDragged(mouseEvent -> {
 			double delta = xAxis.getValueForDisplay(mouseEvent.getSceneX()-linechart.getLayoutX()).doubleValue()
 					- xAxis.getValueForDisplay(dx).doubleValue();
@@ -356,7 +366,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 
-			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());;
+			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
 
 			if(!disabledProperty().get())
 				Platform.runLater(() -> {
