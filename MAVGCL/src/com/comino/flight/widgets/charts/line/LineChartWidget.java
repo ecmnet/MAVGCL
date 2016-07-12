@@ -594,9 +594,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void readRecentList() {
 		Preferences prefs = MAVPreferences.getInstance();
 		String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
-		if(rc!=null)
-			recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
-
+		try {
+			if(rc!=null)
+				recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
+		} catch(Exception w) { }
 		if(recent==null)
 			recent = new ArrayList<KeyFigureMetaData>();
 

@@ -74,11 +74,14 @@ public class KeyFigureMetaData {
 		this.mspfield = mspfield;
 	}
 
-	public void setConverter(String type, List<String> parameters) {
+	public void setConverter(String type, List<Float> parameters) {
 		try {
 			Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+type);
 			converter = (SourceConverter) clazz.newInstance();
-		} catch(Exception e) { System.err.println(e.getMessage()); }
+			converter.setParameter(parameters);
+		} catch(Exception e) {
+			System.err.println(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
+		}
 	}
 
 	public void setPX4Source(String px4field) {

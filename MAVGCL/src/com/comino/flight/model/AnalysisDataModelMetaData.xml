@@ -620,22 +620,46 @@
 		</Groups>
 	</KeyFigure>
 
-
-	<KeyFigure desc="EST0.Fault" uom="" mask="#0.00" key="EST0FAULT">
-		<PX4Source field="EST0.fFault"></PX4Source>
+	<KeyFigure desc="GPS timeout" uom="" mask="#0" key="TOGPS">
+		<PX4Source field="EST2.fHealth"></PX4Source>
+		<Converter class="BitMaskConverter" p1="1"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="lIDAR Timeout" uom="" mask="#0.00" key="EST0TO">
-		<PX4Source field="EST0.fTOut">
-		    <Converter class="BitMaskConverter" p1="4"/>
-		</PX4Source>
+	<KeyFigure desc="Lidar timeout" uom="" mask="#0" key="TOLIDAR">
+		<PX4Source field="EST2.fHealth"></PX4Source>
+		<Converter class="BitMaskConverter" p1="2"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
+
+	 <KeyFigure desc="Flow Timeout" uom="" mask="#0" key="TOFLOW">
+		<PX4Source field="EST2.fHealth"></PX4Source>
+		<Converter class="BitMaskConverter" p1="3"/>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Sonar timeout" uom="" mask="#0" key="TOSONAR">
+		<PX4Source field="EST2.fHealth"></PX4Source>
+		<Converter class="BitMaskConverter" p1="4"/>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Vision timeout" uom="" mask="#0" key="TOVISION">
+		<PX4Source field="EST2.fHealth"></PX4Source>
+		<Converter class="BitMaskConverter" p1="5"/>
+		<Groups>
+			<Group>PX4Log Estimator</Group>
+		</Groups>
+	</KeyFigure>
+
 
 	<!-- Radio -->
 

@@ -43,6 +43,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -101,7 +102,7 @@ public class AnalysisDataModelMetaData {
 
 	public KeyFigureMetaData getMetaData(String kf) {
 		if(kf!=null)
-		  return meta.get(kf.toLowerCase().hashCode());
+			return meta.get(kf.toLowerCase().hashCode());
 		return null;
 	}
 
@@ -157,6 +158,11 @@ public class AnalysisDataModelMetaData {
 			if(node.getNodeName().equals("PX4Source")) {
 				keyfigure.setPX4Source(node.getAttributes().getNamedItem("field").getTextContent());
 			}
+
+			if(node.getNodeName().equals("Converter")) {
+				buildConverter(keyfigure,node);
+			}
+
 			if(node.getNodeName().equals("Groups")) {
 				for(int j=0;j<node.getChildNodes().getLength();j++) {
 					Node gr_node = node.getChildNodes().item(j);
@@ -174,4 +180,15 @@ public class AnalysisDataModelMetaData {
 		}
 		return keyfigure;
 	}
+
+	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
+		NamedNodeMap att = c_node.getAttributes();
+		if(att.getLength()>1) {
+			List<Float> params = new ArrayList<Float>();
+			for(int p=1; p<att.getLength();p++)
+				params.add(Float.parseFloat(att.item(p).getTextContent()));
+			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
+		}
+	}
+
 }
