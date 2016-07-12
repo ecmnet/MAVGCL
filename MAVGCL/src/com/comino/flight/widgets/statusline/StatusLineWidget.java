@@ -37,13 +37,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.file.FileHandler;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 

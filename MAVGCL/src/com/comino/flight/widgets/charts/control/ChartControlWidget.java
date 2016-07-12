@@ -39,12 +39,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.file.FileHandler;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;

@@ -44,6 +44,7 @@ import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 
+import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -51,7 +52,6 @@ import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.file.FileHandler;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.openmapfx.ext.CanvasLayer;

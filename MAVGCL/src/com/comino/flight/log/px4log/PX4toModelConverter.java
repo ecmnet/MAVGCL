@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.px4log;
+package com.comino.flight.log.px4log;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,18 +42,19 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.msp.model.DataModel;
 
+import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 
 public class PX4toModelConverter {
 
-	private PX4LogReader reader;
+	private BinaryLogReader reader;
 	private List<AnalysisDataModel> list;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
-	public PX4toModelConverter(PX4LogReader reader, List<AnalysisDataModel> list) {
+	public PX4toModelConverter(BinaryLogReader reader, List<AnalysisDataModel> list) {
 		this.reader = reader;
 		this.list = list;
 	}
@@ -72,7 +73,7 @@ public class PX4toModelConverter {
 
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
-
+                System.out.println(data.size());
 				if(tms > tms_slot) {
 					model.tms = tms;
 					tms_slot += 50000;
@@ -83,6 +84,7 @@ public class PX4toModelConverter {
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {
+			System.err.println(e.getMessage());
 			if(errorFlag)
 				System.out.println("WARNING: Some of the key-figures were not available in the PX4Log");
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
