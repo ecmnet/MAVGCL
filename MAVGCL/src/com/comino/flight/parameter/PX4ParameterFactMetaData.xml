@@ -2546,11 +2546,11 @@ EPV used if greater than this value</short_desc>
       <decimal>8</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="1e-1" name="LPE_PN_T" type="FLOAT">
-      <short_desc>Terrain random walk noise density, hilly/outdoor (1e-1), flat/Indoor (1e-3)</short_desc>
+    <parameter default="1.0" name="LPE_T_MAX_GRADE" type="FLOAT">
+      <short_desc>Terrain maximum percent grade, hilly/outdoor (100 = 45 deg), flat/Indoor (0 = 0 deg)</short_desc>
       <min>0</min>
-      <max>1</max>
-      <unit>m/s/sqrt(Hz)</unit>
+      <max>100</max>
+      <unit>%</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
