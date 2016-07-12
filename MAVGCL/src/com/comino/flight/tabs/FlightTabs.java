@@ -154,7 +154,7 @@ public class FlightTabs extends Pane {
 		mavmaptab.setup(flightControl.getRecordControl(),control);
 		mavinspectortab.setup(control);
 		xtanalysistab.setup(flightControl.getRecordControl(),control);
-		xtanalysistab.setWidthBinding(188);
+		xtanalysistab.setWidthBinding(0);
 
 		xyanalysistab.setup(flightControl.getRecordControl(),control);
 		mavparametertab.setup(control);

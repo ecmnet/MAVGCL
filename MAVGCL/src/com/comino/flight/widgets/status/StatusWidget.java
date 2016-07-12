@@ -132,7 +132,7 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);
-		this.details.selectedProperty().set(true);
+		this.details.selectedProperty().set(false);
 		this.messages.selectedProperty().set(true);
 		update(model.sys,model.sys);
 	}
@@ -141,10 +141,13 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	public void update(Status arg0, Status newStat) {
 
 		Platform.runLater(() -> {
-			if(newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_CONNECTED)) {
+				details.selectedProperty().set(true);
 				connected.setMode(LEDControl.MODE_ON);
+			}
 			else {
 				connected.setMode(LEDControl.MODE_OFF);
+				details.selectedProperty().set(false);
 			}
 
 			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
