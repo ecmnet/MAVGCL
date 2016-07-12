@@ -12,12 +12,18 @@ public class BitMaskConverter extends SourceConverter {
 		SENSOR_MOCAP
 	};
 	*/
+	
+	
 
 	@Override
 	public float convert(float val) {
-		if(((int)val >> params.get(0).intValue() & 1) ==1 )
+		if(((int)val >> (int)params[0] & 1) ==1 )
 			return 1;
 		return 0;
+	}
+
+	public BitMaskConverter() {
+		super();
 	}
 
 }

@@ -4,7 +4,11 @@ public class MultiplyConverter extends SourceConverter {
 
 	@Override
 	public float convert(float val) {
-		return val * params.get(0);
+		return val * params[0];
+	}
+
+	public MultiplyConverter() {
+		super();
 	}
 
 }

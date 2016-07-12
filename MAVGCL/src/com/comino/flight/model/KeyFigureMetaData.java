@@ -74,7 +74,7 @@ public class KeyFigureMetaData {
 		this.mspfield = mspfield;
 	}
 
-	public void setConverter(String type, List<Float> parameters) {
+	public void setConverter(String type, float[] parameters) {
 		try {
 			Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+type);
 			converter = (SourceConverter) clazz.newInstance();

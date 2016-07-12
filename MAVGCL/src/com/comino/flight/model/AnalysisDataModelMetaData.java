@@ -57,6 +57,7 @@ public class AnalysisDataModelMetaData {
 	private List<KeyFigureMetaData> sortedMetaList       = null;
 
 	private int count = 0;
+	private String version = null;
 
 	public static AnalysisDataModelMetaData getInstance() {
 		if(instance==null)
@@ -73,9 +74,8 @@ public class AnalysisDataModelMetaData {
 			Document doc = dBuilder.parse(getClass().getResourceAsStream("AnalysisDataModelMetaData.xml"));
 
 			if (doc.hasChildNodes()) {
-				String version = doc.getElementsByTagName("AnalysisDataModel")
+			    version = doc.getElementsByTagName("AnalysisDataModel")
 						.item(0).getAttributes().getNamedItem("version").getTextContent();
-				System.out.print("KeyFigureMetaData Version "+version+" ");
 
 				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
 
@@ -139,7 +139,7 @@ public class AnalysisDataModelMetaData {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println("with "+count+" keyfigures ");
+		System.out.println("KeyFigureMetaData Version "+version+":  "+count+" keyfigures ");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {
@@ -184,9 +184,9 @@ public class AnalysisDataModelMetaData {
 	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
 		NamedNodeMap att = c_node.getAttributes();
 		if(att.getLength()>1) {
-			List<Float> params = new ArrayList<Float>();
+			float[] params = new float[att.getLength()-1];
 			for(int p=1; p<att.getLength();p++)
-				params.add(Float.parseFloat(att.item(p).getTextContent()));
+				params[p-1] = Float.parseFloat(att.item(p).getTextContent());
 			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
 		}
 	}

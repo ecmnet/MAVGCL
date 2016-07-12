@@ -1,12 +1,14 @@
 package com.comino.flight.model.converter;
 
-import java.util.List;
-
 public abstract class SourceConverter {
 
-	protected List<Float> params = null;
+	protected float[] params = null;
 
-	public void setParameter(List<Float> params) {
+	public SourceConverter() {
+
+	}
+
+	public void setParameter(float[] params) {
 		this.params = params;
 	}
 
