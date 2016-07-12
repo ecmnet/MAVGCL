@@ -398,6 +398,7 @@
 	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<PX4Source field="FLOW.Qlty"></PX4Source>
+		<Converter class="MultiplyConverter" p1="0.00392157"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
