@@ -118,10 +118,10 @@ public class TuningWidget extends FadePane  {
 							groups.getItems().add(p.group_name);
 
 						if(waitingForAcknowledge) {
-								BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-								MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-                            if(p.reboot_required)
-                            	MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_INFO);
+							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+							MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							if(p.reboot_required)
+								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_INFO);
 							waitingForAcknowledge = false;
 						}
 					});
@@ -168,6 +168,8 @@ public class TuningWidget extends FadePane  {
 		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 	}
 
+
+
 	private class ParamItem {
 
 		public Control editor = null;
@@ -179,9 +181,34 @@ public class TuningWidget extends FadePane  {
 
 			if(att.increment != 0) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32) {
-					this.editor = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
+					Spinner<Integer> sp = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
+					sp.setEditable(true);
+					this.editor = sp;
+					sp.getEditor().setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER) {
+							System.out.println(getValueOf(sp.getEditor()));
+							setValueOf(editor,getValueOf(sp.getEditor()));
+							editor.getParent().requestFocus();
+						}
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							editor.getParent().requestFocus();
+						}
+					});
 				} else {
-					this.editor = new Spinner<Double>(new SpinnerAttributeFactory(att));
+					Spinner<Double> sp = new Spinner<Double>(new SpinnerAttributeFactory(att));
+					sp.setEditable(true);
+					this.editor = sp;
+					sp.getEditor().setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER) {
+							setValueOf(editor,getValueOf(sp.getEditor()));
+							editor.getParent().requestFocus();
+						}
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							editor.getParent().requestFocus();
+						}
+					});
 				}
 			} else {
 				if(att.valueList.size()>0) {
@@ -210,16 +237,12 @@ public class TuningWidget extends FadePane  {
 			setContextMenu(editor);
 			setValueOf(editor,att.value);
 
-			this.editor.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent keyEvent)
-				{
-					if(keyEvent.getCode() == KeyCode.ENTER)
-						editor.getParent().requestFocus();
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						setValueOf(editor,att.value);
-						editor.getParent().requestFocus();
-					}
+			this.editor.setOnKeyPressed(keyEvent -> {
+				if(keyEvent.getCode() == KeyCode.ENTER)
+					editor.getParent().requestFocus();
+				if(keyEvent.getCode() == KeyCode.ESCAPE) {
+					setValueOf(editor,att.value);
+					editor.getParent().requestFocus();
 				}
 			});
 
@@ -302,9 +325,9 @@ public class TuningWidget extends FadePane  {
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
 			if(v==att.default_val)
-				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
-			else
 				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
+			else
+				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
 		}
 
 		@SuppressWarnings("unchecked")
