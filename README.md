@@ -10,11 +10,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Current Release:** [0.4](https://github.com/ecmnet/MAVGCL/releases)
+**Current Release:** [0.41](https://github.com/ecmnet/MAVGCL/releases)
 
 **Development Status:** Last updated 13/07/2016 
 
-- ULog import (New PX4 Logger) supported (limited keyfigures mapped currently)
+- ULog import (New PX4 Logger) supported
 - Autohide of details
 
 **Features:**
@@ -30,7 +30,7 @@ Any feedback, comments and contributions are very welcome.
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
 - FrSky Taranis USB supported in SITL
-- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
+- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) or other source (recording and replay in preparation)
 
 **Requirements:**
 
