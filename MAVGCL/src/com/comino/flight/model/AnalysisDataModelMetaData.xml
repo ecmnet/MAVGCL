@@ -20,6 +20,7 @@
 
 	<KeyFigure desc="Alt.baro" uom="m" mask="#0.0" key="ALTBARO">
 		<MSPSource class="hud" field="ap"></MSPSource>
+		<PX4Source field="SENS.BaroAlt"></PX4Source>
 		<ULogSource field="vehicle_global_position.pressure_alt"></ULogSource>
 		<Groups>
 			<Group>Altitude</Group>
@@ -256,7 +257,7 @@
 		<PX4Source field="ATSP.YawSP"></PX4Source><Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		
+
 	</KeyFigure>
 
 	<KeyFigure desc="SP.Thrust" uom="" mask="#0.00" key="SPTHRUST">
@@ -270,19 +271,21 @@
 	<!-- Attitude rates setpoint -->
 
 	<KeyFigure desc="Sp.RollRate" uom="deg/s" mask="#0.00" key="SPROLLR">
-		<MSPSource class="attitude" field="srr"></MSPSource><PX4Source field="ARSP.RollRateSP"></PX4Source>
+		<MSPSource class="attitude" field="srr"></MSPSource>
+		<PX4Source field="ARSP.RollRateSP"></PX4Source>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		
+
 	</KeyFigure>
 
 	<KeyFigure desc="Sp.PitchRate" uom="deg/s" mask="#0.00" key="SPPITCHR">
-		<MSPSource class="attitude" field="spr"></MSPSource><PX4Source field="ARSP.PitchRateSP"></PX4Source>
+		<MSPSource class="attitude" field="spr"></MSPSource>
+		<PX4Source field="ARSP.PitchRateSP"></PX4Source>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		
+
 	</KeyFigure>
 
 	<KeyFigure desc="SP.YawRate" uom="deg/s" mask="#0.00" key="SPYAWR">
@@ -385,6 +388,7 @@
 	<KeyFigure desc="Flow X" uom="deg/s" mask="#0.00" key="FLOWX">
 		<MSPSource class="raw" field="fX"></MSPSource>
 		<PX4Source field="FLOW.RawX"></PX4Source>
+		<ULogSource field="optical_flow.pixel_flow_x_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -394,6 +398,7 @@
 	<KeyFigure desc="Flow Y" uom="deg/s" mask="#0.00" key="FLOWY">
 		<MSPSource class="raw" field="fY"></MSPSource>
 		<PX4Source field="FLOW.RawY"></PX4Source>
+		<ULogSource field="optical_flow.pixel_flow_y_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -403,6 +408,7 @@
 	<KeyFigure desc="FLow Dist." uom="m" mask="#0.00" key="FLOWDI">
 		<MSPSource class="raw" field="fd"></MSPSource>
 		<PX4Source field="FLOW.Dist"></PX4Source>
+		<ULogSource field="optical_flow.ground_distance_m"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -412,6 +418,7 @@
 	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<PX4Source field="FLOW.Qlty"></PX4Source>
+		<ULogSource field="optical_flow.quality"/>
 		<Converter class="MultiplyConverter" p1="0.00392157"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -422,6 +429,7 @@
 	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
 		<MSPSource class="raw" field="di"></MSPSource>
 		<PX4Source field="DIST.Distance"></PX4Source>
+		<ULogSource field="distance_sensor.current_distance"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -431,6 +439,7 @@
 	<KeyFigure desc="LIDAR Dist.Cov." uom="m" mask="#0.00" key="LIDARCOV">
 		<MSPSource class="raw" field="dicov"></MSPSource>
 		<PX4Source field="DIST.Covariance"></PX4Source>
+		<ULogSource field="distance_sensor.covariance"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -533,6 +542,7 @@
 	<KeyFigure desc="Abs.Pressure" uom="hPa" mask="#0.0" key="ABSPRES">
 		<MSPSource class="imu" field="abs_pressure"></MSPSource>
 		<PX4Source field="SENS.BaroPres"></PX4Source>
+		<ULogSource field="sensor_baro.pressure"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -541,16 +551,9 @@
 
 	<!-- PX4 only figures (https://github.com/PX4/Firmware/blob/master/src/modules/sdlog2/sdlog2_messages.h#L614-L673)-->
 
-	<KeyFigure desc="Baro Altitude" uom="m" mask="#0.0" key="BAROALT">
-		<PX4Source field="SENS.BaroAlt"></PX4Source>
-		<Groups>
-			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
-		</Groups>
-	</KeyFigure>
-
 	<KeyFigure desc="Raw GPS EPH" uom="m" mask="#0.0" key="RGPSEPH">
 		<PX4Source field="LPOS.EPH"></PX4Source>
+		<ULogSource field="vehicle_local_position.eph"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -559,6 +562,7 @@
 
 	<KeyFigure desc="Raw GPS EPV" uom="m" mask="#0.0" key="RGPSEPV">
 		<PX4Source field="LPOS.EPV"></PX4Source>
+		<ULogSource field="vehicle_local_position.epv"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -746,6 +750,7 @@
 	<KeyFigure desc="Voltage" uom="V" mask="#0.0" key="BATV">
 		<MSPSource class="battery" field="b0"></MSPSource>
 		<PX4Source field="BATT.V"></PX4Source>
+		<ULogSource field="battery_status.voltage_filtered_v"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
@@ -759,8 +764,9 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0" key="BATH">
+	<KeyFigure desc="Consumed.Power" uom="mAh" mask="#0" key="BATH">
 		<MSPSource class="battery" field="a0"></MSPSource>
+		<ULogSource field="battery_status.discharged_mah"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
@@ -783,6 +789,7 @@
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>
+		<ULogSource field="sensor_baro.temperature"></ULogSource>
 		<Groups>
 			<Group>System</Group>
 		</Groups>

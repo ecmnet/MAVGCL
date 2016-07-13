@@ -1671,6 +1671,34 @@ value will determine the minimum airspeed which will still be fused</short_desc>
         <value code="2">declare airspeed invalid</value>
       </values>
     </parameter>
+    <parameter default="1.0" name="FW_MAN_R_SC" type="FLOAT">
+      <short_desc>Manual roll scale</short_desc>
+      <long_desc>Scale factor applied to the desired roll actuator command in full manual mode. This parameter allows to adjust the throws of the control surfaces.</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="1.0" name="FW_MAN_P_SC" type="FLOAT">
+      <short_desc>Manual pitch scale</short_desc>
+      <long_desc>Scale factor applied to the desired pitch actuator command in full manual mode. This parameter allows to adjust the throws of the control surfaces.</long_desc>
+      <min>0.0</min>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="1.0" name="FW_MAN_Y_SC" type="FLOAT">
+      <short_desc>Manual yaw scale</short_desc>
+      <long_desc>Scale factor applied to the desired yaw actuator command in full manual mode. This parameter allows to adjust the throws of the control surfaces.</long_desc>
+      <min>0.0</min>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
   </group>
   <group name="FW L1 Control">
     <parameter default="20.0" name="FW_L1_PERIOD" type="FLOAT">
