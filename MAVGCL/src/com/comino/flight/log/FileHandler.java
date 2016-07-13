@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.log.px4log.PX4toModelConverter;
+import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
@@ -152,7 +153,7 @@ public class FileHandler {
 
 				if(file.getName().endsWith("ulg")) {
 					  ULogReader reader = new ULogReader(file.getAbsolutePath());
-					  PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 					  converter.doConversion();
 				}
 

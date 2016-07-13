@@ -9,7 +9,6 @@ import java.util.*;
  */
 public class MessageFormat {
     public static Charset charset = Charset.forName("latin1");
-    public final int msgID;
     public final String name;
     public final FieldFormat[] fields;
     public final Map<String, Integer> fieldsMap = new HashMap<String, Integer>();
@@ -21,15 +20,10 @@ public class MessageFormat {
         return p.length > 0 ? p[0] : "";
     }
 
-    public MessageFormat(ByteBuffer buffer, int logVersion) {
-        msgID = buffer.get() & 0xFF;
-        int format_len;
-        if (logVersion == 0) {
-            format_len = buffer.get() & 0xFF;
-        } else {
-            format_len = buffer.getShort() & 0xFFFF;
-        }
-        String[] descr_str = getString(buffer, format_len).split(":");
+    public MessageFormat(ByteBuffer buffer, int msgSize) {
+
+
+        String[] descr_str = getString(buffer, msgSize).split(":");
         name = descr_str[0];
         if (descr_str.length > 1) {
             String[] fields_descrs_str = descr_str[1].split(";");
@@ -37,17 +31,21 @@ public class MessageFormat {
             for (int i = 0; i < fields_descrs_str.length; i++) {
                 String field_format_str = fields_descrs_str[i];
                 fields[i] = new FieldFormat(field_format_str);
+                if(i==(fields_descrs_str.length-1) && fields[i].name.startsWith("_p"))
+                	break;
                 fieldsMap.put(fields[i].name, i);
             }
         } else {
             fields = new FieldFormat[0];
         }
+
     }
 
     public List<Object> parseBody(ByteBuffer buffer) {
         List<Object> data = new ArrayList<Object>(fields.length);
         for (FieldFormat field : fields) {
-            data.add(field.getValue(buffer));
+        	if(!field.name.startsWith("_p"))
+                data.add(field.getValue(buffer));
         }
         return data;
     }
@@ -62,7 +60,6 @@ public class MessageFormat {
 
     @Override
     public String toString() {
-        return String.format("FORMAT: type=%s, name=%s, fields=%s",
-                msgID, name, Arrays.asList(fields));
+        return String.format("FORMAT: name=%s, fields=%s", name, Arrays.asList(fields));
     }
 }

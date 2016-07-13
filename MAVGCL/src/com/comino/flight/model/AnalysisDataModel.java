@@ -74,7 +74,10 @@ public class AnalysisDataModel {
 
 
 	public float getValue(String kf) {
+		try {
 		return data.get(kf.toLowerCase().hashCode());
+		} catch(Exception e) { 	}
+		return 0;
 	}
 
 	public float getValue(KeyFigureMetaData m) {
@@ -88,7 +91,7 @@ public class AnalysisDataModel {
 		data.put(kf.toLowerCase().hashCode(), value);
 	}
 
-	public void setValues(DataModel m, AnalysisDataModelMetaData md) {
+	public void setValuesMSP(DataModel m, AnalysisDataModelMetaData md) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
 				data.put(e.hash,e.getValueFromMSPModel(m));
@@ -96,10 +99,18 @@ public class AnalysisDataModel {
 		});
 	}
 
-	public void setValues(Map<String,Object> d, AnalysisDataModelMetaData md) {
+	public void setValuesPX4(Map<String,Object> d, AnalysisDataModelMetaData md) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
 				data.put(e.hash,e.getValueFromPX4Model(d));
+			} catch (Exception e1) {  }
+		});
+	}
+
+	public void setValuesULog(Map<String,Object> d, AnalysisDataModelMetaData md) {
+		md.getKeyFigureMap().forEach((i,e) -> {
+			try {
+				data.put(e.hash,e.getValueFromULogModel(d));
 			} catch (Exception e1) {  }
 		});
 	}

@@ -171,10 +171,11 @@
 
 	<KeyFigure desc="Roll" uom="deg" mask="#0.00" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
+		<PX4Source  field="ATT.Roll"></PX4Source>
+		<ULogSource field="vehicle_attitude.roll"></ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATT.Roll"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="Pitch" uom="deg" mask="#0.00" key="PITCH">

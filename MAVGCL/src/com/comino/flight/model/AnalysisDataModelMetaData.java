@@ -159,6 +159,11 @@ public class AnalysisDataModelMetaData {
 				keyfigure.setPX4Source(node.getAttributes().getNamedItem("field").getTextContent());
 			}
 
+			if(node.getNodeName().equals("ULogSource")) {
+				keyfigure.setULogSource(node.getAttributes().getNamedItem("field").getTextContent());
+			}
+
+
 			if(node.getNodeName().equals("Converter")) {
 				buildConverter(keyfigure,node);
 			}

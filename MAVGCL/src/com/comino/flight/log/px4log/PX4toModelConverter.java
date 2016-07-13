@@ -73,18 +73,16 @@ public class PX4toModelConverter {
 
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
-                System.out.println(data.size());
 				if(tms > tms_slot) {
 					model.tms = tms;
 					tms_slot += 50000;
-					model.setValues(data, meta);
+					model.setValuesPX4(data, meta);
 					list.add(model.clone());
 				}
 			}
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {
-			System.err.println(e.getMessage());
 			if(errorFlag)
 				System.out.println("WARNING: Some of the key-figures were not available in the PX4Log");
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");

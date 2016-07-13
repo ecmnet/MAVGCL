@@ -53,7 +53,7 @@ public class AnalysisModelTest {
 
 
          for(int i=0;i<1000;i++)
-		     model.setValues(m, md);
+		     model.setValuesMSP(m, md);
 
 
 		 AnalysisDataModel model2 = model.clone();
