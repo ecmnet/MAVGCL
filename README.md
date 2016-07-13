@@ -14,7 +14,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 13/07/2016 
 
-- ULog import (New PX4 Logger) supported
+- ULog import (New PX4 Logger) supported (limited keyfigures mapped currently)
 - Autohide of details
 
 **Features:**
@@ -27,7 +27,7 @@ Any feedback, comments and contributions are very welcome.
 - MAVLink inspector
 - Easy to use parameter editor and In-Flight-Tuning-Widget
 - Map viewer of global position and raw gps data with option to record path (cached)
-- Offline-mode: Import of key-figures from PX4Log (file or last log from device via WiFi)
+- Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
 - FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)  (recording and replay in preparation)
@@ -77,7 +77,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 - Limited to one device (MAVLink-ID '1')
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it). Note: Serial via radio might be too slow.
-- PX4Log keyfigure mapping still not [complete](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml).
+- PX4Log/ULog keyfigure mapping still not [complete](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml).
 
 
 **Note for developers:**
