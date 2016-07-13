@@ -5,6 +5,7 @@
 	<KeyFigure desc="Alt.SL" uom="m" mask="#0.0" key="ALTSL">
 		<MSPSource class="hud" field="ag"></MSPSource>
 		<PX4Source field="GPOS.Alt"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.alt"/>
 		<Groups>
 			<Group>Altitude</Group>
 			<Group>Local Position</Group>
@@ -29,6 +30,7 @@
 
 	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
 		<MSPSource class="hud" field="at"></MSPSource>
+		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
 		<Groups>
 			<Group>Altitude</Group>
 		</Groups>
@@ -242,6 +244,7 @@
 			<Group>Attitude</Group>
 		</Groups>
 		<PX4Source field="ATSP.RollSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.roll_body"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Sp.Pitch" uom="deg" mask="#0.00" key="SPPITCH">
@@ -250,11 +253,14 @@
 			<Group>Attitude</Group>
 		</Groups>
 		<PX4Source field="ATSP.PitchSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.pitch_body"/>
 	</KeyFigure>
 
 	<KeyFigure desc="SP.Yaw" uom="deg" mask="#0.00" key="SPYAW">
 		<MSPSource class="attitude" field="sy"></MSPSource>
-		<PX4Source field="ATSP.YawSP"></PX4Source><Groups>
+		<PX4Source field="ATSP.YawSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.yaw_body"/>
+		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
 
@@ -520,6 +526,7 @@
 
 	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
 		<MSPSource class="gps" field="numsat"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.satellites_used"/>
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
