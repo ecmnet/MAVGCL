@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 
-package com.comino.flight.px4log;
+package com.comino.flight.log.px4log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,10 +48,10 @@ import org.mavlink.messages.lquac.msg_log_request_data;
 import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
+import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;

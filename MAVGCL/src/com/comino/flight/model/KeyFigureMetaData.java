@@ -52,6 +52,7 @@ public class KeyFigureMetaData {
 	private String mspclass;
 	private String mspfield;
 	private String px4field;
+	private String ulogfield;
 
 	private SourceConverter converter = null;
 
@@ -89,6 +90,11 @@ public class KeyFigureMetaData {
 		this.desc2    = px4field;
 	}
 
+	public void setULogSource(String ulogfield) {
+		this.ulogfield = ulogfield;
+		this.ulogfield = ulogfield;
+	}
+
 	public float getValueFromMSPModel(DataModel m) throws Exception {
 		float value = 0;
 		Field mclass_field = m.getClass().getField(mspclass);
@@ -108,6 +114,19 @@ public class KeyFigureMetaData {
 			value = (float)(Integer)data.get(px4field);
 		else
 			value = (float)(Float)data.get(px4field);
+
+		if(converter != null)
+			return converter.convert(value);
+		return value;
+	}
+
+	public float getValueFromULogModel(Map<String,Object> data) {
+		float value = 0;
+		Object o = data.get(ulogfield);
+		if(o instanceof Integer)
+			value = (float)(Integer)data.get(ulogfield);
+		else
+			value = (float)(Float)data.get(ulogfield);
 
 		if(converter != null)
 			return converter.convert(value);

@@ -212,7 +212,7 @@ public class AnalysisModelService {
 		@Override
 		public void run() {
 			while(true) {
-				current.setValues(model, AnalysisDataModelMetaData.getInstance());
+				current.setValuesMSP(model, AnalysisDataModelMetaData.getInstance());
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
 			}
 		}

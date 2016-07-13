@@ -31,49 +31,64 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.model;
+package com.comino.flight.log.ulog;
 
-import com.comino.msp.model.DataModel;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class AnalysisModelTest {
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
 
-	public static void main(String[] args) {
+import me.drton.jmavlib.log.BinaryLogReader;
+import me.drton.jmavlib.log.FormatErrorException;
 
-		 DataModel m = new DataModel();
-		 m.hud.ag = 7.2f;
-		 m.state.l_y = 3.99f;
-		 m.state.l_z = 0.12f;
-		 m.target_state.l_z = 0.15f;
+public class UlogtoModelConverter {
 
-		 AnalysisDataModel model = new AnalysisDataModel();
+	private BinaryLogReader reader;
+	private List<AnalysisDataModel> list;
 
-		 AnalysisDataModelMetaData md = AnalysisDataModelMetaData.getInstance();
-
-		 System.out.println(md.getMetaData("ALTGL").toString());
-
-
-         for(int i=0;i<1000;i++)
-		     model.setValuesMSP(m, md);
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
-		 AnalysisDataModel model2 = model.clone();
-		 System.out.println(model2.getValue("ALTGL"));
-		 System.out.println(model2.getValue("LPOSY"));
-		 System.out.println(model2.getValue("LPOSZ"));
-		 System.out.println(model2.getValue("SPLPOSZ"));
-
-		 md.getKeyFigureMap().forEach((i,e) -> {
-			System.out.println( e.desc2 );
-		 });
-
-
-		 md.getGroupMap().forEach((g,p) -> {
-			 System.out.println(g);
-			 p.forEach(k -> {
-				 System.out.println("---> "+k.desc1);
-			 });
-		 });
-
+	public UlogtoModelConverter(BinaryLogReader reader, List<AnalysisDataModel> list) {
+		this.reader = reader;
+		this.list = list;
 	}
+
+
+	public void doConversion() throws FormatErrorException {
+
+		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
+
+		Map<String,Object> data = new HashMap<String,Object>();
+
+		list.clear();
+		AnalysisDataModel model = new AnalysisDataModel();
+
+		try {
+
+			while(tms < reader.getSizeMicroseconds()) {
+				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
+
+				if(tms > tms_slot) {
+					model.tms = tms;
+					tms_slot += 50000;
+					model.setValuesULog(data, meta);
+					list.add(model.clone());
+				}
+			}
+			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+
+		} catch(IOException e) {
+			if(errorFlag)
+				System.out.println("WARNING: Some of the key-figures were not available in the PX4Log");
+			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+
+		}
+	}
+
+
 
 }

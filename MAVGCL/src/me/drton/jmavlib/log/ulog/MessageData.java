@@ -8,18 +8,11 @@ import java.util.List;
  */
 public class MessageData {
     public final MessageFormat format;
-    public final Long timestamp;
     private final List<Object> data;
-    public final int multiID;
-    public final boolean isActive;
 
     public MessageData(MessageFormat format, ByteBuffer buffer) {
         this.format = format;
-        int multiIDRaw = buffer.get() & 0xFF;
-        this.multiID = multiIDRaw & 0x7F;
-        this.isActive = (multiIDRaw & 0x80) != 0;
-        this.timestamp = buffer.getLong();
-        this.data = format.parseBody(buffer);
+        this.data  = format.parseBody(buffer);
     }
 
     public Object get(int idx) {
@@ -33,6 +26,6 @@ public class MessageData {
 
     @Override
     public String toString() {
-        return String.format("DATA: t=%s msg_id=%s, multi_id=%s, name=%s, data=%s", timestamp, format.msgID, multiID, format.name, data);
+        return String.format("DATA: name=%s, data=%s", format.name, data);
     }
 }

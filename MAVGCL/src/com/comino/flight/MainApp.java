@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.control.SITLController;
+import com.comino.flight.log.FileHandler;
+import com.comino.flight.log.px4log.MAVPX4LogReader;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -45,13 +47,11 @@ import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
-import com.comino.flight.px4log.MAVPX4LogReader;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
-import com.comino.model.file.FileHandler;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;

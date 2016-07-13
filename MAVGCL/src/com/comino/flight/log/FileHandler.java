@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.model.file;
+package com.comino.flight.log;
 
 import java.io.File;
 import java.io.FileReader;
@@ -45,12 +45,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.log.px4log.PX4toModelConverter;
+import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.px4log.PX4toModelConverter;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -60,6 +60,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import me.drton.jmavlib.log.px4.PX4LogReader;
+import me.drton.jmavlib.log.ulog.ULogReader;
 
 
 public class FileHandler {
@@ -137,15 +138,25 @@ public class FileHandler {
 
 	public void fileImportPX4Log() {
 		FileChooser fileChooser = getFileDialog("Import PX4Log...",
-				new ExtensionFilter("PX4Log Files", "*.px4log"));
+				new ExtensionFilter("PX4Log Files", "*.px4log"),
+				new ExtensionFilter("ULog Files", "*.ulg"));
 
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
-				PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
 				stage.getScene().setCursor(Cursor.WAIT);
-				PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
-				converter.doConversion();
+				if(file.getName().endsWith("px4log")) {
+				   PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+				   PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+				   converter.doConversion();
+				}
+
+				if(file.getName().endsWith("ulg")) {
+					  ULogReader reader = new ULogReader(file.getAbsolutePath());
+					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
+					  converter.doConversion();
+				}
+
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
 
@@ -196,7 +207,7 @@ public class FileHandler {
 
 
 
-	private FileChooser getFileDialog(String title, ExtensionFilter filter) {
+	private FileChooser getFileDialog(String title, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(filter);
