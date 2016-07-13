@@ -418,7 +418,7 @@
 	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<PX4Source field="FLOW.Qlty"></PX4Source>
-		<ULogSource field="optical_flow.quality"/>
+		<ULogSource field="optical_flow_0.quality"/>
 		<Converter class="MultiplyConverter" p1="0.00392157"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -581,7 +581,7 @@
 
 	<KeyFigure desc="EST0.s1" uom="" mask="#0.00" key="EST0S1">
 		<PX4Source field="EST0.s1"></PX4Source>
-		<ULogSource field="estimator_status.states[1]"></ULogSource>
+		<ULogSource field="estimator_status_0.states[1]"></ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
@@ -597,7 +597,7 @@
 
 	<KeyFigure desc="EST0.s3" uom="" mask="#0.00" key="EST0S3">
 		<PX4Source field="EST0.s3"></PX4Source>
-		<ULogSource field="estimator_status.states[3]"></ULogSource>
+		<ULogSource field="estimator_status_0.states[3]"></ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
@@ -629,7 +629,7 @@
 
 	<KeyFigure desc="EST0.s7" uom="" mask="#0.00" key="EST0S7">
 		<PX4Source field="EST0.s7"></PX4Source>
-		<ULogSource field="estimator_status.states[7]"></ULogSource>
+		<ULogSource field="estimator_status_0.states[7]"></ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
