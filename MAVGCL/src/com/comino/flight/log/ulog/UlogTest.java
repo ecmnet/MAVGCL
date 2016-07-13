@@ -23,21 +23,21 @@ public class UlogTest {
 			  System.out.println(i+":"+c.toString());
 		  });
 
-//		 System.out.println("Fields: "+reader.getFields().size());
-//		 reader.getFields().forEach( (i,s)-> {
-//			 System.out.println(i+":"+s);
-//		 });
+		 System.out.println("Fields: "+reader.getFields().size());
+		 reader.getFields().forEach( (i,s)-> {
+			 System.out.println(i+":"+s);
+		 });
 
 		  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 		  converter.doConversion();
 
 		  reader.close();
 
-		  System.out.println(modelService.getModelList().size());
-
-		  modelService.getModelList().forEach(m -> {
-			System.out.println(m.getValue("ROLL"));
-		  });
+//		  System.out.println(modelService.getModelList().size());
+//
+//		  modelService.getModelList().forEach(m -> {
+//			System.out.println(m.getValue("ROLL"));
+//		  });
 
 //		  if(reader.getErrors().size()>0)
 //				for(Exception k : reader.getErrors())
