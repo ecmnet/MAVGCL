@@ -12,11 +12,10 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.4](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 12/07/2016 
+**Development Status:** Last updated 13/07/2016 
 
-- LPE health keyfigures added (PX4Logs only)
-- In-Flight tuning enhanced
-- LineChart now draggable
+- ULog import (New PX4 Logger) supported
+- Autohide of details
 
 **Features:**
 
