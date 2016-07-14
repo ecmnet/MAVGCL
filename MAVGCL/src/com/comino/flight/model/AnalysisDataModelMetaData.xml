@@ -129,6 +129,7 @@
 	<KeyFigure desc="SP.Loc.Pos.X" uom="m" mask="#0.00" key="SPLPOSX">
 		<MSPSource class="target_state" field="l_x"></MSPSource>
 		<PX4Source field="LPSP.X"></PX4Source>
+		<ULogSource field="vehicle_local_position_setpoint_0.x"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Local Position Setpoint</Group>
@@ -137,6 +138,7 @@
 	<KeyFigure desc="SP.Loc.Pos.Y" uom="m" mask="#0.00" key="SPLPOSY">
 		<MSPSource class="target_state" field="l_y"></MSPSource>
 		<PX4Source field="LPSP.Y"></PX4Source>
+		<ULogSource field="vehicle_local_position_setpoint_0.y"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Local Position Setpoint</Group>
@@ -145,6 +147,7 @@
 	<KeyFigure desc="SP.Loc.Pos.Z" uom="m" mask="#0.00" key="SPLPOSZ">
 		<MSPSource class="target_state" field="l_z"></MSPSource>
 		<PX4Source field="LPSP.Z"></PX4Source>
+		<ULogSource field="vehicle_local_position_setpoint_0.z"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Local Position Setpoint</Group>
@@ -214,6 +217,7 @@
 
 	<KeyFigure desc="RollRate" uom="deg/s" mask="#0.00" key="ROLLR">
 		<MSPSource class="attitude" field="rr"></MSPSource>
+		<ULogSource field="vehicle_attitude_0.rollspeed"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -222,6 +226,7 @@
 
 	<KeyFigure desc="PitchRate" uom="deg/s" mask="#0.00" key="PITCHR">
 		<MSPSource class="attitude" field="pr"></MSPSource>
+		<ULogSource field="vehicle_attitude_0.pitchspeed"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -230,6 +235,7 @@
 
 	<KeyFigure desc="YawRate" uom="deg/s" mask="#0.00" key="YAWR">
 		<MSPSource class="attitude" field="yr"></MSPSource>
+		<ULogSource field="vehicle_attitude_0.yawspeed"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -272,6 +278,7 @@
 		</Groups>
 		<MSPSource class="attitude" field="st"></MSPSource>
 		<PX4Source field="ATSP.ThrustSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.thrust"/>
 	</KeyFigure>
 
 	<!-- Attitude rates setpoint -->
@@ -307,6 +314,7 @@
 	<KeyFigure desc="Global Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
 		<MSPSource class="state" field="g_lat"></MSPSource>
 		<PX4Source field="GPOS.Lat"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.lat"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -315,6 +323,7 @@
 	<KeyFigure desc="Global Lon." uom="°" mask="#0.0000000" key="GLOBLON">
 		<MSPSource class="state" field="g_lon"></MSPSource>
 		<PX4Source field="GPOS.Lon"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.lon"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -337,6 +346,7 @@
 	<KeyFigure desc="Global VX" uom="cm/s" mask="#0.00" key="GLOBVX">
 		<MSPSource class="state" field="g_vx"></MSPSource>
 		<PX4Source field="GPOS.VelN"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.vel_n"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -345,6 +355,7 @@
 	<KeyFigure desc="Global VY" uom="cm/s" mask="#0.00" key="GLOBVY">
 		<MSPSource class="state" field="g_vy"></MSPSource>
 		<PX4Source field="GPOS.VelE"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.vel_e"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -353,6 +364,7 @@
 	<KeyFigure desc="Global VZ" uom="cm/s" mask="#0.00" key="GLOBVZ">
 		<MSPSource class="state" field="g_vz"></MSPSource>
 		<PX4Source field="GPOS.VelD"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.vel_d"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -360,6 +372,7 @@
 
 	<KeyFigure desc="Heading" uom="deg" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
+		<ULogSource field="vehicle_global_position_0.yaw"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -512,6 +525,7 @@
 
 	<KeyFigure desc="Raw GPS Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.lat"/>
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
@@ -519,6 +533,7 @@
 
 	<KeyFigure desc="Raw GPS Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.lon"/>
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
@@ -790,10 +805,11 @@
 
 	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">
 		<MSPSource class="sys" field="load_p"></MSPSource>
+		<PX4Source field="LOAD.CPU"></PX4Source>
+		<ULogSource field="cpuload_0.load"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<PX4Source field="LOAD.CPU"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">

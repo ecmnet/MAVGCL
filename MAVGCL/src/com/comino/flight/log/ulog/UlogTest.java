@@ -1,6 +1,9 @@
 package com.comino.flight.log.ulog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -23,10 +26,16 @@ public class UlogTest {
 			  System.out.println(i+":"+c.toString());
 		  });
 
-		 System.out.println("Fields: "+reader.getFields().size());
-		 reader.getFields().forEach( (i,s)-> {
-			 System.out.println(i+":"+s);
-		 });
+
+		 List<String> list = new ArrayList<String>();
+		 reader.getFields().forEach((i,p) -> {
+				list.add(i);
+			});
+		Collections.sort(list);
+
+		list.forEach(s -> {
+			System.out.println(s);
+		});
 
 		  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 		  converter.doConversion();
