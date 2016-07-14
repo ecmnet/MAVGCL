@@ -331,6 +331,7 @@
 
 	<KeyFigure desc="Home Lat." uom="°" mask="#0.0000000" key="HOMLAT">
 		<MSPSource class="home_state" field="g_lat"></MSPSource>
+		<ULogSource field="vehicle_local_position_0.ref_lat"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -338,6 +339,7 @@
 
 	<KeyFigure desc="Home Lon." uom="°" mask="#0.0000000" key="HOMLON">
 		<MSPSource class="home_state" field="g_lon"></MSPSource>
+		<ULogSource field="vehicle_local_position_0.ref_lon"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -380,6 +382,7 @@
 
 	<KeyFigure desc="Ground Speed" uom="m/s" mask="#0.0" key="GNDV">
 		<MSPSource class="hud" field="s"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.vel_m_s"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -387,6 +390,7 @@
 
 	<KeyFigure desc="Climb rate" uom="m/s" mask="#0.0" key="CLIMB">
 		<MSPSource class="hud" field="vs"></MSPSource>
+		<ULogSource field="vehicle_local_position_0.dist_bottom_rate"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -395,6 +399,7 @@
 	<KeyFigure desc="Air speed" uom="m/s" mask="#0.0" key="AIRV">
 		<MSPSource class="hud" field="as"></MSPSource>
 		<PX4Source field="AIRS.TrueSpeed"></PX4Source>
+		<ULogSource field="airspeed_0.true_airspeed_m_s"/>
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
@@ -667,6 +672,7 @@
 
 	<KeyFigure desc="LPosXY valid" uom="" mask="#0" key="LPOSXYVAL">
 		<PX4Source field="LPOS.PFlg"></PX4Source>
+		<ULogSource field="vehicle_local_position_0.xy_valid"/>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>
@@ -674,6 +680,7 @@
 
 	<KeyFigure desc="LPosZ valid" uom="" mask="#0" key="LPOSZVAL">
 		<PX4Source field="LPOS.GFlg"></PX4Source>
+		<ULogSource field="vehicle_local_position_0.z_valid"/>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>

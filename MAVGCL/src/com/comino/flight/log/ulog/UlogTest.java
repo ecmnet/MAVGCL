@@ -37,6 +37,8 @@ public class UlogTest {
 			System.out.println(s);
 		});
 
+		System.out.println(list.size()+" keyfigures found in log");
+
 		  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 		  converter.doConversion();
 
