@@ -36,6 +36,7 @@ package com.comino.flight.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
@@ -156,20 +157,23 @@ public class FlightTabs extends Pane {
 		mavparametertab.setup(control);
 
 		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
+
 			if(tuning.isVisible())
 				return;
+
 			if(newvalue.booleanValue())
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
-			else
+			else {
 				xtanalysistab.setWidthBinding(0);
+			}
 		});
 
 		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue())
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 			else {
-				if(details.isVisible())
-					xtanalysistab.setWidthBinding(details.getWidth()+3);
+				if(details.isVisible() && control.isConnected())
+			      	xtanalysistab.setWidthBinding(details.getWidth()+3);
 				else
 					xtanalysistab.setWidthBinding(0);
 			}

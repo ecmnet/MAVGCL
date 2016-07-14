@@ -340,8 +340,18 @@
 	-fx-background-color: white;
 }
 
-
 .spinner > .selected .focus-indicator {
     -fx-border-color: #303030;
   }
+
+
+.dialog-pane:header *.header-panel{
+   -fx-background-color: #303030;
+}
+
+.dialog-pane:header *.header-panel *.label{
+    -fx-font-size: 18px;
+    -fx-accent: #000000;
+  }
+
 

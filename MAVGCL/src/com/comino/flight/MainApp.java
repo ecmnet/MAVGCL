@@ -62,6 +62,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -99,6 +101,9 @@ public class MainApp extends Application {
 	private MenuItem m_keyfigures;
 
 	@FXML
+	private MenuItem m_about;
+
+	@FXML
 	private MenuBar menubar;
 
 
@@ -111,48 +116,48 @@ public class MainApp extends Application {
 
 		try {
 
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("MAVGCL Analysis");
+			this.primaryStage = primaryStage;
+			this.primaryStage.setTitle("MAVGCL Analysis");
 
 
-		String peerAddress = null;
-		int port = 14555;
+			String peerAddress = null;
+			int port = 14555;
 
-		Map<String,String> args = getParameters().getNamed();
+			Map<String,String> args = getParameters().getNamed();
 
 
-		Preferences userPrefs = MAVPreferences.getInstance();
-		peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
-		port = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
+			Preferences userPrefs = MAVPreferences.getInstance();
+			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
+			port = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 
-		if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
-			control = new MAVUdpController(peerAddress,port,14550, true);
-			new SITLController(control);
-		}
-		else
-		if(args.size()>0) {
-			if(args.get("SITL")!=null) {
-			   control = new MAVUdpController("127.0.0.1",14556,14550, true);
-			   new SITLController(control);
+			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
+				control = new MAVUdpController(peerAddress,port,14550, true);
+				new SITLController(control);
 			}
-			else if(args.get("SIM")!=null)
-			        control = new MAVSimController();
-		}
-		else
-			control = new MAVUdpController(peerAddress,port,14550, false);
+			else
+				if(args.size()>0) {
+					if(args.get("SITL")!=null) {
+						control = new MAVUdpController("127.0.0.1",14556,14550, true);
+						new SITLController(control);
+					}
+					else if(args.get("SIM")!=null)
+						control = new MAVSimController();
+				}
+				else
+					control = new MAVUdpController(peerAddress,port,14550, false);
 
-		AnalysisModelService.getInstance(control.getCurrentModel());
+			AnalysisModelService.getInstance(control.getCurrentModel());
 
-		MSPLogger.getInstance(control);
-		StateProperties.getInstance(control);
+			MSPLogger.getInstance(control);
+			StateProperties.getInstance(control);
 
-		FileHandler.getInstance(primaryStage,control);
+			FileHandler.getInstance(primaryStage,control);
 
-		PX4Parameters.getInstance(control);
+			PX4Parameters.getInstance(control);
 
 
-		initRootLayout();
-		showMAVGCLApplication();
+			initRootLayout();
+			showMAVGCLApplication();
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -273,6 +278,12 @@ public class MainApp extends Application {
 		m_keyfigures.setOnAction(event -> {
 			AnalysisDataModelMetaData.getInstance().dump();
 		});
+
+		m_about.setOnAction(event -> {
+			showAboutDialog();
+		});
+
+		m_about.setVisible(false);
 	}
 
 
@@ -311,6 +322,17 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	private void showAboutDialog() {
+		final Alert alert = new Alert(AlertType.INFORMATION);
+		alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			alert.setTitle("");
+			alert.setHeaderText("MAVGAnalysis");
+			String s ="Version: 0.41 ";
+			alert.setContentText(s);
+			alert.show();
 	}
 
 }

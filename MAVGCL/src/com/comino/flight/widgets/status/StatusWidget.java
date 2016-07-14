@@ -148,6 +148,7 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 			else {
 				connected.setMode(LEDControl.MODE_OFF);
 				details.selectedProperty().set(false);
+				tuning.selectedProperty().set(false);
 			}
 
 			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))

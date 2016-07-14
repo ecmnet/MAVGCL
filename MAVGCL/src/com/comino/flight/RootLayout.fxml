@@ -55,6 +55,10 @@
 						<MenuItem fx:id="m_keyfigures" mnemonicParsing="false"
 							text="Dump key figures to console">
 						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_about" mnemonicParsing="false"
+							text="About MAVGAnalysis...">
+						</MenuItem>
 					</items>
 				</Menu>
 			</menus>
