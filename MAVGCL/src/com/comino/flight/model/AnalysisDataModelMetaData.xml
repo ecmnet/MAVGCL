@@ -681,6 +681,7 @@
 
 	<KeyFigure desc="Baro timeout" uom="" mask="#0" key="TOBARO">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="0"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -689,6 +690,7 @@
 
 	<KeyFigure desc="GPS timeout" uom="" mask="#0" key="TOGPS">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="1"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -697,6 +699,7 @@
 
 	<KeyFigure desc="LIDAR timeout" uom="" mask="#0" key="TOLIDAR">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="2"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -705,6 +708,7 @@
 
 	 <KeyFigure desc="Flow timeout" uom="" mask="#0" key="TOFLOW">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="3"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -713,6 +717,7 @@
 
 	<KeyFigure desc="Sonar timeout" uom="" mask="#0" key="TOSONAR">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="4"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -721,6 +726,7 @@
 
 	<KeyFigure desc="Vision timeout" uom="" mask="#0" key="TOVIS">
 		<PX4Source field="EST2.fHealth"></PX4Source>
+		<ULogSource field="estimator_status_0.health_flags"/>
 		<Converter class="BitMaskConverter" p1="5"/>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
@@ -733,6 +739,7 @@
 	<KeyFigure desc="RC Channel 0" uom="" mask="#0" key="RC0">
 		<MSPSource class="rc" field="s0"></MSPSource>
 		<PX4Source field="RC.C0"></PX4Source>
+		<ULogSource field="rc_channels_0.channels[0]"/>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
@@ -741,6 +748,7 @@
 	<KeyFigure desc="RC Channel 1" uom="" mask="#0" key="RC1">
 		<MSPSource class="rc" field="s1"></MSPSource>
 		<PX4Source field="RC.C1"></PX4Source>
+		<ULogSource field="rc_channels_0.channels[1]"/>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
@@ -749,6 +757,7 @@
 	<KeyFigure desc="RC Channel 2" uom="" mask="#0" key="RC2">
 		<MSPSource class="rc" field="s2"></MSPSource>
 		<PX4Source field="RC.C2"></PX4Source>
+		<ULogSource field="rc_channels_0.channels[2]"/>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
@@ -757,6 +766,7 @@
 	<KeyFigure desc="RC Channel 3" uom="" mask="#0" key="RC3">
 		<MSPSource class="rc" field="s3"></MSPSource>
 		<PX4Source field="RC.C3"></PX4Source>
+		<ULogSource field="rc_channels_0.channels[3]"/>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
@@ -764,6 +774,7 @@
 
 	<KeyFigure desc="RSSI" uom="" mask="#0" key="RSSI">
 		<MSPSource class="rc" field="rssi"></MSPSource>
+		<ULogSource field="rc_channels_0.rssi"/>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>

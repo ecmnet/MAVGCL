@@ -138,7 +138,7 @@ public class KeyFigureMetaData {
 	}
 
 	public String toStringAll() {
-		return desc1+": "+mspfield+"/"+px4field;
+		return desc1+": "+mspfield+"/"+px4field+"/"+ulogfield;
 	}
 
 
