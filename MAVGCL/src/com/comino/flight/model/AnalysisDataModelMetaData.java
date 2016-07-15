@@ -80,15 +80,17 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	public void loadModelMetaData(InputStream stream) {
 
+		InputStream is = stream;
+
 		meta.clear(); groups.clear();
 
-		if(stream==null) {
-			stream = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
+		if(is==null) {
+			is = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
 		}
 
 		try {
 			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = dBuilder.parse(stream);
+			Document doc = dBuilder.parse(is);
 
 			if (doc.hasChildNodes()) {
 			    version = doc.getElementsByTagName("AnalysisDataModel")
@@ -101,7 +103,7 @@ public class AnalysisDataModelMetaData extends Observable {
 				sortedMetaList = buildSortedList();
 
 				setChanged();
-				notifyObservers(this);
+				notifyObservers(stream);
 			}
 
 		} catch (Exception e) {

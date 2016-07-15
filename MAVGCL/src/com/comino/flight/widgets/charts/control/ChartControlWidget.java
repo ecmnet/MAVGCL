@@ -237,15 +237,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		});
 
 		clear.setOnAction((ActionEvent event)-> {
-			FileHandler.getInstance().clear();
-			scroll.setValue(0);
-			scroll.setDisable(true);
-			modelService.clearModelList();
-			for(IChartControl chart : charts) {
-				if(chart.getScrollProperty()!=null)
-					chart.getScrollProperty().set(1);
-				chart.refreshChart();
-			}
+			clearData();
 		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
@@ -419,6 +411,19 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		}
 	}
 
+
+	private void clearData() {
+		FileHandler.getInstance().clear();
+		scroll.setValue(0);
+		scroll.setDisable(true);
+		modelService.clearModelList();
+		for(IChartControl chart : charts) {
+			if(chart.getScrollProperty()!=null)
+				chart.getScrollProperty().set(1);
+			chart.refreshChart();
+		}
+	}
+
 	private void buildKeyfigureModelSelection() {
 
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
@@ -454,6 +459,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				}
 				break;
 			}
+			clearData();
 		});
 	}
 
