@@ -16,7 +16,7 @@ Any feedback, comments and contributions are very welcome.
 
 - ULog import (New PX4 Logger) supported
 
-- Custom KeyFigureMetaDataFiles allow to define use-case specific collections of key-figures 
+- Import of Custom KeyFigureMetaDataFiles allowsto define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
 
   ​
 
@@ -75,6 +75,10 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 - Run `ant_deploy`
 
+
+**How to define custom key-figure metadata files:**
+
+- Refer to [example file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) or [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml)
 
 **Limitations:**
 
