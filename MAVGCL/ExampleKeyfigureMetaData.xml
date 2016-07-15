@@ -1,0 +1,49 @@
+<AnalysisDataModel version="0.4" description ="Example: UseCase A">
+
+    <!-- Altitudes -->
+
+	<KeyFigure desc="Alt.SL" uom="m" mask="#0.0" key="ALTSL">
+		<MSPSource class="hud" field="ag"></MSPSource>
+		<PX4Source field="GPOS.Alt"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.alt"/>
+		<Groups>
+			<Group>UseCase A</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.GL" uom="m" mask="#0.0" key="ALTGL">
+		<MSPSource class="hud" field="al"></MSPSource>
+		<Groups>
+			<Group>UseCase A</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.baro" uom="m" mask="#0.0" key="ALTBARO">
+		<MSPSource class="hud" field="ap"></MSPSource>
+		<PX4Source field="SENS.BaroAlt"></PX4Source>
+		<ULogSource field="vehicle_global_position_0.pressure_alt"></ULogSource>
+		<Groups>
+			<Group>UseCase A</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
+		<MSPSource class="hud" field="at"></MSPSource>
+		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
+		<Groups>
+			<Group>UseCase A</Group>
+		</Groups>
+		<PX4Source field="GPOS.TALT"></PX4Source>
+	</KeyFigure>
+
+		<KeyFigure desc="Bottom Clearance" uom="m" mask="#0.0" key="BOTCL">
+		<MSPSource class="hud" field="bc"></MSPSource>
+		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
+		<Groups>
+			<Group>UseCase A</Group>
+		</Groups>
+	</KeyFigure>
+
+
+
+</AnalysisDataModel>
