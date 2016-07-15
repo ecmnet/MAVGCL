@@ -354,4 +354,38 @@
     -fx-accent: #000000;
   }
 
+.combo-box {
+	 -fx-background-color: #404040;
+}
+
+.combo-box .text-field{
+	 -fx-background-color: #404040;
+	 -fx-text-fill: #F0F0F0;
+	 -fx-font-size: 10.0px;
+}
+
+.combo-box .arrow-button {
+	-fx-background-color: #606060;
+}
+.combo-box .arrow {
+	-fx-background-color: #F0F0F0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #606060;
+     -fx-background-radius: 0;
+    -fx-border-radius: 0.0px;
+    -fx-border-insets: 0.0px;
+    -fx-padding: 4;
+ }
+
+ .combo-box-popup .list-view .list-cell {
+     -fx-background-color: #606060;
+     -fx-text-fill: #F0F0F0;
+ }
+
+ .combo-box-popup .list-view .list-cell:hover {
+ 	-fx-background-color: #707070;
+}
+
 

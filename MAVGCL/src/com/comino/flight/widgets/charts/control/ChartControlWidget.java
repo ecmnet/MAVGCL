@@ -34,12 +34,15 @@
 package com.comino.flight.widgets.charts.control;
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.log.FileHandler;
+import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.status.StatusWidget;
@@ -50,6 +53,7 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -60,6 +64,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -67,6 +72,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 public class ChartControlWidget extends Pane implements IMSPModeChangedListener {
 
@@ -104,6 +112,9 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 	@FXML
 	private ChoiceBox<Integer> totaltime;
+
+	@FXML
+	private ComboBox<String> keyfigures;
 
 	@FXML Slider scroll;
 
@@ -210,6 +221,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		totaltime.getItems().addAll(TOTAL_TIME);
 		totaltime.getSelectionModel().select(1);
 
+		buildKeyfigureModelSelection();
 
 		recording.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
@@ -220,7 +232,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			recording(newvalue, 0);
 			if(!newvalue.booleanValue())
-					scroll.setValue(1);
+				scroll.setValue(1);
 		});
 
 		clear.setOnAction((ActionEvent event)-> {
@@ -239,16 +251,16 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-				modetrigger = newvalue;
-				trigdelay.setDisable(oldvalue);
-				trigstop.setDisable(oldvalue);
-				trigstart.setDisable(oldvalue);
+			modetrigger = newvalue;
+			trigdelay.setDisable(oldvalue);
+			trigstop.setDisable(oldvalue);
+			trigstart.setDisable(oldvalue);
 		});
 
 		trigstart.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
-				triggerStartMode = newvalue.intValue();
-				triggerStopMode  = newvalue.intValue();
-				trigstop.getSelectionModel().select(triggerStopMode);
+			triggerStartMode = newvalue.intValue();
+			triggerStopMode  = newvalue.intValue();
+			trigstop.getSelectionModel().select(triggerStopMode);
 		});
 
 		trigstop.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -257,7 +269,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		trigdelay.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
-				triggerDelay = newvalue.intValue();
+			triggerDelay = newvalue.intValue();
 		});
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -280,13 +292,13 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-				if((System.currentTimeMillis() - scroll_tms)>20) {
-					scroll_tms = System.currentTimeMillis();
-					for(IChartControl chart : charts) {
-						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(1f-newvalue.floatValue()/1000);
-					}
+			if((System.currentTimeMillis() - scroll_tms)>20) {
+				scroll_tms = System.currentTimeMillis();
+				for(IChartControl chart : charts) {
+					if(chart.getScrollProperty()!=null)
+						chart.getScrollProperty().set(1f-newvalue.floatValue()/1000);
 				}
+			}
 		});
 
 		scroll.setDisable(true);
@@ -315,6 +327,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 
 
 	}
+
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
@@ -403,6 +416,44 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 			if(chart.getScrollProperty()!=null)
 				chart.getScrollProperty().set(1);
 		}
+	}
+
+	private void buildKeyfigureModelSelection() {
+
+		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+
+		keyfigures.getItems().add("Built-In model definition");
+		keyfigures.getItems().add("Custom model definition...");
+		keyfigures.getEditor().setText(meta.getDescription());
+		keyfigures.setEditable(true);
+		keyfigures.getEditor().setEditable(false);
+
+
+		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
+			switch(nv.intValue()) {
+			case 0: meta.loadModelMetaData(null);
+			    break;
+			case 1:
+				try {
+					FileChooser metaFile = new FileChooser();
+					metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
+					File f = metaFile.showOpenDialog(ChartControlWidget.this.getScene().getWindow());
+					if(f!=null) {
+						meta.loadModelMetaData(new FileInputStream(f));
+					}
+					Platform.runLater(() -> {
+						keyfigures.getEditor().setText(meta.getDescription());
+					});
+				} catch(Exception e) {
+					Platform.runLater(() -> {
+						keyfigures.getSelectionModel().select(0);
+					});
+				}
+				break;
+			}
+
+		});
+
 	}
 
 }

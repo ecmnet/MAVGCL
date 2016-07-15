@@ -33,11 +33,14 @@
 
 package com.comino.flight.model;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,17 +50,20 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class AnalysisDataModelMetaData {
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+public class AnalysisDataModelMetaData extends Observable {
 
 	private static AnalysisDataModelMetaData instance = null;
 
 	private Map<Integer,KeyFigureMetaData>        meta   = null;
 	private Map<String,List<KeyFigureMetaData>> groups   = null;
-
-	private List<KeyFigureMetaData> sortedMetaList       = null;
+	private List<KeyFigureMetaData>     sortedMetaList   = null;
 
 	private int count = 0;
-	private String version = null;
+	private String version = "0.0";
+	private String description = "not provided";
 
 	public static AnalysisDataModelMetaData getInstance() {
 		if(instance==null)
@@ -69,22 +75,55 @@ public class AnalysisDataModelMetaData {
 		this.meta    = new HashMap<Integer,KeyFigureMetaData>();
 		this.groups  = new HashMap<String,List<KeyFigureMetaData>>();
 
+		loadModelMetaData(null);
+	}
+
+	public void loadModelMetaData(InputStream stream) {
+
+		meta.clear(); groups.clear();
+
+		if(stream==null) {
+			stream = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
+		}
+
 		try {
 			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = dBuilder.parse(getClass().getResourceAsStream("AnalysisDataModelMetaData.xml"));
+			Document doc = dBuilder.parse(stream);
 
 			if (doc.hasChildNodes()) {
 			    version = doc.getElementsByTagName("AnalysisDataModel")
 						.item(0).getAttributes().getNamedItem("version").getTextContent();
+			    description = doc.getElementsByTagName("AnalysisDataModel")
+						.item(0).getAttributes().getNamedItem("description").getTextContent();
 
 				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
 
 				sortedMetaList = buildSortedList();
+
+				setChanged();
+				notifyObservers(this);
 			}
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
+	}
+
+
+
+	@Override
+	public synchronized void addObserver(Observer o) {
+		super.addObserver(o);
+		setChanged();
+		notifyObservers(null);
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public Map<Integer,KeyFigureMetaData> getKeyFigureMap() {
@@ -139,7 +178,7 @@ public class AnalysisDataModelMetaData {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println("KeyFigureMetaData Version "+version+":  "+count+" keyfigures ");
+		System.out.println(description+" (version "+version+") with "+count+" keyfigures ");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {

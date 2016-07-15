@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<fx:root prefHeight="292.0" prefWidth="183.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="322.0" prefWidth="183.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="12.0" layoutY="14.0" text="Control recording" textFill="#1414da" />
       <Separator layoutX="11.0" layoutY="27.0" prefHeight="0.0" prefWidth="161.0" />
@@ -30,5 +30,7 @@
       <Separator layoutX="13.0" layoutY="250.0" prefHeight="0.0" prefWidth="161.0" />
       <Slider fx:id="scroll" blockIncrement="20.0" layoutX="13.0" prefWidth="161.0"
 					layoutY="262.0" majorTickUnit="100.0" max="1000" min="0" prefHeight="13.0" value="0"/>
+	   <Separator layoutX="13.0" layoutY="282.0" prefHeight="0.0" prefWidth="161.0" />
+	  <ComboBox fx:id="keyfigures" prefHeight="19.0" prefWidth="161.0" layoutY="292.0"  layoutX="11.0"/>
    </children>
 </fx:root>

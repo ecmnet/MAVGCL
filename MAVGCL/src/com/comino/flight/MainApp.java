@@ -41,6 +41,7 @@ import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.px4log.MAVPX4LogReader;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -98,7 +99,7 @@ public class MainApp extends Application {
 	private MenuItem m_prefs;
 
 	@FXML
-	private MenuItem m_keyfigures;
+	private MenuItem m_dump;
 
 	@FXML
 	private MenuItem m_about;
@@ -275,7 +276,7 @@ public class MainApp extends Application {
 			new PreferencesDialog(control).show();
 		});
 
-		m_keyfigures.setOnAction(event -> {
+		m_dump.setOnAction(event -> {
 			AnalysisDataModelMetaData.getInstance().dump();
 		});
 
@@ -299,10 +300,8 @@ public class MainApp extends Application {
 			rootLayout.setCenter(flightPane);
 			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);;
 
-
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
-
 
 			controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
@@ -312,7 +311,6 @@ public class MainApp extends Application {
 
 			if(!control.isConnected())
 				control.connect();
-
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
@@ -326,13 +324,6 @@ public class MainApp extends Application {
 
 
 	private void showAboutDialog() {
-		final Alert alert = new Alert(AlertType.INFORMATION);
-		alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			alert.setTitle("");
-			alert.setHeaderText("MAVGAnalysis");
-			String s ="Version: 0.41 ";
-			alert.setContentText(s);
-			alert.show();
 	}
 
 }

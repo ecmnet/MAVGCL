@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.concurrent.locks.LockSupport;
 import java.util.prefs.Preferences;
 
@@ -44,6 +45,7 @@ import javax.imageio.ImageIO;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
@@ -66,7 +68,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
@@ -280,20 +281,44 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				});
 		});
 
+
 		readRecentList();
 
-		group.getItems().add("Last used...");
-		group.getItems().add("All");
-		group.getItems().addAll(meta.getGroups());
-		group.getSelectionModel().select(0);
+		meta.addObserver((o,e) -> {
 
-		initKeyFigureSelection(cseries1, type1, recent);
-		initKeyFigureSelection(cseries2, type2, recent);
-		initKeyFigureSelection(cseries3, type3, recent);
+			group.getItems().clear();
+
+			if(e == null) {
+
+				group.getItems().add("Last used...");
+				group.getItems().add("All");
+				group.getItems().addAll(meta.getGroups());
+				group.getSelectionModel().select(0);
+
+				initKeyFigureSelection(cseries1, type1, recent);
+				initKeyFigureSelection(cseries2, type2, recent);
+				initKeyFigureSelection(cseries3, type3, recent);
+
+			} else {
+
+				group.getItems().add("All");
+				group.getItems().addAll(meta.getGroups());
+				group.getSelectionModel().select(0);
+
+				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
+				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
+				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
+
+			}
+		});
+
 
 		type1 = type2 = type3 = new KeyFigureMetaData();
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
+
+			if(nv==null)
+				return;
 
 			if(nv.contains("All")) {
 				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
@@ -313,6 +338,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
+
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
 					addToRecent(nv);
