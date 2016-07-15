@@ -10,7 +10,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Current Release:** [0.41](https://github.com/ecmnet/MAVGCL/releases)
+**Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
 **Development Status:** Last updated 15/07/2016 
 
