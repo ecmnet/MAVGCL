@@ -45,6 +45,7 @@ import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -437,11 +438,13 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				try {
 					FileChooser metaFile = new FileChooser();
 					metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
+
 					File f = metaFile.showOpenDialog(ChartControlWidget.this.getScene().getWindow());
-					if(f!=null) {
+					if(f!=null)
 						meta.loadModelMetaData(new FileInputStream(f));
-					}
+
 					Platform.runLater(() -> {
+						keyfigures.getSelectionModel().clearSelection();
 						keyfigures.getEditor().setText(meta.getDescription());
 					});
 				} catch(Exception e) {
@@ -451,9 +454,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 				}
 				break;
 			}
-
 		});
-
 	}
 
 }
