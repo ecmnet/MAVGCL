@@ -403,7 +403,64 @@
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
+	</KeyFigure>
 
+	<!-- Servo output -->
+
+	<KeyFigure desc="Output 1" uom="" mask="#0.0" key="SERVO1">
+		<MSPSource class="servo" field="servo1"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 2" uom="" mask="#0.0" key="SERVO2">
+		<MSPSource class="servo" field="servo2"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 3" uom="" mask="#0.0" key="SERVO3">
+		<MSPSource class="servo" field="servo3"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 4" uom="" mask="#0.0" key="SERVO4">
+		<MSPSource class="servo" field="servo4"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 5" uom="" mask="#0.0" key="SERVO5">
+		<MSPSource class="servo" field="servo5"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 6" uom="" mask="#0.0" key="SERVO6">
+		<MSPSource class="servo" field="servo6"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 7" uom="" mask="#0.0" key="SERVO7">
+		<MSPSource class="servo" field="servo7"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 8" uom="" mask="#0.0" key="SERVO8">
+		<MSPSource class="servo" field="servo8"></MSPSource>
+		<Groups>
+			<Group>PWM Output</Group>
+		</Groups>
 	</KeyFigure>
 
 
