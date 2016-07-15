@@ -12,10 +12,13 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.41](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 13/07/2016 
+**Development Status:** Last updated 15/07/2016 
 
 - ULog import (New PX4 Logger) supported
-- Autohide of details
+
+- Custom KeyFigureMetaDataFiles allow to define use-case specific collections of key-figures 
+
+  ​
 
 **Features:**
 
