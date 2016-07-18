@@ -12,13 +12,12 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 15/07/2016 
+**Development Status:** Last updated 18/07/2016 
 
-- ULog import (New PX4 Logger) supported
+- ULog import (New PX4 Logger) supported (inlcuding annotations)
 
-- Import of Custom KeyFigureMetaDataFiles allowsto define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
+- Import of Custom KeyFigureMetaDataFiles allowsto define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.​
 
-  ​
 
 **Features:**
 
