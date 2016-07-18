@@ -83,7 +83,7 @@ public class UlogtoModelConverter {
 			}
 
 			reader.loggedMessages.forEach(s -> {
-				LogMessage msg = new LogMessage(s.message,s.logLevel);
+				LogMessage msg = new LogMessage(s.message,s.logLevel & 0x00FF - 56);
 				int i = (int)((s.timestamp - reader.getStartMicroseconds())/50000);
 				if(i > 0) {
 					AnalysisDataModel model = list.get(i);
