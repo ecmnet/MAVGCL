@@ -2591,7 +2591,7 @@ EPV used if greater than this value</short_desc>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="40.430" name="LPE_LAT" type="FLOAT">
-      <short_desc>Home latitude for nav w/o GPS</short_desc>
+      <short_desc>Local origin latitude for nav w/o GPS</short_desc>
       <min>-90</min>
       <max>90</max>
       <unit>deg</unit>
@@ -2599,7 +2599,7 @@ EPV used if greater than this value</short_desc>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="-86.929" name="LPE_LON" type="FLOAT">
-      <short_desc>Home longitude for nav w/o GPS</short_desc>
+      <short_desc>Local origin longitude for nav w/o GPS</short_desc>
       <min>-180</min>
       <max>180</max>
       <unit>deg</unit>

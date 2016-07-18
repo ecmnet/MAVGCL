@@ -65,7 +65,6 @@ public class UlogtoModelConverter {
 		Map<String,Object> data = new HashMap<String,Object>();
 
 		list.clear();
-		AnalysisDataModel model = new AnalysisDataModel();
 
 		try {
 
@@ -73,10 +72,12 @@ public class UlogtoModelConverter {
 				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
 
 				if(tms > tms_slot) {
+					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;
 					tms_slot += 50000;
 					model.setValuesULog(data, meta);
-					list.add(model.clone());
+
+					list.add(model);
 				}
 			}
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
