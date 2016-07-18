@@ -22,8 +22,7 @@
 	</target>
 
 	<target name="metadata" depends="clean">
-		<get src="https://s3.amazonaws.com/px4-travis/Firmware/master/parameters.xml"
-					dest="src/com/comino/flight/parameter/PX4ParameterFactMetaData.xml"/>
+		<get src="https://s3.amazonaws.com/px4-travis/Firmware/master/parameters.xml" dest="src/com/comino/flight/parameter/PX4ParameterFactMetaData.xml" />
 	</target>
 
 	<target name="compile" depends="metadata">
@@ -49,17 +48,29 @@
 
 	<target name="build" depends="compile">
 		<fx:jar destfile="dist/MAVGAnalysis.jar">
-			<fx:application mainClass="com.comino.flight.MainApp"/>
+			<fx:application mainClass="com.comino.flight.MainApp" />
 			<fileset dir="bin/">
 				<include name="**" />
+				<exclude name="**/FirstPreloader.*" />
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
 				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar
 					                                JCSG.jar medusa-4.7.jar gson-2.4.jar jfxchartext-1.1.jar
-					                                jinput.jar" />
+					                                jinput.jar MAVGPreloader.jar" />
 			</manifest>
 		</fx:jar>
+
+		<fx:jar destfile="dist/MAVGPreloader.jar">
+			<fx:application mainClass="com.comino.flight.FirstPreloader" />
+			<fileset dir="bin/">
+				<include name="**/FirstPreloader.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="com.comino.flight.FirstPreloader" />
+			</manifest>
+		</fx:jar>
+
 		<copy todir="dist">
 			<fileset dir=".">
 				<include name="*.icns" />
@@ -88,10 +99,12 @@
 	<target name="deploy_osx" depends="build">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
 			<fx:info title="MAVGAnalysiss" />
-			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.4">
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.4"
+				preloaderClass="com.comino.flight.FirstPreloader">
 			</fx:application>
 			<fx:resources>
-				<fx:fileset dir="dist" includes="*.*" />
+				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
+				<fx:fileset requiredFor="preloader" dir="dist" includes="MAVGPreloader.jar"/>
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis.icns" />

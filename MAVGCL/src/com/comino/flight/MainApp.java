@@ -36,6 +36,7 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 import java.util.prefs.Preferences;
+import javafx.application.Preloader.*;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
@@ -57,6 +58,7 @@ import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.application.Preloader.StateChangeNotification;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -111,13 +113,12 @@ public class MainApp extends Application {
 		super();
 	}
 
+
+
 	@Override
-	public void start(Stage primaryStage) {
-
+	public void init() throws Exception {
+		super.init();
 		try {
-
-			this.primaryStage = primaryStage;
-			this.primaryStage.setTitle("MAVGCL Analysis");
 
 
 			String peerAddress = null;
@@ -156,12 +157,22 @@ public class MainApp extends Application {
 			PX4Parameters.getInstance(control);
 
 
-			initRootLayout();
-			showMAVGCLApplication();
+
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+
+	@Override
+	public void start(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle("MAVGCL Analysis");
+		initRootLayout();
+		showMAVGCLApplication();
+
 
 	}
 
@@ -205,6 +216,9 @@ public class MainApp extends Application {
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
+
+			notifyPreloader(new StateChangeNotification(
+                    StateChangeNotification.Type.BEFORE_START));
 
 
 		} catch (IOException e) {
