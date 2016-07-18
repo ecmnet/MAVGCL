@@ -26,18 +26,16 @@ public class UlogTest {
 			  System.out.println(i+":"+c.toString());
 		  });
 
+//
+//		 List<String> list = new ArrayList<String>();
+//		 reader.getFields().forEach((i,p) -> {
+//				list.add(i);
+//			});
+//		Collections.sort(list);
+//
 
-		 List<String> list = new ArrayList<String>();
-		 reader.getFields().forEach((i,p) -> {
-				list.add(i);
-			});
-		Collections.sort(list);
 
-		list.forEach(s -> {
-			System.out.println(s);
-		});
-
-		System.out.println(list.size()+" keyfigures found in log");
+		//System.out.println(list.size()+" keyfigures found in log");
 
 		  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 		  converter.doConversion();

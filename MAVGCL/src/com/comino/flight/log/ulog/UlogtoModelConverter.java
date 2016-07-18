@@ -40,19 +40,21 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.msp.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
+import me.drton.jmavlib.log.ulog.ULogReader;
 
 public class UlogtoModelConverter {
 
-	private BinaryLogReader reader;
+	private ULogReader reader;
 	private List<AnalysisDataModel> list;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
-	public UlogtoModelConverter(BinaryLogReader reader, List<AnalysisDataModel> list) {
+	public UlogtoModelConverter(ULogReader reader, List<AnalysisDataModel> list) {
 		this.reader = reader;
 		this.list = list;
 	}
@@ -76,10 +78,20 @@ public class UlogtoModelConverter {
 					model.tms = tms;
 					tms_slot += 50000;
 					model.setValuesULog(data, meta);
-
 					list.add(model);
 				}
 			}
+
+			reader.loggedMessages.forEach(s -> {
+				LogMessage msg = new LogMessage(s.message,s.logLevel);
+				int i = (int)((s.timestamp - reader.getStartMicroseconds())/50000);
+				if(i > 0) {
+					AnalysisDataModel model = list.get(i);
+					model.msg = msg;
+				}
+			});
+
+
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {
