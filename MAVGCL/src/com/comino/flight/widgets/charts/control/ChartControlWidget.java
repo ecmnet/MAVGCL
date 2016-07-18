@@ -429,7 +429,7 @@ public class ChartControlWidget extends Pane implements IMSPModeChangedListener 
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 		keyfigures.getItems().add("Built-In model definition");
-		keyfigures.getItems().add("Custom model definition...");
+		keyfigures.getItems().add("Select custom model (xml)...");
 		keyfigures.getEditor().setText(meta.getDescription());
 		keyfigures.setEditable(true);
 		keyfigures.getEditor().setEditable(false);
