@@ -64,6 +64,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 
 import javafx.scene.control.MenuBar;
@@ -72,7 +73,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class MainApp extends Application {
+public class MainApp extends Application  {
 
 	private static IMAVController control = null;
 
@@ -217,9 +218,6 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			notifyPreloader(new StateChangeNotification(
-                    StateChangeNotification.Type.BEFORE_START));
-
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -329,6 +327,9 @@ public class MainApp extends Application {
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
+			notifyPreloader(new StateChangeNotification(
+                    StateChangeNotification.Type.BEFORE_START));
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -338,5 +339,8 @@ public class MainApp extends Application {
 
 	private void showAboutDialog() {
 	}
+
+
+
 
 }

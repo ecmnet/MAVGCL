@@ -1,8 +1,10 @@
 package com.comino.flight;
 
+import javafx.application.Platform;
 import javafx.application.Preloader;
+import javafx.concurrent.Task;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -14,22 +16,43 @@ public class FirstPreloader extends Preloader {
 
 
     Stage stage;
+    ProgressBar bar;
     boolean noLoadingProgress = true;
 
     private Scene createPreloaderScene() {
-    	ImageView splash = new ImageView(new Image(getClass().getResource("splash.png").toExternalForm()));
     	VBox splashLayout = new VBox();
-        splashLayout.getChildren().addAll(splash);
+    	splashLayout.getStylesheets().add(getClass().getResource("splash.css").toExternalForm());
+    	ImageView splash = new ImageView(new Image(getClass().getResource("splash.png").toExternalForm()));
+    	bar = new ProgressBar(0);
+    	bar.setPrefHeight(5); bar.setPrefWidth(600);
+        splashLayout.getChildren().addAll(splash,bar);
         splashLayout.setEffect(new DropShadow());
         splashLayout.getChildren().addAll();
-        Scene scene =  new Scene(splashLayout, 600, 263);
+        Scene scene =  new Scene(splashLayout, 600, 268);
     	return scene;
     }
 
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         stage.setScene(createPreloaderScene());
+        stage.setAlwaysOnTop(true);
         stage.show();
+
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                int max = 200;
+                for (int i = 1; i <= max; i++) {
+                	Thread.sleep(300/max);
+                    bar.setProgress((double) i/max);
+                }
+                return null;
+            }
+        };
+        Thread th = new Thread(task);
+		th.setPriority(Thread.MAX_PRIORITY);
+		th.setDaemon(true);
+		th.start();
     }
 
 
@@ -53,7 +76,12 @@ public class FirstPreloader extends Preloader {
 //           bar.setProgress(v);
         } else if (pn instanceof StateChangeNotification) {
             //hide after get any state update from application
+        	bar.setProgress(1);
             stage.hide();
         }
     }
+
+    public static void main(String[] args) {
+		launch(args);
+	}
  }
