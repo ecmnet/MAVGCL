@@ -64,21 +64,18 @@ public class FlightXYAnalysisTab extends Pane {
 
 	@FXML
 	private void initialize() {
-
+		chart1.prefWidthProperty().bind(widthProperty());
 		chart1.disableProperty().bind(this.disabledProperty());
-
-
 	}
 
 
 	public void setup(ChartControlWidget recordControl,IMAVController control) {
-		chart1.prefWidthProperty().bind(heightProperty().add(217));
 		recordControl.addChart(chart1.setup(control));
 		chart1.prefHeightProperty().bind(heightProperty().subtract(1));
+	}
 
-
-
-
+	public void setWidthBinding(double horizontal_space) {
+		chart1.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
 	}
 
 

@@ -240,8 +240,7 @@ public class MainApp extends Application  {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImport();
-
-//	TODO			controlpanel.getRecordControl().refreshCharts();
+  			    controlpanel.getChartControl().refreshCharts();
 			}
 
 		});
@@ -250,7 +249,7 @@ public class MainApp extends Application  {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImportPX4Log();
-//				controlpanel.getRecordControl().refreshCharts();
+				controlpanel.getChartControl().refreshCharts();
 			}
 
 		});
@@ -273,7 +272,7 @@ public class MainApp extends Application  {
 					if(!newvalue.booleanValue()) {
 						Platform.runLater(() -> {
 							r_px4log.setText(m_text);
-//							controlpanel.getRecordControl().refreshCharts();
+						controlpanel.getChartControl().refreshCharts();
 						});
 					}
 				});

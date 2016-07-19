@@ -161,21 +161,30 @@ public class FlightTabs extends Pane {
 			if(tuning.isVisible())
 				return;
 
-			if(newvalue.booleanValue())
+			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
+				xyanalysistab.setWidthBinding(details.getWidth()+3);
+			}
 			else {
 				xtanalysistab.setWidthBinding(0);
+				xyanalysistab.setWidthBinding(0);
 			}
 		});
 
 		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.booleanValue())
+			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
+				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+			}
 			else {
-				if(details.isVisible() && control.isConnected())
+				if(details.isVisible() && control.isConnected()) {
 			      	xtanalysistab.setWidthBinding(details.getWidth()+3);
-				else
+			      	xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+				}
+				else {
 					xtanalysistab.setWidthBinding(0);
+					xyanalysistab.setWidthBinding(0);
+				}
 			}
 		});
 
