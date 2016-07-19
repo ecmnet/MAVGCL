@@ -155,9 +155,9 @@ public class ChartControlWidget extends Pane  {
 		StateProperties.getInstance().getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue()) {
 					scroll.setDisable(true);
+					scroll.setValue(1);
 					return;
 			}
-			System.out.println("TEST");
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 				scroll.setDisable(true);
 			else
