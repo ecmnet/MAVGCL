@@ -33,19 +33,25 @@
 
 package com.comino.flight.widgets.camera;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
 
+import javafx.application.Platform;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CameraWidget extends FadePane  {
@@ -54,9 +60,11 @@ public class CameraWidget extends FadePane  {
 	@FXML
 	private ImageView image;
 
-	private IMWVideoSource source = null;
+	private IMWVideoSource 	source = null;
+	private boolean			big_size=false;
+	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
-	private boolean big_size=false;
+	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	public CameraWidget() {
 
@@ -72,13 +80,17 @@ public class CameraWidget extends FadePane  {
 		}
 	}
 
+
 	@FXML
 	private void initialize() {
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
+
+
 			if(source==null && !connect()) {
 				return;
 			}
+
 			if(newvalue.booleanValue())
 				source.start();
 			else
@@ -95,6 +107,19 @@ public class CameraWidget extends FadePane  {
 			resize(big_size,400,300);
 
 		});
+
+		scroll.addListener((v, ov, nv) -> {
+			int current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
+
+			if(!disabledProperty().get() && dataService.getModelList().size()>0)
+				Platform.runLater(() -> {
+					image.setImage(getfromjpeg(dataService.getModelList().get(current_x0_pt).video));
+				});
+		});
+	}
+
+	public FloatProperty getScrollProperty() {
+		return scroll;
 	}
 
 	private void resize(boolean big, int maxX, int maxY) {
@@ -118,7 +143,7 @@ public class CameraWidget extends FadePane  {
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		try {
 			URL url = new URL(url_string);
-			source = new StreamVideoSource(url);
+			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source.addProcessListener((im,buf) -> {
 				image.setImage(im);
 			});
@@ -127,5 +152,10 @@ public class CameraWidget extends FadePane  {
 			return false;
 		}
 		return true;
+	}
+
+
+	private Image getfromjpeg(byte[] in) {
+		return new Image(new ByteArrayInputStream(in));
 	}
 }

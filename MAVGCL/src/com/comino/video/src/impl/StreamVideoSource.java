@@ -41,8 +41,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.Hashtable;
 
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
 
@@ -76,19 +78,21 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 	private int  fps=0;
 
+	private AnalysisDataModel model = null;
+
 
 
 	private IMWStreamVideoProcessListener listener = null;
 
 
-	public StreamVideoSource(URL url) {
+	public StreamVideoSource(URL url, AnalysisDataModel model) {
 
 
 		if (url == null)
 			throw new NullPointerException();
 
 		isAvailable = true;
-
+		this.model = model;
 		this.url = url;
 	}
 
@@ -209,28 +213,30 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							boundary = ctype.substring(bidx + 9);
 							ssplit.skipToBoundary(boundary);
 						} else {
-						//	System.out.print("FC: "+(++framecounter)+"   ");
+							//	System.out.print("FC: "+(++framecounter)+"   ");
 							byte[] img = ssplit.readToBoundary(boundary);
 							if (img.length == 0)
 								break;
-						    	try {
-						    		if(System.currentTimeMillis() >= trigger) {
+							try {
+								if(System.currentTimeMillis() >= trigger) {
 
-						    		if(listener!=null)
-						    		   listener.process(getfromjpeg(img),img);
+									if(listener!=null) {
+										listener.process(getfromjpeg(img),img);
+										model.video = Arrays.copyOf(img, model.video.length);
+									}
 
-						    		  fps = (int)(1000 / (System.currentTimeMillis() - tms));
-									  tms = System.currentTimeMillis();
-									  trigger = System.currentTimeMillis()+RATE;
-						    		}
-//						    		else
-//						    			Thread.sleep(100);
-
-
-
-								} catch (Exception e) {
-									e.printStackTrace();
+									fps = (int)(1000 / (System.currentTimeMillis() - tms));
+									tms = System.currentTimeMillis();
+									trigger = System.currentTimeMillis()+RATE;
 								}
+								//						    		else
+								//						    			Thread.sleep(100);
+
+
+
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 						}
 					}
@@ -247,18 +253,18 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 	public Thread start() {
-			isRunning = true;
-			thread = new Thread(this);
-			thread.setPriority(Thread.MAX_PRIORITY);
-			thread.start();
-			isAvailable = true;
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
+		isRunning = true;
+		thread = new Thread(this);
+		thread.setPriority(Thread.MAX_PRIORITY);
+		thread.start();
+		isAvailable = true;
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
 
-				e.printStackTrace();
-			}
-            trigger = System.currentTimeMillis();
+			e.printStackTrace();
+		}
+		trigger = System.currentTimeMillis();
 		return thread;
 	}
 
