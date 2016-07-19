@@ -12,10 +12,11 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 18/07/2016 
+**Development Status:** Last updated 19/07/2016 
 
 - ULog import (New PX4 Logger) supported (inlcuding annotations)
-- Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.​
+- Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
+- Key figure conversion based on expressions
 
 
 **Features:**
@@ -77,6 +78,8 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 **How to define custom key-figure metadata files:**
 
 - Refer to [example file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) or [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml)
+- Conversion based on expressions. 
+  Example: `<Converter class="ExpressionConverter" expression="1.5 * sin(val)"/>`
 
 **Limitations:**
 
