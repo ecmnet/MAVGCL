@@ -47,7 +47,6 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.FadePane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -103,12 +102,14 @@ public class DetailsWidget extends FadePane  {
 	private GridPane grid;
 
 	private Task<Long> task;
-	private AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 	private List<KeyFigure> figures = null;
 
 	private DecimalFormat f = new DecimalFormat("#0.#");
+
+	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
+
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 	public DetailsWidget() {
 

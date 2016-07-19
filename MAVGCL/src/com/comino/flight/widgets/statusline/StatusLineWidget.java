@@ -44,7 +44,6 @@ import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -90,9 +89,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
-
-	private static boolean showProgress = false;
-
 
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));

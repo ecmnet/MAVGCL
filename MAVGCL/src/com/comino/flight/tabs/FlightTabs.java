@@ -132,7 +132,6 @@ public class FlightTabs extends Pane {
 			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoVisibility());
 		}
 
-
 		details.fadeProperty().bind(flightControl.getStatusControl().getDetailVisibility());
 		details.setup(control);
 

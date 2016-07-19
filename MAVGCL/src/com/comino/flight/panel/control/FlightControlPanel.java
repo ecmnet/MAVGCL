@@ -34,6 +34,7 @@ package com.comino.flight.panel.control;
 
 import java.io.IOException;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.RecordControlWidget;
