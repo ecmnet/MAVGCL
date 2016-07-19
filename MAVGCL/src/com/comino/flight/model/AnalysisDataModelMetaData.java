@@ -230,9 +230,9 @@ public class AnalysisDataModelMetaData extends Observable {
 	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
 		NamedNodeMap att = c_node.getAttributes();
 		if(att.getLength()>1) {
-			float[] params = new float[att.getLength()-1];
+			String[] params = new String[att.getLength()-1];
 			for(int p=1; p<att.getLength();p++)
-				params[p-1] = Float.parseFloat(att.item(p).getTextContent());
+				params[p-1] = att.item(p).getTextContent();
 			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
 		}
 	}

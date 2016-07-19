@@ -1,23 +1,18 @@
 package com.comino.flight.model.converter;
 
 public class BitMaskConverter extends SourceConverter {
-	/*
-	enum sensor_t {
-		SENSOR_BARO = 0,
-		SENSOR_GPS,
-		SENSOR_LIDAR,
-		SENSOR_FLOW,
-		SENSOR_SONAR,
-		SENSOR_VISION,
-		SENSOR_MOCAP
-	};
-	*/
-	
-	
+
+	int mask = 0;
+
+	@Override
+	public void setParameter(String[] params) {
+		this.mask = Integer.parseInt(params[0]);
+	}
+
 
 	@Override
 	public float convert(float val) {
-		if(((int)val >> (int)params[0] & 1) ==1 )
+		if(((int)val >> mask & 1) ==1 )
 			return 1;
 		return 0;
 	}
