@@ -33,6 +33,7 @@
 
 package com.comino.flight.model;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +46,11 @@ public class AnalysisDataModel {
 	public long       tms  = 0;
 	public LogMessage msg  = null;
 	public Status   status = null;
-	public byte[]    video = null;
 
 	private Map<Integer,Float> data = null;
 
 	public AnalysisDataModel() {
 		this.data = new HashMap<Integer,Float>();
-		this.video = new byte[50000];
 	}
 
 	private AnalysisDataModel(Map<Integer,Float> d) {

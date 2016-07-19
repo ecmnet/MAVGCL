@@ -100,6 +100,7 @@ public class CameraWidget extends FadePane  {
 		resize(false,400,300);
 
 		image.setOnMouseClicked(event -> {
+
 			if(!big_size)
 				big_size=true;
 			else
@@ -108,14 +109,6 @@ public class CameraWidget extends FadePane  {
 
 		});
 
-		scroll.addListener((v, ov, nv) -> {
-			int current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
-
-			if(!disabledProperty().get() && dataService.getModelList().size()>0)
-				Platform.runLater(() -> {
-					image.setImage(getfromjpeg(dataService.getModelList().get(current_x0_pt).video));
-				});
-		});
 	}
 
 	public FloatProperty getScrollProperty() {
@@ -123,14 +116,16 @@ public class CameraWidget extends FadePane  {
 	}
 
 	private void resize(boolean big, int maxX, int maxY) {
-		if(big) {
-			image.setLayoutX(0); image.setFitWidth(maxX);
-			image.setLayoutY(0); image.setFitHeight(maxY);
-		} else
-		{
-			image.setLayoutX(maxX/2); image.setFitWidth(maxX/2);
-			image.setLayoutY(maxY/2); image.setFitHeight(maxY/2);
-		}
+		Platform.runLater(() -> {
+			if(big) {
+				image.setLayoutX(0); image.setFitWidth(maxX);
+				image.setLayoutY(0); image.setFitHeight(maxY);
+			} else
+			{
+				image.setLayoutX(maxX/2); image.setFitWidth(maxX/2);
+				image.setLayoutY(maxY/2); image.setFitHeight(maxY/2);
+			}
+		});
 	}
 
 	public void setup(IMAVController control) {
@@ -152,10 +147,5 @@ public class CameraWidget extends FadePane  {
 			return false;
 		}
 		return true;
-	}
-
-
-	private Image getfromjpeg(byte[] in) {
-		return new Image(new ByteArrayInputStream(in));
 	}
 }

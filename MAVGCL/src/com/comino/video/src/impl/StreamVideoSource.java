@@ -222,7 +222,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 									if(listener!=null) {
 										listener.process(getfromjpeg(img),img);
-										model.video = Arrays.copyOf(img, model.video.length);
 									}
 
 									fps = (int)(1000 / (System.currentTimeMillis() - tms));
