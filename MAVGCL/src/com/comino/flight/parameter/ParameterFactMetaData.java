@@ -66,7 +66,7 @@ public class ParameterFactMetaData {
 				buildParameterList(doc.getElementsByTagName("group"));
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
 	}
 

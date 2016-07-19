@@ -26,9 +26,8 @@ public class FirstPreloader extends Preloader {
     	bar = new ProgressBar(0);
     	bar.setPrefHeight(5); bar.setPrefWidth(600);
         splashLayout.getChildren().addAll(splash,bar);
-        splashLayout.setEffect(new DropShadow());
         splashLayout.getChildren().addAll();
-        Scene scene =  new Scene(splashLayout, 600, 268);
+        Scene scene =  new Scene(splashLayout, 600, 293);
     	return scene;
     }
 

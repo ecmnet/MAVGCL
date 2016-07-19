@@ -66,11 +66,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainApp extends Application  {
@@ -153,8 +157,6 @@ public class MainApp extends Application  {
 			MSPLogger.getInstance(control);
 			StateProperties.getInstance(control);
 
-			FileHandler.getInstance(primaryStage,control);
-
 			PX4Parameters.getInstance(control);
 
 
@@ -171,6 +173,7 @@ public class MainApp extends Application  {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MAVGCL Analysis");
+		FileHandler.getInstance(primaryStage,control);
 		initRootLayout();
 		showMAVGCLApplication();
 
@@ -295,7 +298,7 @@ public class MainApp extends Application  {
 			showAboutDialog();
 		});
 
-		m_about.setVisible(false);
+		m_about.setVisible(true);
 	}
 
 
@@ -309,7 +312,7 @@ public class MainApp extends Application  {
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
-			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);;
+			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);
 
 			StatusLineWidget statusline = new StatusLineWidget();
 			rootLayout.setBottom(statusline);
@@ -328,7 +331,7 @@ public class MainApp extends Application  {
 			fvController.setPrefHeight(820);
 
 			notifyPreloader(new StateChangeNotification(
-                    StateChangeNotification.Type.BEFORE_START));
+					StateChangeNotification.Type.BEFORE_START));
 
 
 		} catch (IOException e) {
@@ -336,11 +339,18 @@ public class MainApp extends Application  {
 		}
 	}
 
-
 	private void showAboutDialog() {
+		VBox box = new VBox();
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash.png").toExternalForm()));
+		box.getChildren().addAll(splash);
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.getDialogPane().getChildren().add(box);
+		alert.getDialogPane().setPrefHeight(291); alert.getDialogPane().setPrefWidth(600);
+		Platform.runLater(() -> {
+			alert.showAndWait();
+		});
+
 	}
-
-
 
 
 }

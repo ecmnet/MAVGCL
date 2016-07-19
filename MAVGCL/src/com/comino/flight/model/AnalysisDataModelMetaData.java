@@ -107,7 +107,7 @@ public class AnalysisDataModelMetaData extends Observable {
 			}
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

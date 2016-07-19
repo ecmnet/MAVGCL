@@ -78,7 +78,7 @@ public class JoyStickController implements Runnable {
 			if(!found)
 				throw new Exception("Controller "+pad.getName()+" not registered");
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 			return false;
 		}
 

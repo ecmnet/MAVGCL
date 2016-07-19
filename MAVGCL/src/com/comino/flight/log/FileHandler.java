@@ -131,7 +131,7 @@ public class FileHandler {
 
 			}
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
 	}
 
@@ -162,7 +162,7 @@ public class FileHandler {
 
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
 
 	}
@@ -190,7 +190,7 @@ public class FileHandler {
 
 			}
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
 
 	}
