@@ -32,13 +32,13 @@ Any feedback, comments and contributions are very welcome.
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
 - FrSky Taranis USB supported in SITL
-- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) or other source (recording and replay in preparation)
+- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) or any other source
 
 **Requirements:**
 
 - requires **Java 8** JRE
 - A companion running a serial-to-udp-proxy (either MAVComm or MAVROS, not required for PIXRacer)
-- Video streaming requires  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) running on companion 
+- Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)) running on companion 
 
 **Binaries:**
 
@@ -85,7 +85,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 - Limited to one device (MAVLink-ID '1')
 - Currently does not support USB or any serial connection (should be easy to add, so feel free to implement it). Note: Serial via radio might be too slow.
-- PX4Log/ULog keyfigure mapping still not [complete](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml).
+- Default PX4Log/ULog keyfigure mapping still not [complete](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml), but you can add your own definition file
 
 
 **Note for developers:**
