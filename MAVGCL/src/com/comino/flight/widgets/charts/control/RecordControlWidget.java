@@ -93,9 +93,6 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 	private ToggleButton recording;
 
 	@FXML
-	private Button clear;
-
-	@FXML
 	private CheckBox enablemodetrig;
 
 	@FXML
@@ -125,8 +122,6 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
-
-	private long scroll_tms = 0;
 
 
 	public RecordControlWidget() {
@@ -166,21 +161,21 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
 				switch(newData) {
 				case ModelCollectorService.STOPPED:
-					clear.setDisable(false);
+
 					StatusLineWidget.showProgressIndicator(false);
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY); break;
 				case ModelCollectorService.PRE_COLLECTING:
-					clear.setDisable(true);
+
 					FileHandler.getInstance().clear();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE); break;
 				case ModelCollectorService.POST_COLLECTING:
-					clear.setDisable(true);
+
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW); break;
 				case ModelCollectorService.COLLECTING:
-					clear.setDisable(true);
+
 					FileHandler.getInstance().clear();
 					StatusLineWidget.showProgressIndicator(true);
 					recording.selectedProperty().set(true);
@@ -216,16 +211,10 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 
 		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			recording(newvalue, 0);
-//			if(!newvalue.booleanValue())
-//				scroll.setValue(1);
 		});
 
-		clear.setOnAction((ActionEvent event)-> {
-			clearData();
-		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
-
 
 		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			modetrigger = newvalue;
@@ -253,11 +242,7 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 			if(!newvalue.booleanValue())
 				recording(false, 0);
 		});
-
-
 		enablemodetrig.selectedProperty().set(true);
-
-
 	}
 
 
@@ -271,8 +256,6 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 		StateProperties.getInstance().getRecordingProperty().bind(recording.selectedProperty());
 
 		ExecutorService.get().execute(task);
-
-
 	}
 
 	@Override
@@ -317,11 +300,5 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 
 	}
 
-
-	private void clearData() {
-		FileHandler.getInstance().clear();
-		modelService.clearModelList();
-
-	}
 
 }

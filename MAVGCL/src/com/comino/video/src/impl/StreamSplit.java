@@ -38,6 +38,7 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.util.Hashtable;
 
 public class StreamSplit {
@@ -47,14 +48,14 @@ public class StreamSplit {
 	protected DataInputStream m_dis;
 	private boolean m_streamEnd;
 
-	private byte[] buffer = null;
+	private ByteBuffer buf = null;
 
 
 	public StreamSplit(DataInputStream dis)
 	{
 		m_dis = dis;
 		m_streamEnd = false;
-//		buffer = new byte[8192];
+        buf = ByteBuffer.allocate(30000);
 	}
 
 
@@ -126,7 +127,8 @@ public class StreamSplit {
 
 	public byte[] readToBoundary(String boundary) throws IOException
 	{
-		ResizableByteArrayOutputStream baos = new ResizableByteArrayOutputStream();
+
+		buf.position(0);
 		StringBuffer lastLine = new StringBuffer();
 		int lineidx = 0;
 		int chidx = 0;
@@ -172,12 +174,9 @@ public class StreamSplit {
 			}
 
 			chidx++;
-			baos.write(ch);
+			buf.put(ch);
 		} while (true);
-		//
-		baos.close();
-		baos.resize(chidx);
-		return baos.toByteArray();
+		return buf.array();
 	}
 
 
