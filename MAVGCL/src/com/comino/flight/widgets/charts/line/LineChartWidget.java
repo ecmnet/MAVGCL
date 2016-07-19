@@ -177,6 +177,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
+		series1 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series1);
+		series2 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series2);
+		series3 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series3);
+
 		task = new Task<Integer>() {
 
 			@Override
@@ -547,12 +554,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	public LineChartWidget setup(IMAVController control) {
-		series1 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series1);
-		series2 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series2);
-		series3 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series3);
+
 		this.control = control;
 
 

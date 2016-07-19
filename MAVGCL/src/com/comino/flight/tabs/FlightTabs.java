@@ -148,12 +148,12 @@ public class FlightTabs extends Pane {
 
 		statusline.registerMessageWidget(messages);
 
-		mavmaptab.setup(flightControl.getRecordControl(),control);
+		mavmaptab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);
-		xtanalysistab.setup(flightControl.getRecordControl(),control);
+		xtanalysistab.setup(flightControl.getChartControl(),control);
 		xtanalysistab.setWidthBinding(0);
 
-		xyanalysistab.setup(flightControl.getRecordControl(),control);
+		xyanalysistab.setup(flightControl.getChartControl(),control);
 		mavparametertab.setup(control);
 
 		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {

@@ -171,11 +171,15 @@ public class MainApp extends Application  {
 
 	@Override
 	public void start(Stage primaryStage) {
+		try {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("MAVGCL Analysis");
 		FileHandler.getInstance(primaryStage,control);
 		initRootLayout();
 		showMAVGCLApplication();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 
 	}
@@ -236,7 +240,8 @@ public class MainApp extends Application  {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImport();
-				controlpanel.getRecordControl().refreshCharts();
+
+//	TODO			controlpanel.getRecordControl().refreshCharts();
 			}
 
 		});
@@ -245,7 +250,7 @@ public class MainApp extends Application  {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImportPX4Log();
-				controlpanel.getRecordControl().refreshCharts();
+//				controlpanel.getRecordControl().refreshCharts();
 			}
 
 		});
@@ -268,7 +273,7 @@ public class MainApp extends Application  {
 					if(!newvalue.booleanValue()) {
 						Platform.runLater(() -> {
 							r_px4log.setText(m_text);
-							controlpanel.getRecordControl().refreshCharts();
+//							controlpanel.getRecordControl().refreshCharts();
 						});
 					}
 				});
@@ -321,7 +326,7 @@ public class MainApp extends Application  {
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
 
-			statusline.setup(controlpanel.getRecordControl(),control);
+			statusline.setup(controlpanel.getChartControl(),control);
 
 			if(!control.isConnected())
 				control.connect();
