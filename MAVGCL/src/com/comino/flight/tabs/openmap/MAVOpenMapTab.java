@@ -87,7 +87,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class MAVOpenMapTab extends BorderPane  implements IChartControl {
+public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static int MAP_UPDATE_MS = 100;
 
@@ -179,6 +179,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 					if(!isCollecting.get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
+
 
 					isCollecting.set(dataService.isCollecting());
 
@@ -281,7 +282,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
 
 				if(isCollecting.get() &&
-						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+					(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
 					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
@@ -371,14 +372,7 @@ public class MAVOpenMapTab extends BorderPane  implements IChartControl {
 		scroll.addListener((v, ov, nv) -> {
 			if(!isCollecting.get()) {
 
-//				int current_x0_pt = (int)(
-//						( collector.getModelList().size()-1)
-//						- nv.intValue());
-//
-//				if(current_x0_pt<0)
-//					current_x0_pt = 0;
-
-				int current_x1_pt = control.getCollector().calculateX1Index(nv.floatValue());
+				int current_x1_pt = dataService.calculateX0Index(nv.floatValue());
 
 				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
 					model = dataService.getModelList().get(current_x1_pt);
