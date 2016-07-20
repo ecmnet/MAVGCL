@@ -23,7 +23,7 @@
 
 	<target name="metadata" depends="clean">
 		<get src="https://s3.amazonaws.com/px4-travis/Firmware/master/parameters.xml" dest="src/com/comino/flight/parameter/PX4ParameterFactMetaData.xml"
-		     ignoreerrors="true" maxtime="5"/>
+		     ignoreerrors="true" maxtime="5" usetimestamp="true"/>
 	</target>
 
 	<target name="compile" depends="metadata">
