@@ -90,6 +90,12 @@ public class AnalysisModelService {
 		return current;
 	}
 
+	public void setCurrent(int index) {
+		if(modelList.size() > index) {
+			current = modelList.get(index);
+		}
+	}
+
 
 	public int getCollectorInterval_ms() {
 		return MODELCOLLECTOR_INTERVAL_US/1000;
@@ -216,7 +222,6 @@ public class AnalysisModelService {
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
 			}
 		}
-
 	}
 
 
