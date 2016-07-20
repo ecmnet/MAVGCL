@@ -40,7 +40,7 @@ import org.mavlink.messages.MAV_MODE_FLAG;
 
 import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
-import com.comino.flight.widgets.FadePane;
+import com.comino.flight.widgets.fx.controls.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;

@@ -42,7 +42,6 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.msp.model.segment.LogMessage;
 
-import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.ULogReader;
 

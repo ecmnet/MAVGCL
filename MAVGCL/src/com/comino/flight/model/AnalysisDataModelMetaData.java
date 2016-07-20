@@ -50,9 +50,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-
 public class AnalysisDataModelMetaData extends Observable {
 
 	private static AnalysisDataModelMetaData instance = null;

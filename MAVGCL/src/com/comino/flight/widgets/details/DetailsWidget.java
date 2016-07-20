@@ -45,7 +45,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.FadePane;
+import com.comino.flight.widgets.fx.controls.FadePane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.application.Platform;

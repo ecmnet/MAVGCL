@@ -45,7 +45,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
-import com.comino.flight.widgets.FadePane;
+import com.comino.flight.widgets.fx.controls.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 
@@ -68,7 +68,6 @@ import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;

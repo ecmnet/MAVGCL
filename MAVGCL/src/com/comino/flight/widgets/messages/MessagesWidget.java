@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
-import com.comino.flight.widgets.FadePane;
+import com.comino.flight.widgets.fx.controls.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.segment.LogMessage;

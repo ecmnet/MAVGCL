@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets;
+package com.comino.flight.widgets.fx.controls;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

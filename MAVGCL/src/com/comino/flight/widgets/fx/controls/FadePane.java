@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets;
+package com.comino.flight.widgets.fx.controls;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;

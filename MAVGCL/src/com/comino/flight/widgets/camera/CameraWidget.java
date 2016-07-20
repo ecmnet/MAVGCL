@@ -41,7 +41,7 @@ import java.util.prefs.Preferences;
 
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.widgets.FadePane;
+import com.comino.flight.widgets.fx.controls.FadePane;
 import com.comino.mav.control.IMAVController;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
