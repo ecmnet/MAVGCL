@@ -149,11 +149,20 @@ public class FlightTabs extends Pane {
 
 		mavmaptab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);
+
 		xtanalysistab.setup(flightControl.getChartControl(),control);
 		xtanalysistab.setWidthBinding(0);
 
 		xyanalysistab.setup(flightControl.getChartControl(),control);
 		mavparametertab.setup(control);
+
+		this.tabpane.getTabs().get(3).setDisable(true);
+		this.tabpane.getTabs().get(4).setDisable(true);
+
+		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
+				this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
+				this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
+		});
 
 		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
 
