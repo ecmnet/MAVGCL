@@ -248,7 +248,7 @@ public class MainApp extends Application  {
 		m_px4log.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				FileHandler.getInstance().fileImportPX4Log();
+				FileHandler.getInstance().fileImportLog();
 				controlpanel.getChartControl().refreshCharts();
 			}
 

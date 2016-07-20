@@ -95,7 +95,7 @@ public class FlightControlPanel extends Pane  {
 	public void setup(IMAVController control) {
 
 		status.setup(control);
-		recordcontrol.setup(control, status);
+		recordcontrol.setup(control, chartcontrol, status);
 		battery.setup(control);
 
 		if(details!=null)

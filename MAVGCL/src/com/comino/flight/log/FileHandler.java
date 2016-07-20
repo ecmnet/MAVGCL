@@ -136,10 +136,11 @@ public class FileHandler {
 	}
 
 
-	public void fileImportPX4Log() {
-		FileChooser fileChooser = getFileDialog("Import PX4Log...",
+	public void fileImportLog() {
+		FileChooser fileChooser = getFileDialog("Import data ...",
 				new ExtensionFilter("PX4Log Files", "*.px4log"),
-				new ExtensionFilter("ULog Files", "*.ulg"));
+				new ExtensionFilter("ULog Files", "*.ulg"),
+				new ExtensionFilter("MAVGCL Files","*.mgc"));
 
 		File file = fileChooser.showOpenDialog(stage);
 		try {
@@ -155,6 +156,16 @@ public class FileHandler {
 					  ULogReader reader = new ULogReader(file.getAbsolutePath());
 					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 					  converter.doConversion();
+				}
+
+				if(file.getName().endsWith("mgc")) {
+					Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
+					Reader reader = new FileReader(file);
+					Gson gson = new GsonBuilder().create();
+					stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
+					ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
+					reader.close();
+					modelService.setModelList(modelList);
 				}
 
 				stage.getScene().setCursor(Cursor.DEFAULT);

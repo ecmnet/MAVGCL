@@ -51,8 +51,10 @@ import com.comino.msp.utils.ExecutorService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
@@ -94,6 +96,9 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 	@FXML
 	private Circle isrecording;
 
+	@FXML
+	private Button openlog;
+
 
 	private Task<Integer> task;
 
@@ -106,6 +111,8 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
+
+	private ChartControlWidget charts;
 
 
 	public RecordControlWidget() {
@@ -197,6 +204,12 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 			recording(newvalue, 0);
 		});
 
+		openlog.disableProperty().bind(StateProperties.getInstance().getRecordingProperty());
+		openlog.setOnAction((ActionEvent event)-> {
+			FileHandler.getInstance().fileImportLog();
+			charts.refreshCharts();
+		});
+
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
@@ -230,7 +243,8 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 	}
 
 
-	public void setup(IMAVController control, StatusWidget statuswidget) {
+	public void setup(IMAVController control, ChartControlWidget charts, StatusWidget statuswidget) {
+		this.charts = charts;
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance(control.getCurrentModel());
 		this.control.addModeChangeListener(this);
