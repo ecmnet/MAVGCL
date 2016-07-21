@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -85,15 +86,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 	public ChartControlWidget() {
 		super(300,true);
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChartControlWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
 		charts = new ArrayList<IChartControl>();
 	}
 

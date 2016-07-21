@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
@@ -77,16 +78,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 
 	public MAVInspectorTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVInspectorTab.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
-
+		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
 	}
 
 	@FXML

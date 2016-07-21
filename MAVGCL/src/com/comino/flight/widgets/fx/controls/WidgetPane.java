@@ -48,7 +48,7 @@ public class WidgetPane extends Pane {
 
 	protected StateProperties state = null;
 
-	private   double initialHeight = 0;
+	private double initialHeight = 0;
 	private FadeTransition in = null;
 	private FadeTransition out = null;
 
@@ -65,7 +65,7 @@ public class WidgetPane extends Pane {
 	public WidgetPane(int duration_ms, boolean visible) {
 
 		this.state = StateProperties.getInstance();
-
+		initialHeight = getPrefHeight();
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
 		in.setToValue(1.0);
@@ -73,20 +73,19 @@ public class WidgetPane extends Pane {
 		out = new FadeTransition(Duration.millis(duration_ms), this);
 		out.setFromValue(1.0);
 		out.setToValue(0.0);
-		this.setVisible(visible);
-		this.fade.set(visible);
-		initialHeight = getPrefHeight();
 
-        if(!visible) {
+		setVisible(visible);
+		fade.set(visible);
+
+        if(!visible)
         	setPrefHeight(0);
-        }
 
 		out.setOnFinished(value -> {
 			setVisible(false);
 			setPrefHeight(0);
 		});
 
-		this.fade.addListener(new ChangeListener<Boolean>() {
+		fade.addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

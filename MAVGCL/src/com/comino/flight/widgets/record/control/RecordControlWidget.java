@@ -31,15 +31,17 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets.charts.control;
+package com.comino.flight.widgets.record.control;
 
 
 import java.io.IOException;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
@@ -118,16 +120,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 
 	public RecordControlWidget() {
 		super(300,true);
-
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RecordControlWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		
+		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
 
 		task = new Task<Integer>() {
 

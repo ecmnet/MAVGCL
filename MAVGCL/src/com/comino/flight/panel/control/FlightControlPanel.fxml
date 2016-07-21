@@ -1,6 +1,6 @@
 
 <?import com.comino.flight.widgets.status.StatusWidget?>
-<?import com.comino.flight.widgets.charts.control.RecordControlWidget?>
+<?import com.comino.flight.widgets.record.control.RecordControlWidget?>
 <?import com.comino.flight.widgets.charts.control.ChartControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
 <?import com.comino.flight.widgets.commander.CommanderWidget?>

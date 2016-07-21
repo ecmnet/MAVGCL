@@ -40,6 +40,7 @@ import java.util.Map;
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.lquac.msg_param_set;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
@@ -113,16 +114,7 @@ public class MAVParameterTab extends Pane {
 
 
 	public MAVParameterTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVParameterTab.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
-
+		FXMLLoadHelper.load(this, "MAVParameterTab.fxml");
 		metadata = PX4Parameters.getInstance().getMetaData();
 	}
 

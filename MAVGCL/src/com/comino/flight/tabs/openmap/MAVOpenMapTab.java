@@ -44,6 +44,7 @@ import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -147,18 +148,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private IMAVController control;
 
 	public MAVOpenMapTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MAVOpenMapTab.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
-
-
-
+		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
+		
 		task = new Task<Long>() {
 
 			@Override

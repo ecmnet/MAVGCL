@@ -35,6 +35,7 @@ package com.comino.flight.widgets.status;
 
 import java.io.IOException;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.fx.controls.LEDControl;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -97,15 +98,7 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 	public StatusWidget() {
 		super(300,true);
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "StatusWidget.fxml");
 	}
 
 	public BooleanProperty getDetailVisibility() {

@@ -43,6 +43,7 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 
@@ -167,15 +168,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	public LineChartWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LineChartWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);

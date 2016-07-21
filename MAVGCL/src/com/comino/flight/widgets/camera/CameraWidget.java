@@ -39,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
@@ -67,17 +68,7 @@ public class CameraWidget extends WidgetPane  {
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	public CameraWidget() {
-
-
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CameraWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 	}
 
 

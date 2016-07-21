@@ -40,6 +40,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
@@ -184,15 +185,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	public XYChartWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("XYChartWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
 
 		task = new Task<Integer>() {
 

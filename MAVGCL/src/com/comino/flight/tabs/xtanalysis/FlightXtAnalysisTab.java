@@ -35,6 +35,7 @@ package com.comino.flight.tabs.xtanalysis;
 
 import java.io.IOException;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.line.LineChartWidget;
 import com.comino.mav.control.IMAVController;
@@ -54,16 +55,7 @@ public class FlightXtAnalysisTab extends Pane {
 
 
 	public FlightXtAnalysisTab() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FlightXtAnalysisTab.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
-
+		FXMLLoadHelper.load(this, "FlightXtAnalysisTab.fxml");
 	}
 
 	@FXML

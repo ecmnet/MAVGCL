@@ -40,6 +40,7 @@ import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -78,15 +79,7 @@ public class CommanderWidget extends WidgetPane  {
 
 	public CommanderWidget() {
 		super(300, true);
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CommanderWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "CommanderWidget.fxml");
 	}
 
 	@FXML

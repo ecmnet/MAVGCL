@@ -34,12 +34,13 @@ package com.comino.flight.panel.control;
 
 import java.io.IOException;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
-import com.comino.flight.widgets.charts.control.RecordControlWidget;
 import com.comino.flight.widgets.commander.CommanderWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
+import com.comino.flight.widgets.record.control.RecordControlWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 
@@ -68,16 +69,7 @@ public class FlightControlPanel extends Pane  {
 	private CommanderWidget commander;
 
 	public FlightControlPanel() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FlightControlPanel.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
-
+		FXMLLoadHelper.load(this, "FlightControlPanel.fxml");
 	}
 
 	public RecordControlWidget getRecordControl() {

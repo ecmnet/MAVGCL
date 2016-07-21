@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -77,15 +78,8 @@ public class BatteryWidget extends WidgetPane  {
 
 	public BatteryWidget() {
 		super(300,true);
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BatteryWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
 
-			throw new RuntimeException(exception);
-		}
+		FXMLLoadHelper.load(this, "BatteryWidget.fxml");
 
 		task = new Task<Integer>() {
 
