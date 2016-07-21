@@ -1,28 +1,26 @@
 # MAVGAnalysis
 
-## In-Flight/PX4Log Analysis for PX4
+## In-Flight/PX4Log/ULog Analyzer for PX4
 
 [![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or offline based on PX4Logs. It is not intended to replace the QGC. 
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or offline based on PX4Logs or ULogs. It is not intended to replace the QGC. 
 
 Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 19/07/2016 
+**Development Status:** Last updated 21/07/2016 
 
-- ULog import (New PX4 Logger) supported (inlcuding annotations)
-- Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
-- Key figure conversion based on expressions
+- Pre-release 0.45 published
 
 
 **Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
-- Timechart annotated by messages and parameter changes
+- Timechart annotated by messages and parameter changes (MAVLink and ULog)
 - Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
@@ -31,6 +29,8 @@ Any feedback, comments and contributions are very welcome.
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
+- Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
+- Key figure conversion based on expressions
 - FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) or any other source
 
@@ -44,7 +44,7 @@ Any feedback, comments and contributions are very welcome.
 
 Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
-**Screenshot** (latest master):
+**Screenshot**:
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
 
