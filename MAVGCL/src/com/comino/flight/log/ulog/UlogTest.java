@@ -34,6 +34,9 @@
 package com.comino.flight.log.ulog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -55,14 +58,17 @@ public class UlogTest {
 			  System.out.println(i+":"+c.toString());
 		  });
 
-//
-//		 List<String> list = new ArrayList<String>();
-//		 reader.getFields().forEach((i,p) -> {
-//				list.add(i);
-//			});
-//		Collections.sort(list);
-//
 
+		 List<String> list = new ArrayList<String>();
+		 reader.getFields().forEach((i,p) -> {
+				list.add(i);
+			});
+		Collections.sort(list);
+
+
+		list.forEach(s -> {
+			System.out.println(s);
+		});
 
 		//System.out.println(list.size()+" keyfigures found in log");
 
