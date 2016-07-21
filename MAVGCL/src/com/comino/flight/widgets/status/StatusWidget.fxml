@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.control.CheckBox?>
-<?import com.comino.fx.controls.LEDControl?>
+<?import com.comino.flight.widgets.fx.controls.LEDControl?>
 
-<fx:root prefHeight="265.0" prefWidth="183.0" type="javafx.scene.layout.Pane"
+<fx:root prefHeight="265.0" prefWidth="183.0" type="javafx.scene.layout.Pane" styleClass="widget"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<GridPane layoutX="16.0" layoutY="16.0" prefHeight="231.0"

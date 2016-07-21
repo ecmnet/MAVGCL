@@ -1,4 +1,4 @@
-package com.comino.fx.controls;
+package com.comino.flight.widgets.fx.controls;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

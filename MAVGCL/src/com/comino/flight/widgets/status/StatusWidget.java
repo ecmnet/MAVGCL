@@ -35,7 +35,7 @@ package com.comino.flight.widgets.status;
 
 import java.io.IOException;
 
-import com.comino.fx.controls.LEDControl;
+import com.comino.flight.widgets.fx.controls.LEDControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
