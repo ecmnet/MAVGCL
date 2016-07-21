@@ -347,6 +347,15 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Home Alt." uom="°" mask="#0.0" key="HOMALT">
+	    <MSPSource class="home_state" field="g_alt"></MSPSource>
+		<PX4Source field="LPOS.RAlt"></PX4Source>
+		<ULogSource field="vehicle_local_position_0.ref_alt"/>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Global VX" uom="cm/s" mask="#0.00" key="GLOBVX">
 		<MSPSource class="state" field="g_vx"></MSPSource>
 		<PX4Source field="GPOS.VelN"></PX4Source>
