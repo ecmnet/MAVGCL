@@ -32,7 +32,9 @@
  ****************************************************************************/
 package com.comino.flight;
 
+import javafx.application.Platform;
 import javafx.application.Preloader;
+import javafx.application.Preloader.ProgressNotification;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
@@ -42,6 +44,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class FirstPreloader extends Preloader {
+
+	static final int max = 20;
 
 
     Stage stage;
@@ -65,26 +69,9 @@ public class FirstPreloader extends Preloader {
         stage.setScene(createPreloaderScene());
         stage.setAlwaysOnTop(true);
         stage.show();
-
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                int max = 200;
-                for (int i = 1; i <= max; i++) {
-                	Thread.sleep(300/max);
-                    bar.setProgress((double) i/max);
-                }
-                return null;
-            }
-        };
-        Thread th = new Thread(task);
-		th.setPriority(Thread.MAX_PRIORITY);
-		th.setDaemon(true);
-		th.start();
     }
 
-
-    @Override
+	@Override
     public void handleStateChangeNotification(StateChangeNotification evt) {
         //ignore, hide after application signals it is ready
     }
@@ -94,14 +81,17 @@ public class FirstPreloader extends Preloader {
         if (pn instanceof ProgressNotification) {
 //           //expect application to send us progress notifications
 //           //with progress ranging from 0 to 1.0
-//           double v = ((ProgressNotification) pn).getProgress();
-//           if (!noLoadingProgress) {
-//               //if we were receiving loading progress notifications
-//               //then progress is already at 50%.
-//               //Rescale application progress to start from 50%
-//               v = 0.5 + v/2;
-//           }
-//           bar.setProgress(v);
+           double v = ((ProgressNotification) pn).getProgress()/max;
+           if (!noLoadingProgress) {
+               //if we were receiving loading progress notifications
+               //then progress is already at 50%.
+               //Rescale application progress to start from 50%
+               v = 0.5 + v/2;
+           }
+           final double vf = v;
+           Platform.runLater(()->{
+           bar.setProgress(vf);
+           });
         } else if (pn instanceof StateChangeNotification) {
             //hide after get any state update from application
         	bar.setProgress(1);

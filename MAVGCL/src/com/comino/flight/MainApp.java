@@ -125,6 +125,7 @@ public class MainApp extends Application  {
 		super.init();
 		try {
 
+			FXMLLoadHelper.setApplication(this);
 
 			String peerAddress = null;
 			int port = 14555;
@@ -303,6 +304,9 @@ public class MainApp extends Application  {
 		});
 
 		m_about.setVisible(true);
+
+		notifyPreloader(new StateChangeNotification(
+				StateChangeNotification.Type.BEFORE_START));
 	}
 
 
@@ -334,8 +338,6 @@ public class MainApp extends Application  {
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
-			notifyPreloader(new StateChangeNotification(
-					StateChangeNotification.Type.BEFORE_START));
 
 
 		} catch (IOException e) {
