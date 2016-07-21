@@ -331,6 +331,7 @@
 
 	<KeyFigure desc="Home Lat." uom="°" mask="#0.0000000" key="HOMLAT">
 		<MSPSource class="home_state" field="g_lat"></MSPSource>
+		<PX4Source field="LPOS.RLat"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.ref_lat"/>
 		<Groups>
 			<Group>Global Position</Group>
@@ -339,6 +340,7 @@
 
 	<KeyFigure desc="Home Lon." uom="°" mask="#0.0000000" key="HOMLON">
 		<MSPSource class="home_state" field="g_lon"></MSPSource>
+		<PX4Source field="LPOS.RLon"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.ref_lon"/>
 		<Groups>
 			<Group>Global Position</Group>
@@ -603,6 +605,7 @@
 
 	<KeyFigure desc="Raw GPS Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
+		<PX4Source field="GPS.Lat"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lat"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -611,6 +614,7 @@
 
 	<KeyFigure desc="Raw GPS Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
+		<PX4Source field="GPS.Lon"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lon"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -619,6 +623,7 @@
 
 	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
 		<MSPSource class="gps" field="numsat"></MSPSource>
+		<PX4Source field="GPS.nSat"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.satellites_used"/>
 		<Groups>
 			<Group>Raw data</Group>
