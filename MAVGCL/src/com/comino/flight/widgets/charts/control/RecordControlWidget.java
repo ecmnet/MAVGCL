@@ -40,6 +40,7 @@ import java.util.concurrent.locks.LockSupport;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
@@ -63,7 +64,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class RecordControlWidget extends Pane implements IMSPModeChangedListener {
+public class RecordControlWidget extends WidgetPane implements IMSPModeChangedListener {
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_LANDED		= 1;
@@ -116,6 +117,8 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 
 
 	public RecordControlWidget() {
+		super(300,true);
+
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RecordControlWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -194,7 +197,7 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 		predelay.getSelectionModel().select(0);
 		predelay.setDisable(true);
 
-		recording.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		recording.disableProperty().bind(state.getConnectedProperty().not());
 
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
@@ -204,7 +207,7 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 			recording(newvalue, 0);
 		});
 
-		openlog.disableProperty().bind(StateProperties.getInstance().getRecordingProperty());
+		openlog.disableProperty().bind(state.getRecordingProperty());
 		openlog.setOnAction((ActionEvent event)-> {
 			FileHandler.getInstance().fileImportLog();
 			charts.refreshCharts();
@@ -251,7 +254,7 @@ public class RecordControlWidget extends Pane implements IMSPModeChangedListener
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
-		StateProperties.getInstance().getRecordingProperty().bind(recording.selectedProperty());
+		state.getRecordingProperty().bind(recording.selectedProperty());
 
 		ExecutorService.get().execute(task);
 	}

@@ -36,6 +36,7 @@ package com.comino.flight.widgets.status;
 import java.io.IOException;
 
 import com.comino.flight.widgets.fx.controls.LEDControl;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
@@ -48,7 +49,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 
-public class StatusWidget extends Pane implements IMSPModeChangedListener {
+public class StatusWidget extends WidgetPane implements IMSPModeChangedListener {
 
 	@FXML
 	private LEDControl armed;
@@ -94,6 +95,8 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 	private DataModel model;
 
 	public StatusWidget() {
+		super(300,true);
+
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -103,7 +106,6 @@ public class StatusWidget extends Pane implements IMSPModeChangedListener {
 
 			throw new RuntimeException(exception);
 		}
-
 	}
 
 	public BooleanProperty getDetailVisibility() {

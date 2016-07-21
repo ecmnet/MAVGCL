@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
-import com.comino.flight.widgets.fx.controls.FadePane;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.segment.LogMessage;
@@ -55,7 +55,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 
-public class MessagesWidget extends FadePane  {
+public class MessagesWidget extends WidgetPane  {
 
 	@FXML
 	private ListView<String> listview;

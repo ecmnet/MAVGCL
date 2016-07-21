@@ -40,6 +40,7 @@ import java.util.concurrent.locks.LockSupport;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
@@ -53,7 +54,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class BatteryWidget extends Pane  {
+public class BatteryWidget extends WidgetPane  {
 
 	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
 	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
@@ -75,6 +76,7 @@ public class BatteryWidget extends Pane  {
 	private AnalysisDataModel model;
 
 	public BatteryWidget() {
+		super(300,true);
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BatteryWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -91,7 +93,7 @@ public class BatteryWidget extends Pane  {
 			protected Integer call() throws Exception {
 				while(true) {
 					LockSupport.parkNanos(1000000000L);
-					if(isDisabled()) {
+					if(isDisabled() || !isVisible()) {
 						continue;
 					}
 
@@ -114,10 +116,14 @@ public class BatteryWidget extends Pane  {
 
 	@FXML
 	private void initialize() {
+
+//		fadeProperty().bind(state.getConnectedProperty());
+
 		setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
 		g_voltage.setDecimals(1);
 		setupGauge(g_capacity,0,100,"%",Color.DEEPSKYBLUE);
 		g_capacity.setDecimals(0);
+
 	}
 
 
@@ -130,7 +136,7 @@ public class BatteryWidget extends Pane  {
 		gauge.setDecimals(1);
 		gauge.setTitle(unit);
 		gauge.setUnit("Battery");
-		gauge.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		gauge.disableProperty().bind(state.getConnectedProperty().not());
 		gauge.setValueColor(Color.WHITE);
 		gauge.setTitleColor(Color.WHITE);
 		gauge.setUnitColor(Color.WHITE);

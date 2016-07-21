@@ -14,16 +14,11 @@
 		<VBox>
 		<padding><Insets top="5" left="5" bottom="0" right="0"/></padding>
 			<children>
-				<StatusWidget fx:id="status"
-				    styleClass="widget" />
-				<BatteryWidget fx:id="battery"
-				    styleClass="widget" />
-				<RecordControlWidget fx:id="recordcontrol"
-					styleClass="widget" />
-				<ChartControlWidget fx:id="chartcontrol"
-					styleClass="widget" />
-				<CommanderWidget fx:id="commander"
-				    styleClass="widget" />
+				<StatusWidget fx:id="status" />
+				<BatteryWidget fx:id="battery" />
+				<RecordControlWidget fx:id="recordcontrol" />
+				<ChartControlWidget fx:id="chartcontrol" />
+				<CommanderWidget fx:id="commander"/>
 			</children>
 		</VBox>
 	</children>

@@ -45,7 +45,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.fx.controls.FadePane;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.application.Platform;
@@ -56,7 +56,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-public class DetailsWidget extends FadePane  {
+public class DetailsWidget extends WidgetPane  {
 
 
 	private static String[] key_figures_details = {

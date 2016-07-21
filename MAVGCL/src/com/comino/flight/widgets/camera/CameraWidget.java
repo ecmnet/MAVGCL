@@ -41,7 +41,7 @@ import java.util.prefs.Preferences;
 
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.widgets.fx.controls.FadePane;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
@@ -54,7 +54,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class CameraWidget extends FadePane  {
+public class CameraWidget extends WidgetPane  {
 
 
 	@FXML

@@ -44,6 +44,7 @@ import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 
@@ -59,7 +60,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class ChartControlWidget extends Pane  {
+public class ChartControlWidget extends WidgetPane  {
 
 	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 240, 1200 };
 
@@ -83,6 +84,7 @@ public class ChartControlWidget extends Pane  {
 
 
 	public ChartControlWidget() {
+		super(300,true);
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChartControlWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -134,7 +136,7 @@ public class ChartControlWidget extends Pane  {
 			}
 		});
 
-		StateProperties.getInstance().getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
+		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue()) {
 				scroll.setDisable(true);
 				scroll.setValue(1);

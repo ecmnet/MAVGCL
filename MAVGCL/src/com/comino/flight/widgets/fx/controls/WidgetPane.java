@@ -33,6 +33,8 @@
 
 package com.comino.flight.widgets.fx.controls;
 
+import com.comino.flight.observables.StateProperties;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -42,22 +44,27 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class FadePane extends Pane {
+public class WidgetPane extends Pane {
 
-	protected FadeTransition in = null;
-	protected FadeTransition out = null;
+	protected StateProperties state = null;
+
+	private   double initialHeight = 0;
+	private FadeTransition in = null;
+	private FadeTransition out = null;
 
 	private BooleanProperty fade = new SimpleBooleanProperty();
 
-	public FadePane() {
+	public WidgetPane() {
 		this(150);
 	}
 
-	public FadePane(int duration_ms) {
+	public WidgetPane(int duration_ms) {
 		this(duration_ms,false);
 	}
 
-	public FadePane(int duration_ms, boolean visible) {
+	public WidgetPane(int duration_ms, boolean visible) {
+
+		this.state = StateProperties.getInstance();
 
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
@@ -68,15 +75,15 @@ public class FadePane extends Pane {
 		out.setToValue(0.0);
 		this.setVisible(visible);
 		this.fade.set(visible);
+		initialHeight = getPrefHeight();
 
-		if(visible) {
-			Platform.runLater(() -> {
-				out.play();
-			});
-		}
+        if(!visible) {
+        	setPrefHeight(0);
+        }
 
 		out.setOnFinished(value -> {
 			setVisible(false);
+			setPrefHeight(0);
 		});
 
 		this.fade.addListener(new ChangeListener<Boolean>() {
@@ -84,7 +91,9 @@ public class FadePane extends Pane {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue.booleanValue()) {
-					setVisible(true); in.play();
+					setPrefHeight(initialHeight);
+					setVisible(true);
+					in.play();
 				}
 				else
 					out.play();

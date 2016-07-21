@@ -45,7 +45,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
-import com.comino.flight.widgets.fx.controls.FadePane;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 
@@ -72,7 +72,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 
-public class TuningWidget extends FadePane  {
+public class TuningWidget extends WidgetPane  {
 
 
 	@FXML

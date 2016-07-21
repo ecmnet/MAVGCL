@@ -41,7 +41,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.fx.controls.FadePane;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -55,7 +55,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
-public class CommanderWidget extends Pane  {
+public class CommanderWidget extends WidgetPane  {
 
 	@FXML
 	private Button arm_command;
@@ -77,6 +77,7 @@ public class CommanderWidget extends Pane  {
 
 
 	public CommanderWidget() {
+		super(300, true);
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CommanderWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
@@ -91,9 +92,9 @@ public class CommanderWidget extends Pane  {
 	@FXML
 	private void initialize() {
 
-		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		//fadeProperty().bind(state.getConnectedProperty());
 
-		StateProperties.getInstance().getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
+		state.getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
 			Platform.runLater(() -> {
 				if(newvalue.booleanValue())
 					arm_command.setText("Disarm motors");
@@ -102,7 +103,7 @@ public class CommanderWidget extends Pane  {
 			});
 		});
 
-		StateProperties.getInstance().getLandedProperty().addListener((observable, oldvalue, newvalue) -> {
+		state.getLandedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(control.isSimulation()) {
 				msg_manual_control rc = new msg_manual_control(255,1);
 				if(newvalue.booleanValue())
@@ -114,7 +115,7 @@ public class CommanderWidget extends Pane  {
 		});
 
 
-		rtl_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+		rtl_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
 		rtl_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -125,7 +126,7 @@ public class CommanderWidget extends Pane  {
 		});
 
 
-		arm_command.disableProperty().bind(StateProperties.getInstance().getLandedProperty().not());
+		arm_command.disableProperty().bind(state.getLandedProperty().not());
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation()) {
@@ -146,13 +147,13 @@ public class CommanderWidget extends Pane  {
 
 		});
 
-		land_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+		land_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
-		takeoff_command.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not()
+		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY))
