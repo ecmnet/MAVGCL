@@ -1,0 +1,26 @@
+package com.comino.flight;
+
+import java.io.IOException;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+
+public class FXMLLoadHelper {
+
+	public static int count = 0;
+
+
+	public static void load(Node obj,String fxml) {
+		FXMLLoader fxmlLoader = new FXMLLoader(obj.getClass().getResource(fxml));
+		fxmlLoader.setRoot(obj);
+		fxmlLoader.setController(obj);
+		try {
+			fxmlLoader.load();
+			count++;
+		} catch (IOException exception) {
+			throw new RuntimeException(exception);
+		}
+
+	}
+
+}
