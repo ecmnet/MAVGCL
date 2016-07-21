@@ -100,7 +100,7 @@ public class KeyFigureMetaData {
 		Field mclass_field = m.getClass().getField(mspclass);
 		Object mclass = mclass_field.get(m);
 		Field mfield_field = mclass.getClass().getField(mspfield);
-		value = mfield_field.getFloat(mclass);
+		value = new Double(mfield_field.getDouble(mclass)).floatValue();
 		if(converter != null)
 			return converter.convert(value);
 		return value;
@@ -112,6 +112,8 @@ public class KeyFigureMetaData {
 		Object o = data.get(px4field);
 		if(o instanceof Integer)
 			value = (float)(Integer)data.get(px4field);
+		else if(o instanceof Double)
+			value = ((Double)data.get(px4field)).floatValue();
 		else
 			value = (float)(Float)data.get(px4field);
 
@@ -125,6 +127,8 @@ public class KeyFigureMetaData {
 		Object o = data.get(ulogfield);
 		if(o instanceof Integer)
 			value = (float)(Integer)data.get(ulogfield);
+		else if(o instanceof Double)
+			value = ((Double)data.get(ulogfield)).floatValue();
 		else
 			value = (float)(Float)data.get(ulogfield);
 
