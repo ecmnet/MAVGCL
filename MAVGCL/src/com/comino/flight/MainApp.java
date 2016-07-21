@@ -307,7 +307,6 @@ public class MainApp extends Application  {
 
 		notifyPreloader(new StateChangeNotification(
 				StateChangeNotification.Type.BEFORE_START));
-		System.out.println();
 	}
 
 
