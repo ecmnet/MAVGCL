@@ -90,12 +90,17 @@ public class AnalysisModelService {
 		return current;
 	}
 
+	public AnalysisDataModel getLast(float f) {
+		if(mode==STOPPED && modelList.size()>0)
+			return modelList.get(calculateX1Index(f));
+		return current;
+	}
+
 	public void setCurrent(int index) {
 		if(modelList.size() > index) {
 			current = modelList.get(index);
 		}
 	}
-
 
 	public int getCollectorInterval_ms() {
 		return MODELCOLLECTOR_INTERVAL_US/1000;

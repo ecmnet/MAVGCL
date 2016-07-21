@@ -96,9 +96,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 	private final static String TYPES[][] =
-			  { { "GLOBLAT",  "GLOBLON" },
+		{ { "GLOBLAT",  "GLOBLON" },
 				{ "RGPSLAT",  "RGPSLON" }
-			  };
+		};
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -149,7 +149,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	public MAVOpenMapTab() {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
-		
+
 		task = new Task<Long>() {
 
 			@Override
@@ -185,9 +185,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 							if(model.getValue("RGPSNO")>3) {
 								if(model.getValue("RGPSHDOP") > 2.5)
-								  positionLayer.getIcon().setImage(plane_invalid);
+									positionLayer.getIcon().setImage(plane_invalid);
 								else
-								  positionLayer.getIcon().setImage(plane_valid);
+									positionLayer.getIcon().setImage(plane_valid);
 								if(mapfollow.selectedProperty().get()) {
 									map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 									canvasLayer.redraw(true);
@@ -195,7 +195,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 									canvasLayer.redraw(false);
 								}
 								positionLayer.updatePosition(
-									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
+										model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
 							}
 
 						} catch(Exception e) { e.printStackTrace(); }
@@ -273,7 +273,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
 
 				if(isCollecting.get() &&
-					(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
 					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
@@ -428,6 +428,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	public void refreshChart() {
 
 		Platform.runLater(() -> {
+			this.model=dataService.getLast(1);
+			map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 			canvasLayer.redraw(true);
 		});
 	}
