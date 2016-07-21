@@ -516,7 +516,7 @@
 		<MSPSource class="raw" field="fq"></MSPSource>
 		<PX4Source field="FLOW.Qlty"></PX4Source>
 		<ULogSource field="optical_flow_0.quality"/>
-		<Converter class="ExpressionConverter" expression="val/255" />
+		<Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>

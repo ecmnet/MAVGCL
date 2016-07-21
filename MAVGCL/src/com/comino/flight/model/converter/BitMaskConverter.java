@@ -38,7 +38,7 @@ public class BitMaskConverter extends SourceConverter {
 	int mask = 0;
 
 	@Override
-	public void setParameter(String[] params) {
+	public void setParameter(String kfname, String[] params) {
 		this.mask = Integer.parseInt(params[0]);
 	}
 

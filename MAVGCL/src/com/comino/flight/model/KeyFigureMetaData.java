@@ -51,6 +51,7 @@ public class KeyFigureMetaData {
 	private String mspfield;
 	private String px4field;
 	private String ulogfield;
+	private String key;
 
 	private SourceConverter converter = null;
 
@@ -65,6 +66,7 @@ public class KeyFigureMetaData {
 		this.desc1  = desc;
 		this.uom    = uom;
 		this.mask   = mask;
+		this.key    = key;
 		this.hash   = key.toLowerCase().hashCode();
 	}
 
@@ -77,7 +79,7 @@ public class KeyFigureMetaData {
 		try {
 			Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+type);
 			converter = (SourceConverter) clazz.newInstance();
-			converter.setParameter(parameters);
+			converter.setParameter(key,parameters);
 		} catch(Exception e) {
 			System.err.println(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
 		}
