@@ -885,7 +885,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Current" uom="mA" mask="#0.0" key="BATC">
+	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">
 		<MSPSource class="battery" field="c0"></MSPSource>
 		<PX4Source field="BATT.C"></PX4Source>
 		<Groups>
