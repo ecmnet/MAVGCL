@@ -60,8 +60,10 @@ public class AnalysisDataModel {
 	public AnalysisDataModel clone() {
 		AnalysisDataModel d = new AnalysisDataModel(data);
 		d.tms = tms;
-		d.msg = msg;
-		d.status = status;
+		if(msg!=null)
+		  d.msg = msg.clone();
+		if(status!=null)
+		  d.status = status.clone();
 		return d;
 	}
 

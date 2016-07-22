@@ -194,18 +194,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if (isCancelled())
 						break;
 
-					if(!isCollecting.get() && dataService.isCollecting()) {
-						synchronized(this) {
-							series1.getData().clear();
-							series2.getData().clear();
-							series3.getData().clear();
-							current_x_pt = 0; current_x0_pt=0;
-							setXAxisBounds(current_x0_pt,timeFrame.intValue() * 1000 / COLLECTOR_CYCLE);
-							scroll.setValue(0);
-						}
-						updateGraph(false);
-					}
-
 					isCollecting.set(dataService.isCollecting());
 
 					if(isCollecting.get() && control.isConnected())
@@ -409,6 +397,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		annotations.setSelected(false);
+
 	}
 
 
@@ -561,6 +550,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
+
+		isCollecting.addListener((o,ov,nv) -> {
+			scroll.setValue(0);
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
+		});
 
 		return this;
 	}

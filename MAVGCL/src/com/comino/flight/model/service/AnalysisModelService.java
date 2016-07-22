@@ -65,7 +65,7 @@ public class AnalysisModelService {
 
 	public static AnalysisModelService getInstance(DataModel model) {
 		if(instance==null)
-		  instance = new AnalysisModelService(model);
+			instance = new AnalysisModelService(model);
 		return instance;
 	}
 
@@ -184,10 +184,10 @@ public class AnalysisModelService {
 
 		int current_x1_pt = calculateX0Index(factor) +
 				(int)(totalTime_sec *  1000f
-				/ getCollectorInterval_ms());
+						/ getCollectorInterval_ms());
 
 		if(current_x1_pt>modelList.size()-1)
-		current_x1_pt = modelList.size()-1;
+			current_x1_pt = modelList.size()-1;
 
 		return (int)(current_x1_pt);
 	}
@@ -222,8 +222,14 @@ public class AnalysisModelService {
 
 		@Override
 		public void run() {
+			long tms = 0;
 			while(true) {
 				current.setValuesMSP(model, AnalysisDataModelMetaData.getInstance());
+				if(model.msg != null && model.msg.tms > tms) {
+					current.msg = model.msg;
+					tms = current.msg.tms;
+				} else
+					current.msg = null;
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
 			}
 		}
@@ -246,10 +252,9 @@ public class AnalysisModelService {
 			long tms = System.nanoTime() / 1000;
 			while(mode!=STOPPED) {
 				synchronized(this) {
-				    current.tms = System.nanoTime() / 1000 - tms;
-					current.msg = model.msg.clone();
-					model.msg.clear();
-					modelList.add(current.clone());
+					AnalysisDataModel m = current.clone();
+					m.tms = System.nanoTime() / 1000 - tms;
+					modelList.add(m);
 					count++;
 				}
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
