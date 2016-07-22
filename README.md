@@ -14,7 +14,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 22/07/2016 
 
-- Pre-release 0.45a published
+- Pre-release 0.45b published
 
 
 **Features:**
