@@ -12,9 +12,9 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 21/07/2016 
+**Development Status:** Last updated 22/07/2016 
 
-- Pre-release 0.45 published
+- Pre-release 0.45a published
 
 
 **Features:**
