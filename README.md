@@ -12,9 +12,10 @@ Any feedback, comments and contributions are very welcome.
 
 **Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
 
-**Development Status:** Last updated 22/07/2016 
+**Development Status:** Last updated 23/07/2016 
 
 - Pre-release 0.45b published
+- Parameters stored in logs now displayed in 'vehicle settings'
 
 
 **Features:**
