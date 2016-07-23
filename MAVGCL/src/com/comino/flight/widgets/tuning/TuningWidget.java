@@ -110,7 +110,7 @@ public class TuningWidget extends WidgetPane  {
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-				if(newValue!=null)
+				if(newValue!=null) {
 					Platform.runLater(() -> {
 						ParameterAttributes p = (ParameterAttributes)newValue;
 						if(!groups.getItems().contains(p.group_name))
@@ -124,6 +124,7 @@ public class TuningWidget extends WidgetPane  {
 							waitingForAcknowledge = false;
 						}
 					});
+				}
 			}
 		});
 
@@ -138,8 +139,8 @@ public class TuningWidget extends WidgetPane  {
 
 	}
 
-	private ParamItem createParamItem(ParameterAttributes p) {
-		ParamItem item = new ParamItem(p);
+	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
+		ParamItem item = new ParamItem(p,editable);
 		return item;
 	}
 
@@ -150,21 +151,21 @@ public class TuningWidget extends WidgetPane  {
 		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
+				boolean editable = !StateProperties.getInstance().getLogLoadedProperty().get();
 				grid.getChildren().clear();
 				int i = 0;
 				for(ParameterAttributes p : params.getList()) {
 					if(newValue.contains(p.group_name)) {
 						Label unit = new Label(p.unit); unit.setPrefWidth(30);
 						Label name = new Label(p.name); name.setPrefWidth(95); name.setTooltip(new Tooltip(p.description));
-						ParamItem item = createParamItem(p);
+						ParamItem item = createParamItem(p, editable);
 						grid.addRow(i++, name,item.editor,unit);
 					}
 				}
 			}
 		});
 
-		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 	}
 
 
@@ -174,7 +175,7 @@ public class TuningWidget extends WidgetPane  {
 		public Control editor = null;
 		private ParameterAttributes att = null;
 
-		public ParamItem(ParameterAttributes att) {
+		public ParamItem(ParameterAttributes att, boolean editable) {
 
 			this.att= att;
 
@@ -233,7 +234,11 @@ public class TuningWidget extends WidgetPane  {
 			this.editor.setPrefWidth(85);
 			this.editor.setPrefHeight(19);
 
-			setContextMenu(editor);
+			if(editable)
+                setContextMenu(editor);
+			else
+				editor.setDisable(true);
+
 			setValueOf(editor,att.value);
 
 			this.editor.setOnKeyPressed(keyEvent -> {

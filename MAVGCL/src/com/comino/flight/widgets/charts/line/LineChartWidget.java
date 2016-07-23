@@ -413,6 +413,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		recent.add(nv);
 		storeRecentList();
+
 	}
 
 	public void saveAsPng(String path) {

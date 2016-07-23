@@ -21,8 +21,8 @@
 					strokeWidth="0.0" />
 			</graphic>
 		</ToggleButton>
-		<Button fx:id="openlog" layoutX="130.0" layoutY="35.0"
-			mnemonicParsing="false" prefHeight="20.0" prefWidth="40.0" text="File.."
+		<Button fx:id="clear" layoutX="130.0" layoutY="35.0"
+			mnemonicParsing="false" prefHeight="20.0" prefWidth="40.0" text="Clear"
 			textFill="#FFFFFF" />
 		<ChoiceBox fx:id="trigstart" layoutX="75.0" layoutY="81.0"
 			prefHeight="22.0" prefWidth="97.0" />

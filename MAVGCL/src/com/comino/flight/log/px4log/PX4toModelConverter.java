@@ -40,6 +40,8 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.msp.model.DataModel;
 
 import me.drton.jmavlib.log.BinaryLogReader;
@@ -66,6 +68,8 @@ public class PX4toModelConverter {
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
+		PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+
 		list.clear();
 		AnalysisDataModel model = new AnalysisDataModel();
 
@@ -88,7 +92,9 @@ public class PX4toModelConverter {
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		}
+		StateProperties.getInstance().getLogLoadedProperty().set(true);
 	}
+
 
 
 

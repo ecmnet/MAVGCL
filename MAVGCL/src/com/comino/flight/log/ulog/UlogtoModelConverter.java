@@ -40,6 +40,7 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.observables.StateProperties;
 import com.comino.msp.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;
@@ -92,6 +93,7 @@ public class UlogtoModelConverter {
 
 
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+			StateProperties.getInstance().getLogLoadedProperty().set(true);
 
 		} catch(IOException e) {
 			if(errorFlag)

@@ -49,6 +49,7 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.google.gson.Gson;
@@ -128,6 +129,7 @@ public class FileHandler {
 				modelService.setModelList(modelList);
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
+				StateProperties.getInstance().getLogLoadedProperty().set(true);
 
 			}
 		} catch (IOException e) {
