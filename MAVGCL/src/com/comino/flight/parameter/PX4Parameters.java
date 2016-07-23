@@ -160,7 +160,12 @@ public class PX4Parameters implements IMAVLinkListener {
 			ParameterAttributes attributes = metadata.getMetaData(s);
 			if(attributes == null)
 				attributes = new ParameterAttributes(s,"(DefaultGroup)");
-			attributes.value = ((Float)(o)).floatValue();
+
+			if(o instanceof Float)
+			   attributes.value = ((Float)(o)).floatValue();
+			if(o instanceof Integer)
+				 attributes.value = ((Integer)(o)).floatValue();
+
 			parameterList.add(attributes);
 			property.setValue(attributes);
 		});

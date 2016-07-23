@@ -41,6 +41,7 @@ import java.util.Map;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.msp.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;

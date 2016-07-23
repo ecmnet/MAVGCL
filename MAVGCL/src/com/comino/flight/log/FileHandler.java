@@ -50,6 +50,7 @@ import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.google.gson.Gson;
@@ -150,12 +151,14 @@ public class FileHandler {
 				stage.getScene().setCursor(Cursor.WAIT);
 				if(file.getName().endsWith("px4log")) {
 				   PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+				   PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 				   PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
 				   converter.doConversion();
 				}
 
 				if(file.getName().endsWith("ulg")) {
 					  ULogReader reader = new ULogReader(file.getAbsolutePath());
+					  PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 					  converter.doConversion();
 				}

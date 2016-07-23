@@ -68,8 +68,6 @@ public class PX4toModelConverter {
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
-		PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-
 		list.clear();
 		AnalysisDataModel model = new AnalysisDataModel();
 
