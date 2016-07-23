@@ -45,6 +45,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -169,7 +170,7 @@ public class DetailsWidget extends WidgetPane  {
 		th.setDaemon(true);
 		th.start();
 
-		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 
 	}
 

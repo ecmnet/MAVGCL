@@ -41,6 +41,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.observables.StateProperties;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -250,6 +251,7 @@ public class AnalysisModelService {
 		@Override
 		public void run() {
 			long tms = System.nanoTime() / 1000;
+			StateProperties.getInstance().getLogLoadedProperty().set(false);
 			while(mode!=STOPPED) {
 				synchronized(this) {
 					AnalysisDataModel m = current.clone();

@@ -36,6 +36,7 @@ package com.comino.flight.widgets.status;
 import java.io.IOException;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.LEDControl;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;

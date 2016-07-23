@@ -100,7 +100,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 	private Circle isrecording;
 
 	@FXML
-	private Button openlog;
+	private Button clear;
 
 
 	private Task<Integer> task;
@@ -120,7 +120,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 
 	public RecordControlWidget() {
 		super(300,true);
-		
+
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
 
 		task = new Task<Integer>() {
@@ -201,9 +201,11 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 			recording(newvalue, 0);
 		});
 
-		openlog.disableProperty().bind(state.getRecordingProperty());
-		openlog.setOnAction((ActionEvent event)-> {
-			FileHandler.getInstance().fileImportLog();
+		clear.disableProperty().bind(state.getRecordingProperty());
+		clear.setOnAction((ActionEvent event)-> {
+			AnalysisModelService.getInstance().clearModelList();
+			FileHandler.getInstance().clear();
+			StateProperties.getInstance().getLogLoadedProperty().set(false);
 			charts.refreshCharts();
 		});
 

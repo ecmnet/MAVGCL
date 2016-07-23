@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.parameter.MAVParameterTab;
@@ -124,11 +125,11 @@ public class FlightTabs extends Pane {
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
 		mavmaptab.setDisable(true);
-		mavparametertab.setDisable(true);
+		//	mavparametertab.setDisable(true);
 
 
 		if(camera!=null) {
-				camera.setup(control);
+			camera.setup(control);
 			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoVisibility());
 		}
 
@@ -160,8 +161,16 @@ public class FlightTabs extends Pane {
 		this.tabpane.getTabs().get(4).setDisable(true);
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
-				this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
-				this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
+			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
+		});
+
+		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(control.isConnected())
+			    this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
+		});
+
+		PX4Parameters.getInstance().loadedProperty().addListener((observable, oldvalue, newvalue) -> {
+			this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
 		});
 
 		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
@@ -172,11 +181,11 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
 				xyanalysistab.setWidthBinding(details.getWidth()+3);
-				}
+			}
 			else {
 				xtanalysistab.setWidthBinding(0);
 				xyanalysistab.setWidthBinding(0);
-				}
+			}
 		});
 
 		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
@@ -186,9 +195,9 @@ public class FlightTabs extends Pane {
 			}
 			else {
 				if(details.isVisible() && control.isConnected()) {
-			      	xtanalysistab.setWidthBinding(details.getWidth()+3);
-			      	xyanalysistab.setWidthBinding(tuning.getWidth()+3);
-			    }
+					xtanalysistab.setWidthBinding(details.getWidth()+3);
+					xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+				}
 				else {
 					xtanalysistab.setWidthBinding(0);
 					xyanalysistab.setWidthBinding(0);

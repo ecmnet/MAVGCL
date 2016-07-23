@@ -127,7 +127,7 @@ public class MAVParameterTab extends Pane {
 		treetableview.setShowRoot(false);
 		treetableview.setEditable(false);
 
-		treetableview.setPlaceholder(new Label("Parameters are loaded when connected"));
+		treetableview.setPlaceholder(new Label("Parameters not loaded"));
 
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -265,14 +265,23 @@ public class MAVParameterTab extends Pane {
 			}
 		});
 
+		PX4Parameters.getInstance().loadedProperty().addListener((o,ov,nv) -> {
+			if(!nv.booleanValue()) {
+				groups.clear();
+				treetableview.getRoot().getChildren().clear();
+			}
+		});
+
 
 		PX4Parameters.getInstance().getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-				if(newValue!=null)
+				if(newValue!=null) {
 					Platform.runLater(() -> {
-						buildParameterTree((ParameterAttributes)newValue);
+						boolean editable = !StateProperties.getInstance().getLogLoadedProperty().get();
+						buildParameterTree((ParameterAttributes)newValue, editable);
 					});
+				}
 			}
 		});
 
@@ -280,7 +289,7 @@ public class MAVParameterTab extends Pane {
 	}
 
 
-	private void buildParameterTree(ParameterAttributes attributes) {
+	private void buildParameterTree(ParameterAttributes attributes, boolean editable) {
 
 		TreeItem<Parameter> p = null;
 		ParameterGroup group = null;
@@ -299,7 +308,7 @@ public class MAVParameterTab extends Pane {
 
 		parameter = group.get(attributes.name);
 		if(parameter == null) {
-			parameter = new Parameter(attributes, attributes.vtype, attributes.value);
+			parameter = new Parameter(attributes, attributes.vtype, attributes.value, editable);
 			group.getData().put(attributes.name, parameter);
 			TreeItem<Parameter> treeItem = new TreeItem<Parameter>(parameter);
 			p.getChildren().add(treeItem);
@@ -354,7 +363,7 @@ public class MAVParameterTab extends Pane {
 		private TextField textField = null;
 		private Tooltip tip = null;
 
-		public Parameter(ParameterAttributes a, int type, float v) {
+		public Parameter(ParameterAttributes a, int type, float v, boolean editable) {
 			this.att = a;
 			this.value = v;//ParamUtils.paramToVal(type,v);
 			this.type = type;
@@ -371,23 +380,26 @@ public class MAVParameterTab extends Pane {
 			tip.setMaxWidth(250);
 			tip.setWrapText(true);
 
-			ContextMenu ctxm = new ContextMenu();
-			MenuItem cmItem1 = new MenuItem("Set default");
-			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent e) {
-					textField.setText(getStringOfDefault());
-				}
-			});
+			if(editable) {
 
-			MenuItem cmItem2 = new MenuItem("Reset to previous");
-			cmItem2.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent e) {
-					textField.setText(getStringOfOld());
-				}
-			});
+				ContextMenu ctxm = new ContextMenu();
+				MenuItem cmItem1 = new MenuItem("Set default");
+				cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						textField.setText(getStringOfDefault());
+					}
+				});
 
-			ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
-			this.textField.setContextMenu(ctxm);
+				MenuItem cmItem2 = new MenuItem("Reset to previous");
+				cmItem2.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						textField.setText(getStringOfOld());
+					}
+				});
+
+				ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
+				this.textField.setContextMenu(ctxm);
+			}
 
 			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
@@ -442,7 +454,7 @@ public class MAVParameterTab extends Pane {
 				}
 			});
 
-
+			this.textField.setEditable(editable);
 			checkDefault();
 		}
 

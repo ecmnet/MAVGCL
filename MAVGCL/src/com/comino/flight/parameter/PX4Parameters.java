@@ -36,6 +36,7 @@ package com.comino.flight.parameter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -47,7 +48,9 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -58,6 +61,7 @@ public class PX4Parameters implements IMAVLinkListener {
 	private static PX4Parameters px4params = null;
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
+	private BooleanProperty isLoaded = new SimpleBooleanProperty();
 
 	private Set<ParameterAttributes> parameterList = null;
 
@@ -88,23 +92,40 @@ public class PX4Parameters implements IMAVLinkListener {
 		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				refreshParameterList();
+				if(newValue && control.isConnected())
+				  refreshParameterList();
 			}
 		});
+
+
+		StateProperties.getInstance().getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+				if(!newValue && control.isConnected())
+				  refreshParameterList();
+			}
+		});
+
 	}
 
 	public void refreshParameterList() {
 		MSPLogger.getInstance().writeLocalMsg("Reading params from vehicle", MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+		property.setValue(null);
 		parameterList.clear();
 		msg_param_request_list msg = new msg_param_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
+		isLoaded.set(false);
 	}
 
 
 	public ObjectProperty<ParameterAttributes> getAttributeProperty() {
 		return property;
+	}
+
+	public BooleanProperty loadedProperty() {
+		return isLoaded;
 	}
 
 	@Override
@@ -128,9 +149,29 @@ public class PX4Parameters implements IMAVLinkListener {
 
 			parameterList.add(attributes);
 			property.setValue(attributes);
-
+			isLoaded.setValue(true);
 		}
 	}
+
+	public void setParametersFromLog(Map<String,Object> list) {
+		isLoaded.set(false);
+		parameterList.clear();
+		list.forEach((s,o) -> {
+			ParameterAttributes attributes = metadata.getMetaData(s);
+			if(attributes == null)
+				attributes = new ParameterAttributes(s,"(DefaultGroup)");
+
+			if(o instanceof Float)
+			   attributes.value = ((Float)(o)).floatValue();
+			if(o instanceof Integer)
+				 attributes.value = ((Integer)(o)).floatValue();
+
+			parameterList.add(attributes);
+			property.setValue(attributes);
+		});
+		isLoaded.setValue(true);
+	}
+
 
 	public ParameterFactMetaData getMetaData() {
 		return this.metadata;

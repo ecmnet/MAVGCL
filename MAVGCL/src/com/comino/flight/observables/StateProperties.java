@@ -45,12 +45,15 @@ public class StateProperties implements IMSPModeChangedListener{
 	private static StateProperties instance = null;
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
+
+
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
 	private BooleanProperty landedProperty = new SimpleBooleanProperty();
 	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
 
 	private BooleanProperty recordingProperty = new SimpleBooleanProperty();
+	private BooleanProperty isLogLoadedProperty = new SimpleBooleanProperty();
 
 
 	public static StateProperties getInstance() {
@@ -99,6 +102,10 @@ public class StateProperties implements IMSPModeChangedListener{
 
 	public BooleanProperty getRecordingProperty() {
 		return recordingProperty;
+	}
+
+	public BooleanProperty getLogLoadedProperty() {
+		return isLogLoadedProperty;
 	}
 
 }
