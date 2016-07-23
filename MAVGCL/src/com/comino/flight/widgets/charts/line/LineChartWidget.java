@@ -246,7 +246,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setOnMousePressed(mouseEvent -> {
 			x = mouseEvent.getX();
-			zoom.setX(mouseEvent.getX());
+			zoom.setX(x-xAxis.getLayoutX());
 			zoom.setY(0);
 			zoom.setHeight(1000);
 		});
@@ -256,8 +256,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			zoom.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
-			if((x1-x0)>0.1) {
-				if((x1-x0)<2) x1= x0+2;
+			if((x1-x0)>1) {
+
 				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
 				setXResolution((int)(x1-x0));
 				if(!disabledProperty().get())
@@ -398,7 +398,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		scroll.addListener((v, ov, nv) -> {
-
+			setXResolution(timeFrame.get());
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
 
 			if(!disabledProperty().get())
