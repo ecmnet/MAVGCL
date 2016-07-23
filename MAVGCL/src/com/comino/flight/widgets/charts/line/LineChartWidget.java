@@ -84,6 +84,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 
 
 public class LineChartWidget extends BorderPane implements IChartControl {
@@ -163,8 +164,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int   yoffset = 0;
 	private int   last_annotation_pos = 0;
 
-	private double dx;
-	private long scroll_tms;
+	private double x0;
+	private int old_timeframe;
 
 	public LineChartWidget() {
 
@@ -231,18 +232,26 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		linechart.setOnMousePressed(mouseEvent -> {
-			dx = mouseEvent.getSceneX()-linechart.getLayoutX();
-			current_x0_pt_dragged = current_x0_pt;
-			linechart.setCursor(Cursor.H_RESIZE);
+			x0 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
 			linechart.setCursor(Cursor.DEFAULT);
+			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
+			if((x1-x0)>0.1) {
+				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
+				timeFrame.set((int)(x1-x0));
+
+				if(!disabledProperty().get())
+					Platform.runLater(() -> {
+						updateGraph(false);
+					});
+			}
 		});
 
 		linechart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
-				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+			    timeFrame.set(old_timeframe);
 				if(!disabledProperty().get())
 					Platform.runLater(() -> {
 						updateGraph(true);
@@ -251,22 +260,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-			double delta = xAxis.getValueForDisplay(mouseEvent.getSceneX()-linechart.getLayoutX()).doubleValue()
-					- xAxis.getValueForDisplay(dx).doubleValue();
+			linechart.setCursor(Cursor.H_RESIZE);
 
-			if(dataService.isCollecting() || (System.currentTimeMillis() - scroll_tms)<20)
-				return;
-
-			scroll_tms = System.currentTimeMillis();
-
-			current_x0_pt = current_x0_pt_dragged - (int)(delta * 1000f / COLLECTOR_CYCLE);
-			if(current_x0_pt<0)
-				current_x0_pt = 0;
-
-			if(!disabledProperty().get())
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
 		});
 
 
@@ -442,6 +437,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		else
 			resolution_ms = 50;
 
+		old_timeframe = frame;
+
 		xAxis.setTickUnit(resolution_ms/20);
 		xAxis.setMinorTickCount(10);
 
@@ -536,6 +533,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private  void setXAxisBounds(int lower_pt, int upper_pt) {
+	    double tick = timeFrame.floatValue()/5;
+		if(tick < 1) tick = 1;
+		xAxis.setTickUnit(tick);
+		xAxis.setMinorTickCount(10);
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
