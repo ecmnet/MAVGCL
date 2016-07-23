@@ -170,7 +170,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int   last_annotation_pos = 0;
 
 	private double x;
-	private int timeframe;
+	private float timeframe;
 
 	public LineChartWidget() {
 
@@ -240,13 +240,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		final Group chartArea = (Group)linechart.getPlotArea();
 		final Rectangle zoom = new Rectangle();
-	    chartArea.getChildren().add(zoom);
+		zoom.setStrokeWidth(0);
+		chartArea.getChildren().add(zoom);
 		zoom.setFill(Color.color(0,0.6,1.0,0.1));
 		zoom.setVisible(false);
 
 		linechart.setOnMousePressed(mouseEvent -> {
 			x = mouseEvent.getX();
-			zoom.setX(x-xAxis.getLayoutX());
+			zoom.setX(x-chartArea.getLayoutX()-7);
 			zoom.setY(0);
 			zoom.setHeight(1000);
 		});
@@ -256,7 +257,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			zoom.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
-			if((x1-x0)>1) {
+			if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 
 				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
 				setXResolution((int)(x1-x0));
@@ -279,9 +280,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-			zoom.setVisible(true);
-			linechart.setCursor(Cursor.H_RESIZE);
-			zoom.setWidth(mouseEvent.getX()-x);
+			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+				zoom.setVisible(true);
+				linechart.setCursor(Cursor.H_RESIZE);
+				zoom.setWidth(mouseEvent.getX()-x);
+			}
 		});
 
 
@@ -447,7 +450,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
-	private void setXResolution(int frame) {
+	private void setXResolution(float frame) {
 		if(frame > 600)
 			resolution_ms = 2000;
 		else if(frame > 200)
@@ -488,7 +491,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			yoffset = 0;
 
 			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt + timeframe * 1000 / COLLECTOR_CYCLE;
+			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
