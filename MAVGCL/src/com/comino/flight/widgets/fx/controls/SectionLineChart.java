@@ -36,6 +36,7 @@ package com.comino.flight.widgets.fx.controls;
 import com.emxsys.chart.extension.XYAnnotations;
 
 import javafx.beans.NamedArg;
+import javafx.scene.Group;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 
@@ -59,6 +60,13 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
         return this.annotations;
     }
 
-
+	public Group getPlotArea() {
+		Group plotArea = (Group) getChartChildren().get(1);
+        int plotContentIndex = plotArea.getChildren().size() - 1;
+        if (plotContentIndex < 0) {
+            throw new IllegalStateException("plotArea is empty!");
+        }
+        return (Group) plotArea.getChildren().get(plotContentIndex);
+	}
 
 }
