@@ -380,24 +380,26 @@ public class MAVParameterTab extends Pane {
 			tip.setMaxWidth(250);
 			tip.setWrapText(true);
 
-			ContextMenu ctxm = new ContextMenu();
-			MenuItem cmItem1 = new MenuItem("Set default");
-			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent e) {
-					textField.setText(getStringOfDefault());
-				}
-			});
+			if(editable) {
 
-			MenuItem cmItem2 = new MenuItem("Reset to previous");
-			cmItem2.setOnAction(new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent e) {
-					textField.setText(getStringOfOld());
-				}
-			});
+				ContextMenu ctxm = new ContextMenu();
+				MenuItem cmItem1 = new MenuItem("Set default");
+				cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						textField.setText(getStringOfDefault());
+					}
+				});
 
-			ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
+				MenuItem cmItem2 = new MenuItem("Reset to previous");
+				cmItem2.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						textField.setText(getStringOfOld());
+					}
+				});
 
-			this.textField.setContextMenu(ctxm);
+				ctxm.getItems().add(cmItem1); ctxm.getItems().add(cmItem2);
+				this.textField.setContextMenu(ctxm);
+			}
 
 			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
