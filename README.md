@@ -14,8 +14,8 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 23/07/2016 
 
-- Pre-release 0.45c published
 - Parameters stored in logs now displayed in 'vehicle settings'
+- Linechart: x-axis zooming enabled
 
 
 **Features:**
