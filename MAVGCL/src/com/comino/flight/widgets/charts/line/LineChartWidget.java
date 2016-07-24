@@ -69,6 +69,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
@@ -84,6 +85,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -168,6 +170,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private Gson gson = new GsonBuilder().create();
 	private int   yoffset = 0;
 	private int   last_annotation_pos = 0;
+
+	private int current_x0_pt_dragged = 0;
 
 	private double x;
 	private float timeframe;
@@ -266,6 +270,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						updateGraph(false);
 					});
 			}
+			mouseEvent.consume();
 		});
 
 		linechart.setOnMouseClicked(click -> {
@@ -277,6 +282,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						updateGraph(true);
 					});
 			}
+			click.consume();
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
@@ -285,6 +291,24 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				linechart.setCursor(Cursor.H_RESIZE);
 				zoom.setWidth(mouseEvent.getX()-x);
 			}
+			mouseEvent.consume();
+		});
+
+		linechart.setOnScroll(event -> {
+				if (!event.isInertia()) {
+
+					current_x0_pt = current_x0_pt +
+							 (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
+							* 1000f / COLLECTOR_CYCLE);
+
+					if(current_x0_pt<0) current_x0_pt=0;
+
+					if(!disabledProperty().get())
+						Platform.runLater(() -> {
+							updateGraph(true);
+						});
+				}
+				event.consume();
 		});
 
 
@@ -388,6 +412,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		export.setOnAction((ActionEvent event)-> {
 			saveAsPng(System.getProperty("user.home"));
+			event.consume();
 		});
 
 
@@ -419,7 +444,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		annotations.setSelected(false);
-
 	}
 
 
