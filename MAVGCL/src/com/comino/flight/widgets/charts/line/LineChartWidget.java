@@ -171,10 +171,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int   yoffset = 0;
 	private int   last_annotation_pos = 0;
 
-	private int current_x0_pt_dragged = 0;
-
 	private double x;
 	private float timeframe;
+	private long scroll_tms = 0;
 
 	public LineChartWidget() {
 
@@ -266,9 +265,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
 				setXResolution((int)(x1-x0));
 				if(!disabledProperty().get())
-					Platform.runLater(() -> {
-						updateGraph(false);
-					});
+					updateGraph(true);
 			}
 			mouseEvent.consume();
 		});
@@ -278,9 +275,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				setXResolution(timeFrame.get());
 				current_x0_pt =  dataService.calculateX0Index(scroll.get());
 				if(!disabledProperty().get())
-					Platform.runLater(() -> {
 						updateGraph(true);
-					});
 			}
 			click.consume();
 		});
@@ -295,17 +290,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnScroll(event -> {
-				if (!event.isInertia()) {
-					if(!disabledProperty().get())
-						Platform.runLater(() -> {
-							current_x0_pt = current_x0_pt +
-									 (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
-									* 1000f / COLLECTOR_CYCLE);
-							if(current_x0_pt<0) current_x0_pt=0;
-							updateGraph(true);
-						});
-				}
-				event.consume();
+			if (!event.isInertia() && (System.currentTimeMillis() - scroll_tms)>20) {
+				scroll_tms = System.currentTimeMillis();
+				current_x0_pt = current_x0_pt +
+						(int)(timeframe / linechart.getWidth() * -event.getDeltaX() *1.5f
+								* 1000f / COLLECTOR_CYCLE);
+				if(current_x0_pt<0) current_x0_pt=0;
+				if(!disabledProperty().get())
+				 updateGraph(true);
+			}
+			event.consume();
 		});
 
 
