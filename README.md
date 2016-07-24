@@ -10,12 +10,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Current Release:** [0.42](https://github.com/ecmnet/MAVGCL/releases)
+**Development Status:** Last updated 24/07/2016 
 
-**Development Status:** Last updated 23/07/2016 
-
-- Parameters stored in logs now displayed in 'vehicle settings'
-- Linechart: x-axis zooming enabled
+- Version 0.45d released
 
 
 **Features:**
