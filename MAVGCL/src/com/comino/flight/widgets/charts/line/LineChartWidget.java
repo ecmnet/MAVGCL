@@ -296,15 +296,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setOnScroll(event -> {
 				if (!event.isInertia()) {
-
-					current_x0_pt = current_x0_pt +
-							 (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
-							* 1000f / COLLECTOR_CYCLE);
-
-					if(current_x0_pt<0) current_x0_pt=0;
-
 					if(!disabledProperty().get())
 						Platform.runLater(() -> {
+							current_x0_pt = current_x0_pt +
+									 (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
+									* 1000f / COLLECTOR_CYCLE);
+							if(current_x0_pt<0) current_x0_pt=0;
 							updateGraph(true);
 						});
 				}
