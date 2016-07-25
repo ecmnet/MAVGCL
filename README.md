@@ -10,9 +10,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 24/07/2016 
+**Development Status:** Last updated 25/07/2016 
 
-- Version 0.45d released
+- DataConverters to be defined source specific ([example file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml))
 
 
 **Features:**
