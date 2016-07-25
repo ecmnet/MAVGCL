@@ -34,6 +34,9 @@
 package com.comino.flight.model;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.comino.flight.model.converter.SourceConverter;
@@ -41,20 +44,19 @@ import com.comino.msp.model.DataModel;
 
 public class KeyFigureMetaData {
 
+	public static final int MSP_SOURCE = 1;
+	public static final int PX4_SOURCE = 2;
+	public static final int ULG_SOURCE = 3;
+
 	public String desc1;
 	public String desc2;
 	public String uom;
 	public String mask;
 	public int    hash;
 
-	private String mspclass;
-	private String mspfield;
-	private String px4field;
-	private String ulogfield;
 	private String key;
 
-	private SourceConverter converter = null;
-
+	private Map<Integer,DataSource> sources = new HashMap<Integer,DataSource>();
 
 	public KeyFigureMetaData() {
 		this.desc1  = "None";
@@ -70,70 +72,67 @@ public class KeyFigureMetaData {
 		this.hash   = key.toLowerCase().hashCode();
 	}
 
-	public void setMSPSource(String mspclass, String mspfield) {
-		this.mspclass = mspclass;
-		this.mspfield = mspfield;
+	public void setSource(int type,String field, String class_c, String[] params) {
+		setSource(type,null,field,class_c,params);
 	}
 
-	public void setConverter(String type, String[] parameters) {
-		try {
-			Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+type);
-			converter = (SourceConverter) clazz.newInstance();
-			converter.setParameter(key,parameters);
-		} catch(Exception e) {
-			System.err.println(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
-		}
-	}
-
-	public void setPX4Source(String px4field) {
-		this.px4field = px4field;
-		this.desc2    = px4field;
-	}
-
-	public void setULogSource(String ulogfield) {
-		this.ulogfield = ulogfield;
-		this.ulogfield = ulogfield;
+	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
+		if(class_c!=null) {
+			try {
+				SourceConverter conv = null;
+				Class<?> clazz = Class.forName(this.getClass().getPackage().getName()+".converter."+class_c);
+				conv = (SourceConverter) clazz.newInstance();
+				conv.setParameter(key,params);
+				sources.put(type, new DataSource(class_n,field,conv));
+			} catch(Exception e) {
+				System.err.println(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
+			}
+		} else
+			sources.put(type, new DataSource(class_n,field,null));
 	}
 
 	public float getValueFromMSPModel(DataModel m) throws Exception {
 		float value = 0;
-		Field mclass_field = m.getClass().getField(mspclass);
+		DataSource source = sources.get(MSP_SOURCE);
+		Field mclass_field = m.getClass().getField(source.class_n);
 		Object mclass = mclass_field.get(m);
-		Field mfield_field = mclass.getClass().getField(mspfield);
+		Field mfield_field = mclass.getClass().getField(source.field);
 		value = new Double(mfield_field.getDouble(mclass)).floatValue();
-		if(converter != null)
-			return converter.convert(value);
+		if(source.converter != null)
+			return source.converter.convert(value);
 		return value;
 	}
 
 
 	public float getValueFromPX4Model(Map<String,Object> data) {
 		float value = 0;
-		Object o = data.get(px4field);
+		DataSource source = sources.get(PX4_SOURCE);
+		Object o = data.get(source.field);
 		if(o instanceof Integer)
-			value = (float)(Integer)data.get(px4field);
+			value = (float)(Integer)o;
 		else if(o instanceof Double)
-			value = ((Double)data.get(px4field)).floatValue();
+			value = ((Double)o).floatValue();
 		else
-			value = (float)(Float)data.get(px4field);
+			value = (float)(Float)o;
 
-		if(converter != null)
-			return converter.convert(value);
+		if(source.converter != null)
+			return source.converter.convert(value);
 		return value;
 	}
 
 	public float getValueFromULogModel(Map<String,Object> data) {
 		float value = 0;
-		Object o = data.get(ulogfield);
+		DataSource source = sources.get(ULG_SOURCE);
+		Object o = data.get(source.field);
 		if(o instanceof Integer)
-			value = (float)(Integer)data.get(ulogfield);
+			value = (float)(Integer)o;
 		else if(o instanceof Double)
-			value = ((Double)data.get(ulogfield)).floatValue();
+			value = ((Double)o).floatValue();
 		else
-			value = (float)(Float)data.get(ulogfield);
+			value = (float)(Float)o;
 
-		if(converter != null)
-			return converter.convert(value);
+		if(source.converter != null)
+			return source.converter.convert(value);
 		return value;
 	}
 
@@ -142,7 +141,20 @@ public class KeyFigureMetaData {
 	}
 
 	public String toStringAll() {
-		return desc1+": "+mspfield+"/"+px4field+"/"+ulogfield;
+		return desc1+": "+key+"("+hash+")";
+	}
+
+	private class DataSource {
+
+		public DataSource(String class_n, String field, SourceConverter converter) {
+			this.class_n = class_n;
+			this.field   = field;
+			this.converter = converter;
+		}
+
+		public String class_n;
+		public String field;
+		public SourceConverter converter;
 	}
 
 

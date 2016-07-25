@@ -27,20 +27,19 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
-		<MSPSource class="hud" field="at"></MSPSource>
-		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
+	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
+		<MSPSource class="raw" field="fq">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</MSPSource>
+		<PX4Source field="FLOW.Qlty">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</PX4Source>
+		<ULogSource field="optical_flow_0.quality">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</ULogSource>
 		<Groups>
-			<Group>UseCase A</Group>
-		</Groups>
-		<PX4Source field="GPOS.TALT"></PX4Source>
-	</KeyFigure>
-
-		<KeyFigure desc="Bottom Clearance" uom="m" mask="#0.0" key="BOTCL">
-		<MSPSource class="hud" field="bc"></MSPSource>
-		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
-		<Groups>
-			<Group>UseCase A</Group>
+			<Group>Raw data</Group>
+			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 

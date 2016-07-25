@@ -190,21 +190,30 @@ public class AnalysisDataModelMetaData extends Observable {
 		for(int i=0;i<kf_node.getChildNodes().getLength();i++) {
 			Node node = kf_node.getChildNodes().item(i);
 			if(node.getNodeName().equals("MSPSource")) {
-				keyfigure.setMSPSource(node.getAttributes().getNamedItem("class").getTextContent(),
-						node.getAttributes().getNamedItem("field").getTextContent());
+				buildDataSource(KeyFigureMetaData.MSP_SOURCE, keyfigure,node);
+//
+//				keyfigure.setSource(KeyFigureMetaData.MSP_SOURCE,
+//					node.getAttributes().getNamedItem("class").getTextContent(),
+//					node.getAttributes().getNamedItem("field").getTextContent(), null, null);
 			}
 			if(node.getNodeName().equals("PX4Source")) {
-				keyfigure.setPX4Source(node.getAttributes().getNamedItem("field").getTextContent());
+				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
+
+//
+//				keyfigure.setSource(KeyFigureMetaData.PX4_SOURCE,
+//						node.getAttributes().getNamedItem("field").getTextContent(), null, null);
 			}
 
 			if(node.getNodeName().equals("ULogSource")) {
-				keyfigure.setULogSource(node.getAttributes().getNamedItem("field").getTextContent());
+				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
+
+//				keyfigure.setSource(KeyFigureMetaData.ULG_SOURCE,
+//						node.getAttributes().getNamedItem("field").getTextContent(), null, null);
 			}
 
-
-			if(node.getNodeName().equals("Converter")) {
-				buildConverter(keyfigure,node);
-			}
+//			if(node.getNodeName().equals("Converter")) {
+//				buildConverter(keyfigure,node);
+//			}
 
 			if(node.getNodeName().equals("Groups")) {
 				for(int j=0;j<node.getChildNodes().getLength();j++) {
@@ -224,14 +233,35 @@ public class AnalysisDataModelMetaData extends Observable {
 		return keyfigure;
 	}
 
-	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
-		NamedNodeMap att = c_node.getAttributes();
-		if(att.getLength()>1) {
-			String[] params = new String[att.getLength()-1];
-			for(int p=1; p<att.getLength();p++)
-				params[p-1] = att.item(p).getTextContent();
-			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
+//	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
+//		NamedNodeMap att = c_node.getAttributes();
+//		if(att.getLength()>1) {
+//			String[] params = new String[att.getLength()-1];
+//			for(int p=1; p<att.getLength();p++)
+//				params[p-1] = att.item(p).getTextContent();
+//			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
+//		}
+//	}
+
+
+	private void buildDataSource(int type,KeyFigureMetaData keyfigure, Node node) {
+		String[] params = null; String class_c = null;
+
+		for(int j=0;j<node.getChildNodes().getLength();j++) {
+			Node cnode = node.getChildNodes().item(j);
+			if(cnode.getNodeName().equals("Converter")) {
+				NamedNodeMap att = cnode.getAttributes();
+				if(att.getLength()>1) {
+					params = new String[att.getLength()-1];
+					for(int p=1; p<att.getLength();p++)
+						params[p-1] = att.item(p).getTextContent();
+					class_c = att.getNamedItem("class").getTextContent();
+				}
+			}
 		}
+		keyfigure.setSource(type,
+				node.getAttributes().getNamedItem("class")!=null ? node.getAttributes().getNamedItem("class").getTextContent() : null,
+				node.getAttributes().getNamedItem("field").getTextContent(), class_c, params);
 	}
 
 }

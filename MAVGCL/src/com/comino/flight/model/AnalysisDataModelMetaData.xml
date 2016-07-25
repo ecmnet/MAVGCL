@@ -524,10 +524,15 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
-		<MSPSource class="raw" field="fq"></MSPSource>
-		<PX4Source field="FLOW.Qlty"></PX4Source>
-		<ULogSource field="optical_flow_0.quality"/>
-		<Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		<MSPSource class="raw" field="fq">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</MSPSource>
+		<PX4Source field="FLOW.Qlty">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</PX4Source>
+		<ULogSource field="optical_flow_0.quality">
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		</ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -774,54 +779,72 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Baro timeout" uom="" mask="#0" key="TOBARO">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="0"/>
+		<PX4Source field="EST2.fHealth">
+		   <Converter class="BitMaskConverter" p1="0"/>
+		</PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		   <Converter class="BitMaskConverter" p1="0"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="GPS timeout" uom="" mask="#0" key="TOGPS">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="1"/>
+		<PX4Source field="EST2.fHealth">
+		    <Converter class="BitMaskConverter" p1="1"/>
+		</PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		    <Converter class="BitMaskConverter" p1="1"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="LIDAR timeout" uom="" mask="#0" key="TOLIDAR">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="2"/>
+		<PX4Source field="EST2.fHealth">
+		   <Converter class="BitMaskConverter" p1="2"/>
+		</PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		   <Converter class="BitMaskConverter" p1="2"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	 <KeyFigure desc="Flow timeout" uom="" mask="#0" key="TOFLOW">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="3"/>
+		<PX4Source field="EST2.fHealth">
+		   <Converter class="BitMaskConverter" p1="3"/>
+		</PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		   <Converter class="BitMaskConverter" p1="3"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Sonar timeout" uom="" mask="#0" key="TOSONAR">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="4"/>
+		<PX4Source field="EST2.fHealth">
+		   <Converter class="BitMaskConverter" p1="4"/>
+		</PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		   <Converter class="BitMaskConverter" p1="4"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Vision timeout" uom="" mask="#0" key="TOVIS">
-		<PX4Source field="EST2.fHealth"></PX4Source>
-		<ULogSource field="estimator_status_0.health_flags"/>
-		<Converter class="BitMaskConverter" p1="5"/>
+		<PX4Source field="EST2.fHealth">
+		    <Converter class="BitMaskConverter" p1="5"/>
+		 </PX4Source>
+		<ULogSource field="estimator_status_0.health_flags">
+		   <Converter class="BitMaskConverter" p1="5"/>
+		</ULogSource>
 		<Groups>
 			<Group>PX4Log Estimator</Group>
 		</Groups>
