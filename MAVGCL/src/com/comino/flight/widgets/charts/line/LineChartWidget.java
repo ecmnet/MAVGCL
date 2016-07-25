@@ -281,12 +281,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setOnScroll(event -> {
 
-			int delta = (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
-					* 1000f / COLLECTOR_CYCLE + 0.5f);
-
+			int delta = (int)(timeframe * 1000f / linechart.getWidth() * -event.getDeltaX() * 0.3f
+					/ COLLECTOR_CYCLE + 0.5f);
 			event.consume();
-			if(delta==0)
-				return;
 
 			current_x0_pt = current_x0_pt + delta;
 			if(current_x0_pt<0)
@@ -296,9 +293,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 
 		});
-
-
-
 
 		readRecentList();
 
