@@ -482,10 +482,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		timeframe = frame;
 
-		xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
-
 		if(!disabledProperty().get())
 			Platform.runLater(() -> {
+				xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 				updateGraph(true);
 			});
 	}
