@@ -107,6 +107,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		return pane;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		pane.setLayoutX(xAxis.getDisplayPosition(xpos));
