@@ -225,10 +225,11 @@ public class AnalysisModelService {
 		public void run() {
 			long tms = 0;
 			while(true) {
+				current.msg = null;
 				current.setValuesMSP(model, AnalysisDataModelMetaData.getInstance());
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg;
-					tms = current.msg.tms;
+					tms = current.msg.tms+100;
 				} else
 					current.msg = null;
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
