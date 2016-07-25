@@ -239,6 +239,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		zoom.setVisible(false);
 
 		linechart.setOnMousePressed(mouseEvent -> {
+			if(dataService.isCollecting())
+				return;
+
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
 			zoom.setY(0);
@@ -246,6 +249,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
+			if(dataService.isCollecting())
+				return;
+
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
@@ -271,6 +277,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
+			if(dataService.isCollecting())
+				return;
+
 			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 				zoom.setVisible(true);
 				linechart.setCursor(Cursor.H_RESIZE);
@@ -280,6 +289,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnScroll(event -> {
+
+			if(dataService.isCollecting())
+				return;
 
 			int delta = (int)(timeframe * 1000f / linechart.getWidth() * -event.getDeltaX() * 0.3f
 					/ COLLECTOR_CYCLE + 0.5f);
@@ -594,6 +606,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		isCollecting.addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
+				setXResolution(timeFrame.get());
 				scroll.setValue(0);
 				refreshChart();
 			}
