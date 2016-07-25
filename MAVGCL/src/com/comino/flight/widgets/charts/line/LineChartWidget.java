@@ -174,6 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private double x;
 	private float timeframe;
 	private long scroll_tms = 0;
+	private boolean display_annotations = true;
 
 	public LineChartWidget() {
 
@@ -275,7 +276,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				setXResolution(timeFrame.get());
 				current_x0_pt =  dataService.calculateX0Index(scroll.get());
 				if(!disabledProperty().get())
-						updateGraph(true);
+					updateGraph(true);
 			}
 			click.consume();
 		});
@@ -290,17 +291,24 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		});
 
 		linechart.setOnScroll(event -> {
-			if (!event.isInertia() && (System.currentTimeMillis() - scroll_tms)>20) {
-				scroll_tms = System.currentTimeMillis();
-				current_x0_pt = current_x0_pt +
-						(int)(timeframe / linechart.getWidth() * -event.getDeltaX() *1.5f
-								* 1000f / COLLECTOR_CYCLE);
-				if(current_x0_pt<0) current_x0_pt=0;
-				if(!disabledProperty().get())
-				 updateGraph(true);
-			}
+
+			int delta = (int)(timeframe / linechart.getWidth() * -event.getDeltaX()
+					* 1000f / COLLECTOR_CYCLE + 0.5f);
+
 			event.consume();
+			if(delta==0)
+				return;
+
+			current_x0_pt = current_x0_pt + delta;
+			if(current_x0_pt<0)
+				current_x0_pt=0;
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
+
 		});
+
+
 
 
 		readRecentList();
@@ -501,7 +509,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series1.getData().clear();
 			series2.getData().clear();
 			series3.getData().clear();
-			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 			last_annotation_pos = 0;
 			yoffset = 0;
 
@@ -522,12 +530,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				m = dataService.getModelList().get(current_x_pt);
 
-				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
+				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null
+						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
+						&& display_annotations) {
 					if((current_x_pt - last_annotation_pos) > 150)
 						yoffset=0;
 					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg,
 							(resolution_ms<300) && annotations.isSelected()),
-							Layer.FOREGROUND);
+							Layer.BACKGROUND);
 					last_annotation_pos = current_x_pt;
 				}
 

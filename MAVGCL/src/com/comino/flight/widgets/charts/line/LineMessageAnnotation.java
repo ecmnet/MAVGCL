@@ -61,7 +61,8 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		this.xpos = xpos;
 
 		this.pane = new Pane();
-		this.pane.setPrefSize(300, 200);
+		this.pane.setPrefSize(300, 20);
+
 		this.pane.setBackground(null);
 
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
