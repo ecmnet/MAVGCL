@@ -57,11 +57,15 @@ public class LineMessageAnnotation  implements XYAnnotation {
 	private  Polygon triangle 	= null;
 	private float    xpos   	= 0;
 
-	public LineMessageAnnotation(float xpos, int ypos, LogMessage message, boolean displayLabel) {
+	public LineMessageAnnotation(Node chart, float xpos, int ypos, LogMessage message, boolean displayLabel) {
 		this.xpos = xpos;
 
 		this.pane = new Pane();
 		this.pane.setPrefSize(300, 20);
+
+		this.pane.setOnScroll(event -> {
+			chart.fireEvent(event);
+		});
 
 		this.pane.setBackground(null);
 
@@ -89,6 +93,10 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		this.triangle.setStrokeType(StrokeType.INSIDE);
 		if(displayLabel) {
 			label = new Label(message.msg);
+
+			label.setOnScroll(event -> {
+				chart.fireEvent(event);
+			});
 			label.setLayoutY(15+ypos*18);
 			label.setLayoutX(7);
 			label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");

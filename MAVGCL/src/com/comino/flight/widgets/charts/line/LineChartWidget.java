@@ -509,7 +509,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series1.getData().clear();
 			series2.getData().clear();
 			series3.getData().clear();
-			linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
 			yoffset = 0;
 
@@ -535,9 +535,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						&& display_annotations) {
 					if((current_x_pt - last_annotation_pos) > 150)
 						yoffset=0;
-					linechart.getAnnotations().add(new LineMessageAnnotation(dt_sec,yoffset++, m.msg,
+
+					linechart.getAnnotations().add(new LineMessageAnnotation(this,dt_sec,yoffset++, m.msg,
 							(resolution_ms<300) && annotations.isSelected()),
-							Layer.BACKGROUND);
+							Layer.FOREGROUND);
 					last_annotation_pos = current_x_pt;
 				}
 
