@@ -14,7 +14,7 @@ public class XYValueItemPool {
 		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>();
 	}
 
-	synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
+	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
 	{
 		XYChart.Data<Number,Number> o;
 		if( unlocked.size() > 0 )
@@ -33,12 +33,12 @@ public class XYValueItemPool {
 		return( o );
 	}
 
-	synchronized void invalidate(XYChart.Data<Number,Number> o) {
+	public synchronized void invalidate(XYChart.Data<Number,Number> o) {
 		locked.remove(o);
 		unlocked.put(o, true);
 	}
 
-	synchronized void invalidateAll() {
+	public synchronized void invalidateAll() {
 		unlocked.clear();
 		locked.clear();
 	}

@@ -47,6 +47,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.flight.widgets.charts.line.XYValueItemPool;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
@@ -181,6 +182,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private float rotation_rad = 0;
 
+	private XYValueItemPool pool = null;
+
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
@@ -189,6 +192,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
 
 		this.state = StateProperties.getInstance();
+
+		pool = new XYValueItemPool();
 
 		task = new Task<Integer>() {
 
@@ -212,7 +217,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
+							pool.invalidateAll();
 						}
+
 						current_x_pt = 0;
 						scroll.setValue(0);
 						Platform.runLater(() -> {
@@ -494,7 +501,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			synchronized(this) {
 				series1.getData().clear();
 				series2.getData().clear();
-
+				pool.invalidateAll();
 			}
 
 			current_x_pt = current_x0_pt;
@@ -522,34 +529,38 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
 						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
 
-						if(series1.getData().size()>0)
+						if(series1.getData().size()>0) {
+							pool.invalidate(series1.getData().get(0));
 							series1.getData().remove(0);
-						if(series2.getData().size()>0)
+						}
+						if(series2.getData().size()>0) {
+							pool.invalidate(series2.getData().get(0));
 							series2.getData().remove(0);
+						}
 					}
 
 
 					if(type1_x.hash!=0 && type1_y.hash!=0) {
 						if(rotation_rad==0) {
-							series1.getData().add(new XYChart.Data<Number,Number>(
+							series1.getData().add(pool.checkOut(
 									m.getValue(type1_x), m.getValue(type1_y))
 									);
 						} else {
 							float[] r = rotateRad(m.getValue(type1_x), m.getValue(type1_y),
 									       rotation_rad);
-							series1.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+							series1.getData().add(pool.checkOut(r[0],r[1]));
 						}
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
 						if(rotation_rad==0) {
-							series2.getData().add(new XYChart.Data<Number,Number>(
+							series2.getData().add(pool.checkOut(
 									m.getValue(type2_x), m.getValue(type2_y))
 									);
 						} else {
 							float[] r = rotateRad(m.getValue(type2_x), m.getValue(type2_y),
 								          rotation_rad);
-							series2.getData().add(new XYChart.Data<Number,Number>(r[0],r[1]));
+							series2.getData().add(pool.checkOut(r[0],r[1]));
 						}
 					}
 					current_x_pt++;
