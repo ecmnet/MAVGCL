@@ -152,9 +152,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private ArrayList<KeyFigureMetaData> recent = null;
 
-	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
-	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
-	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
+//	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
+//	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
+//	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
 	private Gson gson = new GsonBuilder().create();
 	private int   yoffset = 0;
@@ -164,11 +164,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private float timeframe;
 	private boolean display_annotations = true;
 
+	private XYValueItemPool pool = null;
+
 	public LineChartWidget() {
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
 		this.state = StateProperties.getInstance();
+		this.pool  = new XYValueItemPool();
 
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
@@ -208,9 +211,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
-
-
-
 		annotations.setSelected(true);
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			Platform.runLater(() -> {
@@ -226,6 +226,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
+		linechart.setAnimated(false);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -491,14 +492,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 	private void updateGraph(boolean refresh) {
-		float dt_sec = 0; AnalysisDataModel m =null; int remove_count=0; boolean set_bounds = false;
-
-		series1_list.clear();
-		series2_list.clear();
-		series3_list.clear();
+		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;
 
 
 		if(refresh) {
+			pool.invalidateAll();
 			series1.getData().clear();
 			series2.getData().clear();
 			series3.getData().clear();
@@ -537,15 +535,29 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
 
-					if(current_x_pt > current_x1_pt)
-						remove_count++;
+					if(current_x_pt > current_x1_pt) {
+						if(series1.getData().size()>0) {
+							pool.invalidate(series1.getData().get(0));
+							series1.getData().remove(0);
+						}
+
+						if(series2.getData().size()>0) {
+							pool.invalidate(series2.getData().get(0));
+							series2.getData().remove(0);
+						}
+
+						if(series3.getData().size()>0) {
+							pool.invalidate(series3.getData().get(0));
+							series3.getData().remove(0);
+						}
+					}
 
 					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
-						series1_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type1)));
+						series1.getData().add(pool.checkOut(dt_sec,m.getValue(type1)));
 					if(type2.hash!=0 && m.getValue(type2)!=Float.NaN)
-						series2_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type2)));
+						series2.getData().add(pool.checkOut(dt_sec,m.getValue(type2)));
 					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
-						series3_list.add(new XYChart.Data<Number,Number>(dt_sec,m.getValue(type3)));
+						series3.getData().add(pool.checkOut(dt_sec,m.getValue(type3)));
 				}
 
 				if(current_x_pt > current_x1_pt) {
@@ -554,21 +566,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					current_x1_pt += REFRESH_STEP;
 				}
 				current_x_pt++;
-			}
-
-			if(remove_count > 0) {
-				if(series1.getData().size()>remove_count)
-					series1.getData().remove(0, remove_count);
-				if(series2.getData().size()>remove_count)
-					series2.getData().remove(0, remove_count);
-				if(series3.getData().size()>remove_count)
-					series3.getData().remove(0, remove_count);
-			}
-
-			synchronized(this) {
-				series1.getData().addAll(series1_list);
-				series2.getData().addAll(series2_list);
-				series3.getData().addAll(series3_list);
 			}
 
 			if(set_bounds)

@@ -117,15 +117,11 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 
 	public RecordControlWidget() {
 		super(300,true);
-
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
-
-
 	}
 
 	@FXML
 	private void initialize() {
-
 
 		trigstart.getItems().addAll(TRIG_START_OPTIONS);
 		trigstart.getSelectionModel().select(0);

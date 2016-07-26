@@ -140,7 +140,10 @@ public class BatteryWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 		this.model = dataService.getCurrent();
-		ExecutorService.get().execute(task);
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
 	}
 
 }
