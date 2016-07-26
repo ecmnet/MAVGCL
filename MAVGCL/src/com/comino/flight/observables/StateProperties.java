@@ -61,8 +61,10 @@ public class StateProperties implements IMSPModeChangedListener{
 	}
 
 	public static StateProperties getInstance(IMAVController control) {
-		if(instance == null)
+		if(instance == null) {
 			instance = new StateProperties(control);
+			System.out.println("States initialized");
+		}
 		return instance;
 	}
 

@@ -59,6 +59,7 @@ public class AnalysisModelService {
 	private DataModel								model       = null;
 	private AnalysisDataModel				    	current     = null;
 	private ArrayList<AnalysisDataModel> 		    modelList   = null;
+	private StateProperties                         state       = null;
 
 	private int     mode = 0;
 
@@ -79,6 +80,7 @@ public class AnalysisModelService {
 		this.modelList     = new ArrayList<AnalysisDataModel>();
 		this.model         = model;
 		this.current       =  new AnalysisDataModel();
+		this.state         = StateProperties.getInstance();
 		new Thread(new Converter()).start();
 	}
 
@@ -252,7 +254,8 @@ public class AnalysisModelService {
 		@Override
 		public void run() {
 			long tms = System.nanoTime() / 1000;
-			StateProperties.getInstance().getLogLoadedProperty().set(false);
+			state.getLogLoadedProperty().set(false);
+			state.getRecordingProperty().set(true);
 			while(mode!=STOPPED) {
 				synchronized(this) {
 					AnalysisDataModel m = current.clone();
@@ -271,6 +274,7 @@ public class AnalysisModelService {
 
 				}
 			}
+	    	state.getRecordingProperty().set(false);
 		}
 
 	}

@@ -49,6 +49,7 @@ import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
@@ -136,7 +137,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private int index=0;
 
-	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private FloatProperty  scroll       = new SimpleFloatProperty(0);
@@ -147,8 +147,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private IMAVController control;
 
+	private  StateProperties state;
+
 	public MAVOpenMapTab() {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
+
+		this.state = StateProperties.getInstance();
 
 		task = new Task<Long>() {
 
@@ -167,12 +171,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						break;
 					}
 
-					if(!isCollecting.get() && dataService.isCollecting()) {
+					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
 
-
-					isCollecting.set(dataService.isCollecting());
 
 					Platform.runLater(() -> {
 						try {
@@ -272,7 +274,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
 
-				if(isCollecting.get() &&
+				if(state.getRecordingProperty().get() &&
 						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
@@ -361,7 +363,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 		scroll.addListener((v, ov, nv) -> {
-			if(!isCollecting.get()) {
+			if(!state.getRecordingProperty().get()) {
 
 				int current_x1_pt = dataService.calculateX0Index(nv.floatValue());
 
@@ -408,10 +410,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		return this;
 	}
 
-
-	public BooleanProperty getCollectingProperty() {
-		return isCollecting;
-	}
 
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;

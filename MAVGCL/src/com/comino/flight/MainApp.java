@@ -130,6 +130,7 @@ public class MainApp extends Application  {
 			String peerAddress = null;
 			int port = 14555;
 
+
 			Map<String,String> args = getParameters().getNamed();
 
 
@@ -153,11 +154,10 @@ public class MainApp extends Application  {
 				else
 					control = new MAVUdpController(peerAddress,port,14550, false);
 
+			StateProperties.getInstance(control);
 			AnalysisModelService.getInstance(control.getCurrentModel());
 
 			MSPLogger.getInstance(control);
-			StateProperties.getInstance(control);
-
 			PX4Parameters.getInstance(control);
 
 

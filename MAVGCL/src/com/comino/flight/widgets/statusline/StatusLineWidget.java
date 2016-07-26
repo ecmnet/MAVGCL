@@ -182,11 +182,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 		});
 	}
 
-	@Override
-	public BooleanProperty getCollectingProperty() {
-
-		return null;
-	}
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {

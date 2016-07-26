@@ -45,6 +45,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -164,7 +165,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private KeyFigureMetaData type2_x=null;
 	private KeyFigureMetaData type2_y=null;
 
-	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private StateProperties state = null;
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 
@@ -187,6 +188,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
 
+		this.state = StateProperties.getInstance();
+
 		task = new Task<Integer>() {
 
 			@Override
@@ -205,7 +208,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 
-					if(!isCollecting.get() && dataService.isCollecting()) {
+					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 						synchronized(this) {
 							series1.getData().clear();
 							series2.getData().clear();
@@ -217,9 +220,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 						});
 					}
 
-					isCollecting.set(dataService.isCollecting());
 
-					if(isCollecting.get() && control.isConnected())
+					if(state.getRecordingProperty().get() && control.isConnected())
 						Platform.runLater(() -> {
 							updateGraph(false);
 						});
@@ -506,7 +508,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();
-			if(!isCollecting.get() && current_x1_pt < max_x)
+			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
 			while(current_x_pt<max_x) {
@@ -578,11 +580,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		th.setDaemon(true);
 		th.start();
 		return this;
-	}
-
-
-	public BooleanProperty getCollectingProperty() {
-		return isCollecting;
 	}
 
 	public IntegerProperty getTimeFrameProperty() {

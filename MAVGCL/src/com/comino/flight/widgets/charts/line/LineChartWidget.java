@@ -47,6 +47,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.MovingAxis;
@@ -87,7 +88,6 @@ import javafx.scene.shape.Rectangle;
 public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private static int MAXRECENT = 20;
-
 
 	private final static int COLLECTOR_CYCLE = 50;
 	private final static int REFRESH_RATE    = 50;
@@ -134,8 +134,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private KeyFigureMetaData type2=  null;
 	private KeyFigureMetaData type3=  null;
 
-
-	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private StateProperties state = null;
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty  scroll        = new SimpleFloatProperty(0);
 
@@ -169,6 +168,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
+		this.state = StateProperties.getInstance();
+
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
@@ -193,9 +194,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if (isCancelled())
 						break;
 
-					isCollecting.set(dataService.isCollecting());
-
-					if(isCollecting.get() && control.isConnected())
+					if(state.getRecordingProperty().get() && control.isConnected())
 						Platform.runLater(() -> {
 							updateGraph(false);
 						});
@@ -515,7 +514,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
 			int max_x = dataService.getModelList().size();
-			if(!isCollecting.get() && current_x1_pt < max_x)
+			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
 			while(current_x_pt<max_x ) {
@@ -603,7 +602,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		th.setDaemon(true);
 		th.start();
 
-		isCollecting.addListener((o,ov,nv) -> {
+		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
@@ -613,12 +612,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		return this;
 	}
-
-
-	public BooleanProperty getCollectingProperty() {
-		return isCollecting;
-	}
-
 
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;

@@ -102,9 +102,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 	@FXML
 	private Button clear;
 
-
-	private Task<Integer> task;
-
 	private IMAVController control;
 
 	private int triggerStartMode =0;
@@ -123,54 +120,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
 
-		task = new Task<Integer>() {
-
-			@Override
-			protected Integer call() throws Exception {
-				while(true) {
-					LockSupport.parkNanos(500000000L);
-					if(isDisabled()) {
-						continue;
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-
-					updateValue(modelService.getMode());
-				}
-				return modelService.getMode();
-			}
-		};
-
-		task.valueProperty().addListener(new ChangeListener<Integer>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Integer> observableValue, Integer oldData, Integer newData) {
-				switch(newData) {
-				case ModelCollectorService.STOPPED:
-
-					StatusLineWidget.showProgressIndicator(false);
-					recording.selectedProperty().set(false);
-					isrecording.setFill(Color.LIGHTGREY); break;
-				case ModelCollectorService.PRE_COLLECTING:
-
-					FileHandler.getInstance().clear();
-					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.LIGHTBLUE); break;
-				case ModelCollectorService.POST_COLLECTING:
-
-					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.LIGHTYELLOW); break;
-				case ModelCollectorService.COLLECTING:
-
-					FileHandler.getInstance().clear();
-					StatusLineWidget.showProgressIndicator(true);
-					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.RED); break;
-				}
-			}
-		});
 
 	}
 
@@ -239,6 +188,31 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 				recording(false, 0);
 		});
 		enablemodetrig.selectedProperty().set(true);
+
+		state.getRecordingProperty().addListener((o,ov,nv) -> {
+			switch(modelService.getMode()) {
+			case ModelCollectorService.STOPPED:
+
+				StatusLineWidget.showProgressIndicator(false);
+				recording.selectedProperty().set(false);
+				isrecording.setFill(Color.LIGHTGREY); break;
+			case ModelCollectorService.PRE_COLLECTING:
+
+				FileHandler.getInstance().clear();
+				recording.selectedProperty().set(true);
+				isrecording.setFill(Color.LIGHTBLUE); break;
+			case ModelCollectorService.POST_COLLECTING:
+
+				recording.selectedProperty().set(true);
+				isrecording.setFill(Color.LIGHTYELLOW); break;
+			case ModelCollectorService.COLLECTING:
+
+				FileHandler.getInstance().clear();
+				StatusLineWidget.showProgressIndicator(true);
+				recording.selectedProperty().set(true);
+				isrecording.setFill(Color.RED); break;
+			}
+		});
 	}
 
 
@@ -250,9 +224,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
-		state.getRecordingProperty().bind(recording.selectedProperty());
-
-		ExecutorService.get().execute(task);
 	}
 
 	@Override
@@ -261,7 +232,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 		if(!modetrigger)
 			return;
 
-		if(!control.getCollector().isCollecting()) {
+		if(!modelService.isCollecting()) {
 			switch(triggerStartMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
