@@ -39,7 +39,7 @@ public class XYValueItemPool {
 	}
 
 	public synchronized void invalidateAll() {
-		unlocked.clear();
+		unlocked.putAll(locked);
 		locked.clear();
 	}
 

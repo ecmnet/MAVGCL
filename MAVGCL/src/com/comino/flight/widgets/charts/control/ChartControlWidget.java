@@ -99,7 +99,6 @@ public class ChartControlWidget extends WidgetPane  {
 
 		buildKeyfigureModelSelection();
 
-
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
 			modelService.setTotalTimeSec(totalTime_sec);
