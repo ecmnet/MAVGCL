@@ -27,19 +27,20 @@ public class XYValueItemPool {
 			locked.put(o, true);
 			return(o);
 		}
-		// no objects available, create a new one
 		o = new XYChart.Data<Number,Number>(x,y);
 		locked.put( o, true );
 		return( o );
 	}
 
 	public synchronized void invalidate(XYChart.Data<Number,Number> o) {
-		locked.remove(o);
-		unlocked.put(o, true);
+		if(locked.size()>0) {
+			locked.remove(o);
+			unlocked.put(o, true);
+		}
 	}
 
 	public synchronized void invalidateAll() {
-		unlocked.putAll(locked);
+		unlocked.clear();
 		locked.clear();
 	}
 

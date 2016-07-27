@@ -444,6 +444,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
+				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
 			}
@@ -500,7 +501,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		else if(frame > 200)
 			resolution_ms = 500;
 		else if(frame > 50)
-			resolution_ms = 250;
+			resolution_ms = 200;
 		else if(frame > 20)
 			resolution_ms = 100;
 		else
@@ -530,7 +531,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			last_annotation_pos = 0;
 			yoffset = 0;
 
-			current_x_pt = current_x0_pt;
+			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
@@ -562,17 +563,17 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
 
 					if(current_x_pt > current_x1_pt) {
-						if(series1.getData().size()>0) {
+						if(series1.getData().size()>0 && type1.hash!=0) {
 							pool.invalidate(series1.getData().get(0));
 							series1.getData().remove(0);
 						}
 
-						if(series2.getData().size()>0) {
+						if(series2.getData().size()>0 && type2.hash!=0) {
 							pool.invalidate(series2.getData().get(0));
 							series2.getData().remove(0);
 						}
 
-						if(series3.getData().size()>0) {
+						if(series3.getData().size()>0 && type3.hash!=0) {
 							pool.invalidate(series3.getData().get(0));
 							series3.getData().remove(0);
 						}
