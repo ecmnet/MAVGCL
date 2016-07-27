@@ -164,14 +164,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private float timeframe;
 	private boolean display_annotations = true;
 
-	private XYValueItemPool pool = null;
+	private XYDataPool pool = null;
 
 	public LineChartWidget() {
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
 		this.state = StateProperties.getInstance();
-		this.pool  = new XYValueItemPool();
+		this.pool  = new XYDataPool();
 
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
@@ -481,7 +481,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		} catch (IOException e) {  }
 	}
 
-
 	private void addToRecent(KeyFigureMetaData nv) {
 
 		if(recent.size()>MAXRECENT)
@@ -515,8 +514,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				updateGraph(true);
 			});
 	}
-
-
 
 	private void updateGraph(boolean refresh) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;

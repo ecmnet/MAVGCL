@@ -47,7 +47,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.IChartControl;
-import com.comino.flight.widgets.charts.line.XYValueItemPool;
+import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
@@ -182,7 +182,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private float rotation_rad = 0;
 
-	private XYValueItemPool pool = null;
+	private XYDataPool pool = null;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
@@ -193,7 +193,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		pool = new XYValueItemPool();
+		pool = new XYDataPool();
 
 		task = new Task<Integer>() {
 
