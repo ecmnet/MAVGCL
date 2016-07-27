@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -58,14 +57,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,7 +72,6 @@ import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -125,7 +121,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private  XYChart.Series<Number,Number> series2;
 	private  XYChart.Series<Number,Number> series3;
 
-	private Task<Integer> task;
+	private AnimationTimer task;
 
 	private IMAVController control;
 
@@ -138,23 +134,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty  scroll        = new SimpleFloatProperty(0);
 
-
 	private int resolution_ms 	= 50;
 
-	private int current_x_pt=0;
-
+	private int current_x_pt  =0;
 	private int current_x0_pt = 0;
-
-	private int current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+	private int current_x1_pt = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	private ArrayList<KeyFigureMetaData> recent = null;
-
-	//	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
-	//	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
-	//	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
 	private Gson gson = new GsonBuilder().create();
 	private int   yoffset = 0;
@@ -166,9 +155,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private XYDataPool pool = null;
 
+
 	public LineChartWidget() {
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
+
 
 		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();
@@ -180,32 +171,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		series3 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series3);
 
-		task = new Task<Integer>() {
 
-			@Override
-			protected Integer call() throws Exception {
-
-				while(true) {
-
-					LockSupport.parkNanos(REFRESH_RATE*1000000);
-
-					if(isDisabled()) {
-						LockSupport.parkNanos(500000000L);
-						continue;
-					}
-
-					if (isCancelled())
-						break;
-
-					if(state.getRecordingProperty().get() && control.isConnected())
-						Platform.runLater(() -> {
-							updateGraph(false);
-						});
-				}
-				return 0;
-			}
-		};
-
+		task = new AnimationTimer() {
+	            @Override public void handle(long now) {
+	            	updateGraph(false);
+	            }
+	        };
 	}
 
 	@FXML
@@ -218,15 +189,18 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 		});
 
+		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+
 		xAxis.setAutoRanging(false);
 		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
 		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
 
+		yAxis.setAutoRanging(true);
+
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
-		linechart.setAnimated(false);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -421,7 +395,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				scroll.setValue(0);
+				current_x0_pt =  dataService.calculateX0Index(1);
+				setXResolution(timeFrame.get());
 			}
 		});
 		annotations.setSelected(false);
@@ -437,17 +412,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		setXResolution(30);
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
-
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
-			}
+				task.start();
+			} else
+				task.stop();
 		});
 
 		return this;
@@ -515,9 +487,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 	}
 
-	private void updateGraph(boolean refresh) {
+	private  void updateGraph(boolean refresh) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;
 
+		if(disabledProperty().get())
+			return;
 
 		if(refresh) {
 			pool.invalidateAll();
@@ -582,6 +556,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						series2.getData().add(pool.checkOut(dt_sec,m.getValue(type2)));
 					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
 						series3.getData().add(pool.checkOut(dt_sec,m.getValue(type3)));
+
 				}
 
 				if(current_x_pt > current_x1_pt) {

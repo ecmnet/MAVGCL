@@ -52,6 +52,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -154,7 +155,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private volatile XYChart.Series<Number,Number> series1;
 	private volatile XYChart.Series<Number,Number> series2;
 
-	private Task<Integer> task;
+	private AnimationTimer task;
 
 
 	private IMAVController control;
@@ -195,47 +196,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		pool = new XYDataPool();
 
-		task = new Task<Integer>() {
-
-			@Override
-			protected Integer call() throws Exception {
-				while(true) {
-
-					LockSupport.parkNanos(100000000L);
-
-					if(isDisabled()) {
-						try { Thread.sleep(500); } catch (InterruptedException e) { }
-						continue;
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-
-
-					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
-						synchronized(this) {
-							series1.getData().clear();
-							series2.getData().clear();
-							pool.invalidateAll();
-						}
-
-						current_x_pt = 0;
-						scroll.setValue(0);
-						Platform.runLater(() -> {
-							updateGraph(true);
-						});
-					}
-
-
-					if(state.getRecordingProperty().get() && control.isConnected())
-						Platform.runLater(() -> {
-							updateGraph(false);
-						});
-				}
-				return dataService.getModelList().size();
-			}
-		};
+		task = new AnimationTimer() {
+            @Override public void handle(long now) {
+            	updateGraph(false);
+            }
+        };
 
 		xAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
 		yAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
@@ -497,6 +462,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		AnalysisDataModel m =null;
 
+		if(disabledProperty().get())
+			return;
+
 		if(refresh) {
 			synchronized(this) {
 				series1.getData().clear();
@@ -584,12 +552,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		yAxis.setLowerBound(-1);
 		yAxis.setUpperBound(+1);
 
-		//ExecutorService.get().execute(task);
+		state.getRecordingProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+				current_x0_pt = 0;
+				setXResolution(timeFrame.get());
+				scroll.setValue(0);
+				task.start();
+			} else
+				task.stop();
+		});
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
 		return this;
 	}
 

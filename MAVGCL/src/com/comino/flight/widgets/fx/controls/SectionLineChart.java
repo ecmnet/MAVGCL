@@ -39,6 +39,8 @@ import javafx.beans.NamedArg;
 import javafx.scene.Group;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 
 public class SectionLineChart<X,Y> extends LineChart<X, Y> {
 
@@ -48,6 +50,7 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
 		super(xAxis, yAxis);
 		annotations = new XYAnnotations(this, getChartChildren());
 	}
+
 
 	@Override
     protected void layoutPlotChildren() {
