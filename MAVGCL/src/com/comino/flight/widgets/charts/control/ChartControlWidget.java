@@ -107,8 +107,6 @@ public class ChartControlWidget extends WidgetPane  {
 			for(IChartControl chart : charts) {
 				if(chart.getTimeFrameProperty()!=null)
 					chart.getTimeFrameProperty().set(newValue.intValue());
-				if(chart.getScrollProperty()!=null)
-					chart.getScrollProperty().set(1);
 			}
 
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())

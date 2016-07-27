@@ -152,9 +152,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private ArrayList<KeyFigureMetaData> recent = null;
 
-//	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
-//	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
-//	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
+	//	private List<Data<Number,Number>> series1_list = new ArrayList<Data<Number,Number>>();
+	//	private List<Data<Number,Number>> series2_list = new ArrayList<Data<Number,Number>>();
+	//	private List<Data<Number,Number>> series3_list = new ArrayList<Data<Number,Number>>();
 
 	private Gson gson = new GsonBuilder().create();
 	private int   yoffset = 0;
@@ -237,15 +237,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		chartArea.getChildren().add(zoom);
 		zoom.setFill(Color.color(0,0.6,1.0,0.1));
 		zoom.setVisible(false);
+		zoom.setY(0);
+		zoom.setHeight(1000);
 
 		linechart.setOnMousePressed(mouseEvent -> {
 			if(dataService.isCollecting())
 				return;
-
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
-			zoom.setY(0);
-			zoom.setHeight(1000);
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
@@ -260,8 +259,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
 				setXResolution((int)(x1-x0));
-				if(!disabledProperty().get())
-					updateGraph(true);
 			}
 			mouseEvent.consume();
 		});
@@ -336,7 +333,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
-
 		type1 = type2 = type3 = new KeyFigureMetaData();
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
@@ -359,7 +355,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				initKeyFigureSelection(cseries3, type3, meta.getGroupMap().get(nv));
 			}
 		});
-
 
 		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
@@ -409,35 +404,80 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			event.consume();
 		});
 
-
 		timeFrame.addListener((v, ov, nv) -> {
-			scroll.setValue(0);
 			this.current_x_pt = 0;
-			setXResolution(nv.intValue());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
+			current_x0_pt =  dataService.calculateX0Index(1);
+			setXResolution(timeFrame.get());
 		});
 
 
 		scroll.addListener((v, ov, nv) -> {
-			setXResolution(timeFrame.get());
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
-
-			if(!disabledProperty().get())
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+			setXResolution(timeFrame.get());
 		});
 
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				scroll.setValue(0);
-				refreshChart();
+			}
+		});
+		annotations.setSelected(false);
+	}
+
+	public LineChartWidget setup(IMAVController control) {
+
+		this.control = control;
+
+		series1.setName(type1.desc1);
+		series2.setName(type2.desc1);
+		series3.setName(type3.desc1);
+
+		setXResolution(30);
+
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
+
+		state.getRecordingProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+				setXResolution(timeFrame.get());
+				scroll.setValue(0);
 			}
 		});
 
-		annotations.setSelected(false);
+		return this;
+	}
+
+	public IntegerProperty getTimeFrameProperty() {
+		return timeFrame;
+	}
+
+	@Override
+	public FloatProperty getScrollProperty() {
+		return scroll;
+	}
+
+	@Override
+	public void refreshChart() {
+		current_x0_pt = dataService.calculateX0Index(1);
+		if(!disabledProperty().get())
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
+	}
+
+	public void saveAsPng(String path) {
+		SnapshotParameters param = new SnapshotParameters();
+		param.setFill(Color.BLACK);
+		WritableImage image = linechart.snapshot(param, null);
+		File file = new File(path+"/chart.png");
+		try {
+			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+		} catch (IOException e) {  }
 	}
 
 
@@ -450,22 +490,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(s.hash == nv.hash)
 				return;
 		}
-
 		recent.add(nv);
 		storeRecentList();
-
-	}
-
-	public void saveAsPng(String path) {
-		SnapshotParameters param = new SnapshotParameters();
-		param.setFill(Color.BLACK);
-		WritableImage image = linechart.snapshot(param, null);
-		File file = new File(path+"/chart.png");
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-		} catch (IOException e) {
-
-		}
 	}
 
 	private void setXResolution(float frame) {
@@ -583,50 +609,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 
-	public LineChartWidget setup(IMAVController control) {
-
-		this.control = control;
-
-
-		series1.setName(type1.desc1);
-		series2.setName(type2.desc1);
-		series3.setName(type3.desc1);
-
-		setXResolution(30);
-
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
-
-		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
-				setXResolution(timeFrame.get());
-				scroll.setValue(0);
-				refreshChart();
-			}
-		});
-
-		return this;
-	}
-
-	public IntegerProperty getTimeFrameProperty() {
-		return timeFrame;
-	}
-
-	@Override
-	public FloatProperty getScrollProperty() {
-		return scroll;
-	}
-
-	@Override
-	public void refreshChart() {
-		current_x0_pt = dataService.calculateX0Index(1);
-		if(!disabledProperty().get())
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
-	}
 
 	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 
