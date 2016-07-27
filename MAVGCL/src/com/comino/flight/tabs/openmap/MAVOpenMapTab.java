@@ -59,7 +59,6 @@ import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -130,7 +129,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
-	private AnimationTimer task;
+	private Task<Long> task;
 
 	private AnalysisDataModel model;
 	private int type = 0;
@@ -155,14 +154,22 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-
-		task = new AnimationTimer() {
+		task = new Task<Long>() {
 
 			@Override
-			public void handle(long now) {
+			protected Long call() throws Exception {
+				while(true) {
 
-				if(disabledProperty().get())
-					return;
+					try { Thread.sleep(100); } catch (InterruptedException e) { }
+
+					if(isDisabled()) {
+						try { Thread.sleep(500); } catch (InterruptedException e) { }
+						continue;
+					}
+
+					if (isCancelled() ) {
+						break;
+					}
 
 					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
@@ -196,8 +203,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						} catch(Exception e) { e.printStackTrace(); }
 					});
 				}
+				return System.currentTimeMillis();
+			}
 		};
-		task.start();
 	}
 
 
@@ -395,7 +403,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setup(control);
 		recordControl.addChart(this);
 
-
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
 		return this;
 	}
 
