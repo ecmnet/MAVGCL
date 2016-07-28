@@ -246,8 +246,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						setXResolution(timeFrame.get());
 						task.start();
 					}
-					else
+					else {
 						task.stop();
+					}
 					isPaused = !isPaused;
 				}
 				else {
@@ -523,7 +524,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
 			int max_x = dataService.getModelList().size();
-			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
+			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
 			while(current_x_pt<max_x ) {
@@ -574,8 +575,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				if(current_x_pt > current_x1_pt) {
 					set_bounds = true;
-					current_x0_pt += REFRESH_STEP;
-					current_x1_pt += REFRESH_STEP;
+					if(!isPaused) {
+						current_x0_pt += REFRESH_STEP;
+						current_x1_pt += REFRESH_STEP;
+					}
 				}
 				current_x_pt++;
 			}

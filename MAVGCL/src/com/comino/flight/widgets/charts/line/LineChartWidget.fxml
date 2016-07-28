@@ -4,14 +4,13 @@
 <?import javafx.scene.chart.LineChart?>
 <?import com.comino.flight.widgets.fx.controls.*?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Label?>
 
 <fx:root  minHeight="250.0" styleClass="widget" minWidth="600"
 	type="BorderPane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
