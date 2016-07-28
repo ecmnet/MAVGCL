@@ -30,13 +30,13 @@ Any feedback, comments and contributions are very welcome.
 - Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
 - Key figure conversion based on expressions
 - FrSky Taranis USB supported in SITL
-- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) or any other source
+- Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org) or any other source
 
 **Requirements:**
 
 - requires **Java 8** JRE
 - A companion running a serial-to-udp-proxy (either MAVComm or MAVROS, not required for PIXRacer)
-- Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14)) running on companion 
+- Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org)) running on companion 
 
 **Binaries:**
 
@@ -62,7 +62,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 
-- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org/modules/sections/index.php?op=viewarticle&artid=14) at port 8080 on your companion with :
+- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org) at port 8080 on your companion with :
   ​
   `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
 
