@@ -35,6 +35,7 @@ package com.comino.flight.prefs;
 
 import java.util.prefs.Preferences;
 
+
 public class MAVPreferences {
 
 	public final static String PREFS_IP_ADDRESS = "IP_ADDRESS";
@@ -43,12 +44,17 @@ public class MAVPreferences {
 	public final static String PREFS_DIR        = "DIRECTORY";
 	public final static String PREFS_XMLDIR     = "XMLDIRECTORY";
 	public final static String RECENT_FIGS      = "RECENTFIGS";
+	public final static String LINECHART_FIG_1  = "LINECHARTFIG1";
+	public final static String LINECHART_FIG_2  = "LINECHARTFIG2";
+	public final static String LINECHART_FIG_3  = "LINECHARTFIG3";
 
 	private static Preferences prefs = null;
 
+
 	public static Preferences getInstance() {
-		if(prefs==null)
+		if(prefs==null) {
 			prefs = Preferences.userRoot().node("com.comino.mavgcl");
+		}
 		return prefs;
 	}
 

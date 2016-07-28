@@ -116,6 +116,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private CheckBox annotations;
 
+	private int id = 0;
 
 	private  XYChart.Series<Number,Number> series1;
 	private  XYChart.Series<Number,Number> series2;
@@ -124,7 +125,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private AnimationTimer task;
 
 	private IMAVController control;
-
 
 	private KeyFigureMetaData type1 = null;
 	private KeyFigureMetaData type2=  null;
@@ -155,6 +155,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private boolean isPaused = false;
 
 	private XYDataPool pool = null;
+
+	private Preferences prefs = MAVPreferences.getInstance();
 
 
 	public LineChartWidget() {
@@ -293,33 +295,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		readRecentList();
 
-		meta.addObserver((o,e) -> {
-
-			group.getItems().clear();
-
-			if(e == null) {
-
-				group.getItems().add("Last used...");
-				group.getItems().add("All");
-				group.getItems().addAll(meta.getGroups());
-				group.getSelectionModel().select(0);
-
-				initKeyFigureSelection(cseries1, type1, recent);
-				initKeyFigureSelection(cseries2, type2, recent);
-				initKeyFigureSelection(cseries3, type3, recent);
-
-			} else {
-
-				group.getItems().add("All");
-				group.getItems().addAll(meta.getGroups());
-				group.getSelectionModel().select(0);
-
-				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
-				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
-				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
-
-			}
-		});
 
 		type1 = type2 = type3 = new KeyFigureMetaData();
 
@@ -349,10 +324,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
 					addToRecent(nv);
-					series1.setName(nv.desc1+" ["+nv.uom+"]   "); }
+					series1.setName(nv.desc1+" ["+nv.uom+"]   ");
+				}
 				else
 					series1.setName(nv.desc1+"   ");
 				type1 = nv;
+				prefs.putInt(MAVPreferences.LINECHART_FIG_1+id,nv.hash);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -363,10 +340,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
 					addToRecent(nv);
-					series2.setName(nv.desc1+" ["+nv.uom+"]   "); }
+					series2.setName(nv.desc1+" ["+nv.uom+"]   ");
+				}
 				else
 					series2.setName(nv.desc1+"   ");
 				type2 = nv;
+				prefs.putInt(MAVPreferences.LINECHART_FIG_2+id,nv.hash);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -377,10 +356,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
 					addToRecent(nv);
-					series3.setName(nv.desc1+" ["+nv.uom+"]   "); }
+					series3.setName(nv.desc1+" ["+nv.uom+"]   ");
+				}
 				else
 					series3.setName(nv.desc1+"   ");
 				type3 = nv;
+				prefs.putInt(MAVPreferences.LINECHART_FIG_3+id,nv.hash);
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -416,15 +397,15 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		annotations.setSelected(false);
 	}
 
-	public LineChartWidget setup(IMAVController control) {
-
+	public LineChartWidget setup(IMAVController control, int id) {
+		this.id      = id;
 		this.control = control;
+
+		setXResolution(30);
 
 		series1.setName(type1.desc1);
 		series2.setName(type2.desc1);
 		series3.setName(type3.desc1);
-
-		setXResolution(30);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
@@ -434,6 +415,42 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				task.start();
 			} else
 				task.stop();
+		});
+
+		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
+		if(k1!=null) type1 = k1;
+		KeyFigureMetaData k2 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_2+id,0));
+		if(k2!=null) type2 = k2;
+		KeyFigureMetaData k3 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_3+id,0));
+		if(k3!=null) type3 = k3;
+
+		meta.addObserver((o,e) -> {
+
+			group.getItems().clear();
+
+			if(e == null) {
+
+				group.getItems().add("Last used...");
+				group.getItems().add("All");
+				group.getItems().addAll(meta.getGroups());
+				group.getSelectionModel().select(0);
+
+				initKeyFigureSelection(cseries1, type1, recent);
+				initKeyFigureSelection(cseries2, type2, recent);
+				initKeyFigureSelection(cseries3, type3, recent);
+
+			} else {
+
+				group.getItems().add("All");
+				group.getItems().addAll(meta.getGroups());
+				group.getSelectionModel().select(0);
+
+				initKeyFigureSelection(cseries1, type1, meta.getKeyFigures());
+				initKeyFigureSelection(cseries2, type2, meta.getKeyFigures());
+				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
+
+			}
+
 		});
 
 		return this;
@@ -627,13 +644,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void storeRecentList() {
-		Preferences prefs = MAVPreferences.getInstance();
 		String rc = gson.toJson(recent);
 		prefs.put(MAVPreferences.RECENT_FIGS, rc);
 	}
 
 	private void readRecentList() {
-		Preferences prefs = MAVPreferences.getInstance();
+
 		String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
 		try {
 			if(rc!=null)
