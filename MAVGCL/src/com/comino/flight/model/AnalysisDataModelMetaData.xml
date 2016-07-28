@@ -562,7 +562,7 @@
 	<KeyFigure desc="Acc.X" uom="m/s^2" mask="#0.00" key="ACCX">
 		<MSPSource class="imu" field="accx"></MSPSource>
 		<PX4Source field="IMU.AccX"></PX4Source>
-		<ULogSource field="sensor_accel_0.x"></ULogSource>
+		<ULogSource field="sensor_combined_0.accelerometer_m_s2[0]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
 		   <Group>PX4Log Sensors</Group>
@@ -571,7 +571,7 @@
 	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCYY">
 		<MSPSource class="imu" field="accy"></MSPSource>
 		<PX4Source field="IMU.AccY"></PX4Source>
-		<ULogSource field="sensor_accel_0.y"></ULogSource>
+		<ULogSource field="sensor_combined_0.accelerometer_m_s2[1]y"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
 		    <Group>PX4Log Sensors</Group>
@@ -580,7 +580,7 @@
 	<KeyFigure desc="Acc.Z" uom="m/s^2" mask="#0.00" key="ACCZ">
 		<MSPSource class="imu" field="accz"></MSPSource>
 		<PX4Source field="IMU.AccZ"></PX4Source>
-		<ULogSource field="sensor_accel_0.z"></ULogSource>
+		<ULogSource field="sensor_combined_0.accelerometer_m_s2[2]"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
@@ -590,7 +590,7 @@
 	<KeyFigure desc="Gyro.X" uom="rad/s" mask="#0.00" key="GYROX">
 		<MSPSource class="imu" field="gyrox"></MSPSource>
 		<PX4Source field="IMU.GyroX"></PX4Source>
-		<ULogSource field="sensor_gyro_0.x"></ULogSource>
+		<ULogSource field="sensor_combined_0.gyro_rad[0]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
 		  <Group>PX4Log Sensors</Group>
@@ -600,7 +600,7 @@
 	<KeyFigure desc="Gyro.Y" uom="rad/s" mask="#0.00" key="GYROY">
 		<MSPSource class="imu" field="gyroy"></MSPSource>
 		<PX4Source field="IMU.GyroY"></PX4Source>
-		<ULogSource field="sensor_gyro_0.y"></ULogSource>
+		<ULogSource field="sensor_combined_0.gyro_rad[1]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
 		    <Group>PX4Log Sensors</Group>
@@ -610,7 +610,7 @@
 	<KeyFigure desc="Gyro.Z" uom="rad/s" mask="#0.00" key="GYROZ">
 		<MSPSource class="imu" field="gyroz"></MSPSource>
 		<PX4Source field="IMU.GyroZ"></PX4Source>
-		<ULogSource field="sensor_gyro_0.z"></ULogSource>
+		<ULogSource field="sensor_combined_0.gyro_rad[2]"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
