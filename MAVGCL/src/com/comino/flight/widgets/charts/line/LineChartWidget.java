@@ -152,6 +152,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private double x;
 	private float timeframe;
 	private boolean display_annotations = true;
+	private boolean isPaused = false;
 
 	private XYDataPool pool = null;
 
@@ -173,10 +174,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 
 		task = new AnimationTimer() {
-	            @Override public void handle(long now) {
-	            	updateGraph(false);
-	            }
-	        };
+			@Override public void handle(long now) {
+				updateGraph(false);
+			}
+		};
 	}
 
 	@FXML
@@ -215,14 +216,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		zoom.setHeight(1000);
 
 		linechart.setOnMousePressed(mouseEvent -> {
-			if(dataService.isCollecting())
+			if(dataService.isCollecting() && !isPaused)
 				return;
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
-			if(dataService.isCollecting())
+			if(dataService.isCollecting() && !isPaused)
 				return;
 
 			linechart.setCursor(Cursor.DEFAULT);
@@ -239,16 +240,28 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
-				setXResolution(timeFrame.get());
-				current_x0_pt =  dataService.calculateX0Index(scroll.get());
-				if(!disabledProperty().get())
-					updateGraph(true);
+				if(dataService.isCollecting()) {
+					if(isPaused) {
+						current_x0_pt =  dataService.calculateX0Index(scroll.get());
+						setXResolution(timeFrame.get());
+						task.start();
+					}
+					else
+						task.stop();
+					isPaused = !isPaused;
+				}
+				else {
+					setXResolution(timeFrame.get());
+					current_x0_pt =  dataService.calculateX0Index(scroll.get());
+					if(!disabledProperty().get())
+						updateGraph(true);
+				}
 			}
 			click.consume();
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-			if(dataService.isCollecting())
+			if(dataService.isCollecting() && !isPaused)
 				return;
 
 			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
@@ -261,7 +274,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		linechart.setOnScroll(event -> {
 
-			if(dataService.isCollecting())
+			if(dataService.isCollecting() && !isPaused)
 				return;
 
 			int delta = (int)(timeframe * 1000f / linechart.getWidth() * -event.getDeltaX() * 0.3f
