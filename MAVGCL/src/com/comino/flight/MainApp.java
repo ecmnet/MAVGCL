@@ -225,6 +225,7 @@ public class MainApp extends Application  {
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
+		    primaryStage.setAlwaysOnTop(true);
 
 
 		} catch (IOException e) {
