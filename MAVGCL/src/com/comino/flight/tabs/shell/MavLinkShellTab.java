@@ -135,6 +135,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					try {
 						console.appendText(new String(bytes,"US-ASCII"));
 						index = console.getText().length();
+						console.requestFocus();
+						console.setScrollTop(Double.MAX_VALUE);
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
