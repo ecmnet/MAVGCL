@@ -161,7 +161,7 @@ public class FlightTabs extends Pane {
 
 		this.tabpane.getTabs().get(3).setDisable(true);
 		this.tabpane.getTabs().get(4).setDisable(true);
-		this.tabpane.getTabs().get(5).setDisable(true);
+	//	this.tabpane.getTabs().get(5).setDisable(true);
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
@@ -184,10 +184,12 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
 				xyanalysistab.setWidthBinding(details.getWidth()+3);
+				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 			}
 			else {
 				xtanalysistab.setWidthBinding(0);
 				xyanalysistab.setWidthBinding(0);
+				mavlinkshelltab.setWidthBinding(0);
 			}
 		});
 
@@ -195,15 +197,18 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 			}
 			else {
 				if(details.isVisible() && control.isConnected()) {
 					xtanalysistab.setWidthBinding(details.getWidth()+3);
 					xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+					mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 				}
 				else {
 					xtanalysistab.setWidthBinding(0);
 					xyanalysistab.setWidthBinding(0);
+					mavlinkshelltab.setWidthBinding(0);
 				}
 			}
 		});

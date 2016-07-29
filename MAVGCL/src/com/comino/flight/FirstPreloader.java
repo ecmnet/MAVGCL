@@ -67,7 +67,7 @@ public class FirstPreloader extends Preloader {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         stage.setScene(createPreloaderScene());
-        stage.setAlwaysOnTop(true);
+        //stage.setAlwaysOnTop(true);
         stage.show();
     }
 
