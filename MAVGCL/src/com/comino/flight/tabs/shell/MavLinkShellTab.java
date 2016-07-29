@@ -33,6 +33,8 @@
 
 package com.comino.flight.tabs.shell;
 
+import java.io.UnsupportedEncodingException;
+
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
 import org.mavlink.messages.SERIAL_CONTROL_FLAG;
 import org.mavlink.messages.lquac.msg_serial_control;
@@ -43,6 +45,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -83,17 +86,9 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end);
+					String command = console.getText(index,end).trim()+"\n";
 					index = end+1;
-					System.out.println(command);
-					msg_serial_control msg = new msg_serial_control(1,1);
-					for(int i =0;i<command.length() && i<70;i++) {
-						msg.data[i] = command.indexOf(i);
-					}
-					msg.count = command.length();
-					msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
-					msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
-					control.sendMAVLinkMessage(msg);
+					writeToShell(command);
 				}
 			}
 		});
@@ -104,12 +99,16 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
 				console.selectEnd();
+				if(state.getConnectedProperty().get())
+					writeToShell("\n");
 			}
 		});
 
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue()) {
 				console.setText("");
+				if(!isDisabled())
+					writeToShell("\n");
 			}
 			console.setDisable(!nv.booleanValue());
 		});
@@ -128,16 +127,43 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		if(!this.isDisabled()) {
 			if(_msg instanceof msg_serial_control) {
 				msg_serial_control msg = (msg_serial_control)_msg;
-				StringBuilder s = new StringBuilder();
-				for(int i=0;i<msg.count;i++)
-					s.append((char)msg.data[i]);
-				console.appendText(s.toString());
+				byte[] bytes = new byte[msg.count-2];
+				for(int i=0;i<msg.count-2;i++) {
+					bytes[i] = (byte)(msg.data[i] & 0xFF);
+				}
+				Platform.runLater(() -> {
+					try {
+						console.appendText(new String(bytes,"US-ASCII"));
+						index = console.getText().length();
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				});
 			}
 		}
 	}
 
 	public void setWidthBinding(double horizontal_space) {
 		console.prefWidthProperty().bind(widthProperty().subtract(horizontal_space+5));
+	}
+
+
+	private void writeToShell(String s) {
+		msg_serial_control msg = new msg_serial_control(1,1);
+		if(s!=null) {
+			System.out.println("->"+s);
+			try {
+				byte[] bytes = s.getBytes("US-ASCII");
+				for(int i =0;i<bytes.length && i<70;i++)
+					msg.data[i] = bytes[i];
+				msg.count = bytes.length;
+				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
+				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		control.sendMAVLinkMessage(msg);
 	}
 
 

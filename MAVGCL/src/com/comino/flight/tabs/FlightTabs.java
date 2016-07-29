@@ -197,12 +197,12 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
-				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
+				mavlinkshelltab.setWidthBinding(tuning.getWidth()+3);
 			}
 			else {
 				if(details.isVisible() && control.isConnected()) {
 					xtanalysistab.setWidthBinding(details.getWidth()+3);
-					xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+					xyanalysistab.setWidthBinding(details.getWidth()+3);
 					mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 				}
 				else {
