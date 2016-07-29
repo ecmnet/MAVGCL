@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<parameter-check>
+   <parameter name="LPE_GPS_ON" value="0"/>
+</parameter-check>
