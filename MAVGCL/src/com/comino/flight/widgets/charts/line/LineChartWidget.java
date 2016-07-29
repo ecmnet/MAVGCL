@@ -254,10 +254,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					isPaused = !isPaused;
 				}
 				else {
-					setXResolution(timeFrame.get());
+					scroll.set(1);
 					current_x0_pt =  dataService.calculateX0Index(scroll.get());
-					if(!disabledProperty().get())
-						updateGraph(true);
+					setXResolution(timeFrame.get());
 				}
 			}
 			click.consume();
