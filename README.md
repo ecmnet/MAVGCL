@@ -12,6 +12,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 29/07/2016 
 
+- Pre-Release 0.5 available
 - Pause scrolling during recording (scrolling, zooming allowed) by double-clicking on graph - resume with another double-click.
 - MAVLinkShell (NuttShell via MAVLink) supported (latest master only)
 
