@@ -6517,6 +6517,12 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
+    <parameter default="0" name="SENS_EN_MB12XX" type="INT32">
+      <short_desc>Maxbotix Soanr (mb12xx)</short_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+    </parameter>
   </group>
   <group name="Snapdragon UART ESC">
     <parameter default="2" name="UART_ESC_MODEL" type="INT32">

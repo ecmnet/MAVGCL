@@ -119,7 +119,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						 filename = FileHandler.getInstance().getName();
 
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
-							driver.setText("not connected");
+							driver.setText("no sensors available");
 						else
 							driver.setText(control.getCurrentModel().sys.getSensorString());
 
@@ -154,12 +154,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 							time.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
 						}
 						} else {
+							messages.setText("");
 							mode.setText(filename);
 							mode.setStyle("-fx-background-color: #406080;-fx-alignment: center;");
 							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
 						}
-
-
 					});
 				}
 				return System.currentTimeMillis();
@@ -176,7 +175,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
-				messages.setText(msg.msg);
+				if(filename.isEmpty())
+				  messages.setText(msg.msg);
 			});
 		});
 
