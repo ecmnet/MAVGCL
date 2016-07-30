@@ -42,15 +42,12 @@ import org.mavlink.messages.lquac.msg_serial_control;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 
@@ -62,9 +59,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@FXML
 	private TextArea console;
 
-
-	private MSPLogger log         = MSPLogger.getInstance();
-	private StateProperties state = null;
+	private StateProperties state  = null;
+	private String         last    = null;
 
 	private int index = 0;
 
@@ -86,15 +82,29 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end).trim()+"\n";
-					index = end+1;
+					String command = console.getText(index,end).trim();
 					writeToShell(command);
+					index = end+1;
+					last = command;
 				}
+			} else if (ke.getCode().equals(KeyCode.UP)) {
+				if(last!=null) {
+					Platform.runLater(() -> {
+					    console.appendText(last);
+					});
+				}
+			} else if (ke.getCode().equals(KeyCode.LEFT)) {
+				Platform.runLater(() -> {
+					int end = console.getText().length();
+				    console.selectRange(end, end);
+				});
 			}
 		});
 
+		console.mouseTransparentProperty().set(true);
 		console.selectEnd();
 		console.setWrapText(true);
+		console.requestFocus();
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
@@ -127,8 +137,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		if(!this.isDisabled()) {
 			if(_msg instanceof msg_serial_control) {
 				msg_serial_control msg = (msg_serial_control)_msg;
-				byte[] bytes = new byte[msg.count-2];
-				for(int i=0;i<msg.count-2;i++) {
+				byte[] bytes = new byte[msg.count];
+				for(int i=0;i<msg.count;i++) {
+					if(msg.data[i]==0x1b)
+						break;
 					bytes[i] = (byte)(msg.data[i] & 0xFF);
 				}
 				Platform.runLater(() -> {
@@ -153,7 +165,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private void writeToShell(String s) {
 		msg_serial_control msg = new msg_serial_control(1,1);
 		if(s!=null) {
-			System.out.println("->"+s);
+			System.out.println(">"+s);
 			try {
 				byte[] bytes = s.getBytes("US-ASCII");
 				for(int i =0;i<bytes.length && i<70;i++)

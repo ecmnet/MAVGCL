@@ -2,7 +2,6 @@
     -fx-font-size: 8.0pt;
     -fx-background-color: #303030;
     -fx-accent: #000000;
-
 }
 
 .tab-pane {
@@ -103,7 +102,12 @@
     -fx-border-radius: 5px;
     -fx-border-insets: 2 ,0 ,0 ,0 ;
     -fx-padding: 10.0px;
+}
 
+.console .scroll-bar:vertical {
+    -fx-opacity: 0.3;
+    -fx-padding: 0;
+     -fx-fill: #505050;
 }
 
 .widget {
