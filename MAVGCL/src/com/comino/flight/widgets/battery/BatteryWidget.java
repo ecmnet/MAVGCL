@@ -71,10 +71,11 @@ public class BatteryWidget extends WidgetPane  {
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
-	private final DecimalFormat fo = new DecimalFormat("#0.0");
-
 	private Task<Integer> task;
 	private AnalysisDataModel model;
+
+	private float voltage = 0;
+	private float capacity = 0;
 
 	public BatteryWidget() {
 		super(300,true);
@@ -96,8 +97,14 @@ public class BatteryWidget extends WidgetPane  {
 					}
 
 					Platform.runLater(() -> {
-						g_voltage.setValue(model.getValue("BATV"));
-						g_capacity.setValue(model.getValue("BATP"));
+						if(Math.abs(voltage - model.getValue("BATV")) > 0.1) {
+							voltage = model.getValue("BATV");
+							g_voltage.setValue(voltage);
+						}
+						if(Math.abs(capacity - model.getValue("BATP")) > 1) {
+							capacity = model.getValue("BATP");
+							g_capacity.setValue(capacity);
+						}
 					});
 				}
 				return 0;
@@ -111,7 +118,7 @@ public class BatteryWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-//		fadeProperty().bind(state.getConnectedProperty());
+		//		fadeProperty().bind(state.getConnectedProperty());
 
 		setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
 		g_voltage.setDecimals(1);
