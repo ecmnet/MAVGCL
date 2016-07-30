@@ -82,7 +82,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end).trim()+"\n";
+					String command = console.getText(index,end).trim()+"\r\n";
 					writeToShell(command);
 					index = end+1;
 					last = command;
@@ -147,6 +147,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					try {
 						console.appendText(new String(bytes,"US-ASCII"));
 						index = console.getText().length();
+					    console.selectRange(index, index);
 						console.requestFocus();
 						console.setScrollTop(Double.MAX_VALUE);
 					} catch (UnsupportedEncodingException e) {
