@@ -36,6 +36,7 @@ import java.io.IOException;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.widgets.air.AirWidget;
 import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.commander.CommanderWidget;
@@ -61,6 +62,9 @@ public class FlightControlPanel extends Pane  {
 
 	@FXML
 	private BatteryWidget battery;
+
+	@FXML
+	private AirWidget air;
 
 	@FXML
 	private DetailsWidget details;
@@ -95,6 +99,9 @@ public class FlightControlPanel extends Pane  {
 
 		if(commander!=null)
 		  commander.setup(control);
+
+		if(air!=null)
+			  air.setup(control);
 	}
 
 }

@@ -46,6 +46,8 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
+import eu.hansolo.airseries.AirCompass;
+import eu.hansolo.airseries.Horizon;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.application.Platform;
@@ -57,12 +59,11 @@ import javafx.scene.paint.Color;
 
 public class AirWidget extends WidgetPane  {
 
+	@FXML
+	private AirCompass g_compass;
 
 	@FXML
-	private Gauge g_voltage;
-
-	@FXML
-	private Gauge g_capacity;
+	private Horizon g_horizon;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
@@ -70,6 +71,8 @@ public class AirWidget extends WidgetPane  {
 
 	private Task<Integer> task;
 	private AnalysisDataModel model;
+
+	private float pitch,roll,bearing;
 
 	public AirWidget() {
 		super(300,true);
@@ -81,7 +84,7 @@ public class AirWidget extends WidgetPane  {
 			@Override
 			protected Integer call() throws Exception {
 				while(true) {
-					LockSupport.parkNanos(1000000000L);
+					Thread.sleep(100);
 					if(isDisabled() || !isVisible()) {
 						continue;
 					}
@@ -91,7 +94,18 @@ public class AirWidget extends WidgetPane  {
 					}
 
 					Platform.runLater(() -> {
-
+						if(Math.abs(bearing - model.getValue("HEAD"))>2) {
+							bearing = model.getValue("HEAD");
+							g_compass.setBearing(bearing);
+						}
+						if(Math.abs(pitch - model.getValue("PITCH"))>2) {
+							pitch = model.getValue("PITCH");
+							g_horizon.setPitch(pitch);
+						}
+						if(Math.abs(roll - model.getValue("ROLL"))>2) {
+							roll = model.getValue("ROLL");
+							g_horizon.setRoll(roll);
+						}
 					});
 				}
 				return 0;
@@ -104,7 +118,7 @@ public class AirWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
-
+		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 
 
 	}
