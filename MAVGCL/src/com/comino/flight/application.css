@@ -121,7 +121,8 @@
 
 .glass  {
 	-fx-font-size: 7.0pt;
-    -fx-background-color: rgba(0.0, 100.0, 100.0, 0.7); -fx-background-radius: 10.0;
+	-fx-background-color: linear-gradient(from 25% 25% to 100% 100%, rgba(0.0, 100.0, 100.0, 0.7), #202020);
+    -fx-background-radius: 10.0;
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1.0px;
     -fx-border-radius: 5.0px;
@@ -130,7 +131,8 @@
 
 .control  {
 	-fx-font-size: 7.0pt;
-    -fx-background-color: rgba(40.0, 40.0, 60.0, 0.95); -fx-background-radius: 10.0;
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, rgba(40.0, 40.0, 60.0, 0.95), #202020);
+    -fx-background-radius: 10.0;
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1.0px;
     -fx-border-radius: 5.0px;
@@ -148,7 +150,7 @@
 }
 
 .tuning {
-  -fx-background: rgba(40.0, 40.0, 60.0, 0.95);
+  -fx-background: transparent;
   -fx-box-border:transparent;
 }
 
@@ -294,7 +296,7 @@
 	-fx-background-color: #404040;
 	-fx-border-radius: 3;
     -fx-background-radius: 3;
-    -fx-padding: 2;
+    -fx-padding: 3;
 }
 
 .menu-item .label {
