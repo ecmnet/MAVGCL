@@ -82,43 +82,49 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end).trim()+"\r\n";
+					String command = console.getText(index,end).trim()+"\n";
 					writeToShell(command);
 					index = end+1;
 					last = command;
+					scrollIntoView();
 				}
 			} else if (ke.getCode().equals(KeyCode.UP)) {
 				if(last!=null) {
 					Platform.runLater(() -> {
-					    console.appendText(last);
+						console.appendText(last);
+						scrollIntoView();
 					});
 				}
 			} else if (ke.getCode().equals(KeyCode.LEFT)) {
 				Platform.runLater(() -> {
 					int end = console.getText().length();
-				    console.selectRange(end, end);
+					console.selectRange(end, end);
 				});
 			}
 		});
 
 		console.mouseTransparentProperty().set(true);
-		console.selectEnd();
 		console.setWrapText(true);
-		console.requestFocus();
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
-				console.selectEnd();
-				if(state.getConnectedProperty().get())
-					writeToShell("\n");
+				Platform.runLater(() -> {
+					if(console.getText().length()==0)
+						writeToShell("\n");
+					scrollIntoView();
+				});
+
 			}
 		});
 
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue()) {
-				console.setText("");
-				if(!isDisabled())
-					writeToShell("\n");
+				Platform.runLater(() -> {
+					console.setText("");
+					if(!isDisabled())
+						writeToShell("\n");
+					scrollIntoView();
+				});
 			}
 			console.setDisable(!nv.booleanValue());
 		});
@@ -147,9 +153,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					try {
 						console.appendText(new String(bytes,"US-ASCII"));
 						index = console.getText().length();
-					    console.selectRange(index, index);
-						console.requestFocus();
-						console.setScrollTop(Double.MAX_VALUE);
+						scrollIntoView();
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
@@ -179,6 +183,12 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			}
 		}
 		control.sendMAVLinkMessage(msg);
+	}
+
+	private void scrollIntoView() {
+		console.requestFocus();
+		console.setScrollTop(Double.MAX_VALUE);
+		console.selectRange(index, index);
 	}
 
 
