@@ -76,9 +76,6 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	@FXML
 	private Label mode;
 
-	@FXML
-	private Label filename;
-
 	private Task<Long> task;
 	private IMAVController control;
 
@@ -87,6 +84,8 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
+
+	private String filename;
 
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));
@@ -117,6 +116,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 					}
 					Platform.runLater(() -> {
 
+						 filename = FileHandler.getInstance().getName();
 
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 							driver.setText("not connected");
@@ -138,13 +138,14 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
 
 
+						if(filename.isEmpty()) {
 						if(control.isConnected()) {
 							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
 							if(control.isSimulation()) {
 								mode.setText("SITL");
 								mode.setStyle("-fx-background-color: #808040;-fx-alignment: center;");
 							} else {
-								mode.setText("Connected");
+								mode.setText("Online");
 								mode.setStyle("-fx-background-color: #804040;-fx-alignment: center;");
 							}
 						} else {
@@ -152,8 +153,11 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 							mode.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
 							time.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
 						}
-
-						filename.setText(FileHandler.getInstance().getName());
+						} else {
+							mode.setText(filename);
+							mode.setStyle("-fx-background-color: #406080;-fx-alignment: center;");
+							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
+						}
 
 
 					});

@@ -13,8 +13,7 @@
 				<Label fx:id="driver" prefHeight="16.0" prefWidth="150.0" styleClass="badge" text="no sensors available" />
 				<Label fx:id="messages" prefHeight="16.0" prefWidth="300" styleClass="message" text="" />
 				<Label fx:id="time" prefHeight="16.0" prefWidth="150" text=""  styleClass="badge"/>
-				<Label fx:id="mode" prefHeight="16.0" prefWidth="80.0" styleClass="badge" />
-				<Label fx:id="filename" prefHeight="16.0" prefWidth="120.0" text="" />
+				<Label fx:id="mode" prefHeight="16.0" prefWidth="140.0" styleClass="badge" />
 			</children>
 		</HBox>
 	</children>
