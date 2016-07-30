@@ -82,7 +82,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end).trim();
+					String command = console.getText(index,end).trim()+"\n";
 					writeToShell(command);
 					index = end+1;
 					last = command;

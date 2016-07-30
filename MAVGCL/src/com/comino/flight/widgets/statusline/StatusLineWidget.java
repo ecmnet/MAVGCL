@@ -119,7 +119,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 						 filename = FileHandler.getInstance().getName();
 
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
-							driver.setText("no sensors available");
+							driver.setText("no sensor info available");
 						else
 							driver.setText(control.getCurrentModel().sys.getSensorString());
 
