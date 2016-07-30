@@ -46,7 +46,13 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 **Screenshot**:
 
+
+
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot6.png)
+
+
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
