@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root prefHeight="30.0" maxHeight="30.0" styleClass="status"
-    type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label  fx:id="version" layoutX="1100.0" layoutY="10.0" prefHeight="18.0" prefWidth="80.0" text="" />
-      <Label  fx:id="driver" layoutX="200.0" layoutY="10.0" prefHeight="18.0" prefWidth="150.0" text="no sensors available" />
-      <Label  styleClass="message" fx:id="messages" layoutX="370.0" layoutY="10.0" prefHeight="18.0" prefWidth="300" text="" />
-      <Label  fx:id="elapsedtime" layoutX="700.0" layoutY="10.0" prefHeight="18.0" prefWidth="100.0" text="" />
-      <Label  layoutX="800.0" layoutY="10.0" prefHeight="18.0" prefWidth="10.0" text="-" />
-      <Label  fx:id="currenttime" layoutX="810.0" layoutY="10.0" prefHeight="18.0" prefWidth="70.0" text="" />
-      <Label  fx:id="filename" layoutX="1000.0" layoutY="10.0" prefHeight="18.0" prefWidth="300.0" text="" />
-      <Label  fx:id="sitl" layoutX="950.0" layoutY="10.0" prefHeight="18.0" prefWidth="50.0" text="" />
-   </children>
+<fx:root maxHeight="30.0" prefHeight="30.0" styleClass="status" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<HBox layoutY="6.0" spacing="10.0">
+			<children>
+				<Label fx:id="version" prefHeight="16.0" prefWidth="185.0" text="" />
+				<Label fx:id="driver" prefHeight="16.0" prefWidth="150.0" styleClass="badge" text="no sensors available" />
+				<Label fx:id="messages" prefHeight="16.0" prefWidth="300" styleClass="message" text="" />
+				<Label fx:id="time" prefHeight="16.0" prefWidth="150" text=""  styleClass="badge"/>
+				<Label fx:id="mode" prefHeight="16.0" prefWidth="80.0" styleClass="badge" />
+				<Label fx:id="filename" prefHeight="16.0" prefWidth="120.0" text="" />
+			</children>
+		</HBox>
+	</children>
 </fx:root>

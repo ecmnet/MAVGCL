@@ -57,9 +57,6 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 	private LEDControl armed;
 
 	@FXML
-	private LEDControl connected;
-
-	@FXML
 	private LEDControl rcavailable;
 
 	@FXML
@@ -139,10 +136,8 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 		Platform.runLater(() -> {
 			if(newStat.isStatus(Status.MSP_CONNECTED)) {
 				details.selectedProperty().set(true);
-				connected.setMode(LEDControl.MODE_ON);
 			}
 			else {
-				connected.setMode(LEDControl.MODE_OFF);
 				details.selectedProperty().set(false);
 				tuning.selectedProperty().set(false);
 			}
