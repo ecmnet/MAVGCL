@@ -57,6 +57,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.TextAlignment;
 
 public class StatusLineWidget extends Pane implements IChartControl  {
 
@@ -70,13 +71,10 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	private Label messages;
 
 	@FXML
-	private Label elapsedtime;
+	private Label time;
 
 	@FXML
-	private Label currenttime;
-
-	@FXML
-	private Label sitl;
+	private Label mode;
 
 	@FXML
 	private Label filename;
@@ -131,16 +129,29 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 							int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
 							int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
-							elapsedtime.setText("TimeFrame: [ "+fo.format(list.get(current_x0_pt).tms/1000));
-							currenttime.setText(fo.format(list.get(current_x1_pt).tms/1000)+" ] sec");
+							time.setText(
+								String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
+										 list.get(current_x0_pt).tms/1000,
+								         list.get(current_x1_pt).tms/1000)
+								);
+						} else
+							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
+
+
+						if(control.isConnected()) {
+							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
+							if(control.isSimulation()) {
+								mode.setText("SITL");
+								mode.setStyle("-fx-background-color: #808040;-fx-alignment: center;");
+							} else {
+								mode.setText("Connected");
+								mode.setStyle("-fx-background-color: #804040;-fx-alignment: center;");
+							}
 						} else {
-							elapsedtime.setText("TimeFrame: [ "+fo.format(0));
-							currenttime.setText(fo.format(0)+" ] sec");
-
+							mode.setText("Offline");
+							mode.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
+							time.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
 						}
-
-						if(control.isSimulation())
-							sitl.setText("SITL");
 
 						filename.setText(FileHandler.getInstance().getName());
 
@@ -164,6 +175,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 				messages.setText(msg.msg);
 			});
 		});
+
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);
