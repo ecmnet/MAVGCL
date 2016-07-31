@@ -42,12 +42,14 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.LEDControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.model.segment.State;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -91,6 +93,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
+	private StateProperties state = null;
 
 	private String filename;
 
@@ -125,6 +128,16 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 						filename = FileHandler.getInstance().getName();
 
+						if(control.isConnected() && !state.getLogLoadedProperty().get()) {
+							messages.setStyle("-fx-text-fill:#F0F0F0;-fx-background-color: #606060;");
+							driver.setText(control.getCurrentModel().sys.getSensorString());
+							driver.setStyle("-fx-text-fill:#F0F0F0; -fx-background-color: #606060;");
+						} else {
+							messages.setStyle("-fx-text-fill:#808080;-fx-background-color: #404040;");
+							driver.setText("no sensor info available");
+							driver.setStyle("-fx-text-fill:#808080;-fx-background-color: #404040;");
+						}
+
 						list = collector.getModelList();
 
 						if(list.size()>0) {
@@ -138,7 +151,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 									);
 						} else
 							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
-
 
 						if(filename.isEmpty()) {
 							if(control.isConnected()) {
@@ -174,22 +186,18 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 		chartControlWidget.addChart(this);
 		this.control = control;
 		this.control.addModeChangeListener(this);
+		this.state = StateProperties.getInstance();
 
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
 				if(filename.isEmpty()) {
-					if(msg.severity == MAV_SEVERITY.MAV_SEVERITY_CRITICAL)
-						messages.setStyle("-fx-background-color: #808080;");
-					else
-						messages.setStyle("-fx-background-color: #404040;");
 					messages.setText(msg.msg);
 				}
 			});
 		});
 
-		driver.setText(" no sensor info available"); driver.setStyle("-fx-text-fill:#808080");
 		rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 
 		Thread th = new Thread(task);
@@ -203,19 +211,11 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 		Platform.runLater(() -> {
 
-		if(newStat.isStatus(Status.MSP_CONNECTED)) {
-			driver.setText(control.getCurrentModel().sys.getSensorString());
-			driver.setStyle("-fx-text-fill:#F0F0F0");
-		} else {
-			driver.setText("no sensor info available");
-			driver.setStyle("-fx-text-fill:#808080");
-		}
-
-		if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
-				&& newStat.isStatus(Status.MSP_CONNECTED))
-			rc.setStyle("-fx-background-color: #408040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
-		else
-			rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
+			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
+					&& newStat.isStatus(Status.MSP_CONNECTED))
+				rc.setStyle("-fx-background-color: #408040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+			else
+				rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 
 		});
 	}
