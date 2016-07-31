@@ -37,13 +37,17 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.flight.widgets.fx.controls.LEDControl;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -59,7 +63,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 
-public class StatusLineWidget extends Pane implements IChartControl  {
+public class StatusLineWidget extends Pane implements IChartControl, IMSPModeChangedListener  {
 
 	@FXML
 	private Label version;
@@ -75,6 +79,9 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 
 	@FXML
 	private Label mode;
+
+	@FXML
+	private Label rc;
 
 	private Task<Long> task;
 	private IMAVController control;
@@ -116,12 +123,7 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 					}
 					Platform.runLater(() -> {
 
-						 filename = FileHandler.getInstance().getName();
-
-						if(!control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
-							driver.setText("no sensor info available");
-						else
-							driver.setText(control.getCurrentModel().sys.getSensorString());
+						filename = FileHandler.getInstance().getName();
 
 						list = collector.getModelList();
 
@@ -130,34 +132,34 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 							int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
 							int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
 							time.setText(
-								String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
-										 list.get(current_x0_pt).tms/1000,
-								         list.get(current_x1_pt).tms/1000)
-								);
+									String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
+											list.get(current_x0_pt).tms/1000,
+											list.get(current_x1_pt).tms/1000)
+									);
 						} else
 							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
 
 
 						if(filename.isEmpty()) {
-						if(control.isConnected()) {
-							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
-							if(control.isSimulation()) {
-								mode.setText("SITL");
-								mode.setStyle("-fx-background-color: #808040;-fx-alignment: center;");
+							if(control.isConnected()) {
+								time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+								if(control.isSimulation()) {
+									mode.setText("SITL");
+									mode.setStyle("-fx-background-color: #808040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+								} else {
+									mode.setText("Online");
+									mode.setStyle("-fx-background-color: #804040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+								}
 							} else {
-								mode.setText("Online");
-								mode.setStyle("-fx-background-color: #804040;-fx-alignment: center;");
+								mode.setText("Offline");
+								mode.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
+								time.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 							}
-						} else {
-							mode.setText("Offline");
-							mode.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
-							time.setStyle("-fx-background-color: #404040;-fx-alignment: center;");
-						}
 						} else {
 							messages.setText("");
 							mode.setText(filename);
-							mode.setStyle("-fx-background-color: #406080;-fx-alignment: center;");
-							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;");
+							mode.setStyle("-fx-background-color: #406080;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 						}
 					});
 				}
@@ -171,20 +173,51 @@ public class StatusLineWidget extends Pane implements IChartControl  {
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
 		chartControlWidget.addChart(this);
 		this.control = control;
+		this.control.addModeChangeListener(this);
+
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
-				if(filename.isEmpty())
-				  messages.setText(msg.msg);
+				if(filename.isEmpty()) {
+					if(msg.severity == MAV_SEVERITY.MAV_SEVERITY_CRITICAL)
+						messages.setStyle("-fx-background-color: #808080;");
+					else
+						messages.setStyle("-fx-background-color: #404040;");
+					messages.setText(msg.msg);
+				}
 			});
 		});
 
+		driver.setText(" no sensor info available"); driver.setStyle("-fx-text-fill:#808080");
+		rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
+	}
+
+	@Override
+	public void update(Status arg0, Status newStat) {
+
+		Platform.runLater(() -> {
+
+		if(newStat.isStatus(Status.MSP_CONNECTED)) {
+			driver.setText(control.getCurrentModel().sys.getSensorString());
+			driver.setStyle("-fx-text-fill:#F0F0F0");
+		} else {
+			driver.setText("no sensor info available");
+			driver.setStyle("-fx-text-fill:#808080");
+		}
+
+		if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
+				&& newStat.isStatus(Status.MSP_CONNECTED))
+			rc.setStyle("-fx-background-color: #408040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+		else
+			rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
+
+		});
 	}
 
 	@Override

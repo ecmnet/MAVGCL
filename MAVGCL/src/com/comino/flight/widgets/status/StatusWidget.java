@@ -57,9 +57,6 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 	private LEDControl armed;
 
 	@FXML
-	private LEDControl rcavailable;
-
-	@FXML
 	private LEDControl althold;
 
 	@FXML
@@ -146,12 +143,6 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 				armed.setMode(LEDControl.MODE_ON);
 			else
 				armed.setMode(LEDControl.MODE_OFF);
-
-			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
-					&& newStat.isStatus(Status.MSP_CONNECTED))
-				rcavailable.setMode(LEDControl.MODE_ON);
-			else
-				rcavailable.setMode(LEDControl.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
 				althold.setMode(LEDControl.MODE_ON);

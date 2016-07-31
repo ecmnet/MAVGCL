@@ -295,7 +295,7 @@
 	-fx-background-color: #404040;
 	-fx-border-radius: 3;
     -fx-background-radius: 3;
-    -fx-padding: 3;
+    -fx-padding: 2;
 }
 
 .menu-item .label {

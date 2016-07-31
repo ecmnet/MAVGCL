@@ -7,13 +7,14 @@
 
 <fx:root maxHeight="30.0" prefHeight="30.0" styleClass="status" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<HBox layoutY="6.0" spacing="10.0">
+		<HBox layoutY="6.0" spacing="7.0">
 			<children>
 				<Label fx:id="version" prefHeight="16.0" prefWidth="185.0" text="" />
 				<Label fx:id="driver" prefHeight="16.0" prefWidth="150.0" styleClass="badge" text="" />
 				<Label fx:id="messages" prefHeight="16.0" prefWidth="300" styleClass="message" text="" />
 				<Label fx:id="time" prefHeight="16.0" prefWidth="160" text=""  styleClass="badge"/>
 				<Label fx:id="mode" prefHeight="16.0" prefWidth="150.0" styleClass="badge" />
+				<Label fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" styleClass="badge" />
 			</children>
 		</HBox>
 	</children>
