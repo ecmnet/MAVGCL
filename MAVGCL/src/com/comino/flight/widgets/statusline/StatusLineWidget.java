@@ -163,10 +163,11 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 									mode.setText("Online"); mode.setBackgroundColor(Color.CRIMSON);
 											}
 							} else {
+								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
 								time.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 							}
 						} else {
-							messages.setText("");
+							mode.setMode(Badge.MODE_ON); messages.setText("");
 							mode.setText(filename); mode.setBackgroundColor(Color.LIGHTSKYBLUE);
 							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 						}
@@ -195,8 +196,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 			});
 		});
 
-		rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
-
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
@@ -207,11 +206,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	public void update(Status arg0, Status newStat) {
 
 		Platform.runLater(() -> {
-
-			if(newStat.isStatus(Status.MSP_CONNECTED))
-				mode.setMode(Badge.MODE_ON);
-			else
-				mode.setMode(Badge.MODE_OFF);
 
 			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
 					&& newStat.isStatus(Status.MSP_CONNECTED))

@@ -14,7 +14,7 @@
 				<Badge fx:id="driver" prefHeight="16.0" prefWidth="150.0" color="GRAY" text="" />
 				<Label fx:id="messages" prefHeight="16.0" prefWidth="300" styleClass="message" text="" />
 				<Label fx:id="time" prefHeight="16.0" prefWidth="160" text=""  styleClass="badge"/>
-				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" />
+				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" />
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="DARKGREEN" />
 			</children>
 		</HBox>
