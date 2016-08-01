@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 
-public class LEDControl extends GridPane implements Runnable {
+public class LED extends GridPane implements Runnable {
 
 	public final static int MODE_OFF 		=  0;
 	public final static int MODE_ON 		=  1;
@@ -22,7 +22,7 @@ public class LEDControl extends GridPane implements Runnable {
 	private Circle circle = null;
 	private Label  label  = null;
 
-	public LEDControl() {
+	public LED() {
 		super();
 
 		this.color = Color.RED;

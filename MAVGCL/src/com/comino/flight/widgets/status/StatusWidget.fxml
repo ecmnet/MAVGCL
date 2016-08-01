@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.control.CheckBox?>
-<?import com.comino.flight.widgets.fx.controls.LEDControl?>
+<?import com.comino.flight.widgets.fx.controls.Badge?>
 
 <fx:root prefHeight="265.0" prefWidth="183.0" type="javafx.scene.layout.Pane" styleClass="widget"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
@@ -45,25 +45,25 @@
 			</rowConstraints>
 			<children>
 
-				<LEDControl fx:id="armed" text="Motors armed" color="DARKORANGE"
+				<Badge fx:id="armed" text="Motors armed" color="DARKORANGE"
 					GridPane.rowIndex="0" />
 
 				<Separator maxWidth="-Infinity" prefHeight="0.0"
 					prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
 
-				<LEDControl fx:id="althold" text="Altitude hold" color="DARKCYAN"
+				<Badge fx:id="althold" text="Altitude hold" color="DARKCYAN"
 					GridPane.rowIndex="2" />
-				<LEDControl fx:id="poshold" text="Position hold" color="DARKCYAN"
+				<Badge fx:id="poshold" text="Position hold" color="DARKCYAN"
 					GridPane.rowIndex="3" />
 
 				<Separator maxWidth="-Infinity" prefHeight="0.0"
 					prefWidth="145.0" GridPane.columnSpan="2" GridPane.rowIndex="4" />
 
-				<LEDControl fx:id="mission" text="Mission" color="DARKCYAN"
+				<Badge fx:id="mission" text="Mission" color="DARKCYAN"
 					GridPane.rowIndex="5" />
-				<LEDControl fx:id="offboard" text="Offboard" color="DARKCYAN"
+				<Badge fx:id="offboard" text="Offboard" color="DARKCYAN"
 					GridPane.rowIndex="6" />
-				<LEDControl fx:id="landed" text="Landed" color="DARKCYAN"
+				<Badge fx:id="landed" text="Landed" color="DARKCYAN"
 					GridPane.rowIndex="7" />
 
 				<Separator maxWidth="-Infinity" prefHeight="0.0"

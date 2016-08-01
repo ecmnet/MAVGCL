@@ -37,8 +37,7 @@ import java.io.IOException;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.fx.controls.LEDControl;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.flight.widgets.fx.controls.*;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
@@ -54,22 +53,22 @@ import javafx.scene.layout.Pane;
 public class StatusWidget extends WidgetPane implements IMSPModeChangedListener {
 
 	@FXML
-	private LEDControl armed;
+	private Badge armed;
 
 	@FXML
-	private LEDControl althold;
+	private Badge althold;
 
 	@FXML
-	private LEDControl poshold;
+	private Badge poshold;
 
 	@FXML
-	private LEDControl mission;
+	private Badge mission;
 
 	@FXML
-	private LEDControl offboard;
+	private Badge offboard;
 
 	@FXML
-	private LEDControl landed;
+	private Badge landed;
 
 	@FXML
 	private CheckBox details;
@@ -140,40 +139,40 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 			}
 
 			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
-				armed.setMode(LEDControl.MODE_ON);
+				armed.setMode(LED.MODE_ON);
 			else
-				armed.setMode(LEDControl.MODE_OFF);
+				armed.setMode(LED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
-				althold.setMode(LEDControl.MODE_ON);
+				althold.setMode(LED.MODE_ON);
 			else
-				althold.setMode(LEDControl.MODE_OFF);
+				althold.setMode(LED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
-				poshold.setMode(LEDControl.MODE_ON);
+				poshold.setMode(LED.MODE_ON);
 			else
-				poshold.setMode(LEDControl.MODE_OFF);
+				poshold.setMode(LED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
-				mission.setMode(LEDControl.MODE_ON);
+				mission.setMode(LED.MODE_ON);
 			else
 				if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
-					mission.setMode(LEDControl.MODE_BLINK);
+					mission.setMode(LED.MODE_BLINK);
 				else
-					mission.setMode(LEDControl.MODE_OFF);
+					mission.setMode(LED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
-				offboard.setMode(LEDControl.MODE_ON);
+				offboard.setMode(LED.MODE_ON);
 			else
-				offboard.setMode(LEDControl.MODE_OFF);
+				offboard.setMode(LED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-				landed.setMode(LEDControl.MODE_ON);
+				landed.setMode(LED.MODE_ON);
 			else {
 				if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
-					landed.setMode(LEDControl.MODE_BLINK);
+					landed.setMode(LED.MODE_BLINK);
 				else
-					landed.setMode(LEDControl.MODE_OFF);
+					landed.setMode(LED.MODE_OFF);
 			}
 		});
 	}
