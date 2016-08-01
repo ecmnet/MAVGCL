@@ -3,15 +3,8 @@ package com.comino.flight.widgets.fx.controls;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
 public class Badge extends Label {
@@ -51,7 +44,7 @@ public class Badge extends Label {
 		if(this.mode==mode)
 			return;
 
-		timeline.stop();
+		timeline.stop(); setDisable(false);
 
 		switch(mode) {
 		case MODE_OFF:
@@ -64,8 +57,8 @@ public class Badge extends Label {
 			setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
 			timeline.play(); break;
 		case MODE_ERROR:
-			setStyle(DEFAULT_CSS+"-fx-background-color: #904040;-fx-text-fill:#F0F0F0;");
-			break;
+			setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
+			timeline.play(); break;
 		default:
 			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 			break;
@@ -79,10 +72,10 @@ public class Badge extends Label {
 
 	public void setColor(String value) {
 		Color c = Color.valueOf(value);
-		this.color = "#"+Integer.toHexString(c.darker().desaturate().desaturate().hashCode());
+		this.color = "#"+Integer.toHexString(c.darker().desaturate().hashCode());
 		if(c.getBrightness()<0.7)
 			this.textColor ="#"+Integer.toHexString(c.brighter().brighter().hashCode());
 		else
-			this.textColor ="#"+Integer.toHexString(c.darker().darker().hashCode());
+			this.textColor ="#"+Integer.toHexString(c.darker().darker().darker().hashCode());
 	}
 }
