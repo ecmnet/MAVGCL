@@ -63,7 +63,7 @@
 					GridPane.rowIndex="5" />
 				<Badge fx:id="offboard" text="Offboard" color="DARKCYAN"
 					GridPane.rowIndex="6" />
-				<Badge fx:id="landed" text="Landed" color="DARKCYAN"
+				<Badge fx:id="landed" text="Landed" color="DARKCYAN" rate="500"
 					GridPane.rowIndex="7" />
 
 				<Separator maxWidth="-Infinity" prefHeight="0.0"

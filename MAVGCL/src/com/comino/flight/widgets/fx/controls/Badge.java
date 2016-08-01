@@ -24,27 +24,22 @@ public class Badge extends Label {
 
 	public Badge() {
 		super();
-		init(Color.DARKGRAY,300);
+		this.setPrefWidth(999);
+		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
+		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 	}
 
-	public void init(Color color, int rate_ms) {
-		this.setPrefWidth(999);
-		this.color   = "#"+Integer.toHexString(color.hashCode());
-		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
-		timeline = new Timeline(new KeyFrame(
-				Duration.millis(rate_ms),
-				ae -> {
-					toggle = !toggle; setDisable(toggle);
-				}));
-		timeline.setCycleCount(Animation.INDEFINITE);
+	public void setMode(int mode, Color color) {
+		this.mode = mode;
+		setBackgroundColor(color);
 	}
 
 	public void setMode(int mode) {
 
-		if(this.mode==mode)
-			return;
+		if(timeline!=null)
+		  timeline.stop();
 
-		timeline.stop(); setDisable(false);
+		setDisable(false);
 
 		switch(mode) {
 		case MODE_OFF:
@@ -55,10 +50,12 @@ public class Badge extends Label {
 			break;
 		case MODE_BLINK:
 			setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
-			timeline.play(); break;
+			if(timeline!=null) timeline.play();
+			break;
 		case MODE_ERROR:
 			setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
-			timeline.play(); break;
+			if(timeline!=null) timeline.play();
+			break;
 		default:
 			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 			break;
@@ -66,16 +63,34 @@ public class Badge extends Label {
 		this.mode = mode;
 	}
 
+
+	public void setBackgroundColor(Color color) {
+		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
+		if(color.getBrightness()<0.7)
+			this.textColor ="#F0F0F0";
+		else
+			this.textColor ="#"+Integer.toHexString(color.darker().darker().darker().darker().hashCode());
+		setMode(mode);
+	}
+
+	public void setRate(String rate) {
+		timeline = new Timeline(new KeyFrame(
+				Duration.millis(Integer.parseInt(rate)),
+				ae -> {
+					toggle = !toggle; setDisable(toggle);
+				}));
+		timeline.setCycleCount(Animation.INDEFINITE);
+	}
+
+	public String getRate() {
+		return null;
+	}
+
 	public String getColor() {
 		return color.toString();
 	}
 
 	public void setColor(String value) {
-		Color c = Color.valueOf(value);
-		this.color = "#"+Integer.toHexString(c.darker().desaturate().hashCode());
-		if(c.getBrightness()<0.7)
-			this.textColor ="#"+Integer.toHexString(c.brighter().brighter().hashCode());
-		else
-			this.textColor ="#"+Integer.toHexString(c.darker().darker().darker().hashCode());
+		setBackgroundColor(Color.valueOf(value));
 	}
 }

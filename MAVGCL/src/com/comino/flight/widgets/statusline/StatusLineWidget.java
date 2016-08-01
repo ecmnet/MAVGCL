@@ -45,6 +45,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.flight.widgets.fx.controls.Badge;
 import com.comino.flight.widgets.fx.controls.LED;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
@@ -63,6 +64,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 public class StatusLineWidget extends Pane implements IChartControl, IMSPModeChangedListener  {
@@ -71,7 +73,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private Label version;
 
 	@FXML
-	private Label driver;
+	private Badge driver;
 
 	@FXML
 	private Label messages;
@@ -80,10 +82,10 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private Label time;
 
 	@FXML
-	private Label mode;
+	private Badge mode;
 
 	@FXML
-	private Label rc;
+	private Badge rc;
 
 	private Task<Long> task;
 	private IMAVController control;
@@ -131,11 +133,11 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 						if(control.isConnected() && !state.getLogLoadedProperty().get()) {
 							messages.setStyle("-fx-text-fill:#F0F0F0;-fx-background-color: #606060;");
 							driver.setText(control.getCurrentModel().sys.getSensorString());
-							driver.setStyle("-fx-text-fill:#F0F0F0; -fx-background-color: #606060;");
+							driver.setMode(Badge.MODE_ON);
 						} else {
 							messages.setStyle("-fx-text-fill:#808080;-fx-background-color: #404040;");
 							driver.setText("no sensor info available");
-							driver.setStyle("-fx-text-fill:#808080;-fx-background-color: #404040;");
+							driver.setMode(Badge.MODE_OFF);
 						}
 
 						list = collector.getModelList();
@@ -156,21 +158,16 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 							if(control.isConnected()) {
 								time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 								if(control.isSimulation()) {
-									mode.setText("SITL");
-									mode.setStyle("-fx-background-color: #808040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
-								} else {
-									mode.setText("Online");
-									mode.setStyle("-fx-background-color: #804040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
-								}
+									mode.setText("SITL"); mode.setBackgroundColor(Color.BEIGE);
+									} else {
+									mode.setText("Online"); mode.setBackgroundColor(Color.CRIMSON);
+											}
 							} else {
-								mode.setText("Offline");
-								mode.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 								time.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
 							}
 						} else {
 							messages.setText("");
-							mode.setText(filename);
-							mode.setStyle("-fx-background-color: #406080;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+							mode.setText(filename); mode.setBackgroundColor(Color.LIGHTSKYBLUE);
 							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 						}
 					});
@@ -211,11 +208,16 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 		Platform.runLater(() -> {
 
+			if(newStat.isStatus(Status.MSP_CONNECTED))
+				mode.setMode(Badge.MODE_ON);
+			else
+				mode.setMode(Badge.MODE_OFF);
+
 			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
 					&& newStat.isStatus(Status.MSP_CONNECTED))
-				rc.setStyle("-fx-background-color: #408040;-fx-alignment: center;-fx-text-fill:#F0F0F0");
+				rc.setMode(Badge.MODE_ON);
 			else
-				rc.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
+				rc.setMode(Badge.MODE_OFF);
 
 		});
 	}
