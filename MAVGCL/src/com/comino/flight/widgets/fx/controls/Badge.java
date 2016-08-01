@@ -24,6 +24,7 @@ public class Badge extends Label {
 
 	public Badge() {
 		super();
+		this.setDisable(false);
 		this.setPrefWidth(999);
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
@@ -38,8 +39,8 @@ public class Badge extends Label {
 
 		if(timeline!=null)
 		  timeline.stop();
-
-		setDisable(false);
+		toggle=false;
+		setDisable(toggle);
 
 		switch(mode) {
 		case MODE_OFF:
