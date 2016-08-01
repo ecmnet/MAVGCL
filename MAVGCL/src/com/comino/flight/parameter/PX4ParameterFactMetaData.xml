@@ -3660,7 +3660,7 @@ EPV used if greater than this value</short_desc>
       <decimal>2</decimal>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="10.0" name="MPC_ACC_HOR_MAX" type="FLOAT">
+    <parameter default="5.0" name="MPC_ACC_HOR_MAX" type="FLOAT">
       <short_desc>Maximum horizonal acceleration in velocity controlled modes</short_desc>
       <min>2.0</min>
       <max>15.0</max>

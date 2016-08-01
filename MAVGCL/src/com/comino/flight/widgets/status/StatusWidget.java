@@ -169,7 +169,7 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 			if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
 				landed.setMode(LED.MODE_ON);
 			else {
-				if((newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF) ) && newStat.isStatus(Status.MSP_CONNECTED))
+				if((newStat.isStatus(Status.MSP_MODE_LANDING)) && newStat.isStatus(Status.MSP_CONNECTED))
 					landed.setMode(LED.MODE_BLINK);
 				else
 					landed.setMode(LED.MODE_OFF);
