@@ -33,26 +33,19 @@
 
 package com.comino.flight.widgets.battery;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.utils.ExecutorService;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class BatteryWidget extends WidgetPane  {
@@ -110,8 +103,6 @@ public class BatteryWidget extends WidgetPane  {
 				return 0;
 			}
 		};
-
-
 	}
 
 

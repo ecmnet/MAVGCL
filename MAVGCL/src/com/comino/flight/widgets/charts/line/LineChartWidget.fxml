@@ -12,7 +12,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Label?>
 
-<fx:root  minHeight="250.0" styleClass="widget" minWidth="600"
+<fx:root  minHeight="250.0" styleClass="glass" minWidth="600"
 	type="BorderPane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
 		<SectionLineChart fx:id="linechart" animated="false" createSymbols="false"
@@ -20,7 +20,7 @@
 			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
 			horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0"
 			legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="220.0"
-			verticalZeroLineVisible="false" >
+			verticalZeroLineVisible="false">
 			<xAxis>
 				<MovingAxis animated="true" lowerBound="0"
 					minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0"
