@@ -54,9 +54,11 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 public class DetailsWidget extends WidgetPane  {
 
@@ -147,8 +149,9 @@ public class DetailsWidget extends WidgetPane  {
 					}
 
 					Platform.runLater(() -> {
+						int i=0;
 						for(KeyFigure figure : figures) {
-							figure.setValue(model);
+							figure.setValue(model,i++);
 						}
 					});
 				}
@@ -179,26 +182,38 @@ public class DetailsWidget extends WidgetPane  {
 	private class KeyFigure {
 		KeyFigureMetaData kf  = null;
 		Label  value = null;
+		GridPane p = null;
+		DashLabel label = null;
+
+		float val=0;
 
 		public KeyFigure(GridPane grid, String k, int row) {
+			p = new GridPane();
+			p.setPadding(new Insets(0,2,0,2));
 			this.kf = meta.getMetaData(k);
 			if(kf==null) {
 				grid.add(new Label(),0,row);
 			} else {
-			DashLabel l1 = new DashLabel(kf.desc1);
-			l1.setPrefWidth(130); l1.setPrefHeight(19);
-			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(55); value.setAlignment(Pos.CENTER_RIGHT);
-			grid.add(value, 1, row);
-			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
-			grid.add(l3, 2, row);
+				label = new DashLabel(kf.desc1);
+				label.setPrefWidth(130); label.setPrefHeight(19);
+				value = new Label("-"); value.setPrefWidth(55); value.setAlignment(Pos.CENTER_RIGHT);
+				Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
+				p.addRow(row, label,value,l3);
+				grid.add(p, 0, row);
 			}
 		}
 
-		public void setValue(AnalysisDataModel model) {
+		public void setValue(AnalysisDataModel model, int row) {
 			if(kf!=null) {
+				val =model.getValue(kf);
+				if(kf.min!=kf.max) {
+					if(val < kf.min || val > kf.max)
+						p.setStyle("-fx-background-color:#004040;");
+					else
+						p.setStyle("-fx-background-color:transparent;");
+				}
 				f.applyPattern(kf.mask);
-			    value.setText(f.format(model.getValue(kf)));
+				value.setText(f.format(val));
 			}
 		}
 	}

@@ -54,4 +54,8 @@ public class DashLabel extends GridPane {
         label.setText(value);
     }
 
+    public void setDashColor(Color color) {
+    	line.setStroke(color.darker());
+    }
+
 }

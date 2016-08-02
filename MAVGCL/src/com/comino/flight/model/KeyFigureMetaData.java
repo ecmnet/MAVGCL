@@ -53,6 +53,8 @@ public class KeyFigureMetaData {
 	public String uom;
 	public String mask;
 	public int    hash;
+	public float  min;
+	public float  max;
 
 	private String key;
 
@@ -70,6 +72,11 @@ public class KeyFigureMetaData {
 		this.mask   = mask;
 		this.key    = key;
 		this.hash   = key.toLowerCase().hashCode();
+	}
+
+	public void setBounds(float min, float max) {
+		this.min = min;
+		this.max = max;
 	}
 
 	public void setSource(int type,String field, String class_c, String[] params) {

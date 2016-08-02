@@ -167,7 +167,6 @@ public class ChartControlWidget extends WidgetPane  {
 			if(chart.getScrollProperty()!=null)
 				chart.getScrollProperty().set(1);
 		}
-
 	}
 
 
@@ -182,7 +181,6 @@ public class ChartControlWidget extends WidgetPane  {
 				chart.getScrollProperty().set(1);
 			chart.refreshChart();
 		}
-
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}

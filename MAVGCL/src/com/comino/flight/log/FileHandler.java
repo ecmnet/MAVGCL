@@ -89,7 +89,6 @@ public class FileHandler {
 		return handler;
 	}
 
-
 	private FileHandler(Stage stage, IMAVController control) {
 		super();
 		this.stage = stage;
@@ -108,11 +107,9 @@ public class FileHandler {
 		this.name = name;
 	}
 
-
 	public String getBasePath() {
 		return System.getProperty("user.home")+BASEPATH;
 	}
-
 
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
