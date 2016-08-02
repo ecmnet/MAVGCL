@@ -186,25 +186,27 @@
 
 	<!-- Attitude  -->
 
-	<KeyFigure desc="Roll" uom="deg" mask="#0.00" key="ROLL">
+	<KeyFigure desc="Roll" uom="deg" mask="#0.0" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.roll"></ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
+		<Validity min="-10" max="10"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Pitch" uom="deg" mask="#0.00" key="PITCH">
+	<KeyFigure desc="Pitch" uom="deg" mask="#0.0" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
+		<Validity min="-10" max="10"/>
 		<PX4Source field="ATT.Pitch"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.pitch"></ULogSource>
 	</KeyFigure>
 
-	<KeyFigure desc="Yaw" uom="deg" mask="#0.00" key="YAW">
+	<KeyFigure desc="Yaw" uom="deg" mask="#0.0" key="YAW">
 		<MSPSource class="attitude" field="y"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -906,6 +908,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<Validity min="0" max="10.5"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">

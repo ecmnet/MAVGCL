@@ -215,6 +215,14 @@ public class AnalysisDataModelMetaData extends Observable {
 //				buildConverter(keyfigure,node);
 //			}
 
+			if(node.getNodeName().equals("Validity")) {
+				keyfigure.setBounds(
+                 Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
+                 Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
+                );
+
+			}
+
 			if(node.getNodeName().equals("Groups")) {
 				for(int j=0;j<node.getChildNodes().getLength();j++) {
 					Node gr_node = node.getChildNodes().item(j);
