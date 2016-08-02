@@ -19,7 +19,7 @@
 				<StatusWidget fx:id="status" />
 				<ControlWidget fx:id="control" />
 				<BatteryWidget fx:id="battery" />
-				<!--  <AirWidget fx:id="air" /> -->
+				<!--   <AirWidget fx:id="air" /> -->
 				<RecordControlWidget fx:id="recordcontrol" />
 				<ChartControlWidget fx:id="chartcontrol" />
 				<CommanderWidget fx:id="commander"/>

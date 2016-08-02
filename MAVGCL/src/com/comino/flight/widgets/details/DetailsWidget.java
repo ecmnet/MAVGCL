@@ -188,7 +188,7 @@ public class DetailsWidget extends WidgetPane  {
 			DashLabel l1 = new DashLabel(kf.desc1);
 			l1.setPrefWidth(130); l1.setPrefHeight(19);
 			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(50); value.setAlignment(Pos.CENTER_RIGHT);
+			value = new Label("-"); value.setPrefWidth(55); value.setAlignment(Pos.CENTER_RIGHT);
 			grid.add(value, 1, row);
 			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
 			grid.add(l3, 2, row);
