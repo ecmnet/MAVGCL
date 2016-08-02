@@ -107,7 +107,7 @@
 				<DetailsWidget fx:id="details"
 				    StackPane.alignment="TOP_RIGHT"
 				    maxWidth="185"  visible="false"
-					styleClass="glass">
+					styleClass="widget">
 					<StackPane.margin>
 						<Insets right="10.0" top="32.0" bottom="0.0" />
 					</StackPane.margin>
@@ -116,7 +116,7 @@
 				<TuningWidget fx:id="tuning"
 				    StackPane.alignment="TOP_RIGHT"
 				    maxWidth="245"  visible="false"
-					styleClass="control">
+					styleClass="widget">
 					<StackPane.margin>
 						<Insets right="10.0" top="32.0" bottom="0.0" />
 					</StackPane.margin>

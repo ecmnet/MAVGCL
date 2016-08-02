@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.control.CheckBox?>
+<?import com.comino.flight.widgets.fx.controls.*?>
+
+<fx:root prefWidth="183.0" type="javafx.scene.layout.Pane" styleClass="widget"
+	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+				<GridPane layoutX="16.0" layoutY="10.0" prefWidth="157.0" >
+					<columnConstraints>
+						<ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0"
+							minWidth="10.0" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints minHeight="20.0"/>
+						<RowConstraints minHeight="20.0"/>
+						<RowConstraints minHeight="30.0"/>
+					</rowConstraints>
+					<children>
+						<CheckBox fx:id="details" GridPane.rowIndex="0"
+							GridPane.columnIndex="0" text="Details" />
+						<CheckBox fx:id="tuning" GridPane.rowIndex="1"
+							GridPane.columnIndex="0" text="Parameters" />
+						<CheckBox fx:id="video" GridPane.rowIndex="2"
+							GridPane.columnIndex="0" text="Video" />
+						<CheckBox fx:id="messages" GridPane.rowIndex="0"
+							GridPane.columnIndex="1" text="Messages" />
+					    <CheckBox fx:id="experimental" GridPane.rowIndex="1"
+							GridPane.columnIndex="1" text="Control" />
+					</children>
+				</GridPane>
+	</children>
+</fx:root>

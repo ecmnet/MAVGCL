@@ -53,37 +53,23 @@ import javafx.scene.layout.Pane;
 public class StatusWidget extends WidgetPane implements IMSPModeChangedListener {
 
 	@FXML
-	private Badge armed;
+	private DashLabelLED armed;
 
 	@FXML
-	private Badge althold;
+	private DashLabelLED althold;
 
 	@FXML
-	private Badge poshold;
+	private DashLabelLED poshold;
 
 	@FXML
-	private Badge mission;
+	private DashLabelLED mission;
 
 	@FXML
-	private Badge offboard;
+	private DashLabelLED offboard;
 
 	@FXML
-	private Badge landed;
+	private DashLabelLED landed;
 
-	@FXML
-	private CheckBox details;
-
-	@FXML
-	private CheckBox tuning;
-
-	@FXML
-	private CheckBox video;
-
-	@FXML
-	private CheckBox messages;
-
-	@FXML
-	private CheckBox experimental;
 
 	private IMAVController control;
 
@@ -95,34 +81,11 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 		FXMLLoadHelper.load(this, "StatusWidget.fxml");
 	}
 
-	public BooleanProperty getDetailVisibility() {
-		return details.selectedProperty();
-	}
-
-	public BooleanProperty getVideoVisibility() {
-		return video.selectedProperty();
-	}
-
-	public BooleanProperty getExperimentalVisibility() {
-		return experimental.selectedProperty();
-	}
-
-	public BooleanProperty getTuningVisibility() {
-		return tuning.selectedProperty();
-	}
-
-	public BooleanProperty getMessageVisibility() {
-		return messages.selectedProperty();
-	}
-
-
 	public void setup(IMAVController control) {
 
 		this.model = control.getCurrentModel();
 		this.control = control;
 		this.control.addModeChangeListener(this);
-		this.details.selectedProperty().set(false);
-		this.messages.selectedProperty().set(true);
 		update(model.sys,model.sys);
 	}
 
@@ -130,13 +93,6 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 	public void update(Status arg0, Status newStat) {
 
 		Platform.runLater(() -> {
-			if(newStat.isStatus(Status.MSP_CONNECTED)) {
-				details.selectedProperty().set(true);
-			}
-			else {
-				details.selectedProperty().set(false);
-				tuning.selectedProperty().set(false);
-			}
 
 			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
 				armed.setMode(LED.MODE_ON);

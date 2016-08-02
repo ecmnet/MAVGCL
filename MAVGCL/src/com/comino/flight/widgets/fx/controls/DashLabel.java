@@ -7,12 +7,15 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+
 
 public class DashLabel extends GridPane {
 
-	private Line  line = null;
+	private Line  line      = null;
 	private Label label     = null;
+
 
 	@SuppressWarnings("restriction")
 	public DashLabel() {
@@ -50,6 +53,5 @@ public class DashLabel extends GridPane {
     public void setText(String value) {
         label.setText(value);
     }
-
 
 }

@@ -1,5 +1,6 @@
 
 <?import com.comino.flight.widgets.status.StatusWidget?>
+<?import com.comino.flight.widgets.control.ControlWidget?>
 <?import com.comino.flight.widgets.record.control.RecordControlWidget?>
 <?import com.comino.flight.widgets.charts.control.ChartControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
@@ -16,6 +17,7 @@
 		<padding><Insets top="5" left="5" bottom="0" right="0"/></padding>
 			<children>
 				<StatusWidget fx:id="status" />
+				<ControlWidget fx:id="control" />
 				<BatteryWidget fx:id="battery" />
 				<!--  <AirWidget fx:id="air" /> -->
 				<RecordControlWidget fx:id="recordcontrol" />

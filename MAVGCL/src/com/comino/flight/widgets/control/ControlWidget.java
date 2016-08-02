@@ -30,82 +30,95 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
-package com.comino.flight.panel.control;
+
+package com.comino.flight.widgets.control;
 
 import java.io.IOException;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.air.AirWidget;
-import com.comino.flight.widgets.battery.BatteryWidget;
-import com.comino.flight.widgets.charts.control.ChartControlWidget;
-import com.comino.flight.widgets.commander.CommanderWidget;
-import com.comino.flight.widgets.control.ControlWidget;
-import com.comino.flight.widgets.details.DetailsWidget;
-import com.comino.flight.widgets.record.control.RecordControlWidget;
-import com.comino.flight.widgets.status.StatusWidget;
+import com.comino.flight.widgets.fx.controls.*;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
 
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 
-public class FlightControlPanel extends Pane  {
+public class ControlWidget extends WidgetPane implements IMSPModeChangedListener {
 
 	@FXML
-	private ControlWidget control;
+	private CheckBox details;
 
 	@FXML
-	private StatusWidget status;
+	private CheckBox tuning;
 
 	@FXML
-	private RecordControlWidget recordcontrol;
+	private CheckBox video;
 
 	@FXML
-	private ChartControlWidget  chartcontrol;
+	private CheckBox messages;
 
 	@FXML
-	private BatteryWidget battery;
+	private CheckBox experimental;
 
-	@FXML
-	private AirWidget air;
+	private IMAVController control;
 
-	@FXML
-	private DetailsWidget details;
+	private DataModel model;
 
-	@FXML
-	private CommanderWidget commander;
+	public ControlWidget() {
+		super(300,true);
 
-	public FlightControlPanel() {
-		FXMLLoadHelper.load(this, "FlightControlPanel.fxml");
+		FXMLLoadHelper.load(this, "ControlWidget.fxml");
 	}
 
-	public RecordControlWidget getRecordControl() {
-		return recordcontrol;
+	public BooleanProperty getDetailVisibility() {
+		return details.selectedProperty();
 	}
 
-	public ChartControlWidget getChartControl() {
-		return chartcontrol;
+	public BooleanProperty getVideoVisibility() {
+		return video.selectedProperty();
 	}
 
-	public ControlWidget getControl() {
-		return control;
+	public BooleanProperty getExperimentalVisibility() {
+		return experimental.selectedProperty();
 	}
+
+	public BooleanProperty getTuningVisibility() {
+		return tuning.selectedProperty();
+	}
+
+	public BooleanProperty getMessageVisibility() {
+		return messages.selectedProperty();
+	}
+
 
 	public void setup(IMAVController control) {
 
-		status.setup(control);
-		recordcontrol.setup(control, chartcontrol, status);
-		battery.setup(control);
+		this.model = control.getCurrentModel();
+		this.control = control;
+		this.control.addModeChangeListener(this);
+		this.details.selectedProperty().set(false);
+		this.messages.selectedProperty().set(true);
+		update(model.sys,model.sys);
+	}
 
-		if(details!=null)
-			details.setup(control);
+	@Override
+	public void update(Status arg0, Status newStat) {
 
-		if(commander!=null)
-		  commander.setup(control);
+		if(newStat.isStatus(Status.MSP_CONNECTED)) {
+			details.selectedProperty().set(true);
+		}
+		else {
+			details.selectedProperty().set(false);
+			tuning.selectedProperty().set(false);
+		}
 
-		if(air!=null)
-			  air.setup(control);
 	}
 
 }

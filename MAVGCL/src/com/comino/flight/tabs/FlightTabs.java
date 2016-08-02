@@ -131,20 +131,20 @@ public class FlightTabs extends Pane {
 
 		if(camera!=null) {
 			camera.setup(control);
-			camera.fadeProperty().bind(flightControl.getStatusControl().getVideoVisibility());
+			camera.fadeProperty().bind(flightControl.getControl().getVideoVisibility());
 		}
 
-		details.fadeProperty().bind(flightControl.getStatusControl().getDetailVisibility());
+		details.fadeProperty().bind(flightControl.getControl().getDetailVisibility());
 		details.setup(control);
 
-		tuning.fadeProperty().bind(flightControl.getStatusControl().getTuningVisibility());
+		tuning.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
 		tuning.setup(control);
 
-		messages.disableProperty().bind(flightControl.getStatusControl().getMessageVisibility().not());
+		messages.disableProperty().bind(flightControl.getControl().getMessageVisibility().not());
 		messages.setup(control);
 
 
-		experimental.fadeProperty().bind(flightControl.getStatusControl().getExperimentalVisibility());
+		experimental.fadeProperty().bind(flightControl.getControl().getExperimentalVisibility());
 		experimental.setup(control);
 
 		statusline.registerMessageWidget(messages);
@@ -177,7 +177,7 @@ public class FlightTabs extends Pane {
 			this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
 		});
 
-		flightControl.getStatusControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
+		flightControl.getControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
 
 			if(tuning.isVisible())
 				return;
@@ -194,7 +194,7 @@ public class FlightTabs extends Pane {
 			}
 		});
 
-		flightControl.getStatusControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
+		flightControl.getControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
