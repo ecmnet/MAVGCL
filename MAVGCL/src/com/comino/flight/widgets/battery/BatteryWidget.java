@@ -120,9 +120,9 @@ public class BatteryWidget extends WidgetPane  {
 
 		//		fadeProperty().bind(state.getConnectedProperty());
 
-		setupGauge(g_voltage,8,13,"V",Color.DARKORANGE);
+		setupGauge(g_voltage,8,13,"V",Color.DARKCYAN);
 		g_voltage.setDecimals(1);
-		setupGauge(g_capacity,0,100,"%",Color.DEEPSKYBLUE);
+		setupGauge(g_capacity,0,100,"%",Color.DARKCYAN);
 		g_capacity.setDecimals(0);
 
 	}

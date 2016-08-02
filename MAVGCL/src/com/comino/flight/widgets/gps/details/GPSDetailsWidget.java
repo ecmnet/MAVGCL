@@ -44,6 +44,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.widgets.fx.controls.DashLabel;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -146,12 +147,12 @@ public class GPSDetailsWidget extends WidgetPane  {
 			if(kf==null) {
 				grid.add(new Label(),0,row);
 			} else {
-			Label l1 = new Label(kf.desc1+" :");
-			l1.setPrefWidth(95); l1.setPrefHeight(19);
+			DashLabel l1 = new DashLabel(kf.desc1);
+			l1.setPrefWidth(130); l1.setPrefHeight(19);
 			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(70); value.setAlignment(Pos.CENTER_RIGHT);
+			value = new Label("-"); value.setPrefWidth(50); value.setAlignment(Pos.CENTER_RIGHT);
 			grid.add(value, 1, row);
-			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(20);
+			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
 			grid.add(l3, 2, row);
 			}
 		}
@@ -163,6 +164,4 @@ public class GPSDetailsWidget extends WidgetPane  {
 			}
 		}
 	}
-
-
 }

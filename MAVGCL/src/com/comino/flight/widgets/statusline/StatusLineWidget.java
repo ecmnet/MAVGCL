@@ -162,8 +162,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 									 mode.setBackgroundColor(Color.BEIGE);
 									 mode.setText("SITL");
 									} else {
-										 mode.setBackgroundColor(Color.DARKRED);
-									 mode.setText("Online");
+										 mode.setBackgroundColor(Color.DARKCYAN);
+									 mode.setText("Connected");
 											}
 							} else {
 								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
