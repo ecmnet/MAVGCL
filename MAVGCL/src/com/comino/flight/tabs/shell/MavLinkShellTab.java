@@ -134,8 +134,12 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					scrollIntoView();
 				});
 
-			} else
+			} else {
 				writeToShell(null);
+				Platform.runLater(() -> {
+					console.clear();
+				});
+			}
 		});
 
 		return this;
