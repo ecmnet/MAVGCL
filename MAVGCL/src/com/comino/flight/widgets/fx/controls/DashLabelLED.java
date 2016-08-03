@@ -74,6 +74,10 @@ public class DashLabelLED extends GridPane {
 	}
 
 	public void setMode(int mode) {
+
+		if(timeline!=null)
+		   timeline.stop();
+
 		switch(mode) {
 		case MODE_OFF:
 			circle.setFill(Color.TRANSPARENT); break;

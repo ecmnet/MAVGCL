@@ -2452,7 +2452,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>10</max>
+      <max>3</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -6628,7 +6628,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="2">Data does not survive reset</value>
       </values>
     </parameter>
-    <parameter default="0" name="SYS_MC_EST_GROUP" type="INT32">
+    <parameter default="1" name="SYS_MC_EST_GROUP" type="INT32">
       <short_desc>Set multicopter estimator group</short_desc>
       <long_desc>Set the group of estimators used for multicopters and vtols</long_desc>
       <min>0</min>
@@ -6954,6 +6954,13 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <max>1</max>
       <scope>modules/vtol_att_control</scope>
     </parameter>
+    <parameter default="0.0" name="VT_FW_MIN_ALT" type="FLOAT">
+      <short_desc>QuadChute</short_desc>
+      <long_desc>Minimum altitude for fixed wing flight, when in fixed wing the altitude drops below this altitude the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
+      <min>0.0</min>
+      <max>200.0</max>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
     <parameter default="0.0" name="VT_TILT_MC" type="FLOAT">
       <short_desc>Position of tilt servo in mc mode</short_desc>
       <min>0.0</min>
@@ -7017,13 +7024,6 @@ to accelerate forward if necessary</short_desc>
       <long_desc>Scale applied to fixed wing thrust being used as source for forward acceleration in multirotor mode. This technique can be used to avoid the plane having to pitch down a lot in order to move forward. Setting this value to 0 (default) will disable this strategy.</long_desc>
       <min>0.0</min>
       <max>2.0</max>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="0.0" name="VT_FW_MIN_ALT" type="FLOAT">
-      <short_desc>QuadChute</short_desc>
-      <long_desc>Minimum altitude for fixed wing flight, when in fixed wing the altitude drops below this altitude the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
-      <min>0.0</min>
-      <max>200.0</max>
       <scope>modules/vtol_att_control</scope>
     </parameter>
   </group>
