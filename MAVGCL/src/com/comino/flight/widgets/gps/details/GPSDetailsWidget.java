@@ -148,9 +148,9 @@ public class GPSDetailsWidget extends WidgetPane  {
 				grid.add(new Label(),0,row);
 			} else {
 			DashLabel l1 = new DashLabel(kf.desc1);
-			l1.setPrefWidth(130); l1.setPrefHeight(19);
+			l1.setPrefWidth(110); l1.setPrefHeight(19);
 			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(50); value.setAlignment(Pos.CENTER_RIGHT);
+			value = new Label("-"); value.setPrefWidth(90); value.setAlignment(Pos.CENTER_RIGHT);
 			grid.add(value, 1, row);
 			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
 			grid.add(l3, 2, row);
