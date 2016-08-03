@@ -60,7 +60,7 @@ public class FirstPreloader extends Preloader {
     	bar.setPrefHeight(5); bar.setPrefWidth(600);
         splashLayout.getChildren().addAll(splash,bar);
         splashLayout.getChildren().addAll();
-        Scene scene =  new Scene(splashLayout, 600, 232);
+        Scene scene =  new Scene(splashLayout, 600,151);
     	return scene;
     }
 

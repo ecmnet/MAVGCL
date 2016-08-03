@@ -109,11 +109,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.mouseTransparentProperty().set(true);
 		console.setWrapText(true);
 
-
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue()) {
 				Platform.runLater(() -> {
-					console.setText("");
+					console.clear();
 					if(!isDisabled())
 						writeToShell("\n");
 					scrollIntoView();
