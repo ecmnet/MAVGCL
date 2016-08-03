@@ -50,6 +50,7 @@ import org.mavlink.messages.lquac.msg_log_request_list;
 
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -107,7 +108,6 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		collector.clearModelList();
 		isCollecting.set(false);
-		StatusLineWidget.showProgressIndicator(false);
 		msg_log_request_end msg = new msg_log_request_end(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -128,7 +128,6 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 			if(last_log_id > -1) {
 				if(entry.id != last_log_id) {
-					StatusLineWidget.showProgressIndicator(true);
 					msg_log_request_list msg = new msg_log_request_list(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
@@ -137,6 +136,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					control.sendMAVLinkMessage(msg);
 				}
 				else {
+					StateProperties.getInstance().getProgressProperty().set(0);
 					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
@@ -169,8 +169,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			log_bytes_read = data.ofs;
 
 			if((System.currentTimeMillis()-tms)>5000) {
-				MSPLogger.getInstance().writeLocalMsg("Loading px4log from device: "+getProgress()+"%",
-						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				StateProperties.getInstance().getProgressProperty().set(getProgress()/100f);
 				tms = System.currentTimeMillis();
 			}
 
@@ -184,18 +183,16 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					msg.target_component = 1;
 					msg.target_system = 1;
 					control.sendMAVLinkMessage(msg);
-
-
 					ArrayList<DataModel>modelList = new ArrayList<DataModel>();
 					PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
 					PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
 					converter.doConversion();
 					control.getCollector().setModelList(modelList);
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");
+					StateProperties.getInstance().getProgressProperty().set(-1);
 				} catch (Exception e) { e.printStackTrace(); }
 
 				FileHandler.getInstance().setName("PX4Log-"+last_log_id+"-"+time_utc);
-				StatusLineWidget.showProgressIndicator(false);
 
 				isCollecting.set(false);
 			}

@@ -38,7 +38,9 @@ import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleFloatProperty;
 
 public class StateProperties implements IMSPModeChangedListener{
 
@@ -54,6 +56,8 @@ public class StateProperties implements IMSPModeChangedListener{
 
 	private BooleanProperty recordingProperty = new SimpleBooleanProperty();
 	private BooleanProperty isLogLoadedProperty = new SimpleBooleanProperty();
+
+	private FloatProperty progress = new SimpleFloatProperty(-1);
 
 
 	public static StateProperties getInstance() {
@@ -108,6 +112,10 @@ public class StateProperties implements IMSPModeChangedListener{
 
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
+	}
+
+	public FloatProperty getProgressProperty() {
+		return progress;
 	}
 
 }

@@ -62,6 +62,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -86,6 +87,9 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 	@FXML
 	private Badge rc;
+
+	@FXML
+	private ProgressBar progress;
 
 	private Task<Long> task;
 	private IMAVController control;
@@ -159,12 +163,12 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 								mode.setMode(Badge.MODE_ON);
 								time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 								if(control.isSimulation()) {
-									 mode.setBackgroundColor(Color.BEIGE);
-									 mode.setText("SITL");
-									} else {
-										 mode.setBackgroundColor(Color.DARKCYAN);
-									 mode.setText("Connected");
-											}
+									mode.setBackgroundColor(Color.BEIGE);
+									mode.setText("SITL");
+								} else {
+									mode.setBackgroundColor(Color.DARKCYAN);
+									mode.setText("Connected");
+								}
 							} else {
 								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
 								time.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
@@ -197,6 +201,19 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 					messages.setText(msg.msg);
 				}
 			});
+		});
+
+		progress.setVisible(false);
+
+		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
+			if(nv.floatValue() > -1) {
+				progress.setVisible(true);
+				Platform.runLater(() -> {
+					progress.setProgress(nv.floatValue());
+				});
+			} else {
+				progress.setVisible(false);
+			}
 		});
 
 		Thread th = new Thread(task);
@@ -239,10 +256,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 	@Override
 	public void refreshChart() {
-
-	}
-
-	public static void showProgressIndicator(boolean show) {
 
 	}
 

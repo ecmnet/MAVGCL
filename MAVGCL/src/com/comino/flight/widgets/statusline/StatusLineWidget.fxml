@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import com.comino.flight.widgets.fx.controls.Badge?>
@@ -16,6 +16,7 @@
 				<Label fx:id="time" prefHeight="16.0" prefWidth="160" text=""  styleClass="badge"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" />
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="DARKCYAN" />
+				<ProgressBar fx:id="progress" prefHeight="16.0" prefWidth="200.0" />
 			</children>
 		</HBox>
 	</children>

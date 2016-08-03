@@ -188,8 +188,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			switch(modelService.getMode()) {
 			case ModelCollectorService.STOPPED:
-
-				StatusLineWidget.showProgressIndicator(false);
 				recording.selectedProperty().set(false);
 				isrecording.setFill(Color.LIGHTGREY); break;
 			case ModelCollectorService.PRE_COLLECTING:
@@ -204,7 +202,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 			case ModelCollectorService.COLLECTING:
 
 				FileHandler.getInstance().clear();
-				StatusLineWidget.showProgressIndicator(true);
 				recording.selectedProperty().set(true);
 				isrecording.setFill(Color.RED); break;
 			}

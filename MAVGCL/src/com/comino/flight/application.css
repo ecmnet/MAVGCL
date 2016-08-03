@@ -249,9 +249,10 @@
   -fx-background-color:#404040;
 }
 
-.progress-bar > .track {
+.progress-bar  {
   -fx-control-inner-background: #303030;
-  -fx-text-box-border: #303030;
+  -fx-text-box-border: #606060;
+  -fx-accent: darkcyan;
   -fx-shadow-highlight-color: #303030;
 }
 
