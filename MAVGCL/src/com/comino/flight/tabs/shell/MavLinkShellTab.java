@@ -100,6 +100,9 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					int end = console.getText().length();
 					console.selectRange(end, end);
 				});
+			}  else if (ke.isControlDown() && ke.getCode().equals(KeyCode.C)) {
+				System.out.println("CRTL+C");
+				writeToShell("\u0003");
 			}
 		});
 
