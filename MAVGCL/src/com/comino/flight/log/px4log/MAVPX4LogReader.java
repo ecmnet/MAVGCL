@@ -112,6 +112,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
+		StateProperties.getInstance().getProgressProperty().set(-1);
 		MSPLogger.getInstance().writeLocalMsg("Import from device cancelled");
 	}
 
