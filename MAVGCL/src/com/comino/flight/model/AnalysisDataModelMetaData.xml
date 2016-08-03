@@ -525,15 +525,15 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Flow Quality" mask="#0.0" uom="" key="FLOWQL">
+	<KeyFigure desc="Flow Quality" mask="#0" uom="%" key="FLOWQL">
 		<MSPSource class="raw" field="fq">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
 		</MSPSource>
 		<PX4Source field="FLOW.Qlty">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
 		</PX4Source>
 		<ULogSource field="optical_flow_0.quality">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
 		</ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
@@ -891,9 +891,13 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="RSSI" uom="" mask="#0" key="RSSI">
-		<MSPSource class="rc" field="rssi"></MSPSource>
-		<ULogSource field="rc_channels_0.rssi"/>
+	<KeyFigure desc="RSSI" uom="%" mask="#0" key="RSSI">
+		<MSPSource class="rc" field="rssi">
+		   <Converter class="ExpressionConverter" expression="RSSI/2.55" />
+		</MSPSource>
+		<ULogSource field="rc_channels_0.rssi">
+		  <Converter class="ExpressionConverter" expression="RSSI/2.55" />
+		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>

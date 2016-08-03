@@ -56,7 +56,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -181,7 +184,7 @@ public class DetailsWidget extends WidgetPane  {
 
 	private class KeyFigure {
 		KeyFigureMetaData kf  = null;
-		Label  value = null;
+		Control  value = null;
 		GridPane p = null;
 		DashLabel label = null;
 
@@ -196,9 +199,16 @@ public class DetailsWidget extends WidgetPane  {
 			} else {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130); label.setPrefHeight(19);
-				value = new Label("-"); value.setPrefWidth(55); value.setAlignment(Pos.CENTER_RIGHT);
+				if(kf.uom.contains("%")) {
+				ProgressBar l2 = new ProgressBar(); l2.setPrefWidth(105);
+				value = l2;
+				p.addRow(row, label,l2);
+				} else {
+				Label l2 = new Label("-"); l2.setPrefWidth(55); l2.setAlignment(Pos.CENTER_RIGHT);
+				value = l2;
 				Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
-				p.addRow(row, label,value,l3);
+				p.addRow(row, label,l2,l3);
+				}
 				grid.add(p, 0, row);
 			}
 		}
@@ -213,7 +223,11 @@ public class DetailsWidget extends WidgetPane  {
 						p.setStyle("-fx-background-color:transparent;");
 				}
 				f.applyPattern(kf.mask);
-				value.setText(f.format(val));
+				if(value instanceof Label)
+				    ((Label)value).setText(f.format(val));
+				if(value instanceof ProgressBar)
+				    ((ProgressBar)value).setProgress(val/100);
+
 			}
 		}
 	}
