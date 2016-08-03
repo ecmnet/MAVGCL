@@ -106,16 +106,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.mouseTransparentProperty().set(true);
 		console.setWrapText(true);
 
-		this.disabledProperty().addListener((v,ov,nv) -> {
-			if(!nv.booleanValue()) {
-				Platform.runLater(() -> {
-					if(console.getText().length()==0)
-						writeToShell("\n");
-					scrollIntoView();
-				});
-
-			}
-		});
 
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue()) {
@@ -135,6 +125,19 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.control = control;
 		this.state   = StateProperties.getInstance();
 		control.addMAVLinkListener(this);
+
+		this.disabledProperty().addListener((v,ov,nv) -> {
+			if(!nv.booleanValue()) {
+				Platform.runLater(() -> {
+					if(console.getText().length()==0)
+						writeToShell("\n");
+					scrollIntoView();
+				});
+
+			} else
+				writeToShell(null);
+		});
+
 		return this;
 	}
 
@@ -181,7 +184,11 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+		} else {
+			msg.count = 0;
+			msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
 		}
+
 		control.sendMAVLinkMessage(msg);
 	}
 
