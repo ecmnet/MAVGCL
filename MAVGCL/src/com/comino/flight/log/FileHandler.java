@@ -168,6 +168,7 @@ public class FileHandler {
 					ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
 					reader.close();
 					modelService.setModelList(modelList);
+					StateProperties.getInstance().getLogLoadedProperty().set(true);
 				}
 
 				stage.getScene().setCursor(Cursor.DEFAULT);
