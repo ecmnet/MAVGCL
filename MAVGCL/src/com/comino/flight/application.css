@@ -408,7 +408,7 @@
     -fx-padding: 4;
  }
 
- .combo-box-popup .list-view .list-cell {
+.combo-box-popup .list-view .list-cell {
      -fx-background-color: #606060;
      -fx-text-fill: #F0F0F0;
  }
@@ -417,4 +417,6 @@
  	-fx-background-color: #707070;
 }
 
-
+.text-area .content {
+    -fx-cursor: default ;
+}

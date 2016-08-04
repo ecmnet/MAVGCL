@@ -46,6 +46,7 @@ import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -106,7 +107,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			}
 		});
 
-		console.mouseTransparentProperty().set(true);
 		console.setWrapText(true);
 
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
@@ -200,8 +200,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	private void scrollIntoView() {
 		console.requestFocus();
-		console.setScrollTop(Double.MAX_VALUE);
 		console.selectRange(index, index);
+		console.setScrollTop(Double.MAX_VALUE);
 	}
 
 
