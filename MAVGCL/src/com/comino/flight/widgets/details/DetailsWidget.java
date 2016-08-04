@@ -226,7 +226,7 @@ public class DetailsWidget extends WidgetPane  {
 				if(value instanceof Label)
 				    ((Label)value).setText(f.format(val));
 				if(value instanceof ProgressBar)
-				    ((ProgressBar)value).setProgress(val/100);
+				    ((ProgressBar)value).setProgress(val);
 
 			}
 		}

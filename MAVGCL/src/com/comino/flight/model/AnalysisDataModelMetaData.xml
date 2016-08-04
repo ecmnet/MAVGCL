@@ -527,13 +527,13 @@
 
 	<KeyFigure desc="Flow Quality" mask="#0" uom="%" key="FLOWQL">
 		<MSPSource class="raw" field="fq">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		</MSPSource>
 		<PX4Source field="FLOW.Qlty">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		</PX4Source>
 		<ULogSource field="optical_flow_0.quality">
-		   <Converter class="ExpressionConverter" expression="FLOWQL/2.55" />
+		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		</ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
@@ -893,10 +893,10 @@
 
 	<KeyFigure desc="RSSI" uom="%" mask="#0" key="RSSI">
 		<MSPSource class="rc" field="rssi">
-		   <Converter class="ExpressionConverter" expression="RSSI/2.55" />
+		   <Converter class="ExpressionConverter" expression="RSSI/255" />
 		</MSPSource>
 		<ULogSource field="rc_channels_0.rssi">
-		  <Converter class="ExpressionConverter" expression="RSSI/2.55" />
+		  <Converter class="ExpressionConverter" expression="RSSI/255" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
@@ -939,9 +939,15 @@
 	</KeyFigure>
 
 	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">
-		<MSPSource class="sys" field="load_p"></MSPSource>
-		<PX4Source field="LOAD.CPU"></PX4Source>
-		<ULogSource field="cpuload_0.load"/>
+		<MSPSource class="sys" field="load_p">
+		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		</MSPSource>
+		<PX4Source field="LOAD.CPU">
+		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		</PX4Source>
+		<ULogSource field="cpuload_0.load">
+		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		</ULogSource>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
