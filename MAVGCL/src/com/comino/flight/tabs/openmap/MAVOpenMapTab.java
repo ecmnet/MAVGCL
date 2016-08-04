@@ -98,7 +98,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON" },
-				{ "RGPSLAT",  "RGPSLON" }
+		  { "RGPSLAT",  "RGPSLON" }
 		};
 
 	@FXML

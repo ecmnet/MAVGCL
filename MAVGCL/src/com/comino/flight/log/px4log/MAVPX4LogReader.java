@@ -170,6 +170,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			log_bytes_read = data.ofs;
 
 			if((System.currentTimeMillis()-tms)>5000) {
+				System.out.println("LOG "+log_bytes_read+" bytes read");
 				StateProperties.getInstance().getProgressProperty().set(getProgress()/100f);
 				tms = System.currentTimeMillis();
 			}
