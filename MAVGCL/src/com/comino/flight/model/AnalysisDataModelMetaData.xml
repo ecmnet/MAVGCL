@@ -904,7 +904,7 @@
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
-		<Validity min="0.25" max="1.0"/>
+		<Validity min="0.4" max="1.0"/>
 	</KeyFigure>
 
 	<!-- System & Power -->
@@ -964,7 +964,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="10" max="60"/>
+		<Validity min="10" max="70"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
