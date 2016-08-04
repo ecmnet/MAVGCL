@@ -18,11 +18,12 @@ Any feedback, comments and contributions are very welcome.
 **Features:**
 
 - Realtime data acquisition (50ms sampling) based on MAVLink messages
-- Timechart annotated by messages and parameter changes (MAVLink and ULog)
+- Timechart annotated by messages (MAVLink and ULog) and parameter changes (MAVLink only)
 - Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
-- MAVLink inspector
+- MAVLink inspector (reporting raw MAVlink messages)
+- MAVLinkShell provides NutShell over MAVLink 
 - Easy to use parameter editor and In-Flight-Tuning-Widget
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
