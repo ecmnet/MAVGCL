@@ -6543,6 +6543,20 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
+    <parameter default="0" name="SENS_EN_SF1XX" type="INT32">
+      <short_desc>Lightware SF1xx laser rangefinder</short_desc>
+      <min>0</min>
+      <max>4</max>
+      <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="1">SF10/a</value>
+        <value code="0">Disabled</value>
+        <value code="3">SF10/c</value>
+        <value code="2">SF10/b</value>
+        <value code="4">SF11/c</value>
+      </values>
+    </parameter>
   </group>
   <group name="Snapdragon UART ESC">
     <parameter default="2" name="UART_ESC_MODEL" type="INT32">
