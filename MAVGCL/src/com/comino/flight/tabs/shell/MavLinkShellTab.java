@@ -80,20 +80,22 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.prefWidthProperty().bind(widthProperty().subtract(5));
 
 		console.setOnKeyPressed(ke -> {
+
 			if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
-					String command = console.getText(index,end).trim()+"\n";
-					writeToShell(command);
-					index = end+1;
+					String command = console.getText(index,end).trim();
+					console.deleteText(index, end);
+					writeToShell(command+"\n");
 					last = command;
 					scrollIntoView();
 				}
 			} else if (ke.getCode().equals(KeyCode.UP)) {
-				if(last!=null) {
+				if(last!=null && index == console.getText().length()) {
 					Platform.runLater(() -> {
 						console.appendText(last);
-						scrollIntoView();
+						int end = console.getText().length();
+						console.selectRange(end,end);
 					});
 				}
 			} else if (ke.getCode().equals(KeyCode.LEFT)) {
@@ -104,7 +106,16 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			}  else if (ke.isControlDown() && ke.getCode().equals(KeyCode.C)) {
 				System.out.println("CRTL+C");
 				writeToShell("\u0003");
+			}  else if (ke.getCode().equals(KeyCode.BACK_SPACE)) {
+				Platform.runLater(() -> {
+					int end = console.getText().length();
+					if(end > index) {
+						console.deleteText(end-1, end);
+						console.selectRange(end-1, end-1);
+					}
+				});
 			}
+			ke.consume();
 		});
 
 		console.setWrapText(true);
@@ -179,7 +190,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private void writeToShell(String s) {
 		msg_serial_control msg = new msg_serial_control(1,1);
 		if(s!=null) {
-			System.out.println(">"+s);
 			try {
 				byte[] bytes = s.getBytes("US-ASCII");
 				for(int i =0;i<bytes.length && i<70;i++)
@@ -201,7 +211,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private void scrollIntoView() {
 		console.requestFocus();
 		console.selectRange(index, index);
-		console.setScrollTop(Double.MAX_VALUE);
 	}
 
 
