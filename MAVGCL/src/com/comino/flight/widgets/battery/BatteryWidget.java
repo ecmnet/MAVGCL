@@ -90,13 +90,13 @@ public class BatteryWidget extends WidgetPane  {
 					}
 
 					Platform.runLater(() -> {
-						if(Math.abs(voltage - model.getValue("BATV")) > 0.1) {
+						if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
 							voltage = model.getValue("BATV");
 							g_voltage.setValue(voltage);
 						}
-						if(Math.abs(capacity - model.getValue("BATP")) > 1) {
-							capacity = model.getValue("BATP")*100;
-							g_capacity.setValue(capacity);
+						if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
+							capacity = model.getValue("BATP");
+							g_capacity.setValue(capacity*100f);
 						}
 					});
 				}
