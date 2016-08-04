@@ -967,5 +967,17 @@
 		<Validity min="10" max="60"/>
 	</KeyFigure>
 
+	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
+		<MSPSource class="sys" field="t_armed_ms">
+		    <Converter class="ExpressionConverter" expression="TARM/1000" />
+		</MSPSource>
+	</KeyFigure>
+
+	<KeyFigure desc="Time boot" uom="sec" mask="#0" key="TBOOT">
+		<MSPSource class="sys" field="t_boot_ms">
+		    <Converter class="ExpressionConverter" expression="TBOOT/1000"/>
+		</MSPSource>
+	</KeyFigure>
+
 
 </AnalysisDataModel>

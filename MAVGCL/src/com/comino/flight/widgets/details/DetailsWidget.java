@@ -103,7 +103,9 @@ public class DetailsWidget extends WidgetPane  {
 			"TEMP",
 			"CPU",
 			"RSSI",
-			//MSTYPE.MSP_TIME_ARMED,
+			null,
+			"TARM",
+			"TBOOT",
 	};
 
 	@FXML
@@ -188,7 +190,7 @@ public class DetailsWidget extends WidgetPane  {
 		GridPane p = null;
 		DashLabel label = null;
 
-		float val=0;
+		float val=0, old_val=Float.NaN;
 
 		public KeyFigure(GridPane grid, String k, int row) {
 			p = new GridPane();
@@ -216,6 +218,9 @@ public class DetailsWidget extends WidgetPane  {
 		public void setValue(AnalysisDataModel model, int row) {
 			if(kf!=null) {
 				val =model.getValue(kf);
+				if(val==old_val)
+					return;
+				old_val = val;
 				if(kf.min!=kf.max) {
 					if(val < kf.min || val > kf.max)
 						p.setStyle("-fx-background-color:#004040;");
