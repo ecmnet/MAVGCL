@@ -10,11 +10,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 03/08/2016 
+**Development Status:** Last updated 04/08/2016 
 
-- Pre-Release 0.5 available
-- Pause scrolling during recording (scrolling, zooming allowed) by double-clicking on graph - resume with another double-click.
-- MAVLinkShell (NuttShell via MAVLink) supported (latest master only)
+- **Release 0.5 available now**
 
 
 **Features:**
