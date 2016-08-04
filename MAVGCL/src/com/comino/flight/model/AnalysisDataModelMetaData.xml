@@ -925,6 +925,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<Validity min="0.2" max="15.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Consumed.Power" uom="mAh" mask="#0" key="BATH">
@@ -936,10 +937,13 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
-		<MSPSource class="battery" field="p"></MSPSource>
+		<MSPSource class="battery" field="p">
+		   <Converter class="ExpressionConverter" expression="BATP/100" />
+		</MSPSource>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<Validity min="0.2" max="1.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">

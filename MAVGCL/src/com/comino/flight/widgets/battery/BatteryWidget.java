@@ -95,7 +95,7 @@ public class BatteryWidget extends WidgetPane  {
 							g_voltage.setValue(voltage);
 						}
 						if(Math.abs(capacity - model.getValue("BATP")) > 1) {
-							capacity = model.getValue("BATP");
+							capacity = model.getValue("BATP")*100;
 							g_capacity.setValue(capacity);
 						}
 					});
