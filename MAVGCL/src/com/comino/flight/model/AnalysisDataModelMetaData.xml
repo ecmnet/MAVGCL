@@ -194,7 +194,7 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<Validity min="-10" max="10"/>
+		<Validity min="-2" max="2"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Pitch" uom="deg" mask="#0.0" key="PITCH">
@@ -202,7 +202,7 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<Validity min="-10" max="10"/>
+		<Validity min="-2" max="2"/>
 		<PX4Source field="ATT.Pitch"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.pitch"></ULogSource>
 	</KeyFigure>
@@ -540,6 +540,7 @@
 			<Group>Raw data</Group>
 			<Group>PX4Log Sensors</Group>
 		</Groups>
+		<Validity min="0.25" max="1.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
@@ -646,6 +647,7 @@
 			<Group>Raw data</Group>
 		</Groups>
 		<PX4Source field="GPS.nSat"></PX4Source>
+		<Validity min="6" max="30"/>
 	</KeyFigure>
 
 	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
@@ -902,6 +904,7 @@
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
+		<Validity min="0.25" max="1.0"/>
 	</KeyFigure>
 
 	<!-- System & Power -->
@@ -913,7 +916,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="0" max="10.5"/>
+		<Validity min="10.5" max="15.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">
@@ -952,6 +955,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<Validity min="0" max="0.8"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
@@ -960,6 +964,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
+		<Validity min="10" max="60"/>
 	</KeyFigure>
 
 
