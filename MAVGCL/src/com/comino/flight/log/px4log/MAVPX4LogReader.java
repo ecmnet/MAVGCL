@@ -108,6 +108,8 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
+		StateProperties.getInstance().getProgressProperty().set(0);
+		MSPLogger.getInstance().writeLocalMsg("Request px4log from vehicle");
 		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
 	}
 
@@ -127,7 +129,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
 		StateProperties.getInstance().getProgressProperty().set(-1);
-		MSPLogger.getInstance().writeLocalMsg("Import from device cancelled");
+		MSPLogger.getInstance().writeLocalMsg("Loading px4log from vehicle cancelled");
 	}
 
 	@Override
@@ -151,14 +153,13 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					control.sendMAVLinkMessage(msg);
 				}
 				else {
-					StateProperties.getInstance().getProgressProperty().set(0);
 					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
 					MSPLogger.getInstance().writeLocalMsg(
-							"Loading px4log from device ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"Loading px4log from vehicle ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
