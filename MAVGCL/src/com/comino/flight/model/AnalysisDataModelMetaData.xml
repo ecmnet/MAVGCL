@@ -964,6 +964,7 @@
 
 	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>
+		<PX4Source field="SENS.BaroTemp"></PX4Source>
 		<ULogSource field="sensor_baro_0.temperature"></ULogSource>
 		<Groups>
 			<Group>System</Group>
