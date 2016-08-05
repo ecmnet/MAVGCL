@@ -77,10 +77,10 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private Badge driver;
 
 	@FXML
-	private Label messages;
+	private Badge messages;
 
 	@FXML
-	private Label time;
+	private Badge time;
 
 	@FXML
 	private Badge mode;
@@ -102,6 +102,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private StateProperties state = null;
 
 	private String filename;
+	private long tms;
 
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));
@@ -135,13 +136,19 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 						filename = FileHandler.getInstance().getName();
 
 						if(control.isConnected() && !state.getLogLoadedProperty().get()) {
-							messages.setStyle("-fx-text-fill:#F0F0F0;-fx-background-color: #606060;");
+							messages.setMode(Badge.MODE_ON);
 							driver.setText(control.getCurrentModel().sys.getSensorString());
 							driver.setMode(Badge.MODE_ON);
 						} else {
-							messages.setStyle("-fx-text-fill:#808080;-fx-background-color: #404040;");
+							messages.setMode(Badge.MODE_OFF);
 							driver.setText("no sensor info available");
 							driver.setMode(Badge.MODE_OFF);
+						}
+
+						if((System.currentTimeMillis() - tms)>30000) {
+							messages.setBackgroundColor(Color.GRAY);
+							messages.clear();
+							tms = System.currentTimeMillis();
 						}
 
 						list = collector.getModelList();
@@ -155,13 +162,16 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 											list.get(current_x0_pt).tms/1000,
 											list.get(current_x1_pt).tms/1000)
 									);
-						} else
+							time.setBackgroundColor(Color.DARKCYAN);
+						} else {
 							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
+							time.setBackgroundColor(Color.GRAY);
+						}
 
 						if(filename.isEmpty()) {
 							if(control.isConnected()) {
+								time.setMode(Badge.MODE_ON);
 								mode.setMode(Badge.MODE_ON);
-								time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 								if(control.isSimulation()) {
 									mode.setBackgroundColor(Color.BEIGE);
 									mode.setText("SITL");
@@ -171,12 +181,12 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 								}
 							} else {
 								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
-								time.setStyle("-fx-background-color: #404040;-fx-alignment: center;-fx-text-fill:#808080");
+								time.setMode(Badge.MODE_OFF);
 							}
 						} else {
-							mode.setMode(Badge.MODE_ON); messages.setText("");
+							time.setMode(Badge.MODE_ON);
+							mode.setMode(Badge.MODE_ON); messages.clear();
 							mode.setText(filename); mode.setBackgroundColor(Color.LIGHTSKYBLUE);
-							time.setStyle("-fx-background-color: #606060;-fx-alignment: center;-fx-text-fill:#F0F0F0");
 						}
 					});
 				}
@@ -198,6 +208,11 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
 				if(filename.isEmpty()) {
+					tms = System.currentTimeMillis();
+					if(msg.severity < MAV_SEVERITY.MAV_SEVERITY_WARNING)
+						messages.setBackgroundColor(Color.DARKRED);
+					else
+						messages.setBackgroundColor(Color.GRAY);
 					messages.setText(msg.msg);
 				}
 			});

@@ -39,6 +39,7 @@ public class Badge extends Label {
 
 		if(timeline!=null)
 		  timeline.stop();
+
 		toggle=false;
 		setDisable(toggle);
 
@@ -71,7 +72,6 @@ public class Badge extends Label {
 			this.textColor ="#F0F0F0";
 		else
 			this.textColor ="#"+Integer.toHexString(color.darker().darker().darker().darker().hashCode());
-		setMode(mode);
 	}
 
 	public void setRate(String rate) {
@@ -81,6 +81,10 @@ public class Badge extends Label {
 					toggle = !toggle; setDisable(toggle);
 				}));
 		timeline.setCycleCount(Animation.INDEFINITE);
+	}
+
+	public void clear() {
+	   this.setText("");
 	}
 
 	public String getRate() {
