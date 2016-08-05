@@ -11,7 +11,7 @@
 		<HBox layoutY="6.0" spacing="7.0">
 			<children>
 				<Label fx:id="version" prefHeight="16.0" prefWidth="185.0" text="" />
-				<Badge fx:id="driver" prefHeight="16.0" prefWidth="150.0" color="GRAY" text="" />
+				<Badge fx:id="driver" prefHeight="16.0" prefWidth="150.0" color="DARKCYAN" text="" />
 				<Badge fx:id="messages" prefHeight="16.0" prefWidth="300" text="" color="GRAY"/>
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />
