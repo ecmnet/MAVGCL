@@ -562,10 +562,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					last_annotation_pos = current_x_pt;
 				}
 
-
-
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
-
 
 					if(current_x_pt > current_x1_pt) {
 						if(series1.getData().size()>0 && type1.hash!=0) {
@@ -666,8 +663,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	// Determines spikes, if not all datapoints are reported.
 	private float searchMinMax(int current_x, int length, KeyFigureMetaData m) {
 		float max = -Float.MAX_VALUE; float v; int index=0;
+
 		if(length==1 || dataService.getModelList().size() < length)
 			return dataService.getModelList().get(current_x).getValue(m);
+
 		for(int i=0;i<length;i++) {
 			v = dataService.getModelList().get(current_x-i).getValue(m);
 			if(Math.abs(v)>max) {
