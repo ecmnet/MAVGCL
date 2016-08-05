@@ -144,10 +144,13 @@ public class ChartControlWidget extends WidgetPane  {
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					scroll.setValue(1000);
+					if(scroll.getValue()==1000)
+						scroll.setValue(0);
+					else
+						scroll.setValue(1000);
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(0);
+							chart.getScrollProperty().set((float)(1f-scroll.getValue()/1000));
 					}
 				}
 			}
@@ -181,6 +184,7 @@ public class ChartControlWidget extends WidgetPane  {
 				chart.getScrollProperty().set(1);
 			chart.refreshChart();
 		}
+		scroll.setValue(0);
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
