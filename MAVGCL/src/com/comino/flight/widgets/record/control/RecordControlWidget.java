@@ -206,6 +206,12 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 				isrecording.setFill(Color.RED); break;
 			}
 		});
+
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue() && modelService.isCollecting()) {
+				modelService.stop(0);
+			}
+		});
 	}
 
 
