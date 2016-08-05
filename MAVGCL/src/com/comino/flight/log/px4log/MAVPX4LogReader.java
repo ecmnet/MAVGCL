@@ -40,6 +40,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
@@ -77,9 +81,18 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private long tms = 0;
 	private long time_utc=0;
 
+	private FutureTask<Void> to = null;
+
 	public MAVPX4LogReader(IMAVController control) {
 		this.control = control;
 		this.control.addMAVLinkListener(this);
+
+		to = new FutureTask<Void>(() -> {
+			System.out.println("Timout reading log from device");
+			cancel();
+			return null;
+		});
+
 
 		try {
 			this.tmpfile = FileHandler.getInstance().getTempFile();
@@ -95,6 +108,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
+		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
 	}
 
 	public void cancel() {
@@ -104,7 +118,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 
 		try {
 			out.close();
-		} catch (Exception e) { return;  }
+		} catch (Exception e) {  }
 
 		collector.clearModelList();
 		isCollecting.set(false);
