@@ -65,7 +65,6 @@ public class PX4toModelConverter {
 	public void doConversion() throws FormatErrorException {
 
 		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
-		StateProperties state = null;
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
@@ -84,8 +83,6 @@ public class PX4toModelConverter {
 				}
 			}
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
-			if((state = StateProperties.getInstance())!=null)
-				state.getLogLoadedProperty().set(true);
 
 		} catch(IOException e) {
 			if(errorFlag)

@@ -151,6 +151,7 @@ public class FileHandler {
 				   PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 				   PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
 				   converter.doConversion();
+				   StateProperties.getInstance().getLogLoadedProperty().set(true);
 				}
 
 				if(file.getName().endsWith("ulg")) {
@@ -158,6 +159,7 @@ public class FileHandler {
 					  PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
 					  converter.doConversion();
+					  StateProperties.getInstance().getLogLoadedProperty().set(true);
 				}
 
 				if(file.getName().endsWith("mgc")) {
