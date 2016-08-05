@@ -104,7 +104,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					LockSupport.parkNanos(500000000L);
+					LockSupport.parkNanos(1000000000L);
 					if(isDisabled()) {
 						continue;
 					}

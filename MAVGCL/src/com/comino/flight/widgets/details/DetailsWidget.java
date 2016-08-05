@@ -144,7 +144,7 @@ public class DetailsWidget extends WidgetPane  {
 			@Override
 			protected Long call() throws Exception {
 				while(true) {
-					LockSupport.parkNanos(333000000L);
+					LockSupport.parkNanos(250000000L);
 					if(isDisabled() || !isVisible()) {
 						continue;
 					}
