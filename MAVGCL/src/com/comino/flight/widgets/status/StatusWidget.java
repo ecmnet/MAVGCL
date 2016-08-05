@@ -95,40 +95,40 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 		Platform.runLater(() -> {
 
 			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
-				armed.setMode(LED.MODE_ON);
+				armed.setMode(DashLabelLED.MODE_ON);
 			else
-				armed.setMode(LED.MODE_OFF);
+				armed.setMode(DashLabelLED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
-				althold.setMode(LED.MODE_ON);
+				althold.setMode(DashLabelLED.MODE_ON);
 			else
-				althold.setMode(LED.MODE_OFF);
+				althold.setMode(DashLabelLED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
-				poshold.setMode(LED.MODE_ON);
+				poshold.setMode(DashLabelLED.MODE_ON);
 			else
-				poshold.setMode(LED.MODE_OFF);
+				poshold.setMode(DashLabelLED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
-				mission.setMode(LED.MODE_ON);
+				mission.setMode(DashLabelLED.MODE_ON);
 			else
 				if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
-					mission.setMode(LED.MODE_BLINK);
+					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
-					mission.setMode(LED.MODE_OFF);
+					mission.setMode(DashLabelLED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
-				offboard.setMode(LED.MODE_ON);
+				offboard.setMode(DashLabelLED.MODE_ON);
 			else
-				offboard.setMode(LED.MODE_OFF);
+				offboard.setMode(DashLabelLED.MODE_OFF);
 
 			if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
-				landed.setMode(LED.MODE_ON);
+				landed.setMode(DashLabelLED.MODE_ON);
 			else {
 				if((newStat.isStatus(Status.MSP_MODE_LANDING)) && newStat.isStatus(Status.MSP_CONNECTED))
-					landed.setMode(LED.MODE_BLINK);
+					landed.setMode(DashLabelLED.MODE_BLINK);
 				else
-					landed.setMode(LED.MODE_OFF);
+					landed.setMode(DashLabelLED.MODE_OFF);
 			}
 		});
 	}

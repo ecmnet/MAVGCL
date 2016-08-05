@@ -36,7 +36,6 @@ package com.comino.flight.widgets.fx.controls;
 import com.comino.flight.observables.StateProperties;
 
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
