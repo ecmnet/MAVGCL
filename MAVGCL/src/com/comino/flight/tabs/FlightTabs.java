@@ -171,8 +171,10 @@ public class FlightTabs extends Pane {
 		});
 
 		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(control.isConnected())
+			if(control.isConnected()) {
 			    this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
+			    this.tabpane.getTabs().get(5).setDisable(newvalue.booleanValue());
+			}
 		});
 
 		PX4Parameters.getInstance().loadedProperty().addListener((observable, oldvalue, newvalue) -> {
