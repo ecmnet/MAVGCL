@@ -136,9 +136,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private int resolution_ms 	= 50;
 
-	private int current_x_pt  =0;
-	private int current_x0_pt = 0;
-	private int current_x1_pt = 0;
+	private int current_x_pt      = 0;
+	private int current_x_pt_max  = 0;
+	private int current_x0_pt     = 0;
+	private int current_x1_pt     = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
@@ -561,7 +562,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					last_annotation_pos = current_x_pt;
 				}
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && dt_sec > 0) {
+
+
+				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
+
 
 					if(current_x_pt > current_x1_pt) {
 						if(series1.getData().size()>0 && type1.hash!=0) {
@@ -581,11 +585,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
-						series1.getData().add(pool.checkOut(dt_sec,m.getValue(type1)));
+						series1.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1)));
 					if(type2.hash!=0 && m.getValue(type2)!=Float.NaN)
-						series2.getData().add(pool.checkOut(dt_sec,m.getValue(type2)));
+						series2.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2)));
 					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
-						series3.getData().add(pool.checkOut(dt_sec,m.getValue(type3)));
+						series3.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3)));
 
 				}
 
@@ -657,6 +661,20 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(recent==null)
 			recent = new ArrayList<KeyFigureMetaData>();
 
+	}
+
+	// Determines spikes, if not all datapoints are reported.
+	private float searchMinMax(int current_x, int length, KeyFigureMetaData m) {
+		float max = -Float.MAX_VALUE; float v; int index=0;
+		if(length==1 || dataService.getModelList().size() < length)
+			return dataService.getModelList().get(current_x).getValue(m);
+		for(int i=0;i<length;i++) {
+			v = dataService.getModelList().get(current_x-i).getValue(m);
+			if(Math.abs(v)>max) {
+				max = Math.abs(v); index = i;
+			}
+		}
+		return dataService.getModelList().get(current_x-index).getValue(m);
 	}
 
 }
