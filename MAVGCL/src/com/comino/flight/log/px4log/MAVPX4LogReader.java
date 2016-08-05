@@ -87,12 +87,6 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		this.control = control;
 		this.control.addMAVLinkListener(this);
 
-		to = new FutureTask<Void>(() -> {
-			System.out.println("Timout reading log from device");
-			cancel();
-			return null;
-		});
-
 
 		try {
 			this.tmpfile = FileHandler.getInstance().getTempFile();
@@ -102,6 +96,13 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public void requestLastLog() {
+
+		to = new FutureTask<Void>(() -> {
+			System.out.println("Timout reading log from device");
+			cancel();
+			return null;
+		});
+
 		collector.clearModelList();
 		isCollecting.set(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
@@ -114,6 +115,8 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	}
 
 	public void cancel() {
+
+		to.cancel(true);
 
 		if(!isCollecting.get())
 			return;
