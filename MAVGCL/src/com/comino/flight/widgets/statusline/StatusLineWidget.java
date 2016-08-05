@@ -170,7 +170,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 						if(filename.isEmpty()) {
 							if(control.isConnected()) {
 								time.setMode(Badge.MODE_ON);
-								mode.setMode(Badge.MODE_ON);
 								if(control.isSimulation()) {
 									mode.setBackgroundColor(Color.BEIGE);
 									mode.setText("SITL");
@@ -178,14 +177,17 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 									mode.setBackgroundColor(Color.DARKCYAN);
 									mode.setText("Connected");
 								}
+								mode.setMode(Badge.MODE_ON);
 							} else {
 								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
 								time.setMode(Badge.MODE_OFF);
 							}
 						} else {
 							time.setMode(Badge.MODE_ON);
-							mode.setMode(Badge.MODE_ON); messages.clear();
-							mode.setText(filename); mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+							messages.clear();
+							mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+							mode.setText(filename);
+							mode.setMode(Badge.MODE_ON);
 						}
 					});
 				}
