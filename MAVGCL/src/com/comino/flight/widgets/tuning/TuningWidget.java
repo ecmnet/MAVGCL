@@ -186,7 +186,6 @@ public class TuningWidget extends WidgetPane  {
 					this.editor = sp;
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
-							System.out.println(getValueOf(sp.getEditor()));
 							setValueOf(editor,getValueOf(sp.getEditor()));
 							editor.getParent().requestFocus();
 						}
@@ -212,10 +211,10 @@ public class TuningWidget extends WidgetPane  {
 				}
 			} else {
 				if(att.valueList.size()>0) {
-					this.editor = new ChoiceBox<Entry<Integer,String>>();
-
-					((ChoiceBox<Entry<Integer,String>>)editor).getItems().addAll(att.valueList.entrySet());
-					((ChoiceBox<Entry<Integer,String>>)editor).setConverter(new StringConverter<Entry<Integer,String>>() {
+					ChoiceBox<Entry<Integer,String>> cb = new ChoiceBox<Entry<Integer,String>>();
+					this.editor = cb;
+					cb.getItems().addAll(att.valueList.entrySet());
+					cb.setConverter(new StringConverter<Entry<Integer,String>>() {
 						@Override
 						public String toString(Entry<Integer, String> o) {
 							return o.getValue();
@@ -224,8 +223,13 @@ public class TuningWidget extends WidgetPane  {
 						public Entry<Integer, String> fromString(String o) {
 							return null;
 						}
-
 					});
+					cb.getSelectionModel().
+					     selectedItemProperty().addListener((v,ov,nv) -> {
+					    	 if(editor.getParent()!=null) {
+					    	    editor.getParent().requestFocus();
+					    	 }
+					 });
 				}
 				else
 					this.editor = new TextField();
@@ -297,9 +301,10 @@ public class TuningWidget extends WidgetPane  {
 			}
 			else if(p instanceof Spinner)
 				return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
-			else {
+			else if(p instanceof ChoiceBox) {
 				return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
-			}
+			} else
+				return 0;
 		}
 
 		@SuppressWarnings("unchecked")
