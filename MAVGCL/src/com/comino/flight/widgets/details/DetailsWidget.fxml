@@ -8,7 +8,7 @@
 
 <fx:root prefWidth="183.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-	<ScrollPane fx:id="scroll" layoutX="10.0" layoutY="14.0" prefWidth="185.0">
-		<GridPane fx:id="grid" prefWidth="165.0" />
+	<ScrollPane fx:id="scroll" layoutX="10.0" layoutY="14.0">
+		<GridPane fx:id="grid" prefWidth="176.0" />
 	</ScrollPane>
 </fx:root>

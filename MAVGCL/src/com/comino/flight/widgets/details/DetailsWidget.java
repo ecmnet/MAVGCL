@@ -61,6 +61,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -173,6 +175,9 @@ public class DetailsWidget extends WidgetPane  {
 	public void setup(IMAVController control) {
 
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
+		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+		scroll.setBorder(Border.EMPTY);
 
 		int i=0;
 		for(String k : key_figures_details) {

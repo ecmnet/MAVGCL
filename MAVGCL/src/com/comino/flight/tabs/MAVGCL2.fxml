@@ -106,7 +106,7 @@
 				</TabPane>
 				<DetailsWidget fx:id="details"
 				    StackPane.alignment="TOP_RIGHT"
-				    maxWidth="185"  visible="false"
+				    maxWidth="195"  visible="false"
 					styleClass="widget">
 					<StackPane.margin>
 						<Insets right="10.0" top="32.0" bottom="0.0" />
