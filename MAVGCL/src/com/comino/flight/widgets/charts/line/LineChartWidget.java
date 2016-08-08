@@ -137,7 +137,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private int resolution_ms 	= 50;
 
 	private int current_x_pt      = 0;
-	private int current_x_pt_max  = 0;
+
 	private int current_x0_pt     = 0;
 	private int current_x1_pt     = 0;
 
@@ -163,7 +163,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	public LineChartWidget() {
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
-
 
 		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();

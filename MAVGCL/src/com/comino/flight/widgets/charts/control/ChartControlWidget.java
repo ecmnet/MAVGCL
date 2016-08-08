@@ -126,6 +126,17 @@ public class ChartControlWidget extends WidgetPane  {
 			}
 		});
 
+
+		state.getLogLoadedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.booleanValue()) {
+			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
+				scroll.setDisable(true);
+			else
+				scroll.setDisable(false);
+			scroll.setValue(1);
+			}
+		});
+
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue()) {
 				scroll.setDisable(true);
