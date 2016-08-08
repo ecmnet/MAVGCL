@@ -13,7 +13,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Alt.GL" uom="m" mask="#0.0" key="ALTGL">
-		<MSPSource class="hud" field="al"></MSPSource>
+		<MSPSource class="hud" field="ar"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
 		<Groups>
 			<Group>Altitude</Group>
