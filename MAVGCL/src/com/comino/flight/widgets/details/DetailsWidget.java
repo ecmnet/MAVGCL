@@ -60,6 +60,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
@@ -106,6 +107,9 @@ public class DetailsWidget extends WidgetPane  {
 			"TARM",
 			"TBOOT",
 	};
+
+	@FXML
+	private ScrollPane scroll;
 
 	@FXML
 	private GridPane grid;
@@ -167,6 +171,8 @@ public class DetailsWidget extends WidgetPane  {
 
 
 	public void setup(IMAVController control) {
+
+		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
 
 		int i=0;
 		for(String k : key_figures_details) {

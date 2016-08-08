@@ -149,12 +149,12 @@
     -fx-padding: 4;
 }
 
-.tuning {
+.scroll-pane {
   -fx-background:  transparent;
   -fx-box-border:  transparent;
 }
 
-.tuning:focused {
+.scroll-pane:focused {
   -fx-background-color: #282828;
   -fx-box-border: #282828;
   -fx-control-inner-background: #282828;
@@ -164,7 +164,7 @@
 }
 
 
-.tuning .scroll-bar:vertical {
+.scroll-pane .scroll-bar:vertical {
     -fx-opacity: 0;
     -fx-padding: 0;
 }
