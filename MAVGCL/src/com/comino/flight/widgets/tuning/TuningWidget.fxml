@@ -13,6 +13,6 @@
 	<ChoiceBox fx:id="groups" prefHeight="19.0" prefWidth="225.0"
 		layoutX="10" layoutY="30" />
 	<ScrollPane fx:id="scroll" layoutX="15.0" layoutY="70.0" styleClass="tuning">
-		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="225.0" />
+		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="222.0" />
 	</ScrollPane>
 </fx:root>

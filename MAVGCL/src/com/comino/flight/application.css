@@ -150,8 +150,17 @@
 }
 
 .tuning {
-  -fx-background: transparent;
-  -fx-box-border:transparent;
+  -fx-background:  transparent;
+  -fx-box-border:  transparent;
+}
+
+.tuning:focused {
+  -fx-background-color: #282828;
+  -fx-box-border: #282828;
+  -fx-control-inner-background: #282828;
+  -fx-background-insets: -1.4, 0, 1;
+  -fx-background-radius: 1.4, 0, 0;
+  -fx-padding: 1; /* 0.083333em; */
 }
 
 
@@ -413,7 +422,7 @@
      -fx-text-fill: #F0F0F0;
  }
 
- .combo-box-popup .list-view .list-cell:hover {
+.combo-box-popup .list-view .list-cell:hover {
  	-fx-background-color: #707070;
 }
 

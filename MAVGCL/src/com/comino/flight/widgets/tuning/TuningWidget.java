@@ -136,7 +136,6 @@ public class TuningWidget extends WidgetPane  {
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(80));
 		grid.setVgap(4); grid.setHgap(6);
-
 	}
 
 	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
