@@ -247,6 +247,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					if(isPaused) {
 						current_x0_pt =  dataService.calculateX0Index(scroll.get());
 						setXResolution(timeFrame.get());
+						Platform.runLater(() -> {
+							updateGraph(true);
+						});
 						task.start();
 					}
 					else {
