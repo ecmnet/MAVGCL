@@ -408,6 +408,7 @@
 		<Groups>
 			<Group>Global Position</Group>
 		</Groups>
+		<Validity min="-2.5" max="2.5"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Air speed" uom="m/s" mask="#0.0" key="AIRV">
