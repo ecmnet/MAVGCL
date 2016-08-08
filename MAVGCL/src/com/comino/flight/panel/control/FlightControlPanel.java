@@ -32,10 +32,7 @@
  ****************************************************************************/
 package com.comino.flight.panel.control;
 
-import java.io.IOException;
-
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.air.AirWidget;
 import com.comino.flight.widgets.battery.BatteryWidget;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
@@ -47,7 +44,6 @@ import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 public class FlightControlPanel extends Pane  {

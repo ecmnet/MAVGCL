@@ -34,8 +34,6 @@ package com.comino.flight;
 
 import javafx.application.Platform;
 import javafx.application.Preloader;
-import javafx.application.Preloader.ProgressNotification;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;

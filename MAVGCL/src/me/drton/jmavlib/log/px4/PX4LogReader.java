@@ -1,11 +1,16 @@
 package me.drton.jmavlib.log.px4;
 
-import me.drton.jmavlib.log.BinaryLogReader;
-import me.drton.jmavlib.log.FormatErrorException;
-
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import me.drton.jmavlib.log.BinaryLogReader;
+import me.drton.jmavlib.log.FormatErrorException;
 
 /**
  * User: ton Date: 03.06.13 Time: 14:18

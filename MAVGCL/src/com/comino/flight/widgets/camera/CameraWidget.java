@@ -33,8 +33,6 @@
 
 package com.comino.flight.widgets.camera;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.prefs.Preferences;
@@ -51,8 +49,6 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {

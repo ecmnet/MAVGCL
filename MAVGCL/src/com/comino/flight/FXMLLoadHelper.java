@@ -34,7 +34,7 @@
 package com.comino.flight;
 
 import javafx.application.Application;
-import javafx.application.Preloader.*;
+import javafx.application.Preloader.ProgressNotification;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 

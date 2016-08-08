@@ -33,22 +33,16 @@
 
 package com.comino.flight.widgets.control;
 
-import java.io.IOException;
-
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.fx.controls.*;
+import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.Pane;
 
 public class ControlWidget extends WidgetPane implements IMSPModeChangedListener {
 

@@ -40,13 +40,9 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
-import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
-import com.comino.msp.model.DataModel;
 
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
-import me.drton.jmavlib.log.px4.PX4LogReader;
 
 public class PX4toModelConverter {
 

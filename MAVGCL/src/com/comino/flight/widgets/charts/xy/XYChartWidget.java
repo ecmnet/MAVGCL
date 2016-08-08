@@ -36,7 +36,6 @@ package com.comino.flight.widgets.charts.xy;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
 
 import javax.imageio.ImageIO;
 
@@ -49,25 +48,20 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;

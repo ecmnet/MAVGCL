@@ -49,11 +49,9 @@ import com.comino.flight.widgets.fx.controls.Badge;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
-import com.comino.msp.model.segment.State;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -65,7 +63,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 
 public class StatusLineWidget extends Pane implements IChartControl, IMSPModeChangedListener  {
 

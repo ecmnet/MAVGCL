@@ -41,7 +41,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.Hashtable;
 
 import com.comino.flight.model.AnalysisDataModel;

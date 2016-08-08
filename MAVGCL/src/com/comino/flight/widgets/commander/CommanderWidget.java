@@ -33,8 +33,6 @@
 
 package com.comino.flight.widgets.commander;
 
-import java.io.IOException;
-
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -52,9 +50,7 @@ import com.comino.msp.model.segment.Status;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 
 public class CommanderWidget extends WidgetPane  {
 

@@ -36,13 +36,11 @@ package com.comino.flight;
 import java.io.IOException;
 import java.util.Map;
 import java.util.prefs.Preferences;
-import javafx.application.Preloader.*;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.px4log.MAVPX4LogReader;
 import com.comino.flight.model.AnalysisDataModelMetaData;
-
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -64,7 +62,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

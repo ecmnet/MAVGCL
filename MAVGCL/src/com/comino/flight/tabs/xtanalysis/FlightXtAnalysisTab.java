@@ -33,15 +33,12 @@
 
 package com.comino.flight.tabs.xtanalysis;
 
-import java.io.IOException;
-
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.line.LineChartWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 public class FlightXtAnalysisTab extends Pane {
