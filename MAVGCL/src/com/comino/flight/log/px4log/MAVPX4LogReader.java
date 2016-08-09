@@ -184,7 +184,6 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 				return;
 
 			msg_log_data data = (msg_log_data) o;
-			System.out.println(data+" "+log_bytes_total);
 
 			for(int i=0;i< data.count;i++) {
 				try {
