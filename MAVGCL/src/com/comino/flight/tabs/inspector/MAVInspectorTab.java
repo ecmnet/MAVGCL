@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
@@ -163,6 +164,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
 		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
+
+		StateProperties.getInstance().getConnectedProperty().addListener((v,ov,nv) -> {
+			if(!nv.booleanValue()) {
+			   allData.clear();
+			   treetableview.getRoot().getChildren().clear();
+			}
+		});
 
 	}
 

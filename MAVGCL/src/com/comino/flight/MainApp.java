@@ -144,6 +144,9 @@ public class MainApp extends Application  {
 					if(args.get("SITL")!=null) {
 						control = new MAVUdpController("127.0.0.1",14556,14550, true);
 						new SITLController(control);
+					} if(args.get("PROXY")!=null) {
+						control = new MAVUdpController("127.0.0.1",14656,14650, true);
+						new SITLController(control);
 					}
 					else if(args.get("SIM")!=null)
 						control = new MAVSimController();
@@ -184,6 +187,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void stop() throws Exception {
+		System.out.println("closing...");
 		control.close();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
 		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());
