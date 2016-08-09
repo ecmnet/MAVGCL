@@ -76,6 +76,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
 	private long tms = 0;
+	private long start = 0;
 	private long time_utc=0;
 
 	private FutureTask<Void> to = null;
@@ -101,6 +102,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			return null;
 		});
 
+        start = System.currentTimeMillis();
 		collector.clearModelList();
 		isCollecting.set(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
@@ -182,6 +184,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 				return;
 
 			msg_log_data data = (msg_log_data) o;
+			System.out.println(data+" "+log_bytes_total);
 
 			for(int i=0;i< data.count;i++) {
 				try {
@@ -211,7 +214,8 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
 					converter.doConversion();
 					control.getCollector().setModelList(modelList);
-					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished");
+					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
+					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished +("+speed+" kbtyes/sec)");
 					state.getProgressProperty().set(-1);
 				} catch (Exception e) { e.printStackTrace(); }
 
