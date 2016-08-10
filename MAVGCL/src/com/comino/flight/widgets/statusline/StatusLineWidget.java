@@ -85,6 +85,9 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private Badge rc;
 
 	@FXML
+	private Badge px4;
+
+	@FXML
 	private ProgressBar progress;
 
 	private Task<Long> task;
@@ -246,6 +249,10 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 			else
 				rc.setMode(Badge.MODE_OFF);
 
+			if(newStat.isStatus(Status.MSP_READY))
+				px4.setMode(Badge.MODE_ON);
+			else
+				px4.setMode(Badge.MODE_OFF);
 		});
 	}
 

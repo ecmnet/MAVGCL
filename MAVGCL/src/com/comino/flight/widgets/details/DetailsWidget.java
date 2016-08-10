@@ -100,7 +100,7 @@ public class DetailsWidget extends WidgetPane  {
 			"BATP",
 			null,
 			"TEMP",
-			"CPU",
+			"CPUPX4",
 			"RSSI",
 			null,
 			"TARM",

@@ -11,12 +11,13 @@
 		<HBox layoutY="6.0" spacing="7.0">
 			<children>
 				<Label fx:id="version" prefHeight="16.0" prefWidth="185.0" text="" />
-				<Badge fx:id="driver" prefHeight="16.0" prefWidth="150.0" color="DARKCYAN" text="" />
+				<Badge fx:id="driver" prefHeight="16.0" prefWidth="200.0" color="DARKCYAN" text="" />
 				<Badge fx:id="messages" prefHeight="16.0" prefWidth="300" text="" color="GRAY"/>
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="DARKCYAN" />
-				<ProgressBar fx:id="progress" prefHeight="16.0" prefWidth="200.0" />
+				<Badge fx:id="px4" prefHeight="16.0" prefWidth="30.0" text="PX4" color="YELLOW" />
+				<ProgressBar fx:id="progress" prefHeight="16.0" prefWidth="130.0" />
 			</children>
 		</HBox>
 	</children>
