@@ -947,16 +947,26 @@
 		<Validity min="0.2" max="1.0"/>
 	</KeyFigure>
 
-	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPU">
+	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPUPX4">
 		<MSPSource class="sys" field="load_p">
-		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		   <Converter class="ExpressionConverter" expression="CPUPX4/100" />
 		</MSPSource>
 		<PX4Source field="LOAD.CPU">
-		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		   <Converter class="ExpressionConverter" expression="CPUPX4/100" />
 		</PX4Source>
 		<ULogSource field="cpuload_0.load">
-		   <Converter class="ExpressionConverter" expression="CPU/100" />
+		   <Converter class="ExpressionConverter" expression="CPUPX4/100" />
 		</ULogSource>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+		<Validity min="0" max="0.8"/>
+	</KeyFigure>
+
+	<KeyFigure desc="CPU Load (MSP)" uom="%" mask="#0" key="CPUMSP">
+		<MSPSource class="sys" field="load_m">
+		   <Converter class="ExpressionConverter" expression="CPUMSP/100" />
+		</MSPSource>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
