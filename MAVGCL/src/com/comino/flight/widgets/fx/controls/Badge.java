@@ -36,13 +36,14 @@ package com.comino.flight.widgets.fx.controls;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class Badge extends Label {
 
-	private final String DEFAULT_CSS = "-fx-alignment: center;-fx-border-radius: 3;-fx-background-radius: 3;-fx-padding: 2;";
+	private String DEFAULT_CSS = "-fx-border-radius: 3;-fx-background-radius: 3;-fx-padding: 2;";
 
 	public final static int MODE_OFF 		=  0;
 	public final static int MODE_ON 		=  1;
@@ -60,6 +61,7 @@ public class Badge extends Label {
 		this.setDisable(false);
 		this.setPrefWidth(999);
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
+		this.setAlignment(Pos.CENTER);
 		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 	}
 

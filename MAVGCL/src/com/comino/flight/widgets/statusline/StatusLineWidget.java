@@ -58,6 +58,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
@@ -83,9 +84,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 
 	@FXML
 	private Badge rc;
-
-	@FXML
-	private Badge px4;
 
 	@FXML
 	private ProgressBar progress;
@@ -194,7 +192,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 				return System.currentTimeMillis();
 			}
 		};
-
+        driver.setAlignment(Pos.CENTER_LEFT);
 		messages.setTooltip(new Tooltip("Click to show messages"));
 	}
 
@@ -249,10 +247,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 			else
 				rc.setMode(Badge.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_READY))
-				px4.setMode(Badge.MODE_ON);
-			else
-				px4.setMode(Badge.MODE_OFF);
 		});
 	}
 
