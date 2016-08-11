@@ -264,6 +264,53 @@ velocity</short_desc>
     </parameter>
   </group>
   <group name="Battery Calibration">
+    <parameter default="10000" name="BAT_V_SCALE_IO" type="INT32">
+      <short_desc>Scaling factor for battery voltage sensor on PX4IO</short_desc>
+      <min>1</min>
+      <max>100000</max>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="-1.0" name="BAT_CNT_V_VOLT" type="FLOAT">
+      <short_desc>Scaling from ADC counts to volt on the ADC input (battery voltage)</short_desc>
+      <long_desc>This is not the battery voltage, but the intermediate ADC voltage. A value of -1 signifies that the board defaults are used, which is highly recommended.</long_desc>
+      <decimal>8</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="-1.0" name="BAT_CNT_V_CURR" type="FLOAT">
+      <short_desc>Scaling from ADC counts to volt on the ADC input (battery current)</short_desc>
+      <long_desc>This is not the battery current, but the intermediate ADC voltage. A value of -1 signifies that the board defaults are used, which is highly recommended.</long_desc>
+      <decimal>8</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.0" name="BAT_V_OFFS_CURR" type="FLOAT">
+      <short_desc>Offset in volt as seen by the ADC input of the current sensor</short_desc>
+      <long_desc>This offset will be subtracted before calculating the battery current based on the voltage.</long_desc>
+      <decimal>8</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="-1.0" name="BAT_V_DIV" type="FLOAT">
+      <short_desc>Battery voltage divider (V divider)</short_desc>
+      <long_desc>This is the divider from battery voltage to 3.3V ADC voltage. If using e.g. Mauch power modules the value from the datasheet can be applied straight here. A value of -1 means to use the board default.</long_desc>
+      <decimal>8</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="-1.0" name="BAT_A_PER_V" type="FLOAT">
+      <short_desc>Battery current per volt (A/V)</short_desc>
+      <long_desc>The voltage seen by the 3.3V ADC multiplied by this factor will determine the battery current. A value of -1 means to use the board default.</long_desc>
+      <decimal>8</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0" name="BAT_SOURCE" type="INT32">
+      <short_desc>Battery monitoring source</short_desc>
+      <long_desc>This parameter controls the source of battery data. The value 'Power Module' means that measurements are expected to come from a power module. If the value is set to 'External' then the system expects to receive mavlink battery status messages.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="1">External</value>
+        <value code="0">Power Module</value>
+      </values>
+    </parameter>
     <parameter default="3.4" name="BAT_V_EMPTY" type="FLOAT">
       <short_desc>Empty cell voltage (5C load)</short_desc>
       <long_desc>Defines the voltage where a single cell of the battery is considered empty. The voltage should be chosen before the steep dropoff to 2.8V. A typical lithium battery can only be discharged down to 10% before it drops off to a voltage level damaging the cells.</long_desc>
@@ -343,53 +390,6 @@ velocity</short_desc>
       <decimal>0</decimal>
       <increment>50</increment>
       <scope>modules/systemlib</scope>
-    </parameter>
-    <parameter default="10000" name="BAT_V_SCALE_IO" type="INT32">
-      <short_desc>Scaling factor for battery voltage sensor on PX4IO</short_desc>
-      <min>1</min>
-      <max>100000</max>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="-1.0" name="BAT_CNT_V_VOLT" type="FLOAT">
-      <short_desc>Scaling from ADC counts to volt on the ADC input (battery voltage)</short_desc>
-      <long_desc>This is not the battery voltage, but the intermediate ADC voltage. A value of -1 signifies that the board defaults are used, which is highly recommended.</long_desc>
-      <decimal>8</decimal>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="-1.0" name="BAT_CNT_V_CURR" type="FLOAT">
-      <short_desc>Scaling from ADC counts to volt on the ADC input (battery current)</short_desc>
-      <long_desc>This is not the battery current, but the intermediate ADC voltage. A value of -1 signifies that the board defaults are used, which is highly recommended.</long_desc>
-      <decimal>8</decimal>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="0.0" name="BAT_V_OFFS_CURR" type="FLOAT">
-      <short_desc>Offset in volt as seen by the ADC input of the current sensor</short_desc>
-      <long_desc>This offset will be subtracted before calculating the battery current based on the voltage.</long_desc>
-      <decimal>8</decimal>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="-1.0" name="BAT_V_DIV" type="FLOAT">
-      <short_desc>Battery voltage divider (V divider)</short_desc>
-      <long_desc>This is the divider from battery voltage to 3.3V ADC voltage. If using e.g. Mauch power modules the value from the datasheet can be applied straight here. A value of -1 means to use the board default.</long_desc>
-      <decimal>8</decimal>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="-1.0" name="BAT_A_PER_V" type="FLOAT">
-      <short_desc>Battery current per volt (A/V)</short_desc>
-      <long_desc>The voltage seen by the 3.3V ADC multiplied by this factor will determine the battery current. A value of -1 means to use the board default.</long_desc>
-      <decimal>8</decimal>
-      <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="0" name="BAT_SOURCE" type="INT32">
-      <short_desc>Battery monitoring source</short_desc>
-      <long_desc>This parameter controls the source of battery data. The value 'Power Module' means that measurements are expected to come from a power module. If the value is set to 'External' then the system expects to receive mavlink battery status messages.</long_desc>
-      <min>0</min>
-      <max>1</max>
-      <scope>modules/sensors</scope>
-      <values>
-        <value code="1">External</value>
-        <value code="0">Power Module</value>
-      </values>
     </parameter>
   </group>
   <group name="Camera trigger">
@@ -689,6 +689,31 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
     </parameter>
   </group>
   <group name="Data Link Loss">
+    <parameter default="-265847810" name="NAV_AH_LAT" type="INT32">
+      <short_desc>Airfield home Lat</short_desc>
+      <long_desc>Latitude of airfield home waypoint</long_desc>
+      <min>-900000000</min>
+      <max>900000000</max>
+      <unit>deg * 1e7</unit>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="1518423250" name="NAV_AH_LON" type="INT32">
+      <short_desc>Airfield home Lon</short_desc>
+      <long_desc>Longitude of airfield home waypoint</long_desc>
+      <min>-1800000000</min>
+      <max>1800000000</max>
+      <unit>deg * 1e7</unit>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="600.0" name="NAV_AH_ALT" type="FLOAT">
+      <short_desc>Airfield home alt</short_desc>
+      <long_desc>Altitude of airfield home waypoint</long_desc>
+      <min>-50</min>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
     <parameter default="120.0" name="NAV_DLL_CH_T" type="FLOAT">
       <short_desc>Comms hold wait time</short_desc>
       <long_desc>The amount of time in seconds the system should wait at the comms hold waypoint</long_desc>
@@ -746,31 +771,6 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <short_desc>Skip comms hold wp</short_desc>
       <long_desc>If set to 1 the system will skip the comms hold wp on data link loss and will directly fly to airfield home</long_desc>
       <boolean />
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="-265847810" name="NAV_AH_LAT" type="INT32">
-      <short_desc>Airfield home Lat</short_desc>
-      <long_desc>Latitude of airfield home waypoint</long_desc>
-      <min>-900000000</min>
-      <max>900000000</max>
-      <unit>deg * 1e7</unit>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="1518423250" name="NAV_AH_LON" type="INT32">
-      <short_desc>Airfield home Lon</short_desc>
-      <long_desc>Longitude of airfield home waypoint</long_desc>
-      <min>-1800000000</min>
-      <max>1800000000</max>
-      <unit>deg * 1e7</unit>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="600.0" name="NAV_AH_ALT" type="FLOAT">
-      <short_desc>Airfield home alt</short_desc>
-      <long_desc>Altitude of airfield home waypoint</long_desc>
-      <min>-50</min>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
       <scope>modules/navigator</scope>
     </parameter>
   </group>
@@ -1900,6 +1900,16 @@ value will determine the minimum airspeed which will still be fused</short_desc>
     </parameter>
   </group>
   <group name="FW TECS">
+    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
+      <short_desc>Cruise Airspeed</short_desc>
+      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
+      <min>0.0</min>
+      <max>40</max>
+      <unit>m/s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
     <parameter default="10.0" name="FW_AIRSPD_MIN" type="FLOAT">
       <short_desc>Minimum Airspeed</short_desc>
       <long_desc>If the airspeed falls below this value, the TECS controller will try to increase airspeed more aggressively.</long_desc>
@@ -2068,16 +2078,6 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <decimal>2</decimal>
       <increment>0.01</increment>
       <scope>modules/fw_pos_control_l1</scope>
-    </parameter>
-    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
-      <short_desc>Cruise Airspeed</short_desc>
-      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
-      <min>0.0</min>
-      <max>40</max>
-      <unit>m/s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
     </parameter>
   </group>
   <group name="Follow target">
@@ -2742,90 +2742,6 @@ EPV used if greater than this value</short_desc>
     </parameter>
   </group>
   <group name="Mission">
-    <parameter default="0" name="COM_OBL_ACT" type="INT32">
-      <short_desc>Set offboard loss failsafe mode</short_desc>
-      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
-      <scope>modules/commander</scope>
-      <values>
-        <value code="1">Loiter</value>
-        <value code="0">Land at current position</value>
-        <value code="2">Return to Land</value>
-      </values>
-    </parameter>
-    <parameter default="0" name="COM_OBL_RC_ACT" type="INT32">
-      <short_desc>Set offboard loss failsafe mode when RC is available</short_desc>
-      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
-      <scope>modules/commander</scope>
-      <values>
-        <value code="1">Altitude control</value>
-        <value code="0">Position control</value>
-        <value code="3">Return to Land</value>
-        <value code="2">Manual</value>
-        <value code="4">Land at current position</value>
-      </values>
-    </parameter>
-    <parameter default="50.0" name="NAV_LOITER_RAD" type="FLOAT">
-      <short_desc>Loiter radius (FW only)</short_desc>
-      <long_desc>Default value of loiter radius for missions, loiter, RTL, etc. (fixedwing only).</long_desc>
-      <min>25</min>
-      <max>1000</max>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="10.0" name="NAV_ACC_RAD" type="FLOAT">
-      <short_desc>Acceptance Radius</short_desc>
-      <long_desc>Default acceptance radius, overridden by acceptance radius of waypoint if set. For fixed wing the L1 turning distance is used for horizontal acceptance.</long_desc>
-      <min>0.05</min>
-      <max>200.0</max>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="10.0" name="NAV_FW_ALT_RAD" type="FLOAT">
-      <short_desc>FW Altitude Acceptance Radius</short_desc>
-      <long_desc>Acceptance radius for fixedwing altitude.</long_desc>
-      <min>0.05</min>
-      <max>200.0</max>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="3.0" name="NAV_MC_ALT_RAD" type="FLOAT">
-      <short_desc>MC Altitude Acceptance Radius</short_desc>
-      <long_desc>Acceptance radius for multicopter altitude.</long_desc>
-      <min>0.05</min>
-      <max>200.0</max>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="0" name="NAV_DLL_ACT" type="INT32">
-      <short_desc>Set data link loss failsafe mode</short_desc>
-      <long_desc>The data link loss failsafe will only be entered after a timeout, set by COM_DL_LOSS_T in seconds. Once the timeout occurs the selected action will be executed. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
-      <scope>modules/navigator</scope>
-      <values>
-        <value code="1">Loiter</value>
-        <value code="0">Disabled</value>
-        <value code="3">Land at current position</value>
-        <value code="2">Return to Land</value>
-      </values>
-    </parameter>
-    <parameter default="2" name="NAV_RCL_ACT" type="INT32">
-      <short_desc>Set RC loss failsafe mode</short_desc>
-      <long_desc>The RC loss failsafe will only be entered after a timeout, set by COM_RC_LOSS_T in seconds. If RC input checks have been disabled by setting the COM_RC_IN_MODE param it will not be triggered. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
-      <scope>modules/navigator</scope>
-      <values>
-        <value code="1">Loiter</value>
-        <value code="0">Disabled</value>
-        <value code="3">Land at current position</value>
-        <value code="2">Return to Land</value>
-      </values>
-    </parameter>
     <parameter default="10.0" name="MIS_TAKEOFF_ALT" type="FLOAT">
       <short_desc>Take-off altitude</short_desc>
       <long_desc>This is the minimum altitude the system will take off to.</long_desc>
@@ -2914,6 +2830,90 @@ EPV used if greater than this value</short_desc>
       <short_desc>Weather-vane mode for loiter mode</short_desc>
       <boolean />
       <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="50.0" name="NAV_LOITER_RAD" type="FLOAT">
+      <short_desc>Loiter radius (FW only)</short_desc>
+      <long_desc>Default value of loiter radius for missions, loiter, RTL, etc. (fixedwing only).</long_desc>
+      <min>25</min>
+      <max>1000</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="10.0" name="NAV_ACC_RAD" type="FLOAT">
+      <short_desc>Acceptance Radius</short_desc>
+      <long_desc>Default acceptance radius, overridden by acceptance radius of waypoint if set. For fixed wing the L1 turning distance is used for horizontal acceptance.</long_desc>
+      <min>0.05</min>
+      <max>200.0</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="10.0" name="NAV_FW_ALT_RAD" type="FLOAT">
+      <short_desc>FW Altitude Acceptance Radius</short_desc>
+      <long_desc>Acceptance radius for fixedwing altitude.</long_desc>
+      <min>0.05</min>
+      <max>200.0</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="3.0" name="NAV_MC_ALT_RAD" type="FLOAT">
+      <short_desc>MC Altitude Acceptance Radius</short_desc>
+      <long_desc>Acceptance radius for multicopter altitude.</long_desc>
+      <min>0.05</min>
+      <max>200.0</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="0" name="NAV_DLL_ACT" type="INT32">
+      <short_desc>Set data link loss failsafe mode</short_desc>
+      <long_desc>The data link loss failsafe will only be entered after a timeout, set by COM_DL_LOSS_T in seconds. Once the timeout occurs the selected action will be executed. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
+      <scope>modules/navigator</scope>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Disabled</value>
+        <value code="3">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
+    </parameter>
+    <parameter default="2" name="NAV_RCL_ACT" type="INT32">
+      <short_desc>Set RC loss failsafe mode</short_desc>
+      <long_desc>The RC loss failsafe will only be entered after a timeout, set by COM_RC_LOSS_T in seconds. If RC input checks have been disabled by setting the COM_RC_IN_MODE param it will not be triggered. Setting this parameter to 4 will enable CASA Outback Challenge rules, which are only recommended to participants of that competition.</long_desc>
+      <scope>modules/navigator</scope>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Disabled</value>
+        <value code="3">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="COM_OBL_ACT" type="INT32">
+      <short_desc>Set offboard loss failsafe mode</short_desc>
+      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Loiter</value>
+        <value code="0">Land at current position</value>
+        <value code="2">Return to Land</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="COM_OBL_RC_ACT" type="INT32">
+      <short_desc>Set offboard loss failsafe mode when RC is available</short_desc>
+      <long_desc>The offboard loss failsafe will only be entered after a timeout, set by COM_OF_LOSS_T in seconds.</long_desc>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Altitude control</value>
+        <value code="0">Position control</value>
+        <value code="3">Return to Land</value>
+        <value code="2">Manual</value>
+        <value code="4">Land at current position</value>
+      </values>
     </parameter>
   </group>
   <group name="Multicopter Attitude Control">
@@ -3735,6 +3735,48 @@ EPV used if greater than this value</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
+    <parameter default="0" name="PWM_AUX_REV1" type="INT32">
+      <short_desc>Invert direction of aux output channel 1</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV2" type="INT32">
+      <short_desc>Invert direction of aux output channel 2</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV3" type="INT32">
+      <short_desc>Invert direction of aux output channel 3</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV4" type="INT32">
+      <short_desc>Invert direction of aux output channel 4</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV5" type="INT32">
+      <short_desc>Invert direction of aux output channel 5</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV6" type="INT32">
+      <short_desc>Invert direction of aux output channel 6</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
     <parameter default="0" name="PWM_MAIN_REV1" type="INT32">
       <short_desc>Invert direction of main output channel 1</short_desc>
       <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
@@ -3796,48 +3838,6 @@ EPV used if greater than this value</short_desc>
       <long_desc>Set to 1 to enable S.BUS version 1 output instead of RSSI.</long_desc>
       <boolean />
       <scope>drivers/px4io</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV1" type="INT32">
-      <short_desc>Invert direction of aux output channel 1</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV2" type="INT32">
-      <short_desc>Invert direction of aux output channel 2</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV3" type="INT32">
-      <short_desc>Invert direction of aux output channel 3</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV4" type="INT32">
-      <short_desc>Invert direction of aux output channel 4</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV5" type="INT32">
-      <short_desc>Invert direction of aux output channel 5</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV6" type="INT32">
-      <short_desc>Invert direction of aux output channel 6</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
     </parameter>
   </group>
   <group name="Payload drop">
@@ -4256,33 +4256,6 @@ EPV used if greater than this value</short_desc>
     </parameter>
   </group>
   <group name="Radio Calibration">
-    <parameter default="0.0" name="TRIM_ROLL" type="FLOAT">
-      <short_desc>Roll trim</short_desc>
-      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
-      <min>-0.25</min>
-      <max>0.25</max>
-      <decimal>2</decimal>
-      <increment>0.01</increment>
-      <scope>modules/commander</scope>
-    </parameter>
-    <parameter default="0.0" name="TRIM_PITCH" type="FLOAT">
-      <short_desc>Pitch trim</short_desc>
-      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
-      <min>-0.25</min>
-      <max>0.25</max>
-      <decimal>2</decimal>
-      <increment>0.01</increment>
-      <scope>modules/commander</scope>
-    </parameter>
-    <parameter default="0.0" name="TRIM_YAW" type="FLOAT">
-      <short_desc>Yaw trim</short_desc>
-      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
-      <min>-0.25</min>
-      <max>0.25</max>
-      <decimal>2</decimal>
-      <increment>0.01</increment>
-      <scope>modules/commander</scope>
-    </parameter>
     <parameter default="1000.0" name="RC1_MIN" type="FLOAT">
       <short_desc>RC Channel 1 Minimum</short_desc>
       <long_desc>Minimum value for RC channel 1</long_desc>
@@ -5388,6 +5361,33 @@ EPV used if greater than this value</short_desc>
       <min>0</min>
       <max>2000</max>
       <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.0" name="TRIM_ROLL" type="FLOAT">
+      <short_desc>Roll trim</short_desc>
+      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
+      <min>-0.25</min>
+      <max>0.25</max>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.0" name="TRIM_PITCH" type="FLOAT">
+      <short_desc>Pitch trim</short_desc>
+      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
+      <min>-0.25</min>
+      <max>0.25</max>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.0" name="TRIM_YAW" type="FLOAT">
+      <short_desc>Yaw trim</short_desc>
+      <long_desc>The trim value is the actuator control value the system needs for straight and level flight. It can be calibrated by flying manually straight and level using the RC trims and copying them using the GCS.</long_desc>
+      <min>-0.25</min>
+      <max>0.25</max>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/commander</scope>
     </parameter>
   </group>
   <group name="Radio Signal Loss">
@@ -7297,6 +7297,50 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     </parameter>
   </group>
   <group name="Miscellaneous">
+    <parameter default="10.0" name="SEG_TH2V_P" type="FLOAT">
+      <short_desc>SEG_TH2V_P</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I" type="FLOAT">
+      <short_desc>SEG_TH2V_I</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I_MAX" type="FLOAT">
+      <short_desc>SEG_TH2V_I_MAX</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="1.0" name="SEG_Q2V" type="FLOAT">
+      <short_desc>SEG_Q2V</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="0" name="RC_MAP_FAILSAFE" type="INT32">
+      <short_desc>Failsafe channel mapping</short_desc>
+      <long_desc>The RC mapping index indicates which channel is used for failsafe If 0, whichever channel is mapped to throttle is used otherwise the value indicates the specific rc channel to use</long_desc>
+      <min>0</min>
+      <max>18</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="11">Channel 11</value>
+        <value code="10">Channel 10</value>
+        <value code="13">Channel 13</value>
+        <value code="12">Channel 12</value>
+        <value code="15">Channel 15</value>
+        <value code="14">Channel 14</value>
+        <value code="17">Channel 17</value>
+        <value code="16">Channel 16</value>
+        <value code="18">Channel 18</value>
+        <value code="1">Channel 1</value>
+        <value code="0">Unassigned</value>
+        <value code="3">Channel 3</value>
+        <value code="2">Channel 2</value>
+        <value code="5">Channel 5</value>
+        <value code="4">Channel 4</value>
+        <value code="7">Channel 7</value>
+        <value code="6">Channel 6</value>
+        <value code="9">Channel 9</value>
+        <value code="8">Channel 8</value>
+      </values>
+    </parameter>
     <parameter default="-1" name="COM_FLTMODE1" type="INT32">
       <short_desc>First flightmode slot (1000-1160)</short_desc>
       <long_desc>If the main switch channel is in this range the selected flight mode will be applied.</long_desc>
@@ -7423,54 +7467,6 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
         <value code="8">Stabilized</value>
       </values>
     </parameter>
-    <parameter default="10.0" name="SEG_TH2V_P" type="FLOAT">
-      <short_desc>SEG_TH2V_P</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="0.0" name="SEG_TH2V_I" type="FLOAT">
-      <short_desc>SEG_TH2V_I</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="0.0" name="SEG_TH2V_I_MAX" type="FLOAT">
-      <short_desc>SEG_TH2V_I_MAX</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="1.0" name="SEG_Q2V" type="FLOAT">
-      <short_desc>SEG_Q2V</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="0" name="RC_MAP_FAILSAFE" type="INT32">
-      <short_desc>Failsafe channel mapping</short_desc>
-      <long_desc>The RC mapping index indicates which channel is used for failsafe If 0, whichever channel is mapped to throttle is used otherwise the value indicates the specific rc channel to use</long_desc>
-      <min>0</min>
-      <max>18</max>
-      <scope>modules/sensors</scope>
-      <values>
-        <value code="11">Channel 11</value>
-        <value code="10">Channel 10</value>
-        <value code="13">Channel 13</value>
-        <value code="12">Channel 12</value>
-        <value code="15">Channel 15</value>
-        <value code="14">Channel 14</value>
-        <value code="17">Channel 17</value>
-        <value code="16">Channel 16</value>
-        <value code="18">Channel 18</value>
-        <value code="1">Channel 1</value>
-        <value code="0">Unassigned</value>
-        <value code="3">Channel 3</value>
-        <value code="2">Channel 2</value>
-        <value code="5">Channel 5</value>
-        <value code="4">Channel 4</value>
-        <value code="7">Channel 7</value>
-        <value code="6">Channel 6</value>
-        <value code="9">Channel 9</value>
-        <value code="8">Channel 8</value>
-      </values>
-    </parameter>
-    <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
-      <short_desc>RV_YAW_P</short_desc>
-      <scope>examples/rover_steering_control</scope>
-    </parameter>
     <parameter default="0.1" name="EXFW_HDNG_P" type="FLOAT">
       <short_desc>EXFW_HDNG_P</short_desc>
       <scope>examples/fixedwing_control</scope>
@@ -7482,6 +7478,10 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     <parameter default="0.2" name="EXFW_PITCH_P" type="FLOAT">
       <short_desc>EXFW_PITCH_P</short_desc>
       <scope>examples/fixedwing_control</scope>
+    </parameter>
+    <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
+      <short_desc>RV_YAW_P</short_desc>
+      <scope>examples/rover_steering_control</scope>
     </parameter>
   </group>
 </parameters>
