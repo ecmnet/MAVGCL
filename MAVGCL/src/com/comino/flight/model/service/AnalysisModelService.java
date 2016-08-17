@@ -159,7 +159,6 @@ public class AnalysisModelService {
 			modelList.add(e);
 
 		});
-		modelList.addAll(list);
 	}
 
 	public void clearModelList() {
