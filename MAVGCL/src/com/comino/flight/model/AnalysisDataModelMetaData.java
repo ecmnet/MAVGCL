@@ -204,10 +204,6 @@ public class AnalysisDataModelMetaData extends Observable {
 				buildDataSource(KeyFigureMetaData.VIR_SOURCE, keyfigure,node);
 			}
 
-//			if(node.getNodeName().equals("Converter")) {
-//				buildConverter(keyfigure,node);
-//			}
-
 			if(node.getNodeName().equals("Validity")) {
 				keyfigure.setBounds(
                  Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
@@ -233,17 +229,6 @@ public class AnalysisDataModelMetaData extends Observable {
 		}
 		return keyfigure;
 	}
-
-//	private void buildConverter(KeyFigureMetaData keyfigure, Node c_node) {
-//		NamedNodeMap att = c_node.getAttributes();
-//		if(att.getLength()>1) {
-//			String[] params = new String[att.getLength()-1];
-//			for(int p=1; p<att.getLength();p++)
-//				params[p-1] = att.item(p).getTextContent();
-//			keyfigure.setConverter(att.getNamedItem("class").getTextContent(),params);
-//		}
-//	}
-
 
 	private void buildDataSource(int type,KeyFigureMetaData keyfigure, Node node) {
 		String[] params = null; String class_c = null;
