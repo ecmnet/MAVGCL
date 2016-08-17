@@ -43,6 +43,15 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="VirtDemo" uom="m" mask="#0.00" key="VIRTDEMO">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="(LPOSZ - SPLPOSZ)/SPLPOSZ" var0="LPOSZ" var1="SPLPOSZ"/>
+		</VirtualSource>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
 
 
 </AnalysisDataModel>
