@@ -191,24 +191,17 @@ public class AnalysisDataModelMetaData extends Observable {
 			Node node = kf_node.getChildNodes().item(i);
 			if(node.getNodeName().equals("MSPSource")) {
 				buildDataSource(KeyFigureMetaData.MSP_SOURCE, keyfigure,node);
-//
-//				keyfigure.setSource(KeyFigureMetaData.MSP_SOURCE,
-//					node.getAttributes().getNamedItem("class").getTextContent(),
-//					node.getAttributes().getNamedItem("field").getTextContent(), null, null);
 			}
 			if(node.getNodeName().equals("PX4Source")) {
 				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
-
-//
-//				keyfigure.setSource(KeyFigureMetaData.PX4_SOURCE,
-//						node.getAttributes().getNamedItem("field").getTextContent(), null, null);
 			}
 
 			if(node.getNodeName().equals("ULogSource")) {
 				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
+			}
 
-//				keyfigure.setSource(KeyFigureMetaData.ULG_SOURCE,
-//						node.getAttributes().getNamedItem("field").getTextContent(), null, null);
+			if(node.getNodeName().equals("VirtualSource")) {
+				buildDataSource(KeyFigureMetaData.VIR_SOURCE, keyfigure,node);
 			}
 
 //			if(node.getNodeName().equals("Converter")) {
@@ -269,7 +262,8 @@ public class AnalysisDataModelMetaData extends Observable {
 		}
 		keyfigure.setSource(type,
 				node.getAttributes().getNamedItem("class")!=null ? node.getAttributes().getNamedItem("class").getTextContent() : null,
-				node.getAttributes().getNamedItem("field").getTextContent(), class_c, params);
+				node.getAttributes().getNamedItem("field")!=null ? node.getAttributes().getNamedItem("field").getTextContent() : null,
+					class_c, params);
 	}
 
 }

@@ -995,5 +995,16 @@
 		</MSPSource>
 	</KeyFigure>
 
+  <!-- virtual keyfigure definition  -->
+
+	<KeyFigure desc="Loc.Pos.Z error" uom="m" mask="#0.00" key="LPOSZERROR">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="LPOSZ - SPLPOSZ" var0="LPOSZ" var1="SPLPOSZ"/>
+		</VirtualSource>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
 
 </AnalysisDataModel>

@@ -75,6 +75,7 @@ public class PX4toModelConverter {
 					model.tms = tms;
 					tms_slot += 50000;
 					model.setValuesPX4(data, meta);
+					model.calculateVirtualKeyFigures(meta);
 					list.add(model.clone());
 				}
 			}

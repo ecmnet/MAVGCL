@@ -33,6 +33,9 @@
 
 package com.comino.flight.model.converter;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+
 public abstract class SourceConverter {
 	public SourceConverter() {
 	}
@@ -40,6 +43,8 @@ public abstract class SourceConverter {
 	public abstract void setParameter(String kfname,String[] params);
 
 	public abstract float convert(float val);
+
+	public abstract float convert(AnalysisDataModel data);
 
 
 }

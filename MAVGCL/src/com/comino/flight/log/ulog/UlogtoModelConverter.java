@@ -77,6 +77,7 @@ public class UlogtoModelConverter {
 					model.tms = tms;
 					tms_slot += 50000;
 					model.setValuesULog(data, meta);
+					model.calculateVirtualKeyFigures(meta);
 					list.add(model);
 				}
 			}

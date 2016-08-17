@@ -33,6 +33,9 @@
 
 package com.comino.flight.model.converter;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.AnalysisDataModelMetaData;
+
 public class BitMaskConverter extends SourceConverter {
 
 	int mask = 0;
@@ -52,6 +55,12 @@ public class BitMaskConverter extends SourceConverter {
 
 	public BitMaskConverter() {
 		super();
+	}
+
+
+	@Override
+	public float convert(AnalysisDataModel md) {
+		return 0;
 	}
 
 }

@@ -46,6 +46,8 @@ public class KeyFigureMetaData {
 	public static final int PX4_SOURCE = 2;
 	public static final int ULG_SOURCE = 3;
 
+	public static final int VIR_SOURCE = 9;
+
 	public String desc1;
 	public String desc2;
 	public String uom;
@@ -53,6 +55,8 @@ public class KeyFigureMetaData {
 	public int    hash;
 	public float  min;
 	public float  max;
+
+	public boolean isVirtual = false;
 
 	private String key;
 
@@ -82,6 +86,7 @@ public class KeyFigureMetaData {
 	}
 
 	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
+		isVirtual = type==VIR_SOURCE;
 		if(class_c!=null) {
 			try {
 				SourceConverter conv = null;
@@ -141,6 +146,14 @@ public class KeyFigureMetaData {
 		return value;
 	}
 
+	public float calculateVirtualValue(AnalysisDataModel data) {
+		float value = 0;
+		DataSource source = sources.get(VIR_SOURCE);
+		if(source.converter != null)
+			return source.converter.convert(data);
+		return 0;
+	}
+
 	public String toString() {
 		return desc1;
 	}
@@ -161,7 +174,4 @@ public class KeyFigureMetaData {
 		public String field;
 		public SourceConverter converter;
 	}
-
-
-
 }
