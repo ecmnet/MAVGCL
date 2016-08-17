@@ -39,17 +39,25 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-public class ExpressionConverter extends SourceConverter {
+public class VirtualConverter extends SourceConverter {
 
 	private Expression calc = null;
 	private String kfname;
+	private String[] params;
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
 		this.kfname = kfname;
+		this.params = params;
+
 		Runnable r = new Runnable() {
 			public void run() {
-				calc = new ExpressionBuilder(params[0]).variable(kfname).build();
+				ExpressionBuilder exp = new ExpressionBuilder(params[0]);
+				if(params.length>0) {
+				for(int i=1;i<params.length;i++)
+				     exp.variable(params[i]);
+				}
+				calc = exp.build();
 			}
 		};
 		new Thread(r).start();
@@ -57,17 +65,20 @@ public class ExpressionConverter extends SourceConverter {
 
 	@Override
 	public float convert(float val) {
-		calc.setVariable(kfname, val);
-		return (float)calc.evaluate();
+		return 0;
 	}
 
-	public ExpressionConverter() {
+	public VirtualConverter() {
 		super();
 	}
 
 	@Override
-	public float convert(AnalysisDataModel md) {
-		return 0;
+	public float convert(AnalysisDataModel data) {
+		if(params.length>1) {
+			for(int i=1;i<params.length;i++)
+        		calc.setVariable(params[i], data.getValue(params[i]));
+		}
+		return (float)calc.evaluate();
 	}
 
 }

@@ -154,6 +154,11 @@ public class AnalysisModelService {
 	public void setModelList(List<AnalysisDataModel> list) {
 		mode = STOPPED;
 		modelList.clear();
+		list.forEach((e) -> {
+			e.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+			modelList.add(e);
+
+		});
 		modelList.addAll(list);
 	}
 
@@ -234,6 +239,7 @@ public class AnalysisModelService {
 					tms = current.msg.tms+100;
 				} else
 					current.msg = null;
+				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
 			}
 		}

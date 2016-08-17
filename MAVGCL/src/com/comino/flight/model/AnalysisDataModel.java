@@ -96,7 +96,8 @@ public class AnalysisDataModel {
 	public void setValuesMSP(DataModel m, AnalysisDataModelMetaData md) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
-				data.put(e.hash,e.getValueFromMSPModel(m));
+				if(!e.isVirtual)
+				  data.put(e.hash,e.getValueFromMSPModel(m));
 			} catch (Exception e1) { }
 		});
 	}
@@ -104,7 +105,8 @@ public class AnalysisDataModel {
 	public void setValuesPX4(Map<String,Object> d, AnalysisDataModelMetaData md) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
-				data.put(e.hash,e.getValueFromPX4Model(d));
+				if(!e.isVirtual)
+				  data.put(e.hash,e.getValueFromPX4Model(d));
 			} catch (Exception e1) {  }
 		});
 	}
@@ -112,7 +114,18 @@ public class AnalysisDataModel {
 	public void setValuesULog(Map<String,Object> d, AnalysisDataModelMetaData md) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			try {
-				data.put(e.hash,e.getValueFromULogModel(d));
+				if(!e.isVirtual)
+				  data.put(e.hash,e.getValueFromULogModel(d));
+			} catch (Exception e1) {  }
+		});
+	}
+
+
+	public void calculateVirtualKeyFigures(AnalysisDataModelMetaData md) {
+		md.getKeyFigureMap().forEach((i,e) -> {
+			try {
+				if(e.isVirtual)
+				  data.put(e.hash,e.calculateVirtualValue(this));
 			} catch (Exception e1) {  }
 		});
 	}
