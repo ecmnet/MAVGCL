@@ -995,5 +995,17 @@
 		</MSPSource>
 	</KeyFigure>
 
+   <!--
+
+	<KeyFigure desc="Error LPOSZ" uom="m" mask="#0.00" key="LPOSZERROR">
+		<VirtualSource field="LPOSZ" field="SPLPOSZ">
+		    <Converter class="ExpressionConverter" expression="LPOSZ - SPLPOSZ"/>
+		</VirtualSource>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
+	-->
 
 </AnalysisDataModel>
