@@ -147,7 +147,6 @@ public class KeyFigureMetaData {
 	}
 
 	public float calculateVirtualValue(AnalysisDataModel data) {
-		float value = 0;
 		DataSource source = sources.get(VIR_SOURCE);
 		if(source.converter != null)
 			return source.converter.convert(data);

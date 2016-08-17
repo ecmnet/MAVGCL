@@ -34,7 +34,6 @@
 package com.comino.flight.model.converter;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.AnalysisDataModelMetaData;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -42,12 +41,10 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 public class VirtualConverter extends SourceConverter {
 
 	private Expression calc = null;
-	private String kfname;
 	private String[] params;
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
-		this.kfname = kfname;
 		this.params = params;
 
 		Runnable r = new Runnable() {
