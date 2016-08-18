@@ -83,7 +83,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 **How to define custom key-figure metadata files:**
 
 - Refer to [example file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) or [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L515)
-- Conversion based on expressions. 
+- Conversion based on expressions ( [exp4j](http://www.objecthunter.net/exp4j/#Built-in_functions) ).
   Example: `<Converter class="ExpressionConverter" expression="1.5 * sin(val)"/>`
 
 **Limitations:**
