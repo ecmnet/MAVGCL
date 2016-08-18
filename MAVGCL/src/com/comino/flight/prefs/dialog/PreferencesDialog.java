@@ -135,12 +135,11 @@ public class PreferencesDialog  {
 
 	public void show() {
 
-		autosave.setDisable(true);
-
 		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, DEF_IP_ADDRESS));
 		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
+		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -148,6 +147,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_IP_PORT, ip_port.getText());
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
+			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 
 			try {
 				userPrefs.flush();

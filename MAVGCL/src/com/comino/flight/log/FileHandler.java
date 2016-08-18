@@ -212,6 +212,22 @@ public class FileHandler {
 	}
 
 
+	public void autoSave() throws IOException {
+		name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+		File f = new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/"+name);
+		System.out.println("Autosave to "+f.getPath());
+		if(f.exists())
+			f.delete();
+		f.createNewFile();
+		Writer writer = new FileWriter(f);
+		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+		stage.getScene().setCursor(Cursor.WAIT);
+		gson.toJson(modelService.getModelList(), writer);
+		writer.close();
+		stage.getScene().setCursor(Cursor.DEFAULT);
+	}
+
+
 	public File getTempFile() throws IOException {
 		File f = new File(getBasePath()+TMPFILE);
 		if(f.exists())

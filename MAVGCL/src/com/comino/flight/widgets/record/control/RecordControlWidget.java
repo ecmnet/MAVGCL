@@ -34,10 +34,13 @@
 package com.comino.flight.widgets.record.control;
 
 
+import java.io.IOException;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
@@ -179,7 +182,16 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 			switch(modelService.getMode()) {
 			case ModelCollectorService.STOPPED:
 				recording.selectedProperty().set(false);
-				isrecording.setFill(Color.LIGHTGREY); break;
+				isrecording.setFill(Color.LIGHTGREY);
+
+				if(MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false)) {
+                       try {
+						FileHandler.getInstance().autoSave();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				break;
 			case ModelCollectorService.PRE_COLLECTING:
 
 				FileHandler.getInstance().clear();
