@@ -1000,21 +1000,21 @@
   <KeyFigure desc="Mocap VX" uom="m/s" mask="#0.00" key="MOCAPVX">
 		<MSPSource class="mocap" field="vx"/>
 		<Groups>
-			<Group>MOCAP</Group>
+			<Group>Motion capture</Group>
 		</Groups>
   </KeyFigure>
 
   <KeyFigure desc="Mocap VY" uom="m/s" mask="#0.00" key="MOCAPVY">
 		<MSPSource class="mocap" field="vy"/>
 		<Groups>
-			<Group>MOCAP</Group>
+			<Group>Motion capture</Group>
 		</Groups>
   </KeyFigure>
 
   <KeyFigure desc="Mocap VZ" uom="m/s" mask="#0.00" key="MOCAPVZ">
 		<MSPSource class="mocap" field="vz"/>
 		<Groups>
-			<Group>MOCAP</Group>
+			<Group>Motion capture</Group>
 		</Groups>
   </KeyFigure>
 
