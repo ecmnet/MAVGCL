@@ -105,6 +105,8 @@ public class DetailsWidget extends WidgetPane  {
 			null,
 			"TARM",
 			"TBOOT",
+			null,
+			"MOCAPFPS"
 	};
 
 	@FXML

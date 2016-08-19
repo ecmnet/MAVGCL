@@ -83,13 +83,15 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private static String[][] PRESETS = {
 			{  null		, null      },
 			{ "LPOSX"	, "LPOSY" 	},
-			{ "LPOSVX"	, "LPOSVY" 	}
+			{ "LPOSVX"	, "LPOSVY" 	},
+			{ "MOCAPVX"	, "MOCAPVY" }
 	};
 
 	private final static String[] PRESET_NAMES = {
 			"None",
 			"Loc.Position",
 			"Loc.Speed",
+			"MOCAP Speed",
 	};
 
 	private final static String[] SCALES = {

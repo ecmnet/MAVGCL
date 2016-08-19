@@ -215,7 +215,8 @@ public class FileHandler {
 	public void autoSave() throws IOException {
 		stage.getScene().setCursor(Cursor.WAIT);
 		name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
-		File f = new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/"+name);
+		String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
+		File f = new File(path+"/"+name);
 		System.out.println("Autosave to "+f.getPath());
 		if(f.exists())
 			f.delete();
