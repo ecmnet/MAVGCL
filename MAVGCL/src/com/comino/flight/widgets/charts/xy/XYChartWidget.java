@@ -376,6 +376,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
+				auto_rotate.setSelected(false);
 				rotation_rad = MSPMathUtils.toRad(new_val.intValue());
 				rot_label.setText("Rotation: ["+new_val.intValue()+"°]");
 				Platform.runLater(() -> {
