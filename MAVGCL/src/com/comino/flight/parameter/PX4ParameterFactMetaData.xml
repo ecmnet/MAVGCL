@@ -6798,6 +6798,12 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <unit>bit/s</unit>
       <scope>modules/uavcan</scope>
     </parameter>
+    <parameter default="0" name="UAVCAN_ESC_IDLT" type="INT32">
+      <short_desc>UAVCAN ESC will spin at idle throttle when armed, even if the mixer outputs zero setpoints</short_desc>
+      <min>0</min>
+      <max>1</max>
+      <scope>modules/uavcan</scope>
+    </parameter>
   </group>
   <group name="VTOL Attitude Control">
     <parameter default="0" name="VT_MOT_COUNT" type="INT32">

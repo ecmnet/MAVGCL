@@ -507,7 +507,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(auto_rotate.isSelected()) {
-						rotation_rad= MSPMathUtils.toRad(m.getValue("HEAD"));
+						rotation_rad= -MSPMathUtils.toRad(m.getValue("HEAD"));
 					}
 
 
