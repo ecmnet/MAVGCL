@@ -141,6 +141,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private CheckBox normalize;
 
 	@FXML
+	private CheckBox auto_rotate;
+
+	@FXML
 	private Button export;
 
 	@FXML
@@ -501,6 +504,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 							pool.invalidate(series2.getData().get(0));
 							series2.getData().remove(0);
 						}
+					}
+
+					if(auto_rotate.isSelected()) {
+						rotation_rad= MSPMathUtils.toRad(m.getValue("HEAD"));
 					}
 
 
