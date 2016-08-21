@@ -997,31 +997,31 @@
 
   <!-- MOCAP definitions -->
 
-  <KeyFigure desc="Mocap VX" uom="m/s" mask="#0.00" key="MOCAPVX">
-		<MSPSource class="mocap" field="vx"/>
+  <KeyFigure desc="Vision VX" uom="m/s" mask="#0.00" key="VISIONVX">
+		<MSPSource class="vision" field="vx"/>
 		<Groups>
-			<Group>Motion capture</Group>
+				<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Mocap VY" uom="m/s" mask="#0.00" key="MOCAPVY">
-		<MSPSource class="mocap" field="vy"/>
+  <KeyFigure desc="Vision VY" uom="m/s" mask="#0.00" key="VISIONVY">
+		<MSPSource class="vision" field="vy"/>
 		<Groups>
-			<Group>Motion capture</Group>
+			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Mocap VZ" uom="m/s" mask="#0.00" key="MOCAPVZ">
-		<MSPSource class="mocap" field="vz"/>
+  <KeyFigure desc="Vision VZ" uom="m/s" mask="#0.00" key="VISIONVZ">
+		<MSPSource class="vision" field="vz"/>
 		<Groups>
-			<Group>Motion capture</Group>
+				<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Mocap FPS" uom="Hz" mask="#0" key="MOCAPFPS">
-		<MSPSource class="mocap" field="fps"/>
+  <KeyFigure desc="Vision FPS" uom="Hz" mask="#0" key="VISIONFPS">
+		<MSPSource class="vision" field="fps"/>
 		<Groups>
-			<Group>MOCAP</Group>
+			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
