@@ -90,10 +90,9 @@ public class DetailsWidget extends WidgetPane  {
 			"LPOSY",
 			"LPOSZ",
 			null,
-			"RC0",
-			"RC1",
-			"RC2",
-			"RC3",
+			"VISIONX",
+			"VISIONY",
+			"VISIONZ",
 			null,
 			"BATC",
 			"BATH",
@@ -106,7 +105,8 @@ public class DetailsWidget extends WidgetPane  {
 			"TARM",
 			"TBOOT",
 			null,
-			"VISIONFPS"
+			"VISIONFPS",
+
 	};
 
 	@FXML

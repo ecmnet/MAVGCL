@@ -995,7 +995,28 @@
 		</MSPSource>
 	</KeyFigure>
 
-  <!-- MOCAP definitions -->
+  <!-- VISION definitions -->
+
+  <KeyFigure desc="Vision X" uom="m" mask="#0.00" key="VISIONX">
+		<MSPSource class="vision" field="x"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vision Y" uom="m" mask="#0.00" key="VISIONY">
+		<MSPSource class="vision" field="y"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vision Z" uom="m" mask="#0.00" key="VISIONZ">
+		<MSPSource class="vision" field="z"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
 
   <KeyFigure desc="Vision VX" uom="m/s" mask="#0.00" key="VISIONVX">
 		<MSPSource class="vision" field="vx"/>
