@@ -325,10 +325,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			String x_desc = "";
 			if(nv!=null) {
 				type2_x = nv;
-
-				if(type1_y.hash!=0)
+				if(type1_x.hash!=0)
 					x_desc = x_desc + type1_x.desc1+" ["+type1_x.uom+"] ";
-				if(type2_y.hash!=0)
+				if(type2_x.hash!=0)
 					x_desc = x_desc + type2_x.desc1+" ["+type2_x.uom+"] ";
 				xAxis.setLabel(x_desc);
 
@@ -343,7 +342,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			String y_desc = "";
 			if(nv!=null) {
 				type2_y = nv;
-
 				if(type1_y.hash!=0)
 					y_desc = y_desc + type1_y.desc1+" ["+type1_y.uom+"] ";
 				if(type2_y.hash!=0)
