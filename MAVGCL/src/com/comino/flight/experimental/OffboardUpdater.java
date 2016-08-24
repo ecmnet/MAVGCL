@@ -56,14 +56,9 @@ public class OffboardUpdater implements Runnable {
 
 	public OffboardUpdater(IMAVController control) {
 		this.control = control;
-		this.control.addModeChangeListener((oldstatus, newstatus) -> {
-			if(!newstatus.isStatus(Status.MSP_MODE_OFFBOARD))
-				isRunning = false;
-		});
 	}
 
 	public void start() {
-
 		isRunning = true;
 		new Thread(this).start();
 
@@ -130,10 +125,6 @@ public class OffboardUpdater implements Runnable {
 
 	    MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
 
-		if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
-		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-				MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-				MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
 
 	}
 

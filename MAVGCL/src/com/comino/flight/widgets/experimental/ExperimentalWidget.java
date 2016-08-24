@@ -52,6 +52,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -63,7 +64,7 @@ public class ExperimentalWidget extends WidgetPane  {
 	private GridPane grid;
 
 	@FXML
-	private Button offboard_command;
+	private CheckBox offboard_enabled;
 
 	@FXML
 	private Button althold_command;
@@ -103,10 +104,13 @@ public class ExperimentalWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-		offboard_command.setOnAction((ActionEvent event)-> {
+		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
 
+			if(!model.sys.isStatus(Status.MSP_ARMED))
+				return;
 
-			if(!offboard.isRunning()) {
+			if(nv.booleanValue()) {
+				if(!offboard.isRunning())
 					offboard.start();
 
 				if(control.isSimulation()) {
@@ -115,9 +119,16 @@ public class ExperimentalWidget extends WidgetPane  {
 								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
 				}
-			}
-			else
+			} else {
 				offboard.stop();
+				if(control.isSimulation()) {
+					if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+				}
+			}
+
 		});
 
 
