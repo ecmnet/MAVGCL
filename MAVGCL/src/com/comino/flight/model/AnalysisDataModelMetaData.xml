@@ -1050,7 +1050,7 @@
 		<MSPSource class="vision" field="qual">
 		   <Converter class="ExpressionConverter" expression="VISIONQUAL/100" />
 		 </MSPSource>
-		 <Validity min="0.5" max="1.0"/>
+		 <Validity min="0.1" max="1.0"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
