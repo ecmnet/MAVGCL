@@ -10,11 +10,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 21/08/2016 
+**Development Status:** Last updated 24/08/2016 
 
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
-- Autosave implemented
 - Analyze MSP_VISION messages provided by MAVComm
+- Offboard-control
 
 **Features:**
 
@@ -24,7 +24,7 @@ Any feedback, comments and contributions are very welcome.
 - Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
 - MAVLink inspector (reporting raw MAVlink messages)
-- MAVLinkShell provides NutShell over MAVLink 
+- MAVLinkShell provides NutShell over MAVLink (Console)
 - Easy to use parameter editor and In-Flight-Tuning-Widget
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
