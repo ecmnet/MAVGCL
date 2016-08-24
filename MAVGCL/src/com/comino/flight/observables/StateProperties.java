@@ -33,7 +33,10 @@
 
 package com.comino.flight.observables;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.segment.Status;
 
@@ -83,6 +86,13 @@ public class StateProperties implements IMSPModeChangedListener{
 		landedProperty.set(newStatus.isStatus(Status.MSP_LANDED));
 		altholdProperty.set(newStatus.isStatus(Status.MSP_MODE_ALTITUDE));
 		posholdProperty.set(newStatus.isStatus(Status.MSP_MODE_POSITION));
+
+		if(!oldStatus.isStatus(Status.MSP_MODE_ALTITUDE) && newStatus.isStatus(Status.MSP_MODE_ALTITUDE))
+			MSPLogger.getInstance().writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+		if(!oldStatus.isStatus(Status.MSP_MODE_POSITION) && newStatus.isStatus(Status.MSP_MODE_POSITION))
+			MSPLogger.getInstance().writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+		if(!oldStatus.isStatus(Status.MSP_MODE_OFFBOARD) && newStatus.isStatus(Status.MSP_MODE_OFFBOARD))
+			MSPLogger.getInstance().writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 	}
 
 
