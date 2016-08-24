@@ -1039,8 +1039,18 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision FPS" uom="Hz" mask="#0" key="VISIONFPS">
+  <KeyFigure desc="Vis.FrameRate" uom="fps" mask="#0" key="VISIONFPS">
 		<MSPSource class="vision" field="fps"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.Quality" uom="%" mask="#0" key="VISIONQUAL">
+		<MSPSource class="vision" field="qual">
+		   <Converter class="ExpressionConverter" expression="VISIONQUAL/100" />
+		 </MSPSource>
+		 <Validity min="0.5" max="1.0"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>

@@ -106,6 +106,7 @@ public class DetailsWidget extends WidgetPane  {
 			"TBOOT",
 			null,
 			"VISIONFPS",
+			"VISIONQUAL",
 
 	};
 
