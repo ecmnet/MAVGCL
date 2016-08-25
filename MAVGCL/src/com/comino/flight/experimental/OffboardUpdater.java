@@ -124,8 +124,6 @@ public class OffboardUpdater implements Runnable {
 		}
 
 	    MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
-
-
 	}
 
 }
