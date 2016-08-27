@@ -29,6 +29,13 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Alt.GPS" uom="m" mask="#0.0" key="ALTGPS">
+		<MSPSource class="gps" field="altitude"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
 		<MSPSource class="hud" field="at"></MSPSource>
 		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
