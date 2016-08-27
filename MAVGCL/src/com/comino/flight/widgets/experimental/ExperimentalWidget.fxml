@@ -29,9 +29,9 @@
 			<Slider fx:id="alt_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
 				max="300" min="50" prefHeight="13.0" value="50" GridPane.rowIndex="5" />
 			<Slider fx:id="x_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="500.0" min="-500.0" prefHeight="13.0" value="0" GridPane.rowIndex="6" />
+				max="200.0" min="-200.0" prefHeight="13.0" value="0" GridPane.rowIndex="6" />
 			<Slider fx:id="y_control" blockIncrement="20.0" prefWidth="161.0" majorTickUnit="100.0"
-				max="500.0" min="-500.0" prefHeight="13.0" value="0" GridPane.rowIndex="7" />
+				max="200.0" min="-200.0" prefHeight="13.0" value="0" GridPane.rowIndex="7" />
 		</children>
 	</GridPane>
 </fx:root>

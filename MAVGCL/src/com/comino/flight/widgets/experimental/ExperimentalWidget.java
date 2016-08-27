@@ -113,6 +113,8 @@ public class ExperimentalWidget extends WidgetPane  {
 				if(!offboard.isRunning())
 					offboard.start();
 
+				alt_control.setValue(-model.state.l_z * 100f);
+
 				if(control.isSimulation()) {
 					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -210,7 +212,6 @@ public class ExperimentalWidget extends WidgetPane  {
 
 		this.control = control;
 		this.model   = control.getCurrentModel();
-		//	vision = new VisionPositionSimulationUpdater(control);
 		offboard = new OffboardUpdater(control);
 
 	}
