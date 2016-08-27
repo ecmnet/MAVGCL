@@ -34,6 +34,7 @@
 package com.comino.flight.widgets.experimental;
 
 import java.io.IOException;
+import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
@@ -47,6 +48,8 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -86,6 +89,8 @@ public class ExperimentalWidget extends WidgetPane  {
 	private OffboardUpdater offboard = null;
 	private IMAVController control;
 
+	private Task<Long> task;
+
 
 	public ExperimentalWidget() {
 
@@ -99,6 +104,28 @@ public class ExperimentalWidget extends WidgetPane  {
 			throw new RuntimeException(exception);
 		}
 
+
+		task = new Task<Long>() {
+
+			@Override
+			protected Long call() throws Exception {
+				while(true) {
+					LockSupport.parkNanos(250000000L);
+					if(isDisabled() || !isVisible() && offboard_enabled.isSelected()) {
+						continue;
+					}
+
+					if (isCancelled()) {
+						break;
+					}
+
+					Platform.runLater(() -> {
+						alt_control.setValue(-model.state.l_z * 100f);
+					});
+				}
+				return model.tms;
+			}
+		};
 	}
 
 	@FXML
@@ -112,8 +139,6 @@ public class ExperimentalWidget extends WidgetPane  {
 			if(nv.booleanValue()) {
 				if(!offboard.isRunning())
 					offboard.start();
-
-				alt_control.setValue(-model.state.l_z * 100f);
 
 				if(control.isSimulation()) {
 					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
@@ -213,6 +238,11 @@ public class ExperimentalWidget extends WidgetPane  {
 		this.control = control;
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
+
+		Thread th = new Thread(task);
+		th.setPriority(Thread.MIN_PRIORITY);
+		th.setDaemon(true);
+		th.start();
 
 	}
 

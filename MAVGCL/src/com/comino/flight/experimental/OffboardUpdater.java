@@ -79,18 +79,22 @@ public class OffboardUpdater implements Runnable {
 
 	public void setNEDZ(float z) {
 		this.z_pos = z;
+		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
 	}
 
 	public void setNEDX(float x) {
 		this.x_pos = x;
+		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
 	}
 
 	public void setNEDY(float y) {
 		this.y_pos = y;
+		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
 	}
 
 	public void setYaw(float yaw) {
 		this.yaw = yaw;
+		System.out.printf("YAW: %2.1f",yaw);
 	}
 
 
@@ -113,7 +117,7 @@ public class OffboardUpdater implements Runnable {
 			cmd.y =  y_pos;
 			cmd.z =  z_pos;
 			cmd.yaw = yaw;
-			cmd.coordinate_frame = MAV_FRAME.MAV_FRAME_LOCAL_NED;
+			cmd.coordinate_frame = MAV_FRAME.MAV_FRAME_BODY_NED;
 
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
