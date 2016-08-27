@@ -111,7 +111,7 @@ public class ExperimentalWidget extends WidgetPane  {
 			protected Long call() throws Exception {
 				while(true) {
 					LockSupport.parkNanos(250000000L);
-					if(isDisabled() || !isVisible() && offboard_enabled.isSelected()) {
+					if(isDisabled() || !isVisible() || offboard_enabled.isSelected()) {
 						continue;
 					}
 
@@ -198,12 +198,14 @@ public class ExperimentalWidget extends WidgetPane  {
 		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setNEDZ(-newvalue.intValue()/100f);
+			if(offboard_enabled.isSelected())
+				offboard.setNEDZ(-newvalue.intValue()/100f);
 		});
 
 		x_control.setValue(0);
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setNEDX(newvalue.intValue()/100f);
+			if(offboard_enabled.isSelected())
+				offboard.setNEDX(newvalue.intValue()/100f);
 		});
 
 		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -218,7 +220,8 @@ public class ExperimentalWidget extends WidgetPane  {
 
 		y_control.setValue(0);
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			offboard.setNEDY(newvalue.intValue()/100f);
+			if(offboard_enabled.isSelected())
+				offboard.setNEDY(newvalue.intValue()/100f);
 		});
 
 		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {

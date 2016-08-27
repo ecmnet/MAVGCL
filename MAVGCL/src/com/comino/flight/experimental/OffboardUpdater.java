@@ -42,6 +42,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.MSPMathUtils;
 
 public class OffboardUpdater implements Runnable {
 
@@ -79,22 +80,22 @@ public class OffboardUpdater implements Runnable {
 
 	public void setNEDZ(float z) {
 		this.z_pos = z;
-		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
+		System.out.printf("Offboard Set: X: %2.1f Y: %2.1f Z: %2.1f\n",x_pos, y_pos,z_pos);
 	}
 
 	public void setNEDX(float x) {
 		this.x_pos = x;
-		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
+		System.out.printf("Offboard Set: X: %2.1f Y: %2.1f Z: %2.1f\n",x_pos, y_pos,z_pos);
 	}
 
 	public void setNEDY(float y) {
 		this.y_pos = y;
-		System.out.printf("X: %2.1f Y: %2.1f Z: %2.1f",x_pos, y_pos,z_pos);
+		System.out.printf("Offboard Set: X: %2.1f Y: %2.1f Z: %2.1f\n",x_pos, y_pos,z_pos);
 	}
 
-	public void setYaw(float yaw) {
-		this.yaw = yaw;
-		System.out.printf("YAW: %2.1f",yaw);
+	public void setYaw(float yaw_deg) {
+		this.yaw = yaw_deg;
+		System.out.printf("Offboard Set: YAW: %2f°\n",yaw);
 	}
 
 
@@ -116,14 +117,14 @@ public class OffboardUpdater implements Runnable {
 			cmd.x =  x_pos;
 			cmd.y =  y_pos;
 			cmd.z =  z_pos;
-			cmd.yaw = yaw;
+			cmd.yaw = (float)(MSPMathUtils.toRad(yaw));
 			cmd.coordinate_frame = MAV_FRAME.MAV_FRAME_BODY_NED;
 
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
 			try {
-				Thread.sleep(200);
+				Thread.sleep(250);
 			} catch (InterruptedException e) { }
 		}
 
