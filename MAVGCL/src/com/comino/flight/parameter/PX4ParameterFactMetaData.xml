@@ -6561,6 +6561,12 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
+    <parameter default="0" name="SENS_EN_TRONE" type="INT32">
+      <short_desc>TeraRanger One (trone)</short_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+    </parameter>
     <parameter default="0" name="SENS_EN_SF1XX" type="INT32">
       <short_desc>Lightware SF1xx laser rangefinder</short_desc>
       <min>0</min>
