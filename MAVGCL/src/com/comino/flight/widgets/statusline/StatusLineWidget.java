@@ -51,11 +51,11 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPModeChangedListener;
 import com.comino.msp.model.segment.Status;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -88,7 +88,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	@FXML
 	private ProgressBar progress;
 
-	private Task<Long> task;
 	private IMAVController control;
 
 
@@ -101,6 +100,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	private String filename;
 	private long tms;
 
+	private AnimationTimer task;
+
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -112,86 +113,73 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Long>() {
-
+		task = new AnimationTimer() {
 			List<AnalysisDataModel> list = null;
 
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException iex) {
-						Thread.currentThread().interrupt();
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>500) {
+					filename = FileHandler.getInstance().getName();
+
+					if(control.isConnected() && !state.getLogLoadedProperty().get()) {
+						messages.setMode(Badge.MODE_ON);
+						driver.setText(control.getCurrentModel().sys.getSensorString());
+						driver.setMode(Badge.MODE_ON);
+					} else {
+						messages.setMode(Badge.MODE_OFF);
+						driver.setText("no sensor info available");
+						driver.setMode(Badge.MODE_OFF);
 					}
 
-					if (isCancelled()) {
-						break;
+					if((System.currentTimeMillis() - tms)>30000) {
+						messages.setBackgroundColor(Color.GRAY);
+						messages.clear();
+						tms = System.currentTimeMillis();
 					}
-					Platform.runLater(() -> {
 
-						filename = FileHandler.getInstance().getName();
+					list = collector.getModelList();
 
-						if(control.isConnected() && !state.getLogLoadedProperty().get()) {
-							messages.setMode(Badge.MODE_ON);
-							driver.setText(control.getCurrentModel().sys.getSensorString());
-							driver.setMode(Badge.MODE_ON);
-						} else {
-							messages.setMode(Badge.MODE_OFF);
-							driver.setText("no sensor info available");
-							driver.setMode(Badge.MODE_OFF);
-						}
+					if(list.size()>0) {
 
-						if((System.currentTimeMillis() - tms)>30000) {
-							messages.setBackgroundColor(Color.GRAY);
-							messages.clear();
-							tms = System.currentTimeMillis();
-						}
+						int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
+						int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
+						time.setText(
+								String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
+										list.get(current_x0_pt).tms/1000,
+										list.get(current_x1_pt).tms/1000)
+								);
+						time.setBackgroundColor(Color.DARKCYAN);
+					} else {
+						time.setText("TimeFrame: [ 00:00 - 00:00 ]");
+						time.setBackgroundColor(Color.GRAY);
+					}
 
-						list = collector.getModelList();
-
-						if(list.size()>0) {
-
-							int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
-							int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
-							time.setText(
-									String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
-											list.get(current_x0_pt).tms/1000,
-											list.get(current_x1_pt).tms/1000)
-									);
-							time.setBackgroundColor(Color.DARKCYAN);
-						} else {
-							time.setText("TimeFrame: [ 00:00 - 00:00 ]");
-							time.setBackgroundColor(Color.GRAY);
-						}
-
-						if(filename.isEmpty()) {
-							if(control.isConnected()) {
-								time.setMode(Badge.MODE_ON);
-								if(control.isSimulation()) {
-									mode.setBackgroundColor(Color.BEIGE);
-									mode.setText("SITL");
-								} else {
-									mode.setBackgroundColor(Color.DARKCYAN);
-									mode.setText("Connected");
-								}
-								mode.setMode(Badge.MODE_ON);
-							} else {
-								mode.setMode(Badge.MODE_OFF); mode.setText("offline");
-								time.setMode(Badge.MODE_OFF);
-							}
-						} else {
+					if(filename.isEmpty()) {
+						if(control.isConnected()) {
 							time.setMode(Badge.MODE_ON);
-							messages.clear();
-							mode.setBackgroundColor(Color.LIGHTSKYBLUE);
-							mode.setText(filename);
+							if(control.isSimulation()) {
+								mode.setBackgroundColor(Color.BEIGE);
+								mode.setText("SITL");
+							} else {
+								mode.setBackgroundColor(Color.DARKCYAN);
+								mode.setText("Connected");
+							}
 							mode.setMode(Badge.MODE_ON);
+						} else {
+							mode.setMode(Badge.MODE_OFF); mode.setText("offline");
+							time.setMode(Badge.MODE_OFF);
 						}
-					});
+					} else {
+						time.setMode(Badge.MODE_ON);
+						messages.clear();
+						mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+						mode.setText(filename);
+						mode.setMode(Badge.MODE_ON);
+					}
+
 				}
-				return System.currentTimeMillis();
 			}
 		};
+
         driver.setAlignment(Pos.CENTER_LEFT);
 		messages.setTooltip(new Tooltip("Click to show messages"));
 	}
@@ -230,10 +218,12 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 			}
 		});
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
+
+//		Thread th = new Thread(task);
+//		th.setPriority(Thread.MIN_PRIORITY);
+//		th.setDaemon(true);
+//		th.start();
 	}
 
 	@Override

@@ -49,6 +49,7 @@ import com.comino.flight.widgets.fx.controls.DashLabel;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -116,7 +117,8 @@ public class DetailsWidget extends WidgetPane  {
 	@FXML
 	private GridPane grid;
 
-	private Task<Long> task;
+	private AnimationTimer task;
+	private long tms = 0;
 
 	private List<KeyFigure> figures = null;
 
@@ -142,33 +144,19 @@ public class DetailsWidget extends WidgetPane  {
 		} catch (IOException exception) {
 
 			throw new RuntimeException(exception);
+
 		}
 
-		task = new Task<Long>() {
-
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					LockSupport.parkNanos(250000000L);
-					if(isDisabled() || !isVisible()) {
-						continue;
+		task = new AnimationTimer() {
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>200) {
+					int i=0; tms = System.currentTimeMillis();
+					for(KeyFigure figure : figures) {
+						figure.setValue(model,i++);
 					}
-
-					if (isCancelled()) {
-						break;
-					}
-
-					Platform.runLater(() -> {
-						int i=0;
-						for(KeyFigure figure : figures) {
-							figure.setValue(model,i++);
-						}
-					});
 				}
-				return model.tms;
 			}
 		};
-
 	}
 
 
@@ -185,10 +173,7 @@ public class DetailsWidget extends WidgetPane  {
 			i++;
 		}
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
 
 		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 
@@ -212,14 +197,14 @@ public class DetailsWidget extends WidgetPane  {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130); label.setPrefHeight(19);
 				if(kf.uom.contains("%")) {
-				ProgressBar l2 = new ProgressBar(); l2.setPrefWidth(105);
-				value = l2;
-				p.addRow(row, label,l2);
+					ProgressBar l2 = new ProgressBar(); l2.setPrefWidth(105);
+					value = l2;
+					p.addRow(row, label,l2);
 				} else {
-				Label l2 = new Label("-"); l2.setPrefWidth(55); l2.setAlignment(Pos.CENTER_RIGHT);
-				value = l2;
-				Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
-				p.addRow(row, label,l2,l3);
+					Label l2 = new Label("-"); l2.setPrefWidth(55); l2.setAlignment(Pos.CENTER_RIGHT);
+					value = l2;
+					Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
+					p.addRow(row, label,l2,l3);
 				}
 				grid.add(p, 0, row);
 			}
@@ -239,9 +224,9 @@ public class DetailsWidget extends WidgetPane  {
 				}
 				f.applyPattern(kf.mask);
 				if(value instanceof Label)
-				    ((Label)value).setText(f.format(val));
+					((Label)value).setText(f.format(val));
 				if(value instanceof ProgressBar)
-				    ((ProgressBar)value).setProgress(val);
+					((ProgressBar)value).setProgress(val);
 
 			}
 		}
