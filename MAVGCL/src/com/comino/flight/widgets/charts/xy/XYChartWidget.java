@@ -184,6 +184,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private XYDataPool pool = null;
 
+	private boolean refreshRequest = false;
+
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
@@ -197,7 +199,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		task = new AnimationTimer() {
             @Override public void handle(long now) {
-            	updateGraph(false);
+            	updateGraph(refreshRequest);
             }
         };
 
@@ -297,9 +299,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					x_desc = x_desc + type2_x.desc1+" ["+type2_x.uom+"] ";
 				xAxis.setLabel(x_desc);
 
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 			}
 		});
 
@@ -315,9 +315,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					y_desc = y_desc + type2_y.desc1+" ["+type2_y.uom+"] ";
 				yAxis.setLabel(y_desc);
 
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 			}
 		});
 
@@ -331,9 +329,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					x_desc = x_desc + type2_x.desc1+" ["+type2_x.uom+"] ";
 				xAxis.setLabel(x_desc);
 
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 			}
 		});
 
@@ -348,9 +344,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					y_desc = y_desc + type2_y.desc1+" ["+type2_y.uom+"] ";
 				yAxis.setLabel(y_desc);
 
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 			}
 		});
 
@@ -364,9 +358,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				else
 					scale = 0;
 				setScaling(scale);
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 			}
 
 		});
@@ -377,9 +369,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				auto_rotate.setSelected(false);
 				rotation_rad = MSPMathUtils.toRad(new_val.intValue());
 				rot_label.setText("Rotation: ["+new_val.intValue()+"°]");
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+				updateRequest();
 
 			}
 		});
@@ -408,18 +398,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		});
 
 		force_zero.setOnAction((ActionEvent event)-> {
-			refreshChart();
+			updateRequest();
 		});
 
 
 		scroll.addListener((v, ov, nv) -> {
-
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
-
-			if(!disabledProperty().get())
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
+			updateRequest();
 		});
 
 
@@ -465,6 +450,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(refresh) {
 			synchronized(this) {
+				refreshRequest = false;
 				series1.getData().clear();
 				series2.getData().clear();
 				pool.invalidateAll();
@@ -589,11 +575,21 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		current_x0_pt = control.getCollector().calculateX0Index(1);
 		setScaling(scale);
 
-		if(!disabledProperty().get())
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
+		updateRequest();
 	}
+
+	private void updateRequest() {
+		if(!isDisabled()) {
+			if(dataService.isCollecting())
+				refreshRequest = true;
+			else {
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
+			}
+		}
+	}
+
 
 
 	private void setScaling(float scale) {
