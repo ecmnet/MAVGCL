@@ -478,6 +478,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
+		if(force_zero.isSelected()) {
+
+
+		}
+
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();

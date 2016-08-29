@@ -552,7 +552,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				m = dataService.getModelList().get(current_x_pt);
 
-				if(m.msg!=null && current_x_pt > 0 && m.msg.msg!=null
+				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
 						&& display_annotations) {
 					if((current_x_pt - last_annotation_pos) > 150)
