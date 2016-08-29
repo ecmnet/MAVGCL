@@ -38,6 +38,9 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_OFFBOARD;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionPositionSimulationUpdater;
@@ -132,13 +135,20 @@ public class ExperimentalWidget extends WidgetPane  {
 	private void initialize() {
 
 		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
-
-			if(!model.sys.isStatus(Status.MSP_ARMED))
-				return;
+//
+//			if(!model.sys.isStatus(Status.MSP_ARMED))
+//				return;
 
 			if(nv.booleanValue()) {
-				if(!offboard.isRunning())
+				if(!offboard.isRunning()) {
 					offboard.start();
+
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
+					msp.param1 = MSP_OFFBOARD.MSP_OFFBOARD_ENABLE;
+					control.sendMAVLinkMessage(msp);
+
+				}
 
 				if(control.isSimulation()) {
 					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
@@ -148,6 +158,13 @@ public class ExperimentalWidget extends WidgetPane  {
 				}
 			} else {
 				offboard.stop();
+
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
+				msp.param1 = MSP_OFFBOARD.MSP_OFFBOARD_DISABLE;
+				control.sendMAVLinkMessage(msp);
+
+
 				if(control.isSimulation()) {
 					if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
@@ -160,6 +177,10 @@ public class ExperimentalWidget extends WidgetPane  {
 
 
 		althold_command.setOnAction((ActionEvent event)-> {
+
+//			msg_msp_command msp = new msg_msp_command(255,1);
+//			msp.command = MSP_CMD.MSP_CMD_RESTART;
+//			control.sendMAVLinkMessage(msp);
 
 			if(!model.sys.isStatus(Status.MSP_ARMED))
 				return;
