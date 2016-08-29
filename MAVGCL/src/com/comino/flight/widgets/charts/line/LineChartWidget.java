@@ -239,6 +239,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
 				setXResolution((int)(x1-x0));
 			}
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 			mouseEvent.consume();
 		});
 
@@ -291,7 +294,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			current_x0_pt = current_x0_pt + delta;
 			if(current_x0_pt<0)
 				current_x0_pt=0;
-			updateRequest();
+
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 		});
 
 		readRecentList();
