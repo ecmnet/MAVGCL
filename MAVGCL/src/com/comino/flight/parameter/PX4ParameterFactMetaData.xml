@@ -2392,6 +2392,14 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
+    <parameter default="0.01" name="LPE_FLW_XY_D" type="FLOAT">
+      <short_desc>Optical flow xy standard deviation linear factor on distance</short_desc>
+      <min>0.01</min>
+      <max>1</max>
+      <unit>m / m</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
     <parameter default="75" name="LPE_FLW_QMIN" type="INT32">
       <short_desc>Optical flow minimum quality threshold</short_desc>
       <min>0</min>
@@ -2574,8 +2582,17 @@ EPV used if greater than this value</short_desc>
       <decimal>8</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
+    <parameter default="0.001" name="LPE_PN_T" type="FLOAT">
+      <short_desc>Terrain random walk noise density, hilly/outdoor (0.1), flat/Indoor (0.001)</short_desc>
+      <min>0</min>
+      <max>1</max>
+      <unit>(m/s)/(sqrt(hz))</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
     <parameter default="1.0" name="LPE_T_MAX_GRADE" type="FLOAT">
-      <short_desc>Terrain maximum percent grade, hilly/outdoor (100 = 45 deg), flat/Indoor (0 = 0 deg)</short_desc>
+      <short_desc>Terrain maximum percent grade, hilly/outdoor (100 = 45 deg), flat/Indoor (0 = 0 deg)
+Used to calculate increased terrain random walk nosie due to movement</short_desc>
       <min>0</min>
       <max>100</max>
       <unit>%</unit>
@@ -2644,7 +2661,7 @@ EPV used if greater than this value</short_desc>
       <max>250</max>
       <scope>modules/mavlink</scope>
     </parameter>
-    <parameter default="1" name="MAV_PROTO_VER" type="INT32">
+    <parameter default="0" name="MAV_PROTO_VER" type="INT32">
       <short_desc>MAVLink protocol version</short_desc>
       <scope>modules/mavlink</scope>
       <values>
