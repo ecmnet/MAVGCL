@@ -149,7 +149,7 @@ public class DetailsWidget extends WidgetPane  {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>200) {
+				if((System.currentTimeMillis()-tms)>333) {
 					int i=0; tms = System.currentTimeMillis();
 					for(KeyFigure figure : figures) {
 						figure.setValue(model,i++);
