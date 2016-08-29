@@ -527,7 +527,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private  void updateGraph(boolean refresh) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;
 
-		if(isDisabled() || dataService.getModelList().size()<1) {
+		if(isDisabled()) {
 			return;
 		}
 
