@@ -10,11 +10,12 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 24/08/2016 
+**Development Status:** Last updated 29/08/2016 
 
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
 - Analyze MSP_VISION messages provided by MAVComm
 - Offboard-control
+- Line- and XY-chart performance fixes
 
 **Features:**
 
