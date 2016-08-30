@@ -38,6 +38,7 @@
             <ChoiceBox fx:id="cseries1_x" layoutX="40.0" layoutY="90.0" prefHeight="19.0" prefWidth="86.0" />
             <Label layoutX="15.0" layoutY="124.0" text="Y:" />
             <ChoiceBox fx:id="cseries1_y" layoutX="40.0" layoutY="120.0" prefHeight="19.0" prefWidth="86.0" />
+
             <Separator layoutX="15.0" layoutY="175.0" prefHeight="4.0" prefWidth="126.0" />
 
             <Label layoutX="15.0" layoutY="195.0" text="Dataset 2:" />
@@ -51,13 +52,14 @@
 
             <Label layoutX="20.0" layoutY="368.0" text="Scale:" />
             <ChoiceBox fx:id="scale_select" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
-            <CheckBox fx:id="force_zero" layoutX="15.0" layoutY="422.0" mnemonicParsing="false" text="Origin always visible" />
+             <CheckBox fx:id="force_zero" layoutX="15.0" layoutY="420.0" mnemonicParsing="false" text="always centered" />
             <Label fx:id="rot_label" layoutX="20.0" layoutY="452.0" text="Rotation: [ 0°]" />
             <Slider fx:id="rotation" blockIncrement="10.0" layoutX="13.0" prefWidth="126.0"
 					layoutY="467" majorTickUnit="10.0" max="90" min="-90" prefHeight="13.0" value="0"/>
 		    <CheckBox fx:id="auto_rotate" layoutX="15.0" layoutY="490.0" mnemonicParsing="false" text="Heading autorotate" />
 
             <Separator layoutX="15.0" layoutY="510.0" prefHeight="4.0" prefWidth="126.0" />
+
 
             <Button fx:id="export" layoutX="15.0" layoutY="540.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 

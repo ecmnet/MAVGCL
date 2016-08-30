@@ -35,6 +35,7 @@ package com.comino.flight.widgets.charts.xy;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -198,14 +199,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		pool = new XYDataPool();
 
 		task = new AnimationTimer() {
-            @Override public void handle(long now) {
-            	updateGraph(refreshRequest);
-            }
-        };
-
-		xAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
-		yAxis.forceZeroInRangeProperty().bind(force_zero.selectedProperty());
-
+			@Override public void handle(long now) {
+				updateGraph(refreshRequest);
+			}
+		};
 	}
 
 	@FXML
@@ -256,14 +253,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
 				if(PRESETS[newValue.intValue()][0]!=null)
-				   cseries1_x.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][0]));
+					cseries1_x.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][0]));
 				else
-				   cseries1_x.getSelectionModel().select(0);
+					cseries1_x.getSelectionModel().select(0);
 
 				if(PRESETS[newValue.intValue()][1]!=null)
-				  cseries1_y.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][1]));
+					cseries1_y.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][1]));
 				else
-				  cseries1_y.getSelectionModel().select(0);
+					cseries1_y.getSelectionModel().select(0);
 
 			}
 
@@ -275,14 +272,14 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
 				if(PRESETS[newValue.intValue()][0]!=null)
-				   cseries2_x.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][0]));
+					cseries2_x.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][0]));
 				else
-				   cseries2_x.getSelectionModel().select(0);
+					cseries2_x.getSelectionModel().select(0);
 
 				if(PRESETS[newValue.intValue()][1]!=null)
-				  cseries2_y.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][1]));
+					cseries2_y.getSelectionModel().select(meta.getMetaData(PRESETS[newValue.intValue()][1]));
 				else
-				  cseries2_y.getSelectionModel().select(0);
+					cseries2_y.getSelectionModel().select(0);
 
 			}
 
@@ -420,10 +417,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private void setXResolution(int frame) {
 		this.current_x_pt = 0;
 		if(frame < 240) {
-		this.frame_secs = frame;
-		resolution_ms = 50;
-		scroll.setValue(1);
-		refreshChart();
+			this.frame_secs = frame;
+			resolution_ms = 50;
+			scroll.setValue(1);
+			refreshChart();
 		}
 	}
 
@@ -464,8 +461,28 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
-		if(force_zero.isSelected()) {
+		if(force_zero.isSelected() && scale > 0) {
+			float x = 0; float y = 0;
 
+			if(type1_x.hash!=0 && type2_x.hash==0)	{
+				x = getAverage(mList,type1_x);
+				y = getAverage(mList,type1_y);
+			}
+
+			if(type2_x.hash!=0 && type1_x.hash==0)	{
+				x = getAverage(mList,type2_x);
+				y = getAverage(mList,type2_y);
+			}
+
+			if(type2_x.hash!=0 && type1_x.hash!=0)	{
+				x = ( getAverage(mList,type2_x) + getAverage(mList,type1_x) ) / 2f;
+				y = ( getAverage(mList,type2_y) + getAverage(mList,type1_y) ) / 2f;
+			}
+
+			xAxis.setLowerBound(x-scale);
+			xAxis.setUpperBound(x+scale);
+			yAxis.setLowerBound(y-scale);
+			yAxis.setUpperBound(y+scale);
 
 		}
 
@@ -508,7 +525,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 									);
 						} else {
 							float[] r = rotateRad(m.getValue(type1_x), m.getValue(type1_y),
-									       rotation_rad);
+									rotation_rad);
 							series1.getData().add(pool.checkOut(r[0],r[1]));
 						}
 					}
@@ -520,7 +537,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 									);
 						} else {
 							float[] r = rotateRad(m.getValue(type2_x), m.getValue(type2_y),
-								          rotation_rad);
+									rotation_rad);
 							series2.getData().add(pool.checkOut(r[0],r[1]));
 						}
 					}
@@ -594,7 +611,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private void setScaling(float scale) {
 		if(scale>0) {
-			force_zero.setDisable(true);
+
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
 
@@ -613,7 +630,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				xAxis.setTickUnit(0.1); yAxis.setTickUnit(0.1);
 			}
 		} else {
-			force_zero.setDisable(false);
 			xAxis.setAutoRanging(true);
 			yAxis.setAutoRanging(true);
 		}
@@ -658,6 +674,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
+	}
+
+	private float getAverage(List<AnalysisDataModel> list, KeyFigureMetaData f) {
+		float average = 0;
+		if(list.size() < 2)
+			return 0;
+		for(int i = current_x0_pt; i< current_x1_pt;i++)
+			average +=list.get(i).getValue(f);
+		average = average / (current_x1_pt - current_x0_pt);
+		return average;
 	}
 
 }
