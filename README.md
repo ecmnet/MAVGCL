@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 30/08/2016 
+**Development Status:** Last updated 06/09/2016 
 
-- Line- and XY-chart performance fixes
+- Estimator status key figures added
 
 **Features:**
 
