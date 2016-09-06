@@ -725,14 +725,14 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="HorizPos.Accurracy" uom="m" mask="#0.000" key="HORIZACC">
+	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="#0.00" key="HORIZACCURACY">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="VertPos.Accurracy" uom="m" mask="#0.000" key="VERTACC">
+	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="VERTACCURACY">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
