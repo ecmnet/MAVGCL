@@ -2213,7 +2213,7 @@ but also ignore less noise</short_desc>
       <increment>1</increment>
       <scope>modules/navigator</scope>
     </parameter>
-    <parameter default="-1" name="GF_MAX_HOR_DIST" type="INT32">
+    <parameter default="-1" name="GF_MAX_HOR_DIST" type="FLOAT">
       <short_desc>Max horizontal distance in meters</short_desc>
       <long_desc>Set to &gt; 0 to activate a geofence action if horizontal distance to home exceeds this value.</long_desc>
       <min>-1</min>
@@ -2222,34 +2222,13 @@ but also ignore less noise</short_desc>
       <increment>1</increment>
       <scope>modules/navigator</scope>
     </parameter>
-    <parameter default="-1" name="GF_MAX_VER_DIST" type="INT32">
+    <parameter default="-1" name="GF_MAX_VER_DIST" type="FLOAT">
       <short_desc>Max vertical distance in meters</short_desc>
       <long_desc>Set to &gt; 0 to activate a geofence action if vertical distance to home exceeds this value.</long_desc>
       <min>-1</min>
       <unit>m</unit>
       <increment>1</increment>
       <scope>modules/navigator</scope>
-    </parameter>
-  </group>
-  <group name="Gimbal">
-    <parameter default="0" name="GMB_USE_MNT" type="INT32">
-      <short_desc>Consider mount operation mode</short_desc>
-      <long_desc>If set to 1, mount mode will be enforced.</long_desc>
-      <boolean />
-      <scope>drivers/gimbal</scope>
-    </parameter>
-    <parameter default="0" name="GMB_AUX_MNT_CHN" type="INT32">
-      <short_desc>Auxiliary switch to set mount operation mode</short_desc>
-      <long_desc>Set to 0 to disable manual mode control. If set to an auxiliary switch: Switch off means the gimbal is put into safe/locked position. Switch on means the gimbal can move freely, and landing gear will be retracted if applicable.</long_desc>
-      <min>0</min>
-      <max>3</max>
-      <scope>drivers/gimbal</scope>
-      <values>
-        <value code="1">AUX1</value>
-        <value code="0">Disable</value>
-        <value code="3">AUX3</value>
-        <value code="2">AUX2</value>
-      </values>
     </parameter>
   </group>
   <group name="Land Detector">
@@ -2930,6 +2909,108 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
         <value code="3">Return to Land</value>
         <value code="2">Manual</value>
         <value code="4">Land at current position</value>
+      </values>
+    </parameter>
+  </group>
+  <group name="Mount">
+    <parameter default="0" name="MNT_MODE_IN" type="INT32">
+      <short_desc>Mount input mode
+RC uses the AUX input channels (see MNT_MAN_* parameters),
+MAVLINK_ROI uses the MAV_CMD_DO_SET_ROI Mavlink message, and MAVLINK_DO_MOUNT the
+MAV_CMD_DO_MOUNT_CONFIGURE and MAV_CMD_DO_MOUNT_CONTROL messages to control a mount</short_desc>
+      <min>0</min>
+      <max>3</max>
+      <scope>drivers/vmount</scope>
+      <values>
+        <value code="1">RC</value>
+        <value code="0">DISABLE</value>
+        <value code="3">MAVLINK_DO_MOUNT</value>
+        <value code="2">MAVLINK_ROI</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="MNT_MODE_OUT" type="INT32">
+      <short_desc>Mount output mode
+AUX uses the mixer output Control Group #2.
+MAVLINK uses the MAV_CMD_DO_MOUNT_CONFIGURE and MAV_CMD_DO_MOUNT_CONTROL MavLink messages
+to control a mount (set MNT_MAV_SYSID &amp; MNT_MAV_COMPID)</short_desc>
+      <min>0</min>
+      <max>1</max>
+      <scope>drivers/vmount</scope>
+      <values>
+        <value code="1">MAVLINK</value>
+        <value code="0">AUX</value>
+      </values>
+    </parameter>
+    <parameter default="71" name="MNT_MAV_SYSID" type="INT32">
+      <short_desc>Mavlink System ID (if MNT_MODE_OUT is MAVLINK)</short_desc>
+      <scope>drivers/vmount</scope>
+    </parameter>
+    <parameter default="67" name="MNT_MAV_COMPID" type="INT32">
+      <short_desc>Mavlink Component ID (if MNT_MODE_OUT is MAVLINK)</short_desc>
+      <scope>drivers/vmount</scope>
+    </parameter>
+    <parameter default="-1.0" name="MNT_OB_NORM_MODE" type="FLOAT">
+      <short_desc>Mixer value for selecting normal mode
+if required by the gimbal (only in AUX output mode)</short_desc>
+      <min>-1.0</min>
+      <max>1.0</max>
+      <decimal>3</decimal>
+      <scope>drivers/vmount</scope>
+    </parameter>
+    <parameter default="0.0" name="MNT_OB_LOCK_MODE" type="FLOAT">
+      <short_desc>Mixer value for selecting a locking mode
+if required for the gimbal (only in AUX output mode)</short_desc>
+      <min>-1.0</min>
+      <max>1.0</max>
+      <decimal>3</decimal>
+      <scope>drivers/vmount</scope>
+    </parameter>
+    <parameter default="0" name="MNT_MAN_CONTROL" type="INT32">
+      <short_desc>This enables the mount to be manually controlled when no ROI is set</short_desc>
+      <long_desc>If set to 1, the mount will be controlled by the AUX channels below when no ROI is set.</long_desc>
+      <boolean />
+      <scope>drivers/vmount</scope>
+    </parameter>
+    <parameter default="0" name="MNT_MAN_ROLL" type="INT32">
+      <short_desc>Auxiliary channel to control roll (in AUX input or manual mode)</short_desc>
+      <min>0</min>
+      <max>5</max>
+      <scope>drivers/vmount</scope>
+      <values>
+        <value code="1">AUX1</value>
+        <value code="0">Disable</value>
+        <value code="3">AUX3</value>
+        <value code="2">AUX2</value>
+        <value code="5">AUX5</value>
+        <value code="4">AUX4</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="MNT_MAN_PITCH" type="INT32">
+      <short_desc>Auxiliary channel to control pitch (in AUX input or manual mode)</short_desc>
+      <min>0</min>
+      <max>5</max>
+      <scope>drivers/vmount</scope>
+      <values>
+        <value code="1">AUX1</value>
+        <value code="0">Disable</value>
+        <value code="3">AUX3</value>
+        <value code="2">AUX2</value>
+        <value code="5">AUX5</value>
+        <value code="4">AUX4</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="MNT_MAN_YAW" type="INT32">
+      <short_desc>Auxiliary channel to control yaw (in AUX input or manual mode)</short_desc>
+      <min>0</min>
+      <max>5</max>
+      <scope>drivers/vmount</scope>
+      <values>
+        <value code="1">AUX1</value>
+        <value code="0">Disable</value>
+        <value code="3">AUX3</value>
+        <value code="2">AUX2</value>
+        <value code="5">AUX5</value>
+        <value code="4">AUX4</value>
       </values>
     </parameter>
   </group>
@@ -6641,6 +6722,20 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     <parameter default="3.14" name="SUB_TESTF" type="FLOAT">
       <short_desc>Float Demonstration Parameter in the Example</short_desc>
       <scope>examples/subscriber</scope>
+    </parameter>
+  </group>
+  <group name="Syslink">
+    <parameter default="80" name="SLNK_RADIO_CHAN" type="INT32">
+      <short_desc>Operating channel of the NRF51</short_desc>
+      <min>0</min>
+      <max>125</max>
+      <scope>modules/syslink</scope>
+    </parameter>
+    <parameter default="0" name="SLNK_RADIO_RATE" type="INT32">
+      <short_desc>Operating datarate of the NRF51</short_desc>
+      <min>0</min>
+      <max>2</max>
+      <scope>modules/syslink</scope>
     </parameter>
   </group>
   <group name="System">
