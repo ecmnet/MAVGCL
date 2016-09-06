@@ -56,7 +56,7 @@
 
 	<!-- Local position  -->
 
-	<KeyFigure desc="Loc.Pos.X" uom="m" mask="#0.0" key="LPOSX">
+	<KeyFigure desc="LPos.X" uom="m" mask="#0.0" key="LPOSX">
 		<MSPSource class="state" field="l_x"></MSPSource>
 		<PX4Source field="LPOS.X"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.x"></ULogSource>
@@ -64,7 +64,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.Y" uom="m" mask="#0.0" key="LPOSY">
+	<KeyFigure desc="LPos.Y" uom="m" mask="#0.0" key="LPOSY">
 		<MSPSource class="state" field="l_y"></MSPSource>
 		<PX4Source field="LPOS.Y"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.y"></ULogSource>
@@ -72,7 +72,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.Z" uom="m" mask="#0.0" key="LPOSZ">
+	<KeyFigure desc="LPos.Z" uom="m" mask="#0.0" key="LPOSZ">
 		<MSPSource class="state" field="l_z"></MSPSource>
 		<PX4Source field="LPOS.Z"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.z"></ULogSource>
@@ -83,7 +83,7 @@
 
 	<!-- Local position speed -->
 
-	<KeyFigure desc="Loc.Pos.VX" uom="m/s" mask="#0.0" key="LPOSVX">
+	<KeyFigure desc="LPos.VX" uom="m/s" mask="#0.0" key="LPOSVX">
 		<MSPSource class="state" field="l_vx"></MSPSource>
 		<PX4Source field="LPOS.VX"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.vx"></ULogSource>
@@ -91,7 +91,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.VY" uom="m/s" mask="#0.0" key="LPOSVY">
+	<KeyFigure desc="LPos.VY" uom="m/s" mask="#0.0" key="LPOSVY">
 		<MSPSource class="state" field="l_vy"></MSPSource>
 		<PX4Source field="LPOS.VY"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.vy"></ULogSource>
@@ -99,7 +99,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.VZ" uom="m/s" mask="#0.0" key="LPOSVZ">
+	<KeyFigure desc="LPos.VZ" uom="m/s" mask="#0.0" key="LPOSVZ">
 		<MSPSource class="state" field="l_vz"></MSPSource>
 		<PX4Source field="LPOS.VZ"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.vz"></ULogSource>
@@ -110,21 +110,21 @@
 
 	<!-- Local position acceleration -->
 
-	<KeyFigure desc="Loc.Pos.AX" uom="m/s^2" mask="#0.0" key="LPOSAX">
+	<KeyFigure desc="LPos.AX" uom="m/s^2" mask="#0.0" key="LPOSAX">
 		<MSPSource class="state" field="l_ax"></MSPSource>
 		<PX4Source field=""></PX4Source>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.AY" uom="m/s^2" mask="#0.0" key="LPOSAY">
+	<KeyFigure desc="LPos.AY" uom="m/s^2" mask="#0.0" key="LPOSAY">
 		<MSPSource class="state" field="l_ay"></MSPSource>
 		<PX4Source field=""></PX4Source>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Loc.Pos.AZ" uom="m/s^2" mask="#0.0" key="LPOSAZ">
+	<KeyFigure desc="LPos.AZ" uom="m/s^2" mask="#0.0" key="LPOSAZ">
 		<MSPSource class="state" field="l_az"></MSPSource>
 		<PX4Source field=""></PX4Source>
 		<Groups>
@@ -134,7 +134,7 @@
 
 	<!-- Local position setpoint -->
 
-	<KeyFigure desc="SP.Loc.Pos.X" uom="m" mask="#0.0" key="SPLPOSX">
+	<KeyFigure desc="SP.LPos.X" uom="m" mask="#0.0" key="SPLPOSX">
 		<MSPSource class="target_state" field="l_x"></MSPSource>
 		<PX4Source field="LPSP.X"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.x"></ULogSource>
@@ -143,7 +143,7 @@
 			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="SP.Loc.Pos.Y" uom="m" mask="#0.0" key="SPLPOSY">
+	<KeyFigure desc="SP.LPos.Y" uom="m" mask="#0.0" key="SPLPOSY">
 		<MSPSource class="target_state" field="l_y"></MSPSource>
 		<PX4Source field="LPSP.Y"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.y"></ULogSource>
@@ -152,7 +152,7 @@
 			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="SP.Loc.Pos.Z" uom="m" mask="#0.0" key="SPLPOSZ">
+	<KeyFigure desc="SP.LPos.Z" uom="m" mask="#0.0" key="SPLPOSZ">
 		<MSPSource class="target_state" field="l_z"></MSPSource>
 		<PX4Source field="LPSP.Z"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.z"></ULogSource>
@@ -162,9 +162,17 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="SP.LPos.Yaw" uom="deg" mask="#0.0" key="SPLPOSYAW">
+		<MSPSource class="target_state" field="h"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Local Position Setpoint</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- Local position speed setpoint -->
 
-	<KeyFigure desc="SP.Loc.Pos.VX" uom="m/s" mask="#0.0" key="SPLPOSVX">
+	<KeyFigure desc="SP.LPos.VX" uom="m/s" mask="#0.0" key="SPLPOSVX">
 		<MSPSource class="target_state" field="l_vx"></MSPSource>
 		<PX4Source field="LPSP.VX"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.vx"></ULogSource>
@@ -173,7 +181,8 @@
 			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="SP.Loc.Pos.VY" uom="m/s" mask="#0.0" key="SPLPOSVY">
+
+	<KeyFigure desc="SP.LPos.VY" uom="m/s" mask="#0.0" key="SPLPOSVY">
 		<MSPSource class="target_state" field="l_vy"></MSPSource>
 		<PX4Source field="LPSP.VY"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.vy"></ULogSource>
@@ -182,10 +191,19 @@
 			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="SP.Loc.Pos.VZ" uom="m/s" mask="#0.0" key="SPLPOSVZ">
+
+	<KeyFigure desc="SP.LPos.VZ" uom="m/s" mask="#0.0" key="SPLPOSVZ">
 		<MSPSource class="target_state" field="l_vz"></MSPSource>
 		<PX4Source field="LPSP.VZ"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.vz"></ULogSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Local Position Setpoint</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.LPos.YawRate" uom="deg/s" mask="#0.0" key="SPLPOSYAWRATE">
+		<MSPSource class="target_state" field="vh"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Local Position Setpoint</Group>
@@ -725,14 +743,14 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="#0.00" key="HORIZACCURACY">
+	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="#0.00" key="EPH">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="VERTACCURACY">
+	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="EPV">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
