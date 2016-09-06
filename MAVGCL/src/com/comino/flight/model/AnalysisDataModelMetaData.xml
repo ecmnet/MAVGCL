@@ -416,6 +416,7 @@
 		<ULogSource field="vehicle_global_position_0.yaw"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
 
