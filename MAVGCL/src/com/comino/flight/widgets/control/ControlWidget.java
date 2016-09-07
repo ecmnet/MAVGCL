@@ -106,7 +106,7 @@ public class ControlWidget extends WidgetPane implements IMSPModeChangedListener
 	public void update(Status arg0, Status newStat) {
 
 		if(newStat.isStatus(Status.MSP_CONNECTED)) {
-			details.selectedProperty().set(true);
+			details.selectedProperty().set(false);
 		}
 		else {
 			details.selectedProperty().set(false);

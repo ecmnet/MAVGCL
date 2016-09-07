@@ -35,7 +35,6 @@ package com.comino.flight.widgets.details;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,6 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.DashLabel;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -60,12 +58,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public class DetailsWidget extends WidgetPane  {
 
-	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
-	private final static String STYLE_INVALID     = "-fx-background-color:#101010;";
-	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;";
+	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040; -fx-text-fill: #F0F0F0;";
+	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;-fx-text-fill: #F0F0F0;";
 
 	private final static String[] key_figures_details = {
 			"ROLL",
@@ -131,10 +129,6 @@ public class DetailsWidget extends WidgetPane  {
 
 	public DetailsWidget() {
 
-		DecimalFormatSymbols f_symbols = new DecimalFormatSymbols();
-		f_symbols.setNaN("-");
-		f.setDecimalFormatSymbols(f_symbols);
-
 		figures = new ArrayList<KeyFigure>();
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DetailsWidget.fxml"));
@@ -160,7 +154,6 @@ public class DetailsWidget extends WidgetPane  {
 		};
 	}
 
-
 	public void setup(IMAVController control) {
 
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
@@ -176,7 +169,7 @@ public class DetailsWidget extends WidgetPane  {
 
 		task.start();
 
-		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+	//	this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 
 	}
 
@@ -214,27 +207,31 @@ public class DetailsWidget extends WidgetPane  {
 		public void setValue(AnalysisDataModel model, int row) {
 			if(kf!=null) {
 				val =model.getValue(kf);
+
+				if(Float.isNaN(val)) {
+					label.setDashColor(Color.GRAY);
+					if(value instanceof ProgressBar)
+						((ProgressBar)value).setProgress(0);
+					return;
+				}
+
 				if(val==old_val)
 					return;
-				if(val==Float.NaN) {
-					p.setStyle(STYLE_INVALID);
-					return;
-				}
 				old_val = val;
+
 				if(kf.min!=kf.max) {
 					if(val < kf.min || val > kf.max)
+						label.setDashColor(Color.WHITE);
 						p.setStyle(STYLE_OUTOFBOUNDS);
 				}
+				label.setDashColor(null);
 				p.setStyle(STYLE_VALIDDATA);
 				f.applyPattern(kf.mask);
 				if(value instanceof Label)
 					((Label)value).setText(f.format(val));
 				if(value instanceof ProgressBar)
 					((ProgressBar)value).setProgress(val);
-
 			}
 		}
 	}
-
-
 }

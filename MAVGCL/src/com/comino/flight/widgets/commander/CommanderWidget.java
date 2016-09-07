@@ -93,7 +93,7 @@ public class CommanderWidget extends WidgetPane  {
 		});
 
 		state.getLandedProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(control.isSimulation()) {
+			if(control!=null && control.isSimulation()) {
 				msg_manual_control rc = new msg_manual_control(255,1);
 				if(newvalue.booleanValue())
 					rc.z = 0;

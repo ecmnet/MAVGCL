@@ -174,6 +174,7 @@ public class FlightTabs extends Pane {
 			if(control.isConnected()) {
 			    this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
 			    this.tabpane.getTabs().get(5).setDisable(newvalue.booleanValue());
+			    flightControl.getControl().getDetailVisibility().set(false);
 			}
 		});
 
