@@ -749,6 +749,7 @@
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
+		<Validity min="0" max="5.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="EPV">
@@ -756,6 +757,7 @@
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
+		<Validity min="0" max="5.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="EstimatorFlags" uom="" mask="#0" key="ESTFLAGS">
