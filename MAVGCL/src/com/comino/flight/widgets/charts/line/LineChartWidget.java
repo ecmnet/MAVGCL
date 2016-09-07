@@ -685,9 +685,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			return dataService.getModelList().get(current_x).getValue(m);
 
 		for(int i=0;i<length;i++) {
-			v = dataService.getModelList().get(current_x-i).getValue(m);
-			if(Math.abs(v)>max) {
-				max = Math.abs(v); index = i;
+			v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
+			if(v>max) {
+				max = v; index = i;
 			}
 		}
 		return dataService.getModelList().get(current_x-index).getValue(m);
