@@ -38,7 +38,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -50,8 +49,6 @@ import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -66,8 +63,11 @@ import javafx.scene.layout.GridPane;
 
 public class DetailsWidget extends WidgetPane  {
 
+	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
+	private final static String STYLE_INVALID     = "-fx-background-color:#101010;";
+	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;";
 
-	private static String[] key_figures_details = {
+	private final static String[] key_figures_details = {
 			"ROLL",
 			"PITCH",
 			null,
@@ -216,13 +216,16 @@ public class DetailsWidget extends WidgetPane  {
 				val =model.getValue(kf);
 				if(val==old_val)
 					return;
+				if(val==Float.NaN) {
+					p.setStyle(STYLE_INVALID);
+					return;
+				}
 				old_val = val;
 				if(kf.min!=kf.max) {
 					if(val < kf.min || val > kf.max)
-						p.setStyle("-fx-background-color:#004040;");
-					else
-						p.setStyle("-fx-background-color:transparent;");
+						p.setStyle(STYLE_OUTOFBOUNDS);
 				}
+				p.setStyle(STYLE_VALIDDATA);
 				f.applyPattern(kf.mask);
 				if(value instanceof Label)
 					((Label)value).setText(f.format(val));
