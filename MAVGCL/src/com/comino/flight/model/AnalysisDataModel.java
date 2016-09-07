@@ -86,7 +86,7 @@ public class AnalysisDataModel {
 		try {
 			return data.get(m.hash);
 		} catch(Exception e) { 	}
-		return 0;
+		return Float.NaN;
 	}
 
 	public void setValue(String kf,float value) {
@@ -98,7 +98,9 @@ public class AnalysisDataModel {
 			try {
 				if(!e.isVirtual)
 				  data.put(e.hash,e.getValueFromMSPModel(m));
-			} catch (Exception e1) { }
+			} catch (Exception e1) {
+				data.put(e.hash, Float.NaN);
+			}
 		});
 	}
 
@@ -107,7 +109,9 @@ public class AnalysisDataModel {
 			try {
 				if(!e.isVirtual)
 				  data.put(e.hash,e.getValueFromPX4Model(d));
-			} catch (Exception e1) {  }
+			} catch (Exception e1) {
+				data.put(e.hash, Float.NaN);
+			}
 		});
 	}
 
@@ -116,7 +120,9 @@ public class AnalysisDataModel {
 			try {
 				if(!e.isVirtual)
 				  data.put(e.hash,e.getValueFromULogModel(d));
-			} catch (Exception e1) {  }
+			} catch (Exception e1) {
+				data.put(e.hash, Float.NaN);
+			}
 		});
 	}
 
@@ -126,7 +132,9 @@ public class AnalysisDataModel {
 			try {
 				if(e.isVirtual)
 				  data.put(e.hash,e.calculateVirtualValue(this));
-			} catch (Exception e1) {  }
+			} catch (Exception e1) {
+				data.put(e.hash, Float.NaN);
+			}
 		});
 	}
 
