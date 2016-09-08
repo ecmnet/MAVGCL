@@ -516,7 +516,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		else
 			resolution_ms = 50;
 
-		if(resolution_ms > 100) {
+		if(resolution_ms > COLLECTOR_CYCLE) {
 			averaging.setDisable(false);
 		} else {
 			averaging.setSelected(false);
