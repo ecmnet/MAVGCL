@@ -548,6 +548,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private  void updateGraph(boolean refresh) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;
 
+		float v1 ; float v2; float v3;
+
 		if(isDisabled()) {
 			return;
 		}
@@ -613,6 +615,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						}
 					}
 
+					v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
 					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
 						series1.getData().add(pool.checkOut(dt_sec,
 								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected())));
@@ -699,7 +702,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 		float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
 
-		if(length==1 || dataService.getModelList().size() < length)
+		if(dataService.getModelList().size() < length)
+			return 0;
+
+		if(length==1)
 			return dataService.getModelList().get(current_x).getValue(m);
 
 		if(average) {
@@ -707,15 +713,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			for(int i=0;i<length;i++)
 			   a = a + dataService.getModelList().get(current_x-i).getValue(m);
 			return a / length;
+
 		} else {
 			for(int i=0;i<length;i++) {
 				v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
-				if(v>max) {
+				if(v>max)
 					max = v; index = i;
-				}
 			}
 			return dataService.getModelList().get(current_x-index).getValue(m);
 		}
 	}
-
 }
