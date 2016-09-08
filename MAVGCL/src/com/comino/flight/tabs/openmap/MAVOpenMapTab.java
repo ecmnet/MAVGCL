@@ -92,7 +92,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON" },
-		  { "RGPSLAT",  "RGPSLON" }
+				{ "RGPSLAT",  "RGPSLON" }
 		};
 
 	@FXML
@@ -179,20 +179,19 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 							} else
 								homeLayer.setVisible(false);
 
-							if(model.getValue("RGPSNO")>3) {
-								if(model.getValue("RGPSHDOP") > 2.5)
-									positionLayer.getIcon().setImage(plane_invalid);
-								else
-									positionLayer.getIcon().setImage(plane_valid);
-								if(mapfollow.selectedProperty().get()) {
-									map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
-									canvasLayer.redraw(true);
-								} else {
-									canvasLayer.redraw(false);
-								}
-								positionLayer.updatePosition(
-										model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
+							if(model.getValue("RGPSHDOP") > 2.5)
+								positionLayer.getIcon().setImage(plane_invalid);
+							else
+								positionLayer.getIcon().setImage(plane_valid);
+							if(mapfollow.selectedProperty().get()) {
+								map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
+								canvasLayer.redraw(true);
+							} else {
+								canvasLayer.redraw(false);
 							}
+							positionLayer.updatePosition(
+									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
+
 
 						} catch(Exception e) { e.printStackTrace(); }
 					});
