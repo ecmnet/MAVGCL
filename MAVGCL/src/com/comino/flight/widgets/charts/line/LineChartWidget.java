@@ -111,6 +111,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private ChoiceBox<KeyFigureMetaData> cseries3;
 
 	@FXML
+	private CheckBox averaging;
+
+	@FXML
 	private Button export;
 
 	@FXML
@@ -395,6 +398,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				setXResolution(timeFrame.get());
 			}
 		});
+
+		averaging.selectedProperty().addListener((v, ov, nv) -> {
+			updateRequest();
+		});
+
 		annotations.setSelected(false);
 	}
 
@@ -508,6 +516,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		else
 			resolution_ms = 50;
 
+		if(resolution_ms > 100) {
+			averaging.setDisable(false);
+		} else {
+			averaging.setSelected(false);
+			averaging.setDisable(true);
+		}
+
 		timeframe = frame;
 
 		if(!isDisabled()) {
@@ -599,11 +614,14 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
-						series1.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1)));
+						series1.getData().add(pool.checkOut(dt_sec,
+								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected())));
 					if(type2.hash!=0 && m.getValue(type2)!=Float.NaN)
-						series2.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2)));
+						series2.getData().add(pool.checkOut(dt_sec,
+								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected())));
 					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
-						series3.getData().add(pool.checkOut(dt_sec,searchMinMax(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3)));
+						series3.getData().add(pool.checkOut(dt_sec,
+								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected())));
 
 				}
 
@@ -678,19 +696,25 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	// Determines spikes, if not all datapoints are reported.
-	private float searchMinMax(int current_x, int length, KeyFigureMetaData m) {
-		float max = -Float.MAX_VALUE; float v; int index=0;
+	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
+		float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
 
 		if(length==1 || dataService.getModelList().size() < length)
 			return dataService.getModelList().get(current_x).getValue(m);
 
-		for(int i=0;i<length;i++) {
-			v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
-			if(v>max) {
-				max = v; index = i;
+		if(average) {
+			for(int i=0;i<length;i++)
+			  a =+ dataService.getModelList().get(current_x-i).getValue(m);
+			return a / length;
+		} else {
+			for(int i=0;i<length;i++) {
+				v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
+				if(v>max) {
+					max = v; index = i;
+				}
 			}
+			return dataService.getModelList().get(current_x-index).getValue(m);
 		}
-		return dataService.getModelList().get(current_x-index).getValue(m);
 	}
 
 }
