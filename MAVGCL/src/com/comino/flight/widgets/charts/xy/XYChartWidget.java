@@ -461,7 +461,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
-		if(force_zero.isSelected() && scale > 0) {
+		if(force_zero.isSelected() && scale > 0 && current_x_pt > 0) {
 			float x = 0; float y = 0;
 
 			if(type1_x.hash!=0 && type2_x.hash==0)	{
@@ -478,11 +478,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				x = ( getAverage(mList,type2_x) + getAverage(mList,type1_x) ) / 2f;
 				y = ( getAverage(mList,type2_y) + getAverage(mList,type1_y) ) / 2f;
 			}
-
-			xAxis.setLowerBound(x-scale);
-			xAxis.setUpperBound(x+scale);
-			yAxis.setLowerBound(y-scale);
-			yAxis.setUpperBound(y+scale);
+				x = (int)(x *  scale) / (scale); y = (int)(y *  scale) / (scale);
+				xAxis.setLowerBound(x-scale);
+				xAxis.setUpperBound(x+scale);
+				yAxis.setLowerBound(y-scale);
+				yAxis.setUpperBound(y+scale);
 
 		}
 
@@ -571,6 +571,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			} else
 				task.stop();
 		});
+
+		current_x1_pt =  timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 		return this;
 	}
@@ -678,9 +680,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private float getAverage(List<AnalysisDataModel> list, KeyFigureMetaData f) {
 		float average = 0;
-		if(list.size() < 2)
+		if(list.size() < 10)
 			return 0;
-		for(int i = current_x0_pt; i< current_x1_pt;i++)
+		for(int i = current_x0_pt; i< current_x1_pt && i < list.size();i++)
 			average +=list.get(i).getValue(f);
 		average = average / (current_x1_pt - current_x0_pt);
 		return average;
