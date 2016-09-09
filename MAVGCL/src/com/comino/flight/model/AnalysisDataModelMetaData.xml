@@ -744,7 +744,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="#0.00" key="EPH">
+	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="#0.00" key="GPHACCUR">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
@@ -752,7 +752,7 @@
 		<Validity min="0" max="5.0"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="EPV">
+	<KeyFigure desc="Vert.Accurracy" uom="m" mask="#0.00" key="GPVACCUR">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
