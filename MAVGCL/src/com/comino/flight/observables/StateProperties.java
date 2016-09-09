@@ -37,7 +37,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
@@ -45,7 +45,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
-public class StateProperties implements IMSPModeChangedListener{
+public class StateProperties implements IMSPStatusChangedListener{
 
 	private static StateProperties instance = null;
 
@@ -76,7 +76,7 @@ public class StateProperties implements IMSPModeChangedListener{
 	}
 
 	private StateProperties(IMAVController control) {
-		 control.addModeChangeListener(this);
+		 control.addStatusChangeListener(this);
 	}
 
 	@Override

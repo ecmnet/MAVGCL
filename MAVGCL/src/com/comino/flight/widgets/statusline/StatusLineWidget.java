@@ -48,7 +48,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.Badge;
 import com.comino.flight.widgets.messages.MessagesWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
 
 import javafx.animation.AnimationTimer;
@@ -65,7 +65,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class StatusLineWidget extends Pane implements IChartControl, IMSPModeChangedListener  {
+public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusChangedListener  {
 
 	@FXML
 	private Label version;
@@ -187,7 +187,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPModeCha
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
 		chartControlWidget.addChart(this);
 		this.control = control;
-		this.control.addModeChangeListener(this);
+		this.control.addStatusChangeListener(this);
 		this.state = StateProperties.getInstance();
 
 		messages.setText(control.getClass().getSimpleName()+ " loaded");

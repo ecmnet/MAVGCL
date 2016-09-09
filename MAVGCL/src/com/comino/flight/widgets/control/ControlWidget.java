@@ -36,7 +36,7 @@ package com.comino.flight.widgets.control;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
@@ -44,7 +44,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
-public class ControlWidget extends WidgetPane implements IMSPModeChangedListener {
+public class ControlWidget extends WidgetPane implements IMSPStatusChangedListener {
 
 	@FXML
 	private CheckBox details;
@@ -96,7 +96,7 @@ public class ControlWidget extends WidgetPane implements IMSPModeChangedListener
 
 		this.model = control.getCurrentModel();
 		this.control = control;
-		this.control.addModeChangeListener(this);
+		this.control.addStatusChangeListener(this);
 		this.details.selectedProperty().set(false);
 		this.messages.selectedProperty().set(true);
 		update(model.sys,model.sys);

@@ -37,14 +37,14 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.fx.controls.DashLabelLED;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
-public class StatusWidget extends WidgetPane implements IMSPModeChangedListener {
+public class StatusWidget extends WidgetPane implements IMSPStatusChangedListener {
 
 	@FXML
 	private DashLabelLED armed;
@@ -79,7 +79,7 @@ public class StatusWidget extends WidgetPane implements IMSPModeChangedListener 
 
 		this.model = control.getCurrentModel();
 		this.control = control;
-		this.control.addModeChangeListener(this);
+		this.control.addStatusChangeListener(this);
 		update(model.sys,model.sys);
 	}
 

@@ -135,7 +135,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private FloatProperty  scroll       = new SimpleFloatProperty(0);
 
-	private Image plane_valid, plane_invalid;
+	private Image plane_valid, plane_invalid, plane_lpe;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
@@ -238,6 +238,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(homeLayer);
 
 		plane_valid   = new Image(getClass().getResource("airplane_g.png").toString());
+		plane_lpe     = new Image(getClass().getResource("airplane_b.png").toString());
 		plane_invalid = new Image(getClass().getResource("airplane_r.png").toString());
 
 		positionLayer = new PositionLayer(plane_valid);

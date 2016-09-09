@@ -45,7 +45,7 @@ import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPModeChangedListener;
+import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 
@@ -59,7 +59,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class RecordControlWidget extends WidgetPane implements IMSPModeChangedListener {
+public class RecordControlWidget extends WidgetPane implements IMSPStatusChangedListener {
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_LANDED		= 1;
@@ -223,7 +223,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPModeChangedLi
 		this.charts = charts;
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance(control.getCurrentModel());
-		this.control.addModeChangeListener(this);
+		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
