@@ -211,8 +211,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		mapfollow.selectedProperty().set(true);
 
-		// TODO 1.0: provide application directory
-
 		String mapFileName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
 
@@ -266,7 +264,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					first = true;
 				}
 
-				// TODO 0.3: MAVOpenMapTab: Draw path also in replay
+				// TODO MAVOpenMapTab: Draw path also in replay
 
 				if(state.getRecordingProperty().get() &&
 						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {

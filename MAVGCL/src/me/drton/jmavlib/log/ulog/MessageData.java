@@ -22,7 +22,6 @@ public class MessageData {
         if (t == null)
             throw new FormatErrorException("Message " + format.name + " has no timestamp field");
 
-        //TODO: parse non-64bit timestamp (depending on field type) & handle wrap-arounds
         timestamp = ((Number) t).longValue();
     }
 

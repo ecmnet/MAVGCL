@@ -2439,7 +2439,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>3</max>
+      <max>10</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -2527,12 +2527,12 @@ EPV used if greater than this value</short_desc>
       <boolean />
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.05" name="LPE_VIC_P" type="FLOAT">
+    <parameter default="0.001" name="LPE_VIC_P" type="FLOAT">
       <short_desc>Vicon position standard deviation</short_desc>
-      <min>0.01</min>
+      <min>0.0001</min>
       <max>1</max>
       <unit>m</unit>
-      <decimal>3</decimal>
+      <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="0.1" name="LPE_PN_P" type="FLOAT">
