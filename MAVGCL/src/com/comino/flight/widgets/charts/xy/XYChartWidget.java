@@ -187,6 +187,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private boolean refreshRequest = false;
 
+	private float old_center_x, old_center_y;
+
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
@@ -461,7 +463,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
-		if(force_zero.isSelected() && scale > 0 && current_x_pt > 0) {
+		if(force_zero.isSelected() && scale > 0 ) {
 			float x = 0; float y = 0;
 
 			if(type1_x.hash!=0 && type2_x.hash==0)	{
@@ -478,11 +480,19 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				x = ( getAverage(mList,type2_x) + getAverage(mList,type1_x) ) / 2f;
 				y = ( getAverage(mList,type2_y) + getAverage(mList,type1_y) ) / 2f;
 			}
-				x = (int)(x *  scale) / (scale); y = (int)(y *  scale) / (scale);
+
+			if(Math.abs(x - old_center_x)> scale/4) {
+				x = (int)(x *  100) / (100f);
 				xAxis.setLowerBound(x-scale);
 				xAxis.setUpperBound(x+scale);
+				old_center_x = x;
+			}
+			if(Math.abs(y - old_center_y)> scale/4) {
+				y = (int)(y *  100) / (100f);
 				yAxis.setLowerBound(y-scale);
 				yAxis.setUpperBound(y+scale);
+				old_center_y = y;
+			}
 
 		}
 
