@@ -39,7 +39,7 @@ import java.util.concurrent.locks.LockSupport;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MSP_CMD;
-import org.mavlink.messages.MSP_OFFBOARD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
@@ -71,6 +71,9 @@ public class ExperimentalWidget extends WidgetPane  {
 
 	@FXML
 	private CheckBox offboard_enabled;
+
+	@FXML
+	private CheckBox vision_enabled;
 
 	@FXML
 	private Button althold_command;
@@ -134,6 +137,20 @@ public class ExperimentalWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
+		vision_enabled.selectedProperty().addListener((v,ov,nv) -> {
+			if(nv.booleanValue())  {
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_VISION;
+				msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
+				control.sendMAVLinkMessage(msp);
+			} else {
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_VISION;
+				msp.param1 = MSP_COMPONENT_CTRL.DISABLE;
+				control.sendMAVLinkMessage(msp);
+			}
+		});
+
 		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
 //
 //			if(!model.sys.isStatus(Status.MSP_ARMED))
@@ -145,7 +162,7 @@ public class ExperimentalWidget extends WidgetPane  {
 
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
-					msp.param1 = MSP_OFFBOARD.MSP_OFFBOARD_ENABLE;
+					msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
 					control.sendMAVLinkMessage(msp);
 
 				}
@@ -161,7 +178,7 @@ public class ExperimentalWidget extends WidgetPane  {
 
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
-				msp.param1 = MSP_OFFBOARD.MSP_OFFBOARD_DISABLE;
+				msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
 				control.sendMAVLinkMessage(msp);
 
 
