@@ -85,7 +85,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			{  null		, null      },
 			{ "LPOSX"	, "LPOSY" 	},
 			{ "LPOSVX"	, "LPOSVY" 	},
-			{ "VISIONX"	, "VISIONY" }
+			{ "VISIONX"	, "VISIONY" },
+			{ "SPLPOSX"	, "SPLPOSY" }
 	};
 
 	private final static String[] PRESET_NAMES = {
@@ -93,6 +94,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			"Loc.Position",
 			"Loc.Speed",
 			"Vision Position",
+			"SP Loc.Position"
 	};
 
 	private final static String[] SCALES = {
