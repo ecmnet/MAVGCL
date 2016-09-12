@@ -12,10 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 09/09/2016 
-
-- Estimator status key figures added
-- LineChart sample averaging on request
+**Development Status:** Last updated 12/09/2016 
 
 **Features:**
 
