@@ -212,7 +212,7 @@
 
 	<!-- Attitude  -->
 
-	<KeyFigure desc="Roll" uom="deg" mask="#0.0" key="ROLL">
+	<KeyFigure desc="Roll" uom="°" mask="#0.0" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.roll"></ULogSource>
@@ -222,7 +222,7 @@
 		<Validity min="-2" max="2"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Pitch" uom="deg" mask="#0.0" key="PITCH">
+	<KeyFigure desc="Pitch" uom="°" mask="#0.0" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
