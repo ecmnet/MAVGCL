@@ -691,13 +691,15 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private float getAverage(List<AnalysisDataModel> list, KeyFigureMetaData f) {
-		float average = 0;
+		float min = Float.MAX_VALUE; float max = -Float.MAX_VALUE; float v=0;
 		if(list.size() < 10)
 			return 0;
-		for(int i = current_x0_pt; i< current_x1_pt && i < list.size();i++)
-			average +=list.get(i).getValue(f);
-		average = average / (current_x1_pt - current_x0_pt);
-		return average;
+		for(int i = current_x0_pt; i< current_x1_pt && i < list.size();i++) {
+			v = list.get(i).getValue(f);
+			if(v > max) max =v;
+			if(v < min) min =v;
+		}
+		return (max - min) / 2f + min;
 	}
 
 }
