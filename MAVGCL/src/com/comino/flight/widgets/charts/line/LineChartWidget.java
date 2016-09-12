@@ -615,16 +615,21 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						}
 					}
 
-					v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
-					if(type1.hash!=0 && m.getValue(type1)!=Float.NaN)
-						series1.getData().add(pool.checkOut(dt_sec,
-								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected())));
-					if(type2.hash!=0 && m.getValue(type2)!=Float.NaN)
-						series2.getData().add(pool.checkOut(dt_sec,
-								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected())));
-					if(type3.hash!=0 && m.getValue(type3)!=Float.NaN)
-						series3.getData().add(pool.checkOut(dt_sec,
-								determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected())));
+					if(type1.hash!=0)  {
+						v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
+						if(!Float.isNaN(v1))
+							series1.getData().add(pool.checkOut(dt_sec,v1));
+					}
+					if(type2.hash!=0)  {
+						v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
+						if(!Float.isNaN(v2))
+							series2.getData().add(pool.checkOut(dt_sec,v2));
+					}
+					if(type3.hash!=0)  {
+						v3 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected());
+						if(!Float.isNaN(v3))
+							series3.getData().add(pool.checkOut(dt_sec,v3));
+					}
 
 				}
 
@@ -711,13 +716,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(average) {
 			a = 0;
 			for(int i=0;i<length;i++)
-			   a = a + dataService.getModelList().get(current_x-i).getValue(m);
+				a = a + dataService.getModelList().get(current_x-i).getValue(m);
 			return a / length;
 
 		} else {
 			for(int i=0;i<length;i++) {
 				v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
-				if(v>max)
+				if(v>max && v != Float.NaN)
 					max = v; index = i;
 			}
 			return dataService.getModelList().get(current_x-index).getValue(m);
