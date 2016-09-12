@@ -411,7 +411,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Heading" uom="deg" mask="#0" key="HEAD">
+	<KeyFigure desc="Heading" uom="deg" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
 		<ULogSource field="vehicle_global_position_0.yaw"/>
 		<Groups>
