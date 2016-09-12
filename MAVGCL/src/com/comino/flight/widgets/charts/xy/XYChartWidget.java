@@ -399,6 +399,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		});
 
 		force_zero.setOnAction((ActionEvent event)-> {
+
 			updateRequest();
 		});
 
@@ -612,10 +613,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private void updateRequest() {
 		if(!isDisabled()) {
+			old_center_x = 0; old_center_y = 0;
 			if(dataService.isCollecting())
 				refreshRequest = true;
 			else {
-				old_center_x = 0; old_center_y = 0;
 				Platform.runLater(() -> {
 					updateGraph(true);
 				});
@@ -627,7 +628,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private void setScaling(float scale) {
 		if(scale>0) {
-
+			force_zero.setDisable(false);
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
 
@@ -648,6 +649,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		} else {
 			xAxis.setAutoRanging(true);
 			yAxis.setAutoRanging(true);
+			force_zero.setDisable(true);
+			force_zero.setSelected(false);
 		}
 
 	}
