@@ -62,8 +62,8 @@ import javafx.scene.paint.Color;
 
 public class DetailsWidget extends WidgetPane  {
 
-	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040; -fx-text-fill: #F0F0F0;";
-	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;-fx-text-fill: #F0F0F0;";
+	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
+	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;";
 
 	private final static String[] key_figures_details = {
 			"ROLL",
@@ -220,12 +220,17 @@ public class DetailsWidget extends WidgetPane  {
 				old_val = val;
 
 				if(kf.min!=kf.max) {
-					if(val < kf.min || val > kf.max)
+					if(val < kf.min || val > kf.max) {
 						label.setDashColor(Color.WHITE);
 						p.setStyle(STYLE_OUTOFBOUNDS);
+					} else {
+						label.setDashColor(null);
+						p.setStyle(STYLE_VALIDDATA);
+					}
+				} else {
+					label.setDashColor(null);
+					p.setStyle(STYLE_VALIDDATA);
 				}
-				label.setDashColor(null);
-				p.setStyle(STYLE_VALIDDATA);
 				f.applyPattern(kf.mask);
 				if(value instanceof Label)
 					((Label)value).setText(f.format(val));
