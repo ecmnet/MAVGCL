@@ -6731,7 +6731,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <max>125</max>
       <scope>modules/syslink</scope>
     </parameter>
-    <parameter default="0" name="SLNK_RADIO_RATE" type="INT32">
+    <parameter default="2" name="SLNK_RADIO_RATE" type="INT32">
       <short_desc>Operating datarate of the NRF51</short_desc>
       <min>0</min>
       <max>2</max>
