@@ -96,7 +96,7 @@ public class ParameterFactMetaData {
 			attributes.default_val  = Float.parseFloat(default_n.getNamedItem("default").getNodeValue());
 
 		for(int i=0;i<parameter.getChildNodes().getLength();i++) {
-		
+
 			Node node = parameter.getChildNodes().item(i);
 			if(node.getNodeName().equals("short_desc"))
 				attributes.description = node.getTextContent();
@@ -112,6 +112,10 @@ public class ParameterFactMetaData {
 				attributes.min_val = Float.parseFloat(node.getTextContent());
 			if(node.getNodeName().equals("max"))
 				attributes.max_val = Float.parseFloat(node.getTextContent());
+			if(node.getNodeName().equals("boolean")) {
+				attributes.valueList.put(0, "disabled");
+				attributes.valueList.put(1, "enabled");
+			}
 			if(node.getNodeName().equals("reboot_required"))
 				attributes.reboot_required = Boolean.parseBoolean(node.getTextContent());
 			if(node.getNodeName().equals("values")) {
