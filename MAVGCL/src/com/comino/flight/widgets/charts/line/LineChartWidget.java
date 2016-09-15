@@ -619,6 +619,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
 						if(!Float.isNaN(v1))
 							series1.getData().add(pool.checkOut(dt_sec,v1));
+
 					}
 					if(type2.hash!=0)  {
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
@@ -707,7 +708,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 		float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
 
-		if(dataService.getModelList().size() < length)
+		if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
 			return 0;
 
 		if(length==1)
