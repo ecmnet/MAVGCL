@@ -953,13 +953,13 @@
 
 	<KeyFigure desc="RC Channel 0" uom="" mask="#0.0" key="RC0">
 		<MSPSource class="rc" field="s0">
-		  <Converter class="ExpressionConverter" expression="(RC0 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC0 - 1000) / 1000" />
 		</MSPSource>
 		<PX4Source field="RC.C0">
-		  <Converter class="ExpressionConverter" expression="(RC0 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC0 - 1000) / 1000" />
 		</PX4Source>
 		<ULogSource field="rc_channels_0.channels[0]">
-		  <Converter class="ExpressionConverter" expression="(RC0 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC0 - 1000) / 1000" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
@@ -968,13 +968,13 @@
 
 	<KeyFigure desc="RC Channel 1" uom="" mask="#0.0" key="RC1">
 		<MSPSource class="rc" field="s1">
-		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 1000" />
 		</MSPSource>
 		<PX4Source field="RC.C1">
-		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 1000" />
 		</PX4Source>
 		<ULogSource field="rc_channels_0.channels[1]">
-		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC1 - 1500) / 1000" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
@@ -983,13 +983,13 @@
 
 	<KeyFigure desc="RC Channel 2" uom="" mask="#0.0" key="RC2">
 		<MSPSource class="rc" field="s2">
-		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 1000" />
 		</MSPSource>
 		<PX4Source field="RC.C2">
-		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 1000" />
 		</PX4Source>
 		<ULogSource field="rc_channels_0.channels[2]">
-		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC2 - 1500) / 1000" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
@@ -998,13 +998,13 @@
 
 	<KeyFigure desc="RC Channel 3" uom="" mask="#0.0" key="RC3">
 		<MSPSource class="rc" field="s3">
-		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 1000" />
 		</MSPSource>
 		<PX4Source field="RC.C3">
-		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 1000" />
 		</PX4Source>
 		<ULogSource field="rc_channels_0.channels[3]">
-		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 500" />
+		  <Converter class="ExpressionConverter" expression="(RC3 - 1500) / 1000" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
