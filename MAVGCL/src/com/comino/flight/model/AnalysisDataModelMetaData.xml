@@ -212,7 +212,7 @@
 
 	<!-- Attitude  -->
 
-	<KeyFigure desc="Roll" uom="°" mask="#0.0" key="ROLL">
+	<KeyFigure desc="Roll" uom="rad" mask="#0.00" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.roll"></ULogSource>
@@ -222,7 +222,7 @@
 		<Validity min="-2" max="2"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Pitch" uom="°" mask="#0.0" key="PITCH">
+	<KeyFigure desc="Pitch" uom="rad" mask="#0.00" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -232,7 +232,7 @@
 		<ULogSource field="vehicle_attitude_0.pitch"></ULogSource>
 	</KeyFigure>
 
-	<KeyFigure desc="Yaw" uom="deg" mask="#0.0" key="YAW">
+	<KeyFigure desc="Yaw" uom="rad" mask="#0.00" key="YAW">
 		<MSPSource class="attitude" field="y"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -243,7 +243,7 @@
 
 	<!-- Attitude rates -->
 
-	<KeyFigure desc="RollRate" uom="deg/s" mask="#0.00" key="ROLLR">
+	<KeyFigure desc="RollRate" uom="rad/s" mask="#0.00" key="ROLLR">
 		<MSPSource class="attitude" field="rr"></MSPSource>
 		<ULogSource field="vehicle_attitude_0.rollspeed"/>
 		<Groups>
@@ -252,7 +252,7 @@
 		<PX4Source field="ATT.RollRate"></PX4Source>
 	</KeyFigure>
 
-	<KeyFigure desc="PitchRate" uom="deg/s" mask="#0.00" key="PITCHR">
+	<KeyFigure desc="PitchRate" uom="rad/s" mask="#0.00" key="PITCHR">
 		<MSPSource class="attitude" field="pr"></MSPSource>
 		<ULogSource field="vehicle_attitude_0.pitchspeed"/>
 		<Groups>
@@ -261,7 +261,7 @@
 		<PX4Source field="ATT.PitchRate"></PX4Source>
 	</KeyFigure>
 
-	<KeyFigure desc="YawRate" uom="deg/s" mask="#0.00" key="YAWR">
+	<KeyFigure desc="YawRate" uom="rad/s" mask="#0.00" key="YAWR">
 		<MSPSource class="attitude" field="yr"></MSPSource>
 		<ULogSource field="vehicle_attitude_0.yawspeed"/>
 		<Groups>
@@ -272,7 +272,7 @@
 
 		<!-- Attitude  setpoint -->
 
-	<KeyFigure desc="Sp.Roll" uom="deg" mask="#0.00" key="SPROLL">
+	<KeyFigure desc="Sp.Roll" uom="rad" mask="#0.00" key="SPROLL">
 		<MSPSource class="attitude" field="sr"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -281,7 +281,7 @@
 		<ULogSource field="vehicle_attitude_setpoint_0.roll_body"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Sp.Pitch" uom="deg" mask="#0.00" key="SPPITCH">
+	<KeyFigure desc="Sp.Pitch" uom="rad" mask="#0.00" key="SPPITCH">
 		<MSPSource class="attitude" field="sp"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -290,7 +290,7 @@
 		<ULogSource field="vehicle_attitude_setpoint_0.pitch_body"/>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.Yaw" uom="deg" mask="#0.00" key="SPYAW">
+	<KeyFigure desc="SP.Yaw" uom="rad" mask="#0.00" key="SPYAW">
 		<MSPSource class="attitude" field="sy"></MSPSource>
 		<PX4Source field="ATSP.YawSP"></PX4Source>
 		<ULogSource field="vehicle_attitude_setpoint_0.yaw_body"/>
@@ -311,7 +311,7 @@
 
 	<!-- Attitude rates setpoint -->
 
-	<KeyFigure desc="Sp.RollRate" uom="deg/s" mask="#0.00" key="SPROLLR">
+	<KeyFigure desc="Sp.RollRate" uom="rad/s" mask="#0.00" key="SPROLLR">
 		<MSPSource class="attitude" field="srr"></MSPSource>
 		<PX4Source field="ARSP.RollRateSP"></PX4Source>
 		<Groups>
@@ -320,7 +320,7 @@
 
 	</KeyFigure>
 
-	<KeyFigure desc="Sp.PitchRate" uom="deg/s" mask="#0.00" key="SPPITCHR">
+	<KeyFigure desc="Sp.PitchRate" uom="rad/s" mask="#0.00" key="SPPITCHR">
 		<MSPSource class="attitude" field="spr"></MSPSource>
 		<PX4Source field="ARSP.PitchRateSP"></PX4Source>
 		<Groups>
@@ -329,7 +329,7 @@
 
 	</KeyFigure>
 
-	<KeyFigure desc="SP.YawRate" uom="deg/s" mask="#0.00" key="SPYAWR">
+	<KeyFigure desc="SP.YawRate" uom="rad/s" mask="#0.00" key="SPYAWR">
 		<MSPSource class="attitude" field="syr"></MSPSource>
 		<Groups>
 			<Group>Attitude</Group>
