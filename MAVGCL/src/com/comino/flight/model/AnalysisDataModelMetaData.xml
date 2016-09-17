@@ -421,18 +421,21 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Ground Speed" uom="m/s" mask="#0.0" key="GNDV">
-		<MSPSource class="hud" field="s"></MSPSource>
-		<ULogSource field="vehicle_gps_position_0.vel_m_s"/>
+		<MSPSource class="state" field="v"></MSPSource>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Climb rate" uom="m/s" mask="#0.0" key="CLIMB">
-		<MSPSource class="hud" field="vs"></MSPSource>
+	<KeyFigure desc="Vertical Speed" uom="m/s" mask="#0.0" key="CLIMB">
+		<MSPSource class="state" field="l_vz">
+		    <Converter class="ExpressionConverter" expression="-CLIMB" />
+		</MSPSource>
 		<ULogSource field="vehicle_local_position_0.dist_bottom_rate"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Local Position</Group>
 		</Groups>
 		<Validity min="-2.5" max="2.5"/>
 	</KeyFigure>
