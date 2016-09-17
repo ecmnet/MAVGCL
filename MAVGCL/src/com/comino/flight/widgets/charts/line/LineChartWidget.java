@@ -688,8 +688,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void storeRecentList() {
+		try {
 		String rc = gson.toJson(recent);
 		prefs.put(MAVPreferences.RECENT_FIGS, rc);
+		} catch(Exception w) { }
 	}
 
 	private void readRecentList() {

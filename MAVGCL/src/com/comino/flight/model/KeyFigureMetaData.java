@@ -53,8 +53,8 @@ public class KeyFigureMetaData {
 	public String uom;
 	public String mask;
 	public int    hash;
-	public float  min;
-	public float  max;
+	public float  min=0;
+	public float  max=0;
 
 	public boolean isVirtual = false;
 
@@ -77,8 +77,10 @@ public class KeyFigureMetaData {
 	}
 
 	public void setBounds(float min, float max) {
-		this.min = min;
-		this.max = max;
+		if(Float.isFinite(min) && Float.isFinite(max)) {
+			this.min = min;
+			this.max = max;
+		}
 	}
 
 	public void setSource(int type,String field, String class_c, String[] params) {
