@@ -61,8 +61,6 @@ public class CameraWidget extends WidgetPane  {
 	private boolean			big_size=false;
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
-	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
-
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 	}
