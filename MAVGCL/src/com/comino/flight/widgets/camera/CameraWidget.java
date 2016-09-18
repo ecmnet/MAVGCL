@@ -73,15 +73,15 @@ public class CameraWidget extends WidgetPane  {
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
-
 			if(source==null && !connect()) {
 				return;
 			}
 
 			if(newvalue.booleanValue())
 				source.start();
-			else
+			else {
 				source.stop();
+			}
 		});
 
 		resize(false,400,300);
@@ -121,6 +121,7 @@ public class CameraWidget extends WidgetPane  {
 
 
 	private boolean connect() {
+		System.out.println("VideSource connect");
 		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		try {
