@@ -251,7 +251,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 			} while (m_collecting);
 		}
-		System.out.println("VideoSource stopped");
 	}
 
 
@@ -261,12 +260,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		thread.setPriority(Thread.MAX_PRIORITY);
 		thread.start();
 		isAvailable = true;
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-
-			e.printStackTrace();
-		}
 		trigger = System.currentTimeMillis();
 		return thread;
 	}
@@ -282,9 +275,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		m_collecting = false;
 		isRunning = false;
 		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-		}
+			stream.close();
+		} catch (Exception e1) { }
 	}
 
 	public boolean isAvailable() {
