@@ -40,6 +40,7 @@ public interface IMWVideoSource {
 	Thread start();
 	void stop();
 	boolean isAvailable();
+	public boolean isRunning();
 	int getFPS();
 
 

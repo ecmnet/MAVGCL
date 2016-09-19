@@ -124,8 +124,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 				try {
 
 					conn = url.openConnection();
-					conn.setReadTimeout(500);
-					conn.setConnectTimeout(500);
+					conn.setReadTimeout(1000);
+					conn.setConnectTimeout(1000);
 					conn.setRequestProperty("Host", url.getHost());
 					conn.setRequestProperty("Client", "chromium");
 					conn.connect();
@@ -154,15 +154,14 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 					connectionError = e.getMessage();
 					try {
 						stream.close();
-					} catch (IOException e1) {
-					}
+					} catch (Exception e1) { }
 					m_collecting = false;
 					isRunning = false;
 					System.out.println("Connect VS "+connectionError);
 					isAvailable = false;
 				}
 
-			} while(connectionError != null);
+			} while(connectionError != null && isRunning);
 
 			isAvailable = true;
 
@@ -290,6 +289,10 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 	public boolean isAvailable() {
 		return isAvailable;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
 	}
 
 

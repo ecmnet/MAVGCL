@@ -39,6 +39,7 @@ import java.util.prefs.Preferences;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -92,6 +93,14 @@ public class CameraWidget extends WidgetPane  {
 				big_size=false;
 			resize(big_size,400,300);
 
+		});
+
+		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+			if(fadeProperty().getValue() && !source.isRunning()) {
+				if(nv.booleanValue()) {
+					connect(); source.start();
+				}
+			}
 		});
 
 	}
