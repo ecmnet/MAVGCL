@@ -16,7 +16,7 @@ Any feedback, comments and contributions are very welcome.
 
 - MJPEG fixes for onboard visual system
 - Dashboard overlay shows statistics of displayed data
-- Acquisition of MAVLink messages
+- Acquisition of custom MAVLink messages
 
 **Features:**
 
