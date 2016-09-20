@@ -204,9 +204,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 		});
 
-		dashboard1 = new DashBoardAnnotation(10);
-		dashboard2 = new DashBoardAnnotation(70);
-		dashboard3 = new DashBoardAnnotation(130);
+		dashboard1 = new DashBoardAnnotation(0);
+		dashboard2 = new DashBoardAnnotation(80);
+		dashboard3 = new DashBoardAnnotation(160);
 
 		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
@@ -579,11 +579,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			if(dash.isSelected()) {
 				if(type1.hash!=0)
-				  linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 				if(type2.hash!=0)
-				  linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				if(type3.hash!=0)
-				  linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
 			}
 
 			last_annotation_pos = 0;
@@ -683,20 +683,29 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
 		AnalysisDataModel m = null; int count=0;
 		float _min = Float.NaN; float _max = Float.NaN;
-		float _avg = 0;
+		float _avg = 0; float mean = 0; float std=0;
 
 		if(kf.hash==0)
 			return;
 
-		d.setHeader(kf.desc1+" ["+kf.uom+"]");
+		d.setKeyFigure(kf);
 		for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
 			m = dataService.getModelList().get(i);
 			if(m.getValue(kf)<_min || Float.isNaN(_min)) _min = m.getValue(kf);
 			if(m.getValue(kf)>_max || Float.isNaN(_max)) _max = m.getValue(kf);
 			_avg = _avg + m.getValue(kf); count++;
 		}
+
 		d.setMinMax(_min, _max);
-		if(count>0) d.setAvg(_avg/count);
+		if(count>0) {
+			mean = _avg / count; std = 0;
+			for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
+			   m = dataService.getModelList().get(i);
+               std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
+			}
+			std = (float)Math.sqrt(std / count);
+			d.setAvg(mean, std);
+		}
 	}
 
 	private  void setXAxisBounds(int lower_pt, int upper_pt) {

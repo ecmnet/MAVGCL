@@ -33,6 +33,10 @@
 
 package com.comino.flight.widgets.charts.line;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
+import com.comino.flight.model.KeyFigureMetaData;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -44,36 +48,55 @@ import javafx.scene.layout.Pane;
 public class DashBoardAnnotation  implements XYAnnotation {
 
 	private  GridPane   pane 		= null;
-	private  Label      header     = null;
-	private  Label      minmax 	= null;
-	private  Label      avg     	= null;
+	private  Label      header      = null;
+	private  Label      minmax 	    = null;
+	private  Label      delta       = null;
+	private  Label      avgstd     	= null;
 	private int posy;
 
+	private DecimalFormat f = new DecimalFormat("#0.#");
+
 	public DashBoardAnnotation(int posy) {
+
         this.posy = posy;
 		this.pane = new GridPane();
+		this.pane.setPrefWidth(130);
 		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85);");
 		header = new Label();
 		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
 		minmax = new Label();
 		minmax.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
-		avg = new Label();
-		avg.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
-		this.pane.add(header,0,0);
-		this.pane.add(minmax,0,1);
-		this.pane.add(avg,0,2);
+		delta = new Label();
+		delta.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
+		avgstd = new Label();
+		avgstd.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
+
+		this.pane.addRow(0,header);
+		this.pane.addRow(1,minmax);
+		this.pane.addRow(2,delta);
+		this.pane.addRow(3,avgstd);
+
+		DecimalFormatSymbols sym = new DecimalFormatSymbols();
+		sym.setNaN("-"); f.setDecimalFormatSymbols(sym);
+
 	}
 
-	public void setHeader(String text) {
-		header.setText(text);
+	public void setPosY(int y) {
+		this.posy = y;
+	}
+
+	public void setKeyFigure(KeyFigureMetaData kf) {
+		f.applyPattern(kf.mask);
+		header.setText(kf.desc1+" ["+kf.uom+"]:");
 	}
 
 	public void setMinMax(float min, float max) {
-	  minmax.setText(String.format("Min: % .3f\tMax: % .3f",min,max));
+	  minmax.setText("Min: "+f.format(min)+"\t Max: "+f.format(max));
+	  delta.setText("Delta: "+f.format(max-min));
 	}
 
-	public void setAvg(float _avg) {
-		avg.setText(String.format("Avg: % .3f",_avg));
+	public void setAvg(float avg, float std) {
+		avgstd.setText("Avg: "+f.format(avg)+" \t Std: "+f.format(std));
 	}
 
 	@Override
