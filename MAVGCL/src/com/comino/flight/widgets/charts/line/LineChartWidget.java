@@ -215,6 +215,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		xAxis.setLowerBound(0);
 		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
+		yAxis.setPrefWidth(40);
 
 		yAxis.setAutoRanging(true);
 
