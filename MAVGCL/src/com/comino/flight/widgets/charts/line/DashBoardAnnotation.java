@@ -61,7 +61,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
         this.posy = posy;
 		this.pane = new GridPane();
 		this.pane.setPrefWidth(130);
-		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85);");
+		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.80);");
 		header = new Label();
 		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
 		minmax = new Label();

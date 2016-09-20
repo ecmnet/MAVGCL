@@ -204,9 +204,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			});
 		});
 
-		dashboard1 = new DashBoardAnnotation(0);
-		dashboard2 = new DashBoardAnnotation(80);
-		dashboard3 = new DashBoardAnnotation(160);
+		dashboard1 = new DashBoardAnnotation(10);
+		dashboard2 = new DashBoardAnnotation(90);
+		dashboard3 = new DashBoardAnnotation(170);
 
 		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
