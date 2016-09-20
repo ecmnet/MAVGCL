@@ -40,6 +40,7 @@ import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.KeyFigureMetaData;
 
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
@@ -74,7 +75,7 @@ public class PX4toModelConverter {
 				if(tms > tms_slot) {
 					model.tms = tms;
 					tms_slot += 50000;
-					model.setValuesPX4(data, meta);
+					model.setValues(KeyFigureMetaData.PX4_SOURCE,data, meta);
 					model.calculateVirtualKeyFigures(meta);
 					list.add(model.clone());
 				}

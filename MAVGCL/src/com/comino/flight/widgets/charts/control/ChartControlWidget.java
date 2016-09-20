@@ -167,7 +167,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 	public void setup(IMAVController control, StatusWidget statuswidget) {
 		this.control = control;
-		this.modelService =  AnalysisModelService.getInstance(control.getCurrentModel());
+		this.modelService =  AnalysisModelService.getInstance();
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 

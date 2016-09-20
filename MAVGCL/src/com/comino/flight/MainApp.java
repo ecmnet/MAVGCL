@@ -155,7 +155,7 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,port,14550, false);
 
 			StateProperties.getInstance(control);
-			AnalysisModelService.getInstance(control.getCurrentModel());
+			AnalysisModelService.getInstance(control);
 
 			MSPLogger.getInstance(control);
 			PX4Parameters.getInstance(control);

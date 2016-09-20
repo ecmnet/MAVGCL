@@ -93,50 +93,41 @@ public class AnalysisDataModel {
 		data.put(kf.toLowerCase().hashCode(), value);
 	}
 
-	public void setValuesMSP(DataModel m, AnalysisDataModelMetaData md) {
+	@SuppressWarnings("unchecked")
+	public void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
+			Float val = null;
 			try {
-				if(!e.isVirtual)
-				  data.put(e.hash,e.getValueFromMSPModel(m));
+				if(!e.isVirtual) {
+
+				  if( type == KeyFigureMetaData.MSP_SOURCE && e.hasSource(KeyFigureMetaData.MSP_SOURCE))
+				      val = e.getValueFromMSPModel((DataModel)source);
+				  if( type == KeyFigureMetaData.PX4_SOURCE && e.hasSource(KeyFigureMetaData.PX4_SOURCE))
+					  val = e.getValueFromPX4Model((Map<String,Object>)source);
+				  if( type == KeyFigureMetaData.ULG_SOURCE && e.hasSource(KeyFigureMetaData.ULG_SOURCE))
+					  val = e.getValueFromULogModel((Map<String,Object>)source);
+				  if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
+					  val = e.getValueFromMAVLinkMessage(source);
+
+				  if(val!=null)
+					    data.put(e.hash,val);
+				}
 			} catch (Exception e1) {
 				data.put(e.hash, Float.NaN);
 			}
 		});
 	}
-
-	public void setValuesPX4(Map<String,Object> d, AnalysisDataModelMetaData md) {
-		md.getKeyFigureMap().forEach((i,e) -> {
-			try {
-				if(!e.isVirtual)
-				  data.put(e.hash,e.getValueFromPX4Model(d));
-			} catch (Exception e1) {
-				data.put(e.hash, Float.NaN);
-			}
-		});
-	}
-
-	public void setValuesULog(Map<String,Object> d, AnalysisDataModelMetaData md) {
-		md.getKeyFigureMap().forEach((i,e) -> {
-			try {
-				if(!e.isVirtual)
-				  data.put(e.hash,e.getValueFromULogModel(d));
-			} catch (Exception e1) {
-				data.put(e.hash, Float.NaN);
-			}
-		});
-	}
-
 
 	public void calculateVirtualKeyFigures(AnalysisDataModelMetaData md) {
-		md.getKeyFigureMap().forEach((i,e) -> {
+		md.getVirtualKeyFigureMap().forEach((i,e) -> {
 			try {
-				if(e.isVirtual)
+				if(e.isVirtual) {
 				  data.put(e.hash,e.calculateVirtualValue(this));
+				}
 			} catch (Exception e1) {
 				data.put(e.hash, Float.NaN);
 			}
 		});
 	}
-
 
 }

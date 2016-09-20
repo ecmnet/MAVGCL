@@ -41,11 +41,14 @@ import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
+import com.comino.mav.control.IMAVController;
+import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
-public class AnalysisModelService {
+public class AnalysisModelService implements IMAVLinkListener {
 
 	private static AnalysisModelService instance = null;
 
@@ -65,9 +68,9 @@ public class AnalysisModelService {
 
 	private  int  totalTime_sec = 30;
 
-	public static AnalysisModelService getInstance(DataModel model) {
+	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
-			instance = new AnalysisModelService(model);
+			instance = new AnalysisModelService(control);
 		return instance;
 	}
 
@@ -76,9 +79,20 @@ public class AnalysisModelService {
 	}
 
 
-	private AnalysisModelService(DataModel model) {
+	private AnalysisModelService(IMAVController control) {
 		this.modelList     = new ArrayList<AnalysisDataModel>();
-		this.model         = model;
+		this.model         = control.getCurrentModel();
+		this.current       =  new AnalysisDataModel();
+		this.state         = StateProperties.getInstance();
+
+		control.addMAVLinkListener(this);
+
+		new Thread(new Converter()).start();
+	}
+
+	public AnalysisModelService(DataModel model) {
+		this.modelList     = new ArrayList<AnalysisDataModel>();
+		this.model         =  model;
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
 		new Thread(new Converter()).start();
@@ -225,6 +239,11 @@ public class AnalysisModelService {
 		return mode;
 	}
 
+	@Override
+	public void received(Object _msg) {
+		current.setValues(KeyFigureMetaData.MAV_SOURCE,_msg,AnalysisDataModelMetaData.getInstance());
+	}
+
 	private class Converter implements Runnable {
 
 		@Override
@@ -232,7 +251,7 @@ public class AnalysisModelService {
 			long tms = 0;
 			while(true) {
 				current.msg = null;
-				current.setValuesMSP(model, AnalysisDataModelMetaData.getInstance());
+				current.setValues(KeyFigureMetaData.MSP_SOURCE,model, AnalysisDataModelMetaData.getInstance());
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg;
 					tms = current.msg.tms+100;

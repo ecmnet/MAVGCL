@@ -1175,6 +1175,7 @@
 		</Groups>
   </KeyFigure>
 
+
   <!-- virtual keyfigure definition  -->
 
 	<KeyFigure desc="Loc.Pos.Z error" uom="m" mask="#0.00" key="LPOSZERR">

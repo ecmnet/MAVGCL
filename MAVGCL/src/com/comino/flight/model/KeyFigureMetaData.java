@@ -45,6 +45,7 @@ public class KeyFigureMetaData {
 	public static final int MSP_SOURCE = 1;
 	public static final int PX4_SOURCE = 2;
 	public static final int ULG_SOURCE = 3;
+	public static final int MAV_SOURCE = 4;
 
 	public static final int VIR_SOURCE = 9;
 
@@ -103,7 +104,11 @@ public class KeyFigureMetaData {
 			sources.put(type, new DataSource(class_n,field,null));
 	}
 
-	public float getValueFromMSPModel(DataModel m) throws Exception {
+	public boolean hasSource(int type) {
+		return sources.containsKey(type);
+	}
+
+	public Float getValueFromMSPModel(DataModel m) throws Exception {
 		float value = 0;
 		DataSource source = sources.get(MSP_SOURCE);
 		Field mclass_field = m.getClass().getField(source.class_n);
@@ -116,7 +121,7 @@ public class KeyFigureMetaData {
 	}
 
 
-	public float getValueFromPX4Model(Map<String,Object> data) {
+	public Float getValueFromPX4Model(Map<String,Object> data) {
 		float value = 0;
 		DataSource source = sources.get(PX4_SOURCE);
 		Object o = data.get(source.field);
@@ -132,7 +137,7 @@ public class KeyFigureMetaData {
 		return value;
 	}
 
-	public float getValueFromULogModel(Map<String,Object> data) {
+	public Float getValueFromULogModel(Map<String,Object> data) {
 		float value = 0;
 		DataSource source = sources.get(ULG_SOURCE);
 		Object o = data.get(source.field);
@@ -146,6 +151,19 @@ public class KeyFigureMetaData {
 		if(source.converter != null)
 			return source.converter.convert(value);
 		return value;
+	}
+
+	public Float getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
+		float value = 0;
+		DataSource source = sources.get(MAV_SOURCE);
+		if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
+		    Field mfield_field = mavlink_message.getClass().getField(source.field);
+		    value = new Double(mfield_field.getDouble(mavlink_message)).floatValue();
+			if(source.converter != null)
+				return source.converter.convert(value);
+			return value;
+		}
+		return null;
 	}
 
 	public float calculateVirtualValue(AnalysisDataModel data) {

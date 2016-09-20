@@ -49,7 +49,7 @@ public class UlogTest {
 	public static void main(String[] args) {
 		ULogReader reader = null;
 		AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-		AnalysisModelService modelService = AnalysisModelService.getInstance(new DataModel());
+		AnalysisModelService modelService = new AnalysisModelService(new DataModel());
 
 		File file = new File("/Users/ecmnet/Desktop/test.ulg");
 		try {

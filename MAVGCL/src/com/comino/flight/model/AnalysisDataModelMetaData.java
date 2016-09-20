@@ -55,6 +55,7 @@ public class AnalysisDataModelMetaData extends Observable {
 	private static AnalysisDataModelMetaData instance = null;
 
 	private Map<Integer,KeyFigureMetaData>        meta   = null;
+	private Map<Integer,KeyFigureMetaData>        virt   = null;
 	private Map<String,List<KeyFigureMetaData>> groups   = null;
 	private List<KeyFigureMetaData>     sortedMetaList   = null;
 
@@ -70,6 +71,7 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	private AnalysisDataModelMetaData() {
 		this.meta    = new HashMap<Integer,KeyFigureMetaData>();
+		this.virt    = new HashMap<Integer,KeyFigureMetaData>();
 		this.groups  = new HashMap<String,List<KeyFigureMetaData>>();
 
 		loadModelMetaData(null);
@@ -79,7 +81,7 @@ public class AnalysisDataModelMetaData extends Observable {
 
 		InputStream is = stream;
 
-		meta.clear(); groups.clear();
+		meta.clear(); groups.clear(); virt.clear();
 
 		if(is==null) {
 			is = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
@@ -129,6 +131,10 @@ public class AnalysisDataModelMetaData extends Observable {
 		return meta;
 	}
 
+	public Map<Integer,KeyFigureMetaData> getVirtualKeyFigureMap() {
+		return virt;
+	}
+
 	public Map<String,List<KeyFigureMetaData>> getGroupMap() {
 		return groups;
 	}
@@ -176,6 +182,8 @@ public class AnalysisDataModelMetaData extends Observable {
 		for (count = 0; count < keyfigures.getLength(); count++) {
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
+			if(keyfigure.isVirtual)
+				virt.put(keyfigure.hash,keyfigure);
 		}
 		System.out.println(description+" (version "+version+") with "+count+" keyfigures ");
 	}
@@ -198,6 +206,10 @@ public class AnalysisDataModelMetaData extends Observable {
 
 			if(node.getNodeName().equals("ULogSource")) {
 				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
+			}
+
+			if(node.getNodeName().equals("MAVLinkSource")) {
+				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
 			}
 
 			if(node.getNodeName().equals("VirtualSource")) {

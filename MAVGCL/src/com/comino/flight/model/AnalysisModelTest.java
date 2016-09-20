@@ -53,7 +53,7 @@ public class AnalysisModelTest {
 
 
          for(int i=0;i<1000;i++)
-		     model.setValuesMSP(m, md);
+		     model.setValues(KeyFigureMetaData.MSP_SOURCE,m, md);
 
 
 		 AnalysisDataModel model2 = model.clone();

@@ -222,7 +222,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	public void setup(IMAVController control, ChartControlWidget charts, StatusWidget statuswidget) {
 		this.charts = charts;
 		this.control = control;
-		this.modelService =  AnalysisModelService.getInstance(control.getCurrentModel());
+		this.modelService =  AnalysisModelService.getInstance();
 		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
