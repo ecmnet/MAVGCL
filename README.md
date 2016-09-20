@@ -16,6 +16,7 @@ Any feedback, comments and contributions are very welcome.
 
 - MJPEG fixes for onboard visual system
 - Dashboard overlay shows statistics of displayed data
+- Acquisition of MAVLink messages
 
 **Features:**
 
@@ -91,6 +92,29 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 - Conversion based on expressions ( [exp4j](http://www.objecthunter.net/exp4j/#Built-in_functions) ).
   Example: `<Converter class="ExpressionConverter" expression="1.5 * sin(val)"/>`
 
+
+##### How to map custom MAVLink messages to key figures
+
+Currently a direct mapping of MAVLink messages to keyfigures is not possible. Instead you have to generate the java class of the message and map it to the key figure:
+
+1. Clone https://github.com/ecmnet/MAVComm and add the MAVLink definition in https://github.com/ecmnet/MAVComm/blob/master/MAVComm/mavlink/lquac.xml
+
+   This creates the java class of the custom message and adds it to mavcomm.jar
+
+2. Build `mavcomm.jar` with `ant build_mavcomm` and replace the one used by MAVGCL
+
+3. Map a keyfigure definition to the created java class in the [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L515) like this
+
+
+```
+ <KeyFigure desc="MAVLINK Test" uom="" mask="#0.0" key="MAVLINK">
+		<MAVLinkSource class="msg_altitude" field="altitude_amsl"/>
+		<Validity min="0.1" max="1000.0"/>
+		<Groups>
+			<Group>Custom mavlink messages</Group>
+		</Groups>
+  </KeyFigure>
+```
 **Limitations:**
 
 - Limited to one device (MAVLink-ID '1')
