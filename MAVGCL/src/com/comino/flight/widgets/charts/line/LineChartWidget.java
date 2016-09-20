@@ -577,7 +577,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series3.getData().clear();
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-			if(dash.isSelected()) {
+			if(dash.isSelected() && dataService.getModelList().size()>0) {
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 				if(type2.hash!=0)
@@ -603,7 +603,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			if(dash.isSelected()) {
+			if(dash.isSelected() && dataService.getModelList().size()>0) {
 				setDashboardData(dashboard1,type1);
 				setDashboardData(dashboard2,type2);
 				setDashboardData(dashboard3,type3);

@@ -39,19 +39,31 @@ import java.text.DecimalFormatSymbols;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 public class DashBoardAnnotation  implements XYAnnotation {
 
 	private  GridPane   pane 		= null;
-	private  Label      header      = null;
-	private  Label      minmax 	    = null;
-	private  Label      delta       = null;
-	private  Label      avgstd     	= null;
+
+	private  Label      header      = new Label();
+	private  HLabel      min 	    = new HLabel("Min:");
+	private  HLabel      max 	    = new HLabel("Max:");
+	private  HLabel      delta      = new HLabel("Delta:");
+	private  HLabel      avg     	= new HLabel("Avg:");
+	private  HLabel      std     	= new HLabel("Std:");
+
+	private  VLabel      min_v       = new VLabel();
+	private  VLabel      max_v 	     = new VLabel();
+	private  VLabel      delta_v     = new VLabel();
+	private  VLabel      avg_v       = new VLabel();
+	private  VLabel      std_v     	 = new VLabel();
+
 	private int posy;
 
 	private DecimalFormat f = new DecimalFormat("#0.#");
@@ -60,25 +72,18 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
         this.posy = posy;
 		this.pane = new GridPane();
-		this.pane.setPrefWidth(130);
-		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.80);");
-		header = new Label();
+		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
 		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
-		minmax = new Label();
-		minmax.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
-		delta = new Label();
-		delta.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
-		avgstd = new Label();
-		avgstd.setStyle("-fx-font-size: 8pt;-fx-text-fill: #B0B0B0; -fx-padding:2;");
-
-		this.pane.addRow(0,header);
-		this.pane.addRow(1,minmax);
-		this.pane.addRow(2,delta);
-		this.pane.addRow(3,avgstd);
+        this.pane.setHgap(5);
+        this.pane.setMinWidth(150);
+		this.pane.add(header,0,0);
+		GridPane.setColumnSpan(header,4);
+		this.pane.addRow(1,min,min_v,max,max_v);
+		this.pane.addRow(2,delta,delta_v);
+		this.pane.addRow(3,avg,avg_v,std,std_v);
 
 		DecimalFormatSymbols sym = new DecimalFormatSymbols();
 		sym.setNaN("-"); f.setDecimalFormatSymbols(sym);
-
 	}
 
 	public void setPosY(int y) {
@@ -91,12 +96,12 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	}
 
 	public void setMinMax(float min, float max) {
-	  minmax.setText("Min: "+f.format(min)+"\t Max: "+f.format(max));
-	  delta.setText("Delta: "+f.format(max-min));
+	  min_v.setValue(min); max_v.setValue(max);
+	  delta_v.setValue(max-min);
 	}
 
 	public void setAvg(float avg, float std) {
-		avgstd.setText("Avg: "+f.format(avg)+" \t Std: "+f.format(std));
+		avg_v.setValue(avg); std_v.setValue(std);
 	}
 
 	@Override
@@ -108,6 +113,31 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		pane.setLayoutX(10);
 		pane.setLayoutY(posy);
+	}
+
+	private class VLabel extends Label {
+
+		public VLabel() {
+			super();
+			setAlignment(Pos.CENTER_RIGHT);
+			setMinWidth(35);
+			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+		}
+
+		public void setValue(float val) {
+			setText(f.format(val));
+		}
+	}
+
+	private class HLabel extends Label {
+
+		public HLabel(String text) {
+			super(text);
+			setAlignment(Pos.CENTER_LEFT);
+			setMinWidth(30);
+			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+		}
+
 	}
 
 }
