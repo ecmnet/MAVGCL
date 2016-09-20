@@ -119,6 +119,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private CheckBox annotations;
 
+	@FXML
+	private CheckBox dash;
+
 	private int id = 0;
 
 	private  XYChart.Series<Number,Number> series1;
@@ -158,6 +161,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private boolean display_annotations = true;
 	private boolean isPaused = false;
 
+	private DashBoardAnnotation dashboard1 = null;
+	private DashBoardAnnotation dashboard2 = null;
+	private DashBoardAnnotation dashboard3 = null;
+
 	private XYDataPool pool = null;
 
 	private Preferences prefs = MAVPreferences.getInstance();
@@ -196,6 +203,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				updateGraph(true);
 			});
 		});
+
+		dashboard1 = new DashBoardAnnotation(10);
+		dashboard2 = new DashBoardAnnotation(70);
+		dashboard3 = new DashBoardAnnotation(130);
 
 		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
@@ -403,6 +414,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			updateRequest();
 		});
 
+		dash.selectedProperty().addListener((v, ov, nv) -> {
+			updateRequest();
+		});
+
 		annotations.setSelected(false);
 	}
 
@@ -561,6 +576,16 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+
+			if(dash.isSelected()) {
+				if(type1.hash!=0)
+				  linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+				if(type2.hash!=0)
+				  linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+				if(type3.hash!=0)
+				  linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+			}
+
 			last_annotation_pos = 0;
 			yoffset = 0;
 
@@ -577,6 +602,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			int max_x = dataService.getModelList().size();
 			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
+
+			if(dash.isSelected()) {
+				setDashboardData(dashboard1,type1);
+				setDashboardData(dashboard2,type2);
+				setDashboardData(dashboard3,type3);
+			}
 
 			while(current_x_pt<max_x ) {
 
@@ -649,6 +680,25 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 	}
 
+	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
+		AnalysisDataModel m = null; int count=0;
+		float _min = Float.NaN; float _max = Float.NaN;
+		float _avg = 0;
+
+		if(kf.hash==0)
+			return;
+
+		d.setHeader(kf.desc1+" ["+kf.uom+"]");
+		for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
+			m = dataService.getModelList().get(i);
+			if(m.getValue(kf)<_min || Float.isNaN(_min)) _min = m.getValue(kf);
+			if(m.getValue(kf)>_max || Float.isNaN(_max)) _max = m.getValue(kf);
+			_avg = _avg + m.getValue(kf); count++;
+		}
+		d.setMinMax(_min, _max);
+		if(count>0) d.setAvg(_avg/count);
+	}
+
 	private  void setXAxisBounds(int lower_pt, int upper_pt) {
 		double tick = timeframe/5;
 		if(tick < 1) tick = 1;
@@ -689,8 +739,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private void storeRecentList() {
 		try {
-		String rc = gson.toJson(recent);
-		prefs.put(MAVPreferences.RECENT_FIGS, rc);
+			String rc = gson.toJson(recent);
+			prefs.put(MAVPreferences.RECENT_FIGS, rc);
 		} catch(Exception w) { }
 	}
 
