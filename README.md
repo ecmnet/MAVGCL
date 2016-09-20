@@ -47,9 +47,7 @@ Any feedback, comments and contributions are very welcome.
 
 Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
-**Screenshot**:
-
-
+**Screenshots**:
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot7.png)
 
@@ -93,7 +91,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
   Example: `<Converter class="ExpressionConverter" expression="1.5 * sin(val)"/>`
 
 
-##### How to map custom MAVLink messages to key figures
+**How to map custom MAVLink messages to key figures**
 
 Currently a direct mapping of MAVLink messages to keyfigures is not possible. Instead you have to generate the java class of the message and map it to the key figure:
 
