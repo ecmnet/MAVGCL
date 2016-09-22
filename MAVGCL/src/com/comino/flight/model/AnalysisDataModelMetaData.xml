@@ -1165,7 +1165,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Quality" uom="%" mask="#0" key="VISIONQUAL">
+  <KeyFigure desc="Vis.Quality" uom="%" mask="#0.0" key="VISIONQUAL">
 		<MSPSource class="vision" field="qual">
 		   <Converter class="ExpressionConverter" expression="VISIONQUAL/100" />
 		 </MSPSource>

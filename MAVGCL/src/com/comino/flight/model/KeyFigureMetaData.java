@@ -89,7 +89,9 @@ public class KeyFigureMetaData {
 	}
 
 	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
-		isVirtual = type==VIR_SOURCE;
+
+		if(type==VIR_SOURCE) isVirtual = true;
+
 		if(class_c!=null) {
 			try {
 				SourceConverter conv = null;
@@ -166,11 +168,11 @@ public class KeyFigureMetaData {
 		return null;
 	}
 
-	public float calculateVirtualValue(AnalysisDataModel data) {
+	public Float calculateVirtualValue(AnalysisDataModel data) {
 		DataSource source = sources.get(VIR_SOURCE);
 		if(source.converter != null)
 			return source.converter.convert(data);
-		return 0;
+		return 0f;
 	}
 
 	public String toString() {
