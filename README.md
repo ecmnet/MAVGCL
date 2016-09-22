@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 20/09/2016 
+**Development Status:** Last updated 22/09/2016 
 
 - MJPEG fixes for onboard visual system
 - Dashboard overlay shows statistics of displayed data
@@ -78,6 +78,12 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
   `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
 
   Set video URL in `File->Preferences`: e.g. `http://127.0.0.1:8080/stream/video.mjpeg`
+
+  or 
+
+  run [MAVSlam vision]( https://github.com/ecmnet/MAVSlam) based on Intel® RealSense™ R200 on your companion and point video to port 8080 of your companion.
+
+  ​
 
 **How to deploy on OSX:**
 
