@@ -90,6 +90,9 @@ public class DetailsWidget extends WidgetPane  {
 			"LPOSY",
 			"LPOSZ",
 			null,
+			"LPOSXYERR",
+			"LPOSZERR",
+			null,
 			"VISIONX",
 			"VISIONY",
 			"VISIONZ",
@@ -107,7 +110,6 @@ public class DetailsWidget extends WidgetPane  {
 			null,
 			"VISIONFPS",
 			"VISIONQUAL",
-
 	};
 
 	@FXML

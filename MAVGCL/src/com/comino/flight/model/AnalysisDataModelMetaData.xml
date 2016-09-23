@@ -1180,8 +1180,9 @@
 
 	<KeyFigure desc="Loc.Pos.Z error" uom="m" mask="#0.00" key="LPOSZERR">
 		<VirtualSource>
-		    <Converter class="VirtualConverter" expression="LPOSZ - SPLPOSZ" var0="LPOSZ" var1="SPLPOSZ"/>
+		    <Converter class="VirtualConverter" expression="abs(LPOSZ - SPLPOSZ)" var0="LPOSZ" var1="SPLPOSZ"/>
 		</VirtualSource>
+		<Validity min="0" max="0.3"/>
 		<Groups>
 			<Group>Altitude</Group>
 			<Group>Virtual keyfigures</Group>
@@ -1194,6 +1195,7 @@
 		       expression="sqrt( (LPOSX - SPLPOSX) * (LPOSX - SPLPOSX) + (LPOSY - SPLPOSY) * (LPOSY - SPLPOSY) )"
 		       var0="LPOSX" var1="SPLPOSX" var2="LPOSY" var3="SPLPOSY"/>
 		</VirtualSource>
+		<Validity min="0" max="0.3"/>
 		<Groups>
 			<Group>Virtual keyfigures</Group>
 		</Groups>
