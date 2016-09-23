@@ -355,6 +355,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 		});
 
+		cseries1.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_1,0));
+		cseries2.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_2,0));
+
 
 		scale_select.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -370,6 +373,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			}
 
 		});
+
+		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
 
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
@@ -410,6 +415,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,force_zero.isSelected());
 		});
 
+		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
@@ -424,12 +430,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				refreshChart();
 			}
 		});
-
-
-		cseries1.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_1,0));
-		cseries2.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_2,0));
-		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
-		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
 
 	}
 
