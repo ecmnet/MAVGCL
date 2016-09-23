@@ -48,6 +48,10 @@ public class MAVPreferences {
 	public final static String LINECHART_FIG_1  = "LINECHARTFIG1";
 	public final static String LINECHART_FIG_2  = "LINECHARTFIG2";
 	public final static String LINECHART_FIG_3  = "LINECHARTFIG3";
+	public final static String XYCHART_FIG_1    = "XYCHARTFIG1";
+	public final static String XYCHART_FIG_2    = "XYCHARTFIG2";
+	public final static String XYCHART_SCALE    = "XYCHARTSCALE";
+	public final static String XYCHART_CENTER   = "XYCHARTCENTER";
 
 	private static Preferences prefs = null;
 

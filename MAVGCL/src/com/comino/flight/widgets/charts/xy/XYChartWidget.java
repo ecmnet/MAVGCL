@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
@@ -46,6 +47,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.mav.control.IMAVController;
@@ -154,8 +156,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 
-	private volatile XYChart.Series<Number,Number> series1;
-	private volatile XYChart.Series<Number,Number> series2;
+	private  XYChart.Series<Number,Number> series1;
+	private  XYChart.Series<Number,Number> series2;
 
 	private AnimationTimer task;
 
@@ -176,6 +178,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int resolution_ms 	= 50;
 	private float scale = 0;
 
+	private Preferences prefs = MAVPreferences.getInstance();
 
 	private int current_x_pt=0;
 	private int current_x0_pt=0;
@@ -266,6 +269,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				else
 					cseries1_y.getSelectionModel().select(0);
 
+				prefs.putInt(MAVPreferences.XYCHART_FIG_1,newValue.intValue());
+
 			}
 
 		});
@@ -285,6 +290,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				else
 					cseries2_y.getSelectionModel().select(0);
 
+				prefs.putInt(MAVPreferences.XYCHART_FIG_2,newValue.intValue());
 			}
 
 		});
@@ -360,6 +366,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					scale = 0;
 				setScaling(scale);
 				updateRequest();
+				prefs.putInt(MAVPreferences.XYCHART_SCALE,newValue.intValue());
 			}
 
 		});
@@ -399,8 +406,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		});
 
 		force_zero.setOnAction((ActionEvent event)-> {
-
 			updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,force_zero.isSelected());
 		});
 
 
@@ -417,6 +424,13 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				refreshChart();
 			}
 		});
+
+
+		cseries1.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_1,0));
+		cseries2.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_FIG_2,0));
+		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
+		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
+
 	}
 
 	private void setXResolution(int frame) {

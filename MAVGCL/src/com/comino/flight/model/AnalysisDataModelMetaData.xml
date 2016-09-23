@@ -56,7 +56,7 @@
 
 	<!-- Local position  -->
 
-	<KeyFigure desc="LPos.X" uom="m" mask="#0.0" key="LPOSX">
+	<KeyFigure desc="LPos.X" uom="m" mask="#0.00" key="LPOSX">
 		<MSPSource class="state" field="l_x"></MSPSource>
 		<PX4Source field="LPOS.X"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.x"></ULogSource>
@@ -64,7 +64,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="LPos.Y" uom="m" mask="#0.0" key="LPOSY">
+	<KeyFigure desc="LPos.Y" uom="m" mask="#0.00" key="LPOSY">
 		<MSPSource class="state" field="l_y"></MSPSource>
 		<PX4Source field="LPOS.Y"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.y"></ULogSource>
@@ -72,7 +72,7 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="LPos.Z" uom="m" mask="#0.0" key="LPOSZ">
+	<KeyFigure desc="LPos.Z" uom="m" mask="#0.00" key="LPOSZ">
 		<MSPSource class="state" field="l_z"></MSPSource>
 		<PX4Source field="LPOS.Z"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.z"></ULogSource>
