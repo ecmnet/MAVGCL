@@ -96,6 +96,7 @@ public class DetailsWidget extends WidgetPane  {
 			"VISIONX",
 			"VISIONY",
 			"VISIONZ",
+			"VISIONH",
 			null,
 			"BATC",
 			"BATH",
