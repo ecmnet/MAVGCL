@@ -1137,27 +1137,6 @@
 		</Groups>
   </KeyFigure>
 
-   <KeyFigure desc="Vision Roll" uom="rad" mask="#0.00" key="VISROLL">
-		<MSPSource class="vision" field="ro"/>
-		<Groups>
-				<Group>Vision</Group>
-		</Groups>
-  </KeyFigure>
-
-  <KeyFigure desc="Vision Pitch" uom="rad" mask="#0.00" key="VISPITCH">
-		<MSPSource class="vision" field="pi"/>
-		<Groups>
-			<Group>Vision</Group>
-		</Groups>
-  </KeyFigure>
-
-  <KeyFigure desc="Vision Yaw" uom="rad" mask="#0.00" key="VISYAW">
-		<MSPSource class="vision" field="ya"/>
-		<Groups>
-				<Group>Vision</Group>
-		</Groups>
-  </KeyFigure>
-
   <KeyFigure desc="Vision VX" uom="m/s" mask="#0.00" key="VISIONVX">
 		<MSPSource class="vision" field="vx"/>
 		<Groups>
