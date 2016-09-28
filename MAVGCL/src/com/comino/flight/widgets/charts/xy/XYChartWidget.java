@@ -401,6 +401,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		rotation.setTooltip(new Tooltip("Double-click to set to 0°"));
 
+		auto_rotate.setDisable(true);
+
 
 		export.setOnAction((ActionEvent event)-> {
 			saveAsPng(System.getProperty("user.home"));
@@ -542,7 +544,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					}
 
 					if(auto_rotate.isSelected()) {
-						rotation_rad= -MSPMathUtils.toRad(m.getValue("HEAD"));
+						rotation_rad= - MSPMathUtils.toRad(mList.get(current_x1_pt).getValue("HEAD"));
 					}
 
 
@@ -671,8 +673,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	private  float[] rotateRad(float posx, float posy, float heading_rad) {
 		float[] rotated = new float[2];
-		rotated[0] =  posx * (float)Math.cos(heading_rad) + posy * (float)Math.sin(heading_rad);
-		rotated[1] = -posx * (float)Math.sin(heading_rad) + posy * (float)Math.cos(heading_rad);
+		rotated[0] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
+				      ( posy - old_center_y ) * (float)Math.sin(heading_rad) + old_center_x;
+		rotated[1] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
+				      ( posy - old_center_y ) * (float)Math.cos(heading_rad) + old_center_y;
 		return rotated;
 	}
 
