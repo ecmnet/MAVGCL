@@ -156,6 +156,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	@FXML
 	private CheckBox force_zero;
 
+	@FXML
+	private CheckBox annotation;
+
 
 
 	private  XYChart.Series<Number,Number> series1;
@@ -429,6 +432,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			updateRequest();
 		});
 
+		annotation.setOnAction((ActionEvent event)-> {
+			updateRequest();
+		});
+
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
@@ -472,6 +479,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			return;
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
+		if(mList.size()<1)
+			return;
 
 		if(refresh) {
 			synchronized(this) {
@@ -481,13 +490,22 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				pool.invalidateAll();
 				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-				if(type1_x.hash!=0 && type1_y.hash!=0 && mList.size()>0 ) {
+				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected())  {
 					m = mList.get(0);
-					rotateRad(p2,m.getValue(type1_x), m.getValue(type1_y),
+					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 							rotation_rad);
 					linechart.getAnnotations().add(
-						new PositionAnnotation(linechart,p1[0],p1[1],"S", Color.DARKSLATEBLUE,true),
-							Layer.FOREGROUND);
+							 new PositionAnnotation(linechart,p1[0],p1[1],"1", Color.DARKSLATEBLUE)
+							,Layer.FOREGROUND);
+				}
+
+				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected())  {
+					m = mList.get(0);
+					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+							rotation_rad);
+					linechart.getAnnotations().add(
+							new PositionAnnotation(linechart,p2[0],p2[1],"2", Color.DARKOLIVEGREEN)
+							,Layer.FOREGROUND);
 				}
 			}
 
@@ -533,7 +551,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
-
 			int max_x = mList.size();
 			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
@@ -541,6 +558,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			while(current_x_pt<max_x) {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+
 
 					m = mList.get(current_x_pt);
 
@@ -573,7 +591,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
 						rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 								rotation_rad);
-						series1.getData().add(pool.checkOut(p2[0],p2[1]));
+						series2.getData().add(pool.checkOut(p2[0],p2[1]));
 					}
 					current_x_pt++;
 				}

@@ -52,7 +52,7 @@ public class PositionAnnotation  implements XYAnnotation {
 	private float    ypos  	    = 0;
 	private Circle circle       = null;
 
-	public PositionAnnotation(Node chart, float xpos, float ypos, String text, Color color, boolean displayLabel) {
+	public PositionAnnotation(Node chart, float xpos, float ypos, String text, Color color) {
 		this.xpos = xpos;
 		this.ypos = ypos;
 
@@ -67,7 +67,7 @@ public class PositionAnnotation  implements XYAnnotation {
 		this.circle.setFill(color);
 
 		this.label = new Label(text);
-		this.label.setLayoutX(3);
+		this.label.setLayoutX(4);
 		this.label.setLayoutY(1);
 
 		this.pane.getChildren().addAll(circle, label);
