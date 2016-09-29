@@ -50,8 +50,10 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
+import com.comino.flight.widgets.fx.controls.SectionLineChart;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.MSPMathUtils;
+import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -107,7 +109,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private static int COLLECTOR_CYCLE = 50;
 
 	@FXML
-	private LineChart<Number,Number> linechart;
+	private SectionLineChart<Number,Number> linechart;
 
 	@FXML
 	private NumberAxis xAxis;
@@ -187,6 +189,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private int frame_secs =30;
 
 	private float rotation_rad = 0;
+
+	private float[] p1 = new float[2];
+	private float[] p2 = new float[2];
 
 	private XYDataPool pool = null;
 
@@ -466,12 +471,24 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		if(disabledProperty().get())
 			return;
 
+		List<AnalysisDataModel> mList = dataService.getModelList();
+
 		if(refresh) {
 			synchronized(this) {
 				refreshRequest = false;
 				series1.getData().clear();
 				series2.getData().clear();
 				pool.invalidateAll();
+				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+
+				if(type1_x.hash!=0 && type1_y.hash!=0 && mList.size()>0 ) {
+					m = mList.get(0);
+					rotateRad(p2,m.getValue(type1_x), m.getValue(type1_y),
+							rotation_rad);
+					linechart.getAnnotations().add(
+						new PositionAnnotation(linechart,p1[0],p1[1],"S", Color.DARKSLATEBLUE,true),
+							Layer.FOREGROUND);
+				}
 			}
 
 			current_x_pt = current_x0_pt;
@@ -479,8 +496,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
-
-		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(force_zero.isSelected() && scale > 0 ) {
 			float x = 0; float y = 0;
@@ -518,6 +533,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
+
 			int max_x = mList.size();
 			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
@@ -549,27 +565,15 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 
 					if(type1_x.hash!=0 && type1_y.hash!=0) {
-						if(rotation_rad==0) {
-							series1.getData().add(pool.checkOut(
-									m.getValue(type1_x), m.getValue(type1_y))
-									);
-						} else {
-							float[] r = rotateRad(m.getValue(type1_x), m.getValue(type1_y),
-									rotation_rad);
-							series1.getData().add(pool.checkOut(r[0],r[1]));
-						}
+						rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
+								rotation_rad);
+						series1.getData().add(pool.checkOut(p1[0],p1[1]));
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
-						if(rotation_rad==0) {
-							series2.getData().add(pool.checkOut(
-									m.getValue(type2_x), m.getValue(type2_y))
-									);
-						} else {
-							float[] r = rotateRad(m.getValue(type2_x), m.getValue(type2_y),
-									rotation_rad);
-							series2.getData().add(pool.checkOut(r[0],r[1]));
-						}
+						rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+								rotation_rad);
+						series1.getData().add(pool.checkOut(p2[0],p2[1]));
 					}
 					current_x_pt++;
 				}
@@ -671,13 +675,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	}
 
-	private  float[] rotateRad(float posx, float posy, float heading_rad) {
-		float[] rotated = new float[2];
-		rotated[0] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
-				      ( posy - old_center_y ) * (float)Math.sin(heading_rad) + old_center_x;
-		rotated[1] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
-				      ( posy - old_center_y ) * (float)Math.cos(heading_rad) + old_center_y;
-		return rotated;
+	private  void rotateRad(float[] rotated, float posx, float posy, float heading_rad) {
+		if(heading_rad!=0) {
+			rotated[0] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
+					( posy - old_center_y ) * (float)Math.sin(heading_rad) + old_center_x;
+			rotated[1] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
+					( posy - old_center_y ) * (float)Math.cos(heading_rad) + old_center_y;
+		} else {
+			rotated[0] = posx;
+			rotated[1] = posy;
+		}
 	}
 
 	private void initKeyFigureSelection(List<KeyFigureMetaData> kfl) {
