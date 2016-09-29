@@ -196,6 +196,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private float[] p1 = new float[2];
 	private float[] p2 = new float[2];
 
+	private XYStatistics s1 = new XYStatistics();
+	private XYStatistics s2 = new XYStatistics();
+
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
@@ -492,6 +495,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					m = mList.get(0);
 					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 							rotation_rad);
+					linechart.getAnnotations().add(new StatisticsAnnotation(linechart,s1),Layer.FOREGROUND);
 					linechart.getAnnotations().add(
 							 new PositionAnnotation(linechart,p1[0],p1[1],"1", Color.DARKSLATEBLUE)
 							,Layer.FOREGROUND);
@@ -501,9 +505,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					m = mList.get(0);
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
+					linechart.getAnnotations().add(new StatisticsAnnotation(linechart,s2),Layer.FOREGROUND);
 					linechart.getAnnotations().add(
 							new PositionAnnotation(linechart,p2[0],p2[1],"2", Color.DARKOLIVEGREEN)
 							,Layer.FOREGROUND);
+
 				}
 			}
 
@@ -517,22 +523,25 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			return;
 
 		if(force_zero.isSelected() && scale > 0 ) {
+
 			float x = 0; float y = 0;
 
+			s1.getStatistics(current_x0_pt,current_x1_pt,mList, type1_x, type1_y);
+			s2.getStatistics(current_x0_pt,current_x1_pt,mList, type2_x, type2_y);
+
 			if(type1_x.hash!=0 && type2_x.hash==0) {
-				x = getAverage(mList,type1_x);
-				y = getAverage(mList,type1_y);
+				x = s1.center_x;
+				y = s1.center_y;
 			}
 
-
 			if(type2_x.hash!=0 && type1_x.hash==0)	{
-				x = getAverage(mList,type2_x);
-				y = getAverage(mList,type2_y);
+				x = s2.center_x;
+				y = s2.center_y;
 			}
 
 			if(type2_x.hash!=0 && type1_x.hash!=0)	{
-				x = ( getAverage(mList,type2_x) + getAverage(mList,type1_x) ) / 2f;
-				y = ( getAverage(mList,type2_y) + getAverage(mList,type1_y) ) / 2f;
+				x = (s1.center_x + s2.center_x ) / 2f;
+				y = (s1.center_y + s2.center_y ) / 2f;
 			}
 
 			if(Math.abs(x - old_center_x)> scale/4) {
@@ -739,16 +748,5 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		cseries2.getSelectionModel().select(0);
 	}
 
-	private float getAverage(List<AnalysisDataModel> list, KeyFigureMetaData f) {
-		float min = Float.MAX_VALUE; float max = -Float.MAX_VALUE; float v=0;
-		if(list.size() < 10)
-			return 0;
-		for(int i = current_x0_pt; i< current_x1_pt && i < list.size();i++) {
-			v = list.get(i).getValue(f);
-			if(v > max) max =v;
-			if(v < min) min =v;
-		}
-		return (max - min) / 2f + min;
-	}
 
 }
