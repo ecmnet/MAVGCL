@@ -479,8 +479,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			return;
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
-		if(mList.size()<1)
-			return;
 
 		if(refresh) {
 			synchronized(this) {
@@ -490,7 +488,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				pool.invalidateAll();
 				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected())  {
+				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0 )  {
 					m = mList.get(0);
 					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 							rotation_rad);
@@ -499,7 +497,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 							,Layer.FOREGROUND);
 				}
 
-				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected())  {
+				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
 					m = mList.get(0);
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
@@ -514,6 +512,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
+
+		if(mList.size()<1)
+			return;
 
 		if(force_zero.isSelected() && scale > 0 ) {
 			float x = 0; float y = 0;
