@@ -202,6 +202,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private XYDashBoardAnnotation dashboard1 = null;
 	private XYDashBoardAnnotation dashboard2 = null;
 
+	private PositionAnnotation    endPosition1 = null;
+	private PositionAnnotation    endPosition2 = null;
+
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
@@ -231,6 +234,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		this.dashboard1 = new XYDashBoardAnnotation(0,s1);
 		this.dashboard2 = new XYDashBoardAnnotation(90,s2);
+
+		this.endPosition1 = new PositionAnnotation("P",Color.DARKSLATEBLUE);
+		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
 
 		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -506,8 +512,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 							rotation_rad);
 
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+					linechart.getAnnotations().add(endPosition1, Layer.FOREGROUND);
 					linechart.getAnnotations().add(
-							new PositionAnnotation(linechart,p1[0],p1[1],"1", Color.DARKSLATEBLUE)
+							new PositionAnnotation(p1[0],p1[1],"S", Color.DARKSLATEBLUE)
 							,Layer.FOREGROUND);
 				}
 
@@ -517,8 +524,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+					linechart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
 					linechart.getAnnotations().add(
-							new PositionAnnotation(linechart,p2[0],p2[1],"2", Color.DARKOLIVEGREEN)
+							new PositionAnnotation(p2[0],p2[1],"S", Color.DARKOLIVEGREEN)
 							,Layer.FOREGROUND);
 
 				}
@@ -578,6 +586,19 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
+//			m = mList.get(mList.size()-1);
+//			if(type1_x.hash!=0 && type1_y.hash!=0) {
+//				rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
+//						rotation_rad);
+//				endPosition1.setPosition(p1[0], p1[1]);
+//			}
+//
+//			if(type2_x.hash!=0 && type2_y.hash!=0) {
+//				rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+//						rotation_rad);
+//				endPosition2.setPosition(p2[0], p2[1]);
+//			}
+
 			while(current_x_pt<max_x) {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
@@ -619,6 +640,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 					current_x_pt++;
 				}
 			}
+
+			endPosition1.setPosition(p1[0], p1[1]);
+			endPosition2.setPosition(p2[0], p2[1]);
 		}
 	}
 
