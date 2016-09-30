@@ -55,11 +55,13 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 	private  HLabel      cey 	    = new HLabel("CenterY:");
 	private  HLabel      rad        = new HLabel("Radius:");
 	private  HLabel      std     	= new HLabel("StdXY:");
+	private  HLabel      dis     	= new HLabel("Distance:");
 
 	private  VLabel      cex_v       = new VLabel();
 	private  VLabel      cey_v 	     = new VLabel();
 	private  VLabel      rad_v       = new VLabel();
 	private  VLabel      std_v     	 = new VLabel();
+	private  VLabel      dis_v     	 = new VLabel();
 
 	private int posy;
 
@@ -76,8 +78,8 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 		this.pane.add(header,0,0);
 		GridPane.setColumnSpan(header,4);
 		this.pane.addRow(1,cex,cex_v,cey,cey_v);
-		this.pane.addRow(2,rad,rad_v);
-		this.pane.addRow(3,std,std_v);
+		this.pane.addRow(2,rad,rad_v, std,std_v);
+		this.pane.addRow(3,dis,dis_v);
 
 		DecimalFormatSymbols sym = new DecimalFormatSymbols();
 		sym.setNaN("-"); f.setDecimalFormatSymbols(sym);
@@ -91,6 +93,7 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
+		this.dis_v.setValue(statistics.distance);
 		this.cex_v.setValue(statistics.center_x);
 		this.cey_v.setValue(statistics.center_y);
 		this.rad_v.setValue(statistics.radius);
@@ -106,7 +109,7 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 			super();
 			setAlignment(Pos.CENTER_RIGHT);
 			setMinWidth(35);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:3;");
 		}
 
 		public void setValue(float val) {
@@ -120,7 +123,7 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 			super(text);
 			setAlignment(Pos.CENTER_LEFT);
 			setMinWidth(30);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:3;");
 		}
 
 	}

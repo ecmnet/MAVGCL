@@ -16,6 +16,8 @@ public class XYStatistics {
 	public float stddev_xy;
 	public float radius;
 
+	public float distance;
+
 	private KeyFigureMetaData fy;
 	private KeyFigureMetaData fx;
 
@@ -47,9 +49,16 @@ public class XYStatistics {
 	        	radius = Math.abs(list.get(i).getValue(fy)-center_y);
 
 		}
+
         this.radius = radius;
 		stddev_x =(float)Math.sqrt( vx / (i - x0));
 		stddev_y =(float)Math.sqrt( vy / (i - x0));
+
+		distance =  (float)Math.sqrt(
+				(list.get(0).getValue(fx) - list.get(list.size()-1).getValue(fx)) *
+				(list.get(0).getValue(fx) - list.get(list.size()-1).getValue(fx)) +
+				(list.get(0).getValue(fy) - list.get(list.size()-1).getValue(fy)) *
+				(list.get(0).getValue(fy) - list.get(list.size()-1).getValue(fy)));
 
 		stddev_xy = (float)Math.sqrt(stddev_x*stddev_x+stddev_y*stddev_y);
 	}
