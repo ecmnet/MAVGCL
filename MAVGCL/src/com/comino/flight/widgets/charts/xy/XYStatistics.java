@@ -38,4 +38,11 @@ public class XYStatistics {
 		stddev_y =(float)Math.sqrt( vy / (i - x0));
 	}
 
+	public void clear() {
+		center_x = 0;
+		center_y = 0;
+		stddev_x = 0;
+		stddev_y = 0;
+	}
+
 }
