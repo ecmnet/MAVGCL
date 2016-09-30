@@ -199,6 +199,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private XYStatistics s1 = new XYStatistics();
 	private XYStatistics s2 = new XYStatistics();
 
+	private XYDashBoardAnnotation dashboard1 = null;
+	private XYDashBoardAnnotation dashboard2 = null;
+
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
@@ -225,6 +228,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 	@FXML
 	private void initialize() {
+
+		this.dashboard1 = new XYDashBoardAnnotation(0,s1);
+		this.dashboard2 = new XYDashBoardAnnotation(90,s2);
 
 		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -489,26 +495,28 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			synchronized(this) {
 				refreshRequest = false;
 				series1.getData().clear(); series2.getData().clear();
-				s1.clear(); s2.clear();
 				pool.invalidateAll();
 
 				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
+			    s1.setKeyFigures(type1_x, type1_y);
 				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0 )  {
 					m = mList.get(0);
 					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 							rotation_rad);
 
+					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 					linechart.getAnnotations().add(
 							new PositionAnnotation(linechart,p1[0],p1[1],"1", Color.DARKSLATEBLUE)
 							,Layer.FOREGROUND);
 				}
 
+				s2.setKeyFigures(type2_x, type2_y);
 				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
 					m = mList.get(0);
-					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
+					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
-
+					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 					linechart.getAnnotations().add(
 							new PositionAnnotation(linechart,p2[0],p2[1],"2", Color.DARKOLIVEGREEN)
 							,Layer.FOREGROUND);
@@ -526,8 +534,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			return;
 
 		if(force_zero.isSelected() || annotation.isSelected()) {
-			s1.getStatistics(current_x0_pt,current_x1_pt,mList, type1_x, type1_y);
-			s2.getStatistics(current_x0_pt,current_x1_pt,mList, type2_x, type2_y);
+			s1.getStatistics(current_x0_pt,current_x1_pt,mList);
+			s2.getStatistics(current_x0_pt,current_x1_pt,mList);
 		}
 
 		if(force_zero.isSelected() && scale > 0 ) {
