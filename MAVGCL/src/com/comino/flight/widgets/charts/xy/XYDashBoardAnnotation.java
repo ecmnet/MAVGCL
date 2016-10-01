@@ -54,7 +54,7 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 	private  HLabel      cex 	    = new HLabel("CenterX:");
 	private  HLabel      cey 	    = new HLabel("CenterY:");
 	private  HLabel      rad        = new HLabel("Radius:");
-	private  HLabel      std     	= new HLabel("StdXY:");
+	private  HLabel      std     	= new HLabel("\u03C3:");
 	private  HLabel      dis     	= new HLabel("Distance:");
 
 	private  VLabel      cex_v       = new VLabel();
@@ -78,8 +78,8 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 		this.pane.add(header,0,0);
 		GridPane.setColumnSpan(header,4);
 		this.pane.addRow(1,cex,cex_v,cey,cey_v);
-		this.pane.addRow(2,rad,rad_v, std,std_v);
-		this.pane.addRow(3,dis,dis_v);
+		this.pane.addRow(2,rad,rad_v,dis,dis_v);
+		this.pane.addRow(3,std,std_v);
 
 		DecimalFormatSymbols sym = new DecimalFormatSymbols();
 		sym.setNaN("-"); f.setDecimalFormatSymbols(sym);

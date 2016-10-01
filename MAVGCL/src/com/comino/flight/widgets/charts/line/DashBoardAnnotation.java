@@ -55,8 +55,8 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	private  HLabel      min 	    = new HLabel("Min:");
 	private  HLabel      max 	    = new HLabel("Max:");
 	private  HLabel      delta      = new HLabel("Delta:");
-	private  HLabel      avg     	= new HLabel("Avg:");
-	private  HLabel      std     	= new HLabel("Std:");
+	private  HLabel      avg     	= new HLabel("\u00F8:");
+	private  HLabel      std     	= new HLabel("\u03C3:");
 
 	private  VLabel      min_v       = new VLabel();
 	private  VLabel      max_v 	     = new VLabel();
