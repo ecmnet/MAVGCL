@@ -602,7 +602,7 @@
 		   <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCYY">
+	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCY">
 		<MSPSource class="imu" field="accy"></MSPSource>
 		<PX4Source field="IMU.AccY"></PX4Source>
 		<ULogSource field="sensor_combined_0.accelerometer_m_s2[1]y"></ULogSource>
