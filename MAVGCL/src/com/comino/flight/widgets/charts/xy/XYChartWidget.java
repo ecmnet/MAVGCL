@@ -429,6 +429,11 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		rotation.setTooltip(new Tooltip("Double-click to set to 0°"));
 
 		auto_rotate.setDisable(true);
+		auto_rotate.selectedProperty().addListener((v,ov,nv) -> {
+			rotation.setDisable(nv.booleanValue());
+			rotation.setValue(0);
+			updateRequest();
+		});
 
 
 		export.setOnAction((ActionEvent event)-> {
@@ -498,6 +503,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		if(disabledProperty().get())
 			return;
+
+		if(auto_rotate.isSelected()) {
+			rotation_rad = -control.getCurrentModel().attitude.y;
+		}
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
@@ -590,19 +599,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-//			m = mList.get(mList.size()-1);
-//			if(type1_x.hash!=0 && type1_y.hash!=0) {
-//				rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
-//						rotation_rad);
-//				endPosition1.setPosition(p1[0], p1[1]);
-//			}
-//
-//			if(type2_x.hash!=0 && type2_y.hash!=0) {
-//				rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
-//						rotation_rad);
-//				endPosition2.setPosition(p2[0], p2[1]);
-//			}
-
 			while(current_x_pt<max_x) {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
@@ -624,11 +620,6 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 							series2.getData().remove(0);
 						}
 					}
-
-					if(auto_rotate.isSelected()) {
-						rotation_rad= - MSPMathUtils.toRad(mList.get(current_x1_pt).getValue("HEAD"));
-					}
-
 
 					if(type1_x.hash!=0 && type1_y.hash!=0) {
 						rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
