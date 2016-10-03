@@ -2213,19 +2213,20 @@ but also ignore less noise</short_desc>
       <increment>1</increment>
       <scope>modules/navigator</scope>
     </parameter>
-    <parameter default="-1" name="GF_MAX_HOR_DIST" type="FLOAT">
+    <parameter default="0" name="GF_MAX_HOR_DIST" type="FLOAT">
       <short_desc>Max horizontal distance in meters</short_desc>
-      <long_desc>Set to &gt; 0 to activate a geofence action if horizontal distance to home exceeds this value.</long_desc>
-      <min>-1</min>
-      <max>5000</max>
+      <long_desc>Maximum horizontal distance in meters the vehicle can be from home before triggering a geofence action. Disabled if 0.</long_desc>
+      <min>0</min>
+      <max>10000</max>
       <unit>m</unit>
       <increment>1</increment>
       <scope>modules/navigator</scope>
     </parameter>
-    <parameter default="-1" name="GF_MAX_VER_DIST" type="FLOAT">
+    <parameter default="0" name="GF_MAX_VER_DIST" type="FLOAT">
       <short_desc>Max vertical distance in meters</short_desc>
-      <long_desc>Set to &gt; 0 to activate a geofence action if vertical distance to home exceeds this value.</long_desc>
-      <min>-1</min>
+      <long_desc>Maximum vertical distance in meters the vehicle can be from home before triggering a geofence action. Disabled if 0.</long_desc>
+      <min>0</min>
+      <max>10000</max>
       <unit>m</unit>
       <increment>1</increment>
       <scope>modules/navigator</scope>
@@ -2355,6 +2356,11 @@ but also ignore less noise</short_desc>
     </parameter>
   </group>
   <group name="Local Position Estimator">
+    <parameter default="0" name="LPE_PUB_AGL_Z" type="FLOAT">
+      <short_desc>Publish AGL as Z</short_desc>
+      <boolean />
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
     <parameter default="0.0" name="LPE_FLW_OFF_Z" type="FLOAT">
       <short_desc>Optical flow z offset from center</short_desc>
       <min>-1</min>
@@ -2363,23 +2369,39 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.01" name="LPE_FLW_XY" type="FLOAT">
-      <short_desc>Optical flow xy standard deviation</short_desc>
+    <parameter default="1" name="LPE_FLW_GYRO_CMP" type="INT32">
+      <short_desc>Optical flow gyro compensation</short_desc>
+      <min>-1</min>
+      <max>1</max>
+      <unit>m</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="0.04" name="LPE_FLW_VXY" type="FLOAT">
+      <short_desc>Optical flow xy velocity standard deviation</short_desc>
       <min>0.01</min>
       <max>1</max>
       <unit>m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.01" name="LPE_FLW_XY_D" type="FLOAT">
-      <short_desc>Optical flow xy standard deviation linear factor on distance</short_desc>
+    <parameter default="0.04" name="LPE_FLW_VXY_D" type="FLOAT">
+      <short_desc>Optical flow xy velocity standard deviation linear factor on distance</short_desc>
       <min>0.01</min>
       <max>1</max>
       <unit>m / m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="75" name="LPE_FLW_QMIN" type="INT32">
+    <parameter default="1.0" name="LPE_FLW_VXY_R" type="FLOAT">
+      <short_desc>Optical flow xy velocity standard deviation linear factor on rotation rate</short_desc>
+      <min>0.01</min>
+      <max>1</max>
+      <unit>m / m</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="150" name="LPE_FLW_QMIN" type="INT32">
       <short_desc>Optical flow minimum quality threshold</short_desc>
       <min>0</min>
       <max>255</max>
@@ -2439,7 +2461,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>20</max>
+      <max>3</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -2506,7 +2528,15 @@ EPV used if greater than this value</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.5" name="LPE_VIS_XY" type="FLOAT">
+    <parameter default="0.1" name="LPE_VIS_DELAY" type="FLOAT">
+      <short_desc>Vision delay compensaton</short_desc>
+      <min>0</min>
+      <max>0.1</max>
+      <unit>sec</unit>
+      <decimal>2</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="0.1" name="LPE_VIS_XY" type="FLOAT">
       <short_desc>Vision xy standard deviation</short_desc>
       <min>0.01</min>
       <max>1</max>
@@ -2578,7 +2608,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.1" name="LPE_FGYRO_HP" type="FLOAT">
+    <parameter default="0.001" name="LPE_FGYRO_HP" type="FLOAT">
       <short_desc>Flow gyro high pass filter cut off frequency</short_desc>
       <min>0</min>
       <max>2</max>
@@ -2610,12 +2640,12 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>0</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="1.0" name="LPE_XY_PUB" type="FLOAT">
-      <short_desc>Required xy standard deviation to publish position</short_desc>
-      <min>0.3</min>
-      <max>5.0</max>
-      <unit>m</unit>
-      <decimal>1</decimal>
+    <parameter default="0.1" name="LPE_VXY_PUB" type="FLOAT">
+      <short_desc>Required velocity xy standard deviation to publish position</short_desc>
+      <min>0.01</min>
+      <max>1.0</max>
+      <unit>m/s</unit>
+      <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="1.0" name="LPE_Z_PUB" type="FLOAT">
@@ -3849,6 +3879,13 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <max>2200</max>
       <unit>us</unit>
       <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.0" name="MOT_SLEW_MAX" type="FLOAT">
+      <short_desc>Minimum motor rise time (slew rate limit)</short_desc>
+      <long_desc>Minimum time allowed for the motor input signal to pass through a range of 1000 PWM units. A value x means that the motor signal can only go from 1000 to 2000 PWM in maximum x seconds. Zero means that slew rate limiting is disabled.</long_desc>
+      <min>0.0</min>
+      <unit>s/(1000*PWM)</unit>
       <scope>modules/sensors</scope>
     </parameter>
     <parameter default="0" name="PWM_AUX_REV1" type="INT32">
@@ -6735,6 +6772,14 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <short_desc>Operating datarate of the NRF51</short_desc>
       <min>0</min>
       <max>2</max>
+      <scope>modules/syslink</scope>
+    </parameter>
+    <parameter default="231" name="SLNK_RADIO_ADDR1" type="INT32">
+      <short_desc>Operating address of the NRF51 (most significant byte)</short_desc>
+      <scope>modules/syslink</scope>
+    </parameter>
+    <parameter default="3890735079" name="SLNK_RADIO_ADDR2" type="INT32">
+      <short_desc>Operating address of the NRF51 (least significant 4 bytes)</short_desc>
       <scope>modules/syslink</scope>
     </parameter>
   </group>
