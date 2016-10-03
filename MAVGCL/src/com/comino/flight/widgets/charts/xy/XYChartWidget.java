@@ -91,7 +91,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			{ "LPOSVX"	, "LPOSVY" 	},
 			{ "VISIONX"	, "VISIONY" },
 			{ "SPLPOSX"	, "SPLPOSY" },
-			{ "ROLL"    , "PITCH"   },
+			{ "PITCH"   , "ROLL"   },
 			{ "ACCX"    , "ACCY"    },
 	};
 
