@@ -43,7 +43,7 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
-import com.comino.flight.experimental.VisionPositionSimulationUpdater;
+import com.comino.flight.experimental.VisionSpeedSimulationUpdater;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
@@ -91,7 +91,7 @@ public class ExperimentalWidget extends WidgetPane  {
 	private Slider y_control;
 
 	private DataModel model;
-	private VisionPositionSimulationUpdater vision = null;
+	private VisionSpeedSimulationUpdater vision = null;
 	private OffboardUpdater offboard = null;
 	private IMAVController control;
 
@@ -109,6 +109,7 @@ public class ExperimentalWidget extends WidgetPane  {
 
 			throw new RuntimeException(exception);
 		}
+
 
 
 		task = new Task<Long>() {
@@ -138,23 +139,20 @@ public class ExperimentalWidget extends WidgetPane  {
 	private void initialize() {
 
 		vision_enabled.selectedProperty().addListener((v,ov,nv) -> {
-			if(nv.booleanValue())  {
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_VISION;
-				msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
-				control.sendMAVLinkMessage(msp);
-			} else {
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_VISION;
-				msp.param1 = MSP_COMPONENT_CTRL.DISABLE;
-				control.sendMAVLinkMessage(msp);
-			}
+			if(control.isSimulation()) {
+				if(nv.booleanValue())  {
+					vision.start();
+				} else {
+					vision.stop();
+				}
+			} 
 		});
 
 		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
-//
-//			if(!model.sys.isStatus(Status.MSP_ARMED))
-//				return;
+
+			//
+			//			if(!model.sys.isStatus(Status.MSP_ARMED))
+			//				return;
 
 			if(nv.booleanValue()) {
 				if(!offboard.isRunning()) {
@@ -195,9 +193,9 @@ public class ExperimentalWidget extends WidgetPane  {
 
 		althold_command.setOnAction((ActionEvent event)-> {
 
-//			msg_msp_command msp = new msg_msp_command(255,1);
-//			msp.command = MSP_CMD.MSP_CMD_RESTART;
-//			control.sendMAVLinkMessage(msp);
+			//			msg_msp_command msp = new msg_msp_command(255,1);
+			//			msp.command = MSP_CMD.MSP_CMD_RESTART;
+			//			control.sendMAVLinkMessage(msp);
 
 			if(!model.sys.isStatus(Status.MSP_ARMED))
 				return;
@@ -244,6 +242,8 @@ public class ExperimentalWidget extends WidgetPane  {
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
 				offboard.setNEDX(newvalue.intValue()/100f);
+			if(vision_enabled.isSelected())
+				vision.setSpeedX(newvalue.intValue()/1000f);
 		});
 
 		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -260,6 +260,8 @@ public class ExperimentalWidget extends WidgetPane  {
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
 				offboard.setNEDY(newvalue.intValue()/100f);
+			if(vision_enabled.isSelected())
+				vision.setSpeedY(newvalue.intValue()/1000f);
 		});
 
 		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -279,6 +281,7 @@ public class ExperimentalWidget extends WidgetPane  {
 		this.control = control;
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
+		vision = new VisionSpeedSimulationUpdater(control);
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);

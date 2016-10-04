@@ -34,15 +34,19 @@
 package com.comino.flight.experimental;
 
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
+import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.mav.control.IMAVController;
 
-public class VisionPositionSimulationUpdater implements Runnable {
+public class VisionSpeedSimulationUpdater implements Runnable {
 
 	private IMAVController control = null;
 	private boolean isRunning = false;
 
-	public VisionPositionSimulationUpdater(IMAVController control) {
+	private float x=0;
+	private float y=0;
+
+	public VisionSpeedSimulationUpdater(IMAVController control) {
 		this.control = control;
 	}
 
@@ -51,6 +55,14 @@ public class VisionPositionSimulationUpdater implements Runnable {
 		isRunning = true;
 		new Thread(this).start();
 
+	}
+
+	public void setSpeedX(float x) {
+		this.x=x;
+	}
+
+	public void setSpeedY(float y) {
+		this.y=y;
 	}
 
 	public void stop() {
@@ -67,10 +79,11 @@ public class VisionPositionSimulationUpdater implements Runnable {
 				Thread.sleep(100);
 			} catch (InterruptedException e) { }
 
-			msg_vision_position_estimate cmd = new msg_vision_position_estimate(255,1);
-			cmd.x = (float)Math.random();
-			cmd.y = (float)Math.random();
-			cmd.z = -5;
+			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(1,1);
+			cmd.x = x;
+			cmd.y = y;
+			cmd.z = 0;
+			System.out.println(x+":"+y);
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
