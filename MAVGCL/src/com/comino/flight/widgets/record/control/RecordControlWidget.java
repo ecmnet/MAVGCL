@@ -155,6 +155,10 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			trigdelay.setDisable(oldvalue);
 			trigstop.setDisable(oldvalue);
 			trigstart.setDisable(oldvalue);
+
+			if(modelService!=null && newvalue.booleanValue() && modelService.isCollecting())
+				recording(false,0);
+
 		});
 
 		trigstart.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
