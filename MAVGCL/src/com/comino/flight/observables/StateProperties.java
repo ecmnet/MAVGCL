@@ -62,6 +62,8 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private FloatProperty progress = new SimpleFloatProperty(-1);
 
+	private IMAVController control;
+
 
 	public static StateProperties getInstance() {
 		return instance;
@@ -76,6 +78,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 	}
 
 	private StateProperties(IMAVController control) {
+		this.control = control;
 		 control.addStatusChangeListener(this);
 	}
 
@@ -93,6 +96,9 @@ public class StateProperties implements IMSPStatusChangedListener{
 			MSPLogger.getInstance().writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 		if(!oldStatus.isStatus(Status.MSP_MODE_OFFBOARD) && newStatus.isStatus(Status.MSP_MODE_OFFBOARD))
 			MSPLogger.getInstance().writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+
+		if(!newStatus.isStatus(Status.MSP_CONNECTED))
+				control.getCurrentModel().clear();
 	}
 
 
