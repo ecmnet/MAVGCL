@@ -12,11 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 03/10/2016 
+**Development Status:** Last updated 10/10/2016 
 
-- MJPEG fixes for onboard visual system
-- Dashboard overlay shows statistics of displayed data
-- XYChart overlays
+- Minor fixes
 
 **Features:**
 
