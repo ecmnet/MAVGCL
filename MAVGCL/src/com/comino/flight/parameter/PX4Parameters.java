@@ -109,7 +109,8 @@ public class PX4Parameters implements IMAVLinkListener {
 	}
 
 	public void refreshParameterList() {
-		MSPLogger.getInstance().writeLocalMsg("Reading params from vehicle", MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+		MSPLogger.getInstance().writeLocalMsg("Reading params (PX4 version "+control.getCurrentModel().sys.version+")",
+				    MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		property.setValue(null);
 		parameterList.clear();
 		msg_param_request_list msg = new msg_param_request_list(255,1);
