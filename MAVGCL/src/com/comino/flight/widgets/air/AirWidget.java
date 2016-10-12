@@ -33,8 +33,6 @@
 
 package com.comino.flight.widgets.air;
 
-import java.text.DecimalFormat;
-
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -45,8 +43,7 @@ import com.comino.msp.utils.MSPMathUtils;
 
 import eu.hansolo.airseries.AirCompass;
 import eu.hansolo.airseries.Horizon;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 
 public class AirWidget extends WidgetPane  {
@@ -59,48 +56,36 @@ public class AirWidget extends WidgetPane  {
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
-	private final DecimalFormat fo = new DecimalFormat("#0.0");
+	private AnimationTimer task;
 
-	private Task<Integer> task;
 	private AnalysisDataModel model;
 
 	private float pitch,roll,bearing;
+
+	private long tms = 0;
 
 	public AirWidget() {
 		super(300,true);
 
 		FXMLLoadHelper.load(this, "AirWidget.fxml");
 
-		task = new Task<Integer>() {
-
-			@Override
-			protected Integer call() throws Exception {
-				while(true) {
-					Thread.sleep(100);
-					if(isDisabled() || !isVisible()) {
-						continue;
+		task = new AnimationTimer() {
+			@Override public void handle(long now) {
+				if(!isDisabled() && (System.currentTimeMillis()-tms)>200) {
+					tms = System.currentTimeMillis();
+					if(Math.abs(bearing - model.getValue("HEAD"))>2) {
+						bearing = model.getValue("HEAD");
+						g_compass.setBearing(bearing);
 					}
-
-					if (isCancelled()) {
-						break;
+					if(Math.abs(pitch - model.getValue("PITCH"))>0.1) {
+						pitch = model.getValue("PITCH");
+						g_horizon.setPitch(MSPMathUtils.fromRad(pitch));
 					}
-
-					Platform.runLater(() -> {
-						if(Math.abs(bearing - model.getValue("HEAD"))>2) {
-							bearing = model.getValue("HEAD");
-							g_compass.setBearing(bearing);
-						}
-						if(Math.abs(pitch - model.getValue("PITCH"))>0.1) {
-							pitch = model.getValue("PITCH");
-							g_horizon.setPitch(MSPMathUtils.fromRad(pitch));
-						}
-						if(Math.abs(roll - model.getValue("ROLL"))>0.1) {
-							roll = model.getValue("ROLL");
-							g_horizon.setRoll(MSPMathUtils.fromRad(roll));
-						}
-					});
+					if(Math.abs(roll - model.getValue("ROLL"))>0.1) {
+						roll = model.getValue("ROLL");
+						g_horizon.setRoll(MSPMathUtils.fromRad(roll));
+					}
 				}
-				return 0;
 			}
 		};
 
@@ -118,10 +103,7 @@ public class AirWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 		this.model = dataService.getCurrent();
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
 	}
 
 }
