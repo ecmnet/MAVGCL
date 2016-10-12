@@ -46,7 +46,7 @@
 			<Button fx:id="export" layoutX="630.0"  prefHeight="19.0" mnemonicParsing="false"
 				text="PNG export" />
 			<CheckBox fx:id="annotations" layoutX="720.0" prefHeight="19.0" mnemonicParsing="false" text="Messages" />
-			<CheckBox fx:id="dash"   layoutX="800.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" />
+			<CheckBox fx:id="dash"   layoutX="800.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
 		</Pane>
 	</bottom>
 </fx:root>

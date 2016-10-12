@@ -60,7 +60,7 @@
 		    <CheckBox fx:id="auto_rotate" layoutX="15.0" layoutY="490.0" mnemonicParsing="false" text="Heading autorotate" />
 
             <Separator layoutX="15.0" layoutY="510.0" prefHeight="4.0" prefWidth="126.0" />
-            <CheckBox fx:id="annotation" layoutX="15.0" layoutY="530.0" mnemonicParsing="false" text="Dashboard" />
+            <CheckBox fx:id="annotation" layoutX="15.0" layoutY="530.0" mnemonicParsing="false" text="Dashboard" selected="true" />
 
 
             <Button fx:id="export" layoutX="15.0" layoutY="570.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
