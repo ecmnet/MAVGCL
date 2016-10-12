@@ -41,6 +41,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.utils.MSPMathUtils;
 
 import eu.hansolo.airseries.AirCompass;
 import eu.hansolo.airseries.Horizon;
@@ -89,13 +90,13 @@ public class AirWidget extends WidgetPane  {
 							bearing = model.getValue("HEAD");
 							g_compass.setBearing(bearing);
 						}
-						if(Math.abs(pitch - model.getValue("PITCH"))>2) {
+						if(Math.abs(pitch - model.getValue("PITCH"))>0.1) {
 							pitch = model.getValue("PITCH");
-							g_horizon.setPitch(pitch);
+							g_horizon.setPitch(MSPMathUtils.fromRad(pitch));
 						}
-						if(Math.abs(roll - model.getValue("ROLL"))>2) {
+						if(Math.abs(roll - model.getValue("ROLL"))>0.1) {
 							roll = model.getValue("ROLL");
-							g_horizon.setRoll(roll);
+							g_horizon.setRoll(MSPMathUtils.fromRad(roll));
 						}
 					});
 				}
