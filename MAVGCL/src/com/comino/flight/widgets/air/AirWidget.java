@@ -88,8 +88,6 @@ public class AirWidget extends WidgetPane  {
 				}
 			}
 		};
-
-
 	}
 
 
@@ -103,7 +101,7 @@ public class AirWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 		this.model = dataService.getCurrent();
-		task.start();
+		//task.start();
 	}
 
 }
