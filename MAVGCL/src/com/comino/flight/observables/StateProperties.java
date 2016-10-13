@@ -90,11 +90,11 @@ public class StateProperties implements IMSPStatusChangedListener{
 		altholdProperty.set(newStatus.isStatus(Status.MSP_MODE_ALTITUDE));
 		posholdProperty.set(newStatus.isStatus(Status.MSP_MODE_POSITION));
 
-		if(!newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
+		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
 			MSPLogger.getInstance().writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
-		if(!newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_POSITION))
+		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_POSITION))
 			MSPLogger.getInstance().writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
-		if(!newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_OFFBOARD))
+		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_OFFBOARD))
 			MSPLogger.getInstance().writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 		if(!newStatus.isStatus(Status.MSP_CONNECTED))
