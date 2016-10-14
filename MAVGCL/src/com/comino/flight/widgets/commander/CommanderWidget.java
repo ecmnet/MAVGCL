@@ -36,7 +36,10 @@ package com.comino.flight.widgets.commander;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_manual_control;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
@@ -65,6 +68,9 @@ public class CommanderWidget extends WidgetPane  {
 
 	@FXML
 	private Button rtl_command;
+
+	@FXML
+	private Button vis_reset;
 
 	@FXML
 	private Button emergency;
@@ -156,6 +162,13 @@ public class CommanderWidget extends WidgetPane  {
 			}
 
 		});
+
+//		vis_reset.setOnAction((ActionEvent event)-> {
+//			msg_msp_command msp = new msg_msp_command(255,1);
+//			msp.command = MSP_CMD.MSP_CMD_VISION;
+//			msp.param1 = MSP_COMPONENT_CTRL.RESET;
+//			control.sendMAVLinkMessage(msp);
+//		});
 
 		emergency.setOnAction((ActionEvent event)-> {
 			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
