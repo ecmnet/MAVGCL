@@ -133,7 +133,7 @@
 
 				<ExperimentalWidget fx:id="experimental"
 				    StackPane.alignment="BOTTOM_LEFT"
-				    maxWidth="185"  visible="false" maxHeight="240"
+				    maxWidth="185"  visible="false" maxHeight="260"
 					styleClass="control">
 					<StackPane.margin>
 						<Insets left="30.0" bottom="120.0" />

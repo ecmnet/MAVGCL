@@ -28,9 +28,11 @@
 			<CheckBox fx:id="vision_enabled" prefWidth="80.0" text="Vis.simulation" GridPane.rowIndex="2" />
 			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="3" />
 			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="4" />
-			<Slider fx:id="alt_control" blockIncrement="20.0" majorTickUnit="100.0" max="300" min="50" prefHeight="13.0" prefWidth="161.0" value="50" GridPane.rowIndex="5" />
-			<Slider blockIncrement="20.0" majorTickUnit="100.0" max="200.0" min="-200.0" prefHeight="13.0" prefWidth="161.0" value="0" GridPane.rowIndex="6" fx:id="x_control" />
-			<Slider fx:id="y_control" blockIncrement="20.0" majorTickUnit="100.0" max="200.0" min="-200.0" prefHeight="13.0" prefWidth="161.0" value="0" GridPane.rowIndex="7" />
+			<Button fx:id="vis_reset"  prefWidth="161.0" text="Vis.Reset" GridPane.rowIndex="5"/>
+			<Slider fx:id="alt_control" blockIncrement="20.0" majorTickUnit="100.0" max="300" min="50" prefHeight="13.0" prefWidth="161.0" value="50" GridPane.rowIndex="6" />
+			<Slider blockIncrement="20.0" majorTickUnit="100.0" max="200.0" min="-200.0" prefHeight="13.0" prefWidth="161.0" value="0" GridPane.rowIndex="7" fx:id="x_control" />
+			<Slider fx:id="y_control" blockIncrement="20.0" majorTickUnit="100.0" max="200.0" min="-200.0" prefHeight="13.0" prefWidth="161.0" value="0" GridPane.rowIndex="8" />
+
 		</children>
       <columnConstraints>
          <ColumnConstraints />

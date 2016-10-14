@@ -82,6 +82,9 @@ public class ExperimentalWidget extends WidgetPane  {
 	private Button poshold_command;
 
 	@FXML
+	private Button vis_reset;
+
+	@FXML
 	private Slider alt_control;
 
 	@FXML
@@ -145,7 +148,14 @@ public class ExperimentalWidget extends WidgetPane  {
 				} else {
 					vision.stop();
 				}
-			} 
+			}
+		});
+
+		vis_reset.setOnAction((ActionEvent event)-> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_VISION;
+			msp.param1 = MSP_COMPONENT_CTRL.RESET;
+			control.sendMAVLinkMessage(msp);
 		});
 
 		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
