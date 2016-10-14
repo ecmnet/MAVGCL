@@ -50,18 +50,25 @@ public class PX4toModelConverter {
 	private BinaryLogReader reader;
 	private List<AnalysisDataModel> list;
 
+	private long tms_start_us =0;
+	private long tms_total_us =0;
+
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
 	public PX4toModelConverter(BinaryLogReader reader, List<AnalysisDataModel> list) {
 		this.reader = reader;
 		this.list = list;
+		reader.clearErrors();
+		System.out.println("Conversion of "+reader.getSizeMicroseconds()/1000+"ms");
+		tms_start_us = reader.getStartMicroseconds();
+		tms_total_us = reader.getSizeMicroseconds();
 	}
 
 
 	public void doConversion() throws FormatErrorException {
 
-		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
+		long tms_slot = 0; long tms = 0; long tms_tmp=0; boolean errorFlag = false;
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
@@ -71,8 +78,9 @@ public class PX4toModelConverter {
 		try {
 
 			while(tms < reader.getSizeMicroseconds()) {
-				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
-				if(tms > tms_slot) {
+				tms_tmp = reader.readUpdate(data)-tms_start_us;
+				if(tms_tmp > tms_slot && tms_tmp < tms_total_us) {
+					tms = tms_tmp;
 					model.tms = tms;
 					tms_slot += 50000;
 					model.setValues(KeyFigureMetaData.PX4_SOURCE,data, meta);
