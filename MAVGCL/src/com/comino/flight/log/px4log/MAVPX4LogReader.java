@@ -215,7 +215,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					converter.doConversion();
 					control.getCollector().setModelList(modelList);
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
-					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished +("+speed+" kbtyes/sec)");
+					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished ("+speed+" kbtyes/sec)");
 					state.getProgressProperty().set(-1);
 				} catch (Exception e) { e.printStackTrace(); }
 
