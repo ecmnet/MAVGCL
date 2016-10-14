@@ -193,13 +193,14 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			log_bytes_read = data.ofs;
 
 			if((System.currentTimeMillis()-tms)>5000) {
-				//System.out.println("LOG "+log_bytes_read+" bytes read");
+				System.out.println("LOG "+log_bytes_read+" bytes of "+log_bytes_total+" read");
 				state.getProgressProperty().set(getProgress()/100f);
 				tms = System.currentTimeMillis();
 			}
 
-			if(data.count < 90) {
+			if(data.count < 90 || (log_bytes_read == log_bytes_total)) {
 				try {
+					System.out.println("LOG "+log_bytes_read+" bytes of "+log_bytes_total+" read");
 					out.close();
 				} catch (IOException e) { cancel();  }
 				try {
