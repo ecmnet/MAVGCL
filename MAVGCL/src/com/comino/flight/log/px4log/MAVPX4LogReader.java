@@ -107,7 +107,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
 		state.getProgressProperty().set(0);
-		state.getLogLoadedProperty().set(true);
+		state.getLogLoadedProperty().set(false);
 		FileHandler.getInstance().setName("PX4Log loading..");
 		MSPLogger.getInstance().writeLocalMsg("Request px4log from vehicle");
 		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
@@ -213,6 +213,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					state.getLogLoadedProperty().set(false);
 					MSPLogger.getInstance().writeLocalMsg("Loading px4log exception ");
 				}
+				state.getLogLoadedProperty().set(true);
 			}
 		}
 	}
