@@ -8,6 +8,6 @@
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
  <ListView fx:id="listview"  layoutX="5" layoutY="5" prefWidth="194"
-        prefHeight="112" editable="false"  />
+        prefHeight="110" editable="false"  />
 	</children>
 </fx:root>

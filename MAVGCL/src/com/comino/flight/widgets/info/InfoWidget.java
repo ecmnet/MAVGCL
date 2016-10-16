@@ -38,11 +38,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.LogMessage;
 
 import javafx.application.Platform;
@@ -51,9 +49,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.paint.Color;
 
 public class InfoWidget extends WidgetPane  {
+
+	private static final int MAX_ITEMS = 50;
 
 	@FXML
 	private ListView<LogMessage> listview;
@@ -106,6 +105,8 @@ public class InfoWidget extends WidgetPane  {
 							synchronized(this) {
 								while(!list.isEmpty()) {
 									listview.getItems().add(list.poll());
+									if(listview.getItems().size()>MAX_ITEMS)
+										listview.getItems().remove(0);
 								}
 							}
 							listview.scrollTo(listview.getItems().size()-1);
