@@ -46,7 +46,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.Badge;
-import com.comino.flight.widgets.messages.MessagesWidget;
+
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
@@ -245,11 +245,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		return scroll;
 	}
 
-	public void registerMessageWidget(MessagesWidget m) {
-		messages.setOnMousePressed(value -> {
-			m.showMessages();
-		});
-	}
 
 
 	@Override

@@ -18,7 +18,6 @@
 <?import com.comino.flight.widgets.tuning.TuningWidget?>
 <?import com.comino.flight.widgets.experimental.ExperimentalWidget?>
 <?import com.comino.flight.widgets.camera.CameraWidget?>
-<?import com.comino.flight.widgets.messages.MessagesWidget?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.comino.flight.tabs.FlightTabs">
@@ -139,15 +138,6 @@
 						<Insets left="30.0" bottom="120.0" />
 					</StackPane.margin>
 				</ExperimentalWidget>
-
-				<MessagesWidget fx:id="messages"
-				    StackPane.alignment="TOP_LEFT"
-				    maxWidth="375"  visible="false" maxHeight="120"
-					>
-					<StackPane.margin>
-						<Insets left="0.0" top="32.0" />
-					</StackPane.margin>
-				</MessagesWidget>
 
 			</children>
 		</StackPane>

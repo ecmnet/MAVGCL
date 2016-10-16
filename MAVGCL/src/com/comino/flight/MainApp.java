@@ -161,8 +161,6 @@ public class MainApp extends Application  {
 			PX4Parameters.getInstance(control);
 
 
-
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

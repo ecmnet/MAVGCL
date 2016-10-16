@@ -56,9 +56,6 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 	private CheckBox video;
 
 	@FXML
-	private CheckBox messages;
-
-	@FXML
 	private CheckBox experimental;
 
 	private IMAVController control;
@@ -87,10 +84,6 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 		return tuning.selectedProperty();
 	}
 
-	public BooleanProperty getMessageVisibility() {
-		return messages.selectedProperty();
-	}
-
 
 	public void setup(IMAVController control) {
 
@@ -98,7 +91,6 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 		this.control = control;
 		this.control.addStatusChangeListener(this);
 		this.details.selectedProperty().set(false);
-		this.messages.selectedProperty().set(true);
 		update(model.sys,model.sys);
 	}
 

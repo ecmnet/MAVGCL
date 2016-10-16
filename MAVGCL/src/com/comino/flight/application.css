@@ -146,11 +146,11 @@
     -fx-box-border: #B0B0B0;
     -fx-border-radius: 10.0px;
     -fx-border-insets: 0.0px;
-    -fx-padding: 4;
+    -fx-padding: 2;
 }
 
 .list-cell {
-	-fx-font-size: 5.0pt;
+	-fx-font-size: 7.0pt;
     -fx-background-color: #303030;
 }
 

@@ -33,12 +33,12 @@
 
 package com.comino.flight.widgets.info;
 
-import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
@@ -49,12 +49,14 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.paint.Color;
 
 public class InfoWidget extends WidgetPane  {
 
 	@FXML
-	private ListView<String> listview;
+	private ListView<LogMessage> listview;
 
 
 	private ConcurrentLinkedQueue<LogMessage> list = null;
@@ -69,6 +71,23 @@ public class InfoWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
+
+		listview.setCellFactory(list -> new ListCell<LogMessage>() {
+
+			@Override
+			protected void updateItem(LogMessage m, boolean empty) {
+				super.updateItem(m, empty);
+				if(!empty) {
+					setPrefWidth(130);
+					setText(m.msg);
+					if(m.severity < MAV_SEVERITY.MAV_SEVERITY_WARNING)
+						setStyle("-fx-text-fill:yellow;");
+					else
+						setStyle("-fx-text-fill:white;");
+				}
+			}
+
+		});
 
 	}
 
@@ -86,11 +105,7 @@ public class InfoWidget extends WidgetPane  {
 						public void run() {
 							synchronized(this) {
 								while(!list.isEmpty()) {
-									String s = list.poll().msg;
-									if(s.length()>40) {
-										s = s.substring(0, 40);
-									}
-									listview.getItems().add(s);
+									listview.getItems().add(list.poll());
 								}
 							}
 							listview.scrollTo(listview.getItems().size()-1);
@@ -100,6 +115,7 @@ public class InfoWidget extends WidgetPane  {
 			}
 
 		});
+
 
 		listview.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
 			@Override
@@ -111,9 +127,6 @@ public class InfoWidget extends WidgetPane  {
 				});
 			}
 		});
-
-
-
 	}
 
 }

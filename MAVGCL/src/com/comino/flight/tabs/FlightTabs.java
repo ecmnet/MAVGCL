@@ -48,7 +48,7 @@ import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.camera.CameraWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.experimental.ExperimentalWidget;
-import com.comino.flight.widgets.messages.MessagesWidget;
+
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.flight.widgets.tuning.TuningWidget;
 import com.comino.mav.control.IMAVController;
@@ -83,9 +83,6 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private ExperimentalWidget experimental;
-
-	@FXML
-	private MessagesWidget messages;
 
 	@FXML
 	private CameraWidget camera;
@@ -140,14 +137,9 @@ public class FlightTabs extends Pane {
 		tuning.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
 		tuning.setup(control);
 
-		messages.disableProperty().bind(flightControl.getControl().getMessageVisibility().not());
-		messages.setup(control);
-
 
 		experimental.fadeProperty().bind(flightControl.getControl().getExperimentalVisibility());
 		experimental.setup(control);
-
-		statusline.registerMessageWidget(messages);
 
 		mavmaptab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);

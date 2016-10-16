@@ -20,19 +20,16 @@
 					</columnConstraints>
 					<rowConstraints>
 						<RowConstraints minHeight="20.0"/>
-						<RowConstraints minHeight="20.0"/>
-						<RowConstraints minHeight="30.0"/>
+						<RowConstraints minHeight="27.0"/>
 					</rowConstraints>
 					<children>
 						<CheckBox fx:id="details" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" text="Details" />
 						<CheckBox fx:id="tuning" GridPane.rowIndex="1"
 							GridPane.columnIndex="0" text="Parameters" />
-						<CheckBox fx:id="video" GridPane.rowIndex="2"
-							GridPane.columnIndex="0" text="Video" />
-						<CheckBox fx:id="messages" GridPane.rowIndex="0"
-							GridPane.columnIndex="1" text="Messages" />
-					    <CheckBox fx:id="experimental" GridPane.rowIndex="1"
+						<CheckBox fx:id="video" GridPane.rowIndex="1"
+							GridPane.columnIndex="1" text="Video" />
+					    <CheckBox fx:id="experimental" GridPane.rowIndex="0"
 							GridPane.columnIndex="1" text="Control" />
 					</children>
 				</GridPane>
