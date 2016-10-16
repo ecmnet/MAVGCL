@@ -73,6 +73,7 @@ public class AirWidget extends WidgetPane  {
 			@Override public void handle(long now) {
 				if(!isDisabled() && (System.currentTimeMillis()-tms)>200) {
 					tms = System.currentTimeMillis();
+
 					if(Math.abs(bearing - model.getValue("HEAD"))>2) {
 						bearing = model.getValue("HEAD");
 						g_compass.setBearing(bearing);
@@ -94,8 +95,12 @@ public class AirWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
-
-
+		this.disabledProperty().addListener((v,ov,nv) -> {
+			if(!nv.booleanValue())
+				task.start();
+			else
+				task.stop();
+		});
 	}
 
 

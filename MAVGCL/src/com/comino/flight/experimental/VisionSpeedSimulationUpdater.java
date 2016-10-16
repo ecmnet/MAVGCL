@@ -79,11 +79,10 @@ public class VisionSpeedSimulationUpdater implements Runnable {
 				Thread.sleep(100);
 			} catch (InterruptedException e) { }
 
-			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(1,1);
+			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(255,1);
 			cmd.x = x;
 			cmd.y = y;
 			cmd.z = 0;
-			System.out.println(x+":"+y);
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
