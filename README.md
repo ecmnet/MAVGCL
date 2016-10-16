@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 14/10/2016 
+**Development Status:** Last updated 16/10/2016 
 
-- PX4Log reader fixed
+- Message display-widget
 
 **Features:**
 
