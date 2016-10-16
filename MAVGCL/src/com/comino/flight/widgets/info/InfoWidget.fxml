@@ -4,10 +4,10 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<fx:root  prefHeight="120" prefWidth="183.0"  type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root  prefHeight="120" prefWidth="203.0"  type="javafx.scene.layout.Pane" styleClass="widget"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
- <ListView fx:id="listview"  layoutX="5" layoutY="5" prefWidth="174"
+ <ListView fx:id="listview"  layoutX="5" layoutY="5" prefWidth="194"
         prefHeight="112" editable="false"  />
 	</children>
 </fx:root>

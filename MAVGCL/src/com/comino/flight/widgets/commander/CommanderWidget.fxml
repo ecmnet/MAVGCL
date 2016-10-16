@@ -5,27 +5,27 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 
-<fx:root  prefHeight="140" prefWidth="183.0"  type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root  prefHeight="140" prefWidth="203.0"  type="javafx.scene.layout.Pane" styleClass="widget"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-	   <Button fx:id="arm_command" layoutX="15.0" layoutY="10" prefHeight="19" prefWidth="150.0"
+	   <Button fx:id="arm_command" layoutX="15.0" layoutY="10" prefHeight="19" prefWidth="170.0"
                text="Arm motors" styleClass="arm" />
 
-	   <Separator prefHeight="0.0" layoutX="15.0"  layoutY="34" prefWidth="150.0" />
+	   <Separator prefHeight="0.0" layoutX="15.0"  layoutY="34" prefWidth="170.0" />
 
-       <Button fx:id="land_command"    layoutX="15.0"    layoutY="40" prefHeight="19" prefWidth="70.0" text="Landing"/>
-       <Button fx:id="takeoff_command" layoutX="95.0" layoutY="40" prefHeight="19" prefWidth="70.0" text="TakeOff"/>
+       <Button fx:id="land_command"    layoutX="15.0"    layoutY="40" prefHeight="19" prefWidth="80.0" text="Landing"/>
+       <Button fx:id="takeoff_command" layoutX="105.0" layoutY="40" prefHeight="19" prefWidth="80.0" text="TakeOff"/>
 
 
-       <Button fx:id="rtl_command" layoutX="15.0" layoutY="65" prefHeight="19" prefWidth="70.0" text="RTL"/>
+       <Button fx:id="rtl_command" layoutX="15.0" layoutY="65" prefHeight="19" prefWidth="80.0" text="RTL"/>
 <!--
        <Button fx:id="vis_reset"   layoutX="95.0" layoutY="65" prefHeight="19" prefWidth="70.0" text="Vis.Reset"/>
 -->
-       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="100" prefWidth="150.0" />
+       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="100" prefWidth="170.0" />
 
-       <Button fx:id="emergency" layoutX="15.0" layoutY="110" prefHeight="19" prefWidth="150.0"
+       <Button fx:id="emergency" layoutX="15.0" layoutY="110" prefHeight="19" prefWidth="170.0"
                text="Emergency Stop [F12]" styleClass="emergency" />
 
-       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="135" prefWidth="150.0" />
+       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="135" prefWidth="170.0" />
 	</children>
 </fx:root>

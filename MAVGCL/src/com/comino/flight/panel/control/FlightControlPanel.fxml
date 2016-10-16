@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<fx:root prefWidth="190.0" type="javafx.scene.layout.Pane"
+<fx:root prefWidth="210.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 
 	<children>

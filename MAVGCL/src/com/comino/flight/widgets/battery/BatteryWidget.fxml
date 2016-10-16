@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import eu.hansolo.medusa.Gauge?>
 
-<fx:root  prefWidth="183.0"  type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root  prefWidth="203.0"  type="javafx.scene.layout.Pane" styleClass="widget"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane layoutX="7.0" layoutY="0.0" maxHeight="92" prefWidth="169.0">
+      <GridPane layoutX="7.0" layoutY="0.0" maxHeight="92" prefWidth="189.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES"  />
           <ColumnConstraints hgrow="SOMETIMES"  />

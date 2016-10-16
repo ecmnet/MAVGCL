@@ -10,12 +10,12 @@
 <?import javafx.scene.control.CheckBox?>
 <?import com.comino.flight.widgets.fx.controls.*?>
 
-<fx:root  prefWidth="183.0" type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root  prefWidth="203.0" type="javafx.scene.layout.Pane" styleClass="widget"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<GridPane layoutX="16.0" layoutY="10.0" prefWidth="157.0" >
+		<GridPane layoutX="16.0" layoutY="10.0" prefWidth="194.0" >
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" maxWidth="146.0"
+				<ColumnConstraints hgrow="SOMETIMES" maxWidth="175.0"
 					minWidth="10.0" prefWidth="240.0" />
 			</columnConstraints>
 			<rowConstraints>

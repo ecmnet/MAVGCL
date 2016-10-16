@@ -4,24 +4,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<fx:root prefHeight="143" prefWidth="183.0" type="javafx.scene.layout.Pane"
+<fx:root prefHeight="143" prefWidth="203.0" type="javafx.scene.layout.Pane"
 	styleClass="widget" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<Label layoutX="11.0" layoutY="14.0" text="Time axis" textFill="#1414da" />
 		<Separator layoutX="12.0" layoutY="27.0" prefHeight="0.0"
-			prefWidth="161.0" />
-		<ChoiceBox fx:id="totaltime" layoutX="130.0" layoutY="35.0"
-			prefHeight="19.0" prefWidth="42.0" />
+			prefWidth="176.0" />
+		<ChoiceBox fx:id="totaltime" layoutX="140.0" layoutY="35.0"
+			prefHeight="19.0" prefWidth="47.0" />
 		<Label layoutX="13.0" layoutY="39.0" text="Frame displayed (sec)" />
 		<Label layoutX="11.0" layoutY="57.0" text="Replay" textFill="#1414da" />
 		<Separator layoutX="13.0" layoutY="70.0" prefHeight="0.0"
-			prefWidth="161.0" />
+			prefWidth="176.0" />
 		<Slider fx:id="scroll" blockIncrement="20.0" layoutX="13.0"
-			prefWidth="161.0" layoutY="82.0" majorTickUnit="100.0" max="1000"
+			prefWidth="176.0" layoutY="82.0" majorTickUnit="100.0" max="1000"
 			min="0" prefHeight="13.0" value="0" />
 		<Separator layoutX="13.0" layoutY="102.0" prefHeight="0.0"
-			prefWidth="161.0" />
-		<ComboBox fx:id="keyfigures" prefHeight="19.0" prefWidth="161.0"
+			prefWidth="176.0" />
+		<ComboBox fx:id="keyfigures" prefHeight="19.0" prefWidth="176.0"
 			layoutY="112.0" layoutX="11.0" />
 
 	</children>
