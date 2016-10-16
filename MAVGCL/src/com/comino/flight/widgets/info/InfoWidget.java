@@ -31,107 +31,75 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets.messages;
+package com.comino.flight.widgets.info;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.LogMessage;
-import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 
-public class MessagesWidget extends WidgetPane  {
+public class InfoWidget extends WidgetPane  {
 
 	@FXML
 	private ListView<String> listview;
 
-	private IMAVController control;
 
-	private ScheduledFuture f = null;
-
-	private final SimpleDateFormat fo = new SimpleDateFormat("HH:mm:ss");
 	private ConcurrentLinkedQueue<LogMessage> list = null;
 
 
-	public MessagesWidget() {
+	public InfoWidget() {
+		super(300, true);
+		FXMLLoadHelper.load(this, "InfoWidget.fxml");
 
-		super(300);
 		list = new ConcurrentLinkedQueue<LogMessage>();
+	}
 
+	@FXML
+	private void initialize() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MessagesWidget.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-
-			throw new RuntimeException(exception);
-		}
 	}
 
 	public void setup(IMAVController control) {
 
-		this.setOnMouseEntered(event -> {
-			if(f!=null)
-				f.cancel(true);
+		control.addMAVMessageListener( new IMAVMessageListener() {
+
+			@Override
+			public void messageReceived(LogMessage message) {
+
+				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG ) {
+					list.add(message);
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							synchronized(this) {
+								while(!list.isEmpty()) {
+									String s = list.poll().msg;
+									if(s.length()>40) {
+										s = s.substring(0, 40);
+									}
+									listview.getItems().add(s);
+								}
+							}
+							listview.scrollTo(listview.getItems().size()-1);
+						}
+					});
+				}
+			}
+
 		});
-
-		this.setOnMouseExited(event -> {
-			fadeProperty().setValue(false);
-		});
-
-		fadeProperty().setValue(false);
-
-		disableProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.booleanValue())
-				fadeProperty().setValue(false);
-
-		});
-
-//		control.addMAVMessageListener( new IMAVMessageListener() {
-//
-//
-//			@Override
-//			public void messageReceived(LogMessage message) {
-//
-//				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG  && !isDisabled()) {
-//					list.add(message);
-//					Platform.runLater(new Runnable() {
-//
-//						@Override
-//						public void run() {
-//							synchronized(this) {
-//								while(!list.isEmpty()) {
-//									LogMessage m = list.poll();
-//									fadeProperty().setValue(true);
-//									listview.getItems().add(fo.format(new Date(m.tms))+" : \t"+m.msg);
-//								}
-//							}
-//							listview.scrollTo(listview.getItems().size()-1);
-//							fadeProperty().setValue(true);
-//						}
-//					});
-//					showMessages();
-//				}
-//			}
-//
-//		});
 
 		listview.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
 			@Override
@@ -143,28 +111,9 @@ public class MessagesWidget extends WidgetPane  {
 				});
 			}
 		});
-	}
-
-	public void showMessages() {
-
-		if(listview.getItems().isEmpty()) {
-			fadeProperty().setValue(false);
-			return;
-		}
 
 
-		fadeProperty().setValue(true);
 
-		if(f!=null) {
-			f.cancel(true);
-		}
-
-		f = ExecutorService.get().schedule(new Runnable() {
-			@Override
-			public void run() {
-				fadeProperty().setValue(false);
-			}
-		},3,TimeUnit.SECONDS);
 	}
 
 }

@@ -5,6 +5,7 @@
 <?import com.comino.flight.widgets.charts.control.ChartControlWidget?>
 <?import com.comino.flight.widgets.battery.BatteryWidget?>
 <?import com.comino.flight.widgets.air.AirWidget?>
+<?import com.comino.flight.widgets.info.InfoWidget?>
 <?import com.comino.flight.widgets.commander.CommanderWidget?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
@@ -23,6 +24,7 @@
 				<RecordControlWidget fx:id="recordcontrol" />
 				<ChartControlWidget fx:id="chartcontrol" />
 				<CommanderWidget fx:id="commander"/>
+				<InfoWidget fx:id="info"/>
 			</children>
 		</VBox>
 	</children>

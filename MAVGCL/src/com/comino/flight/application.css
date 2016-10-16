@@ -140,6 +140,21 @@
 }
 
 .list-view  {
+	-fx-background-color: #303030;
+    -fx-control-inner-background:  #303030;
+    -fx-background-radius: 10.0;
+    -fx-box-border: #B0B0B0;
+    -fx-border-radius: 10.0px;
+    -fx-border-insets: 0.0px;
+    -fx-padding: 4;
+}
+
+.list-cell {
+	-fx-font-size: 5.0pt;
+    -fx-background-color: #303030;
+}
+
+.messages  {
     -fx-background-radius: 10.0;
     -fx-background-color: rgba(130, 120, 0, 0.8);
     -fx-control-inner-background: rgba(130, 120, 0, 0.0);

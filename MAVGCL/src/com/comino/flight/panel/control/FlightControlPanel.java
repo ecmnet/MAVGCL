@@ -39,6 +39,7 @@ import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.commander.CommanderWidget;
 import com.comino.flight.widgets.control.ControlWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
+import com.comino.flight.widgets.info.InfoWidget;
 import com.comino.flight.widgets.record.control.RecordControlWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
@@ -72,6 +73,9 @@ public class FlightControlPanel extends Pane  {
 	@FXML
 	private CommanderWidget commander;
 
+	@FXML
+	private InfoWidget info;
+
 	public FlightControlPanel() {
 		FXMLLoadHelper.load(this, "FlightControlPanel.fxml");
 	}
@@ -102,6 +106,8 @@ public class FlightControlPanel extends Pane  {
 
 		if(air!=null)
 			  air.setup(control);
+
+		info.setup(control);
 	}
 
 }
