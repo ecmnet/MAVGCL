@@ -69,7 +69,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
-	private int totalCount = 0;
+
 
 	public static PX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
@@ -139,8 +139,6 @@ public class PX4Parameters implements IMAVLinkListener {
 
 			if(msg.param_id[0]=='_')
 				return;
-
-			this.totalCount = msg.param_count;
 
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
