@@ -160,7 +160,6 @@ public class MainApp extends Application  {
 			MSPLogger.getInstance(control);
 			PX4Parameters.getInstance(control);
 
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -179,8 +178,6 @@ public class MainApp extends Application  {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	@Override
@@ -224,8 +221,6 @@ public class MainApp extends Application  {
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		   // primaryStage.setAlwaysOnTop(true);
-
 
 		} catch (IOException e) {
 			e.printStackTrace();
