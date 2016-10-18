@@ -48,6 +48,7 @@ import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
@@ -73,7 +74,7 @@ public class ExperimentalWidget extends WidgetPane  {
 	private CheckBox offboard_enabled;
 
 	@FXML
-	private CheckBox vision_enabled;
+	private CheckBox mavlink_enabled;
 
 	@FXML
 	private Button althold_command;
@@ -141,15 +142,13 @@ public class ExperimentalWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-		vision_enabled.selectedProperty().addListener((v,ov,nv) -> {
-			if(control.isSimulation()) {
-				if(nv.booleanValue())  {
-					vision.start();
-				} else {
-					vision.stop();
-				}
-			}
-		});
+//		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
+//				if(nv.booleanValue())  {
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START);
+//				} else {
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+//				}
+//		});
 
 		vis_reset.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -252,8 +251,6 @@ public class ExperimentalWidget extends WidgetPane  {
 		x_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
 				offboard.setNEDX(newvalue.intValue()/100f);
-			if(vision_enabled.isSelected())
-				vision.setSpeedX(newvalue.intValue()/1000f);
 		});
 
 		x_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -270,8 +267,6 @@ public class ExperimentalWidget extends WidgetPane  {
 		y_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
 				offboard.setNEDY(newvalue.intValue()/100f);
-			if(vision_enabled.isSelected())
-				vision.setSpeedY(newvalue.intValue()/1000f);
 		});
 
 		y_control.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -285,10 +280,17 @@ public class ExperimentalWidget extends WidgetPane  {
 
 	}
 
+//	@Override
+//	public void received(Object o) {
+//		if(o instanceof msg_logging_data)
+//     System.out.println(o);
+//	}
+
 
 	public void setup(IMAVController control) {
 
 		this.control = control;
+//		this.control.addMAVLinkListener(this);
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
 		vision = new VisionSpeedSimulationUpdater(control);
