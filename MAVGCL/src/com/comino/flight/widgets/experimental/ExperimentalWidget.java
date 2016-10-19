@@ -64,7 +64,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-public class ExperimentalWidget extends WidgetPane  {
+public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  {
 
 
 	@FXML
@@ -142,13 +142,18 @@ public class ExperimentalWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-//		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
-//				if(nv.booleanValue())  {
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START);
-//				} else {
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-//				}
-//		});
+		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
+//			if(nv.booleanValue())  {
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START);
+//				msg_logging_ack ack = new msg_logging_ack(255,1);
+//				ack.target_component=1;
+//				ack.target_system=1;
+//				ack.sequence=1;
+//				control.sendMAVLinkMessage(ack);
+//			} else {
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+//			}
+		});
 
 		vis_reset.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -280,11 +285,17 @@ public class ExperimentalWidget extends WidgetPane  {
 
 	}
 
-//	@Override
-//	public void received(Object o) {
-//		if(o instanceof msg_logging_data)
-//     System.out.println(o);
-//	}
+	@Override
+	public void received(Object o) {
+//		if(o instanceof msg_logging_data_acked)
+//			System.out.println(o);
+//			msg_logging_ack ack = new msg_logging_ack(255,1);
+//			ack.target_component=1;
+//			ack.target_system=1;
+//			ack.sequence=1;
+//			control.sendMAVLinkMessage(ack);
+
+	}
 
 
 	public void setup(IMAVController control) {
