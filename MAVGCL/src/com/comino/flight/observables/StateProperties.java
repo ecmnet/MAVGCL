@@ -53,7 +53,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
-	private BooleanProperty landedProperty = new SimpleBooleanProperty();
+	private BooleanProperty landedProperty = new SimpleBooleanProperty(true);
 	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
 
