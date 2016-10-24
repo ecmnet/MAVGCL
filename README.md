@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 16/10/2016 
+**Development Status:** Last updated 24/10/2016 
 
-- Message display-widget
+- MAVLink 2.0 compatibility (in progress: inbound message parsing working)
 
 **Features:**
 
