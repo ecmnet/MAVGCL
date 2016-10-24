@@ -40,6 +40,8 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.lquac.msg_logging_ack;
+import org.mavlink.messages.lquac.msg_logging_data_acked;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
@@ -143,16 +145,16 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 	private void initialize() {
 
 		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
-//			if(nv.booleanValue())  {
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START);
+			if(nv.booleanValue())  {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 //				msg_logging_ack ack = new msg_logging_ack(255,1);
 //				ack.target_component=1;
 //				ack.target_system=1;
 //				ack.sequence=1;
 //				control.sendMAVLinkMessage(ack);
-//			} else {
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-//			}
+			} else {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+			}
 		});
 
 		vis_reset.setOnAction((ActionEvent event)-> {
@@ -287,13 +289,14 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 
 	@Override
 	public void received(Object o) {
-//		if(o instanceof msg_logging_data_acked)
-//			System.out.println(o);
-//			msg_logging_ack ack = new msg_logging_ack(255,1);
-//			ack.target_component=1;
-//			ack.target_system=1;
-//			ack.sequence=1;
-//			control.sendMAVLinkMessage(ack);
+		if(o instanceof msg_logging_data_acked) {
+			msg_logging_data_acked log = (msg_logging_data_acked)o;
+			msg_logging_ack ack = new msg_logging_ack(255,1);
+			ack.target_component=1;
+			ack.target_system=1;
+			ack.sequence=log.sequence;
+			control.sendMAVLinkMessage(ack);
+		}
 
 	}
 
@@ -301,7 +304,7 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 	public void setup(IMAVController control) {
 
 		this.control = control;
-//		this.control.addMAVLinkListener(this);
+		this.control.addMAVLinkListener(this);
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
 		vision = new VisionSpeedSimulationUpdater(control);

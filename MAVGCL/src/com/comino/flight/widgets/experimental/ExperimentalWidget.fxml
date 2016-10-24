@@ -25,9 +25,9 @@
 		<children>
 		    <Label text="Experimental vehicle control" GridPane.rowIndex="0" />
 			<CheckBox fx:id="offboard_enabled" prefWidth="80.0" text="offboard" GridPane.rowIndex="1" />
-<!--
+
 			<CheckBox fx:id="mavlink_enabled" prefWidth="161.0" text="MAVLINK Logging" GridPane.rowIndex="2" />
--->
+
 			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="3" />
 			<Button fx:id="poshold_command" prefWidth="161.0" text="Pos.hold" GridPane.rowIndex="4" />
 			<Button fx:id="vis_reset"  prefWidth="161.0" text="Vis.Reset" GridPane.rowIndex="5"/>
