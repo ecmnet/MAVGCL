@@ -147,11 +147,6 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())  {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
-//				msg_logging_ack ack = new msg_logging_ack(255,1);
-//				ack.target_component=1;
-//				ack.target_system=1;
-//				ack.sequence=1;
-//				control.sendMAVLinkMessage(ack);
 			} else {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			}
@@ -294,7 +289,7 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 			msg_logging_ack ack = new msg_logging_ack(255,1);
 			ack.target_component=1;
 			ack.target_system=1;
-			ack.sequence=log.sequence;
+			ack.sequence = log.sequence;
 			control.sendMAVLinkMessage(ack);
 		}
 
@@ -304,7 +299,7 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 	public void setup(IMAVController control) {
 
 		this.control = control;
-		this.control.addMAVLinkListener(this);
+    	this.control.addMAVLinkListener(this);
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
 		vision = new VisionSpeedSimulationUpdater(control);
