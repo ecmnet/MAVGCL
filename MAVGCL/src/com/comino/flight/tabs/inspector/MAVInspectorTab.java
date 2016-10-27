@@ -215,7 +215,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			for(String v : msg)
 				if(v.contains("=")) {
 					String[] p = v.split("=");
+					try {
 					data.getData().get(p[0]).setValue(p[1]);
+					} catch(Exception k) {  System.out.println(_msg); }
 				}
 		}
 
