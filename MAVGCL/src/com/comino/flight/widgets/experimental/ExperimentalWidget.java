@@ -285,6 +285,7 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 	@Override
 	public void received(Object o) {
 		if(o instanceof msg_logging_data_acked) {
+			System.out.println(o);
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 			msg_logging_ack ack = new msg_logging_ack(255,1);
 			ack.target_component=1;
