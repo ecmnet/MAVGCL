@@ -14,9 +14,15 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 28/10/2016 
 
+- Available as pre-release
+
 - MAVLink 2.0 compatibility (in progress: MAVGCL switch to MAVLink 2.0 completed, parsing Logging packages ongoing)
+
 - UDP connection reliability and performance improved 
+
 - Performance optimizations
+
+  Note, that developer builds require MAVLink 2.0 protocol without signing
 
 **Features:**
 
