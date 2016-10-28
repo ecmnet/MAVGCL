@@ -37,6 +37,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.lquac.msg_heartbeat;
+
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.px4log.MAVPX4LogReader;
@@ -155,9 +158,11 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,port,14550, false);
 
 			StateProperties.getInstance(control);
+
 			AnalysisModelService.getInstance(control);
 
 			MSPLogger.getInstance(control);
+
 			PX4Parameters.getInstance(control);
 
 		} catch(Exception e) {
@@ -302,6 +307,8 @@ public class MainApp extends Application  {
 
 		notifyPreloader(new StateChangeNotification(
 				StateChangeNotification.Type.BEFORE_START));
+
+
 	}
 
 
@@ -326,14 +333,12 @@ public class MainApp extends Application  {
 
 			statusline.setup(controlpanel.getChartControl(),control);
 
-			if(!control.isConnected())
-				control.connect();
-
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
-
+			if(!control.isConnected())
+				control.connect();
 
 		} catch (IOException e) {
 			e.printStackTrace();

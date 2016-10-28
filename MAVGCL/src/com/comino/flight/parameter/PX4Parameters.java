@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
@@ -92,8 +93,9 @@ public class PX4Parameters implements IMAVLinkListener {
 		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				if(newValue && control.isConnected())
+				if(newValue && control.isConnected()) {
 				  refreshParameterList();
+				}
 			}
 		});
 
@@ -109,8 +111,6 @@ public class PX4Parameters implements IMAVLinkListener {
 	}
 
 	public void refreshParameterList() {
-		MSPLogger.getInstance().writeLocalMsg("Reading params (PX4 version "+control.getCurrentModel().sys.version+")",
-				    MAV_SEVERITY.MAV_SEVERITY_INFO);
 		property.setValue(null);
 		parameterList.clear();
 		msg_param_request_list msg = new msg_param_request_list(255,1);
@@ -118,6 +118,8 @@ public class PX4Parameters implements IMAVLinkListener {
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
 		isLoaded.set(false);
+		MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
+			    MAV_SEVERITY.MAV_SEVERITY_INFO);
 	}
 
 
