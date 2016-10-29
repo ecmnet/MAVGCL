@@ -157,6 +157,11 @@ public class DetailsWidget extends WidgetPane  {
 		};
 	}
 
+	@FXML
+	private void initialize() {
+		this.setWidth(getPrefWidth());
+	}
+
 	public void setup(IMAVController control) {
 
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
