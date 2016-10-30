@@ -467,7 +467,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				current_x_pt = dataService.calculateX0Index(1);
 				scroll.setValue(1);
-				refreshChart();
+				updateRequest();
 			}
 		});
 
