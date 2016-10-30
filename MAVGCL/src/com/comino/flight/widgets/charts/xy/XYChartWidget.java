@@ -465,7 +465,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x_pt = 0;
+				current_x_pt = dataService.calculateX0Index(1);
 				scroll.setValue(1);
 				refreshChart();
 			}
