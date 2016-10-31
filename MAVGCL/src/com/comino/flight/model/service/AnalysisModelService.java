@@ -189,11 +189,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public int calculateX0Index(double factor) {
-		int current_x0_pt = (int)(
-				( modelList.size()
-						- totalTime_sec *  1000f
-						/ getCollectorInterval_ms())
-				* factor);
+		int current_x0_pt = (int)((modelList.size() - totalTime_sec *  1000f / getCollectorInterval_ms()) * factor);
 
 		if(current_x0_pt<0)
 			current_x0_pt = 0;
@@ -203,9 +199,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public int calculateX1Index(double factor) {
 
-		int current_x1_pt = calculateX0Index(factor) +
-				(int)(totalTime_sec *  1000f
-						/ getCollectorInterval_ms());
+		int current_x1_pt = calculateX0Index(factor) + (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
 
 		if(current_x1_pt>modelList.size()-1)
 			current_x1_pt = modelList.size()-1;
