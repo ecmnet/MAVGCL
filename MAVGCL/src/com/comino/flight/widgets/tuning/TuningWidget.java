@@ -229,8 +229,17 @@ public class TuningWidget extends WidgetPane  {
 					    	 groups.requestFocus();
 					 });
 				}
-				else
+				else {
 					this.editor = new TextField();
+					this.editor.setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER)
+							groups.requestFocus();
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							groups.requestFocus();
+						}
+					});
+				}
 			}
 
 			this.editor.setPrefWidth(85);
@@ -243,19 +252,13 @@ public class TuningWidget extends WidgetPane  {
 
 			setValueOf(editor,att.value);
 
-			this.editor.setOnKeyPressed(keyEvent -> {
-				if(keyEvent.getCode() == KeyCode.ENTER)
-					groups.requestFocus();
-				if(keyEvent.getCode() == KeyCode.ESCAPE) {
-					setValueOf(editor,att.value);
-					groups.requestFocus();
-				}
-			});
 
 			this.editor.focusedProperty().addListener(new ChangeListener<Boolean>() {
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-					if(!newValue.booleanValue()) {
+
+					if(!editor.isFocused()) {
+
 						try {
 
 							float val =  getValueOf(editor);
@@ -357,11 +360,8 @@ public class TuningWidget extends WidgetPane  {
 
 	private class SpinnerAttributeFactory extends DoubleSpinnerValueFactory {
 
-		private ParameterAttributes att = null;
-
 		public SpinnerAttributeFactory(ParameterAttributes att) {
 			super(att.min_val, att.max_val, att.value, att.increment);
-			this.att = att;
 			if(att.increment==0)
 				this.setAmountToStepBy(1);
 
