@@ -398,43 +398,39 @@ public class MAVParameterTab extends Pane {
 				this.textField.setContextMenu(ctxm);
 			}
 
-			this.textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-				@Override
-				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-					if(!newValue.booleanValue()) {
-						try {
+			this.textField.textProperty().addListener((o,oldValue,newValue) -> {
 
-							float val =  Float.parseFloat(textField.getText());
-							if(val!=value) {
+				if(newValue!=null) {
+					try {
 
-								if((val >= att.min_val && val <= att.max_val) ||
-										att.min_val == att.max_val ) {
+						float val =  Float.parseFloat(newValue);
 
-									textField.setStyle("-fx-text-fill: #80D0F0;");
+						if(val!=value) {
+							if((val >= att.min_val && val <= att.max_val) ||
+									att.min_val == att.max_val ) {
+								textField.setStyle("-fx-text-fill: #80D0F0;");
 
-									msg_param_set msg = new msg_param_set(255,1);
-									msg.target_component = 1;
-									msg.target_system = 1;
-									msg.param_type = type;
-									msg.setParam_id(att.name);
-									msg.param_value = ParamUtils.valToParam(type, val);
+								msg_param_set msg = new msg_param_set(255,1);
+								msg.target_component = 1;
+								msg.target_system = 1;
+								msg.param_type = type;
+								msg.setParam_id(att.name);
+								msg.param_value = ParamUtils.valToParam(type, val);
 
-									control.sendMAVLinkMessage(msg);
-									textField.commitValue();
+								control.sendMAVLinkMessage(msg);
+								textField.commitValue();
 
-								}
-								else {
-									log.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")");
-									textField.setText(getStringOfValue());
-								}
 							}
-						} catch(NumberFormatException e) {
-							textField.setText(getStringOfValue());
+							else {
+								log.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")");
+								textField.setText(getStringOfValue());
+							}
 						}
-						treetableview.getSelectionModel().clearSelection();
+					} catch(NumberFormatException e) {
+						textField.setText(getStringOfValue());
 					}
+					treetableview.getSelectionModel().clearSelection();
 				}
-
 			});
 
 			this.textField.setOnKeyPressed(new EventHandler<KeyEvent>()
