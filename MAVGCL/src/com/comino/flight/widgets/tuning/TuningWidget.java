@@ -187,11 +187,11 @@ public class TuningWidget extends WidgetPane  {
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
 							setValueOf(editor,getValueOf(sp.getEditor()));
-							editor.getParent().requestFocus();
+							groups.requestFocus();
 						}
 						if(keyEvent.getCode() == KeyCode.ESCAPE) {
 							setValueOf(editor,att.value);
-							editor.getParent().requestFocus();
+							groups.requestFocus();
 						}
 					});
 				} else {
@@ -201,11 +201,11 @@ public class TuningWidget extends WidgetPane  {
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
 							setValueOf(editor,getValueOf(sp.getEditor()));
-							editor.getParent().requestFocus();
+							groups.requestFocus();
 						}
 						if(keyEvent.getCode() == KeyCode.ESCAPE) {
 							setValueOf(editor,att.value);
-							editor.getParent().requestFocus();
+							groups.requestFocus();
 						}
 					});
 				}
@@ -226,9 +226,7 @@ public class TuningWidget extends WidgetPane  {
 					});
 					cb.getSelectionModel().
 					     selectedItemProperty().addListener((v,ov,nv) -> {
-					    	 if(editor.getParent()!=null) {
-					    	    editor.getParent().requestFocus();
-					    	 }
+					    	 groups.requestFocus();
 					 });
 				}
 				else
@@ -247,10 +245,10 @@ public class TuningWidget extends WidgetPane  {
 
 			this.editor.setOnKeyPressed(keyEvent -> {
 				if(keyEvent.getCode() == KeyCode.ENTER)
-					editor.getParent().requestFocus();
+					groups.requestFocus();
 				if(keyEvent.getCode() == KeyCode.ESCAPE) {
 					setValueOf(editor,att.value);
-					editor.getParent().requestFocus();
+					groups.requestFocus();
 				}
 			});
 
