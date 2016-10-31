@@ -57,7 +57,6 @@ public class FirstPreloader extends Preloader {
     	bar = new ProgressBar(0);
     	bar.setPrefHeight(5); bar.setPrefWidth(600);
         splashLayout.getChildren().addAll(splash,bar);
-        splashLayout.getChildren().addAll();
         Scene scene =  new Scene(splashLayout, 600,151);
     	return scene;
     }
@@ -65,7 +64,6 @@ public class FirstPreloader extends Preloader {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         stage.setScene(createPreloaderScene());
-        //stage.setAlwaysOnTop(true);
         stage.show();
     }
 
