@@ -1,4 +1,4 @@
-package me.drton.jmavlib.log;
+package com.comino.jmavlib.extensions;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -7,20 +7,31 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SeekableByteChannel;
 
+import com.comino.msp.main.control.listener.IMAVLinkListener;
+
+import me.drton.jmavlib.log.LogReader;
+
 
 /**
  * User: ton Date: 03.06.13 Time: 14:51
  */
-public abstract class BinaryLogReader implements LogReader {
+public abstract class MAVLinkLogReader implements LogReader {
     protected ByteBuffer buffer;
     protected SeekableByteChannel channel = null;
     protected long channelPosition = 0;
 
-    public BinaryLogReader(String fileName) throws IOException {
+    public MAVLinkLogReader() throws IOException {
         buffer = ByteBuffer.allocate(8192);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.flip();
-        channel = new RandomAccessFile(fileName, "r").getChannel();
+        channel = new SeekableInMemoryByteChannel();
+    }
+
+    public void addDataPacket(int[] data, int len) throws IOException {
+    	ByteBuffer b = ByteBuffer.allocateDirect(len);
+    	for(int i=0;i<len;i++)
+			b.put((byte)(data[i] & 0x00FF));
+    	channel.write(b);
     }
 
     @Override

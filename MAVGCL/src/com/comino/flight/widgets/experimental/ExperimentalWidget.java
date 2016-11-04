@@ -66,7 +66,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  {
+public class ExperimentalWidget extends WidgetPane   {
 
 
 	@FXML
@@ -282,25 +282,12 @@ public class ExperimentalWidget extends WidgetPane implements IMAVLinkListener  
 
 	}
 
-	@Override
-	public void received(Object o) {
-		if(o instanceof msg_logging_data_acked) {
-			System.out.println(o);
-			msg_logging_data_acked log = (msg_logging_data_acked)o;
-			msg_logging_ack ack = new msg_logging_ack(255,1);
-			ack.target_component=1;
-			ack.target_system=1;
-			ack.sequence = log.sequence;
-			control.sendMAVLinkMessage(ack);
-		}
 
-	}
 
 
 	public void setup(IMAVController control) {
 
 		this.control = control;
-    	this.control.addMAVLinkListener(this);
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
 		vision = new VisionSpeedSimulationUpdater(control);

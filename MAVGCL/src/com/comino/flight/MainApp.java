@@ -43,6 +43,7 @@ import org.mavlink.messages.lquac.msg_heartbeat;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.px4log.MAVPX4LogReader;
+import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -164,6 +165,8 @@ public class MainApp extends Application  {
 			MSPLogger.getInstance(control);
 
 			PX4Parameters.getInstance(control);
+
+			new ULogFromMAVLinkReader(control);
 
 		} catch(Exception e) {
 			e.printStackTrace();
