@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 /**
  * Created by ton on 26.10.15.
  */
-class FieldFormat {
+public class FieldFormat {
     public final String name;
     public final String type;
     public final int size; //array length (-1 if not an array)
@@ -36,7 +36,7 @@ class FieldFormat {
 
     }
 
-    boolean isArray() {
+    public boolean isArray() {
         return size >= 0 && !"char".equals(type);
     }
 

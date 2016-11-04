@@ -20,18 +20,26 @@ public abstract class MAVLinkLogReader implements LogReader {
     protected SeekableByteChannel channel = null;
     protected long channelPosition = 0;
 
-    public MAVLinkLogReader() throws IOException {
+    public MAVLinkLogReader()  {
         buffer = ByteBuffer.allocate(8192);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.flip();
         channel = new SeekableInMemoryByteChannel();
     }
 
+    public void clear() {
+    	 channel = new SeekableInMemoryByteChannel();
+    }
+
+    public long size() throws IOException {
+   	  return channel.size();
+   }
+
     public void addDataPacket(int[] data, int len) throws IOException {
-    	ByteBuffer b = ByteBuffer.allocateDirect(len);
+    	byte[] in = new byte[len];
     	for(int i=0;i<len;i++)
-			b.put((byte)(data[i] & 0x00FF));
-    	channel.write(b);
+			in[i]= (byte)(data[i] & 0x00FF);
+    	channel.write(ByteBuffer.wrap(in));
     }
 
     @Override

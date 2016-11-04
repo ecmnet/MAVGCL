@@ -147,7 +147,7 @@ public class ULogReader extends BinaryLogReader {
 
     /**
      * Read and parse the file header.
-     * 
+     *
      * @throws IOException
      * @throws FormatErrorException
      */
@@ -181,7 +181,7 @@ public class ULogReader extends BinaryLogReader {
     /**
      * Read all necessary information from the file, including message formats,
      * seeking positions and log file information.
-     * 
+     *
      * @throws IOException
      * @throws FormatErrorException
      */
