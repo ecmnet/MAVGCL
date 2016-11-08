@@ -21,7 +21,7 @@ public abstract class MAVLinkLogReader implements LogReader {
     protected long channelPosition = 0;
 
     public MAVLinkLogReader()  {
-        buffer = ByteBuffer.allocate(8192);
+        buffer = ByteBuffer.allocate(32768);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.flip();
         channel = new SeekableInMemoryByteChannel();
