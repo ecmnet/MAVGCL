@@ -41,7 +41,7 @@ public class UlogMAVLinkParser {
 
 	// Data map
 
-	private Map<String, Object> update = new HashMap<String, Object>();
+	private Map<String, Object> data = new HashMap<String, Object>();
 
 	// System info
 	private String systemName;
@@ -71,14 +71,19 @@ public class UlogMAVLinkParser {
 		}
 	}
 
-	public void reset(boolean clearMetaData) {
-		if(clearMetaData) {
-			messageFormats.clear();
-			parameters.clear();
-			parameterUpdates.clear();
-			messageSubscriptions.clear();
-			fieldsList.clear();
-		}
+	public Map<String, Object> getDataBuffer() {
+		return data;
+	}
+
+	public void reset() {
+		messageFormats.clear();
+		parameters.clear();
+		parameterUpdates.clear();
+		messageSubscriptions.clear();
+		fieldsList.clear();
+		data.clear();
+
+		nestedParsingDone = false;
 		buffer.clear();
 	}
 
@@ -87,30 +92,31 @@ public class UlogMAVLinkParser {
 	}
 
 	public boolean parseHeader() {
+
 		buffer.flip();
 		logStartTimestamp = 0;
 		if (!checkHeader())
 			return false;
 		readHeader();
+		buffer.clear();
 		System.out.println("MAVLink logging started at: " + logStartTimestamp);
 		return true;
 	}
 
 	public void parseData() {
-		Object msg = null; double time = 0;
+		Object msg = null;
 		buffer.flip();
 		while ((msg = readMessage()) != null) {
-			if (timeStart < 0) {
-				timeStart = ((MessageData)msg).timestamp;
+			if(msg instanceof MessageData) {
+				if (timeStart < 0)
+					timeStart = ((MessageData)msg).timestamp;
+				applyMsg(data, (MessageData) msg);
 			}
-			applyMsg(update, (MessageData) msg);
-			time = ((MessageData) msg).timestamp / 1e6f;
-			System.out.println(update.get("vehicle_local_position_0.z"));
 		}
 		buffer.compact();
 	}
 
-	private void readHeader()  {
+	private void readHeader()   {
 		Object msg = null;  long lastTime = -1;
 
 		while ((msg = readMessage()) != null) {
@@ -209,7 +215,7 @@ public class UlogMAVLinkParser {
 		}
 	}
 
-	public Object readMessage() {
+	public Object readMessage()  {
 
 		int s1 = buffer.get() & 0xFF;
 		int s2 = buffer.get() & 0xFF;
@@ -220,10 +226,9 @@ public class UlogMAVLinkParser {
 			buffer.position(buffer.position()-3);
 			return null;
 		}
-
 		switch (msgType) {
-
 		case MESSAGE_TYPE_DATA:
+
 			s1 = buffer.get() & 0xFF;
 			s2 = buffer.get() & 0xFF;
 			int msgID = s1 + (256 * s2);

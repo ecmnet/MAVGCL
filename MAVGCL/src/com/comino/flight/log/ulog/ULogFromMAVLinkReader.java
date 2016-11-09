@@ -1,5 +1,7 @@
 package com.comino.flight.log.ulog;
 
+import java.util.Map;
+
 import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
@@ -17,7 +19,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private final int STATE_HEADER_WAIT				= 1;
 	private final int STATE_DATA            		= 2;
 
-
 	private IMAVController control   = null;
 	private int state = STATE_HEADER_IDLE;
 	private UlogMAVLinkParser parser = null;
@@ -28,7 +29,10 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		this.parser = new UlogMAVLinkParser();
 		this.control = control;
 		this.control.addMAVLinkListener(this);
+	}
 
+	public Map<String, Object> getData() {
+		return parser.getDataBuffer();
 	}
 
 	@Override
@@ -36,9 +40,10 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		if( o instanceof msg_logging_data_acked) {
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
-				parser.reset(true);
+				parser.reset();
 				package_processed = 0;
 				state = STATE_HEADER_WAIT;
+				System.out.println("Start reading header");
 			}
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 			msg_logging_ack ack = new msg_logging_ack(255,1);
@@ -51,10 +56,10 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				System.err.println(package_processed+":"+log.sequence);
 
 			if(package_processed++ > 127) {
+				System.out.println("Start parsing header");
 				if(parser.parseHeader()) {
 					System.out.println(parser.getSystemInfo());
 					state = STATE_DATA;
-					parser.reset(false);
 				}
 			}
 		}
@@ -63,11 +68,13 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_DATA) {
 				msg_logging_data log = (msg_logging_data)o;
 				if(package_processed != log.sequence) {
-					package_processed = log.sequence;
-					// ====> resync does not work as well as stopping and restarting logging does not work
-					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
-				} else
-				    parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
+					System.out.println("X");
+//					package_processed = log.sequence;
+//					// ====> resync does not work as well as stopping and restarting logging does not work
+//					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
+				}
+					//else
+				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
                 parser.parseData();
 				package_processed++;
 			}
@@ -76,10 +83,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	}
 
-
-
-
-
+//  helpers for dev
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static String bytesToHex(byte[] bytes, int len) {
 		char[] hexChars = new char[len * 2];
