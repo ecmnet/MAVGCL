@@ -261,8 +261,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 			while(true) {
 				current.msg = null; wait = System.nanoTime();
 				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-				if(ulogger.isLogging())
+				if(ulogger.isLogging()) {
+				//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 			        record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+				}
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg; record.msg = model.msg;
 					tms = current.msg.tms+100;
