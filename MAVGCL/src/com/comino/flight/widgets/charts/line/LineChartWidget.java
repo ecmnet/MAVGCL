@@ -577,18 +577,21 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			series2.getData().clear();
 			series3.getData().clear();
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			last_annotation_pos = 0;
+			yoffset = 0;
 
-			if(dash.isSelected() && dataService.getModelList().size()>0) {
+			if(dash.isSelected()) {
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 				if(type2.hash!=0)
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				if(type3.hash!=0)
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
-			}
 
-			last_annotation_pos = 0;
-			yoffset = 0;
+				setDashboardData(dashboard1,type1);
+				setDashboardData(dashboard2,type2);
+				setDashboardData(dashboard3,type3);
+			}
 
 			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
