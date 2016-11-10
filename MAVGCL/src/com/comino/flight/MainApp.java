@@ -166,8 +166,6 @@ public class MainApp extends Application  {
 
 			PX4Parameters.getInstance(control);
 
-			new ULogFromMAVLinkReader(control);
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

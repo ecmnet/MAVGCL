@@ -36,9 +36,11 @@ package com.comino.flight.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
@@ -59,10 +61,14 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private static final int MODELCOLLECTOR_INTERVAL_US = 50000;
 
-	private DataModel								model       = null;
-	private AnalysisDataModel				    	current     = null;
-	private ArrayList<AnalysisDataModel> 		    modelList   = null;
-	private StateProperties                         state       = null;
+	private DataModel								  model   = null;
+	private ULogFromMAVLinkReader                   ulogger   = null;
+	private AnalysisDataModel				    	current   = null;
+	private AnalysisDataModel                        record   = null;
+	private ArrayList<AnalysisDataModel> 		  modelList   = null;
+	private StateProperties                           state   = null;
+
+	private AnalysisDataModelMetaData                  meta  =  null;
 
 	private int     mode = 0;
 
@@ -80,10 +86,16 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 
 	private AnalysisModelService(IMAVController control) {
+
+		this.meta = AnalysisDataModelMetaData.getInstance();
+
 		this.modelList     = new ArrayList<AnalysisDataModel>();
 		this.model         = control.getCurrentModel();
 		this.current       =  new AnalysisDataModel();
+		this.record       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
+
+	    this.ulogger = new ULogFromMAVLinkReader(control);
 
 		control.addMAVLinkListener(this);
 
@@ -132,8 +144,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
-
-
+			 ulogger.enableLogging(true);
 			new Thread(new Collector(0)).start();
 		}
 		return mode != STOPPED;
@@ -143,6 +154,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public boolean stop() {
 		mode = STOPPED;
+		ulogger.enableLogging(false);
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -156,6 +168,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
+				ulogger.enableLogging(false);
 				mode = STOPPED;
 				try {
 					Thread.sleep(100);
@@ -167,9 +180,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public void setModelList(List<AnalysisDataModel> list) {
 		mode = STOPPED;
+		ulogger.enableLogging(false);
 		modelList.clear();
 		list.forEach((e) -> {
-			e.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+			e.calculateVirtualKeyFigures(meta);
 			modelList.add(e);
 
 		});
@@ -178,6 +192,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public void clearModelList() {
 		mode = STOPPED;
 		modelList.clear();
+		ulogger.enableLogging(false);
 	}
 
 	public void setTotalTimeSec(int totalTime) {
@@ -217,7 +232,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public void start(int pre_sec) {
 		if(mode==STOPPED) {
 			modelList.clear();
-
+            ulogger.enableLogging(true);
 			mode = PRE_COLLECTING;
 			new Thread(new Collector(pre_sec)).start();
 		}
@@ -235,24 +250,27 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
-		current.setValues(KeyFigureMetaData.MAV_SOURCE,_msg,AnalysisDataModelMetaData.getInstance());
+		record.setValues(KeyFigureMetaData.MAV_SOURCE,_msg,meta);
 	}
 
 	private class Converter implements Runnable {
 
 		@Override
 		public void run() {
-			long tms = 0;
+			long tms = 0; long wait = 0;
 			while(true) {
-				current.msg = null;
-				current.setValues(KeyFigureMetaData.MSP_SOURCE,model, AnalysisDataModelMetaData.getInstance());
+				current.msg = null; wait = System.nanoTime();
+				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+				if(ulogger.isLogging())
+			        record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 				if(model.msg != null && model.msg.tms > tms) {
-					current.msg = model.msg;
+					current.msg = model.msg; record.msg = model.msg;
 					tms = current.msg.tms+100;
-				} else
-					current.msg = null;
-				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
+				} else {
+					current.msg = null; record.msg = null;
+				}
+				record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
 			}
 		}
 	}
@@ -260,7 +278,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class Collector implements Runnable {
 
-		int pre_delay_count=0; int count = 0;
+		int pre_delay_count=0; int count = 0; long wait = 0;  AnalysisDataModel m = null;
 
 		public Collector(int pre_delay_sec) {
 			if(pre_delay_sec>0) {
@@ -276,12 +294,16 @@ public class AnalysisModelService implements IMAVLinkListener {
 			state.getRecordingProperty().set(true);
 			while(mode!=STOPPED) {
 				synchronized(this) {
-					AnalysisDataModel m = current.clone();
+					wait = System.nanoTime();
+					if(ulogger.isLogging())
+					  m = record.clone();
+					else
+					  m = current.clone();
 					m.tms = System.nanoTime() / 1000 - tms;
 					modelList.add(m);
 					count++;
 				}
-				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000);
+				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
 
 				if(mode==PRE_COLLECTING) {
 					int _delcount = count - pre_delay_count;
@@ -292,7 +314,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				}
 			}
-	    	state.getRecordingProperty().set(false);
+			state.getRecordingProperty().set(false);
 		}
 
 	}

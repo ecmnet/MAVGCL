@@ -1,11 +1,14 @@
 package com.comino.flight.log.ulog;
 
 import java.util.Map;
+import java.util.concurrent.locks.LockSupport;
 
+import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -33,6 +36,39 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	public Map<String, Object> getData() {
 		return parser.getDataBuffer();
+	}
+
+
+	public void enableLogging(boolean enable) {
+
+		if(enable && !MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
+			System.err.println("ULOG over MAVLink not enabled in preferences - using MSP data for logging");
+			return;
+		}
+
+		long tms = System.currentTimeMillis();
+		state = STATE_HEADER_IDLE;
+
+		if(enable)  {
+			if(state==STATE_DATA)
+			   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+			System.out.println("Start ulogging...");
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
+			while(state!=STATE_DATA ) {
+				LockSupport.parkNanos(10000000);
+				if((System.currentTimeMillis()-tms)>500) {
+					System.err.println("Logging via ULOGMAVLink could not be started");
+					return;
+				}
+			}
+			System.out.println("Logging via ULOGMAVLink started successfully");
+		} else {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+		}
+	}
+
+	public boolean isLogging() {
+		return state==STATE_DATA;
 	}
 
 	@Override

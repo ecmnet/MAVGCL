@@ -82,6 +82,9 @@ public class PreferencesDialog  {
 	@FXML
 	private CheckBox autosave;
 
+	@FXML
+	private CheckBox ulog;
+
 	private IMAVController control;
 	private Preferences userPrefs;
 
@@ -140,6 +143,7 @@ public class PreferencesDialog  {
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
+		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -148,6 +152,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
+			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 
 			try {
 				userPrefs.flush();
