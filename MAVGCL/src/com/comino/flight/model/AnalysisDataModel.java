@@ -54,11 +54,12 @@ public class AnalysisDataModel {
 
 	private AnalysisDataModel(Map<Integer,Float> d) {
 		this.data = new HashMap<Integer,Float>();
-		data.putAll(d);
+		this.data.putAll(d);
 	}
 
-	public AnalysisDataModel clone() {
+	public  AnalysisDataModel clone() {
 		AnalysisDataModel d = new AnalysisDataModel(data);
+
 		d.tms = tms;
 		if(msg!=null)
 		  d.msg = msg.clone();
@@ -94,7 +95,7 @@ public class AnalysisDataModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
+	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			Float val = null;
 			try {

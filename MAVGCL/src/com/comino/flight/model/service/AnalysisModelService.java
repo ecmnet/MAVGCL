@@ -95,11 +95,13 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.record       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
 
-	    this.ulogger = new ULogFromMAVLinkReader(control);
+		this.ulogger = new ULogFromMAVLinkReader(control);
 
 		control.addMAVLinkListener(this);
 
-		new Thread(new Converter()).start();
+		Thread c = new Thread(new Converter());
+		c.setPriority(Thread.MIN_PRIORITY);
+		c.start();
 	}
 
 	public AnalysisModelService(DataModel model) {
@@ -107,7 +109,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.model         =  model;
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
-		new Thread(new Converter()).start();
+		Thread c = new Thread(new Converter());
+		c.setPriority(Thread.MIN_PRIORITY);
+		c.start();
 	}
 
 
@@ -144,7 +148,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
-			new Thread(new Collector(0)).start();
+			Thread c = new Thread(new Collector(0));
+			c.setPriority(Thread.MIN_PRIORITY);
+			c.start();
 		}
 		return mode != STOPPED;
 		//service = ExecutorService.get().scheduleAtFixedRate(new Collector(), 0, MODELCOLLECTOR_INTERVAL_US, TimeUnit.MICROSECONDS);
@@ -228,7 +234,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = PRE_COLLECTING;
-			new Thread(new Collector(pre_sec)).start();
+			Thread c = new Thread(new Collector(pre_sec));
+			c.setPriority(Thread.MIN_PRIORITY);
+			c.start();
 		}
 	}
 
@@ -252,12 +260,13 @@ public class AnalysisModelService implements IMAVLinkListener {
 		@Override
 		public void run() {
 			long tms = 0; long wait = 0;
+			try { Thread.sleep(1000); } catch(Exception e) { }
 			while(true) {
 				current.msg = null; wait = System.nanoTime();
 				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 				if(ulogger.isLogging()) {
-				//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-			        record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 				}
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg; record.msg = model.msg;
@@ -274,7 +283,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class Collector implements Runnable {
 
-		int pre_delay_count=0; int count = 0; long wait = 0;  AnalysisDataModel m = null;
+		int pre_delay_count=0; int count = 0;  AnalysisDataModel m = null;
 
 		public Collector(int pre_delay_sec) {
 			if(pre_delay_sec>0) {
@@ -285,32 +294,35 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		@Override
 		public void run() {
-			long tms = System.nanoTime() / 1000;
+			long tms = System.nanoTime() / 1000; long wait = 0;
+
 			state.getLogLoadedProperty().set(false);
 			state.getRecordingProperty().set(true);
 			ulogger.enableLogging(true);
+
 			while(mode!=STOPPED) {
-				synchronized(this) {
-					wait = System.nanoTime();
+				 wait = System.nanoTime();
+
 					if(ulogger.isLogging())
-					  m = record.clone();
+						m = record.clone();
 					else
-					  m = current.clone();
+						m = current.clone();
 					m.tms = System.nanoTime() / 1000 - tms;
+
 					modelList.add(m);
-					count++;
-				}
+
+				count++;
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
+			}
 
-				if(mode==PRE_COLLECTING) {
-					int _delcount = count - pre_delay_count;
-					if(_delcount > 0) {
-						for(int i = 0; i < _delcount; i++ )
-							modelList.remove(0);
-					}
-
+			if(mode==PRE_COLLECTING) {
+				int _delcount = count - pre_delay_count;
+				if(_delcount > 0) {
+					for(int i = 0; i < _delcount; i++ )
+						modelList.remove(0);
 				}
 			}
+
 			ulogger.enableLogging(false);
 			state.getRecordingProperty().set(false);
 		}
