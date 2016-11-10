@@ -90,7 +90,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				System.err.println(package_processed+":"+log.sequence);
 
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
-				System.out.println("Waiting for header");
 				if(parser.checkHeader()) {
 					state = STATE_HEADER_WAIT;
 					System.out.println("Start reading header");
@@ -106,7 +105,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		if( o instanceof msg_logging_data) {
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
-				System.out.println(parser.getSystemInfo());
+				System.out.println("Header valid: "+parser.getSystemInfo());
 				state = STATE_DATA;
 			}
 

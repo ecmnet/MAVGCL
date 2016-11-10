@@ -294,7 +294,6 @@ public class UlogMAVLinkParser {
 			System.out.println("ULog: Different version than expected. Will try anyway");
 		}
 		logStartTimestamp = buffer.getLong();
-		System.out.println(error);
 		return error;
 	}
 
