@@ -47,6 +47,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		if(enable && !MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
 			System.err.println("ULOG over MAVLink not enabled in preferences - using MSP data for logging");
+			MSPLogger.getInstance().writeLocalMsg("Logging via MAVLink started",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			return;
 		}
 
@@ -58,12 +59,12 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>500) {
-					System.err.println("Logging via ULOGMAVLink could not be started");
+					System.err.println("Logging via Ulog could not be started");
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
 				}
 			}
-			MSPLogger.getInstance().writeLocalMsg("Logging via ULOGMAVLink started",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			MSPLogger.getInstance().writeLocalMsg("Logging via ULog started",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		}
