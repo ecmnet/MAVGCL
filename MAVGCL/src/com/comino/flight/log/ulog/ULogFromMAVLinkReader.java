@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
@@ -11,6 +12,7 @@ import org.mavlink.messages.lquac.msg_logging_data_acked;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 
@@ -61,7 +63,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					return;
 				}
 			}
-			System.out.println("Logging via ULOGMAVLink started successfully");
+			MSPLogger.getInstance().writeLocalMsg("Logging via ULOGMAVLink started",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		}
