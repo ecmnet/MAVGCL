@@ -153,7 +153,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public boolean stop() {
 		mode = STOPPED;
-		ulogger.enableLogging(false);
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -228,7 +227,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public void start(int pre_sec) {
 		if(mode==STOPPED) {
 			modelList.clear();
-            ulogger.enableLogging(true);
 			mode = PRE_COLLECTING;
 			new Thread(new Collector(pre_sec)).start();
 		}
