@@ -31,6 +31,8 @@
 	    <Separator maxWidth="-Infinity" prefHeight="14.0"
 					prefWidth="590.0" GridPane.columnSpan="4" GridPane.rowIndex="6" />
 		<CheckBox fx:id="ulog" GridPane.rowIndex="7" GridPane.columnIndex="0"
-	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for recording data" />
+	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for recording data (experimental)" />
+		 <Separator maxWidth="-Infinity" prefHeight="14.0"
+					prefWidth="590.0" GridPane.columnSpan="4" GridPane.rowIndex="8" />
 	</children>
 </GridPane>

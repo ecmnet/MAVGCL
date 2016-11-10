@@ -91,15 +91,15 @@ public class UlogMAVLinkParser {
 		return "Sys:"+systemName+" HWVer:"+hw_version+" SWVer:"+sw_version+" UTCref:"+utcTimeReference;
 	}
 
-	public boolean parseHeader() {
-
+	public boolean checkHeader() {
 		buffer.flip();
-		logStartTimestamp = 0;
-		if (!checkHeader())
+		if (!checkMagicHeader()) {
+			buffer.clear();
 			return false;
-		readHeader();
-		buffer.clear();
+		}
 		System.out.println("MAVLink logging started at: " + logStartTimestamp);
+		buffer.compact();
+		logStartTimestamp = 0;
 		return true;
 	}
 
@@ -116,9 +116,9 @@ public class UlogMAVLinkParser {
 		buffer.compact();
 	}
 
-	private void readHeader()   {
+	public void parseHeader()   {
 		Object msg = null;  long lastTime = -1;
-
+		buffer.flip();
 		while ((msg = readMessage()) != null) {
 
 			if (msg instanceof MessageFormat) {
@@ -190,6 +190,11 @@ public class UlogMAVLinkParser {
 			timeStart=-1;
 		}
 
+		buffer.compact();
+
+	}
+
+	public void buildSubscriptions() {
 		for (int k = 0; k < messageSubscriptions.size(); ++k) {
 			Subscription s = messageSubscriptions.get(k);
 			if (s != null) {
@@ -269,7 +274,7 @@ public class UlogMAVLinkParser {
 		return null;
 	}
 
-	private boolean checkHeader() {
+	private boolean checkMagicHeader() {
 		boolean error = true;
 		if ((buffer.get() & 0xFF) != 'U')
 			error = false;
@@ -289,6 +294,7 @@ public class UlogMAVLinkParser {
 			System.out.println("ULog: Different version than expected. Will try anyway");
 		}
 		logStartTimestamp = buffer.getLong();
+		System.out.println(error);
 		return error;
 	}
 

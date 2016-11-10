@@ -51,7 +51,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		if(enable)  {
 			if(state==STATE_DATA)
-			   control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			System.out.println("Start ulogging...");
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
@@ -78,8 +78,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
 				parser.reset();
 				package_processed = 0;
-				state = STATE_HEADER_WAIT;
-				System.out.println("Start reading header");
 			}
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 			msg_logging_ack ack = new msg_logging_ack(255,1);
@@ -91,27 +89,38 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(package_processed != log.sequence)
 				System.err.println(package_processed+":"+log.sequence);
 
-			if(package_processed++ > 127) {
-				System.out.println("Start parsing header");
-				if(parser.parseHeader()) {
-					System.out.println(parser.getSystemInfo());
-					state = STATE_DATA;
-				}
+			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
+				System.out.println("Waiting for header");
+				if(parser.checkHeader()) {
+					state = STATE_HEADER_WAIT;
+					System.out.println("Start reading header");
+				} else
+					return;
 			}
+
+			parser.parseHeader();
+			package_processed++;
+
 		}
 
 		if( o instanceof msg_logging_data) {
+			if(state==STATE_HEADER_WAIT) {
+				parser.buildSubscriptions();
+				System.out.println(parser.getSystemInfo());
+				state = STATE_DATA;
+			}
+
 			if(state==STATE_DATA) {
 				msg_logging_data log = (msg_logging_data)o;
 				if(package_processed != log.sequence) {
 					System.out.println("X");
-//					package_processed = log.sequence;
-//					// ====> resync does not work as well as stopping and restarting logging does not work
-//					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
+					//					package_processed = log.sequence;
+					//					// ====> resync does not work as well as stopping and restarting logging does not work
+					//					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
 				}
-					//else
+				//else
 				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
-                parser.parseData();
+				parser.parseData();
 				package_processed++;
 			}
 
@@ -119,7 +128,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	}
 
-//  helpers for dev
+	//  helpers for dev
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static String bytesToHex(byte[] bytes, int len) {
 		char[] hexChars = new char[len * 2];
