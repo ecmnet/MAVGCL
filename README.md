@@ -15,7 +15,7 @@ Any feedback, comments and contributions are very welcome.
 **Development Status:** Last updated 10/11/2016 
 
 - MAVLink 2.0 implementation
-- use ULOG over MAVLink logging to record data (experimental, still sync issues in certain cases)
+- use ULOG over MAVLink logging to record data (experimental)
 
 
 Developer build notes:
