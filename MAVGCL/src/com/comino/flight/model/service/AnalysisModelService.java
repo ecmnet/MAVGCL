@@ -144,7 +144,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
-			 ulogger.enableLogging(true);
 			new Thread(new Collector(0)).start();
 		}
 		return mode != STOPPED;
@@ -168,7 +167,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
-				ulogger.enableLogging(false);
 				mode = STOPPED;
 				try {
 					Thread.sleep(100);
@@ -180,7 +178,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public void setModelList(List<AnalysisDataModel> list) {
 		mode = STOPPED;
-		ulogger.enableLogging(false);
 		modelList.clear();
 		list.forEach((e) -> {
 			e.calculateVirtualKeyFigures(meta);
@@ -192,7 +189,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public void clearModelList() {
 		mode = STOPPED;
 		modelList.clear();
-		ulogger.enableLogging(false);
 	}
 
 	public void setTotalTimeSec(int totalTime) {
@@ -294,6 +290,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 			long tms = System.nanoTime() / 1000;
 			state.getLogLoadedProperty().set(false);
 			state.getRecordingProperty().set(true);
+			ulogger.enableLogging(true);
 			while(mode!=STOPPED) {
 				synchronized(this) {
 					wait = System.nanoTime();
@@ -316,6 +313,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				}
 			}
+			ulogger.enableLogging(false);
 			state.getRecordingProperty().set(false);
 		}
 

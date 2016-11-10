@@ -58,6 +58,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>500) {
 					System.err.println("Logging via ULOGMAVLink could not be started");
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
 				}
 			}
@@ -86,8 +87,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			ack.sequence = log.sequence;
 			control.sendMAVLinkMessage(ack);
 			parser.addToBuffer(log.data, log.length,log.first_message_offset, package_processed == log.sequence);
-			if(package_processed != log.sequence)
+			if(package_processed != log.sequence) {
 				System.err.println(package_processed+":"+log.sequence);
+			}
 
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
 				if(parser.checkHeader()) {
@@ -96,13 +98,17 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				} else
 					return;
 			}
-
 			parser.parseHeader();
 			package_processed++;
-
 		}
 
 		if( o instanceof msg_logging_data) {
+
+			if(state==STATE_HEADER_IDLE) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				return;
+			}
+
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
 				System.out.println("Header valid: "+parser.getSystemInfo());
@@ -112,10 +118,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_DATA) {
 				msg_logging_data log = (msg_logging_data)o;
 				if(package_processed != log.sequence) {
-					System.out.println("X");
-					//					package_processed = log.sequence;
-					//					// ====> resync does not work as well as stopping and restarting logging does not work
-					//					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
+					System.err.println("ULOG Sequence failed");
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+					state=STATE_HEADER_IDLE;
 				}
 				//else
 				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);

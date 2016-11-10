@@ -242,14 +242,13 @@ public class UlogMAVLinkParser {
 				subscription = messageSubscriptions.get(msgID);
 			if (subscription == null) {
 				System.err.println("Unknown DATA subscription ID: " + msgID);
-				buffer.position(buffer.position() + msgSize - 1);
-				return null;
+				return new DummyMessage(buffer,msgSize,2);
 			}
 			try {
 				return new MessageData(subscription.format, buffer, subscription.multiID);
 			} catch (FormatErrorException e) {
 				System.err.println(e.getMessage()+": " + msgID);
-				return null;
+				return new DummyMessage(buffer,msgSize,2);
 			}
 		case MESSAGE_TYPE_INFO:
 			return new MessageInfo(buffer);

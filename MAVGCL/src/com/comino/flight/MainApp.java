@@ -189,6 +189,7 @@ public class MainApp extends Application  {
 	@Override
 	public void stop() throws Exception {
 		System.out.println("closing...");
+		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.close();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
 		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());
