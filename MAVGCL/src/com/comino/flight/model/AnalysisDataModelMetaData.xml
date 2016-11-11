@@ -330,8 +330,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<!--- ABOVE CHECKED -->
-
 	<!-- Global position -->
 
 	<KeyFigure desc="Global Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
@@ -340,6 +338,7 @@
 		<ULogSource field="vehicle_global_position_0.lat"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Telemtry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -349,6 +348,7 @@
 		<ULogSource field="vehicle_global_position_0.lon"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Telemtry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -358,6 +358,7 @@
 		<ULogSource field="vehicle_local_position_0.ref_lat"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Telemtry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -367,6 +368,7 @@
 		<ULogSource field="vehicle_local_position_0.ref_lon"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Telemtry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -376,10 +378,11 @@
 		<ULogSource field="vehicle_local_position_0.ref_alt"/>
 		<Groups>
 			<Group>Global Position</Group>
+			<Group>Telemtry</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global VX" uom="cm/s" mask="#0.00" key="GLOBVX">
+	<KeyFigure desc="GlobalSpeed N" uom="cm/s" mask="#0.00" key="GLOBVN">
 		<MSPSource class="state" field="g_vx"></MSPSource>
 		<PX4Source field="GPOS.VelN"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_n"/>
@@ -388,7 +391,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global VY" uom="cm/s" mask="#0.00" key="GLOBVY">
+	<KeyFigure desc="GlobalSpeed E" uom="cm/s" mask="#0.00" key="GLOBVE">
 		<MSPSource class="state" field="g_vy"></MSPSource>
 		<PX4Source field="GPOS.VelE"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_e"/>
@@ -397,7 +400,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global VZ" uom="cm/s" mask="#0.00" key="GLOBVZ">
+	<KeyFigure desc="GlobalSpeed D" uom="cm/s" mask="#0.00" key="GLOBVD">
 		<MSPSource class="state" field="g_vz"></MSPSource>
 		<PX4Source field="GPOS.VelD"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_d"/>
@@ -405,6 +408,8 @@
 			<Group>Global Position</Group>
 		</Groups>
 	</KeyFigure>
+
+	<!--- ABOVE CHECKED -->
 
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
