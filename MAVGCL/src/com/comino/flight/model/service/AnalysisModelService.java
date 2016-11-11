@@ -267,6 +267,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				if(ulogger.isLogging()) {
 					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 				}
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg; record.msg = model.msg;
@@ -274,7 +275,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				} else {
 					current.msg = null; record.msg = null;
 				}
-				record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
 			}
 		}
