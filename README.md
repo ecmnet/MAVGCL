@@ -23,6 +23,7 @@ V0.6 notes:
 
 - V0.6 requires MAVLink 2.0 protocol without signing
 - Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
+- Mapping between ULog data and MAVGCL key-figures still is required and not completed
 
 **Features:**
 
