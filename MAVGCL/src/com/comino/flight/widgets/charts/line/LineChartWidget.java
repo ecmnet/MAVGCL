@@ -187,9 +187,12 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.getData().add(series3);
 
 		task = new AnimationTimer() {
+			long last = 0;
 			@Override public void handle(long now) {
-				if(!isDisabled())
+				if(!isDisabled() && (now - last) > (REFRESH_RATE*1000000)) {
 					updateGraph(refreshRequest);
+					last = now;
+				}
 			}
 		};
 	}
@@ -219,6 +222,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		yAxis.setAutoRanging(true);
 
+		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
 
