@@ -611,7 +611,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			if(dash.isSelected() && dataService.getModelList().size()>0) {
+			if(dash.isSelected() && dataService.getModelList().size()>0 &&
+					((current_x_pt * COLLECTOR_CYCLE * 10) % resolution_ms) == 0) {
 				setDashboardData(dashboard1,type1);
 				setDashboardData(dashboard2,type2);
 				setDashboardData(dashboard3,type3);
