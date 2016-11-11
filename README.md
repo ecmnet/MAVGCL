@@ -12,17 +12,17 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 10/11/2016 
+**Development Status:** Last updated 11/11/2016 
+
+V0.6 pre-release now available
 
 - MAVLink 2.0 implementation
-- use ULOG over MAVLink logging to record data (experimental)
+- use ULOG over MAVLink logging to record data 
 
+V0.6 notes:
 
-Developer build notes:
-
-- Developer builds require MAVLink 2.0 protocol without signing
-- Recording based on ULOG over MAVLink needs to be enabled in preferences
-- Mapping (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000)) for ULOG over MAVLink not complete
+- V0.6 requires MAVLink 2.0 protocol without signing
+- Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
 
 **Features:**
 
