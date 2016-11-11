@@ -69,7 +69,7 @@ public class UlogMAVLinkParser {
 	private Map<String, MessageFormat> messageFormats = new HashMap<String, MessageFormat>();
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 	private Map<String, List<ParamUpdate>> parameterUpdates = new HashMap<String, List<ParamUpdate>>();
-	private ArrayList<Subscription> messageSubscriptions = new ArrayList<Subscription>();
+	private List<Subscription> messageSubscriptions = new ArrayList<Subscription>();
 	private Map<String, String> fieldsList = new HashMap<String, String>();
 
 	// Data map
@@ -102,6 +102,10 @@ public class UlogMAVLinkParser {
 			for (int i = offset; i < len; i++)
 				buffer.put((byte) (data[i] & 0x00FF));
 		}
+	}
+
+	public Map<String, String> getFieldList() {
+		return fieldsList;
 	}
 
 	public Map<String, Object> getDataBuffer() {

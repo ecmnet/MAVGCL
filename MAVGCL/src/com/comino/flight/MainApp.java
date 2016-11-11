@@ -298,7 +298,7 @@ public class MainApp extends Application  {
 		});
 
 		m_dump.setOnAction(event -> {
-			AnalysisDataModelMetaData.getInstance().dump();
+			AnalysisModelService.getInstance().dumpUlogFields();
 		});
 
 		m_about.setOnAction(event -> {

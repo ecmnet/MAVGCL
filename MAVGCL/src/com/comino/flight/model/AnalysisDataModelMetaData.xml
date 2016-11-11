@@ -8,15 +8,17 @@
 		<ULogSource field="vehicle_global_position_0.alt"/>
 		<Groups>
 			<Group>Altitude</Group>
-			<Group>Local Position</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Alt.GL" uom="m" mask="#0.0" key="ALTGL">
 		<MSPSource class="hud" field="ar"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
+		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -26,11 +28,13 @@
 		<ULogSource field="vehicle_global_position_0.pressure_alt"></ULogSource>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Alt.GPS" uom="m" mask="#0.0" key="ALTGPS">
 		<MSPSource class="gps" field="altitude"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.alt"/>
 		<Groups>
 			<Group>Altitude</Group>
 		</Groups>
@@ -38,21 +42,14 @@
 
 	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
 		<MSPSource class="hud" field="at"></MSPSource>
+		<PX4Source field="GPOS.TALT"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
-		<PX4Source field="GPOS.TALT"></PX4Source>
 	</KeyFigure>
 
-		<KeyFigure desc="Bottom Clearance" uom="m" mask="#0.0" key="BOTCL">
-		<MSPSource class="hud" field="bc"></MSPSource>
-		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
-		<Groups>
-			<Group>Altitude</Group>
-			<Group>Global Position</Group>
-		</Groups>
-	</KeyFigure>
 
 	<!-- Local position  -->
 
@@ -62,6 +59,7 @@
 		<ULogSource field="vehicle_local_position_0.x"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="LPos.Y" uom="m" mask="#0.00" key="LPOSY">
@@ -70,6 +68,7 @@
 		<ULogSource field="vehicle_local_position_0.y"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="LPos.Z" uom="m" mask="#0.00" key="LPOSZ">
@@ -78,6 +77,15 @@
 		<ULogSource field="vehicle_local_position_0.z"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="LPos.Yaw" uom="rad" mask="#0.000" key="LPOSW">
+		<MSPSource class="state" field="h"></MSPSource>
+		<ULogSource field="vehicle_local_position_0.yaw"></ULogSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -108,30 +116,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<!-- Local position acceleration -->
-
-	<KeyFigure desc="LPos.AX" uom="m/s^2" mask="#0.0" key="LPOSAX">
-		<MSPSource class="state" field="l_ax"></MSPSource>
-		<PX4Source field=""></PX4Source>
-		<Groups>
-			<Group>Local Position</Group>
-		</Groups>
-	</KeyFigure>
-	<KeyFigure desc="LPos.AY" uom="m/s^2" mask="#0.0" key="LPOSAY">
-		<MSPSource class="state" field="l_ay"></MSPSource>
-		<PX4Source field=""></PX4Source>
-		<Groups>
-			<Group>Local Position</Group>
-		</Groups>
-	</KeyFigure>
-	<KeyFigure desc="LPos.AZ" uom="m/s^2" mask="#0.0" key="LPOSAZ">
-		<MSPSource class="state" field="l_az"></MSPSource>
-		<PX4Source field=""></PX4Source>
-		<Groups>
-			<Group>Local Position</Group>
-		</Groups>
-	</KeyFigure>
-
 	<!-- Local position setpoint -->
 
 	<KeyFigure desc="SP.LPos.X" uom="m" mask="#0.0" key="SPLPOSX">
@@ -140,33 +124,32 @@
 		<ULogSource field="vehicle_local_position_setpoint_0.x"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
+
 	<KeyFigure desc="SP.LPos.Y" uom="m" mask="#0.0" key="SPLPOSY">
 		<MSPSource class="target_state" field="l_y"></MSPSource>
 		<PX4Source field="LPSP.Y"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.y"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
+
 	<KeyFigure desc="SP.LPos.Z" uom="m" mask="#0.0" key="SPLPOSZ">
 		<MSPSource class="target_state" field="l_z"></MSPSource>
 		<PX4Source field="LPSP.Z"></PX4Source>
 		<ULogSource field="vehicle_local_position_setpoint_0.z"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.LPos.Yaw" uom="deg" mask="#0.0" key="SPLPOSYAW">
+	<KeyFigure desc="SP.LPos.Yaw" uom="rad" mask="#0.0" key="SPLPOSYAW">
 		<MSPSource class="target_state" field="h"></MSPSource>
+		<ULogSource field="vehicle_local_position_setpoint_0.yaw"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -178,7 +161,6 @@
 		<ULogSource field="vehicle_local_position_setpoint_0.vx"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -188,7 +170,6 @@
 		<ULogSource field="vehicle_local_position_setpoint_0.vy"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -198,96 +179,91 @@
 		<ULogSource field="vehicle_local_position_setpoint_0.vz"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.LPos.YawRate" uom="deg/s" mask="#0.0" key="SPLPOSYAWRATE">
-		<MSPSource class="target_state" field="vh"></MSPSource>
-		<Groups>
-			<Group>Local Position</Group>
-			<Group>Local Position Setpoint</Group>
-		</Groups>
-	</KeyFigure>
 
 	<!-- Attitude  -->
 
 	<KeyFigure desc="Roll" uom="rad" mask="#0.00" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.roll"></ULogSource>
+		<ULogSource field="vehicle_attitude_0.q[1]"></ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 		<Validity min="-2" max="2"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Pitch" uom="rad" mask="#0.00" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
+		<PX4Source field="ATT.Pitch"></PX4Source>
+		<ULogSource field="vehicle_attitude_0.q[2]"></ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 		<Validity min="-2" max="2"/>
-		<PX4Source field="ATT.Pitch"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.pitch"></ULogSource>
 	</KeyFigure>
 
 	<KeyFigure desc="Yaw" uom="rad" mask="#0.00" key="YAW">
 		<MSPSource class="attitude" field="y"></MSPSource>
+		<PX4Source field="ATT.Yaw"></PX4Source>
+		<ULogSource field="vehicle_attitude_0.q[3]"></ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
-		<PX4Source field="ATT.Yaw"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.yaw"></ULogSource>
 	</KeyFigure>
 
 	<!-- Attitude rates -->
 
 	<KeyFigure desc="RollRate" uom="rad/s" mask="#0.00" key="ROLLR">
 		<MSPSource class="attitude" field="rr"></MSPSource>
+		<PX4Source field="ATT.RollRate"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.rollspeed"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATT.RollRate"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="PitchRate" uom="rad/s" mask="#0.00" key="PITCHR">
 		<MSPSource class="attitude" field="pr"></MSPSource>
 		<ULogSource field="vehicle_attitude_0.pitchspeed"/>
+		<PX4Source field="ATT.PitchRate"></PX4Source>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATT.PitchRate"></PX4Source>
 	</KeyFigure>
 
 	<KeyFigure desc="YawRate" uom="rad/s" mask="#0.00" key="YAWR">
 		<MSPSource class="attitude" field="yr"></MSPSource>
+		<PX4Source field="ATT.YawRate"></PX4Source>
 		<ULogSource field="vehicle_attitude_0.yawspeed"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATT.YawRate"></PX4Source>
 	</KeyFigure>
 
 		<!-- Attitude  setpoint -->
 
 	<KeyFigure desc="Sp.Roll" uom="rad" mask="#0.00" key="SPROLL">
 		<MSPSource class="attitude" field="sr"></MSPSource>
+		<PX4Source field="ATSP.RollSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.roll_body"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATSP.RollSP"></PX4Source>
-		<ULogSource field="vehicle_attitude_setpoint_0.roll_body"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Sp.Pitch" uom="rad" mask="#0.00" key="SPPITCH">
 		<MSPSource class="attitude" field="sp"></MSPSource>
+		<PX4Source field="ATSP.PitchSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.pitch_body"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ATSP.PitchSP"></PX4Source>
-		<ULogSource field="vehicle_attitude_setpoint_0.pitch_body"/>
 	</KeyFigure>
 
 	<KeyFigure desc="SP.Yaw" uom="rad" mask="#0.00" key="SPYAW">
@@ -297,16 +273,16 @@
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-
 	</KeyFigure>
 
+
 	<KeyFigure desc="SP.Thrust" uom="" mask="#0.00" key="SPTHRUST">
+	    <MSPSource class="attitude" field="st"></MSPSource>
+		<PX4Source field="ATSP.ThrustSP"></PX4Source>
+		<ULogSource field="vehicle_attitude_setpoint_0.thrust"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<MSPSource class="attitude" field="st"></MSPSource>
-		<PX4Source field="ATSP.ThrustSP"></PX4Source>
-		<ULogSource field="vehicle_attitude_setpoint_0.thrust"/>
 	</KeyFigure>
 
 	<!-- Attitude rates setpoint -->
@@ -314,6 +290,7 @@
 	<KeyFigure desc="Sp.RollRate" uom="rad/s" mask="#0.00" key="SPROLLR">
 		<MSPSource class="attitude" field="srr"></MSPSource>
 		<PX4Source field="ARSP.RollRateSP"></PX4Source>
+		<ULogSource field="vehicle_rates_setpoint_0.roll"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -323,6 +300,7 @@
 	<KeyFigure desc="Sp.PitchRate" uom="rad/s" mask="#0.00" key="SPPITCHR">
 		<MSPSource class="attitude" field="spr"></MSPSource>
 		<PX4Source field="ARSP.PitchRateSP"></PX4Source>
+		<ULogSource field="vehicle_rates_setpoint_0.pitch"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -331,11 +309,28 @@
 
 	<KeyFigure desc="SP.YawRate" uom="rad/s" mask="#0.00" key="SPYAWR">
 		<MSPSource class="attitude" field="syr"></MSPSource>
+		<PX4Source field="ARSP.YawRateSP"></PX4Source>
+		<ULogSource field="vehicle_rates_setpoint_0.yaw"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
-		<PX4Source field="ARSP.YawRateSP"></PX4Source>
 	</KeyFigure>
+
+	<KeyFigure desc="SP.ThrustRate" uom="" mask="#0.00" key="SPTHRUSTR">
+		<ULogSource field="vehicle_rates_setpoint_0.yaw"/>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.MoveRate Yaw" uom="rad/s" mask="#0.00" key="SPYAW">
+		<ULogSource field="vehicle_attitude_setpoint_0.yaw_sp_move_rate"/>
+		<Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!--- ABOVE CHECKED ---------- ->
 
 	<!-- Global position -->
 

@@ -83,31 +83,14 @@ public class AnalysisDataModelMetaData extends Observable {
 
 		meta.clear(); groups.clear(); virt.clear();
 
-		if(is==null) {
+		if(is!=null) {
+            buildDocument(is);
+		} else {
 			is = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
+			buildDocument(is);
 		}
-
-		try {
-			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc = dBuilder.parse(is);
-
-			if (doc.hasChildNodes()) {
-			    version = doc.getElementsByTagName("AnalysisDataModel")
-						.item(0).getAttributes().getNamedItem("version").getTextContent();
-			    description = doc.getElementsByTagName("AnalysisDataModel")
-						.item(0).getAttributes().getNamedItem("description").getTextContent();
-
-				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
-
-				sortedMetaList = buildSortedList();
-
-				setChanged();
-				notifyObservers(stream);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sortedMetaList = buildSortedList();
+		setChanged();
 	}
 
 
@@ -169,6 +152,27 @@ public class AnalysisDataModelMetaData extends Observable {
 		}
 	}
 
+	private void buildDocument(InputStream is) {
+		try {
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = dBuilder.parse(is);
+
+			if (doc.hasChildNodes()) {
+				version = doc.getElementsByTagName("AnalysisDataModel")
+						.item(0).getAttributes().getNamedItem("version").getTextContent();
+				description = doc.getElementsByTagName("AnalysisDataModel")
+						.item(0).getAttributes().getNamedItem("description").getTextContent();
+
+				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
+
+				notifyObservers(is);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private List<KeyFigureMetaData> buildSortedList() {
 		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
 		meta.forEach((i,p) -> {
@@ -218,9 +222,9 @@ public class AnalysisDataModelMetaData extends Observable {
 
 			if(node.getNodeName().equals("Validity")) {
 				keyfigure.setBounds(
-                 Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
-                 Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
-                );
+						Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
+						Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
+						);
 
 			}
 
@@ -259,8 +263,8 @@ public class AnalysisDataModelMetaData extends Observable {
 		}
 		keyfigure.setSource(type,
 				node.getAttributes().getNamedItem("class")!=null ? node.getAttributes().getNamedItem("class").getTextContent() : null,
-				node.getAttributes().getNamedItem("field")!=null ? node.getAttributes().getNamedItem("field").getTextContent() : null,
-					class_c, params);
+						node.getAttributes().getNamedItem("field")!=null ? node.getAttributes().getNamedItem("field").getTextContent() : null,
+								class_c, params);
 	}
 
 }

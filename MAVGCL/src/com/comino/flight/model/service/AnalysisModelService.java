@@ -191,6 +191,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 		});
 	}
 
+	public void dumpUlogFields() {
+		ulogger.getFieldList().forEach((e,i) -> {
+			System.out.println(e+": "+i);
+		});
+	}
+
 	public void clearModelList() {
 		mode = STOPPED;
 		modelList.clear();
