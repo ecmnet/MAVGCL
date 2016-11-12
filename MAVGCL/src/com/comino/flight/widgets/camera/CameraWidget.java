@@ -54,6 +54,9 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {
 
+	private static final int X = 320;
+	private static final int Y = 240;
+
 
 	@FXML
 	private ImageView image;
@@ -83,7 +86,7 @@ public class CameraWidget extends WidgetPane  {
 			}
 		});
 
-		resize(false,400,300);
+		resize(false,X,Y);
 
 		image.setOnMouseClicked(event -> {
 
@@ -91,7 +94,7 @@ public class CameraWidget extends WidgetPane  {
 				big_size=true;
 			else
 				big_size=false;
-			resize(big_size,400,300);
+			resize(big_size,X,Y);
 
 		});
 
