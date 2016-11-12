@@ -423,7 +423,7 @@
 	<KeyFigure desc="Ground Speed" uom="m/s" mask="#0.0" key="GNDV">
 		<MSPSource class="state" field="v"></MSPSource>
 		<Groups>
-			<Group>Global Position</Group>
+			<Group>Telemetry</Group>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
@@ -434,7 +434,7 @@
 		</MSPSource>
 		<ULogSource field="vehicle_local_position_0.dist_bottom_rate"/>
 		<Groups>
-			<Group>Global Position</Group>
+			<Group>Telemetry</Group>
 			<Group>Local Position</Group>
 		</Groups>
 		<Validity min="-2.5" max="2.5"/>
