@@ -338,7 +338,7 @@
 		<ULogSource field="vehicle_global_position_0.lat"/>
 		<Groups>
 			<Group>Global Position</Group>
-			<Group>Telemtry</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -348,7 +348,7 @@
 		<ULogSource field="vehicle_global_position_0.lon"/>
 		<Groups>
 			<Group>Global Position</Group>
-			<Group>Telemtry</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -358,7 +358,7 @@
 		<ULogSource field="vehicle_local_position_0.ref_lat"/>
 		<Groups>
 			<Group>Global Position</Group>
-			<Group>Telemtry</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -368,7 +368,7 @@
 		<ULogSource field="vehicle_local_position_0.ref_lon"/>
 		<Groups>
 			<Group>Global Position</Group>
-			<Group>Telemtry</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -378,7 +378,7 @@
 		<ULogSource field="vehicle_local_position_0.ref_alt"/>
 		<Groups>
 			<Group>Global Position</Group>
-			<Group>Telemtry</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
