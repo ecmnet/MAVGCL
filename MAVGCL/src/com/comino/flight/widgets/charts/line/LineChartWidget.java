@@ -189,7 +189,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			long last = 0;
 			@Override public void handle(long now) {
-				if(!isDisabled() && (now - last) > (REFRESH_RATE*1000000)) {
+				if(!isDisabled() && (now - last) > (REFRESH_RATE*500000)) {
 					updateGraph(refreshRequest);
 					last = now;
 				}
@@ -575,6 +575,11 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		}
 
 		if(refresh) {
+
+			if(dataService.getModelList().size()==0) {
+				refreshRequest = true; return;
+			}
+
 			refreshRequest = false;
 			pool.invalidateAll();
 			series1.getData().clear();
@@ -709,8 +714,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		if(count>0) {
 			mean = _avg / count; std = 0;
 			for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
-			   m = dataService.getModelList().get(i);
-               std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
+				m = dataService.getModelList().get(i);
+				std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
 			}
 			std = (float)Math.sqrt(std / count);
 			d.setAvg(mean, std);

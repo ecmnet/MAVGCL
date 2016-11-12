@@ -511,7 +511,10 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(refresh) {
-			synchronized(this) {
+			    if(mList.size()==0) {
+			    	refreshRequest = true; return;
+			    }
+	//		synchronized(this) {
 				refreshRequest = false;
 				series1.getData().clear(); series2.getData().clear();
 				pool.invalidateAll();
@@ -519,7 +522,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			    s1.setKeyFigures(type1_x, type1_y);
-				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0 )  {
+				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected())  {
 					m = mList.get(0);
 					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 							rotation_rad);
@@ -532,7 +535,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				}
 
 				s2.setKeyFigures(type2_x, type2_y);
-				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
+				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected())  {
 					m = mList.get(0);
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
@@ -543,7 +546,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 							,Layer.FOREGROUND);
 
 				}
-			}
+	//		}
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
