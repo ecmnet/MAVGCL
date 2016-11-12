@@ -81,9 +81,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		state=STATE_HEADER_IDLE;
 
-		if(enable && !MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
-			System.err.println("ULOG over MAVLink not enabled in preferences - using MSP data for logging");
-			MSPLogger.getInstance().writeLocalMsg("Logging via MAVLink started.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
 			return;
 		}
 

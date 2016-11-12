@@ -28,7 +28,6 @@
 		<ULogSource field="vehicle_global_position_0.pressure_alt"></ULogSource>
 		<Groups>
 			<Group>Altitude</Group>
-			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
