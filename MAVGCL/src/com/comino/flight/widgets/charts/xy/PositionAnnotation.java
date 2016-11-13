@@ -58,6 +58,7 @@ public class PositionAnnotation  implements XYAnnotation {
 
 		this.pane = new Pane();
 		this.pane.setPrefSize(SIZE, SIZE);
+		this.pane.setCache(true);
 	//	this.pane.setBackground(null);
 
 		this.circle = new Circle();

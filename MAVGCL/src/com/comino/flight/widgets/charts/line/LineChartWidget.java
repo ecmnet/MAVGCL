@@ -222,9 +222,13 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		yAxis.setAutoRanging(true);
 
+	    xAxis.setAnimated(false);
+	    yAxis.setAnimated(false);
+
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
+		linechart.setCache(true);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());

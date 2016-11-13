@@ -98,7 +98,6 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private void initialize() {
-
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
 		tabs.add(mavmaptab);

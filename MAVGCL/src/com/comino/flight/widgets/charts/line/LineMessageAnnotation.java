@@ -58,6 +58,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 
 		this.pane = new Pane();
 		this.pane.setPrefSize(300, 20);
+		this.pane.setCache(true);
 
 		this.pane.setOnScroll(event -> {
 			chart.fireEvent(event);
@@ -66,6 +67,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		this.pane.setBackground(null);
 
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
+		this.triangle.setCache(true);
 
 		switch(message.severity) {
 		case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
