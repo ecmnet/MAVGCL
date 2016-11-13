@@ -84,6 +84,18 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 		return tuning.selectedProperty();
 	}
 
+	@FXML
+	private void initialize() {
+		tuning.selectedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				video.setSelected(false);
+				video.setDisable(true);
+			}
+			else
+				video.setDisable(false);
+		});
+	}
+
 
 	public void setup(IMAVController control) {
 
