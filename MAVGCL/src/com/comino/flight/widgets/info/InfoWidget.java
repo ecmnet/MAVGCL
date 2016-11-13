@@ -52,7 +52,7 @@ import javafx.scene.control.ListView;
 
 public class InfoWidget extends WidgetPane  {
 
-	private static final int MAX_ITEMS = 50;
+	private static final int MAX_ITEMS = 200;
 
 	@FXML
 	private ListView<LogMessage> listview;
