@@ -46,6 +46,9 @@ public class XYDataPool {
 	public XYDataPool() {
 		locked = new Hashtable<XYChart.Data<Number,Number>,Boolean>();
 		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>();
+		for(int i=0; i < 2000; i++) {
+			unlocked.put( new XYChart.Data<Number,Number>(0,0), true );
+		}
 	}
 
 	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
