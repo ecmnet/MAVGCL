@@ -68,23 +68,26 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
 
 		switch(message.severity) {
-		case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
-			this.triangle.setFill(Color.CADETBLUE); break;
 		case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
-			this.triangle.setFill(Color.BISQUE); break;
-		case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
-			this.triangle.setFill(Color.CORAL); break;
-		case MAV_SEVERITY.MAV_SEVERITY_ERROR:
-			this.triangle.setFill(Color.DARKRED); break;
-		case MAV_SEVERITY.MAV_SEVERITY_INFO:
-			this.triangle.setFill(Color.GREEN); break;
+			triangle.setFill(Color.LIGHTBLUE);
+			break;
+		case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
+			triangle.setFill(Color.LIGHTGREEN);
+			break;
 		case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-			this.triangle.setFill(Color.YELLOW); break;
-		case MAV_SEVERITY.MAV_SEVERITY_ALERT:
+			triangle.setFill(Color.WHEAT);
+			break;
 		case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-			this.triangle.setFill(Color.RED); break;
+			triangle.setFill(Color.SALMON);
+			break;
+		case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
+			triangle.setFill(Color.TOMATO);
+			break;
+		case MAV_SEVERITY.MAV_SEVERITY_ERROR:
+			triangle.setFill(Color.ORANGE);
+			break;
 		default:
-			this.triangle.setFill(Color.DARKGREY);
+			triangle.setFill(Color.LIGHTGREY);
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
 		if(displayLabel) {

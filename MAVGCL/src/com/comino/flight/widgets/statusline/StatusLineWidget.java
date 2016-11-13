@@ -181,7 +181,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		};
 
         driver.setAlignment(Pos.CENTER_LEFT);
-		messages.setTooltip(new Tooltip("Click to show messages"));
+
 	}
 
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
@@ -191,15 +191,12 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		this.state = StateProperties.getInstance();
 
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
+		messages.setBackgroundColor(Color.GRAY);
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
 				if(filename.isEmpty()) {
 					tms = System.currentTimeMillis();
-					if(msg.severity < MAV_SEVERITY.MAV_SEVERITY_WARNING)
-						messages.setBackgroundColor(Color.DARKRED);
-					else
-						messages.setBackgroundColor(Color.GRAY);
 					messages.setText(msg.msg);
 				}
 			});

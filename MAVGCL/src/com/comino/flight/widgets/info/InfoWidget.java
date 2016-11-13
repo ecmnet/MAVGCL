@@ -79,10 +79,28 @@ public class InfoWidget extends WidgetPane  {
 				if(!empty) {
 					setPrefWidth(130);
 					setText(m.msg);
-					if(m.severity < MAV_SEVERITY.MAV_SEVERITY_WARNING)
-						setStyle("-fx-text-fill:yellow;");
-					else
-						setStyle("-fx-text-fill:white;");
+					switch(m.severity) {
+					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
+						setStyle("-fx-text-fill:lightblue;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
+						setStyle("-fx-text-fill:lightgreen;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_WARNING:
+						setStyle("-fx-text-fill:wheat;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
+						setStyle("-fx-text-fill:salmon;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
+						setStyle("-fx-text-fill:tomato;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_ERROR:
+						setStyle("-fx-text-fill:orange;");
+						break;
+					default:
+						setStyle("-fx-text-fill:lightgrey;");
+					}
 				}
 			}
 
