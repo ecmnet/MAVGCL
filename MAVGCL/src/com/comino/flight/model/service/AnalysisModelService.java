@@ -35,6 +35,7 @@
 package com.comino.flight.model.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +66,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private ULogFromMAVLinkReader                   ulogger   = null;
 	private AnalysisDataModel				    	current   = null;
 	private AnalysisDataModel                        record   = null;
-	private ArrayList<AnalysisDataModel> 		  modelList   = null;
+	private LinkedList<AnalysisDataModel> 		  modelList   = null;
 	private StateProperties                           state   = null;
 
 	private AnalysisDataModelMetaData                  meta  =  null;
@@ -89,7 +90,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 
-		this.modelList     = new ArrayList<AnalysisDataModel>();
+		this.modelList     = new LinkedList<AnalysisDataModel>();
 		this.model         = control.getCurrentModel();
 		this.current       =  new AnalysisDataModel();
 		this.record       =  new AnalysisDataModel();
@@ -105,7 +106,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public AnalysisModelService(DataModel model) {
-		this.modelList     = new ArrayList<AnalysisDataModel>();
+		this.modelList     = new LinkedList<AnalysisDataModel>();
 		this.model         =  model;
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
