@@ -474,7 +474,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void setXResolution(int frame) {
-		this.current_x_pt = 0;
+		this.current_x_pt = dataService.calculateX0Index(1);
 		if(frame < 240) {
 			this.frame_secs = frame;
 			resolution_ms = 50;
