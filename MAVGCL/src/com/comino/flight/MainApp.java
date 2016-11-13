@@ -148,12 +148,15 @@ public class MainApp extends Application  {
 					if(args.get("SITL")!=null) {
 						control = new MAVUdpController("127.0.0.1",14556,14550, true);
 						new SITLController(control);
-					} if(args.get("PROXY")!=null) {
+					}
+					else  if(args.get("PROXY")!=null) {
 						control = new MAVUdpController("127.0.0.1",14656,14650, true);
 						new SITLController(control);
 					}
 					else if(args.get("SIM")!=null)
 						control = new MAVSimController();
+					else if(args.get("ip")!=null)
+						peerAddress = args.get("ip");
 				}
 				else
 					control = new MAVUdpController(peerAddress,port,14550, false);
