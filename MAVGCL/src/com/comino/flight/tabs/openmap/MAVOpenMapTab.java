@@ -260,7 +260,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 				if(refresh) {
-					index = 0;
+					index = dataService.calculateX0Index(1);
 					first = true;
 				}
 
