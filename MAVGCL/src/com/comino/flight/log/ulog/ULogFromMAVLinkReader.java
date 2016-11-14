@@ -33,7 +33,6 @@
 
 package com.comino.flight.log.ulog;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.LockSupport;
 
@@ -75,7 +74,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	public Map<String,String> getFieldList() {
 		return parser.getFieldList();
 	}
-
 
 	public void enableLogging(boolean enable) {
 
