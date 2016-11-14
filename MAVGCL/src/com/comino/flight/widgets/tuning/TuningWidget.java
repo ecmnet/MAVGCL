@@ -45,6 +45,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -137,6 +138,13 @@ public class TuningWidget extends WidgetPane  {
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(80));
 		grid.setVgap(4); grid.setHgap(6);
+		
+		this.visibleProperty().addListener((e,o,n) -> {
+			if(n.booleanValue() && params.getList().size()>0) {
+				String s = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "None");
+				groups.getSelectionModel().select(s);
+			}
+		});
 	}
 
 	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
@@ -152,6 +160,7 @@ public class TuningWidget extends WidgetPane  {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				boolean editable = !StateProperties.getInstance().getLogLoadedProperty().get();
+				MAVPreferences.getInstance().put(MAVPreferences.TUNING_GROUP, newValue);
 				grid.getChildren().clear();
 				int i = 0;
 				for(ParameterAttributes p : params.getList()) {
