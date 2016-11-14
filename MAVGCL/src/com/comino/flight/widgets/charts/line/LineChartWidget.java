@@ -222,8 +222,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		yAxis.setAutoRanging(true);
 
-	    xAxis.setAnimated(false);
-	    yAxis.setAnimated(false);
+		xAxis.setAnimated(false);
+		yAxis.setAnimated(false);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
@@ -594,219 +594,219 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			last_annotation_pos = 0;
 			yoffset = 0;
 
-			if(dash.isSelected()) {
-				if(type1.hash!=0)
-					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
-				if(type2.hash!=0)
-					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
-				if(type3.hash!=0)
-					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+				if(dash.isSelected() && dataService.getModelList().size()> 0) {
+					if(type1.hash!=0)
+						linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+					if(type2.hash!=0)
+						linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+					if(type3.hash!=0)
+						linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
 
-				setDashboardData(dashboard1,type1);
-				setDashboardData(dashboard2,type2);
-				setDashboardData(dashboard3,type3);
-			}
+					setDashboardData(dashboard1,type1);
+					setDashboardData(dashboard2,type2);
+					setDashboardData(dashboard3,type3);
+				}
 
-			current_x_pt  = current_x0_pt;
-			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
-			setXAxisBounds(current_x0_pt,current_x1_pt);
+		current_x_pt  = current_x0_pt;
+		current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
+		setXAxisBounds(current_x0_pt,current_x1_pt);
 
-			if(type1.hash==0 && type2.hash==0 && type3.hash==0)
-				return;
+		if(type1.hash==0 && type2.hash==0 && type3.hash==0)
+			return;
+	}
+
+	if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
+
+		int max_x = dataService.getModelList().size();
+		if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
+			max_x = current_x1_pt;
+
+		if(dash.isSelected() && dataService.getModelList().size()>0 &&
+				((current_x_pt * COLLECTOR_CYCLE * 10) % resolution_ms) == 0) {
+			setDashboardData(dashboard1,type1);
+			setDashboardData(dashboard2,type2);
+			setDashboardData(dashboard3,type3);
 		}
 
-		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
+		while(current_x_pt<max_x ) {
 
-			int max_x = dataService.getModelList().size();
-			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
-				max_x = current_x1_pt;
+			dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
-			if(dash.isSelected() && dataService.getModelList().size()>0 &&
-					((current_x_pt * COLLECTOR_CYCLE * 10) % resolution_ms) == 0) {
-				setDashboardData(dashboard1,type1);
-				setDashboardData(dashboard2,type2);
-				setDashboardData(dashboard3,type3);
+			m = dataService.getModelList().get(current_x_pt);
+
+			if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
+					&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
+					&& display_annotations) {
+				if((current_x_pt - last_annotation_pos) > 150 || yoffset > 12)
+					yoffset=0;
+
+				linechart.getAnnotations().add(new LineMessageAnnotation(this,dt_sec,yoffset++, m.msg,
+						(resolution_ms<300) && annotations.isSelected()),
+						Layer.FOREGROUND);
+				last_annotation_pos = current_x_pt;
 			}
 
-			while(current_x_pt<max_x ) {
-
-				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
-
-				m = dataService.getModelList().get(current_x_pt);
-
-				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
-						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
-						&& display_annotations) {
-					if((current_x_pt - last_annotation_pos) > 150 || yoffset > 12)
-						yoffset=0;
-
-					linechart.getAnnotations().add(new LineMessageAnnotation(this,dt_sec,yoffset++, m.msg,
-							(resolution_ms<300) && annotations.isSelected()),
-							Layer.FOREGROUND);
-					last_annotation_pos = current_x_pt;
-				}
-
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
-
-					if(current_x_pt > current_x1_pt) {
-						if(series1.getData().size()>0 && type1.hash!=0) {
-							pool.invalidate(series1.getData().get(0));
-							series1.getData().remove(0);
-						}
-
-						if(series2.getData().size()>0 && type2.hash!=0) {
-							pool.invalidate(series2.getData().get(0));
-							series2.getData().remove(0);
-						}
-
-						if(series3.getData().size()>0 && type3.hash!=0) {
-							pool.invalidate(series3.getData().get(0));
-							series3.getData().remove(0);
-						}
-					}
-
-					if(type1.hash!=0)  {
-						v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
-						if(!Float.isNaN(v1))
-							series1.getData().add(pool.checkOut(dt_sec,v1));
-
-					}
-					if(type2.hash!=0)  {
-						v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
-						if(!Float.isNaN(v2))
-							series2.getData().add(pool.checkOut(dt_sec,v2));
-					}
-					if(type3.hash!=0)  {
-						v3 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected());
-						if(!Float.isNaN(v3))
-							series3.getData().add(pool.checkOut(dt_sec,v3));
-					}
-
-				}
+			if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
 
 				if(current_x_pt > current_x1_pt) {
-					set_bounds = true;
-					if(!isPaused) {
-						current_x0_pt += REFRESH_STEP;
-						current_x1_pt += REFRESH_STEP;
+					if(series1.getData().size()>0 && type1.hash!=0) {
+						pool.invalidate(series1.getData().get(0));
+						series1.getData().remove(0);
+					}
+
+					if(series2.getData().size()>0 && type2.hash!=0) {
+						pool.invalidate(series2.getData().get(0));
+						series2.getData().remove(0);
+					}
+
+					if(series3.getData().size()>0 && type3.hash!=0) {
+						pool.invalidate(series3.getData().get(0));
+						series3.getData().remove(0);
 					}
 				}
-				current_x_pt++;
+
+				if(type1.hash!=0)  {
+					v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
+					if(!Float.isNaN(v1))
+						series1.getData().add(pool.checkOut(dt_sec,v1));
+
+				}
+				if(type2.hash!=0)  {
+					v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
+					if(!Float.isNaN(v2))
+						series2.getData().add(pool.checkOut(dt_sec,v2));
+				}
+				if(type3.hash!=0)  {
+					v3 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected());
+					if(!Float.isNaN(v3))
+						series3.getData().add(pool.checkOut(dt_sec,v3));
+				}
+
 			}
 
-			if(set_bounds)
-				setXAxisBounds(current_x0_pt,current_x1_pt);
+			if(current_x_pt > current_x1_pt) {
+				set_bounds = true;
+				if(!isPaused) {
+					current_x0_pt += REFRESH_STEP;
+					current_x1_pt += REFRESH_STEP;
+				}
+			}
+			current_x_pt++;
 		}
+
+		if(set_bounds)
+			setXAxisBounds(current_x0_pt,current_x1_pt);
+	}
+}
+
+private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
+	AnalysisDataModel m = null; int count=0;
+	float _min = Float.NaN; float _max = Float.NaN;
+	float _avg = 0; float mean = 0; float std=0;
+
+	if(kf.hash==0)
+		return;
+
+	d.setKeyFigure(kf);
+	for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
+		m = dataService.getModelList().get(i);
+		if(m.getValue(kf)<_min || Float.isNaN(_min)) _min = m.getValue(kf);
+		if(m.getValue(kf)>_max || Float.isNaN(_max)) _max = m.getValue(kf);
+		_avg = _avg + m.getValue(kf); count++;
 	}
 
-	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
-		AnalysisDataModel m = null; int count=0;
-		float _min = Float.NaN; float _max = Float.NaN;
-		float _avg = 0; float mean = 0; float std=0;
-
-		if(kf.hash==0)
-			return;
-
-		d.setKeyFigure(kf);
+	d.setMinMax(_min, _max);
+	if(count>0) {
+		mean = _avg / count; std = 0;
 		for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
 			m = dataService.getModelList().get(i);
-			if(m.getValue(kf)<_min || Float.isNaN(_min)) _min = m.getValue(kf);
-			if(m.getValue(kf)>_max || Float.isNaN(_max)) _max = m.getValue(kf);
-			_avg = _avg + m.getValue(kf); count++;
+			std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
+		}
+		std = (float)Math.sqrt(std / count);
+		d.setAvg(mean, std);
+	}
+}
+
+private  void setXAxisBounds(int lower_pt, int upper_pt) {
+	double tick = timeframe/5;
+	if(tick < 1) tick = 1;
+	xAxis.setTickUnit(tick);
+	xAxis.setMinorTickCount(10);
+	xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
+	xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
+}
+
+
+
+private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
+
+	KeyFigureMetaData none = new KeyFigureMetaData();
+
+	Platform.runLater(() -> {
+
+		series.getItems().clear();
+		series.getItems().add(none);
+
+		if(kfl.size()==0) {
+			series.getSelectionModel().select(0);
+			return;
 		}
 
-		d.setMinMax(_min, _max);
-		if(count>0) {
-			mean = _avg / count; std = 0;
-			for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
-				m = dataService.getModelList().get(i);
-				std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
-			}
-			std = (float)Math.sqrt(std / count);
-			d.setAvg(mean, std);
-		}
-	}
-
-	private  void setXAxisBounds(int lower_pt, int upper_pt) {
-		double tick = timeframe/5;
-		if(tick < 1) tick = 1;
-		xAxis.setTickUnit(tick);
-		xAxis.setMinorTickCount(10);
-		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
-		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
-	}
-
-
-
-	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
-
-		KeyFigureMetaData none = new KeyFigureMetaData();
-
-		Platform.runLater(() -> {
-
-			series.getItems().clear();
-			series.getItems().add(none);
-
-			if(kfl.size()==0) {
-				series.getSelectionModel().select(0);
-				return;
-			}
-
-			if(type!=null && type.hash!=0) {
-				if(!kfl.contains(type))
-					series.getItems().add(type);
-				series.getItems().addAll(kfl);
-				series.getSelectionModel().select(type);
-			} else {
-				series.getItems().addAll(kfl);
-				series.getSelectionModel().select(0);
-			}
-
-		});
-	}
-
-	private void storeRecentList() {
-		try {
-			String rc = gson.toJson(recent);
-			prefs.put(MAVPreferences.RECENT_FIGS, rc);
-		} catch(Exception w) { }
-	}
-
-	private void readRecentList() {
-
-		String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
-		try {
-			if(rc!=null)
-				recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
-		} catch(Exception w) { }
-		if(recent==null)
-			recent = new ArrayList<KeyFigureMetaData>();
-
-	}
-
-	// Determines spikes or average, if not all datapoints are reported.
-	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
-		float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
-
-		if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
-			return 0;
-
-		if(length==1)
-			return dataService.getModelList().get(current_x).getValue(m);
-
-		if(average) {
-			a = 0;
-			for(int i=0;i<length;i++)
-				a = a + dataService.getModelList().get(current_x-i).getValue(m);
-			return a / length;
-
+		if(type!=null && type.hash!=0) {
+			if(!kfl.contains(type))
+				series.getItems().add(type);
+			series.getItems().addAll(kfl);
+			series.getSelectionModel().select(type);
 		} else {
-			for(int i=0;i<length;i++) {
-				v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
-				if(v>max && v != Float.NaN)
-					max = v; index = i;
-			}
-			return dataService.getModelList().get(current_x-index).getValue(m);
+			series.getItems().addAll(kfl);
+			series.getSelectionModel().select(0);
 		}
+
+	});
+}
+
+private void storeRecentList() {
+	try {
+		String rc = gson.toJson(recent);
+		prefs.put(MAVPreferences.RECENT_FIGS, rc);
+	} catch(Exception w) { }
+}
+
+private void readRecentList() {
+
+	String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
+	try {
+		if(rc!=null)
+			recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
+	} catch(Exception w) { }
+	if(recent==null)
+		recent = new ArrayList<KeyFigureMetaData>();
+
+}
+
+// Determines spikes or average, if not all datapoints are reported.
+private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
+	float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
+
+	if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
+		return 0;
+
+	if(length==1)
+		return dataService.getModelList().get(current_x).getValue(m);
+
+	if(average) {
+		a = 0;
+		for(int i=0;i<length;i++)
+			a = a + dataService.getModelList().get(current_x-i).getValue(m);
+		return a / length;
+
+	} else {
+		for(int i=0;i<length;i++) {
+			v = Math.abs(dataService.getModelList().get(current_x-i).getValue(m));
+			if(v>max && v != Float.NaN)
+				max = v; index = i;
+		}
+		return dataService.getModelList().get(current_x-index).getValue(m);
 	}
+}
 }
