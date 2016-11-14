@@ -465,7 +465,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x_pt = dataService.calculateX0Index(1);
+				current_x0_pt = dataService.calculateX0Index(1);
+				current_x_pt  = dataService.calculateX0Index(1);
 				scroll.setValue(1);
 				updateRequest();
 			}
@@ -668,8 +669,8 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 			} else
 				task.stop();
 		});
-
-		current_x1_pt =  timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+		current_x0_pt = dataService.calculateX0Index(1);
+		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 		return this;
 	}

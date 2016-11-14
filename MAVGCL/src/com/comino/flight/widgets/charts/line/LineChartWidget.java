@@ -414,7 +414,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x0_pt =  dataService.calculateX0Index(1);
+				current_x0_pt = dataService.calculateX0Index(1);
+				current_x0_pt = dataService.calculateX0Index(1);
 				setXResolution(timeFrame.get());
 			}
 		});
