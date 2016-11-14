@@ -17,7 +17,7 @@ Any feedback, comments and contributions are very welcome.
 V0.6 pre-release now available
 
 - MAVLink 2.0 implementation
-- use ULOG over MAVLink logging to record data 
+- supports ULOG streaming to record data 
 
 V0.6 notes:
 
