@@ -239,7 +239,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 							} catch (Exception e) {
-								e.printStackTrace();
+								throw new Exception(e.getMessage());
 							}
 
 						}
@@ -247,6 +247,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 				} catch (Exception e) {
 					m_collecting = false;
+					connectionError = e.getMessage();
+					System.err.println(connectionError);
 				}
 
 			} while (m_collecting);
