@@ -512,7 +512,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(refresh) {
-			    if(mList.size()==0) {
+			    if(mList.size()==0 && dataService.isCollecting()) {
 			    	refreshRequest = true; return;
 			    }
 	//		synchronized(this) {

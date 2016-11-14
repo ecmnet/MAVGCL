@@ -581,7 +581,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		if(refresh) {
 
-			if(dataService.getModelList().size()==0) {
+			if(dataService.getModelList().size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
 
