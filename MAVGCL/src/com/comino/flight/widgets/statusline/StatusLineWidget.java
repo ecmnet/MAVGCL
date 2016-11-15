@@ -34,10 +34,7 @@
 package com.comino.flight.widgets.statusline;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-
-import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
@@ -46,7 +43,6 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.Badge;
-
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
@@ -61,7 +57,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -90,8 +85,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 	private IMAVController control;
 
-
-	private final SimpleDateFormat fo = new SimpleDateFormat("mm:ss");
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
@@ -131,7 +124,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 					}
 
 					if((System.currentTimeMillis() - tms)>30000) {
-						messages.setBackgroundColor(Color.GRAY);
 						messages.clear();
 						tms = System.currentTimeMillis();
 					}
@@ -179,9 +171,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 				}
 			}
 		};
-
         driver.setAlignment(Pos.CENTER_LEFT);
-
 	}
 
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
@@ -216,11 +206,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		});
 
 		task.start();
-
-//		Thread th = new Thread(task);
-//		th.setPriority(Thread.MIN_PRIORITY);
-//		th.setDaemon(true);
-//		th.start();
 	}
 
 	@Override
