@@ -431,6 +431,27 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="SP.Global.Pos.VX" uom="cm/s" mask="#0.00" key="SPGLOBVX">
+		<ULogSource field="vehicle_global_velocity_setpoint_0.vx"/>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.Global.Pos.VY" uom="cm/s" mask="#0.00" key="SPGLOBVY">
+		<ULogSource field="vehicle_global_velocity_setpoint_0.vy"/>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.Global.Pos.VZ" uom="cm/s" mask="#0.00" key="SPGLOBVZ">
+		<ULogSource field="vehicle_global_velocity_setpoint_0.vz"/>
+		<Groups>
+			<Group>Global Position</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!--- ABOVE CHECKED -->
 
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
