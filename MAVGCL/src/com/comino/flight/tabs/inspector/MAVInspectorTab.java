@@ -41,6 +41,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -92,7 +93,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-					treetableview.getSelectionModel().clearSelection();
+				treetableview.getSelectionModel().clearSelection();
 			}
 		});
 
@@ -167,8 +168,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		StateProperties.getInstance().getConnectedProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
-			   allData.clear();
-			   treetableview.getRoot().getChildren().clear();
+				allData.clear();
+				treetableview.getRoot().getChildren().clear();
 			}
 		});
 
@@ -183,7 +184,11 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	@Override
 	public void received(Object _msg) {
 		if(!this.isDisabled())
-		   parseMessageString(_msg.toString().split(" "));
+			new Thread(() -> {
+				Platform.runLater(() -> {
+					parseMessageString(_msg.toString().split(" "));
+				});
+			}).run();
 	}
 
 	private synchronized void parseMessageString(String[] msg) {
@@ -216,7 +221,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				if(v.contains("=")) {
 					String[] p = v.split("=");
 					try {
-					data.getData().get(p[0]).setValue(p[1]);
+						data.getData().get(p[0]).setValue(p[1]);
 					} catch(Exception k) {  System.out.println(_msg); }
 				}
 		}
