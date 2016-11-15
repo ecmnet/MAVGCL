@@ -138,10 +138,7 @@ public class AnalysisDataModelMetaData extends Observable {
 	}
 
 	public List<String> getGroups() {
-		List<String> list = new ArrayList<String>();
-		groups.forEach((i,p) -> {
-			list.add(i);
-		});
+		List<String> list = new ArrayList<String>(groups.keySet());
 		Collections.sort(list);
 		return list;
 	}
@@ -165,12 +162,20 @@ public class AnalysisDataModelMetaData extends Observable {
 
 				buildKeyFigureList(doc.getElementsByTagName("KeyFigure"));
 
+				sortGroupMaps();
+
 				notifyObservers(is);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void sortGroupMaps() {
+		groups.forEach((g,l) -> {
+			l.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
+		});
 	}
 
 	private List<KeyFigureMetaData> buildSortedList() {
