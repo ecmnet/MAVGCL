@@ -61,7 +61,7 @@ public class KeyFigureMetaData {
 
 	private String key;
 
-	private Map<Integer,DataSource> sources = new HashMap<Integer,DataSource>();
+	public Map<Integer,DataSource> sources = new HashMap<Integer,DataSource>();
 
 	public KeyFigureMetaData() {
 		this.desc1  = "None";
@@ -183,7 +183,7 @@ public class KeyFigureMetaData {
 		return desc1+": "+key+"("+hash+")";
 	}
 
-	private class DataSource {
+	public class DataSource {
 
 		public DataSource(String class_n, String field, SourceConverter converter) {
 			this.class_n = class_n;
@@ -194,5 +194,11 @@ public class KeyFigureMetaData {
 		public String class_n;
 		public String field;
 		public SourceConverter converter;
+
+		public String toString() {
+			if(class_n!=null)
+				return class_n+"."+field;
+			return field;
+		}
 	}
 }

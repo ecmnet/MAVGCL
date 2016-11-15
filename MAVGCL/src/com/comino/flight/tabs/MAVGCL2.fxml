@@ -12,7 +12,6 @@
 <?import com.comino.flight.tabs.parameter.MAVParameterTab?>
 <?import com.comino.flight.tabs.openmap.MAVOpenMapTab?>
 <?import com.comino.flight.tabs.shell.MavLinkShellTab?>
-<?import com.comino.flight.tabs.raw.RawDataTab?>
 
 
 <?import com.comino.flight.widgets.details.DetailsWidget?>
@@ -91,20 +90,6 @@
 								</AnchorPane>
 							</content>
 							</Tab>
-
-							<Tab text="Raw Data">
-							<content>
-								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
-									xmlns:fx="http://javafx.com/fxml/1">
-									<children>
-										<RawDataTab fx:id="rawdatatab"
-											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
-											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="0.0" />
-									</children>
-								</AnchorPane>
-							</content>
-							</Tab>
-
 						<Tab text="NuttShell">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
