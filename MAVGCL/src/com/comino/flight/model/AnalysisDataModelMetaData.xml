@@ -181,6 +181,29 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- Local position acceleration setpoint -->
+
+	<KeyFigure desc="SP.LPos.AccX" uom="m/s^2" mask="#0.0" key="SPLPOSAX">
+		<ULogSource field="vehicle_local_position_setpoint_0.acc_x"></ULogSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.LPos.AccY" uom="m/s^2" mask="#0.0" key="SPLPOSAY">
+		<ULogSource field="vehicle_local_position_setpoint_0.acc_y"></ULogSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="SP.LPos.AccZ" uom="m/s^2" mask="#0.0" key="SPLPOSAZ">
+		<ULogSource field="vehicle_local_position_setpoint_0.acc_z"></ULogSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+
 
 	<!-- Attitude  -->
 
@@ -316,7 +339,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="SP.ThrustRate" uom="" mask="#0.00" key="SPTHRUSTR">
-		<ULogSource field="vehicle_rates_setpoint_0.yaw"/>
+		<ULogSource field="vehicle_rates_setpoint_0.thrust"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -331,7 +354,7 @@
 
 	<!-- Global position -->
 
-	<KeyFigure desc="Global Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
+	<KeyFigure desc="Global.Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
 		<MSPSource class="state" field="g_lat"></MSPSource>
 		<PX4Source field="GPOS.Lat"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.lat"/>
@@ -341,7 +364,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global Lon." uom="°" mask="#0.0000000" key="GLOBLON">
+	<KeyFigure desc="Global.Lon." uom="°" mask="#0.0000000" key="GLOBLON">
 		<MSPSource class="state" field="g_lon"></MSPSource>
 		<PX4Source field="GPOS.Lon"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.lon"/>
@@ -351,7 +374,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Home Lat." uom="°" mask="#0.0000000" key="HOMLAT">
+	<KeyFigure desc="Home.Lat." uom="°" mask="#0.0000000" key="HOMLAT">
 		<MSPSource class="home_state" field="g_lat"></MSPSource>
 		<PX4Source field="LPOS.RLat"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.ref_lat"/>
@@ -361,7 +384,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Home Lon." uom="°" mask="#0.0000000" key="HOMLON">
+	<KeyFigure desc="Home.Lon." uom="°" mask="#0.0000000" key="HOMLON">
 		<MSPSource class="home_state" field="g_lon"></MSPSource>
 		<PX4Source field="LPOS.RLon"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.ref_lon"/>
@@ -371,7 +394,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Home Alt." uom="°" mask="#0.0" key="HOMALT">
+	<KeyFigure desc="Home.Alt." uom="°" mask="#0.0" key="HOMALT">
 	    <MSPSource class="home_state" field="g_alt"></MSPSource>
 		<PX4Source field="LPOS.RAlt"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.ref_alt"/>
@@ -381,7 +404,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GlobalSpeed N" uom="cm/s" mask="#0.00" key="GLOBVN">
+	<KeyFigure desc="Global.Speed.N" uom="cm/s" mask="#0.00" key="GLOBVN">
 		<MSPSource class="state" field="g_vx"></MSPSource>
 		<PX4Source field="GPOS.VelN"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_n"/>
@@ -390,7 +413,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GlobalSpeed E" uom="cm/s" mask="#0.00" key="GLOBVE">
+	<KeyFigure desc="Global.Speed.E" uom="cm/s" mask="#0.00" key="GLOBVE">
 		<MSPSource class="state" field="g_vy"></MSPSource>
 		<PX4Source field="GPOS.VelE"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_e"/>
@@ -399,7 +422,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GlobalSpeed D" uom="cm/s" mask="#0.00" key="GLOBVD">
+	<KeyFigure desc="Global.Speed.D" uom="cm/s" mask="#0.00" key="GLOBVD">
 		<MSPSource class="state" field="g_vz"></MSPSource>
 		<PX4Source field="GPOS.VelD"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_d"/>
@@ -419,7 +442,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Ground Speed" uom="m/s" mask="#0.0" key="GNDV">
+	<KeyFigure desc="Ground.Speed" uom="m/s" mask="#0.0" key="GNDV">
 		<MSPSource class="state" field="v"></MSPSource>
 		<Groups>
 			<Group>Telemetry</Group>
@@ -427,7 +450,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vertical Speed" uom="m/s" mask="#0.0" key="CLIMB">
+	<KeyFigure desc="Vert.Speed" uom="m/s" mask="#0.0" key="CLIMB">
 		<MSPSource class="state" field="l_vz">
 		    <Converter class="ExpressionConverter" expression="-CLIMB" />
 		</MSPSource>
@@ -525,37 +548,34 @@
 
 	<!-- Raw data -->
 
-	<KeyFigure desc="Flow X" uom="deg/s" mask="#0.00" key="FLOWX">
+	<KeyFigure desc="Flow.X" uom="deg/s" mask="#0.00" key="FLOWX">
 		<MSPSource class="raw" field="fX"></MSPSource>
 		<PX4Source field="FLOW.RawX"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_x_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Flow Y" uom="deg/s" mask="#0.00" key="FLOWY">
+	<KeyFigure desc="Flow.Y" uom="deg/s" mask="#0.00" key="FLOWY">
 		<MSPSource class="raw" field="fY"></MSPSource>
 		<PX4Source field="FLOW.RawY"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_y_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="FLow Dist." uom="m" mask="#0.00" key="FLOWDI">
+	<KeyFigure desc="FLow.Dist." uom="m" mask="#0.00" key="FLOWDI">
 		<MSPSource class="raw" field="fd"></MSPSource>
 		<PX4Source field="FLOW.Dist"></PX4Source>
 		<ULogSource field="optical_flow_0.ground_distance_m"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Flow Quality" mask="#0" uom="%" key="FLOWQL">
+	<KeyFigure desc="Flow.Quality" mask="#0" uom="%" key="FLOWQL">
 		<MSPSource class="raw" field="fq">
 		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		</MSPSource>
@@ -567,9 +587,29 @@
 		</ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 		<Validity min="0.25" max="1.0"/>
+	</KeyFigure>
+
+	<KeyFigure desc="Flow.Gyro.X" uom="m" mask="#0.00" key="FLOWGYX">
+		<ULogSource field="optical_flow_0.gyro_x_rate_integral"/>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Flow.Gyro.Y" uom="m" mask="#0.00" key="FLOWGYY">
+		<ULogSource field="optical_flow_0.gyro_y_rate_integral"/>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Flow.Gyro.Z" uom="m" mask="#0.00" key="FLOWGYZ">
+		<ULogSource field="optical_flow_0.gyro_z_rate_integral"/>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
@@ -578,7 +618,6 @@
 		<ULogSource field="distance_sensor_0.current_distance"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -588,7 +627,6 @@
 		<ULogSource field="distance_sensor_0.covariance"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -598,7 +636,6 @@
 		<ULogSource field="sensor_combined_0.accelerometer_m_s2[0]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
-		   <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Acc.Y" uom="m/s^2" mask="#0.00" key="ACCY">
@@ -607,7 +644,6 @@
 		<ULogSource field="sensor_combined_0.accelerometer_m_s2[1]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
-		    <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="Acc.Z" uom="m/s^2" mask="#0.00" key="ACCZ">
@@ -616,7 +652,6 @@
 		<ULogSource field="sensor_combined_0.accelerometer_m_s2[2]"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -626,7 +661,6 @@
 		<ULogSource field="sensor_combined_0.gyro_rad[0]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
-		  <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -636,7 +670,6 @@
 		<ULogSource field="sensor_combined_0.gyro_rad[1]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
-		    <Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -646,11 +679,24 @@
 		<ULogSource field="sensor_combined_0.gyro_rad[2]"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Raw GPS Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
+	<KeyFigure desc="Baro.Alt" uom="m" mask="#0.00" key="BAROALT">
+		<ULogSource field="sensor_combined_0.baro_alt_meter"></ULogSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Baro.Temp" uom="°C" mask="#0.00" key="BAROTEMP">
+		<ULogSource field="sensor_combined_0.baro_temp_celcius"></ULogSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Raw GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
 		<PX4Source field="GPS.Lat"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lat"/>
@@ -659,7 +705,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Raw GPS Lon." uom="°" mask="#0.0000000" key="RGPSLON">
+	<KeyFigure desc="Raw GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
 		<PX4Source field="GPS.Lon"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lon"/>
@@ -700,26 +746,28 @@
 		<ULogSource field="sensor_baro_0.pressure"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EST(9)" uom="m" mask="#0.0" key="HAGLRATIO">
+	<KeyFigure desc="EST0.s9" uom="m" mask="#0.0" key="HAGLRATIO">
 		<MSPSource class="est" field="haglRatio"></MSPSource>
+		<ULogSource field="estimator_status_0.states[9]"></ULogSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EST(10)" uom="m" mask="#0.00" key="TASRATIO">
+	<KeyFigure desc="EST0.s10" uom="m" mask="#0.00" key="TASRATIO">
 		<MSPSource class="est" field="tasRatio"></MSPSource>
+		<ULogSource field="estimator_status_0.states[10]"></ULogSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EST(11)" uom="m" mask="#0.0" key="MAGRATIO">
+	<KeyFigure desc="EST0.s11" uom="m" mask="#0.0" key="MAGRATIO">
 		<MSPSource class="est" field="magRatio"></MSPSource>
+		<ULogSource field="estimator_status_0.states[11]"></ULogSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>
@@ -777,7 +825,6 @@
 		<ULogSource field="vehicle_local_position_0.eph"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -786,7 +833,6 @@
 		<ULogSource field="vehicle_local_position_0.epv"/>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>PX4Log Sensors</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -794,7 +840,7 @@
 		<PX4Source field="EST0.s0"></PX4Source>
 		<ULogSource field="estimator_status_0.states[0]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -802,7 +848,7 @@
 		<PX4Source field="EST0.s1"></PX4Source>
 		<ULogSource field="estimator_status_0.states[1]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -810,7 +856,7 @@
 		<PX4Source field="EST0.s2"></PX4Source>
 		<ULogSource field="estimator_status_0.states[2]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -818,7 +864,7 @@
 		<PX4Source field="EST0.s3"></PX4Source>
 		<ULogSource field="estimator_status_0.states[3]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -826,7 +872,7 @@
 		<PX4Source field="EST0.s4"></PX4Source>
 		<ULogSource field="estimator_status_0.states[4]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -834,7 +880,7 @@
 		<PX4Source field="EST0.s5"></PX4Source>
 		<ULogSource field="estimator_status_0.states[5]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -842,7 +888,7 @@
 		<PX4Source field="EST0.s6"></PX4Source>
 		<ULogSource field="estimator_status_0.states[6]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -850,7 +896,7 @@
 		<PX4Source field="EST0.s7"></PX4Source>
 		<ULogSource field="estimator_status_0.states[7]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -858,7 +904,7 @@
 		<PX4Source field="EST0.s8"></PX4Source>
 		<ULogSource field="estimator_status_0.states[8]"></ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -886,7 +932,7 @@
 		   <Converter class="BitMaskConverter" p1="0"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -898,7 +944,7 @@
 		    <Converter class="BitMaskConverter" p1="1"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -910,7 +956,7 @@
 		   <Converter class="BitMaskConverter" p1="2"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -922,7 +968,7 @@
 		   <Converter class="BitMaskConverter" p1="3"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -934,7 +980,7 @@
 		   <Converter class="BitMaskConverter" p1="4"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -946,7 +992,7 @@
 		   <Converter class="BitMaskConverter" p1="5"/>
 		</ULogSource>
 		<Groups>
-			<Group>PX4Log Estimator</Group>
+			<Group>Estimator Status</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1033,7 +1079,7 @@
 		<PX4Source field="BATT.V"></PX4Source>
 		<ULogSource field="battery_status_0.voltage_filtered_v"/>
 		<Groups>
-			<Group>System</Group>
+			<Group>Power</Group>
 		</Groups>
 		<Validity min="10.5" max="15.0"/>
 	</KeyFigure>
@@ -1041,8 +1087,9 @@
 	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">
 		<MSPSource class="battery" field="c0"></MSPSource>
 		<PX4Source field="BATT.C"></PX4Source>
+		<ULogSource field="battery_status_0.current_filtered_a"/>
 		<Groups>
-			<Group>System</Group>
+			<Group>Power</Group>
 		</Groups>
 		<Validity min="0.2" max="15.0"/>
 	</KeyFigure>
@@ -1051,7 +1098,7 @@
 		<MSPSource class="battery" field="a0"></MSPSource>
 		<ULogSource field="battery_status_0.discharged_mah"/>
 		<Groups>
-			<Group>System</Group>
+			<Group>Power</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1060,7 +1107,7 @@
 		   <Converter class="ExpressionConverter" expression="BATP/100" />
 		</MSPSource>
 		<Groups>
-			<Group>System</Group>
+			<Group>Power</Group>
 		</Groups>
 		<Validity min="0.2" max="1.0"/>
 	</KeyFigure>
