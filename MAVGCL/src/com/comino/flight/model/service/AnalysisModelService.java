@@ -35,6 +35,7 @@
 package com.comino.flight.model.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -193,8 +194,18 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public void dumpUlogFields() {
-		ulogger.getFieldList().forEach((e,i) -> {
-			System.out.println(e+": "+i);
+		List<String> sortedKeys=new ArrayList<String>(ulogger.getFieldList().keySet());
+		Collections.sort(sortedKeys);
+		sortedKeys.forEach((e) -> {
+			System.out.print(e);
+			meta.getKeyFigures().forEach((k) -> {
+				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
+					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
+						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
+					}
+				}
+			});
+			System.out.println();
 		});
 	}
 
