@@ -42,6 +42,7 @@ import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.parameter.MAVParameterTab;
+import com.comino.flight.tabs.raw.RawDataTab;
 import com.comino.flight.tabs.shell.MavLinkShellTab;
 import com.comino.flight.tabs.xtanalysis.FlightXtAnalysisTab;
 import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
@@ -91,6 +92,9 @@ public class FlightTabs extends Pane {
 	private MAVParameterTab mavparametertab;
 
 	@FXML
+	private RawDataTab rawdatatab;
+
+	@FXML
 	private MavLinkShellTab mavlinkshelltab;
 
 	private List<Node> tabs = new ArrayList<Node>();
@@ -103,6 +107,7 @@ public class FlightTabs extends Pane {
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavparametertab);
+		tabs.add(rawdatatab);
 		tabs.add(mavlinkshelltab);
 
 	}
@@ -136,7 +141,6 @@ public class FlightTabs extends Pane {
 		tuning.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
 		tuning.setup(control);
 
-
 		experimental.fadeProperty().bind(flightControl.getControl().getExperimentalVisibility());
 		experimental.setup(control);
 
@@ -148,15 +152,18 @@ public class FlightTabs extends Pane {
 
 		xyanalysistab.setup(flightControl.getChartControl(),control);
 		mavparametertab.setup(control);
+	    rawdatatab.setup(control);
 		mavlinkshelltab.setup(control);
 
 		this.tabpane.getTabs().get(3).setDisable(true);
 		this.tabpane.getTabs().get(4).setDisable(true);
 		this.tabpane.getTabs().get(5).setDisable(true);
+		this.tabpane.getTabs().get(6).setDisable(true);
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
-			this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue() || control.isSimulation());
+//			this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue());
+			this.tabpane.getTabs().get(6).setDisable(!newvalue.booleanValue() || control.isSimulation());
 			flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
 
 		});
@@ -164,7 +171,7 @@ public class FlightTabs extends Pane {
 		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(control.isConnected()) {
 			    this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
-			    this.tabpane.getTabs().get(5).setDisable(newvalue.booleanValue());
+			    this.tabpane.getTabs().get(6).setDisable(newvalue.booleanValue());
 			    flightControl.getControl().getDetailVisibility().set(false);
 			}
 		});
@@ -181,11 +188,13 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
 				xyanalysistab.setWidthBinding(details.getWidth()+3);
+				rawdatatab.setWidthBinding(details.getWidth()+3);
 				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 			}
 			else {
 				xtanalysistab.setWidthBinding(0);
 				xyanalysistab.setWidthBinding(0);
+				rawdatatab.setWidthBinding(0);
 				mavlinkshelltab.setWidthBinding(0);
 			}
 		});
@@ -194,17 +203,20 @@ public class FlightTabs extends Pane {
 			if(newvalue.booleanValue()) {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
+				rawdatatab.setWidthBinding(details.getWidth()+3);
 				mavlinkshelltab.setWidthBinding(tuning.getWidth()+3);
 			}
 			else {
 				if(details.isVisible() && control.isConnected()) {
 					xtanalysistab.setWidthBinding(details.getWidth()+3);
 					xyanalysistab.setWidthBinding(details.getWidth()+3);
+					rawdatatab.setWidthBinding(details.getWidth()+3);
 					mavlinkshelltab.setWidthBinding(details.getWidth()+3);
 				}
 				else {
 					xtanalysistab.setWidthBinding(0);
 					xyanalysistab.setWidthBinding(0);
+					rawdatatab.setWidthBinding(0);
 					mavlinkshelltab.setWidthBinding(0);
 				}
 			}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.TableView?>
+
+<fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+		<TableView fx:id="tableview" layoutX="2.0" layoutY="5.0"  styleClass="widget">
+		</TableView>
+	</children>
+</fx:root>
