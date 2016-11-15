@@ -121,21 +121,23 @@ public class ChartControlWidget extends WidgetPane  {
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if((System.currentTimeMillis() - scroll_tms)>20) {
 				scroll_tms = System.currentTimeMillis();
-				for(IChartControl chart : charts) {
-					if(chart.getScrollProperty()!=null)
-						chart.getScrollProperty().set(1f-newvalue.floatValue()/1000);
-				}
+				new Thread(()->{
+					for(IChartControl chart : charts) {
+						if(chart.getScrollProperty()!=null)
+							chart.getScrollProperty().set(1f-newvalue.floatValue()/1000f);
+					}
+				}).start();
 			}
 		});
 
 
 		state.getLogLoadedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
-			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
-				scroll.setDisable(true);
-			else
-				scroll.setDisable(false);
-			scroll.setValue(1);
+				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
+					scroll.setDisable(true);
+				else
+					scroll.setDisable(false);
+				scroll.setValue(1);
 			}
 		});
 
