@@ -14,17 +14,16 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 15/11/2016 
 
-V0.6 pre-release now available
+V0.6 release now available
 
 - MAVLink 2.0 implementation
 - supports ULOG streaming to record data 
-- Dump of Mapping ULOG <=> KeyFigures via menu
 
 V0.6 notes:
 
-- V0.6 requires MAVLink 2.0 protocol without signing
+- V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0') - MAVLink 1.0 no longer supported
 - Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
-- Mapping between ULog data and MAVGCL key-figures still is required and not completed (refer to the [Mapping documentation](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/UlogKeyFiguresAssignment.xlsx) )
+- Mapping between ULog data and MAVGCL key-figures is still ongoing and not completed (refer to the [Mapping documentation](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/UlogKeyFiguresAssignment.xlsx) )
 
 
 **Features:**
