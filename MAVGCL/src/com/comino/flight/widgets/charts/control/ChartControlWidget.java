@@ -43,6 +43,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.mav.control.IMAVController;
@@ -109,6 +110,11 @@ public class ChartControlWidget extends WidgetPane  {
 			else
 				scroll.setDisable(false);
 			scroll.setValue(1);
+		});
+
+
+		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
+			keyfigures.setDisable(n.booleanValue());
 		});
 
 

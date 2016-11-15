@@ -79,18 +79,18 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	public void loadModelMetaData(InputStream stream) {
 
-		InputStream is = stream;
+			InputStream is = stream;
+			meta.clear(); groups.clear(); virt.clear();
 
-		meta.clear(); groups.clear(); virt.clear();
+			if(is!=null) {
+				buildDocument(is);
+			} else {
+				is = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
+				buildDocument(is);
+			}
+			sortedMetaList = buildSortedList();
+			setChanged(); notifyObservers(null);
 
-		if(is!=null) {
-            buildDocument(is);
-		} else {
-			is = getClass().getResourceAsStream("AnalysisDataModelMetaData.xml");
-			buildDocument(is);
-		}
-		sortedMetaList = buildSortedList();
-		setChanged();
 	}
 
 
@@ -173,12 +173,15 @@ public class AnalysisDataModelMetaData extends Observable {
 	}
 
 	private void sortGroupMaps() {
-		groups.forEach((g,l) -> {
-			l.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
-		});
+		new Thread(()-> {
+			groups.forEach((g,l) -> {
+				l.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
+			});
+		}).start();
 	}
 
 	private List<KeyFigureMetaData> buildSortedList() {
+
 		List<KeyFigureMetaData> list = new ArrayList<KeyFigureMetaData>();
 		meta.forEach((i,p) -> {
 			list.add(p);
