@@ -102,7 +102,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		Thread c = new Thread(new Converter());
-		c.setPriority(Thread.MIN_PRIORITY);
+		c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
 	}
 
@@ -112,7 +112,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
 		Thread c = new Thread(new Converter());
-		c.setPriority(Thread.MIN_PRIORITY);
+		c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
 	}
 

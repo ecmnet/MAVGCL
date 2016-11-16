@@ -62,9 +62,9 @@ public class AnalysisDataModel {
 
 		d.tms = tms;
 		if(msg!=null)
-		  d.msg = msg.clone();
+			d.msg = msg.clone();
 		if(status!=null)
-		  d.status = status.clone();
+			d.status = status.clone();
 		return d;
 	}
 
@@ -78,7 +78,7 @@ public class AnalysisDataModel {
 
 	public float getValue(String kf) {
 		try {
-		return data.get(kf.toLowerCase().hashCode());
+			return data.get(kf.toLowerCase().hashCode());
 		} catch(Exception e) { 	}
 		return 0;
 	}
@@ -97,21 +97,20 @@ public class AnalysisDataModel {
 	@SuppressWarnings("unchecked")
 	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
-			Float val = null;
+			Float val = Float.NaN;
 			try {
 				if(!e.isVirtual) {
 
-				  if( type == KeyFigureMetaData.MSP_SOURCE && e.hasSource(KeyFigureMetaData.MSP_SOURCE))
-				      val = e.getValueFromMSPModel((DataModel)source);
-				  if( type == KeyFigureMetaData.PX4_SOURCE && e.hasSource(KeyFigureMetaData.PX4_SOURCE))
-					  val = e.getValueFromPX4Model((Map<String,Object>)source);
-				  if( type == KeyFigureMetaData.ULG_SOURCE && e.hasSource(KeyFigureMetaData.ULG_SOURCE))
-					  val = e.getValueFromULogModel((Map<String,Object>)source);
-				  if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
-					  val = e.getValueFromMAVLinkMessage(source);
+					if( type == KeyFigureMetaData.MSP_SOURCE && e.hasSource(KeyFigureMetaData.MSP_SOURCE))
+						val = e.getValueFromMSPModel((DataModel)source);
+					if( type == KeyFigureMetaData.PX4_SOURCE && e.hasSource(KeyFigureMetaData.PX4_SOURCE))
+						val = e.getValueFromPX4Model((Map<String,Object>)source);
+					if( type == KeyFigureMetaData.ULG_SOURCE && e.hasSource(KeyFigureMetaData.ULG_SOURCE))
+						val = e.getValueFromULogModel((Map<String,Object>)source);
+					if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
+						val = e.getValueFromMAVLinkMessage(source);
 
-				  if(val!=null)
-					    data.put(e.hash,val);
+					data.put(e.hash,val);
 				}
 			} catch (Exception e1) {
 				data.put(e.hash, Float.NaN);
@@ -123,7 +122,7 @@ public class AnalysisDataModel {
 		md.getVirtualKeyFigureMap().forEach((i,e) -> {
 			try {
 				if(e.isVirtual) {
-				  data.put(e.hash,e.calculateVirtualValue(this));
+					data.put(e.hash,e.calculateVirtualValue(this));
 				}
 			} catch (Exception e1) {
 				data.put(e.hash, Float.NaN);

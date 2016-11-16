@@ -648,38 +648,36 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
 
-					if(current_x_pt > current_x1_pt) {
-						if(series1.getData().size()>0 && type1.hash!=0) {
-							pool.invalidate(series1.getData().get(0));
-							series1.getData().remove(0);
-						}
-
-						if(series2.getData().size()>0 && type2.hash!=0) {
-							pool.invalidate(series2.getData().get(0));
-							series2.getData().remove(0);
-						}
-
-						if(series3.getData().size()>0 && type3.hash!=0) {
-							pool.invalidate(series3.getData().get(0));
-							series3.getData().remove(0);
-						}
-					}
-
 					if(type1.hash!=0)  {
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
-						if(!Float.isNaN(v1))
+						if(!Float.isNaN(v1)) {
+							if(current_x_pt > current_x1_pt && series1.getData().size()>0) {
+								pool.invalidate(series1.getData().get(0));
+								series1.getData().remove(0);
+							}
 							series1.getData().add(pool.checkOut(dt_sec,v1));
+						}
 
 					}
 					if(type2.hash!=0)  {
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
-						if(!Float.isNaN(v2))
+						if(!Float.isNaN(v2)) {
+							if(current_x_pt > current_x1_pt && series2.getData().size()>0) {
+								pool.invalidate(series2.getData().get(0));
+								series2.getData().remove(0);
+							}
 							series2.getData().add(pool.checkOut(dt_sec,v2));
+						}
 					}
 					if(type3.hash!=0)  {
 						v3 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected());
-						if(!Float.isNaN(v3))
+						if(!Float.isNaN(v3)) {
+							if(current_x_pt > current_x1_pt && series3.getData().size()>0) {
+								pool.invalidate(series3.getData().get(0));
+								series3.getData().remove(0);
+							}
 							series3.getData().add(pool.checkOut(dt_sec,v3));
+						}
 					}
 
 				}
@@ -742,27 +740,27 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		KeyFigureMetaData none = new KeyFigureMetaData();
 
-			Platform.runLater(() -> {
+		Platform.runLater(() -> {
 
-				series.getItems().clear();
-				series.getItems().add(none);
+			series.getItems().clear();
+			series.getItems().add(none);
 
-				if(kfl.size()==0) {
-					series.getSelectionModel().select(0);
-					return;
-				}
+			if(kfl.size()==0) {
+				series.getSelectionModel().select(0);
+				return;
+			}
 
-				if(type!=null && type.hash!=0) {
-					if(!kfl.contains(type))
-						series.getItems().add(type);
-					series.getItems().addAll(kfl);
-					series.getSelectionModel().select(type);
-				} else {
-					series.getItems().addAll(kfl);
-					series.getSelectionModel().select(0);
-				}
+			if(type!=null && type.hash!=0) {
+				if(!kfl.contains(type))
+					series.getItems().add(type);
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(type);
+			} else {
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(0);
+			}
 
-			});
+		});
 	}
 
 	private void storeRecentList() {
@@ -789,7 +787,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		float max = -Float.MAX_VALUE; float a = 0; float v; int index=0;
 
 		if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
-			return 0;
+			return Float.NaN;
 
 		if(length==1)
 			return dataService.getModelList().get(current_x).getValue(m);

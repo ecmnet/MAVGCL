@@ -111,7 +111,7 @@ public class KeyFigureMetaData {
 	}
 
 	public Float getValueFromMSPModel(DataModel m) throws Exception {
-		float value = 0;
+		float value = Float.NaN;
 		DataSource source = sources.get(MSP_SOURCE);
 		Field mclass_field = m.getClass().getField(source.class_n);
 		Object mclass = mclass_field.get(m);
@@ -124,7 +124,7 @@ public class KeyFigureMetaData {
 
 
 	public Float getValueFromPX4Model(Map<String,Object> data) {
-		float value = 0;
+		float value = Float.NaN;;
 		DataSource source = sources.get(PX4_SOURCE);
 		Object o = data.get(source.field);
 		if(o instanceof Integer)
@@ -140,7 +140,7 @@ public class KeyFigureMetaData {
 	}
 
 	public Float getValueFromULogModel(Map<String,Object> data) {
-		float value = 0;
+		float value = Float.NaN;;
 		DataSource source = sources.get(ULG_SOURCE);
 		Object o = data.get(source.field);
 		if(o instanceof Integer)
@@ -156,7 +156,7 @@ public class KeyFigureMetaData {
 	}
 
 	public Float getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
-		float value = 0;
+		float value = Float.NaN;;
 		DataSource source = sources.get(MAV_SOURCE);
 		if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
 		    Field mfield_field = mavlink_message.getClass().getField(source.field);
