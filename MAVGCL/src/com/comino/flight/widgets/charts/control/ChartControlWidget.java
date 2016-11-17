@@ -60,7 +60,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ChartControlWidget extends WidgetPane  {
 
-	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 240, 1200 };
+	private static final Integer[] TOTAL_TIME = { 20, 30, 60, 100, 200 };
 
 
 	@FXML
@@ -75,7 +75,7 @@ public class ChartControlWidget extends WidgetPane  {
 	private IMAVController control;
 	private List<IChartControl> charts = null;
 
-	protected int totalTime_sec = 30;
+	protected int totalTime_sec = 0;
 	private AnalysisModelService modelService;
 
 	private long scroll_tms = 0;
@@ -179,7 +179,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 		for(IChartControl chart : charts) {
 			if(chart.getTimeFrameProperty()!=null)
-				chart.getTimeFrameProperty().set(30);
+				chart.getTimeFrameProperty().set(totalTime_sec);
 			if(chart.getScrollProperty()!=null)
 				chart.getScrollProperty().set(1);
 		}

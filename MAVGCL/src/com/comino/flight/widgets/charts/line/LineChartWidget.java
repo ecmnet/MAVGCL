@@ -140,7 +140,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty  scroll        = new SimpleFloatProperty(0);
 
-	private int resolution_ms 	= 50;
+	private int resolution_ms 	= 100;
 
 	private int current_x_pt      = 0;
 
@@ -399,10 +399,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		timeFrame.addListener((v, ov, nv) -> {
 			this.current_x_pt = 0;
+			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
 			current_x0_pt =  dataService.calculateX0Index(1);
-			setXResolution(timeFrame.get());
 		});
 
 
@@ -435,7 +435,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		this.id      = id;
 		this.control = control;
 
-		setXResolution(30);
+		setXResolution(20);
 
 		series1.setName(type1.desc1);
 		series2.setName(type2.desc1);
@@ -551,8 +551,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		timeframe = frame;
 
 		if(!isDisabled()) {
-			updateRequest();
 			Platform.runLater(() -> {
+				updateGraph(true);
 				xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 			});
 		}
@@ -610,7 +610,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
-			set_bounds = true;
+			setXAxisBounds(current_x0_pt,current_x1_pt);
 
 			if(type1.hash==0 && type2.hash==0 && type3.hash==0)
 				return;
