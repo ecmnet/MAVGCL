@@ -189,10 +189,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			long last = 0;
 			@Override public void handle(long now) {
-				if(!isDisabled() && (now - last) > (REFRESH_RATE*500000)) {
+			//	if(!isDisabled() && (now - last) > (REFRESH_RATE*500000)) {
 					updateGraph(refreshRequest);
 					last = now;
-				}
+			//	}
 			}
 		};
 	}
