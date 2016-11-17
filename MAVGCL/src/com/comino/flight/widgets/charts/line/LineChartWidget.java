@@ -705,7 +705,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
-		AnalysisDataModel m = null; int count=0;
+		AnalysisDataModel m = null; int count=0; float val=0;
 		float _min = Float.NaN; float _max = Float.NaN;
 		float _avg = 0; float mean = 0; float std=0;
 
@@ -714,18 +714,18 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		d.setKeyFigure(kf);
 		for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
-			m = dataService.getModelList().get(i);
-			if(m.getValue(kf)<_min || Float.isNaN(_min)) _min = m.getValue(kf);
-			if(m.getValue(kf)>_max || Float.isNaN(_max)) _max = m.getValue(kf);
-			_avg = _avg + m.getValue(kf); count++;
+			val = dataService.getModelList().get(i).getValue(kf);
+			if(val<_min || Float.isNaN(_min)) _min = val;
+			if(val>_max || Float.isNaN(_max)) _max = val;
+			_avg = _avg + val; count++;
 		}
 
 		d.setMinMax(_min, _max);
 		if(count>0) {
 			mean = _avg / count; std = 0;
 			for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
-				m = dataService.getModelList().get(i);
-				std = std + (m.getValue(kf) - mean) * (m.getValue(kf) - mean);
+				val = dataService.getModelList().get(i).getValue(kf);
+				std = std + (val - mean) * (val - mean);
 			}
 			std = (float)Math.sqrt(std / count);
 			d.setAvg(mean, std);
