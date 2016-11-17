@@ -41,11 +41,13 @@ import javafx.scene.chart.XYChart;
 
 public class XYDataPool {
 
+	private static final int INIT_CAPACITY = 500;
+
 	private Hashtable<XYChart.Data<Number,Number>,Boolean> locked, unlocked;
 
 	public XYDataPool() {
-		locked = new Hashtable<XYChart.Data<Number,Number>,Boolean>();
-		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>();
+		locked   = new Hashtable<XYChart.Data<Number,Number>,Boolean>(0);
+		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
 	}
 
 	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)

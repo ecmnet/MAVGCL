@@ -92,7 +92,10 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	public void setKeyFigure(KeyFigureMetaData kf) {
 		f.applyPattern(kf.mask);
-		header.setText(kf.desc1+" ["+kf.uom+"]:");
+		if(kf.uom!=null && kf.uom.length()>0)
+		  header.setText(kf.desc1+" ["+kf.uom+"]:");
+		else
+		  header.setText(kf.desc1+":");
 	}
 
 	public void setMinMax(float min, float max) {
@@ -107,6 +110,10 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	@Override
 	public Node getNode() {
 		return pane;
+	}
+
+	public void setVisible(boolean v) {
+		pane.setVisible(v);
 	}
 
 	@Override

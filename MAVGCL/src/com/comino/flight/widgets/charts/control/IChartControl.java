@@ -23,7 +23,7 @@ import javafx.beans.property.IntegerProperty;
 public interface IChartControl {
 
 	public IntegerProperty getTimeFrameProperty();
-	public FloatProperty  getScrollProperty();
+	public FloatProperty   getScrollProperty();
 
 	public boolean isVisible();
 

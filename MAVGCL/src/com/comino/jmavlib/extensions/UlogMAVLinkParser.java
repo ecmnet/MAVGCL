@@ -347,6 +347,7 @@ public class UlogMAVLinkParser {
 				}
 			} else {
 				update.put(msg_name + "." + field.name, msg.get(i));
+			//	System.out.println(msg_name+":"+msg.get(i));
 			}
 		}
 	}

@@ -67,7 +67,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private ULogFromMAVLinkReader                   ulogger   = null;
 	private AnalysisDataModel				    	current   = null;
 	private AnalysisDataModel                        record   = null;
-	private LinkedList<AnalysisDataModel> 		  modelList   = null;
+	private List<AnalysisDataModel> 		      modelList   = null;
 	private StateProperties                           state   = null;
 
 	private AnalysisDataModelMetaData                  meta  =  null;
@@ -91,7 +91,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 
-		this.modelList     = new LinkedList<AnalysisDataModel>();
+		this.modelList     = new ArrayList<AnalysisDataModel>();
 		this.model         = control.getCurrentModel();
 		this.current       =  new AnalysisDataModel();
 		this.record       =  new AnalysisDataModel();

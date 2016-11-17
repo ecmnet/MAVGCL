@@ -119,13 +119,13 @@ public class ChartControlWidget extends WidgetPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if((System.currentTimeMillis() - scroll_tms)>100) {
+			if((System.currentTimeMillis() - scroll_tms)>20) {
 				scroll_tms = System.currentTimeMillis();
-					for(IChartControl chart : charts) {
-						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set(1f-newvalue.floatValue()/1000f);
-					}
-			}
+				charts.forEach((chart) -> {
+					if(chart.getScrollProperty()!=null)
+						chart.getScrollProperty().set(1f-newvalue.floatValue()/500);
+				});
+     		}
 		});
 
 

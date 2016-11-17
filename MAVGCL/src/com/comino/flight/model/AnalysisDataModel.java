@@ -77,17 +77,18 @@ public class AnalysisDataModel {
 
 
 	public float getValue(String kf) {
-		try {
-			return data.get(kf.toLowerCase().hashCode());
-		} catch(Exception e) { 	}
-		return 0;
+		int hash = kf.toLowerCase().hashCode();
+		if(data.containsKey(hash))
+			return data.get(hash);
+		else
+			return 0;
 	}
 
 	public float getValue(KeyFigureMetaData m) {
-		try {
+		if(data.containsKey(m.hash))
 			return data.get(m.hash);
-		} catch(Exception e) { 	}
-		return Float.NaN;
+		else
+			return Float.NaN;
 	}
 
 	public void setValue(String kf,float value) {
@@ -97,7 +98,7 @@ public class AnalysisDataModel {
 	@SuppressWarnings("unchecked")
 	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
-			Float val = Float.NaN;
+			Float val = null;
 			try {
 				if(!e.isVirtual) {
 
@@ -110,7 +111,8 @@ public class AnalysisDataModel {
 					if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
 						val = e.getValueFromMAVLinkMessage(source);
 
-					data.put(e.hash,val);
+					if(val!=null)
+						data.put(e.hash,val);
 				}
 			} catch (Exception e1) {
 				data.put(e.hash, Float.NaN);
