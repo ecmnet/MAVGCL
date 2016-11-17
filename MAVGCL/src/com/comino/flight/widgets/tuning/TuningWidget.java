@@ -112,7 +112,6 @@ public class TuningWidget extends WidgetPane  {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
 				if(newValue!=null) {
-					Platform.runLater(() -> {
 						ParameterAttributes p = (ParameterAttributes)newValue;
 						if(!groups.getItems().contains(p.group_name))
 							groups.getItems().add(p.group_name);
@@ -124,7 +123,6 @@ public class TuningWidget extends WidgetPane  {
 								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 							waitingForAcknowledge = false;
 						}
-					});
 				}
 			}
 		});
@@ -138,7 +136,7 @@ public class TuningWidget extends WidgetPane  {
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(80));
 		grid.setVgap(4); grid.setHgap(6);
-		
+
 		this.visibleProperty().addListener((e,o,n) -> {
 			if(n.booleanValue() && params.getList().size()>0) {
 				String s = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "None");
@@ -234,9 +232,9 @@ public class TuningWidget extends WidgetPane  {
 						}
 					});
 					cb.getSelectionModel().
-					     selectedItemProperty().addListener((v,ov,nv) -> {
-					    	 groups.requestFocus();
-					 });
+					selectedItemProperty().addListener((v,ov,nv) -> {
+						groups.requestFocus();
+					});
 				}
 				else {
 					this.editor = new TextField();
@@ -255,7 +253,7 @@ public class TuningWidget extends WidgetPane  {
 			this.editor.setPrefHeight(19);
 
 			if(editable)
-                setContextMenu(editor);
+				setContextMenu(editor);
 			else
 				editor.setDisable(true);
 
@@ -275,6 +273,7 @@ public class TuningWidget extends WidgetPane  {
 
 								if((val >= att.min_val && val <= att.max_val) ||
 										att.min_val == att.max_val ) {
+									System.out.println("Try to set "+att.name+" to "+val+"...");
 
 									msg_param_set msg = new msg_param_set(255,1);
 									msg.target_component = 1;
@@ -287,6 +286,7 @@ public class TuningWidget extends WidgetPane  {
 									waitingForAcknowledge = true;
 
 									checkDefaultOf(editor,val);
+
 
 								}
 								else {
