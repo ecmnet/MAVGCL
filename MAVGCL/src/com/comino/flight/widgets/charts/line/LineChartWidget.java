@@ -67,6 +67,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
+import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
@@ -171,6 +172,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 	private boolean refreshRequest = false;
 
+	private long dashboard_update_tms = 0;
+
 
 	public LineChartWidget() {
 
@@ -229,6 +232,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
 		linechart.setCache(true);
+		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -622,8 +626,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			if(dash.isSelected() && dataService.getModelList().size()>0 &&
-					((current_x_pt * COLLECTOR_CYCLE * 10) % resolution_ms) == 0) {
+			if(dash.isSelected() && dataService.getModelList().size()>0
+					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
+				dashboard_update_tms = System.currentTimeMillis();
 				Platform.runLater(() -> {
 				setDashboardData(dashboard1,type1);
 				setDashboardData(dashboard2,type2);
@@ -633,9 +638,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 			while(current_x_pt<max_x ) {
 
-				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
-
 				m = dataService.getModelList().get(current_x_pt);
+				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)

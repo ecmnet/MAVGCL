@@ -91,7 +91,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 
-		this.modelList     = new ArrayList<AnalysisDataModel>();
+		this.modelList     = new ArrayList<AnalysisDataModel>(50000);
 		this.model         = control.getCurrentModel();
 		this.current       =  new AnalysisDataModel();
 		this.record       =  new AnalysisDataModel();
@@ -327,7 +327,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					else
 						m = current.clone();
 					m.tms = System.nanoTime() / 1000 - tms;
-
+                    m.dt_sec = m.tms / 1e6f;
 					modelList.add(m);
 
 				count++;

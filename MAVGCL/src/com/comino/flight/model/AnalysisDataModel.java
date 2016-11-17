@@ -46,6 +46,8 @@ public class AnalysisDataModel {
 	public LogMessage msg  = null;
 	public Status   status = null;
 
+	public float    dt_sec = 0;
+
 	private Map<Integer,Float> data = null;
 
 	public AnalysisDataModel() {
