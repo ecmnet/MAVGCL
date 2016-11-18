@@ -92,6 +92,7 @@ public class TuningWidget extends WidgetPane  {
 	private PX4Parameters  params;
 
 	private ScheduledFuture<?> timeout;
+	private int timeout_count=0;
 
 	public TuningWidget() {
 
@@ -123,7 +124,7 @@ public class TuningWidget extends WidgetPane  {
 						MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						if(p.reboot_required)
 							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						timeout.cancel(true);
+						timeout.cancel(true);  timeout_count=0;
 					}
 
 				}
@@ -169,9 +170,9 @@ public class TuningWidget extends WidgetPane  {
 						Label unit = new Label(p.unit); unit.setPrefWidth(30);
 						Label name = new Label(p.name); name.setPrefWidth(95);
 						if(p.unit!=null && p.unit.length()>0)
-						  name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
+							name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
 						else
-						 name.setTooltip(new Tooltip(p.description));
+							name.setTooltip(new Tooltip(p.description));
 						ParamItem item = createParamItem(p, editable);
 						grid.addRow(i++, name,item.editor,unit);
 					}
@@ -267,15 +268,11 @@ public class TuningWidget extends WidgetPane  {
 
 			setValueOf(editor,att.value);
 
-
-			this.editor.focusedProperty().addListener(new ChangeListener<Boolean>() {
-
-				@Override
-				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-					if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
-						try {
-							float val =  getValueOf(editor);
+			this.editor.focusedProperty().addListener((observable, oldValue, newValue) -> {
+				if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
+					try {
+						float val =  getValueOf(editor);
+						if(val != att.value) {
 							if((val >= att.min_val && val <= att.max_val) ||
 									att.min_val == att.max_val ) {
 								sendParameter(att,val);
@@ -285,13 +282,12 @@ public class TuningWidget extends WidgetPane  {
 								MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 								setValueOf(editor,att.value);
 							}
-						} catch(NumberFormatException e) {
-							setValueOf(editor,att.value);
 						}
+					} catch(NumberFormatException e) {
+						setValueOf(editor,att.value);
 					}
 				}
 			});
-
 		}
 
 		private void sendParameter(ParameterAttributes att, float val) {
@@ -304,9 +300,14 @@ public class TuningWidget extends WidgetPane  {
 			msg.param_value = ParamUtils.valToParam(att.vtype, val);
 			control.sendMAVLinkMessage(msg);
 			timeout = ExecutorService.get().schedule(() -> {
-				MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
-						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				setValueOf(editor,att.value);
+				if(++timeout_count > 3) {
+					MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
+							MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					setValueOf(editor,att.value); }
+				else {
+					System.out.println("Timeout setting parameter. Retry "+timeout_count);
+					sendParameter(att,val);
+				}
 			}, 200, TimeUnit.MILLISECONDS);
 		}
 
