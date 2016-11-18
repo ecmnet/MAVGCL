@@ -647,7 +647,7 @@ velocity</short_desc>
     </parameter>
     <parameter default="0" name="COM_DISARM_LAND" type="INT32">
       <short_desc>Time-out for auto disarm after landing</short_desc>
-      <long_desc>A non-zero, positive value specifies the time-out period in seconds after which the vehicle will be automatically disarmed in case a landing situation has been detected during this period. A value of zero means that automatic disarming is disabled.</long_desc>
+      <long_desc>A non-zero, positive value specifies the time-out period in seconds after which the vehicle will be automatically disarmed in case a landing situation has been detected during this period. The vehicle will also auto-disarm right after arming if it has not even flown, however the time will be longer by a factor of 5. A value of zero means that automatic disarming is disabled.</long_desc>
       <min>0</min>
       <max>20</max>
       <unit>s</unit>
@@ -775,6 +775,14 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
     </parameter>
   </group>
   <group name="EKF2">
+    <parameter default="20" name="EKF2_MIN_OBS_DT" type="INT32">
+      <short_desc>Minimum time of arrival delta between non-IMU observations before data is downsampled.
+Baro and Magnetometer data will be averaged before downsampling, other data will be point sampled resulting in loss of information</short_desc>
+      <min>10</min>
+      <max>50</max>
+      <unit>ms</unit>
+      <scope>modules/ekf2</scope>
+    </parameter>
     <parameter default="0" name="EKF2_MAG_DELAY" type="FLOAT">
       <short_desc>Magnetometer measurement delay relative to IMU measurements</short_desc>
       <min>0</min>
@@ -1013,6 +1021,14 @@ Assumes measurement is timestamped at trailing edge of integration period</short
       <max>5.0</max>
       <unit>m/s</unit>
       <decimal>1</decimal>
+      <scope>modules/ekf2</scope>
+    </parameter>
+    <parameter default="0.3" name="EKF2_BETA_NOISE" type="FLOAT">
+      <short_desc>Noise for synthetic sideslip fusion</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>m/s</unit>
+      <decimal>2</decimal>
       <scope>modules/ekf2</scope>
     </parameter>
     <parameter default="0" name="EKF2_MAG_DECL" type="FLOAT">
@@ -1313,7 +1329,13 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <decimal>1</decimal>
       <scope>modules/ekf2</scope>
     </parameter>
-    <parameter default="0.5" name="EKF2_TAU_VEL" type="FLOAT">
+    <parameter default="0" name="EKF2_FUSE_BETA" type="INT32">
+      <short_desc>Boolean determining if synthetic sideslip measurements should fused</short_desc>
+      <long_desc>A value of 1 indicates that fusion is active</long_desc>
+      <boolean />
+      <scope>modules/ekf2</scope>
+    </parameter>
+    <parameter default="0.25" name="EKF2_TAU_VEL" type="FLOAT">
       <short_desc>Time constant of the velocity output prediction and smoothing filter</short_desc>
       <max>1.0</max>
       <unit>s</unit>
@@ -2369,35 +2391,19 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
+    <parameter default="1.3" name="LPE_FLW_SCALE" type="FLOAT">
+      <short_desc>Optical flow scale</short_desc>
+      <min>0.1</min>
+      <max>10.0</max>
+      <unit>m</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
     <parameter default="1" name="LPE_FLW_GYRO_CMP" type="INT32">
       <short_desc>Optical flow gyro compensation</short_desc>
       <min>-1</min>
       <max>1</max>
       <unit>m</unit>
-      <decimal>3</decimal>
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
-    <parameter default="0.04" name="LPE_FLW_VXY" type="FLOAT">
-      <short_desc>Optical flow xy velocity standard deviation</short_desc>
-      <min>0.01</min>
-      <max>1</max>
-      <unit>m</unit>
-      <decimal>3</decimal>
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
-    <parameter default="0.04" name="LPE_FLW_VXY_D" type="FLOAT">
-      <short_desc>Optical flow xy velocity standard deviation linear factor on distance</short_desc>
-      <min>0.01</min>
-      <max>1</max>
-      <unit>m / m</unit>
-      <decimal>3</decimal>
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
-    <parameter default="1.0" name="LPE_FLW_VXY_R" type="FLOAT">
-      <short_desc>Optical flow xy velocity standard deviation linear factor on rotation rate</short_desc>
-      <min>0.01</min>
-      <max>1</max>
-      <unit>m / m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
@@ -2440,7 +2446,7 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0015" name="LPE_ACC_XY" type="FLOAT">
+    <parameter default="0.012" name="LPE_ACC_XY" type="FLOAT">
       <short_desc>Accelerometer xy noise density</short_desc>
       <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz) Larger than data sheet to account for tilt error.</long_desc>
       <min>0.00001</min>
@@ -2449,7 +2455,7 @@ but also ignore less noise</short_desc>
       <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.0015" name="LPE_ACC_Z" type="FLOAT">
+    <parameter default="0.02" name="LPE_ACC_Z" type="FLOAT">
       <short_desc>Accelerometer z noise density</short_desc>
       <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz)</long_desc>
       <min>0.00001</min>
@@ -2461,7 +2467,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>30</max>
+      <max>3</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -2547,7 +2553,7 @@ EPV used if greater than this value</short_desc>
     <parameter default="0.5" name="LPE_VIS_Z" type="FLOAT">
       <short_desc>Vision z standard deviation</short_desc>
       <min>0.01</min>
-      <max>5</max>
+      <max>2</max>
       <unit>m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -2640,7 +2646,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>0</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="0.1" name="LPE_VXY_PUB" type="FLOAT">
+    <parameter default="0.3" name="LPE_VXY_PUB" type="FLOAT">
       <short_desc>Required velocity xy standard deviation to publish position</short_desc>
       <min>0.01</min>
       <max>1.0</max>
@@ -2654,6 +2660,14 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <max>5.0</max>
       <unit>m</unit>
       <decimal>1</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="0.03" name="LPE_LAND_Z" type="FLOAT">
+      <short_desc>Land detector z standard deviation</short_desc>
+      <min>0.001</min>
+      <max>10.0</max>
+      <unit>m</unit>
+      <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
   </group>
@@ -2768,7 +2782,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
     </parameter>
   </group>
   <group name="Mission">
-    <parameter default="10.0" name="MIS_TAKEOFF_ALT" type="FLOAT">
+    <parameter default="2.5" name="MIS_TAKEOFF_ALT" type="FLOAT">
       <short_desc>Take-off altitude</short_desc>
       <long_desc>This is the minimum altitude the system will take off to.</long_desc>
       <min>0</min>
@@ -5854,6 +5868,33 @@ if required for the gimbal (only in AUX output mode)</short_desc>
         <value code="8">Channel 8</value>
       </values>
     </parameter>
+    <parameter default="0" name="RC_MAP_GEAR_SW" type="INT32">
+      <short_desc>Landing gear switch channel</short_desc>
+      <min>0</min>
+      <max>18</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="11">Channel 11</value>
+        <value code="10">Channel 10</value>
+        <value code="13">Channel 13</value>
+        <value code="12">Channel 12</value>
+        <value code="15">Channel 15</value>
+        <value code="14">Channel 14</value>
+        <value code="17">Channel 17</value>
+        <value code="16">Channel 16</value>
+        <value code="18">Channel 18</value>
+        <value code="1">Channel 1</value>
+        <value code="0">Unassigned</value>
+        <value code="3">Channel 3</value>
+        <value code="2">Channel 2</value>
+        <value code="5">Channel 5</value>
+        <value code="4">Channel 4</value>
+        <value code="7">Channel 7</value>
+        <value code="6">Channel 6</value>
+        <value code="9">Channel 9</value>
+        <value code="8">Channel 8</value>
+      </values>
+    </parameter>
     <parameter default="0.25" name="RC_ASSIST_TH" type="FLOAT">
       <short_desc>Threshold for selecting assist mode</short_desc>
       <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
@@ -5919,6 +5960,13 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
     <parameter default="0.25" name="RC_TRANS_TH" type="FLOAT">
       <short_desc>Threshold for the VTOL transition switch</short_desc>
+      <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
+      <min>-1</min>
+      <max>1</max>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.25" name="RC_GEAR_TH" type="FLOAT">
+      <short_desc>Threshold for the landing gear switch</short_desc>
       <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
       <min>-1</min>
       <max>1</max>
@@ -6826,13 +6874,12 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     <parameter default="1" name="SYS_MC_EST_GROUP" type="INT32">
       <short_desc>Set multicopter estimator group</short_desc>
       <long_desc>Set the group of estimators used for multicopters and vtols</long_desc>
-      <min>0</min>
+      <min>1</min>
       <max>2</max>
       <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
       <values>
         <value code="1">local_position_estimator, attitude_estimator_q</value>
-        <value code="0">position_estimator_inav, attitude_estimator_q</value>
         <value code="2">ekf2</value>
       </values>
     </parameter>
@@ -6845,13 +6892,16 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <scope>modules/systemlib</scope>
       <values>
         <value code="10">FrSky Telemetry</value>
+        <value code="20">Crazyflie (Syslink)</value>
         <value code="357600">Normal Telemetry (57600 baud, 8N1)</value>
         <value code="257600">Command Receiver (57600 baud, 8N1)</value>
         <value code="157600">OSD (57600 baud, 8N1)</value>
+        <value code="338400">Normal Telemetry (38400 baud, 8N1)</value>
         <value code="0">Disabled</value>
         <value code="1921600">ESP8266 (921600 baud, 8N1)</value>
         <value code="57600">Companion Link (57600 baud, 8N1)</value>
         <value code="921600">Companion Link (921600 baud, 8N1)</value>
+        <value code="319200">Normal Telemetry (19200 baud, 8N1)</value>
       </values>
     </parameter>
     <parameter default="1" name="SYS_PARAM_VER" type="INT32">
@@ -6936,15 +6986,14 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
   <group name="UAVCAN">
     <parameter default="0" name="UAVCAN_ENABLE" type="INT32">
       <short_desc>UAVCAN mode</short_desc>
-      <long_desc>0 - UAVCAN disabled. 1 - Enabled support for UAVCAN actuators and sensors. 2 - Enabled support for dynamic node ID allocation and firmware update. 3 - Sets the motor control outputs to UAVCAN and enables support for dynamic node ID allocation and firmware update.</long_desc>
+      <long_desc>0 - UAVCAN disabled. 1 - Basic support for UAVCAN actuators and sensors. 2 - Full support for dynamic node ID allocation and firmware update. 3 - Sets the motor control outputs to UAVCAN and enables support for dynamic node ID allocation and firmware update.</long_desc>
       <min>0</min>
       <max>3</max>
       <scope>modules/uavcan</scope>
       <values>
-        <value code="1">Enabled</value>
         <value code="0">Disabled</value>
-        <value code="3">Motors/Update</value>
-        <value code="2">Dynamic ID/Update</value>
+        <value code="3">Sensors and Motors</value>
+        <value code="2">Sensors Enabled</value>
       </values>
     </parameter>
     <parameter default="1" name="UAVCAN_NODE_ID" type="INT32">
