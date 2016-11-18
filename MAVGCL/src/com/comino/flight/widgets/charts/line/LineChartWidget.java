@@ -192,10 +192,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			long last = 0;
 			@Override public void handle(long now) {
-			//	if(!isDisabled() && (now - last) > (REFRESH_RATE*500000)) {
-					updateGraph(refreshRequest);
+				if((now - last) > (REFRESH_RATE*1000000)) {
 					last = now;
-			//	}
+					updateGraph(refreshRequest);
+				}
 			}
 		};
 	}
@@ -555,8 +555,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		timeframe = frame;
 
 		if(!isDisabled()) {
+			updateRequest();
 			Platform.runLater(() -> {
-				updateGraph(true);
 				xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 			});
 		}
@@ -709,7 +709,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
-		AnalysisDataModel m = null; int count=0; float val=0;
+		int count=0; float val=0;
 		float _min = Float.NaN; float _max = Float.NaN;
 		float _avg = 0; float mean = 0; float std=0;
 
