@@ -45,7 +45,7 @@ import org.mavlink.messages.lquac.msg_logging_data_acked;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
-import com.comino.flight.experimental.VisionSpeedSimulationUpdater;
+import com.comino.flight.experimental.VisionSimulationUpdater;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
@@ -76,7 +76,7 @@ public class ExperimentalWidget extends WidgetPane   {
 	private CheckBox offboard_enabled;
 
 	@FXML
-	private CheckBox mavlink_enabled;
+	private CheckBox vision_enabled;
 
 	@FXML
 	private Button althold_command;
@@ -97,7 +97,7 @@ public class ExperimentalWidget extends WidgetPane   {
 	private Slider y_control;
 
 	private DataModel model;
-	private VisionSpeedSimulationUpdater vision = null;
+	private VisionSimulationUpdater vision = null;
 	private OffboardUpdater offboard = null;
 	private IMAVController control;
 
@@ -144,11 +144,11 @@ public class ExperimentalWidget extends WidgetPane   {
 	@FXML
 	private void initialize() {
 
-		mavlink_enabled.selectedProperty().addListener((v,ov,nv) -> {
+		vision_enabled.selectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())  {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
+				vision.start();
 			} else {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				vision.stop();
 			}
 		});
 
@@ -290,7 +290,7 @@ public class ExperimentalWidget extends WidgetPane   {
 		this.control = control;
 		this.model   = control.getCurrentModel();
 		offboard = new OffboardUpdater(control);
-		vision = new VisionSpeedSimulationUpdater(control);
+		vision = new VisionSimulationUpdater(control);
 
 		Thread th = new Thread(task);
 		th.setPriority(Thread.MIN_PRIORITY);

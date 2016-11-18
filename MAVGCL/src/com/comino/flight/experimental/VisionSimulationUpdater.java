@@ -38,7 +38,7 @@ import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.mav.control.IMAVController;
 
-public class VisionSpeedSimulationUpdater implements Runnable {
+public class VisionSimulationUpdater implements Runnable {
 
 	private IMAVController control = null;
 	private boolean isRunning = false;
@@ -46,14 +46,16 @@ public class VisionSpeedSimulationUpdater implements Runnable {
 	private float x=0;
 	private float y=0;
 
-	public VisionSpeedSimulationUpdater(IMAVController control) {
+	public VisionSimulationUpdater(IMAVController control) {
 		this.control = control;
 	}
 
 	public void start() {
-		System.out.println("Vision updater started");
+		if(!isRunning) {
 		isRunning = true;
+		System.out.println("Vision updater started");
 		new Thread(this).start();
+		}
 
 	}
 
@@ -76,10 +78,13 @@ public class VisionSpeedSimulationUpdater implements Runnable {
 
 		while(isRunning) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(50);
 			} catch (InterruptedException e) { }
 
-			msg_vision_speed_estimate cmd = new msg_vision_speed_estimate(255,1);
+			x= x+(float)(Math.random()-0.5)/120f;
+			y= y+(float)(Math.random()-0.5)/120f;
+
+			msg_vision_position_estimate cmd = new msg_vision_position_estimate(255,1);
 			cmd.x = x;
 			cmd.y = y;
 			cmd.z = 0;
