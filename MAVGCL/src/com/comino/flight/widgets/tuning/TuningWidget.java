@@ -120,7 +120,7 @@ public class TuningWidget extends WidgetPane  {
 
 					if(timeout!=null && !timeout.isDone()) {
 					BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-					MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					if(p.reboot_required)
 						MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
                     timeout.cancel(true);
