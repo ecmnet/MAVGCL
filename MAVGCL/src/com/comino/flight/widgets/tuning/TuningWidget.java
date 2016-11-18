@@ -91,7 +91,7 @@ public class TuningWidget extends WidgetPane  {
 	private IMAVController control;
 	private PX4Parameters  params;
 
-	public ScheduledFuture<?> timeout;
+	private ScheduledFuture<?> timeout;
 
 	public TuningWidget() {
 
@@ -119,11 +119,11 @@ public class TuningWidget extends WidgetPane  {
 						groups.getItems().add(p.group_name);
 
 					if(timeout!=null && !timeout.isDone()) {
-					BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-					MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-					if(p.reboot_required)
-						MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-                    timeout.cancel(true);
+						BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+						MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						if(p.reboot_required)
+							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						timeout.cancel(true);
 					}
 
 				}
@@ -167,7 +167,11 @@ public class TuningWidget extends WidgetPane  {
 				for(ParameterAttributes p : params.getList()) {
 					if(newValue.contains(p.group_name)) {
 						Label unit = new Label(p.unit); unit.setPrefWidth(30);
-						Label name = new Label(p.name); name.setPrefWidth(95); name.setTooltip(new Tooltip(p.description));
+						Label name = new Label(p.name); name.setPrefWidth(95);
+						if(p.unit!=null && p.unit.length()>0)
+						  name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
+						else
+						 name.setTooltip(new Tooltip(p.description));
 						ParamItem item = createParamItem(p, editable);
 						grid.addRow(i++, name,item.editor,unit);
 					}
@@ -270,27 +274,22 @@ public class TuningWidget extends WidgetPane  {
 				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 
 					if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
-
 						try {
-
 							float val =  getValueOf(editor);
-
-								if((val >= att.min_val && val <= att.max_val) ||
-										att.min_val == att.max_val ) {
-									sendParameter(att,val);
-									checkDefaultOf(editor,val);
-								}
-								else {
-									MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-									setValueOf(editor,att.value);
-								}
-
+							if((val >= att.min_val && val <= att.max_val) ||
+									att.min_val == att.max_val ) {
+								sendParameter(att,val);
+								checkDefaultOf(editor,val);
+							}
+							else {
+								MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+								setValueOf(editor,att.value);
+							}
 						} catch(NumberFormatException e) {
 							setValueOf(editor,att.value);
 						}
 					}
 				}
-
 			});
 
 		}

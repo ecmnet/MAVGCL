@@ -35,8 +35,11 @@ package com.comino.flight.tabs.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
@@ -47,6 +50,7 @@ import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.parameter.ParameterFactMetaData;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.binding.ObjectBinding;
@@ -105,6 +109,8 @@ public class MAVParameterTab extends Pane {
 	private TreeItem<Parameter> root;
 
 	private ParameterFactMetaData metadata = null;
+
+	private ScheduledFuture<?> timeout;
 
 
 	private MSPLogger log = MSPLogger.getInstance();
@@ -277,6 +283,8 @@ public class MAVParameterTab extends Pane {
 					Platform.runLater(() -> {
 						boolean editable = !StateProperties.getInstance().getLogLoadedProperty().get();
 						buildParameterTree((ParameterAttributes)newValue, editable);
+						if(timeout!=null && !timeout.isDone())
+							timeout.cancel(true);
 					});
 				}
 			}
@@ -421,6 +429,11 @@ public class MAVParameterTab extends Pane {
 
 									control.sendMAVLinkMessage(msg);
 									textField.commitValue();
+									timeout = ExecutorService.get().schedule(() -> {
+										MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
+												MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+										textField.setText(getStringOfValue());
+									}, 1000, TimeUnit.MILLISECONDS);
 
 								}
 								else {
