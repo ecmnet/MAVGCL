@@ -36,6 +36,8 @@ package com.comino.flight.widgets.tuning;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map.Entry;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -49,6 +51,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -88,8 +91,7 @@ public class TuningWidget extends WidgetPane  {
 	private IMAVController control;
 	private PX4Parameters  params;
 
-	private boolean waitingForAcknowledge = false;
-
+	public ScheduledFuture<?> timeout;
 
 	public TuningWidget() {
 
@@ -112,17 +114,18 @@ public class TuningWidget extends WidgetPane  {
 			@Override
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
 				if(newValue!=null) {
-						ParameterAttributes p = (ParameterAttributes)newValue;
-						if(!groups.getItems().contains(p.group_name))
-							groups.getItems().add(p.group_name);
+					ParameterAttributes p = (ParameterAttributes)newValue;
+					if(!groups.getItems().contains(p.group_name))
+						groups.getItems().add(p.group_name);
 
-						if(waitingForAcknowledge) {
-							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-							MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-							if(p.reboot_required)
-								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-							waitingForAcknowledge = false;
-						}
+					if(timeout!=null && !timeout.isDone()) {
+					BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+					MSPLogger.getInstance().writeLocalMsg(p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					if(p.reboot_required)
+						MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+                    timeout.cancel(true);
+					}
+
 				}
 			}
 		});
@@ -181,9 +184,10 @@ public class TuningWidget extends WidgetPane  {
 
 		public Control editor = null;
 		private ParameterAttributes att = null;
+		private ParamItem item = null;
 
 		public ParamItem(ParameterAttributes att, boolean editable) {
-
+			this.item = this;
 			this.att= att;
 
 			if(att.increment != 0) {
@@ -261,39 +265,26 @@ public class TuningWidget extends WidgetPane  {
 
 
 			this.editor.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
 				@Override
 				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 
-					if(!editor.isFocused()) {
+					if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
 
 						try {
 
 							float val =  getValueOf(editor);
-							if(val!=att.value && !waitingForAcknowledge ) {
 
 								if((val >= att.min_val && val <= att.max_val) ||
 										att.min_val == att.max_val ) {
-									System.out.println("Try to set "+att.name+" to "+val+"...");
-
-									msg_param_set msg = new msg_param_set(255,1);
-									msg.target_component = 1;
-									msg.target_system = 1;
-									msg.param_type = att.vtype;
-									msg.setParam_id(att.name);
-									msg.param_value = ParamUtils.valToParam(att.vtype, val);
-
-									control.sendMAVLinkMessage(msg);
-									waitingForAcknowledge = true;
-
+									sendParameter(att,val);
 									checkDefaultOf(editor,val);
-
-
 								}
 								else {
 									MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 									setValueOf(editor,att.value);
 								}
-							}
+
 						} catch(NumberFormatException e) {
 							setValueOf(editor,att.value);
 						}
@@ -301,7 +292,30 @@ public class TuningWidget extends WidgetPane  {
 				}
 
 			});
+
 		}
+
+		private void sendParameter(ParameterAttributes att, float val) {
+			System.out.println("Try to set "+att.name+" to "+val+"...");
+			final msg_param_set msg = new msg_param_set(255,1);
+			msg.target_component = 1;
+			msg.target_system = 1;
+			msg.param_type = att.vtype;
+			msg.setParam_id(att.name);
+			msg.param_value = ParamUtils.valToParam(att.vtype, val);
+			control.sendMAVLinkMessage(msg);
+			timeout = ExecutorService.get().schedule(() -> {
+				System.out.println("Timeout setting parameter. Try again");
+				msg.target_component = 1;
+				msg.target_system = 1;
+				msg.param_type = att.vtype;
+				msg.setParam_id(att.name);
+				msg.param_value = ParamUtils.valToParam(att.vtype, val);
+				control.sendMAVLinkMessage(msg);
+			}, 200, TimeUnit.MILLISECONDS);
+		}
+
+
 
 		@SuppressWarnings("unchecked")
 		private float getValueOf(Control p) throws NumberFormatException {
@@ -343,7 +357,7 @@ public class TuningWidget extends WidgetPane  {
 			Control e = p;
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
-			if(v==att.default_val)
+			else if(v==att.default_val)
 				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
 			else
 				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
