@@ -305,13 +305,9 @@ public class TuningWidget extends WidgetPane  {
 			msg.param_value = ParamUtils.valToParam(att.vtype, val);
 			control.sendMAVLinkMessage(msg);
 			timeout = ExecutorService.get().schedule(() -> {
-				System.out.println("Timeout setting parameter. Try again");
-				msg.target_component = 1;
-				msg.target_system = 1;
-				msg.param_type = att.vtype;
-				msg.setParam_id(att.name);
-				msg.param_value = ParamUtils.valToParam(att.vtype, val);
-				control.sendMAVLinkMessage(msg);
+				MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
+						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				setValueOf(editor,att.value);
 			}, 200, TimeUnit.MILLISECONDS);
 		}
 
