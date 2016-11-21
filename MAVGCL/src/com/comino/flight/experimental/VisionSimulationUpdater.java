@@ -33,21 +33,30 @@
 
 package com.comino.flight.experimental;
 
+import org.mavlink.messages.lquac.msg_manual_control;
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
 import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.model.DataModel;
 
 public class VisionSimulationUpdater implements Runnable {
 
 	private IMAVController control = null;
 	private boolean isRunning = false;
 
+	private msg_manual_control rc = new msg_manual_control(255,1);
+
 	private float x=0;
 	private float y=0;
+	private DataModel model;
 
 	public VisionSimulationUpdater(IMAVController control) {
 		this.control = control;
+		this.rc.z = 50;
+		this.rc.x = 50;
+		this.rc.y = 50;
+		this.model = control.getCurrentModel();
 	}
 
 	public void start() {
@@ -81,17 +90,21 @@ public class VisionSimulationUpdater implements Runnable {
 				Thread.sleep(50);
 			} catch (InterruptedException e) { }
 
-			x= x+(float)(Math.random()-0.5)/120f;
-			y= y+(float)(Math.random()-0.5)/120f;
+			x= x+(float)(Math.random()-0.5)/60f;
+			y= y+(float)(Math.random()-0.5)/60f;
 
 			msg_vision_position_estimate cmd = new msg_vision_position_estimate(255,1);
 			cmd.x = x;
 			cmd.y = y;
-			cmd.z = 0;
+			cmd.z = model.state.l_z;
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
+			model.vision.x = cmd.x;
+			model.vision.y = cmd.y;
+			model.vision.z = cmd.z;
 
+			control.sendMAVLinkMessage(rc);
 		}
 
 
