@@ -169,7 +169,7 @@ public class FlightTabs extends Pane {
 			}
 		});
 
-		PX4Parameters.getInstance().loadedProperty().addListener((observable, oldvalue, newvalue) -> {
+		StateProperties.getInstance().getParamLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
 			this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
 		});
 

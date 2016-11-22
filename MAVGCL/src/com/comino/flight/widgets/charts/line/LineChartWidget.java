@@ -57,8 +57,8 @@ import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sun.javafx.PlatformUtil;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -72,7 +72,6 @@ import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.LineChart.SortingPolicy;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -195,18 +194,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		linechart.getData().add(series3);
 
 		dataService.registerListener(this);
+		
 	}
+
 
 	@Override
 	public void update(long now) {
-		if(!isRunning || isDisabled())
+		if(!isRunning || isDisabled() || !isVisible() )
 			return;
-
-		if(isVisible()) {
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest);
-			});
-		}
+		});
+
 	}
 
 	@FXML
@@ -226,18 +225,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
 
 		xAxis.setAutoRanging(false);
-		yAxis.setForceZeroInRange(false);
 		xAxis.setLowerBound(0);
-		xAxis.setLabel("Seconds");
 		xAxis.setUpperBound(timeFrame.intValue());
-		yAxis.setPrefWidth(40);
-
-		yAxis.setAutoRanging(true);
-
+		xAxis.setLabel("Seconds");
 		xAxis.setAnimated(false);
-		xAxis.setCache(true);
+
+		yAxis.setForceZeroInRange(false);
+		yAxis.setAutoRanging(true);
+		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
-		yAxis.setCache(true);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
@@ -248,7 +244,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-		final Group chartArea = (Group)linechart.getPlotArea();
+		final Group chartArea = (Group)linechart.getAnnotationArea();
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
@@ -545,13 +541,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 	}
 
 	private void setXResolution(float frame) {
-		if(frame > 600)
-			resolution_ms = 2000;
-		else if(frame > 200)
-			resolution_ms = 500;
-		else if(frame > 50)
+		if(frame >= 200)
 			resolution_ms = 200;
-		else if(frame > 20)
+		else if(frame >= 60)
 			resolution_ms = 100;
 		else
 			resolution_ms = 50;
@@ -623,8 +615,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
 			setXAxisBounds(current_x0_pt,current_x1_pt);
-
-			return;
 		}
 
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
