@@ -34,6 +34,7 @@
 package com.comino.flight.widgets.control;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
@@ -86,6 +87,7 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 
 	@FXML
 	private void initialize() {
+		tuning.setDisable(true);
 		tuning.selectedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				video.setSelected(false);
@@ -93,6 +95,14 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 			}
 			else
 				video.setDisable(false);
+		});
+
+		StateProperties.getInstance().getParamLoadedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				tuning.setDisable(true);
+				tuning.setSelected(false);
+			} else
+				tuning.setDisable(false);
 		});
 	}
 

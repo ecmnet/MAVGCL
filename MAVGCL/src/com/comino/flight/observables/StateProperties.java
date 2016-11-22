@@ -57,8 +57,9 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
 
-	private BooleanProperty recordingProperty = new SimpleBooleanProperty();
-	private BooleanProperty isLogLoadedProperty = new SimpleBooleanProperty();
+	private BooleanProperty recordingProperty     = new SimpleBooleanProperty();
+	private BooleanProperty isLogLoadedProperty   = new SimpleBooleanProperty();
+	private BooleanProperty isParamLoadedProperty = new SimpleBooleanProperty();
 
 	private FloatProperty progress = new SimpleFloatProperty(-1);
 
@@ -128,6 +129,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
+	}
+
+	public BooleanProperty getParamLoadedProperty() {
+		return isParamLoadedProperty;
 	}
 
 	public FloatProperty getProgressProperty() {

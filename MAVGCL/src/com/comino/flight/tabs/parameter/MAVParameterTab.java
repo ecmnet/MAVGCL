@@ -268,7 +268,7 @@ public class MAVParameterTab extends Pane {
 			}
 		});
 
-		PX4Parameters.getInstance().loadedProperty().addListener((o,ov,nv) -> {
+		StateProperties.getInstance().getParamLoadedProperty().addListener((o,ov,nv) -> {
 			if(!nv.booleanValue()) {
 				groups.clear();
 				treetableview.getRoot().getChildren().clear();

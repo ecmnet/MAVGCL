@@ -62,7 +62,6 @@ public class PX4Parameters implements IMAVLinkListener {
 	private static PX4Parameters px4params = null;
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
-	private BooleanProperty isLoaded = new SimpleBooleanProperty();
 
 	private Set<ParameterAttributes> parameterList = null;
 
@@ -117,7 +116,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
-		isLoaded.set(false);
+		StateProperties.getInstance().getParamLoadedProperty().set(false);
 		MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 			    MAV_SEVERITY.MAV_SEVERITY_INFO);
 	}
@@ -125,10 +124,6 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	public ObjectProperty<ParameterAttributes> getAttributeProperty() {
 		return property;
-	}
-
-	public BooleanProperty loadedProperty() {
-		return isLoaded;
 	}
 
 	@Override
@@ -150,12 +145,13 @@ public class PX4Parameters implements IMAVLinkListener {
 
 			parameterList.add(attributes);
 			property.setValue(attributes);
-			isLoaded.setValue(true);
+
+			StateProperties.getInstance().getParamLoadedProperty().set(true);
 		}
 	}
 
 	public void setParametersFromLog(Map<String,Object> list) {
-		isLoaded.set(false);
+		StateProperties.getInstance().getParamLoadedProperty().set(false);
 		parameterList.clear();
 		list.forEach((s,o) -> {
 			ParameterAttributes attributes = metadata.getMetaData(s);
@@ -170,7 +166,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			parameterList.add(attributes);
 			property.setValue(attributes);
 		});
-		isLoaded.setValue(true);
+		StateProperties.getInstance().getParamLoadedProperty().set(true);
 	}
 
 
