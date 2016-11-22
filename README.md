@@ -12,14 +12,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 17/11/2016 
-
-V0.6 release now available
+**Development Status:** Last updated 22/11/2016 
 
 - MAVLink 2.0 implementation
 - supports ULOG streaming to record data 
+- Tuning fix and TimeFrames selection adjusted
 
-V0.6 notes:
+V0.6xx notes:
 
 - V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0 always') - MAVLink 1.0 no longer supported (for MAVLink 1.0 use V0.536 )
 - Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
