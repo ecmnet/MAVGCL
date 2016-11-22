@@ -60,7 +60,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ChartControlWidget extends WidgetPane  {
 
-	private static final Integer[] TOTAL_TIME = { 10, 30, 60, 100, 200 };
+	private static final Integer[] TOTAL_TIME = { 15, 30, 60, 120, 240 };
 
 
 	@FXML
