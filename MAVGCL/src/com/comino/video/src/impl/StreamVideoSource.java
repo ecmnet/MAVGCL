@@ -154,7 +154,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 					connectionError = e.getMessage();
 					try {
 						stream.close();
-						Thread.sleep(500);
 					} catch (Exception e1) { }
 					m_collecting = false;
 					System.out.println("Connect VS "+connectionError);
