@@ -56,7 +56,7 @@ public class XYDataPool {
 		if( unlocked.size() > 0 )
 		{
 			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
-			o = e.nextElement();
+			o = e.nextElement(); 
 			o.setXValue(x);
 			o.setYValue(y);
 			unlocked.remove(o);

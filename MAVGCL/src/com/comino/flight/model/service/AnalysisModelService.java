@@ -49,6 +49,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.ExecutorService;
 
@@ -71,6 +72,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private StateProperties                           state   = null;
 
 	private AnalysisDataModelMetaData                  meta  =  null;
+	private List<IAnalysisModelServiceListener>    listener  =  null;
 
 	private int     mode = 0;
 
@@ -90,6 +92,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisModelService(IMAVController control) {
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
+		this.listener = new ArrayList<IAnalysisModelServiceListener>();
 
 		this.modelList     = new ArrayList<AnalysisDataModel>(50000);
 		this.model         = control.getCurrentModel();
@@ -114,6 +117,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 		Thread c = new Thread(new Converter());
 		c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
+	}
+
+	public void registerListener(IAnalysisModelServiceListener l) {
+		listener.add(l);
 	}
 
 
@@ -330,7 +337,10 @@ public class AnalysisModelService implements IMAVLinkListener {
                     m.dt_sec = m.tms / 1e6f;
 					modelList.add(m);
 
-				count++;
+					count++;
+					for(IAnalysisModelServiceListener updater : listener)
+						updater.update(System.nanoTime());
+
 				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
 			}
 

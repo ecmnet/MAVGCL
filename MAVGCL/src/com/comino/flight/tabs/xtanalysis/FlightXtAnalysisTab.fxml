@@ -1,4 +1,5 @@
 <?import com.comino.flight.widgets.charts.line.LineChartWidget?>
+
 <?import javafx.scene.layout.VBox?>
 
 <fx:root minHeight="164.0" type="javafx.scene.layout.Pane"

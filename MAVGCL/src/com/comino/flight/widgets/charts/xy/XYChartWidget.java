@@ -46,6 +46,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.IAnalysisModelServiceListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
@@ -83,7 +84,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 
-public class XYChartWidget extends BorderPane implements IChartControl {
+public class XYChartWidget extends BorderPane implements IChartControl, IAnalysisModelServiceListener {
 
 	private static String[][] PRESETS = {
 			{  null		, null      },
@@ -168,11 +169,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private  XYChart.Series<Number,Number> series1;
 	private  XYChart.Series<Number,Number> series2;
 
-	private AnimationTimer task;
-
-
 	private IMAVController control;
-
 
 	private KeyFigureMetaData type1_x=null;
 	private KeyFigureMetaData type1_y=null;
@@ -212,6 +209,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
+	private boolean isRunning = false;
 
 	private float old_center_x, old_center_y;
 
@@ -226,11 +224,7 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		pool = new XYDataPool();
 
-		task = new AnimationTimer() {
-			@Override public void handle(long now) {
-				updateGraph(refreshRequest);
-			}
-		};
+		dataService.registerListener(this);
 	}
 
 	@FXML
@@ -665,9 +659,9 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
-				task.start();
+				isRunning = true;
 			} else
-				task.stop();
+				isRunning = false;
 		});
 		current_x0_pt = dataService.calculateX0Index(1);
 		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
@@ -786,6 +780,16 @@ public class XYChartWidget extends BorderPane implements IChartControl {
 
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
+	}
+
+	@Override
+	public void update(long now) {
+		if(isVisible() && !isDisabled() && isRunning) {
+			Platform.runLater(() -> {
+			updateGraph(refreshRequest);
+			});
+		}
+
 	}
 
 

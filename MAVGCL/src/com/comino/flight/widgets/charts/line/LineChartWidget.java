@@ -46,6 +46,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.IAnalysisModelServiceListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
@@ -71,6 +72,8 @@ import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.LineChart.SortingPolicy;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -82,7 +85,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
-public class LineChartWidget extends BorderPane implements IChartControl {
+public class LineChartWidget extends BorderPane implements IChartControl, IAnalysisModelServiceListener {
 
 	private static int MAXRECENT = 20;
 
@@ -129,8 +132,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private  XYChart.Series<Number,Number> series2;
 	private  XYChart.Series<Number,Number> series3;
 
-	private AnimationTimer task;
-
 	private IMAVController control;
 
 	private KeyFigureMetaData type1 = null;
@@ -171,9 +172,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	private Preferences prefs = MAVPreferences.getInstance();
 
 	private boolean refreshRequest = false;
+	private boolean isRunning = false;
 
 	private long dashboard_update_tms = 0;
-
 
 	public LineChartWidget() {
 
@@ -182,6 +183,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();
 
+		linechart.setAxisSortingPolicy(SortingPolicy.NONE);
+		linechart.setBackground(null);
+		linechart.setCreateSymbols(false);
+
 		series1 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
@@ -189,15 +194,19 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		series3 = new XYChart.Series<Number,Number>();
 		linechart.getData().add(series3);
 
-		task = new AnimationTimer() {
-			long last = 0;
-			@Override public void handle(long now) {
-				if((now - last) > (REFRESH_RATE*1000000)) {
-					last = now;
-					updateGraph(refreshRequest);
-				}
-			}
-		};
+		dataService.registerListener(this);
+	}
+
+	@Override
+	public void update(long now) {
+		if(!isRunning || isDisabled())
+			return;
+
+		if(isVisible()) {
+			Platform.runLater(() -> {
+				updateGraph(refreshRequest);
+			});
+		}
 	}
 
 	@FXML
@@ -226,7 +235,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		yAxis.setAutoRanging(true);
 
 		xAxis.setAnimated(false);
+		xAxis.setCache(true);
 		yAxis.setAnimated(false);
+		yAxis.setCache(true);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
@@ -281,10 +292,10 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						Platform.runLater(() -> {
 							updateGraph(true);
 						});
-						task.start();
+						isRunning = true;
 					}
 					else {
-						task.stop();
+						isRunning = false;
 					}
 					isPaused = !isPaused;
 				}
@@ -450,9 +461,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
-				task.start();
+				isRunning = true;
 			} else
-				task.stop();
+				isRunning = false;
 		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
@@ -575,9 +586,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 	}
 
 	private  void updateGraph(boolean refresh) {
-		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false;
-
-		float v1 ; float v2; float v3;
+		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; float v1 ; float v2; float v3;
 
 		if(isDisabled()) {
 			return;
@@ -599,25 +608,23 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			yoffset = 0;
 
 			if(dash.isSelected() && dataService.getModelList().size()> 0) {
+
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 				if(type2.hash!=0)
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				if(type3.hash!=0)
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
-				Platform.runLater(() -> {
 				setDashboardData(dashboard1,type1);
 				setDashboardData(dashboard2,type2);
 				setDashboardData(dashboard3,type3);
-				});
 			}
 
 			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 
-			if(type1.hash==0 && type2.hash==0 && type3.hash==0)
-				return;
+			return;
 		}
 
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
@@ -630,9 +637,9 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 				dashboard_update_tms = System.currentTimeMillis();
 				Platform.runLater(() -> {
-				setDashboardData(dashboard1,type1);
-				setDashboardData(dashboard2,type2);
-				setDashboardData(dashboard3,type3);
+					setDashboardData(dashboard1,type1);
+					setDashboardData(dashboard2,type2);
+					setDashboardData(dashboard3,type3);
 				});
 			}
 
@@ -654,7 +661,6 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 				}
 
 				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
-
 					if(current_x_pt > current_x1_pt) {
 						if(series1.getData().size()>0 && type1.hash!=0) {
 							pool.invalidate(series1.getData().get(0));
@@ -688,8 +694,8 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 						if(!Float.isNaN(v3))
 							series3.getData().add(pool.checkOut(dt_sec,v3));
 					}
-
 				}
+
 
 				if(current_x_pt > current_x1_pt) {
 					set_bounds = true;
@@ -740,7 +746,7 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 		double tick = timeframe/5;
 		if(tick < 1) tick = 1;
 		xAxis.setTickUnit(tick);
-		xAxis.setMinorTickCount(10);
+		//xAxis.setMinorTickCount(10);
 		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
 		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
 	}
@@ -751,27 +757,27 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 
 		KeyFigureMetaData none = new KeyFigureMetaData();
 
-			Platform.runLater(() -> {
+		Platform.runLater(() -> {
 
-				series.getItems().clear();
-				series.getItems().add(none);
+			series.getItems().clear();
+			series.getItems().add(none);
 
-				if(kfl.size()==0) {
-					series.getSelectionModel().select(0);
-					return;
-				}
+			if(kfl.size()==0) {
+				series.getSelectionModel().select(0);
+				return;
+			}
 
-				if(type!=null && type.hash!=0) {
-					if(!kfl.contains(type))
-						series.getItems().add(type);
-					series.getItems().addAll(kfl);
-					series.getSelectionModel().select(type);
-				} else {
-					series.getItems().addAll(kfl);
-					series.getSelectionModel().select(0);
-				}
+			if(type!=null && type.hash!=0) {
+				if(!kfl.contains(type))
+					series.getItems().add(type);
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(type);
+			} else {
+				series.getItems().addAll(kfl);
+				series.getSelectionModel().select(0);
+			}
 
-			});
+		});
 	}
 
 	private void storeRecentList() {
@@ -818,4 +824,5 @@ public class LineChartWidget extends BorderPane implements IChartControl {
 			return dataService.getModelList().get(current_x-index).getValue(m);
 		}
 	}
+
 }
