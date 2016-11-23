@@ -34,6 +34,7 @@
 package com.comino.flight.widgets.fx.controls;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -47,11 +48,16 @@ public class WidgetPane extends Pane {
 
 	protected StateProperties state = null;
 
-	private double initialHeight = 0;
 	private FadeTransition in = null;
 	private FadeTransition out = null;
 
-	private BooleanProperty fade = new SimpleBooleanProperty();
+	private double mouseX ;
+	private double mouseY ;
+
+	private BooleanProperty fade     = new SimpleBooleanProperty(false);
+	private BooleanProperty moveable = new SimpleBooleanProperty(false);
+
+	private String prefKey = MAVPreferences.CTRLPOS+this.getClass().getSimpleName().toUpperCase();
 
 	public WidgetPane() {
 		this(150);
@@ -64,7 +70,6 @@ public class WidgetPane extends Pane {
 	public WidgetPane(int duration_ms, boolean visible) {
 
 		this.state = StateProperties.getInstance();
-		initialHeight = getPrefHeight();
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
 		in.setToValue(1.0);
@@ -76,12 +81,8 @@ public class WidgetPane extends Pane {
 		setVisible(visible);
 		fade.set(visible);
 
-        if(!visible)
-        	setPrefHeight(0);
-
 		out.setOnFinished(value -> {
 			setVisible(false);
-			setPrefHeight(0);
 		});
 
 		fade.addListener(new ChangeListener<Boolean>() {
@@ -89,7 +90,10 @@ public class WidgetPane extends Pane {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(newValue.booleanValue()) {
-					setPrefHeight(initialHeight);
+					if(moveable.get()) {
+						setLayoutX(MAVPreferences.getInstance().getDouble(prefKey+"X", 10));
+						setLayoutY(MAVPreferences.getInstance().getDouble(prefKey+"Y", 10));
+					}
 					setVisible(true);
 					in.play();
 				}
@@ -97,9 +101,63 @@ public class WidgetPane extends Pane {
 					out.play();
 			}
 		});
+
+		setOnMousePressed(event -> {
+			if(moveable.get()) {
+				mouseX = event.getSceneX() ;
+				mouseY = event.getSceneY() ;
+			}
+		});
+
+		setOnMouseDragged(event -> {
+			if(moveable.get()) {
+				double deltaX = event.getSceneX() - mouseX ;
+				double deltaY = event.getSceneY() - mouseY ;
+				relocate(getLayoutX() + deltaX, getLayoutY() + deltaY);
+				mouseX = event.getSceneX() ;
+				mouseY = event.getSceneY() ;
+			}
+		});
+
+		setOnMouseReleased(event -> {
+			if(moveable.get()) {
+				MAVPreferences.getInstance().putDouble(prefKey+"X",getLayoutX());
+				MAVPreferences.getInstance().putDouble(prefKey+"Y",getLayoutY());
+			}
+		});
+
 	}
 
 	public BooleanProperty fadeProperty() {
 		return fade;
 	}
+
+	public BooleanProperty MoveableProperty() {
+		return moveable;
+	}
+
+	public void setMoveable(boolean val) {
+		setManaged(!val); moveable.set(val);
+	}
+
+	public boolean getMoveable() {
+		return moveable.get();
+	}
+
+	public void setInitialWidth(double val) {
+		setWidth(val);
+	}
+
+	public void setInitialHeight(double val) {
+		setHeight(val);
+	}
+
+	public double getInitialWidth() {
+		return getWidth();
+	}
+
+	public double getInitialHeight() {
+		return getHeight();
+	}
+
 }

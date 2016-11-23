@@ -717,7 +717,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Raw GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
+	<KeyFigure desc="GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
 		<PX4Source field="GPS.Lat"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lat"/>
@@ -726,7 +726,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Raw GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
+	<KeyFigure desc="GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
 		<PX4Source field="GPS.Lon"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lon"/>
@@ -746,7 +746,7 @@
 		<Validity min="6" max="30"/>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
+	<KeyFigure desc="GPS.HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
 		<MSPSource class="gps" field="hdop"></MSPSource>
 		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
 		<Groups>
@@ -754,7 +754,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS Speed" uom="m/s" mask="#0.0" key="RGPSV">
+	<KeyFigure desc="GPS.Speed" uom="m/s" mask="#0.0" key="RGPSV">
 		<MSPSource class="gps" field="speed"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>

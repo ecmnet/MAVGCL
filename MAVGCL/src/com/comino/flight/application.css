@@ -126,7 +126,7 @@
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1.0px;
     -fx-border-radius: 5.0px;
-    -fx-border-insets: 2.0px;
+    -fx-border-insets: -2.0px;
 }
 
 .control  {

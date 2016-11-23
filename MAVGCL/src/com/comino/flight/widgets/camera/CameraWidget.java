@@ -90,11 +90,13 @@ public class CameraWidget extends WidgetPane  {
 
 		image.setOnMouseClicked(event -> {
 
-			if(!big_size)
-				big_size=true;
-			else
-				big_size=false;
-			resize(big_size,X,Y);
+			if(event.getClickCount()==2) {
+				if(!big_size)
+					big_size=true;
+				else
+					big_size=false;
+				resize(big_size,X,Y);
+			}
 
 		});
 
@@ -134,6 +136,8 @@ public class CameraWidget extends WidgetPane  {
 		System.out.println("VideSource connect");
 		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
+		if(url_string.isEmpty())
+			url_string = "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());

@@ -33,13 +33,10 @@
 		<StackPane alignment="TOP_LEFT">
 			<children>
 				<BorderPane fx:id="mapviewpane" prefWidth="800" />
-				<GPSDetailsWidget fx:id="gpsdetails"
-				    prefWidth="185"
-				    maxHeight="215" maxWidth="185" visible="false"
-					styleClass="glass">
-					<StackPane.margin>
-						<Insets left="10.0" top="13.0" />
-					</StackPane.margin>
+				<GPSDetailsWidget fx:id="gpsdetails" moveable="true"
+				   initialWidth="220" initialHeight="205" visible="false"
+				   styleClass="glass">
+
 				</GPSDetailsWidget>
 			</children>
 		</StackPane>

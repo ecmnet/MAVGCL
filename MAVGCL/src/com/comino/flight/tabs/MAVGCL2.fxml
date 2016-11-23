@@ -122,23 +122,16 @@
 				</TuningWidget>
 
 				<CameraWidget fx:id="camera"
-				    StackPane.alignment="BOTTOM_RIGHT"
-				    maxWidth="325"  visible="false" maxHeight="225"
-					>
-					<StackPane.margin>
-						<Insets left="0.0" bottom="32.0"  right="20.0"/>
-					</StackPane.margin>
-				</CameraWidget>
+				    visible="false" moveable="true"
+				    initialWidth="325" initialHeight="225"
+				    layoutX="300" layoutY="500"
+					/>
 
 				<ExperimentalWidget fx:id="experimental"
-				    StackPane.alignment="BOTTOM_LEFT"
-				    maxWidth="185"  visible="false" maxHeight="260"
-					styleClass="control">
-					<StackPane.margin>
-						<Insets left="30.0" bottom="120.0" />
-					</StackPane.margin>
-				</ExperimentalWidget>
-
+				    moveable="true" visible="false"
+				    initialWidth="185" initialHeight="260"
+				    layoutX="30" layoutY="250"
+					styleClass="control"/>
 			</children>
 		</StackPane>
 	</children>
