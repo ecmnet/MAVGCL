@@ -99,13 +99,11 @@ public class InfoWidget extends WidgetPane  {
 						setStyle("-fx-text-fill:orange;");
 						break;
 					default:
-						setStyle("-fx-text-fill:lightgrey;");
+						setStyle("-fx-text-fill:darkcyan;");
 					}
 				}
 			}
-
 		});
-
 	}
 
 	public void setup(IMAVController control) {
