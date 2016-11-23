@@ -90,13 +90,15 @@ public class VisionSimulationUpdater implements Runnable {
 				Thread.sleep(50);
 			} catch (InterruptedException e) { }
 
-			x= x+(float)(Math.random()-0.5)/60f;
-			y= y+(float)(Math.random()-0.5)/60f;
+			x= (float)(Math.random()-0.5)/60f;
+			y= (float)(Math.random()-0.5)/60f;
 
 			msg_vision_position_estimate cmd = new msg_vision_position_estimate(255,1);
+			cmd.usec = System.nanoTime()/1000;
 			cmd.x = x;
 			cmd.y = y;
 			cmd.z = model.state.l_z;
+			cmd.isValid = true;
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();
 
