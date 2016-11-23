@@ -108,6 +108,7 @@ public class InfoWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 
+
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
 			@Override
@@ -118,13 +119,11 @@ public class InfoWidget extends WidgetPane  {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							synchronized(this) {
 								while(!list.isEmpty()) {
-									listview.getItems().add(list.poll());
 									if(listview.getItems().size()>MAX_ITEMS)
 										listview.getItems().remove(0);
+									listview.getItems().add(list.poll());
 								}
-							}
 							listview.scrollTo(listview.getItems().size()-1);
 						}
 					});
