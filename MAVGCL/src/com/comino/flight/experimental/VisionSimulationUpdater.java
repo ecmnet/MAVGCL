@@ -106,7 +106,8 @@ public class VisionSimulationUpdater implements Runnable {
 			model.vision.y = cmd.y;
 			model.vision.z = cmd.z;
 
-			control.sendMAVLinkMessage(rc);
+			if(control.isSimulation())
+			  control.sendMAVLinkMessage(rc);
 		}
 
 
