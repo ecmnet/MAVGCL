@@ -131,7 +131,7 @@
 				    moveable="true" visible="false"
 				    initialWidth="185" initialHeight="260"
 				    layoutX="30" layoutY="250"
-					styleClass="control"/>
+					styleClass="glass"/>
 			</children>
 		</StackPane>
 	</children>
