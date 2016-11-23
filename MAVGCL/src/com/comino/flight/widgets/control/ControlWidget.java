@@ -45,7 +45,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
-public class ControlWidget extends WidgetPane implements IMSPStatusChangedListener {
+public class ControlWidget extends WidgetPane  {
 
 	@FXML
 	private CheckBox details;
@@ -97,6 +97,22 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 				video.setDisable(false);
 		});
 
+		experimental.setDisable(true);
+		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				experimental.setDisable(true);
+				experimental.setSelected(false);
+			} else
+				experimental.setDisable(false);
+		});
+
+		StateProperties.getInstance().getLogLoadedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				experimental.setSelected(false);
+				details.setSelected(false);
+			}
+		});
+
 		StateProperties.getInstance().getParamLoadedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 				tuning.setDisable(true);
@@ -111,22 +127,7 @@ public class ControlWidget extends WidgetPane implements IMSPStatusChangedListen
 
 		this.model = control.getCurrentModel();
 		this.control = control;
-		this.control.addStatusChangeListener(this);
 		this.details.selectedProperty().set(false);
-		update(model.sys,model.sys);
-	}
-
-	@Override
-	public void update(Status arg0, Status newStat) {
-
-		if(newStat.isStatus(Status.MSP_CONNECTED)) {
-			details.selectedProperty().set(false);
-		}
-		else {
-			details.selectedProperty().set(false);
-			tuning.selectedProperty().set(false);
-		}
-
 	}
 
 }
