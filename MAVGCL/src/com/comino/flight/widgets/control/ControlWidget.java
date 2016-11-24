@@ -59,9 +59,7 @@ public class ControlWidget extends WidgetPane  {
 	@FXML
 	private CheckBox experimental;
 
-	private IMAVController control;
-
-	private DataModel model;
+	private StateProperties stateProperties = StateProperties.getInstance();
 
 	public ControlWidget() {
 		super(300,true);
@@ -98,7 +96,7 @@ public class ControlWidget extends WidgetPane  {
 		});
 
 		experimental.setDisable(true);
-		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 				experimental.setDisable(true);
 				experimental.setSelected(false);
@@ -106,14 +104,14 @@ public class ControlWidget extends WidgetPane  {
 				experimental.setDisable(false);
 		});
 
-		StateProperties.getInstance().getLogLoadedProperty().addListener((e,o,n) -> {
+		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				experimental.setSelected(false);
 				details.setSelected(false);
 			}
 		});
 
-		StateProperties.getInstance().getParamLoadedProperty().addListener((e,o,n) -> {
+		stateProperties.getParamLoadedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 				tuning.setDisable(true);
 				tuning.setSelected(false);
@@ -122,11 +120,8 @@ public class ControlWidget extends WidgetPane  {
 		});
 	}
 
-
 	public void setup(IMAVController control) {
 
-		this.model = control.getCurrentModel();
-		this.control = control;
 		this.details.selectedProperty().set(false);
 	}
 
