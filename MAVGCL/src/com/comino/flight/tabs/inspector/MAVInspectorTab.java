@@ -173,8 +173,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			}
 		});
 
+
 	}
 
+	public void setWidthBinding(double horizontal_space) {
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
+	}
 
 	public MAVInspectorTab setup(IMAVController control) {
 		control.addMAVLinkListener(this);

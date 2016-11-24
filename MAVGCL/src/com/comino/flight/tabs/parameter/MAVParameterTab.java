@@ -253,8 +253,12 @@ public class MAVParameterTab extends Pane {
 		});
 
 
-		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(5));
 		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
+	}
+
+	public void setWidthBinding(double horizontal_space) {
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(horizontal_space+5));
 	}
 
 

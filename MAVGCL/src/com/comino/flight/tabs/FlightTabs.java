@@ -122,7 +122,7 @@ public class FlightTabs extends Pane {
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
 		mavmaptab.setDisable(true);
-	    mavlinkshelltab.setDisable(true);
+		mavlinkshelltab.setDisable(true);
 
 
 		if(camera!=null) {
@@ -163,9 +163,9 @@ public class FlightTabs extends Pane {
 
 		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(control.isConnected()) {
-			    this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
-			    this.tabpane.getTabs().get(5).setDisable(newvalue.booleanValue());
-			    flightControl.getControl().getDetailVisibility().set(false);
+				this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
+				this.tabpane.getTabs().get(5).setDisable(newvalue.booleanValue());
+				flightControl.getControl().getDetailVisibility().set(false);
 			}
 		});
 
@@ -182,11 +182,17 @@ public class FlightTabs extends Pane {
 				xtanalysistab.setWidthBinding(details.getWidth()+3);
 				xyanalysistab.setWidthBinding(details.getWidth()+3);
 				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
+				mavinspectortab.setWidthBinding(details.getWidth()+3);
+				mavparametertab.setWidthBinding(details.getWidth()+3);
+
 			}
 			else {
 				xtanalysistab.setWidthBinding(0);
 				xyanalysistab.setWidthBinding(0);
 				mavlinkshelltab.setWidthBinding(0);
+				mavinspectortab.setWidthBinding(0);
+				mavparametertab.setWidthBinding(0);
+
 			}
 		});
 
@@ -195,17 +201,26 @@ public class FlightTabs extends Pane {
 				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
 				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
 				mavlinkshelltab.setWidthBinding(tuning.getWidth()+3);
+				mavinspectortab.setWidthBinding(tuning.getWidth()+3);
+				mavparametertab.setWidthBinding(tuning.getWidth()+3);
+
 			}
 			else {
 				if(details.isVisible() && control.isConnected()) {
 					xtanalysistab.setWidthBinding(details.getWidth()+3);
 					xyanalysistab.setWidthBinding(details.getWidth()+3);
 					mavlinkshelltab.setWidthBinding(details.getWidth()+3);
+					mavinspectortab.setWidthBinding(details.getWidth()+3);
+					mavparametertab.setWidthBinding(details.getWidth()+3);
+
 				}
 				else {
 					xtanalysistab.setWidthBinding(0);
 					xyanalysistab.setWidthBinding(0);
 					mavlinkshelltab.setWidthBinding(0);
+					mavinspectortab.setWidthBinding(0);
+					mavparametertab.setWidthBinding(0);
+
 				}
 			}
 		});
