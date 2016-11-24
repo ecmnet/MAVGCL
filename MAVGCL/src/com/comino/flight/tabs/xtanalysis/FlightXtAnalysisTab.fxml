@@ -5,7 +5,7 @@
 <fx:root minHeight="164.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<VBox spacing="4">
+		<VBox spacing="0">
 			<LineChartWidget fx:id="chart1" />
 			<LineChartWidget fx:id="chart2" />
 		<!--	<LineChartWidget fx:id="chart3" /> -->
