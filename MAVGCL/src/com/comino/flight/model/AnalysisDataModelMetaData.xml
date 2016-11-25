@@ -1265,7 +1265,7 @@
 
   <!-- virtual keyfigure definition  -->
 
-	<KeyFigure desc="Loc.Pos.Z error" uom="m" mask="±#0.00" key="LPOSZERR">
+	<KeyFigure desc="Loc.Pos.Z error" uom="m" mask="#0.00" key="LPOSZERR">
 		<VirtualSource>
 		    <Converter class="VirtualConverter" expression="abs(LPOSZ - SPLPOSZ)" var0="LPOSZ" var1="SPLPOSZ"/>
 		</VirtualSource>
@@ -1276,7 +1276,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Loc.Pos.XY error" uom="m" mask="±#0.00" key="LPOSXYERR">
+	<KeyFigure desc="Loc.Pos.XY error" uom="m" mask="#0.00" key="LPOSXYERR">
 		<VirtualSource>
 		    <Converter class="VirtualConverter"
 		       expression="sqrt( (LPOSX - SPLPOSX) * (LPOSX - SPLPOSX) + (LPOSY - SPLPOSY) * (LPOSY - SPLPOSY) )"
