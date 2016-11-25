@@ -66,7 +66,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	private int posy;
 
-	private DecimalFormat f = new DecimalFormat("#0.#");
+	private DecimalFormat f = new DecimalFormat("#0.00");
 
 	public DashBoardAnnotation(int posy) {
 
@@ -91,7 +91,6 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	}
 
 	public void setKeyFigure(KeyFigureMetaData kf) {
-		f.applyPattern(kf.mask);
 		if(kf.uom!=null && kf.uom.length()>0)
 		  header.setText(kf.desc1+" ["+kf.uom+"]:");
 		else
