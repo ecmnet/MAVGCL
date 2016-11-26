@@ -82,7 +82,7 @@ public class ExperimentalWidget extends WidgetPane   {
 	private Button althold_command;
 
 	@FXML
-	private Button poshold_command;
+	private Button file_command;
 
 	@FXML
 	private Button vis_reset;
@@ -100,6 +100,8 @@ public class ExperimentalWidget extends WidgetPane   {
 	private VisionSimulationUpdater vision = null;
 	private OffboardUpdater offboard = null;
 	private IMAVController control;
+
+	private boolean file_enabled = false;
 
 	private Task<Long> task;
 
@@ -226,23 +228,38 @@ public class ExperimentalWidget extends WidgetPane   {
 
 		});
 
-		poshold_command.setOnAction((ActionEvent event)-> {
+		file_command.setOnAction((ActionEvent event)-> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_COMBINEDFILESTREAM;
+            if(file_enabled) {
+            	System.out.println("Stop stream recording");
+            	msp.param1 = 0;
+            } else {
+            	System.out.println("Start stream recording");
+    			msp.param1 = 1;
+            }
+            control.sendMAVLinkMessage(msp);
+            file_enabled = !file_enabled;
 
-			if(!model.sys.isStatus(Status.MSP_ARMED))
-				return;
-
-			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
-
-
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-			}
-			else
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
 		});
+
+//		poshold_command.setOnAction((ActionEvent event)-> {
+//
+//			if(!model.sys.isStatus(Status.MSP_ARMED))
+//				return;
+//
+//			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
+//
+//
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+//			}
+//			else
+//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+//		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
