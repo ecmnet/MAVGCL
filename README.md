@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 22/11/2016 
+**Development Status:** Last updated 05/12/2016 
 
 - MAVLink 2.0 implementation
 - supports ULOG streaming to record data 
