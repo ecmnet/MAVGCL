@@ -349,12 +349,20 @@ velocity</short_desc>
     </parameter>
     <parameter default="0.3" name="BAT_V_LOAD_DROP" type="FLOAT">
       <short_desc>Voltage drop per cell on full throttle</short_desc>
-      <long_desc>This implicitely defines the internal resistance to maximum current ratio and assumes linearity. A good value to use is the difference between the 5C and 20-25C load.</long_desc>
+      <long_desc>This implicitely defines the internal resistance to maximum current ratio and assumes linearity. A good value to use is the difference between the 5C and 20-25C load. Not used if BAT_R_INTERNAL is set.</long_desc>
       <min>0.07</min>
       <max>0.5</max>
       <unit>V</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <scope>modules/systemlib</scope>
+    </parameter>
+    <parameter default="-1.0" name="BAT_R_INTERNAL" type="FLOAT">
+      <short_desc>Explicitly defines the per cell internal resistance</short_desc>
+      <long_desc>If non-negative, then this will be used in place of BAT_V_LOAD_DROP for all calculations.</long_desc>
+      <min>-1.0</min>
+      <max>0.2</max>
+      <unit>Ohms</unit>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="0" name="BAT_N_CELLS" type="INT32">
@@ -687,33 +695,80 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <increment>1</increment>
       <scope>modules/commander</scope>
     </parameter>
+    <parameter default="0.5" name="COM_ARM_EKF_POS" type="FLOAT">
+      <short_desc>Maximum EKF position innovation test ratio that will allow arming</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>m</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.5" name="COM_ARM_EKF_VEL" type="FLOAT">
+      <short_desc>Maximum EKF velocity innovation test ratio that will allow arming</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>m/s</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="1.0" name="COM_ARM_EKF_HGT" type="FLOAT">
+      <short_desc>Maximum EKF height innovation test ratio that will allow arming</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>m</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.5" name="COM_ARM_EKF_YAW" type="FLOAT">
+      <short_desc>Maximum EKF yaw innovation test ratio that will allow arming</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>rad</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="2.0e-3" name="COM_ARM_EKF_AB" type="FLOAT">
+      <short_desc>Maximum value of EKF accelerometer delta velocity bias estimate that will allow arming</short_desc>
+      <min>0.001</min>
+      <max>0.004</max>
+      <unit>m/s</unit>
+      <decimal>4</decimal>
+      <increment>0.0005</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="3.5e-4" name="COM_ARM_EKF_GB" type="FLOAT">
+      <short_desc>Maximum value of EKF gyro delta angle bias estimate that will allow arming</short_desc>
+      <min>0.0001</min>
+      <max>0.0007</max>
+      <unit>rad</unit>
+      <decimal>5</decimal>
+      <increment>0.00005</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.7" name="COM_ARM_IMU_ACC" type="FLOAT">
+      <short_desc>Maximum accelerometer inconsistency between IMU units that will allow arming</short_desc>
+      <min>0.1</min>
+      <max>1.0</max>
+      <unit>m/s/s</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0.09" name="COM_ARM_IMU_GYR" type="FLOAT">
+      <short_desc>Maximum rate gyro inconsistency between IMU units that will allow arming</short_desc>
+      <min>0.02</min>
+      <max>0.2</max>
+      <unit>rad/s</unit>
+      <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/commander</scope>
+    </parameter>
   </group>
   <group name="Data Link Loss">
-    <parameter default="-265847810" name="NAV_AH_LAT" type="INT32">
-      <short_desc>Airfield home Lat</short_desc>
-      <long_desc>Latitude of airfield home waypoint</long_desc>
-      <min>-900000000</min>
-      <max>900000000</max>
-      <unit>deg * 1e7</unit>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="1518423250" name="NAV_AH_LON" type="INT32">
-      <short_desc>Airfield home Lon</short_desc>
-      <long_desc>Longitude of airfield home waypoint</long_desc>
-      <min>-1800000000</min>
-      <max>1800000000</max>
-      <unit>deg * 1e7</unit>
-      <scope>modules/navigator</scope>
-    </parameter>
-    <parameter default="600.0" name="NAV_AH_ALT" type="FLOAT">
-      <short_desc>Airfield home alt</short_desc>
-      <long_desc>Altitude of airfield home waypoint</long_desc>
-      <min>-50</min>
-      <unit>m</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
     <parameter default="120.0" name="NAV_DLL_CH_T" type="FLOAT">
       <short_desc>Comms hold wait time</short_desc>
       <long_desc>The amount of time in seconds the system should wait at the comms hold waypoint</long_desc>
@@ -771,6 +826,31 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <short_desc>Skip comms hold wp</short_desc>
       <long_desc>If set to 1 the system will skip the comms hold wp on data link loss and will directly fly to airfield home</long_desc>
       <boolean />
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="-265847810" name="NAV_AH_LAT" type="INT32">
+      <short_desc>Airfield home Lat</short_desc>
+      <long_desc>Latitude of airfield home waypoint</long_desc>
+      <min>-900000000</min>
+      <max>900000000</max>
+      <unit>deg * 1e7</unit>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="1518423250" name="NAV_AH_LON" type="INT32">
+      <short_desc>Airfield home Lon</short_desc>
+      <long_desc>Longitude of airfield home waypoint</long_desc>
+      <min>-1800000000</min>
+      <max>1800000000</max>
+      <unit>deg * 1e7</unit>
+      <scope>modules/navigator</scope>
+    </parameter>
+    <parameter default="600.0" name="NAV_AH_ALT" type="FLOAT">
+      <short_desc>Airfield home alt</short_desc>
+      <long_desc>Altitude of airfield home waypoint</long_desc>
+      <min>-50</min>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
       <scope>modules/navigator</scope>
     </parameter>
   </group>
@@ -1922,16 +2002,6 @@ value will determine the minimum airspeed which will still be fused</short_desc>
     </parameter>
   </group>
   <group name="FW TECS">
-    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
-      <short_desc>Cruise Airspeed</short_desc>
-      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
-      <min>0.0</min>
-      <max>40</max>
-      <unit>m/s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
-    </parameter>
     <parameter default="10.0" name="FW_AIRSPD_MIN" type="FLOAT">
       <short_desc>Minimum Airspeed</short_desc>
       <long_desc>If the airspeed falls below this value, the TECS controller will try to increase airspeed more aggressively.</long_desc>
@@ -2101,6 +2171,16 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <increment>0.01</increment>
       <scope>modules/fw_pos_control_l1</scope>
     </parameter>
+    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
+      <short_desc>Cruise Airspeed</short_desc>
+      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
+      <min>0.0</min>
+      <max>40</max>
+      <unit>m/s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
   </group>
   <group name="Follow target">
     <parameter default="8.0" name="NAV_MIN_FT_HT" type="FLOAT">
@@ -2203,6 +2283,7 @@ but also ignore less noise</short_desc>
         <value code="0">None</value>
         <value code="3">Return to Land</value>
         <value code="2">Loiter</value>
+        <value code="4">Flight terminate</value>
       </values>
     </parameter>
     <parameter default="0" name="GF_ALTMODE" type="INT32">
@@ -2467,7 +2548,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>30</max>
+      <max>3</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -3309,25 +3390,11 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>0.1</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
-    <parameter default="35.0" name="MPP_MAN_R_MAX" type="FLOAT">
-      <short_desc>Max manual roll</short_desc>
-      <min>0.0</min>
-      <max>90.0</max>
-      <unit>deg</unit>
-      <scope>examples/mc_pos_control_multiplatform</scope>
-    </parameter>
-    <parameter default="35.0" name="MPP_MAN_P_MAX" type="FLOAT">
-      <short_desc>Max manual pitch</short_desc>
-      <min>0.0</min>
-      <max>90.0</max>
-      <unit>deg</unit>
-      <scope>examples/mc_pos_control_multiplatform</scope>
-    </parameter>
-    <parameter default="120.0" name="MPP_MAN_Y_MAX" type="FLOAT">
-      <short_desc>Max manual yaw rate</short_desc>
-      <min>0.0</min>
-      <unit>deg/s</unit>
-      <scope>examples/mc_pos_control_multiplatform</scope>
+    <parameter default="0" name="MC_BAT_SCALE_EN" type="INT32">
+      <short_desc>Whether to scale outputs by battery power level</short_desc>
+      <long_desc>This compensates for voltage drop of the battery over time by attempting to normalize performance across the operating range of the battery. The copter should constantly behave as if it was fully charged with reduced max acceleration at lower battery percentages. i.e. if hover is at 0.5 throttle at 100% battery, it will still be 0.5 at 60% battery.</long_desc>
+      <boolean />
+      <scope>modules/mc_att_control</scope>
     </parameter>
     <parameter default="6.0" name="MP_ROLL_P" type="FLOAT">
       <short_desc>Roll P gain</short_desc>
@@ -3437,6 +3504,26 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <min>0.0</min>
       <unit>deg/s</unit>
       <scope>examples/mc_att_control_multiplatform</scope>
+    </parameter>
+    <parameter default="35.0" name="MPP_MAN_R_MAX" type="FLOAT">
+      <short_desc>Max manual roll</short_desc>
+      <min>0.0</min>
+      <max>90.0</max>
+      <unit>deg</unit>
+      <scope>examples/mc_pos_control_multiplatform</scope>
+    </parameter>
+    <parameter default="35.0" name="MPP_MAN_P_MAX" type="FLOAT">
+      <short_desc>Max manual pitch</short_desc>
+      <min>0.0</min>
+      <max>90.0</max>
+      <unit>deg</unit>
+      <scope>examples/mc_pos_control_multiplatform</scope>
+    </parameter>
+    <parameter default="120.0" name="MPP_MAN_Y_MAX" type="FLOAT">
+      <short_desc>Max manual yaw rate</short_desc>
+      <min>0.0</min>
+      <unit>deg/s</unit>
+      <scope>examples/mc_pos_control_multiplatform</scope>
     </parameter>
   </group>
   <group name="Multicopter Position Control">
@@ -3841,6 +3928,15 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
   </group>
   <group name="PWM Outputs">
+    <parameter default="400" name="PWM_RATE" type="INT32">
+      <short_desc>Set the PWM output frequency for the MAIN outputs</short_desc>
+      <long_desc>IMPORTANT: CHANGING THIS PARAMETER REQUIRES A COMPLETE SYSTEM REBOOT IN ORDER TO APPLY THE CHANGES. COMPLETELY POWER-CYCLE THE SYSTEM TO PUT CHANGES INTO EFFECT. Set to 400 for industry default or 1000 for high frequency ESCs.</long_desc>
+      <min>-1</min>
+      <max>2000</max>
+      <unit>Hz</unit>
+      <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+    </parameter>
     <parameter default="1000" name="PWM_MIN" type="INT32">
       <short_desc>Set the minimum PWM for the MAIN outputs</short_desc>
       <long_desc>IMPORTANT: CHANGING THIS PARAMETER REQUIRES A COMPLETE SYSTEM REBOOT IN ORDER TO APPLY THE CHANGES. COMPLETELY POWER-CYCLE THE SYSTEM TO PUT CHANGES INTO EFFECT. Set to 1000 for industry default or 900 to increase servo travel.</long_desc>
@@ -6149,6 +6245,19 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <unit>min</unit>
       <scope>modules/logger</scope>
     </parameter>
+    <parameter default="0" name="SDLOG_MODE" type="INT32">
+      <short_desc>Logging Mode</short_desc>
+      <long_desc>Determines when to start and stop logging. By default, logging is started when arming the system, and stopped when disarming. This parameter is only for the new logger (SYS_LOGGER=1).</long_desc>
+      <min>0</min>
+      <max>2</max>
+      <reboot_required>true</reboot_required>
+      <scope>modules/logger</scope>
+      <values>
+        <value code="1">from boot until disarm</value>
+        <value code="0">when armed until disarm (default)</value>
+        <value code="2">from boot until shutdown</value>
+      </values>
+    </parameter>
   </group>
   <group name="Sensor Calibration">
     <parameter default="0" name="CAL_BOARD_ID" type="INT32">
@@ -6871,7 +6980,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="2">Data does not survive reset</value>
       </values>
     </parameter>
-    <parameter default="1" name="SYS_MC_EST_GROUP" type="INT32">
+    <parameter default="2" name="SYS_MC_EST_GROUP" type="INT32">
       <short_desc>Set multicopter estimator group</short_desc>
       <long_desc>Set the group of estimators used for multicopters and vtols</long_desc>
       <min>1</min>
@@ -7018,6 +7127,48 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     </parameter>
   </group>
   <group name="VTOL Attitude Control">
+    <parameter default="0.0" name="VT_TILT_MC" type="FLOAT">
+      <short_desc>Position of tilt servo in mc mode</short_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0.3" name="VT_TILT_TRANS" type="FLOAT">
+      <short_desc>Position of tilt servo in transition mode</short_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="1.0" name="VT_TILT_FW" type="FLOAT">
+      <short_desc>Position of tilt servo in fw mode</short_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0.5" name="VT_TRANS_P2_DUR" type="FLOAT">
+      <short_desc>Duration of front transition phase 2</short_desc>
+      <long_desc>Time in seconds it should take for the rotors to rotate forward completely from the point when the plane has picked up enough airspeed and is ready to go into fixed wind mode.</long_desc>
+      <min>0.1</min>
+      <max>5.0</max>
+      <unit>s</unit>
+      <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0" name="VT_FW_MOT_OFFID" type="INT32">
+      <short_desc>The channel number of motors that must be turned off in fixed wing mode</short_desc>
+      <min>0</min>
+      <max>12345678</max>
+      <decimal>0</decimal>
+      <increment>1</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
     <parameter default="0" name="VT_MOT_COUNT" type="INT32">
       <short_desc>VTOL number of engines</short_desc>
       <min>0</min>
@@ -7209,48 +7360,6 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <long_desc>Minimum altitude for fixed wing flight, when in fixed wing the altitude drops below this altitude the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
       <min>0.0</min>
       <max>200.0</max>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="0.0" name="VT_TILT_MC" type="FLOAT">
-      <short_desc>Position of tilt servo in mc mode</short_desc>
-      <min>0.0</min>
-      <max>1.0</max>
-      <decimal>3</decimal>
-      <increment>0.01</increment>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="0.3" name="VT_TILT_TRANS" type="FLOAT">
-      <short_desc>Position of tilt servo in transition mode</short_desc>
-      <min>0.0</min>
-      <max>1.0</max>
-      <decimal>3</decimal>
-      <increment>0.01</increment>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="1.0" name="VT_TILT_FW" type="FLOAT">
-      <short_desc>Position of tilt servo in fw mode</short_desc>
-      <min>0.0</min>
-      <max>1.0</max>
-      <decimal>3</decimal>
-      <increment>0.01</increment>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="0.5" name="VT_TRANS_P2_DUR" type="FLOAT">
-      <short_desc>Duration of front transition phase 2</short_desc>
-      <long_desc>Time in seconds it should take for the rotors to rotate forward completely from the point when the plane has picked up enough airspeed and is ready to go into fixed wind mode.</long_desc>
-      <min>0.1</min>
-      <max>5.0</max>
-      <unit>s</unit>
-      <decimal>3</decimal>
-      <increment>0.01</increment>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="0" name="VT_FW_MOT_OFFID" type="INT32">
-      <short_desc>The channel number of motors that must be turned off in fixed wing mode</short_desc>
-      <min>0</min>
-      <max>12345678</max>
-      <decimal>0</decimal>
-      <increment>1</increment>
       <scope>modules/vtol_att_control</scope>
     </parameter>
     <parameter default="0.6" name="VT_TRANS_THR" type="FLOAT">
@@ -7533,22 +7642,6 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     </parameter>
   </group>
   <group name="Miscellaneous">
-    <parameter default="10.0" name="SEG_TH2V_P" type="FLOAT">
-      <short_desc>SEG_TH2V_P</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="0.0" name="SEG_TH2V_I" type="FLOAT">
-      <short_desc>SEG_TH2V_I</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="0.0" name="SEG_TH2V_I_MAX" type="FLOAT">
-      <short_desc>SEG_TH2V_I_MAX</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
-    <parameter default="1.0" name="SEG_Q2V" type="FLOAT">
-      <short_desc>SEG_Q2V</short_desc>
-      <scope>modules/segway</scope>
-    </parameter>
     <parameter default="0" name="RC_MAP_FAILSAFE" type="INT32">
       <short_desc>Failsafe channel mapping</short_desc>
       <long_desc>The RC mapping index indicates which channel is used for failsafe If 0, whichever channel is mapped to throttle is used otherwise the value indicates the specific rc channel to use</long_desc>
@@ -7576,6 +7669,22 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
         <value code="9">Channel 9</value>
         <value code="8">Channel 8</value>
       </values>
+    </parameter>
+    <parameter default="10.0" name="SEG_TH2V_P" type="FLOAT">
+      <short_desc>SEG_TH2V_P</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I" type="FLOAT">
+      <short_desc>SEG_TH2V_I</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I_MAX" type="FLOAT">
+      <short_desc>SEG_TH2V_I_MAX</short_desc>
+      <scope>modules/segway</scope>
+    </parameter>
+    <parameter default="1.0" name="SEG_Q2V" type="FLOAT">
+      <short_desc>SEG_Q2V</short_desc>
+      <scope>modules/segway</scope>
     </parameter>
     <parameter default="-1" name="COM_FLTMODE1" type="INT32">
       <short_desc>First flightmode slot (1000-1160)</short_desc>
@@ -7703,6 +7812,10 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
         <value code="8">Stabilized</value>
       </values>
     </parameter>
+    <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
+      <short_desc>RV_YAW_P</short_desc>
+      <scope>examples/rover_steering_control</scope>
+    </parameter>
     <parameter default="0.1" name="EXFW_HDNG_P" type="FLOAT">
       <short_desc>EXFW_HDNG_P</short_desc>
       <scope>examples/fixedwing_control</scope>
@@ -7714,10 +7827,6 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     <parameter default="0.2" name="EXFW_PITCH_P" type="FLOAT">
       <short_desc>EXFW_PITCH_P</short_desc>
       <scope>examples/fixedwing_control</scope>
-    </parameter>
-    <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
-      <short_desc>RV_YAW_P</short_desc>
-      <scope>examples/rover_steering_control</scope>
     </parameter>
   </group>
 </parameters>
