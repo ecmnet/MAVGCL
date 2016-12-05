@@ -78,6 +78,7 @@ public class InfoWidget extends WidgetPane  {
 				super.updateItem(m, empty);
 				if(!empty) {
 					setPrefWidth(130);
+					setWrapText(true);
 					setText(m.msg);
 					switch(m.severity) {
 					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
