@@ -33,15 +33,11 @@
 
 package com.comino.flight.experimental;
 
-import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_FRAME;
-import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.lquac.msg_set_position_target_local_ned;
 
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.MSPMathUtils;
 
 public class OffboardUpdater implements Runnable {
@@ -55,11 +51,18 @@ public class OffboardUpdater implements Runnable {
 
 	private float yaw = 0f;
 
+	private int duration_ms = 0;
+	private long start_time_ms = 0;
+
 	public OffboardUpdater(IMAVController control) {
 		this.control = control;
 	}
 
 	public void start() {
+		start(0);
+	}
+
+	public void start(int duration_ms) {
 		isRunning = true;
 		new Thread(this).start();
 
@@ -106,9 +109,15 @@ public class OffboardUpdater implements Runnable {
 		if(!isRunning)
 			return;
 
+		start_time_ms = System.currentTimeMillis();
+
 		MSPLogger.getInstance().writeLocalMsg("Offboard updater started");
 
 		while(isRunning) {
+
+			if(duration_ms > 0 && (System.currentTimeMillis() - start_time_ms) > duration_ms) {
+				isRunning = false;
+			}
 
 			msg_set_position_target_local_ned cmd = new msg_set_position_target_local_ned(255,1);
 			cmd.target_component = 1;
@@ -128,7 +137,7 @@ public class OffboardUpdater implements Runnable {
 			} catch (InterruptedException e) { }
 		}
 
-	    MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped");
+	    MSPLogger.getInstance().writeLocalMsg("Offboard updater stopped ("+(System.currentTimeMillis()-start_time_ms)+"ms)");
 	}
 
 }
