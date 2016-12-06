@@ -110,9 +110,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, IAnalysi
 			"Auto", "0.1", "0.2", "0.5","1", "2", "5", "10", "20","50", "100", "200"
 	};
 
-
-	private static int COLLECTOR_CYCLE = 50;
-
 	@FXML
 	private SectionLineChart<Number,Number> linechart;
 
@@ -544,7 +541,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, IAnalysi
 	//		}
 
 			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
@@ -599,15 +596,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, IAnalysi
 
 			while(current_x_pt<max_x) {
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0) {
+				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
 
 					m = mList.get(current_x_pt);
 
 					if(current_x_pt > current_x1_pt) {
 
-						current_x0_pt += resolution_ms / COLLECTOR_CYCLE;
-						current_x1_pt += resolution_ms / COLLECTOR_CYCLE;
+						current_x0_pt += resolution_ms / dataService.getCollectorInterval_ms();
+						current_x1_pt += resolution_ms / dataService.getCollectorInterval_ms();
 
 						if(series1.getData().size()>0) {
 							pool.invalidate(series1.getData().get(0));
@@ -664,7 +661,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, IAnalysi
 				isRunning = false;
 		});
 		current_x0_pt = dataService.calculateX0Index(1);
-		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		return this;
 	}

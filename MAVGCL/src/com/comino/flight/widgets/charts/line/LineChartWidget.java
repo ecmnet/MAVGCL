@@ -87,10 +87,7 @@ import javafx.scene.shape.Rectangle;
 public class LineChartWidget extends BorderPane implements IChartControl, IAnalysisModelServiceListener {
 
 	private static int MAXRECENT = 20;
-
-	private final static int COLLECTOR_CYCLE = 50;
 	private final static int REFRESH_RATE    = 50;
-	private final static int REFRESH_STEP    = REFRESH_RATE / COLLECTOR_CYCLE;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -126,6 +123,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 	private CheckBox dash;
 
 	private int id = 0;
+	private int refresh_step = 0;
 
 	private  XYChart.Series<Number,Number> series1;
 	private  XYChart.Series<Number,Number> series2;
@@ -177,6 +175,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 
 	public LineChartWidget() {
 
+		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
+
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
 		this.state = StateProperties.getInstance();
@@ -194,7 +194,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		linechart.getData().add(series3);
 
 		dataService.registerListener(this);
-		
+
 	}
 
 
@@ -222,7 +222,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		dashboard2 = new DashBoardAnnotation(90);
 		dashboard3 = new DashBoardAnnotation(170);
 
-		current_x1_pt = timeFrame.intValue() * 1000 / COLLECTOR_CYCLE;
+		current_x1_pt = timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		xAxis.setAutoRanging(false);
 		xAxis.setLowerBound(0);
@@ -270,7 +270,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 			if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 
-				current_x0_pt = (int)(x0 * 1000f / COLLECTOR_CYCLE);
+				current_x0_pt = (int)(x0 * 1000f / dataService.getCollectorInterval_ms());
 				setXResolution((int)(x1-x0));
 			}
 			Platform.runLater(() -> {
@@ -322,7 +322,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 				return;
 
 			int delta = (int)(timeframe * 1000f / linechart.getWidth() * -event.getDeltaX() * 0.3f
-					/ COLLECTOR_CYCLE + 0.5f);
+					/ dataService.getCollectorInterval_ms() + 0.5f);
 			event.consume();
 
 			current_x0_pt = current_x0_pt + delta;
@@ -548,7 +548,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		else
 			resolution_ms = 50;
 
-		if(resolution_ms > COLLECTOR_CYCLE) {
+		if(resolution_ms > dataService.getCollectorInterval_ms()) {
 			averaging.setDisable(false);
 		} else {
 			averaging.setSelected(false);
@@ -613,7 +613,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 			}
 
 			current_x_pt  = current_x0_pt;
-			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / COLLECTOR_CYCLE);
+			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / dataService.getCollectorInterval_ms());
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 		}
 
@@ -636,7 +636,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 			while(current_x_pt<max_x ) {
 
 				m = dataService.getModelList().get(current_x_pt);
-				dt_sec = current_x_pt *  COLLECTOR_CYCLE / 1000f;
+				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
@@ -650,7 +650,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 					last_annotation_pos = current_x_pt;
 				}
 
-				if(((current_x_pt * COLLECTOR_CYCLE) % resolution_ms) == 0 && current_x_pt > 0) {
+				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0 && current_x_pt > 0) {
 					if(current_x_pt > current_x1_pt) {
 						if(series1.getData().size()>0 && type1.hash!=0) {
 							pool.invalidate(series1.getData().get(0));
@@ -669,18 +669,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 					}
 
 					if(type1.hash!=0)  {
-						v1 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type1,averaging.isSelected());
+						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,averaging.isSelected());
 						if(!Float.isNaN(v1))
 							series1.getData().add(pool.checkOut(dt_sec,v1));
 
 					}
 					if(type2.hash!=0)  {
-						v2 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type2,averaging.isSelected());
+						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,averaging.isSelected());
 						if(!Float.isNaN(v2))
 							series2.getData().add(pool.checkOut(dt_sec,v2));
 					}
 					if(type3.hash!=0)  {
-						v3 = determineValueFromRange(current_x_pt,resolution_ms/COLLECTOR_CYCLE,type3,averaging.isSelected());
+						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,averaging.isSelected());
 						if(!Float.isNaN(v3))
 							series3.getData().add(pool.checkOut(dt_sec,v3));
 					}
@@ -690,8 +690,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 				if(current_x_pt > current_x1_pt) {
 					set_bounds = true;
 					if(!isPaused) {
-						current_x0_pt += REFRESH_STEP;
-						current_x1_pt += REFRESH_STEP;
+						current_x0_pt += refresh_step;
+						current_x1_pt += refresh_step;
 					}
 				}
 				current_x_pt++;
@@ -737,8 +737,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 		if(tick < 1) tick = 1;
 		xAxis.setTickUnit(tick);
 		//xAxis.setMinorTickCount(10);
-		xAxis.setLowerBound(lower_pt * COLLECTOR_CYCLE / 1000F);
-		xAxis.setUpperBound(upper_pt * COLLECTOR_CYCLE / 1000f);
+		xAxis.setLowerBound(lower_pt * dataService.getCollectorInterval_ms() / 1000F);
+		xAxis.setUpperBound(upper_pt * dataService.getCollectorInterval_ms() / 1000f);
 	}
 
 
