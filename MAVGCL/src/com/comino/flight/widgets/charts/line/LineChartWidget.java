@@ -545,8 +545,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IAnaly
 			resolution_ms = 200;
 		else if(frame >= 60)
 			resolution_ms = 100;
-		else
+		else if(frame >= 30)
 			resolution_ms = 50;
+		else
+			resolution_ms = dataService.getCollectorInterval_ms();
 
 		if(resolution_ms > dataService.getCollectorInterval_ms()) {
 			averaging.setDisable(false);

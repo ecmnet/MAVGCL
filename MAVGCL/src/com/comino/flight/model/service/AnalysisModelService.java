@@ -62,8 +62,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public static  final int COLLECTING     	= 2;
 	public static  final int POST_COLLECTING    = 3;
 
-	private static final int MODELCOLLECTOR_INTERVAL_US = 50000;
-
 	private DataModel								  model   = null;
 	private ULogFromMAVLinkReader                   ulogger   = null;
 	private AnalysisDataModel				    	current   = null;
@@ -77,6 +75,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
+	private  int collector_interval_us = 20000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -123,6 +122,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 		listener.add(l);
 	}
 
+	public void setCollectorInterval(int interval_us) {
+		this.collector_interval_us = interval_us;
+	}
+
 
 	public List<AnalysisDataModel> getModelList() {
 		return modelList;
@@ -145,7 +148,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public int getCollectorInterval_ms() {
-		return MODELCOLLECTOR_INTERVAL_US/1000;
+		return collector_interval_us/1000;
 	}
 
 	public boolean start() {
@@ -301,7 +304,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					current.msg = null; record.msg = null;
 				}
 				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait));
 			}
 		}
 	}
@@ -314,7 +317,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		public Collector(int pre_delay_sec) {
 			if(pre_delay_sec>0) {
 				mode = PRE_COLLECTING;
-				this.pre_delay_count = pre_delay_sec * 1000000 / MODELCOLLECTOR_INTERVAL_US;
+				this.pre_delay_count = pre_delay_sec * 1000000 / collector_interval_us;
 			}
 		}
 
@@ -341,7 +344,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					for(IAnalysisModelServiceListener updater : listener)
 						updater.update(System.nanoTime());
 
-				LockSupport.parkNanos(MODELCOLLECTOR_INTERVAL_US*1000 - (System.nanoTime()-wait));
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait));
 			}
 
 			if(mode==PRE_COLLECTING) {
