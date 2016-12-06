@@ -57,7 +57,7 @@
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
 				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar
 					                                JCSG.jar medusa-4.7.jar gson-2.4.jar jfxchartext-1.1.jar
-					                                jinput.jar MAVGPreloader.jar exp4j-0.4.7.jar" />
+					                                jinput.jar MAVGPreloader.jar exp4j-0.4.7.jar core-0.29.jar" />
 			</manifest>
 		</fx:jar>
 
@@ -92,6 +92,7 @@
 				<include name="jinput.jar" />
 				<include name="exp4j-0.4.7.jar" />
 				<include name="jfxchartext-1.1.jar" />
+				<include name="core-0.29.jar" />
 			</fileset>
 		</copy>
 
