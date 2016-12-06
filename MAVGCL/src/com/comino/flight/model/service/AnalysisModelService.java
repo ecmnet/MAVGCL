@@ -75,7 +75,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 25000;
+	private  int collector_interval_us = 50000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -272,7 +272,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class CombinedConverter implements Runnable {
 
-		long tms = 0; long wait = 0; int old_mode=STOPPED;
+		long tms = 0; long tms_start =0; long wait = 0; int old_mode=STOPPED;
 		float perf = 0; float perf2=0; AnalysisDataModel m = null;
 
 		@Override
@@ -307,6 +307,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					state.getLogLoadedProperty().set(false);
 					state.getRecordingProperty().set(true);
 					ulogger.enableLogging(true);
+					tms_start = System.nanoTime() / 1000;
 				}
 
 				if(mode!=STOPPED) {
@@ -314,7 +315,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 						m = record.clone();
 					else
 						m = current.clone();
-					m.tms = System.nanoTime() / 1000 - tms;
+					m.tms = System.nanoTime() / 1000 - tms_start;
                     m.dt_sec = m.tms / 1e6f;
 					modelList.add(m);
 

@@ -41,6 +41,7 @@ import java.util.Map;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.msp.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;
@@ -76,7 +77,7 @@ public class UlogtoModelConverter {
 				if(tms > tms_slot) {
 					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;
-					tms_slot += 50000;
+					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()/1000;
 					model.setValues(KeyFigureMetaData.ULG_SOURCE, data, meta);
 					model.calculateVirtualKeyFigures(meta);
 					list.add(model);
