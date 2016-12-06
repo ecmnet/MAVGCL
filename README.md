@@ -12,8 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 05/12/2016 
+**Development Status:** Last updated 06/12/2016 
 
+- Collector cycle set to 20ms (experimental)
 - MAVLink 2.0 implementation
 - supports ULOG streaming to record data 
 - Tuning fix and TimeFrames selection adjusted
@@ -27,7 +28,7 @@ V0.6xx notes:
 
 **Features:**
 
-- Realtime data acquisition (50ms sampling) based on MAVLink messages or ULOG data over MAVLink
+- Realtime data acquisition (20ms sampling) based on MAVLink messages or ULOG data over MAVLink
 - Timechart annotated by messages (MAVLink and ULog) and parameter changes (MAVLink only)
 - Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
 - Display of  key-figures during and after recording (with 'Replay')
