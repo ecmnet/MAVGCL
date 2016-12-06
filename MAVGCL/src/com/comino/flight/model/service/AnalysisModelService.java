@@ -70,12 +70,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private StateProperties                           state   = null;
 
 	private AnalysisDataModelMetaData                  meta  =  null;
-	private List<IAnalysisModelServiceListener>    listener  =  null;
+	private List<ICollectorRecordingListener>    listener  =  null;
 
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 20000;
+	private  int collector_interval_us = 25000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -91,7 +91,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisModelService(IMAVController control) {
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
-		this.listener = new ArrayList<IAnalysisModelServiceListener>();
+		this.listener = new ArrayList<ICollectorRecordingListener>();
 
 		this.modelList     = new ArrayList<AnalysisDataModel>(50000);
 		this.model         = control.getCurrentModel();
@@ -103,8 +103,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		control.addMAVLinkListener(this);
 
-		Thread c = new Thread(new Converter());
-		c.setPriority(Thread.MAX_PRIORITY);
+//		ExecutorService.get().scheduleAtFixedRate(new Converter(), 0, collector_interval_us, TimeUnit.MICROSECONDS);
+
+	//	Thread c = new Thread(new Converter());
+		Thread c = new Thread(new CombinedConverter());
+	//	c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
 	}
 
@@ -113,12 +116,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.model         =  model;
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
-		Thread c = new Thread(new Converter());
+		Thread c = new Thread(new CombinedConverter());
 		c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
 	}
 
-	public void registerListener(IAnalysisModelServiceListener l) {
+	public void registerListener(ICollectorRecordingListener l) {
 		listener.add(l);
 	}
 
@@ -160,12 +163,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
-			Thread c = new Thread(new Collector(0));
-			c.setPriority(Thread.MIN_PRIORITY);
-			c.start();
 		}
 		return mode != STOPPED;
-		//service = ExecutorService.get().scheduleAtFixedRate(new Collector(), 0, MODELCOLLECTOR_INTERVAL_US, TimeUnit.MICROSECONDS);
 	}
 
 
@@ -258,16 +257,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 			return 0;
 	}
 
-	public void start(int pre_sec) {
-		if(mode==STOPPED) {
-			modelList.clear();
-			mode = PRE_COLLECTING;
-			Thread c = new Thread(new Collector(pre_sec));
-			c.setPriority(Thread.MIN_PRIORITY);
-			c.start();
-		}
-	}
-
 
 	public boolean isCollecting() {
 		return mode != STOPPED ;
@@ -283,15 +272,24 @@ public class AnalysisModelService implements IMAVLinkListener {
 		record.setValues(KeyFigureMetaData.MAV_SOURCE,_msg,meta);
 	}
 
-	private class Converter implements Runnable {
+
+	private class CombinedConverter implements Runnable {
+
+		long tms = 0; long wait = 0; int old_mode=STOPPED;
+		float perf = 0;  AnalysisDataModel m = null;
 
 		@Override
 		public void run() {
-			long tms = 0; long wait = 0;
-			try { Thread.sleep(1000); } catch(Exception e) { }
+			try { Thread.sleep(5000); } catch(Exception e) { }
 			while(true) {
+
+				current.setValue("MAVGCLACC", (System.nanoTime()-wait)/1e6f);
+				current.setValue("MAVGCLPERF", perf);
+
 				current.msg = null; wait = System.nanoTime();
 				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+
+
 				if(ulogger.isLogging()) {
 					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
@@ -303,35 +301,16 @@ public class AnalysisModelService implements IMAVLinkListener {
 				} else {
 					current.msg = null; record.msg = null;
 				}
+
 				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait));
-			}
-		}
-	}
 
+				if(mode!=STOPPED && old_mode == STOPPED) {
+					state.getLogLoadedProperty().set(false);
+					state.getRecordingProperty().set(true);
+					ulogger.enableLogging(true);
+				}
 
-	private class Collector implements Runnable {
-
-		int pre_delay_count=0; int count = 0;  AnalysisDataModel m = null;
-
-		public Collector(int pre_delay_sec) {
-			if(pre_delay_sec>0) {
-				mode = PRE_COLLECTING;
-				this.pre_delay_count = pre_delay_sec * 1000000 / collector_interval_us;
-			}
-		}
-
-		@Override
-		public void run() {
-			long tms = System.nanoTime() / 1000; long wait = 0;
-
-			state.getLogLoadedProperty().set(false);
-			state.getRecordingProperty().set(true);
-			ulogger.enableLogging(true);
-
-			while(mode!=STOPPED) {
-				 wait = System.nanoTime();
-
+				if(mode!=STOPPED) {
 					if(ulogger.isLogging())
 						m = record.clone();
 					else
@@ -340,25 +319,21 @@ public class AnalysisModelService implements IMAVLinkListener {
                     m.dt_sec = m.tms / 1e6f;
 					modelList.add(m);
 
-					count++;
-					for(IAnalysisModelServiceListener updater : listener)
+					for(ICollectorRecordingListener updater : listener)
 						updater.update(System.nanoTime());
-
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait));
-			}
-
-			if(mode==PRE_COLLECTING) {
-				int _delcount = count - pre_delay_count;
-				if(_delcount > 0) {
-					for(int i = 0; i < _delcount; i++ )
-						modelList.remove(0);
 				}
+
+				if(mode==STOPPED && old_mode != STOPPED) {
+					ulogger.enableLogging(false);
+					state.getRecordingProperty().set(false);
+				}
+
+				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
+
+				old_mode = mode;
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3500000);
 			}
-
-			ulogger.enableLogging(false);
-			state.getRecordingProperty().set(false);
 		}
-
 	}
 
 }

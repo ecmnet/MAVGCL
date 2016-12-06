@@ -46,7 +46,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.model.service.IAnalysisModelServiceListener;
+import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
@@ -84,7 +84,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
-public class LineChartWidget extends BorderPane implements IChartControl, IAnalysisModelServiceListener {
+public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
 
 	private static int MAXRECENT = 20;
 	private final static int REFRESH_RATE    = 50;

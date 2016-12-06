@@ -1262,6 +1262,19 @@
 		</Groups>
   </KeyFigure>
 
+<!--
+  <KeyFigure desc="UI ThreadTime" uom="ms" mask="#0.00" key="MAVGCLPERF">
+		<Groups>
+			<Group>_Debug</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Cnverter" uom="ms" mask="#0.00" key="MAVGCLACC">
+		<Groups>
+			<Group>_Debug</Group>
+		</Groups>
+  </KeyFigure>
+-->
 
   <!-- virtual keyfigure definition  -->
 

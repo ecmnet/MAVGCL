@@ -1,6 +1,6 @@
 package com.comino.flight.model.service;
 
-public interface IAnalysisModelServiceListener {
+public interface ICollectorRecordingListener {
 
 	public void update(long tms);
 

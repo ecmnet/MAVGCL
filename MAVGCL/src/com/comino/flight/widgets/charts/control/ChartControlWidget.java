@@ -60,7 +60,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ChartControlWidget extends WidgetPane  {
 
-	private static final Integer[] TOTAL_TIME = { 15, 30, 60, 120, 240 };
+	private static final Integer[] TOTAL_TIME = { 30, 60, 120, 240, 480 };
 
 
 	@FXML
@@ -92,7 +92,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 		this.modelService =  AnalysisModelService.getInstance();
 		totaltime.getItems().addAll(TOTAL_TIME);
-		totaltime.getSelectionModel().select(1);
+		totaltime.getSelectionModel().select(0);
 
 		buildKeyfigureModelSelection();
 
