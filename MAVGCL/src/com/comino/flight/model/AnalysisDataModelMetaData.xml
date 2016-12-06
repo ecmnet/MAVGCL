@@ -1269,7 +1269,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Cnverter" uom="ms" mask="#0.00" key="MAVGCLACC">
+  <KeyFigure desc="Converter" uom="ms" mask="#0.00" key="MAVGCLACC">
 		<Groups>
 			<Group>_Debug</Group>
 		</Groups>

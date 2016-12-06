@@ -273,16 +273,17 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private class CombinedConverter implements Runnable {
 
 		long tms = 0; long wait = 0; int old_mode=STOPPED;
-		float perf = 0;  AnalysisDataModel m = null;
+		float perf = 0; float perf2=0; AnalysisDataModel m = null;
 
 		@Override
 		public void run() {
 			try { Thread.sleep(5000); } catch(Exception e) { }
 			while(true) {
 
-				current.setValue("MAVGCLACC", (System.nanoTime()-wait)/1e6f);
 				current.setValue("MAVGCLPERF", perf);
+				current.setValue("MAVGCLACC", perf2);
 
+				synchronized(this) {
 				current.msg = null; wait = System.nanoTime();
 				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
@@ -300,6 +301,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 
 				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				}
 
 				if(mode!=STOPPED && old_mode == STOPPED) {
 					state.getLogLoadedProperty().set(false);
@@ -324,11 +326,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 					ulogger.enableLogging(false);
 					state.getRecordingProperty().set(false);
 				}
-
-				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
-
 				old_mode = mode;
+				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3500000);
+				perf2 = (System.nanoTime()-wait)/1e6f;
 			}
 		}
 	}
