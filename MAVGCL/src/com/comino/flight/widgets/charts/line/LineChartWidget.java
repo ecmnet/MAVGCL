@@ -147,8 +147,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
-	private SnapshotParameters param = new SnapshotParameters();
-
 	private ArrayList<KeyFigureMetaData> recent = null;
 
 	private Gson gson = new GsonBuilder().create();
@@ -182,10 +180,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();
 
-		param.setFill(Color.BLACK);
-
 		dataService.registerListener(this);
-
 	}
 
 
@@ -520,6 +515,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	public void saveAsPng(String path) {
+		SnapshotParameters param = new SnapshotParameters();
+		param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/chart_"+id+".png");
 		try {
