@@ -224,6 +224,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		dataService.registerListener(this);
 	}
 
+	@Override
+	public void update(long now) {
+		if(isVisible() && !isDisabled() && isRunning) {
+			Platform.runLater(() -> {
+				updateGraph(refreshRequest);
+			});
+		}
+	}
+
 	@FXML
 	private void initialize() {
 
@@ -267,8 +276,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		yAxis.setUpperBound(5);
 
 		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
-
-		//		center_origin.setDisable(true);
 
 		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
@@ -497,7 +504,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		}
 	}
-
 
 
 	private void updateGraph(boolean refresh) {
@@ -793,16 +799,4 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
 	}
-
-	@Override
-	public void update(long now) {
-		if(isVisible() && !isDisabled() && isRunning) {
-			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
-			});
-		}
-
-	}
-
-
 }
