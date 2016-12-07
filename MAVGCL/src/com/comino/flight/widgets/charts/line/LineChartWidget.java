@@ -521,7 +521,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		SnapshotParameters param = new SnapshotParameters();
 		param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
-		File file = new File(path+"/chart.png");
+		File file = new File(path+"/chart_"+id+".png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (IOException e) {  }
