@@ -75,7 +75,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 25000;
+	private  int collector_interval_us = 50000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -104,7 +104,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		Thread c = new Thread(new CombinedConverter());
-//		c.setPriority(Thread.MAX_PRIORITY);
+		c.setPriority(Thread.MIN_PRIORITY);
 		c.start();
 	}
 

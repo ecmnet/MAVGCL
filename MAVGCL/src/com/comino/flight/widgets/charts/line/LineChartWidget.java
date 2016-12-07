@@ -57,7 +57,9 @@ import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.sun.glass.ui.PlatformFactory;
 import com.sun.javafx.PlatformUtil;
+import com.sun.javafx.application.PlatformImpl;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
@@ -492,7 +494,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				initKeyFigureSelection(cseries3, type3, meta.getKeyFigures());
 
 			}
-
 		});
 
 		return this;
@@ -539,10 +540,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private void setXResolution(float frame) {
 		if(frame >= 200)
-			resolution_ms = 200;
+			resolution_ms = 400;
 		else if(frame >= 60)
-			resolution_ms = 100;
+			resolution_ms = 200;
 		else if(frame >= 30)
+			resolution_ms = 100;
+		else if(frame >= 15)
 			resolution_ms = 50;
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
