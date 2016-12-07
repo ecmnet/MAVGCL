@@ -86,8 +86,8 @@ import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
 
-	private static int MAXRECENT = 20;
-	private final static int REFRESH_RATE    = 50;
+	private final static int MAXRECENT 	    = 20;
+	private final static int REFRESH_RATE   = 50;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -129,8 +129,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  XYChart.Series<Number,Number> series2;
 	private  XYChart.Series<Number,Number> series3;
 
-	private IMAVController control;
-
 	private KeyFigureMetaData type1 = null;
 	private KeyFigureMetaData type2=  null;
 	private KeyFigureMetaData type3=  null;
@@ -148,6 +146,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
+
+	private SnapshotParameters param = new SnapshotParameters();
 
 	private ArrayList<KeyFigureMetaData> recent = null;
 
@@ -182,16 +182,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();
 
-		linechart.setAxisSortingPolicy(SortingPolicy.NONE);
-		linechart.setBackground(null);
-		linechart.setCreateSymbols(false);
-
-		series1 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series1);
-		series2 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series2);
-		series3 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series3);
+		param.setFill(Color.BLACK);
 
 		dataService.registerListener(this);
 
@@ -210,6 +201,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@FXML
 	private void initialize() {
+
+		linechart.setAxisSortingPolicy(SortingPolicy.NONE);
+		linechart.setBackground(null);
+		linechart.setCreateSymbols(false);
+
+		series1 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series1);
+		series2 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series2);
+		series3 = new XYChart.Series<Number,Number>();
+		linechart.getData().add(series3);
 
 		annotations.setSelected(true);
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -443,8 +445,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	public LineChartWidget setup(IMAVController control, int id) {
+
 		this.id      = id;
-		this.control = control;
 
 		setXResolution(20);
 
@@ -518,8 +520,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	public void saveAsPng(String path) {
-		SnapshotParameters param = new SnapshotParameters();
-		param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/chart_"+id+".png");
 		try {
