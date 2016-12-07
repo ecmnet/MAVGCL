@@ -463,16 +463,27 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
+		scale = 0.5f;
+		setScaling(scale);
+
 	}
 
 	private void setXResolution(int frame) {
-		this.current_x_pt = dataService.calculateX0Index(1);
-		if(frame < 240) {
-			this.frame_secs = frame;
+		this.frame_secs = frame;
+
+		if(frame >= 200)
+			resolution_ms = 200;
+		else if(frame >= 60)
+			resolution_ms = 100;
+		else if(frame >= 30)
 			resolution_ms = 50;
-			scroll.setValue(1);
-			refreshChart();
-		}
+		else
+			resolution_ms = dataService.getCollectorInterval_ms();
+
+		current_x0_pt = dataService.calculateX0Index(1);
+		current_x_pt  = dataService.calculateX0Index(1);
+		scroll.setValue(1);
+		refreshChart();
 	}
 
 	public void saveAsPng(String path) {
@@ -503,48 +514,50 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(refresh) {
-			    if(mList.size()==0 && dataService.isCollecting()) {
-			    	refreshRequest = true; return;
-			    }
-	//		synchronized(this) {
-				refreshRequest = false;
-				series1.getData().clear(); series2.getData().clear();
-				pool.invalidateAll();
+			if(mList.size()==0 && dataService.isCollecting()) {
+				refreshRequest = true; return;
+			}
+			//		synchronized(this) {
+			refreshRequest = false;
+			series1.getData().clear(); series2.getData().clear();
+			pool.invalidateAll();
 
-				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-			    s1.setKeyFigures(type1_x, type1_y);
-				if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
-					m = mList.get(0);
-					rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
-							rotation_rad);
+			s1.setKeyFigures(type1_x, type1_y);
+			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
+				m = mList.get(0);
+				rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
+						rotation_rad);
 
-					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
-					linechart.getAnnotations().add(endPosition1, Layer.FOREGROUND);
-					linechart.getAnnotations().add(
-							new PositionAnnotation(p1[0],p1[1],"S", Color.DARKSLATEBLUE)
-							,Layer.FOREGROUND);
-				}
+				linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+				linechart.getAnnotations().add(endPosition1, Layer.FOREGROUND);
+				linechart.getAnnotations().add(
+						new PositionAnnotation(p1[0],p1[1],"S", Color.DARKSLATEBLUE)
+						,Layer.FOREGROUND);
+			}
 
-				s2.setKeyFigures(type2_x, type2_y);
-				if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
-					m = mList.get(0);
-					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
-							rotation_rad);
-					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
-					linechart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
-					linechart.getAnnotations().add(
-							new PositionAnnotation(p2[0],p2[1],"S", Color.DARKOLIVEGREEN)
-							,Layer.FOREGROUND);
+			s2.setKeyFigures(type2_x, type2_y);
+			if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
+				m = mList.get(0);
+				rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+						rotation_rad);
+				linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+				linechart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
+				linechart.getAnnotations().add(
+						new PositionAnnotation(p2[0],p2[1],"S", Color.DARKOLIVEGREEN)
+						,Layer.FOREGROUND);
 
-				}
-	//		}
+			}
+			//		}
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
+
+
 
 		if(mList.size()<1)
 			return;
@@ -594,8 +607,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
-			while(current_x_pt<max_x) {
 
+			while(current_x_pt<max_x) {
+				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
 
@@ -627,13 +641,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 								rotation_rad);
 						series2.getData().add(pool.checkOut(p2[0],p2[1]));
 					}
-					current_x_pt++;
 				}
+				current_x_pt++;
 			}
 
 			endPosition1.setPosition(p1[0], p1[1]);
 			endPosition2.setPosition(p2[0], p2[1]);
 		}
+
 	}
 
 
@@ -783,7 +798,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	public void update(long now) {
 		if(isVisible() && !isDisabled() && isRunning) {
 			Platform.runLater(() -> {
-			updateGraph(refreshRequest);
+				updateGraph(refreshRequest);
 			});
 		}
 
