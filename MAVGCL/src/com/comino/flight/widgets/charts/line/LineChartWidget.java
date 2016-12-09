@@ -90,7 +90,7 @@ import javafx.scene.shape.Rectangle;
  */
 
 
-public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
+public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
 	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 60;
@@ -168,6 +168,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private DashBoardAnnotation dashboard2 = null;
 	private DashBoardAnnotation dashboard3 = null;
 
+	private List<IChartSyncControl> syncCharts = null;
+
 	private XYDataPool pool = null;
 
 	private Preferences prefs = MAVPreferences.getInstance();
@@ -178,6 +180,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private long dashboard_update_tms = 0;
 
 	public LineChartWidget() {
+
+		this.syncCharts = new ArrayList<IChartSyncControl>();
+		syncCharts.add(this);
 
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
 
@@ -271,38 +276,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			zoom.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
-			if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 
-				current_x0_pt = (int)(x0 * 1000f / dataService.getCollectorInterval_ms());
-				setXResolution((int)(x1-x0));
-			}
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
+			for(IChartSyncControl sync : syncCharts)
+				sync.setZoom(x0, x1);
+
 			mouseEvent.consume();
 		});
 
 		linechart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
-				if(dataService.isCollecting()) {
-					if(isPaused) {
-						current_x0_pt =  dataService.calculateX0Index(scroll.get());
-						setXResolution(timeFrame.get());
-						Platform.runLater(() -> {
-							updateGraph(true);
-						});
-						isRunning = true;
-					}
-					else {
-						isRunning = false;
-					}
-					isPaused = !isPaused;
-				}
-				else {
-					scroll.set(1);
-					current_x0_pt =  dataService.calculateX0Index(scroll.get());
-					setXResolution(timeFrame.get());
-				}
+				for(IChartSyncControl sync : syncCharts)
+					sync.returnToOriginalZoom();
+
 			}
 			click.consume();
 		});
@@ -443,6 +428,43 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		annotations.setSelected(false);
+	}
+
+	public void returnToOriginalZoom() {
+		if(dataService.isCollecting()) {
+			if(isPaused) {
+				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+				setXResolution(timeFrame.get());
+				Platform.runLater(() -> {
+					updateGraph(true);
+				});
+				isRunning = true;
+			}
+			else {
+				isRunning = false;
+			}
+			isPaused = !isPaused;
+		}
+		else {
+			scroll.set(1);
+			current_x0_pt =  dataService.calculateX0Index(scroll.get());
+			setXResolution(timeFrame.get());
+		}
+	}
+
+	public void setZoom(double x0, double x1) {
+		if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
+
+			current_x0_pt = (int)(x0 * 1000f / dataService.getCollectorInterval_ms());
+			setXResolution((int)(x1-x0));
+		}
+		Platform.runLater(() -> {
+			updateGraph(true);
+		});
+	}
+
+	public void registerSyncChart(IChartSyncControl syncChart) {
+		this.syncCharts.add(syncChart);
 	}
 
 	public LineChartWidget setup(IMAVController control, int id) {

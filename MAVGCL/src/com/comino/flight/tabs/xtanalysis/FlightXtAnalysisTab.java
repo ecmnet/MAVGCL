@@ -59,6 +59,9 @@ public class FlightXtAnalysisTab extends Pane {
 	private void initialize() {
 		chart1.disableProperty().bind(this.disabledProperty());
 		chart2.disableProperty().bind(this.disabledProperty());
+
+		chart2.registerSyncChart(chart1);
+		chart1.registerSyncChart(chart2);
 	}
 
 	public void setWidthBinding(double horizontal_space) {
