@@ -85,11 +85,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/*
+ * Performance idea: Plot in own thread and put result image into javafx thread during update
+ */
+
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
 
 	private final static int MAXRECENT 	    = 20;
-	private final static int REFRESH_RATE   = 50;
+	private final static int REFRESH_RATE   = 60;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
