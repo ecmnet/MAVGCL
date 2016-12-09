@@ -37,7 +37,6 @@ import com.emxsys.chart.extension.XYAnnotations;
 
 import javafx.beans.NamedArg;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 
@@ -49,7 +48,6 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
 		super(xAxis, yAxis);
 		annotations = new XYAnnotations(this, getChartChildren());
 	}
-
 
 	@Override
     protected void layoutPlotChildren() {
@@ -79,5 +77,4 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
         }
         return (Group)  plotArea.getChildren().get(plotContentIndex);
 	}
-
 }

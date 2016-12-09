@@ -75,7 +75,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 50000;
+	private  int collector_interval_us = 20000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -96,7 +96,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.modelList     = new ArrayList<AnalysisDataModel>(50000);
 		this.model         = control.getCurrentModel();
 		this.current       =  new AnalysisDataModel();
-		this.record       =  new AnalysisDataModel();
+		this.record        =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
 
 		this.ulogger = new ULogFromMAVLinkReader(control);
@@ -114,7 +114,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
 		Thread c = new Thread(new CombinedConverter());
-//		c.setPriority(Thread.MAX_PRIORITY);
+		c.setPriority(Thread.MIN_PRIORITY);
 		c.start();
 	}
 
@@ -329,7 +329,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 				old_mode = mode;
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3500000);
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
 				perf2 = (System.nanoTime()-wait)/1e6f;
 			}
 		}
