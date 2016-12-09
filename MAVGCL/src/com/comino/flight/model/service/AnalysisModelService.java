@@ -51,6 +51,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
 public class AnalysisModelService implements IMAVLinkListener {
@@ -75,7 +76,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 20000;
+	private  int collector_interval_us = 50000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -279,6 +280,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 		public void run() {
 			try { Thread.sleep(5000); } catch(Exception e) { }
 			while(true) {
+
+				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+					LockSupport.parkNanos(200000000);
+					return;
+				}
 
 				current.setValue("MAVGCLPERF", perf);
 				current.setValue("MAVGCLACC", perf2);
