@@ -16,7 +16,7 @@ Any feedback, comments and contributions are very welcome.
 
 - ~~Collector cycle set to 25ms (experimental, allows zoom to 25ms resolution in line chart)~~
 - MAVLink 2.0 implementation
-- supports ULOG streaming to record data 
+- Supports ULOG streaming to record data 
 - Zooming (click&drag) now synchronized between charts (TimeChart)
 
 V0.6xx notes:
