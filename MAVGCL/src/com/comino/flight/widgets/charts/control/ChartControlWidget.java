@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
@@ -112,6 +113,8 @@ public class ChartControlWidget extends WidgetPane  {
 			scroll.setValue(1);
 		});
 
+		scroll.setSnapToTicks(false); scroll.setSnapToPixel(false);
+		scroll.setDisable(true);
 
 		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
 			keyfigures.setDisable(n.booleanValue());
@@ -119,13 +122,20 @@ public class ChartControlWidget extends WidgetPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if((System.currentTimeMillis() - scroll_tms)>50) {
-				scroll_tms = System.currentTimeMillis();
+			if((System.currentTimeMillis() - scroll_tms)>20) {
 				charts.forEach((chart) -> {
 					if(chart.getScrollProperty()!=null)
-						chart.getScrollProperty().set(1f-newvalue.floatValue()/500);
+						chart.getScrollProperty().set(1f-newvalue.floatValue()/1000000);
 				});
-     		}
+				scroll_tms = System.currentTimeMillis();
+			}
+		});
+
+		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
+			charts.forEach((chart) -> {
+				if(chart.getIsScrollingProperty()!=null)
+					chart.getIsScrollingProperty().set(newvalue.booleanValue());
+			});
 		});
 
 

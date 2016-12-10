@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -53,6 +54,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.MovingAxis;
 import com.comino.flight.widgets.fx.controls.SectionLineChart;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.utils.ExecutorService;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,8 +64,10 @@ import com.sun.javafx.PlatformUtil;
 import com.sun.javafx.application.PlatformImpl;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.embed.swing.SwingFXUtils;
@@ -140,10 +144,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private KeyFigureMetaData type3=  null;
 
 	private StateProperties state = null;
-	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private FloatProperty  scroll        = new SimpleFloatProperty(0);
 
-	private int resolution_ms 	= 100;
+	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
+	private FloatProperty   scroll       = new SimpleFloatProperty(0);
+	private BooleanProperty isScrolling  = new SimpleBooleanProperty(false);
+
+	private int resolution_ms 	  = 100;
 
 	private int current_x_pt      = 0;
 
@@ -199,8 +205,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void update(long now) {
 		if(!isRunning || isDisabled() || !isVisible() )
 			return;
-			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
+		Platform.runLater(() -> {
+			updateGraph(refreshRequest);
 		});
 
 	}
@@ -303,6 +309,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			mouseEvent.consume();
 		});
+
+		linechart.setOnScrollStarted(event -> {
+			resolution_ms = resolution_ms * 2;
+		});
+
+
+		linechart.setOnScrollFinished(event -> {
+			setXResolution(timeframe);
+		});
+
 
 		linechart.setOnScroll(event -> {
 
@@ -407,7 +423,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
-			setXResolution(timeFrame.get());
+			updateRequest();
+		});
+
+		isScrolling.addListener((v, ov, nv) -> {
+			if(nv.booleanValue())
+				resolution_ms = resolution_ms * 2 ;
+			else
+				setXResolution(timeFrame.get());
 		});
 
 
@@ -480,11 +503,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				current_x0_pt = 0;
-				setXResolution(timeFrame.get());
 				scroll.setValue(0);
 				isRunning = true;
 			} else
 				isRunning = false;
+			setXResolution(timeFrame.get());
 		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
@@ -534,9 +557,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		return scroll;
 	}
 
+	public BooleanProperty getIsScrollingProperty() {
+		return isScrolling;
+	}
+
 	@Override
 	public void refreshChart() {
 		current_x0_pt = dataService.calculateX0Index(1);
+		setXResolution(timeFrame.get());
 		if(!isDisabled())
 			updateRequest();
 	}
@@ -565,14 +593,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void setXResolution(float frame) {
+		int factor = dataService.isCollecting() ? 2 : 1;
 		if(frame >= 200)
-			resolution_ms = 400;
+			resolution_ms = 200 * factor;
 		else if(frame >= 60)
-			resolution_ms = 200;
+			resolution_ms = 100 * factor;
 		else if(frame >= 30)
-			resolution_ms = 100;
+			resolution_ms = 50 * factor;
 		else if(frame >= 15)
-			resolution_ms = 50;
+			resolution_ms = 50 * factor;
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
 

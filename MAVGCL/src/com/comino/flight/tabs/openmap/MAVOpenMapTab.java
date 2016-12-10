@@ -57,6 +57,7 @@ import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -411,6 +412,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	@Override
 	public FloatProperty getScrollProperty() {
 		return scroll;
+	}
+
+	public BooleanProperty getIsScrollingProperty() {
+		return null;
 	}
 
 

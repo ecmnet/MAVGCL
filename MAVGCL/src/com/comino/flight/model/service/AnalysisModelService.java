@@ -281,6 +281,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 			try { Thread.sleep(5000); } catch(Exception e) { }
 			while(true) {
 
+				if(mode==STOPPED && old_mode != STOPPED) {
+					ulogger.enableLogging(false);
+					state.getRecordingProperty().set(false);
+				}
+
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					LockSupport.parkNanos(200000000);
 					return;
@@ -329,10 +334,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 						updater.update(System.nanoTime());
 				}
 
-				if(mode==STOPPED && old_mode != STOPPED) {
-					ulogger.enableLogging(false);
-					state.getRecordingProperty().set(false);
-				}
 				old_mode = mode;
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);

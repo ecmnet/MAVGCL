@@ -49,6 +49,7 @@ import com.comino.msp.model.segment.Status;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -227,11 +228,12 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		return scroll;
 	}
 
-
-
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
+		return null;
+	}
 
+	public BooleanProperty getIsScrollingProperty() {
 		return null;
 	}
 

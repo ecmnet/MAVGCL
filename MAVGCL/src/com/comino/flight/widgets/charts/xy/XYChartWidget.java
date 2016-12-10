@@ -58,8 +58,10 @@ import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -212,6 +214,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
+
+	private BooleanProperty isScrolling = new SimpleBooleanProperty();
 
 	public XYChartWidget() {
 
@@ -695,6 +699,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@Override
 	public FloatProperty getScrollProperty() {
 		return scroll;
+	}
+
+	public BooleanProperty getIsScrollingProperty() {
+		return isScrolling ;
 	}
 
 	@Override
