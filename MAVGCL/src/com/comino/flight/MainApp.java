@@ -155,7 +155,7 @@ public class MainApp extends Application  {
 						new SITLController(control);
 					}
 					else  if(args.get("SERIAL")!=null) {
-						control = new MAVSerialController();
+						 control = new MAVSerialController();
 					}
 
 					else if(args.get("SIM")!=null)
