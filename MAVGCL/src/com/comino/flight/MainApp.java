@@ -54,6 +54,7 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.tabs.FlightTabs;
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
+import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.msp.log.MSPLogger;
@@ -153,6 +154,10 @@ public class MainApp extends Application  {
 						control = new MAVUdpController("127.0.0.1",14656,14650, true);
 						new SITLController(control);
 					}
+					else  if(args.get("SERIAL")!=null) {
+						control = new MAVSerialController();
+					}
+
 					else if(args.get("SIM")!=null)
 						control = new MAVSimController();
 					else if(args.get("ip")!=null)
