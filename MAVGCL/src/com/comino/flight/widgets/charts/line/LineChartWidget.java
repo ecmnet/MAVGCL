@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -54,14 +53,10 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.fx.controls.MovingAxis;
 import com.comino.flight.widgets.fx.controls.SectionLineChart;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.utils.ExecutorService;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.sun.glass.ui.PlatformFactory;
-import com.sun.javafx.PlatformUtil;
-import com.sun.javafx.application.PlatformImpl;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -88,11 +83,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-/*
- * Performance idea: Plot in own thread and put result image into javafx thread during update
- */
-
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
@@ -157,11 +147,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private int current_x1_pt     = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
+	private AnalysisModelService      dataService = AnalysisModelService.getInstance();
 
 	private ArrayList<KeyFigureMetaData> recent = null;
 
-	private Gson gson = new GsonBuilder().create();
+	private Gson  gson = new GsonBuilder().create();
 	private int   yoffset = 0;
 	private int   last_annotation_pos = 0;
 
@@ -293,7 +283,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if (click.getClickCount() == 2) {
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalZoom();
-
 			}
 			click.consume();
 		});
@@ -593,17 +582,20 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void setXResolution(float frame) {
-		int factor = dataService.isCollecting() ? 2 : 1;
+
 		if(frame >= 200)
-			resolution_ms = 200 * factor;
+			resolution_ms = 200;
 		else if(frame >= 60)
-			resolution_ms = 100 * factor;
+			resolution_ms = 100;
 		else if(frame >= 30)
-			resolution_ms = 50 * factor;
+			resolution_ms = 50;
 		else if(frame >= 15)
-			resolution_ms = 50 * factor;
+			resolution_ms = 50;
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
+
+		int factor = dataService.isCollecting()  ? 2 : 1;
+		resolution_ms = resolution_ms * factor;
 
 		if(resolution_ms > dataService.getCollectorInterval_ms()) {
 			averaging.setDisable(false);
