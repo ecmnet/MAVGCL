@@ -76,7 +76,6 @@ public class JoyStickController implements Runnable {
 		try {
 			ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		} catch( java.lang.UnsatisfiedLinkError u) {
-			u.printStackTrace();
 			return false;
 		}
 
