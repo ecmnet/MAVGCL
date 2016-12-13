@@ -105,7 +105,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		Thread c = new Thread(new CombinedConverter());
-		c.setPriority(Thread.MIN_PRIORITY);
 		c.start();
 	}
 
@@ -114,8 +113,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.model         =  model;
 		this.current       =  new AnalysisDataModel();
 		this.state         = StateProperties.getInstance();
+
 		Thread c = new Thread(new CombinedConverter());
-		c.setPriority(Thread.MIN_PRIORITY);
 		c.start();
 	}
 
@@ -161,6 +160,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
+			return true;
 		}
 		return mode != STOPPED;
 	}
@@ -278,7 +278,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		@Override
 		public void run() {
-			try { Thread.sleep(5000); } catch(Exception e) { }
+//			try { Thread.sleep(2000); } catch(Exception e) { }
+			System.out.println("CombinedConverter started");
 			while(true) {
 
 				if(mode==STOPPED && old_mode != STOPPED) {
@@ -287,8 +288,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
-					LockSupport.parkNanos(200000000);
-					return;
+					mode = STOPPED; old_mode = STOPPED;
+					LockSupport.parkNanos(2000000000);
 				}
 
 				current.setValue("MAVGCLPERF", perf);
