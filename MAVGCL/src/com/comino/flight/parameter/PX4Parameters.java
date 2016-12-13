@@ -69,6 +69,8 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
+	private StateProperties stateProperties =  StateProperties.getInstance();
+
 
 
 	public static PX4Parameters getInstance(IMAVController control) {
@@ -116,7 +118,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
-		StateProperties.getInstance().getParamLoadedProperty().set(false);
+		stateProperties.getParamLoadedProperty().set(false);
 		MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 			    MAV_SEVERITY.MAV_SEVERITY_INFO);
 	}
@@ -143,10 +145,13 @@ public class PX4Parameters implements IMAVLinkListener {
 			attributes.value = ParamUtils.paramToVal(msg.param_type, msg.param_value);
 			attributes.vtype = msg.param_type;
 
+
 			parameterList.add(attributes);
 			property.setValue(attributes);
 
-			StateProperties.getInstance().getParamLoadedProperty().set(true);
+			if(msg.param_index >= msg.param_count-1) {
+				stateProperties.getParamLoadedProperty().set(true);
+			}
 		}
 	}
 
@@ -166,7 +171,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			parameterList.add(attributes);
 			property.setValue(attributes);
 		});
-		StateProperties.getInstance().getParamLoadedProperty().set(true);
+		stateProperties.getParamLoadedProperty().set(true);
 	}
 
 

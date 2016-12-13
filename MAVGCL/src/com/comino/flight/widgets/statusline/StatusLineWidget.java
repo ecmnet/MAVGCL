@@ -197,8 +197,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
 			if(nv.floatValue() > -1) {
-				progress.setVisible(true);
 				Platform.runLater(() -> {
+					progress.setVisible(true);
 					progress.setProgress(nv.floatValue());
 				});
 			} else {

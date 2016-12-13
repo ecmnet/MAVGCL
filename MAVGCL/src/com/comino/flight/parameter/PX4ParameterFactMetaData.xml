@@ -2,7 +2,7 @@
 <parameters>
   <version>3</version>
   <parameter_version_major>1</parameter_version_major>
-  <parameter_version_minor>9</parameter_version_minor>
+  <parameter_version_minor>13</parameter_version_minor>
   <group name="UAVCAN Motor Parameters" no_code_generation="true">
     <parameter default="75" name="ctl_bw" type="INT32">
       <short_desc>Speed controller bandwidth</short_desc>
@@ -731,22 +731,22 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <increment>0.05</increment>
       <scope>modules/commander</scope>
     </parameter>
-    <parameter default="2.0e-3" name="COM_ARM_EKF_AB" type="FLOAT">
+    <parameter default="5.0e-3" name="COM_ARM_EKF_AB" type="FLOAT">
       <short_desc>Maximum value of EKF accelerometer delta velocity bias estimate that will allow arming</short_desc>
       <min>0.001</min>
-      <max>0.004</max>
+      <max>0.01</max>
       <unit>m/s</unit>
       <decimal>4</decimal>
       <increment>0.0005</increment>
       <scope>modules/commander</scope>
     </parameter>
-    <parameter default="3.5e-4" name="COM_ARM_EKF_GB" type="FLOAT">
+    <parameter default="8.7e-4" name="COM_ARM_EKF_GB" type="FLOAT">
       <short_desc>Maximum value of EKF gyro delta angle bias estimate that will allow arming</short_desc>
       <min>0.0001</min>
-      <max>0.0007</max>
+      <max>0.0017</max>
       <unit>rad</unit>
       <decimal>5</decimal>
-      <increment>0.00005</increment>
+      <increment>0.0001</increment>
       <scope>modules/commander</scope>
     </parameter>
     <parameter default="0.7" name="COM_ARM_IMU_ACC" type="FLOAT">
@@ -3165,6 +3165,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <long_desc>Roll proportional gain, i.e. desired angular speed in rad/s for error 1 rad.</long_desc>
       <min>0.0</min>
       <max>8</max>
+      <unit>1/s</unit>
       <decimal>2</decimal>
       <increment>0.1</increment>
       <scope>modules/mc_att_control</scope>
@@ -3183,6 +3184,14 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <long_desc>Roll rate integral gain. Can be set to compensate static thrust difference or gravity center offset.</long_desc>
       <min>0.0</min>
       <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.30" name="MC_RR_INT_LIM" type="FLOAT">
+      <short_desc>Roll rate integrator limit</short_desc>
+      <long_desc>Roll rate integrator limit. Can be set to increase the amount of integrator available to counteract disturbances or reduced to improve settling time after large roll moment trim changes.</long_desc>
+      <min>0.0</min>
+      <decimal>2</decimal>
       <increment>0.01</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
@@ -3209,7 +3218,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <max>10</max>
       <unit>1/s</unit>
       <decimal>2</decimal>
-      <increment>0.0005</increment>
+      <increment>0.1</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
     <parameter default="0.15" name="MC_PITCHRATE_P" type="FLOAT">
@@ -3226,6 +3235,14 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <long_desc>Pitch rate integral gain. Can be set to compensate static thrust difference or gravity center offset.</long_desc>
       <min>0.0</min>
       <decimal>3</decimal>
+      <increment>0.01</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.30" name="MC_PR_INT_LIM" type="FLOAT">
+      <short_desc>Pitch rate integrator limit</short_desc>
+      <long_desc>Pitch rate integrator limit. Can be set to increase the amount of integrator available to counteract disturbances or reduced to improve settling time after large pitch moment trim changes.</long_desc>
+      <min>0.0</min>
+      <decimal>2</decimal>
       <increment>0.01</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
@@ -3266,6 +3283,14 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     <parameter default="0.1" name="MC_YAWRATE_I" type="FLOAT">
       <short_desc>Yaw rate I gain</short_desc>
       <long_desc>Yaw rate integral gain. Can be set to compensate static thrust difference or gravity center offset.</long_desc>
+      <min>0.0</min>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.30" name="MC_YR_INT_LIM" type="FLOAT">
+      <short_desc>Yaw rate integrator limit</short_desc>
+      <long_desc>Yaw rate integrator limit. Can be set to increase the amount of integrator available to counteract disturbances or reduced to improve settling time after large yaw moment trim changes.</long_desc>
       <min>0.0</min>
       <decimal>2</decimal>
       <increment>0.01</increment>
@@ -3372,28 +3397,64 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>0.01</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
-    <parameter default="1.0" name="MC_TPA_BREAK" type="FLOAT">
-      <short_desc>Threshold for Throttle PID Attenuation (TPA)</short_desc>
-      <long_desc>Magnitude of throttle setpoint at which to begin attenuating roll/pitch P gain</long_desc>
+    <parameter default="0" name="MC_BAT_SCALE_EN" type="INT32">
+      <short_desc>Battery power level scaler</short_desc>
+      <long_desc>This compensates for voltage drop of the battery over time by attempting to normalize performance across the operating range of the battery. The copter should constantly behave as if it was fully charged with reduced max acceleration at lower battery percentages. i.e. if hover is at 0.5 throttle at 100% battery, it will still be 0.5 at 60% battery.</long_desc>
+      <boolean />
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="1.0" name="MC_TPA_BREAK_P" type="FLOAT">
+      <short_desc>TPA P Breakpoint</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Magnitude of throttle setpoint at which to begin attenuating roll/pitch P gain</long_desc>
       <min>0.0</min>
       <max>1.0</max>
       <decimal>2</decimal>
       <increment>0.1</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
-    <parameter default="1.0" name="MC_TPA_SLOPE" type="FLOAT">
-      <short_desc>Slope for Throttle PID Attenuation (TPA)</short_desc>
-      <long_desc>Rate at which to attenuate roll/pitch P gain Attenuation factor is 1.0 when throttle magnitude is below the setpoint Above the setpoint, the attenuation factor is (1 - slope*(abs(throttle)-breakpoint))</long_desc>
+    <parameter default="1.0" name="MC_TPA_BREAK_I" type="FLOAT">
+      <short_desc>TPA I Breakpoint</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Magnitude of throttle setpoint at which to begin attenuating roll/pitch I gain</long_desc>
       <min>0.0</min>
-      <max>2.0</max>
+      <max>1.0</max>
       <decimal>2</decimal>
       <increment>0.1</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
-    <parameter default="0" name="MC_BAT_SCALE_EN" type="INT32">
-      <short_desc>Whether to scale outputs by battery power level</short_desc>
-      <long_desc>This compensates for voltage drop of the battery over time by attempting to normalize performance across the operating range of the battery. The copter should constantly behave as if it was fully charged with reduced max acceleration at lower battery percentages. i.e. if hover is at 0.5 throttle at 100% battery, it will still be 0.5 at 60% battery.</long_desc>
-      <boolean />
+    <parameter default="1.0" name="MC_TPA_BREAK_D" type="FLOAT">
+      <short_desc>TPA D Breakpoint</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Magnitude of throttle setpoint at which to begin attenuating roll/pitch D gain</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.1</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.0" name="MC_TPA_RATE_P" type="FLOAT">
+      <short_desc>TPA Rate P</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Rate at which to attenuate roll/pitch P gain Attenuation factor is 1.0 when throttle magnitude is below the setpoint Above the setpoint, the attenuation factor is (1 - rate * (throttle - breakpoint) / (1.0 - breakpoint))</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.0" name="MC_TPA_RATE_I" type="FLOAT">
+      <short_desc>TPA Rate I</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Rate at which to attenuate roll/pitch I gain Attenuation factor is 1.0 when throttle magnitude is below the setpoint Above the setpoint, the attenuation factor is (1 - rate * (throttle - breakpoint) / (1.0 - breakpoint))</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>modules/mc_att_control</scope>
+    </parameter>
+    <parameter default="0.0" name="MC_TPA_RATE_D" type="FLOAT">
+      <short_desc>TPA Rate D</short_desc>
+      <long_desc>Throttle PID Attenuation (TPA) Rate at which to attenuate roll/pitch D gain Attenuation factor is 1.0 when throttle magnitude is below the setpoint Above the setpoint, the attenuation factor is (1 - rate * (throttle - breakpoint) / (1.0 - breakpoint))</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
     <parameter default="6.0" name="MP_ROLL_P" type="FLOAT">
@@ -3955,7 +4016,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
-    <parameter default="0" name="PWM_DISARMED" type="INT32">
+    <parameter default="900" name="PWM_DISARMED" type="INT32">
       <short_desc>Set the disarmed PWM for MAIN outputs</short_desc>
       <long_desc>IMPORTANT: CHANGING THIS PARAMETER REQUIRES A COMPLETE SYSTEM REBOOT IN ORDER TO APPLY THE CHANGES. COMPLETELY POWER-CYCLE THE SYSTEM TO PUT CHANGES INTO EFFECT. This is the PWM pulse the autopilot is outputting if not armed. The main use of this parameter is to silence ESCs when they are disarmed.</long_desc>
       <min>0</min>
@@ -3982,7 +4043,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
     </parameter>
-    <parameter default="1000" name="PWM_AUX_DISARMED" type="INT32">
+    <parameter default="1500" name="PWM_AUX_DISARMED" type="INT32">
       <short_desc>Set the disarmed PWM for AUX outputs</short_desc>
       <long_desc>IMPORTANT: CHANGING THIS PARAMETER REQUIRES A COMPLETE SYSTEM REBOOT IN ORDER TO APPLY THE CHANGES. COMPLETELY POWER-CYCLE THE SYSTEM TO PUT CHANGES INTO EFFECT. This is the PWM pulse the autopilot is outputting if not armed. The main use of this parameter is to silence ESCs when they are disarmed.</long_desc>
       <min>0</min>
@@ -4040,6 +4101,54 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <reboot_required>true</reboot_required>
       <scope>drivers/px4fmu</scope>
     </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM1" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 1</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM2" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 2</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM3" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 3</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM4" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 4</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM5" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 5</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM6" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 6</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
     <parameter default="0" name="PWM_MAIN_REV1" type="INT32">
       <short_desc>Invert direction of main output channel 1</short_desc>
       <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
@@ -4094,6 +4203,70 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
       <boolean />
       <reboot_required>true</reboot_required>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM1" type="FLOAT">
+      <short_desc>Trim value for main output channel 1</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM2" type="FLOAT">
+      <short_desc>Trim value for main output channel 2</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM3" type="FLOAT">
+      <short_desc>Trim value for main output channel 3</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM4" type="FLOAT">
+      <short_desc>Trim value for main output channel 4</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM5" type="FLOAT">
+      <short_desc>Trim value for main output channel 5</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM6" type="FLOAT">
+      <short_desc>Trim value for main output channel 6</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM7" type="FLOAT">
+      <short_desc>Trim value for main output channel 7</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4io</scope>
+    </parameter>
+    <parameter default="0" name="PWM_MAIN_TRIM8" type="FLOAT">
+      <short_desc>Trim value for main output channel 8</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
       <scope>drivers/px4io</scope>
     </parameter>
     <parameter default="0" name="PWM_SBUS_MODE" type="INT32">
@@ -6842,10 +7015,19 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <scope>modules/sensors</scope>
     </parameter>
     <parameter default="0" name="SENS_EN_SF0X" type="INT32">
-      <short_desc>Lightware SF0x laser rangefinder</short_desc>
-      <boolean />
+      <short_desc>Lightware laser rangefinder (serial)</short_desc>
+      <min>0</min>
+      <max>4</max>
       <reboot_required>true</reboot_required>
       <scope>modules/sensors</scope>
+      <values>
+        <value code="1">SF02</value>
+        <value code="0">Disabled</value>
+        <value code="3">SF10/b</value>
+        <value code="2">SF10/a</value>
+        <value code="5">SF11/c</value>
+        <value code="4">SF10/c</value>
+      </values>
     </parameter>
     <parameter default="0" name="SENS_EN_MB12XX" type="INT32">
       <short_desc>Maxbotix Soanr (mb12xx)</short_desc>
@@ -6860,7 +7042,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <scope>modules/sensors</scope>
     </parameter>
     <parameter default="0" name="SENS_EN_SF1XX" type="INT32">
-      <short_desc>Lightware SF1xx laser rangefinder</short_desc>
+      <short_desc>Lightware SF1xx laser rangefinder (i2c)</short_desc>
       <min>0</min>
       <max>4</max>
       <reboot_required>true</reboot_required>
@@ -6871,6 +7053,14 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="3">SF10/c</value>
         <value code="2">SF10/b</value>
         <value code="4">SF11/c</value>
+      </values>
+    </parameter>
+    <parameter default="-1" name="SENS_EN_THERMAL" type="INT32">
+      <short_desc>Thermal control of sensor temperature</short_desc>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="0">Thermal control off</value>
+        <value code="-1">Thermal control unavailable</value>
       </values>
     </parameter>
   </group>
@@ -7029,6 +7219,11 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="1">new logger</value>
         <value code="0">sdlog2 (default)</value>
       </values>
+    </parameter>
+    <parameter default="0" name="SYS_STCK_EN" type="INT32">
+      <short_desc>Enable stack checking</short_desc>
+      <min>0</min>
+      <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="15" name="LED_RGB_MAXBRT" type="INT32">
       <short_desc>RGB Led brightness limit</short_desc>
