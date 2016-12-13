@@ -838,34 +838,38 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	}
 
-	// Determines spikes or average, if not all datapoints are reported.
+	/*
+	 * Determines spikes or average, if not all datapoints are reported.
+	 */
 	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 
-		if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
+		float v_current_x = dataService.getModelList().get(current_x).getValue(m);
+
+		if(dataService.getModelList().size() < length || Float.isNaN(v_current_x))
 			return 0;
 
 		if(length==1)
-			return dataService.getModelList().get(current_x).getValue(m);
+			return v_current_x;
 
 		float a = 0; float v;
 
 		if(average) {
-			a = 0;
-			for(int i=current_x-length+1;i<=current_x;i++)
+			a = v_current_x;
+			for(int i=current_x-length+1;i<current_x;i++)
 				a = a + dataService.getModelList().get(i).getValue(m);
 			return a / length;
 
 		} else {
 
-			int index=current_x;
-			float max = -Float.MAX_VALUE;
+			int peak_index=current_x;
+			float max = Math.abs(v_current_x);
 
-			for(int i=current_x-length+1;i<=current_x;i++) {
+			for(int i=current_x-length+1;i<current_x;i++) {
 				v = Math.abs(dataService.getModelList().get(i).getValue(m));
 				if(v>max && v != Float.NaN)
-					max = v; index = i;
+					max = v; peak_index = i;
 			}
-			return dataService.getModelList().get(index).getValue(m);
+			return dataService.getModelList().get(peak_index).getValue(m);
 		}
 	}
 
