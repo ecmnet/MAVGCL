@@ -840,7 +840,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	// Determines spikes or average, if not all datapoints are reported.
 	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
-		float max = -Float.MAX_VALUE; float a = 0; float v;
 
 		if(dataService.getModelList().size() < length || Float.isNaN(dataService.getModelList().get(current_x).getValue(m)))
 			return 0;
@@ -848,15 +847,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(length==1)
 			return dataService.getModelList().get(current_x).getValue(m);
 
+		float a = 0; float v;
+
 		if(average) {
 			a = 0;
-			for(int i=0;i<length;i++)
-				a = a + dataService.getModelList().get(current_x-i).getValue(m);
+			for(int i=current_x-length+1;i<=current_x;i++)
+				a = a + dataService.getModelList().get(i).getValue(m);
 			return a / length;
 
 		} else {
 
 			int index=current_x;
+			float max = -Float.MAX_VALUE;
 
 			for(int i=current_x-length+1;i<=current_x;i++) {
 				v = Math.abs(dataService.getModelList().get(i).getValue(m));
