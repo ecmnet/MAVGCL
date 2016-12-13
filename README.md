@@ -14,10 +14,10 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 13/12/2016 
 
-- ~~Collector cycle set to 25ms (experimental, allows zoom to 25ms resolution in line chart)~~
 - MAVLink 2.0 implementation
 - Supports ULOG streaming to record data 
 - Zooming (click&drag) now synchronized between charts (TimeChart)
+- USB connected devices now supported (start via commandline with option `—serial=true`) 
 
 V0.6xx notes:
 
@@ -79,6 +79,8 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 - Start with `java -jar MAVGAnalysis.jar`
 
 - Set IP address and port in `File->Preferences` and restart (For local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
+
+- For USB connected devices start with`java -jar MAVGAnalysis.jar --SERIAL=true`)
 
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 
