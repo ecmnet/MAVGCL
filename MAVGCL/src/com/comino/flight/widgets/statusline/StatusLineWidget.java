@@ -172,7 +172,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 				}
 			}
 		};
-        driver.setAlignment(Pos.CENTER_LEFT);
+		driver.setAlignment(Pos.CENTER_LEFT);
 	}
 
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
@@ -196,14 +196,14 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		progress.setVisible(false);
 
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
-			if(nv.floatValue() > -1) {
-				Platform.runLater(() -> {
+			Platform.runLater(() -> {
+				if(nv.floatValue() > -1) {
 					progress.setVisible(true);
 					progress.setProgress(nv.floatValue());
-				});
-			} else {
-				progress.setVisible(false);
-			}
+				} else {
+					progress.setVisible(false);
+				}
+			});
 		});
 
 		task.start();
