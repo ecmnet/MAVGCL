@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 09/12/2016 
+**Development Status:** Last updated 13/12/2016 
 
 - ~~Collector cycle set to 25ms (experimental, allows zoom to 25ms resolution in line chart)~~
 - MAVLink 2.0 implementation
