@@ -2,7 +2,7 @@
 <parameters>
   <version>3</version>
   <parameter_version_major>1</parameter_version_major>
-  <parameter_version_minor>13</parameter_version_minor>
+  <parameter_version_minor>14</parameter_version_minor>
   <group name="UAVCAN Motor Parameters" no_code_generation="true">
     <parameter default="75" name="ctl_bw" type="INT32">
       <short_desc>Speed controller bandwidth</short_desc>
@@ -2335,6 +2335,15 @@ but also ignore less noise</short_desc>
       <scope>modules/navigator</scope>
     </parameter>
   </group>
+  <group name="Iridium SBD">
+    <parameter default="10" name="ISBD_READINT" type="INT32">
+      <short_desc>Satellite radio read interval</short_desc>
+      <min>0</min>
+      <max>300</max>
+      <unit>s</unit>
+      <scope>drivers/iridiumsbd</scope>
+    </parameter>
+  </group>
   <group name="Land Detector">
     <parameter default="0.70" name="LNDMC_Z_VEL_MAX" type="FLOAT">
       <short_desc>Multicopter max climb rate</short_desc>
@@ -2548,7 +2557,7 @@ but also ignore less noise</short_desc>
     <parameter default="3.0" name="LPE_BAR_Z" type="FLOAT">
       <short_desc>Barometric presssure altitude z standard deviation</short_desc>
       <min>0.01</min>
-      <max>30</max>
+      <max>3</max>
       <unit>m</unit>
       <decimal>2</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -2634,7 +2643,7 @@ EPV used if greater than this value</short_desc>
     <parameter default="0.5" name="LPE_VIS_Z" type="FLOAT">
       <short_desc>Vision z standard deviation</short_desc>
       <min>0.01</min>
-      <max>20</max>
+      <max>2</max>
       <unit>m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
@@ -4050,6 +4059,13 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <max>2200</max>
       <unit>us</unit>
       <reboot_required>true</reboot_required>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.0" name="THR_MDL_FAC" type="FLOAT">
+      <short_desc>Thrust to PWM model parameter</short_desc>
+      <long_desc>Parameter used to model the relationship between static thrust and motor input PWM. Model is: thrust = (1-factor)*PWM + factor * PWM^2</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
       <scope>modules/sensors</scope>
     </parameter>
     <parameter default="0.0" name="MOT_SLEW_MAX" type="FLOAT">
@@ -7195,6 +7211,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="357600">Normal Telemetry (57600 baud, 8N1)</value>
         <value code="257600">Command Receiver (57600 baud, 8N1)</value>
         <value code="157600">OSD (57600 baud, 8N1)</value>
+        <value code="419200">Iridium Telemetry (19200 baud, 8N1)</value>
         <value code="338400">Normal Telemetry (38400 baud, 8N1)</value>
         <value code="0">Disabled</value>
         <value code="1921600">ESP8266 (921600 baud, 8N1)</value>
