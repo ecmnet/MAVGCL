@@ -116,7 +116,7 @@ public class TuningWidget extends WidgetPane  {
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
 				if(newValue!=null) {
 					ParameterAttributes p = (ParameterAttributes)newValue;
-					if(!groups.getItems().contains(p.group_name))
+					if(!groups.getItems().contains(p.group_name) && p !=null)
 						groups.getItems().add(p.group_name);
 
 					if(timeout!=null && !timeout.isDone()) {
