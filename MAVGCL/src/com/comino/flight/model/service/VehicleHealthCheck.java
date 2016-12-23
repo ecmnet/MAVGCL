@@ -10,7 +10,6 @@ import com.comino.msp.model.segment.Status;
 public class VehicleHealthCheck {
 
 	private static final long HEALTH_CHECK_DURATION = 5000;
-
 	private static final long WAIT_DURATION = 3000;
 
 	private StateProperties state = StateProperties.getInstance();
