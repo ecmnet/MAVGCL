@@ -73,6 +73,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisDataModelMetaData                  meta  =  null;
 	private List<ICollectorRecordingListener>    listener  =  null;
 
+	private VehicleHealthCheck health = null;
+
 	private int     mode = 0;
 
 	private  int  totalTime_sec = 30;
@@ -90,6 +92,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 
 	private AnalysisModelService(IMAVController control) {
+
+		this.health = new VehicleHealthCheck();
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 		this.listener = new ArrayList<ICollectorRecordingListener>();
@@ -291,6 +295,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 					mode = STOPPED; old_mode = STOPPED;
 					LockSupport.parkNanos(2000000000);
 				}
+
+				health.check(model);
 
 				current.setValue("MAVGCLPERF", perf);
 				current.setValue("MAVGCLACC", perf2);

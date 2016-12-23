@@ -85,6 +85,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	@Override
 	public void update(Status oldStatus, Status newStatus) {
+
+		if(oldStatus==null)
+			return;
+
 		armedProperty.set(newStatus.isStatus(Status.MSP_ARMED));
 		connectedProperty.set(newStatus.isStatus(Status.MSP_CONNECTED));
 		landedProperty.set(newStatus.isStatus(Status.MSP_LANDED));
