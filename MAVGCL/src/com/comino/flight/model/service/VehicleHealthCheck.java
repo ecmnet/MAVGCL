@@ -56,10 +56,14 @@ public class VehicleHealthCheck {
 
 			// check pitch and roll
 
+			if(healthOk) healthOk = model.attitude.r != Float.NaN;
+
 			max_roll = model.attitude.r > max_roll ?  model.attitude.r : max_roll;
 			min_roll = model.attitude.r < min_roll ?  model.attitude.r : min_roll;
 
 			if(healthOk) healthOk = Math.abs(max_roll - min_roll) < 0.1f;
+
+			if(healthOk) healthOk = model.attitude.p != Float.NaN;
 
 			max_pitch = model.attitude.p > max_pitch ?  model.attitude.p : max_pitch;
 			min_pitch = model.attitude.p < min_pitch ?  model.attitude.p : min_pitch;
@@ -79,9 +83,9 @@ public class VehicleHealthCheck {
 
 	private void analyse_results() {
 		if(!healthOk) {
-			MSPLogger.getInstance().writeLocalMsg("MSP Healthcheck failed", MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
+			MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck failed", MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
 		} else
-			System.out.println("HealthCheck ok");
+			MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 
 	}
 
