@@ -11,9 +11,12 @@ public class VehicleHealthCheck {
 
 	private static final long HEALTH_CHECK_DURATION = 5000;
 
+	private static final long WAIT_DURATION = 3000;
+
 	private StateProperties state = StateProperties.getInstance();
 
 	private long  check_start_ms = 0;
+
 	private boolean do_check = false;
 	private boolean healthOk  = true;
 
@@ -31,6 +34,14 @@ public class VehicleHealthCheck {
 		});
 
 		state.getArmedProperty().addListener((a,o,n) -> {
+			if(!n.booleanValue()) {
+				System.out.println("Performing health check");
+				do_check = true;
+				check_start_ms = System.currentTimeMillis();
+			}
+		});
+
+		state.getArmedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue()) {
 				do_check = false;
 				check_start_ms = 0;
@@ -41,7 +52,8 @@ public class VehicleHealthCheck {
 
 
 	public void check(DataModel model) {
-		if(do_check && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION ) {
+		if(do_check && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION
+				&& (System.currentTimeMillis()-check_start_ms) > WAIT_DURATION ) {
 
 
 			// Is power > 11V
