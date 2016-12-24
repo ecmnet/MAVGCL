@@ -118,6 +118,12 @@ public class ControlWidget extends WidgetPane  {
 			} else
 				tuning.setDisable(false);
 		});
+
+		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				video.setSelected(false);
+			}
+		});
 	}
 
 	public void setup(IMAVController control) {
