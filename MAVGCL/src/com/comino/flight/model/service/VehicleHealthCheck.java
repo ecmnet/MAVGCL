@@ -7,6 +7,9 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 public class VehicleHealthCheck {
 
 	private static final long HEALTH_CHECK_DURATION = 5000;
@@ -21,6 +24,8 @@ public class VehicleHealthCheck {
 
 	private float max_roll = -Float.MAX_VALUE, min_roll = Float.MAX_VALUE;
 	private float max_pitch= -Float.MAX_VALUE, min_pitch= Float.MAX_VALUE;
+
+	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
 	public VehicleHealthCheck() {
 
@@ -86,18 +91,18 @@ public class VehicleHealthCheck {
 		} else {
 			if(do_check) {
 				do_check = false;
-				analyse_results();
+				healthProperty.set(healthOk);
+				if(!healthOk)
+					MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck failed", MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
+				 else
+					MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+
 			}
 		}
 	}
 
-
-	private void analyse_results() {
-		if(!healthOk) {
-			MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck failed", MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
-		} else
-			MSPLogger.getInstance().writeLocalMsg("MSP vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-
+	public BooleanProperty getHealthProperty() {
+		return healthProperty;
 	}
 
 }

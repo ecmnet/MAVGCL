@@ -51,6 +51,8 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
 
+	private BooleanProperty rcProperty = new SimpleBooleanProperty();
+
 
 	private BooleanProperty armedProperty = new SimpleBooleanProperty();
 	private BooleanProperty landedProperty = new SimpleBooleanProperty(true);
@@ -94,6 +96,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 		landedProperty.set(newStatus.isStatus(Status.MSP_LANDED));
 		altholdProperty.set(newStatus.isStatus(Status.MSP_MODE_ALTITUDE));
 		posholdProperty.set(newStatus.isStatus(Status.MSP_MODE_POSITION));
+		rcProperty.set(newStatus.isStatus(Status.MSP_RC_ATTACHED));
 
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
 			MSPLogger.getInstance().writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
@@ -125,6 +128,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getPosHoldProperty() {
 		return posholdProperty;
+	}
+
+	public BooleanProperty getRCProperty() {
+		return rcProperty;
 	}
 
 	public BooleanProperty getRecordingProperty() {
