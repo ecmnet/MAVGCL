@@ -108,6 +108,7 @@ public class FlightControlPanel extends Pane  {
 			  air.setup(control);
 
 		info.setup(control);
+
 	}
 
 }
