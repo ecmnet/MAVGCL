@@ -1245,14 +1245,14 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Pitch" uom="°" mask="#0.0" key="VISIONP">
+  <KeyFigure desc="Vis.Pitch" uom="rad" mask="#0.00" key="VISIONP">
 		<MSPSource class="vision" field="p"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Roll" uom="°" mask="#0.0" key="VISIONR">
+  <KeyFigure desc="Vis.Roll" uom="rad" mask="#0.00" key="VISIONR">
 		<MSPSource class="vision" field="r"/>
 		<Groups>
 			<Group>Vision</Group>
