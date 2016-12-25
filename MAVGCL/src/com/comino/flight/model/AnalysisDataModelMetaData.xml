@@ -1183,7 +1183,7 @@
 
   <!-- VISION definitions -->
 
-  <KeyFigure desc="Vision.X" uom="m" mask="#0.00" key="VISIONX">
+  <KeyFigure desc="Vis.X" uom="m" mask="#0.00" key="VISIONX">
 		<MSPSource class="vision" field="x"/>
 		<ULogSource field="vision_position_estimate_0.x"/>
 		<Groups>
@@ -1191,7 +1191,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.Y" uom="m" mask="#0.00" key="VISIONY">
+  <KeyFigure desc="Vis.Y" uom="m" mask="#0.00" key="VISIONY">
 		<MSPSource class="vision" field="y"/>
 		<ULogSource field="vision_position_estimate_0.y"/>
 		<Groups>
@@ -1199,7 +1199,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.Z" uom="m" mask="#0.00" key="VISIONZ">
+  <KeyFigure desc="Vis.Z" uom="m" mask="#0.00" key="VISIONZ">
 		<MSPSource class="vision" field="z"/>
 		<ULogSource field="vision_position_estimate_0.z"/>
 		<Groups>
@@ -1207,7 +1207,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.VX" uom="m/s" mask="#0.00" key="VISIONVX">
+  <KeyFigure desc="Vis.VX" uom="m/s" mask="#0.00" key="VISIONVX">
 		<MSPSource class="vision" field="vx"/>
 		<ULogSource field="vision_position_estimate_0.vx"/>
 		<Groups>
@@ -1215,7 +1215,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.VY" uom="m/s" mask="#0.00" key="VISIONVY">
+  <KeyFigure desc="Vis.VY" uom="m/s" mask="#0.00" key="VISIONVY">
 		<MSPSource class="vision" field="vy"/>
 		<ULogSource field="vision_position_estimate_0.vy"/>
 		<Groups>
@@ -1223,7 +1223,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.VZ" uom="m/s" mask="#0.00" key="VISIONVZ">
+  <KeyFigure desc="Vis.VZ" uom="m/s" mask="#0.00" key="VISIONVZ">
 		<MSPSource class="vision" field="vz"/>
 		<ULogSource field="vision_position_estimate_0.vz"/>
 		<Groups>
@@ -1231,15 +1231,29 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.Pos.Error" uom="m" mask="#0.00" key="VISIONPOSE">
+  <KeyFigure desc="Vis.Pos.Error" uom="m" mask="#0.00" key="VISIONPOSE">
 		<ULogSource field="vision_position_estimate_0.pos_err"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vision.Heading" uom="°" mask="#0.0" key="VISIONH">
-		<MSPSource class="vision" field="dh"/>
+  <KeyFigure desc="Vis.Heading" uom="°" mask="#0.0" key="VISIONH">
+		<MSPSource class="vision" field="h"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.Pitch" uom="°" mask="#0.0" key="VISIONP">
+		<MSPSource class="vision" field="p"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.Roll" uom="°" mask="#0.0" key="VISIONR">
+		<MSPSource class="vision" field="r"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
