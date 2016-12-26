@@ -117,8 +117,10 @@ public class CommanderWidget extends WidgetPane  {
 
 		});
 
-
-		arm_command.disableProperty().bind(state.getLandedProperty().not().or(state.getRCProperty().not()));
+		arm_command.disableProperty().bind(state.getLandedProperty().not()
+				.or(state.getRCProperty().not()
+				.and(state.getSimulationProperty().not())));
+		
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation()) {

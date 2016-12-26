@@ -50,6 +50,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private static StateProperties instance = null;
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
+	private BooleanProperty simulationProperty = new SimpleBooleanProperty();
 
 	private BooleanProperty rcProperty = new SimpleBooleanProperty();
 
@@ -82,7 +83,9 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private StateProperties(IMAVController control) {
 		this.control = control;
-		 control.addStatusChangeListener(this);
+		this.control.addStatusChangeListener(this);
+
+		simulationProperty.set(control.isSimulation());
 	}
 
 	@Override
@@ -120,6 +123,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getLandedProperty() {
 		return landedProperty;
+	}
+
+	public BooleanProperty getSimulationProperty() {
+		return simulationProperty;
 	}
 
 	public BooleanProperty getAltHoldProperty() {
