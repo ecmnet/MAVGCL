@@ -217,7 +217,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished ("+speed+" kbtyes/sec)");
 					state.getLogLoadedProperty().set(true);
-					FileHandler.getInstance().setName("PX4Log-"+last_log_id+"-"+time_utc);
+					FileHandler.getInstance().setName("Log-"+last_log_id+"-"+time_utc);
 				} catch (Exception e) {
 					sendEndNotice();
 					state.getLogLoadedProperty().set(false);

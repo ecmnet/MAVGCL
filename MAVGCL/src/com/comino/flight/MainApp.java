@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.lquac.msg_autopilot_version;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;

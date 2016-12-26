@@ -101,6 +101,9 @@ public class DetailsWidget extends WidgetPane  {
 			"VISIONR",
 			"VISIONP",
 			null,
+			"VISIONFPS",
+			"VISIONQUAL",
+			null,
 			"BATC",
 			"BATH",
 			"BATP",
@@ -111,9 +114,7 @@ public class DetailsWidget extends WidgetPane  {
 			null,
 			"TARM",
 			"TBOOT",
-			null,
-			"VISIONFPS",
-			"VISIONQUAL",
+
 	};
 
 	@FXML
