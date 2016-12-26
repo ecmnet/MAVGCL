@@ -34,6 +34,7 @@
 package com.comino.flight.parameter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
 
-	private Set<ParameterAttributes> parameterList = null;
+	private Map<String,ParameterAttributes> parameterList = null;
 
 	private IMAVController control;
 
@@ -86,7 +87,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		this.control.addMAVLinkListener(this);
 
 		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
-		this.parameterList = new HashSet<ParameterAttributes>();
+		this.parameterList = new HashMap<String,ParameterAttributes>();
 
 		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -143,7 +144,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			attributes.vtype = msg.param_type;
 
 
-			parameterList.add(attributes);
+			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
 
 			if(msg.param_index >= msg.param_count-1) {
@@ -165,7 +166,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			if(o instanceof Integer)
 				 attributes.value = ((Integer)(o)).floatValue();
 
-			parameterList.add(attributes);
+			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
 		});
 		stateProperties.getParamLoadedProperty().set(true);
@@ -180,8 +181,12 @@ public class PX4Parameters implements IMAVLinkListener {
 		return asSortedList(this.parameterList);
 	}
 
-	private List<ParameterAttributes> asSortedList(Set<ParameterAttributes> c) {
-	  List<ParameterAttributes> list = new ArrayList<ParameterAttributes>(c);
+	public ParameterAttributes get(String name) {
+		return parameterList.get(name);
+	}
+
+	private List<ParameterAttributes> asSortedList(Map<String,ParameterAttributes> c) {
+	  List<ParameterAttributes> list = new ArrayList<ParameterAttributes>(c.values());
 	  java.util.Collections.sort(list);
 	  return list;
 	}

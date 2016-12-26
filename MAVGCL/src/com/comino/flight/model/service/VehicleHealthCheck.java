@@ -1,8 +1,12 @@
 package com.comino.flight.model.service;
 
+import java.util.Set;
+
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
@@ -13,7 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class VehicleHealthCheck {
 
 	private static final long HEALTH_CHECK_DURATION = 5000;
-	private static final long WAIT_DURATION = 3000;
+	private static final long WAIT_DURATION = 0;
 
 	private StateProperties state = StateProperties.getInstance();
 
@@ -27,12 +31,16 @@ public class VehicleHealthCheck {
 
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
+	private PX4Parameters parameters = null;
+
 	public VehicleHealthCheck() {
 
-		state.getConnectedProperty().addListener((a,o,n) -> {
+		state.getParamLoadedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue()) {
+				this.parameters = PX4Parameters.getInstance();
 				System.out.println("Performing health check");
 				do_check = true;
+				checkParameters();
 				check_start_ms = System.currentTimeMillis();
 			}
 		});
@@ -51,6 +59,7 @@ public class VehicleHealthCheck {
 				check_start_ms = 0;
 			}
 		});
+
 
 	}
 
@@ -99,6 +108,16 @@ public class VehicleHealthCheck {
 
 			}
 		}
+	}
+
+	private void checkParameters() {
+
+		// Check if kill switch is disabled
+
+		if(parameters.get("CBRK_IO_SAFETY").value != 0) {
+			healthOk = false;
+		}
+
 	}
 
 	public BooleanProperty getHealthProperty() {
