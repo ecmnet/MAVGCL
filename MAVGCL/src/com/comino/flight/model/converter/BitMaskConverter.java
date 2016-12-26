@@ -34,7 +34,6 @@
 package com.comino.flight.model.converter;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.AnalysisDataModelMetaData;
 
 public class BitMaskConverter extends SourceConverter {
 

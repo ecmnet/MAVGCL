@@ -40,8 +40,6 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
-import org.mavlink.messages.lquac.msg_logging_ack;
-import org.mavlink.messages.lquac.msg_logging_data_acked;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
@@ -50,7 +48,6 @@ import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 

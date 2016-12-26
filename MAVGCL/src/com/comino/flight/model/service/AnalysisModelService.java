@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
@@ -49,7 +48,6 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
-import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;

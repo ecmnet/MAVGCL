@@ -41,6 +41,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
+import org.mavlink.messages.lquac.msg_serial_control;
 
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
@@ -108,6 +109,14 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	@Override
 	public synchronized void received(Object o) {
+
+		if( o instanceof msg_serial_control) {
+			msg_logging_ack ack = new msg_logging_ack(255,1);
+			ack.target_component=1;
+			ack.target_system=1;
+			ack.sequence =0;
+			control.sendMAVLinkMessage(ack);
+		}
 
 		if( o instanceof msg_logging_data_acked) {
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {

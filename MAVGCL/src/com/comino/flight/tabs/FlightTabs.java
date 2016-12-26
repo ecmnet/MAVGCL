@@ -38,7 +38,6 @@ import java.util.List;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
-import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.tabs.inspector.MAVInspectorTab;
 import com.comino.flight.tabs.openmap.MAVOpenMapTab;
 import com.comino.flight.tabs.parameter.MAVParameterTab;
@@ -48,7 +47,6 @@ import com.comino.flight.tabs.xyanalysis.FlightXYAnalysisTab;
 import com.comino.flight.widgets.camera.CameraWidget;
 import com.comino.flight.widgets.details.DetailsWidget;
 import com.comino.flight.widgets.experimental.ExperimentalWidget;
-
 import com.comino.flight.widgets.statusline.StatusLineWidget;
 import com.comino.flight.widgets.tuning.TuningWidget;
 import com.comino.mav.control.IMAVController;

@@ -36,10 +36,7 @@ package com.comino.flight.widgets.commander;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.MSP_CMD;
-import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_manual_control;
-import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;

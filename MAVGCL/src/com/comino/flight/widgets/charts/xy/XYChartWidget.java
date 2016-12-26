@@ -35,7 +35,6 @@ package com.comino.flight.widgets.charts.xy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -56,7 +55,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotations.Layer;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -71,7 +69,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;

@@ -39,13 +39,10 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.lquac.msg_heartbeat;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.px4log.MAVPX4LogReader;
-import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
-import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -155,9 +152,9 @@ public class MainApp extends Application  {
 						control = new MAVUdpController("127.0.0.1",14656,14650, true);
 						new SITLController(control);
 					}
-					//					else  if(args.get("SERIAL")!=null) {
-					//						 control = new MAVSerialController();
-					//					}
+					else  if(args.get("SERIAL")!=null) {
+						control = new MAVSerialController();
+					}
 
 					else if(args.get("SIM")!=null)
 						control = new MAVSimController();

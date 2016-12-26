@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
@@ -49,9 +48,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

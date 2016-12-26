@@ -37,9 +37,6 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.fx.controls.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;

@@ -43,9 +43,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 public class DashBoardAnnotation  implements XYAnnotation {
 

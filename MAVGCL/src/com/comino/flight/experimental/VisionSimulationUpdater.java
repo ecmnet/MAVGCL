@@ -35,7 +35,6 @@ package com.comino.flight.experimental;
 
 import org.mavlink.messages.lquac.msg_manual_control;
 import org.mavlink.messages.lquac.msg_vision_position_estimate;
-import org.mavlink.messages.lquac.msg_vision_speed_estimate;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;

@@ -38,7 +38,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;

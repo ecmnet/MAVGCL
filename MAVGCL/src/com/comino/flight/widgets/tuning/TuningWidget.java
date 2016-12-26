@@ -53,7 +53,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.utils.ExecutorService;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
