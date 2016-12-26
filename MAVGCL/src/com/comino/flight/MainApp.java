@@ -33,6 +33,7 @@
 
 package com.comino.flight;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -154,17 +155,22 @@ public class MainApp extends Application  {
 						control = new MAVUdpController("127.0.0.1",14656,14650, true);
 						new SITLController(control);
 					}
-					else  if(args.get("SERIAL")!=null) {
-						 control = new MAVSerialController();
-					}
+					//					else  if(args.get("SERIAL")!=null) {
+					//						 control = new MAVSerialController();
+					//					}
 
 					else if(args.get("SIM")!=null)
 						control = new MAVSimController();
 					else if(args.get("ip")!=null)
 						peerAddress = args.get("ip");
 				}
-				else
-					control = new MAVUdpController(peerAddress,port,14550, false);
+				else {
+					File f = new File("/dev/tty.usbmodem1");
+					if(f.exists())
+						control = new MAVSerialController();
+					else
+						control = new MAVUdpController(peerAddress,port,14550, false);
+				}
 
 			StateProperties.getInstance(control);
 
@@ -184,11 +190,11 @@ public class MainApp extends Application  {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("MAVGCL Analysis");
-		FileHandler.getInstance(primaryStage,control);
-		initRootLayout();
-		showMAVGCLApplication();
+			this.primaryStage = primaryStage;
+			this.primaryStage.setTitle("MAVGCL Analysis");
+			FileHandler.getInstance(primaryStage,control);
+			initRootLayout();
+			showMAVGCLApplication();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -251,7 +257,7 @@ public class MainApp extends Application  {
 			@Override
 			public void handle(ActionEvent event) {
 				FileHandler.getInstance().fileImport();
-  			    controlpanel.getChartControl().refreshCharts();
+				controlpanel.getChartControl().refreshCharts();
 			}
 
 		});
@@ -283,7 +289,7 @@ public class MainApp extends Application  {
 					if(!newvalue.booleanValue()) {
 						Platform.runLater(() -> {
 							r_px4log.setText(m_text);
-						controlpanel.getChartControl().refreshCharts();
+							controlpanel.getChartControl().refreshCharts();
 						});
 					}
 				});
