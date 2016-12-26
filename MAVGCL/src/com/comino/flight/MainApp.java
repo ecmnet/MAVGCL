@@ -42,7 +42,7 @@ import org.mavlink.messages.MAV_CMD;
 
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
-import com.comino.flight.log.px4log.MAVPX4LogReader;
+import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.panel.control.FlightControlPanel;
@@ -271,7 +271,7 @@ public class MainApp extends Application  {
 		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 
 			String m_text = r_px4log.getText();
-			MAVPX4LogReader log = new MAVPX4LogReader(control);
+			MavlinkLogReader log = new MavlinkLogReader(control);
 
 			@Override
 			public void handle(ActionEvent event) {

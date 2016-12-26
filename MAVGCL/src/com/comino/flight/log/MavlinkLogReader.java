@@ -32,7 +32,7 @@
  ****************************************************************************/
 
 
-package com.comino.flight.log.px4log;
+package com.comino.flight.log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -49,9 +49,11 @@ import org.mavlink.messages.lquac.msg_log_request_data;
 import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.log.px4log.PX4toModelConverter;
+import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -59,8 +61,9 @@ import com.comino.msp.main.control.listener.IMAVLinkListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import me.drton.jmavlib.log.px4.PX4LogReader;
+import me.drton.jmavlib.log.ulog.ULogReader;
 
-public class MAVPX4LogReader implements IMAVLinkListener {
+public class MavlinkLogReader implements IMAVLinkListener {
 
 	private IMAVController control = null;
 	private int     last_log_id   = 0;
@@ -80,10 +83,10 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 	private FutureTask<Void> to = null;
 	private StateProperties state = null;
 
-	public MAVPX4LogReader(IMAVController control) {
+	public MavlinkLogReader(IMAVController control) {
 		this.control = control;
 		this.control.addMAVLinkListener(this);
-        this.state = StateProperties.getInstance();
+		this.state = StateProperties.getInstance();
 	}
 
 	public void requestLastLog() {
@@ -100,7 +103,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 			return null;
 		});
 		log_bytes_read = 0; log_bytes_total = 0;
-        start = System.currentTimeMillis();
+		start = System.currentTimeMillis();
 		isCollecting.set(true);
 		msg_log_request_list msg = new msg_log_request_list(255,1);
 		msg.target_component = 1;
@@ -108,8 +111,8 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		control.sendMAVLinkMessage(msg);
 		state.getProgressProperty().set(0);
 		state.getLogLoadedProperty().set(false);
-		FileHandler.getInstance().setName("PX4Log loading..");
-		MSPLogger.getInstance().writeLocalMsg("Request px4log from vehicle");
+		FileHandler.getInstance().setName("Log loading..");
+		MSPLogger.getInstance().writeLocalMsg("Request log from vehicle");
 		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
 	}
 
@@ -126,7 +129,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 		} catch (Exception e) {  }
 		sendEndNotice();
 		state.getLogLoadedProperty().set(false);
-		MSPLogger.getInstance().writeLocalMsg("Loading px4log from vehicle cancelled");
+		MSPLogger.getInstance().writeLocalMsg("Loading log from vehicle cancelled");
 	}
 
 	@Override
@@ -158,7 +161,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
 					MSPLogger.getInstance().writeLocalMsg(
-							"Loading px4log from vehicle ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"Loading log from vehicle ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
@@ -200,10 +203,17 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 					collector.clearModelList();
 					sendEndNotice();
 					Thread.sleep(100);
-					PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
-					PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
-					converter.doConversion();
-					reader.close();
+					if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
+						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
+						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
+						converter.doConversion();
+						reader.close();
+					} else {
+						ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
+						UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
+						converter.doConversion();
+						reader.close();
+					}
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
 					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished ("+speed+" kbtyes/sec)");
 					state.getLogLoadedProperty().set(true);
@@ -211,7 +221,7 @@ public class MAVPX4LogReader implements IMAVLinkListener {
 				} catch (Exception e) {
 					sendEndNotice();
 					state.getLogLoadedProperty().set(false);
-					MSPLogger.getInstance().writeLocalMsg("Loading px4log exception ");
+					MSPLogger.getInstance().writeLocalMsg("Loading log failed: "+e.getMessage());
 				}
 				state.getLogLoadedProperty().set(true);
 			}
