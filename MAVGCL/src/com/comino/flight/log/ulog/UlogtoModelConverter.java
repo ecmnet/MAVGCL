@@ -71,13 +71,14 @@ public class UlogtoModelConverter {
 
 		try {
 
-			while(tms < reader.getSizeMicroseconds()) {
-				tms = reader.readUpdate(data)-reader.getStartMicroseconds();
+			System.out.println(reader.getStartMicroseconds());
 
+			while(tms < reader.getSizeMicroseconds()) {
+				tms = reader.readUpdate(data) - reader.getStartMicroseconds();
 				if(tms > tms_slot) {
 					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;
-					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()/1000;
+					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()*1000;
 					model.setValues(KeyFigureMetaData.ULG_SOURCE, data, meta);
 					model.calculateVirtualKeyFigures(meta);
 					list.add(model);
