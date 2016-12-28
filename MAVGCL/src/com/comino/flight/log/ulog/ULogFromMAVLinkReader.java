@@ -91,7 +91,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
-				if((System.currentTimeMillis()-tms)>500) {
+				if((System.currentTimeMillis()-tms)>2000) {
+					System.out.println("Fallback to MAVLink logging");
 					MSPLogger.getInstance().writeLocalMsg("Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
@@ -110,14 +111,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	@Override
 	public synchronized void received(Object o) {
 
-		if( o instanceof msg_serial_control) {
-			msg_logging_ack ack = new msg_logging_ack(255,1);
-			ack.target_component=1;
-			ack.target_system=1;
-			ack.sequence =0;
-			control.sendMAVLinkMessage(ack);
-		}
-
 		if( o instanceof msg_logging_data_acked) {
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
 				parser.reset();
@@ -127,6 +120,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			msg_logging_ack ack = new msg_logging_ack(255,1);
 			ack.target_component=1;
 			ack.target_system=1;
+			ack.isValid = true;
 			ack.sequence = log.sequence;
 			control.sendMAVLinkMessage(ack);
 			parser.addToBuffer(log.data, log.length,log.first_message_offset, package_processed == log.sequence);

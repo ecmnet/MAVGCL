@@ -134,7 +134,7 @@ public class UlogMAVLinkParser {
 			buffer.clear();
 			return false;
 		}
-		System.out.println("MAVLink logging started at: " + logStartTimestamp);
+		System.out.println("ULOG Logging started at: " + logStartTimestamp);
 		buffer.compact();
 		logStartTimestamp = 0;
 		return true;
