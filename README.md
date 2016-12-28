@@ -12,10 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 26/12/2016 
+**Development Status:** Last updated 29/12/2016 
 
-- MAVLink 2.0 implementation
-- Supports ULOG streaming to record data 
+- ULog handling fixed
 - Auto-connect to USB when plugged in (OS X only)
 - Basic vehicle health check
 
