@@ -138,8 +138,8 @@ public class FileHandler {
 
 	public void fileImportLog() {
 		FileChooser fileChooser = getFileDialog("Import data ...",
-				new ExtensionFilter("PX4Log Files", "*.px4log"),
 				new ExtensionFilter("ULog Files", "*.ulg"),
+				new ExtensionFilter("PX4Log Files", "*.px4log"),
 				new ExtensionFilter("MAVGCL Files","*.mgc"));
 
 		File file = fileChooser.showOpenDialog(stage);
