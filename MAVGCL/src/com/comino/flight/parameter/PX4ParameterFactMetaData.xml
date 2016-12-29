@@ -674,6 +674,17 @@ velocity</short_desc>
         <value code="0">Don't allow arming without GPS</value>
       </values>
     </parameter>
+    <parameter default="0" name="COM_ARM_SWISBTN" type="INT32">
+      <short_desc>Arm switch is only a button</short_desc>
+      <long_desc>The default uses the arm switch as real switch. If parameter set button gets handled like stick arming.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <scope>modules/commander</scope>
+      <values>
+        <value code="1">Arm switch is a button that only triggers arming and disarming</value>
+        <value code="0">Arm switch is a switch that stays on when armed</value>
+      </values>
+    </parameter>
     <parameter default="0" name="COM_LOW_BAT_ACT" type="INT32">
       <short_desc>Battery failsafe mode</short_desc>
       <long_desc>Action the system takes on low battery. Defaults to off</long_desc>
@@ -758,7 +769,7 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <increment>0.05</increment>
       <scope>modules/commander</scope>
     </parameter>
-    <parameter default="0.09" name="COM_ARM_IMU_GYR" type="FLOAT">
+    <parameter default="0.15" name="COM_ARM_IMU_GYR" type="FLOAT">
       <short_desc>Maximum rate gyro inconsistency between IMU units that will allow arming</short_desc>
       <min>0.02</min>
       <max>0.2</max>
@@ -1801,6 +1812,12 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <increment>0.01</increment>
       <scope>modules/fw_att_control</scope>
     </parameter>
+    <parameter default="0" name="FW_BAT_SCALE_EN" type="INT32">
+      <short_desc>Whether to scale throttle by battery power level</short_desc>
+      <long_desc>This compensates for voltage drop of the battery over time by attempting to normalize performance across the operating range of the battery. The fixed wing should constantly behave as if it was fully charged with reduced max thrust at lower battery percentages. i.e. if cruise speed is at 0.5 throttle at 100% battery, it will still be 0.5 at 60% battery.</long_desc>
+      <boolean />
+      <scope>modules/fw_att_control</scope>
+    </parameter>
   </group>
   <group name="FW L1 Control">
     <parameter default="20.0" name="FW_L1_PERIOD" type="FLOAT">
@@ -2468,11 +2485,6 @@ but also ignore less noise</short_desc>
     </parameter>
   </group>
   <group name="Local Position Estimator">
-    <parameter default="0" name="LPE_PUB_AGL_Z" type="FLOAT">
-      <short_desc>Publish AGL as Z</short_desc>
-      <boolean />
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
     <parameter default="0.0" name="LPE_FLW_OFF_Z" type="FLOAT">
       <short_desc>Optical flow z offset from center</short_desc>
       <min>-1</min>
@@ -2489,11 +2501,19 @@ but also ignore less noise</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="1" name="LPE_FLW_GYRO_CMP" type="INT32">
-      <short_desc>Optical flow gyro compensation</short_desc>
-      <min>-1</min>
-      <max>1</max>
-      <unit>m</unit>
+    <parameter default="7.0" name="LPE_FLW_R" type="FLOAT">
+      <short_desc>Optical flow rotation (roll/pitch) noise gain</short_desc>
+      <min>0.1</min>
+      <max>10.0</max>
+      <unit>m/s / (rad)</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="7.0" name="LPE_FLW_RR" type="FLOAT">
+      <short_desc>Optical flow angular velocity noise gain</short_desc>
+      <min>0.0</min>
+      <max>10.0</max>
+      <unit>m/s / (rad/s)</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
@@ -2560,11 +2580,6 @@ but also ignore less noise</short_desc>
       <max>100</max>
       <unit>m</unit>
       <decimal>2</decimal>
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
-    <parameter default="1" name="LPE_GPS_ON" type="INT32">
-      <short_desc>Enables GPS data, also forces alt init with GPS</short_desc>
-      <boolean />
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="0.29" name="LPE_GPS_DELAY" type="FLOAT">
@@ -2648,11 +2663,6 @@ EPV used if greater than this value</short_desc>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="1" name="LPE_VIS_ON" type="INT32">
-      <short_desc>Vision correction</short_desc>
-      <boolean />
-      <scope>modules/local_position_estimator</scope>
-    </parameter>
     <parameter default="0.001" name="LPE_VIC_P" type="FLOAT">
       <short_desc>Vicon position standard deviation</short_desc>
       <min>0.0001</min>
@@ -2712,7 +2722,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="40.430" name="LPE_LAT" type="FLOAT">
+    <parameter default="47.397742" name="LPE_LAT" type="FLOAT">
       <short_desc>Local origin latitude for nav w/o GPS</short_desc>
       <min>-90</min>
       <max>90</max>
@@ -2720,7 +2730,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>8</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="-86.929" name="LPE_LON" type="FLOAT">
+    <parameter default="8.545594" name="LPE_LON" type="FLOAT">
       <short_desc>Local origin longitude for nav w/o GPS</short_desc>
       <min>-180</min>
       <max>180</max>
@@ -2759,6 +2769,31 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <unit>m</unit>
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="0.05" name="LPE_LAND_VXY" type="FLOAT">
+      <short_desc>Land detector xy velocity standard deviation</short_desc>
+      <min>0.01</min>
+      <max>10.0</max>
+      <unit>m/s</unit>
+      <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="247" name="LPE_FUSION" type="INT32">
+      <short_desc>Integer bitmask controlling data fusion</short_desc>
+      <long_desc>Set bits in the following positions to enable: 0 : Set to true to fuse GPS data if available, also requires GPS for altitude init 1 : Set to true to fuse optical flow data if available 2 : Set to true to fuse vision position 3 : Set to true to fuse vision yaw 4 : Set to true to fuse land detector 5 : Set to true to publish AGL as local position down component 6 : Set to true to enable flow gyro compensation 7 : Set to true to enable baro fusion default (247, no vision yaw)</long_desc>
+      <min>0</min>
+      <max>255</max>
+      <scope>modules/local_position_estimator</scope>
+      <bitmask>
+        <bit index="0">fuse GPS, requires GPS for alt. init</bit>
+        <bit index="1">fuse optical flow</bit>
+        <bit index="2">fuse vision position</bit>
+        <bit index="3">fuse vision yaw</bit>
+        <bit index="4">fuse land detector</bit>
+        <bit index="5">pub agl as lpos down</bit>
+        <bit index="6">flow gyro compensation</bit>
+        <bit index="7">fuse baro</bit>
+      </bitmask>
     </parameter>
   </group>
   <group name="MAVLink">
@@ -2956,8 +2991,13 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <boolean />
       <scope>modules/navigator</scope>
     </parameter>
+    <parameter default="0" name="VT_WV_TKO_EN" type="INT32">
+      <short_desc>Enable weather-vane mode takeoff for missions</short_desc>
+      <boolean />
+      <scope>modules/navigator</scope>
+    </parameter>
     <parameter default="0" name="VT_WV_LTR_EN" type="INT32">
-      <short_desc>Weather-vane mode for loiter mode</short_desc>
+      <short_desc>Weather-vane mode for loiter</short_desc>
       <boolean />
       <scope>modules/navigator</scope>
     </parameter>
@@ -3010,6 +3050,9 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
         <value code="0">Disabled</value>
         <value code="3">Land at current position</value>
         <value code="2">Return to Land</value>
+        <value code="5">Terminate</value>
+        <value code="4">Data Link Auto Recovery (CASA Outback Challenge rules)</value>
+        <value code="6">Lockdown</value>
       </values>
     </parameter>
     <parameter default="2" name="NAV_RCL_ACT" type="INT32">
@@ -3021,7 +3064,15 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
         <value code="0">Disabled</value>
         <value code="3">Land at current position</value>
         <value code="2">Return to Land</value>
+        <value code="5">Terminate</value>
+        <value code="4">RC Auto Recovery (CASA Outback Challenge rules)</value>
+        <value code="6">Lockdown</value>
       </values>
+    </parameter>
+    <parameter default="1" name="NAV_FORCE_VT" type="INT32">
+      <short_desc>Force VTOL mode takeoff and land</short_desc>
+      <boolean />
+      <scope>modules/navigator</scope>
     </parameter>
     <parameter default="0" name="COM_OBL_ACT" type="INT32">
       <short_desc>Set offboard loss failsafe mode</short_desc>
@@ -6099,6 +6150,33 @@ if required for the gimbal (only in AUX output mode)</short_desc>
         <value code="8">Channel 8</value>
       </values>
     </parameter>
+    <parameter default="0" name="RC_MAP_ARM_SW" type="INT32">
+      <short_desc>Arm switch channel</short_desc>
+      <min>0</min>
+      <max>18</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="11">Channel 11</value>
+        <value code="10">Channel 10</value>
+        <value code="13">Channel 13</value>
+        <value code="12">Channel 12</value>
+        <value code="15">Channel 15</value>
+        <value code="14">Channel 14</value>
+        <value code="17">Channel 17</value>
+        <value code="16">Channel 16</value>
+        <value code="18">Channel 18</value>
+        <value code="1">Channel 1</value>
+        <value code="0">Unassigned</value>
+        <value code="3">Channel 3</value>
+        <value code="2">Channel 2</value>
+        <value code="5">Channel 5</value>
+        <value code="4">Channel 4</value>
+        <value code="7">Channel 7</value>
+        <value code="6">Channel 6</value>
+        <value code="9">Channel 9</value>
+        <value code="8">Channel 8</value>
+      </values>
+    </parameter>
     <parameter default="0" name="RC_MAP_FLAPS" type="INT32">
       <short_desc>Flaps channel</short_desc>
       <min>0</min>
@@ -6238,6 +6316,13 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
     <parameter default="0.25" name="RC_KILLSWITCH_TH" type="FLOAT">
       <short_desc>Threshold for the kill switch</short_desc>
+      <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
+      <min>-1</min>
+      <max>1</max>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.25" name="RC_ARMSWITCH_TH" type="FLOAT">
+      <short_desc>Threshold for the arm switch</short_desc>
       <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
       <min>-1</min>
       <max>1</max>
@@ -6446,6 +6531,12 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="0">when armed until disarm (default)</value>
         <value code="2">from boot until shutdown</value>
       </values>
+    </parameter>
+    <parameter default="1" name="SDLOG_UUID" type="INT32">
+      <short_desc>Log UUID</short_desc>
+      <long_desc>If set to 1, add an ID to the log, which uniquely identifies the vehicle</long_desc>
+      <boolean />
+      <scope>modules/logger</scope>
     </parameter>
   </group>
   <group name="Sensor Calibration">
@@ -7331,11 +7422,37 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <unit>bit/s</unit>
       <scope>modules/uavcan</scope>
     </parameter>
-    <parameter default="0" name="UAVCAN_ESC_IDLT" type="INT32">
+    <parameter default="1" name="UAVCAN_ESC_IDLT" type="INT32">
       <short_desc>UAVCAN ESC will spin at idle throttle when armed, even if the mixer outputs zero setpoints</short_desc>
-      <min>0</min>
-      <max>1</max>
+      <boolean />
+      <reboot_required>true</reboot_required>
       <scope>modules/uavcan</scope>
+    </parameter>
+    <parameter default="120" name="ESC_NODE_ID" type="INT32">
+      <short_desc>UAVCAN Node ID</short_desc>
+      <long_desc>Read the specs at http://uavcan.org to learn more about Node ID.</long_desc>
+      <min>1</min>
+      <max>125</max>
+      <scope>modules/uavcanesc</scope>
+    </parameter>
+    <parameter default="1000000" name="ESC_BITRATE" type="INT32">
+      <short_desc>UAVCAN CAN bus bitrate</short_desc>
+      <min>20000</min>
+      <max>1000000</max>
+      <scope>modules/uavcanesc</scope>
+    </parameter>
+    <parameter default="120" name="CANNODE_NODE_ID" type="INT32">
+      <short_desc>UAVCAN Node ID</short_desc>
+      <long_desc>Read the specs at http://uavcan.org to learn more about Node ID.</long_desc>
+      <min>1</min>
+      <max>125</max>
+      <scope>modules/uavcannode</scope>
+    </parameter>
+    <parameter default="1000000" name="CANNODE_BITRATE" type="INT32">
+      <short_desc>UAVCAN CAN bus bitrate</short_desc>
+      <min>20000</min>
+      <max>1000000</max>
+      <scope>modules/uavcannode</scope>
     </parameter>
   </group>
   <group name="VTOL Attitude Control">
@@ -7559,12 +7676,6 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <min>0.0</min>
       <max>10.0</max>
       <unit>s</unit>
-      <scope>modules/vtol_att_control</scope>
-    </parameter>
-    <parameter default="1" name="VT_NAV_FORCE_VT" type="INT32">
-      <short_desc>Force VTOL mode takeoff and land</short_desc>
-      <min>0</min>
-      <max>1</max>
       <scope>modules/vtol_att_control</scope>
     </parameter>
     <parameter default="0.0" name="VT_FW_MIN_ALT" type="FLOAT">
