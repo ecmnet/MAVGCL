@@ -77,4 +77,5 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
         }
         return (Group)  plotArea.getChildren().get(plotContentIndex);
 	}
+
 }

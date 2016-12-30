@@ -763,13 +763,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private  void rotateRad(float[] rotated, float posx, float posy, float heading_rad) {
 		if(heading_rad!=0) {
-			rotated[0] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
+			rotated[1] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
 					( posy - old_center_y ) * (float)Math.sin(heading_rad) + old_center_x;
-			rotated[1] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
+			rotated[0] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
 					( posy - old_center_y ) * (float)Math.cos(heading_rad) + old_center_y;
 		} else {
-			rotated[0] = posx;
-			rotated[1] = posy;
+			rotated[1] = posx;
+			rotated[0] = posy;
 		}
 	}
 

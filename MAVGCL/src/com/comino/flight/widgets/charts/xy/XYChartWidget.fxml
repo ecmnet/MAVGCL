@@ -19,10 +19,10 @@
          <children>
             <SectionLineChart fx:id="linechart" animated="false" axisSortingPolicy="NONE" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendSide="TOP" minWidth="510.0" prefHeight="760.0" prefWidth="810.0" verticalZeroLineVisible="false">
                <xAxis>
-                  <NumberAxis animated="false" lowerBound="-5.0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="5.0" fx:id="xAxis" />
+                  <NumberAxis animated="false" lowerBound="-5.0" minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0" tickLength="10.0" upperBound="5.0" fx:id="yAxis" />
                </xAxis>
                <yAxis>
-                  <NumberAxis fx:id="yAxis" animated="false" lowerBound="-5.0" side="LEFT" upperBound="5.0" />
+                  <NumberAxis fx:id="xAxis" animated="false" lowerBound="-5.0" side="LEFT" upperBound="5.0" />
                </yAxis>
             </SectionLineChart>
          </children>
