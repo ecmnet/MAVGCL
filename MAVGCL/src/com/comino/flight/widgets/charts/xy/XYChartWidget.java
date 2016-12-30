@@ -280,6 +280,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
+
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -400,8 +401,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		});
 
-		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
-
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
@@ -470,9 +469,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				updateRequest();
 			}
 		});
-
-		scale = 0.5f;
-		setScaling(scale);
 
 	}
 
@@ -669,11 +665,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
-		xAxis.setLowerBound(-1);
-		xAxis.setUpperBound(+1);
-		yAxis.setLowerBound(-1);
-		yAxis.setUpperBound(+1);
-
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				current_x0_pt = 0;
@@ -685,6 +676,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 		current_x0_pt = dataService.calculateX0Index(1);
 		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+
+		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
+		scale = Float.parseFloat(scale_select.getSelectionModel().getSelectedItem());
+		setScaling(scale);
 
 		return this;
 	}
