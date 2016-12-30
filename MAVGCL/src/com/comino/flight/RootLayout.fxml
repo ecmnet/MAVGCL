@@ -20,26 +20,19 @@
 							text="About MAVGAnalysis">
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
-					    <MenuItem fx:id="m_import" mnemonicParsing="false" text="Open Recording...">
+					    <MenuItem fx:id="m_import" mnemonicParsing="false" text="Open...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="O"
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem fx:id="m_export" mnemonicParsing="false" text="Save Recording as...">
+						<MenuItem fx:id="m_export" mnemonicParsing="false" text="Save as...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="S"
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem fx:id="m_px4log" mnemonicParsing="false"
-							text="Import log File...">
-							<accelerator>
-								<KeyCodeCombination alt="UP" code="I"
-									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-							</accelerator>
-						</MenuItem>
 						<MenuItem fx:id="r_px4log" mnemonicParsing="false"
 							text="Import latest log from device...">
 							<accelerator>

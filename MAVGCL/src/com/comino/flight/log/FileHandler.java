@@ -96,7 +96,7 @@ public class FileHandler {
 	}
 
 	public String getName() {
-			return name;
+		return name;
 	}
 
 	public void clear() {
@@ -113,75 +113,50 @@ public class FileHandler {
 
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
-				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
-
-		File file = fileChooser.showOpenDialog(stage);
-		try {
-			if(file!=null) {
-				Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
-				Reader reader = new FileReader(file);
-				Gson gson = new GsonBuilder().create();
-				stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
-				ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
-				reader.close();
-				modelService.setModelList(modelList);
-				stage.getScene().setCursor(Cursor.DEFAULT);
-				name = file.getName();
-				StateProperties.getInstance().getLogLoadedProperty().set(true);
-
-			}
-		} catch (IOException e) {
-			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
-		}
-	}
-
-
-	public void fileImportLog() {
-		FileChooser fileChooser = getFileDialog("Import data ...",
+				new ExtensionFilter("MAVGCL Model Files", "*.mgc"),
 				new ExtensionFilter("ULog Files", "*.ulg"),
-				new ExtensionFilter("PX4Log Files", "*.px4log"),
-				new ExtensionFilter("MAVGCL Files","*.mgc"));
+				new ExtensionFilter("PX4Log Files", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
 		try {
 			if(file!=null) {
 				stage.getScene().setCursor(Cursor.WAIT);
-				if(file.getName().endsWith("px4log")) {
-				   PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
-				   PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-				   PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
-				   converter.doConversion();
-				   StateProperties.getInstance().getLogLoadedProperty().set(true);
-				}
-
 				if(file.getName().endsWith("ulg")) {
-					  ULogReader reader = new ULogReader(file.getAbsolutePath());
-					  PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-					  UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
-					  converter.doConversion();
-					  StateProperties.getInstance().getLogLoadedProperty().set(true);
+					ULogReader reader = new ULogReader(file.getAbsolutePath());
+					PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+					UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
+					converter.doConversion();
+					StateProperties.getInstance().getLogLoadedProperty().set(true);
 				}
 
 				if(file.getName().endsWith("mgc")) {
+
 					Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 					Reader reader = new FileReader(file);
 					Gson gson = new GsonBuilder().create();
-					stage.getScene().setCursor(Cursor.WAIT); //Change cursor to wait style
 					ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
 					reader.close();
 					modelService.setModelList(modelList);
 					StateProperties.getInstance().getLogLoadedProperty().set(true);
 				}
 
+				if(file.getName().endsWith("px4log")) {
+					PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+					PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+					PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+					converter.doConversion();
+					StateProperties.getInstance().getLogLoadedProperty().set(true);
+				}
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				name = file.getName();
-
 			}
 		} catch (Exception e) {
+			stage.getScene().setCursor(Cursor.DEFAULT);
 			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
-
 	}
+
+
 
 
 	public void fileExport() {
@@ -190,7 +165,7 @@ public class FileHandler {
 				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
 
 		if(name.length()<2)
-		      name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 
 		fileChooser.setInitialFileName(name);
 		File file = fileChooser.showSaveDialog(stage);
