@@ -284,11 +284,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 			System.out.println("CombinedConverter started");
 			while(true) {
 
-				if(mode==STOPPED && old_mode != STOPPED) {
-					ulogger.enableLogging(false);
-					state.getRecordingProperty().set(false);
-				}
-
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
 					LockSupport.parkNanos(2000000000);
@@ -324,6 +319,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 					state.getRecordingProperty().set(true);
 					ulogger.enableLogging(true);
 					tms_start = System.nanoTime() / 1000;
+				}
+
+				if(mode==STOPPED && old_mode != STOPPED) {
+					ulogger.enableLogging(false);
+					state.getRecordingProperty().set(false);
 				}
 
 				if(mode!=STOPPED) {
