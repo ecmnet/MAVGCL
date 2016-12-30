@@ -112,6 +112,9 @@ public class VehicleHealthCheck {
 
 	private void checkParameters() {
 
+		if(parameters==null)
+			return;
+
 		// Check if kill switch is disabled
 
 		if(parameters.get("CBRK_IO_SAFETY").value != 0) {
