@@ -87,7 +87,7 @@ import javafx.scene.shape.Rectangle;
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
 	private final static int MAXRECENT 	    = 20;
-	private final static int REFRESH_RATE   = 60;
+	private final static int REFRESH_RATE   = 50;
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
