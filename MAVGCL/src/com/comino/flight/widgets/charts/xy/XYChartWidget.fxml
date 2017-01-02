@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.comino.flight.widgets.fx.controls.*?>
+<?import com.comino.jfx.extensions.*?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
