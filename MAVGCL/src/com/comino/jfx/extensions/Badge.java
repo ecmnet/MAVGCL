@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets.fx.controls;
+package com.comino.jfx.extensions;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;

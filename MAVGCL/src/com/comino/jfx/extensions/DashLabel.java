@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets.fx.controls;
+package com.comino.jfx.extensions;
 
 import com.sun.javafx.tk.FontLoader;
 import com.sun.javafx.tk.Toolkit;

@@ -50,7 +50,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
-import com.comino.flight.widgets.fx.controls.SectionLineChart;
+import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotations.Layer;

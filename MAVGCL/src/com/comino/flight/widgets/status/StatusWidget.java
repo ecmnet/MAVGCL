@@ -34,8 +34,8 @@
 package com.comino.flight.widgets.status;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.widgets.fx.controls.DashLabelLED;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.jfx.extensions.DashLabelLED;
+import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.DataModel;

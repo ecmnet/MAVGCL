@@ -42,7 +42,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
-import com.comino.flight.widgets.fx.controls.Badge;
+import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;

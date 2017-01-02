@@ -48,7 +48,7 @@ import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.utils.ExecutorService;

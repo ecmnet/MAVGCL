@@ -44,7 +44,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionSimulationUpdater;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;

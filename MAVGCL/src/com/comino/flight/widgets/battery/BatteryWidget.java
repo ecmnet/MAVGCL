@@ -38,7 +38,7 @@ import java.util.concurrent.locks.LockSupport;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import eu.hansolo.medusa.Gauge;

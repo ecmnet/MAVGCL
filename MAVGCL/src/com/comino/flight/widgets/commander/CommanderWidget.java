@@ -40,7 +40,7 @@ import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.fx.controls.WidgetPane;
+import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;

@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.widgets.fx.controls;
+package com.comino.jfx.extensions;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
