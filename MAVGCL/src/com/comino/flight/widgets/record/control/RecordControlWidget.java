@@ -178,8 +178,14 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(!newvalue.booleanValue())
-				recording(false, 0);
+				state.getRecordingProperty().set(false);
 		});
+
+		this.disabledProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.booleanValue())
+				state.getRecordingProperty().set(false);
+		});
+
 		enablemodetrig.selectedProperty().set(true);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
@@ -191,7 +197,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				isrecording.setFill(Color.LIGHTGREY);
 
 				if(MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false)) {
-                       try {
+					try {
 						FileHandler.getInstance().autoSave();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -267,13 +273,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 
 	private void recording(boolean start, int delay) {
-
 		if(start)
 			modelService.start();
 		else
 			modelService.stop(delay);
-
 	}
-
-
 }
