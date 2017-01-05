@@ -400,6 +400,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		th.setPriority(Thread.MIN_PRIORITY);
 		th.setDaemon(true);
 		th.start();
+
+		this.getParent().disabledProperty().addListener((l,o,n) -> {
+			if(!n.booleanValue()) {
+				int current_x1_pt = dataService.calculateX0Index(scroll.get());
+				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+					model = dataService.getModelList().get(current_x1_pt);
+				else
+					model = dataService.getCurrent();
+			}
+		});
+
 		return this;
 	}
 
