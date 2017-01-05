@@ -142,7 +142,9 @@ public class CameraWidget extends WidgetPane  {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source.addProcessListener((im,buf) -> {
-				image.setImage(im);
+				Platform.runLater(() -> {
+					image.setImage(im);
+				});
 			});
 		} catch (MalformedURLException e) {
 			System.out.println("Camera "+e.getMessage());

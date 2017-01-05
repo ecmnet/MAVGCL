@@ -58,7 +58,7 @@ import javafx.scene.image.Image;
  */
 public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
-	private static final int RATE = 33;
+	private static final int RATE = 50;
 
 	public static final String BOUNDARY_MARKER_PREFIX  = "--";
 
@@ -109,6 +109,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		String ctype = null;
 		Hashtable headers = null;
 		URLConnection conn = null;
+		int framecounter=0;
 
 
 		while(isRunning) {
@@ -216,10 +217,13 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							boundary = ctype.substring(bidx + 9);
 							ssplit.skipToBoundary(boundary);
 						} else {
-							//	System.out.print("FC: "+(++framecounter)+"   ");
+						//	System.out.println("FC: "+(++framecounter)+"   ");
 							byte[] img = ssplit.readToBoundary(boundary);
-							if (img.length == 0)
+							if (img.length == 0) {
+								System.out.println("BREAK");
+								trigger = 0;
 								break;
+							}
 							try {
 								if(System.currentTimeMillis() >= trigger) {
 
@@ -231,10 +235,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 									tms = System.currentTimeMillis();
 									trigger = System.currentTimeMillis()+RATE;
 								}
-								//						    		else
-								//						    			Thread.sleep(100);
-
-
+								else
+									Thread.sleep(10);
 
 							} catch (Exception e) {
 								throw new Exception(e.getMessage());
