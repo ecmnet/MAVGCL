@@ -32,6 +32,7 @@ public class VehicleHealthCheck {
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
 	private PX4Parameters parameters = null;
+	private String reason = null;
 
 	public VehicleHealthCheck() {
 
@@ -39,7 +40,7 @@ public class VehicleHealthCheck {
 			if(n.booleanValue()) {
 				this.parameters = PX4Parameters.getInstance();
 				System.out.println("Performing health check");
-				do_check = true;
+				do_check = true; healthOk = true;
 				checkParameters();
 				check_start_ms = System.currentTimeMillis();
 			}
@@ -48,7 +49,7 @@ public class VehicleHealthCheck {
 		state.getArmedProperty().addListener((a,o,n) -> {
 			if(!n.booleanValue()) {
 				System.out.println("Performing health check");
-				do_check = true;
+				do_check = true; healthOk = true;
 				check_start_ms = System.currentTimeMillis();
 			}
 		});
@@ -65,19 +66,28 @@ public class VehicleHealthCheck {
 
 
 	public void check(DataModel model) {
-		if(do_check && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION
+		if(do_check && healthOk && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION
 				&& (System.currentTimeMillis()-check_start_ms) > WAIT_DURATION ) {
 
+			reason = null;
 
 			// Is power > 11V
 
-			if(model.battery.a0 < 11.0f)
-				healthOk = false;
+			if(model.battery.a0 < 11.0f) {
+				checkFailed("Battery fault");
+			}
 
 			// Is IMU available ?
 
-			if(!model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
-				healthOk = false;
+			if(!model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY)) {
+				checkFailed("LIDAR fault");
+			}
+
+			// Is LIDAR available ?
+
+			if(!model.sys.isSensorAvailable(Status.MSP_LIDAR_AVAILABILITY)) {
+				checkFailed("LIDAR fault");
+			}
 
 			// check pitch and roll
 
@@ -95,6 +105,9 @@ public class VehicleHealthCheck {
 
 			if(healthOk) healthOk = Math.abs(max_pitch - min_pitch) < 0.1f;
 
+			if(!healthOk)
+				checkFailed("Pitch/Roll check failed");
+
 
 
 		} else {
@@ -102,8 +115,8 @@ public class VehicleHealthCheck {
 				do_check = false;
 				healthProperty.set(healthOk);
 				if(!healthOk)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] vehicle healthcheck failed", MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
-				 else
+					MSPLogger.getInstance().writeLocalMsg("[mgc] "+reason, MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
+				else
 					MSPLogger.getInstance().writeLocalMsg("[mgc] vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 
 			}
@@ -118,9 +131,18 @@ public class VehicleHealthCheck {
 		// Check if kill switch is disabled
 
 		if(parameters.get("CBRK_IO_SAFETY").value != 0) {
-			healthOk = false;
+			checkFailed("IO SafetyBreaker set");
 		}
+	}
 
+	private void checkFailed(String r) {
+		if(reason == null) {
+			reason = r;
+			return;
+		} else {
+			reason = reason + ", " + r;
+		}
+		healthOk = false;
 	}
 
 	public BooleanProperty getHealthProperty() {
