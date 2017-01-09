@@ -454,11 +454,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,force_zero.isSelected());
 		});
 
+		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
+
 		corr_zero.setOnAction((ActionEvent event)-> {
 			updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_OFFSET,force_zero.isSelected());
 		});
 
-		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
+		corr_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_OFFSET, false));
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
