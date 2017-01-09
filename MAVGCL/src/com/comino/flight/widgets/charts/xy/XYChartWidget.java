@@ -545,8 +545,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			s2.setKeyFigures(type2_x, type2_y);
 			if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
 				m = mList.get(0);
-				rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
-						rotation_rad);
+				if(corr_zero.isSelected())
+					rotateRad(p2,m.getValue(type2_x)-(s2.center_x-s1.center_x), m.getValue(type2_y)-(s2.center_y-s1.center_y),
+							rotation_rad);
+				else
+					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+							rotation_rad);
 				linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				linechart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
 				linechart.getAnnotations().add(
