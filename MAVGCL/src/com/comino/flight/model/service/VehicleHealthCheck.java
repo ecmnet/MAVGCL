@@ -7,6 +7,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
@@ -35,6 +36,9 @@ public class VehicleHealthCheck {
 	private String reason = null;
 
 	public VehicleHealthCheck() {
+
+		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.HEALTHCHECK, true))
+			return;
 
 		state.getParamLoadedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue()) {
@@ -74,19 +78,19 @@ public class VehicleHealthCheck {
 			// Is power > 11V
 
 			if(model.battery.a0 < 11.0f) {
-				checkFailed("Battery fault");
+				checkFailed("Battery too low");
 			}
 
 			// Is IMU available ?
 
 			if(!model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY)) {
-				checkFailed("LIDAR fault");
+				checkFailed("IMU not available");
 			}
 
 			// Is LIDAR available ?
 
 			if(!model.sys.isSensorAvailable(Status.MSP_LIDAR_AVAILABILITY)) {
-				checkFailed("LIDAR fault");
+				checkFailed("LIDAR not available");
 			}
 
 			// check pitch and roll
@@ -106,7 +110,9 @@ public class VehicleHealthCheck {
 			if(healthOk) healthOk = Math.abs(max_pitch - min_pitch) < 0.1f;
 
 			if(!healthOk)
-				checkFailed("Pitch/Roll check failed");
+				checkFailed("IMU: Pitch/Roll check failed");
+
+			// TODO:...add more checks here
 
 
 
@@ -129,19 +135,18 @@ public class VehicleHealthCheck {
 			return;
 
 		// Check if kill switch is disabled
-
 		if(parameters.get("CBRK_IO_SAFETY").value != 0) {
 			checkFailed("IO SafetyBreaker set");
 		}
+
+		// TODO:...add more checks here
+
+
 	}
 
 	private void checkFailed(String r) {
-		if(reason == null) {
+		if(reason == null)
 			reason = r;
-			return;
-		} else {
-			reason = reason + ", " + r;
-		}
 		healthOk = false;
 	}
 

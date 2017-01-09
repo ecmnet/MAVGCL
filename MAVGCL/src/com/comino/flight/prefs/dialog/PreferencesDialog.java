@@ -85,6 +85,9 @@ public class PreferencesDialog  {
 	@FXML
 	private CheckBox ulog;
 
+	@FXML
+	private CheckBox check;
+
 	private IMAVController control;
 	private Preferences userPrefs;
 
@@ -144,6 +147,7 @@ public class PreferencesDialog  {
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
+		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -153,6 +157,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
+			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());
 
 			try {
 				userPrefs.flush();
