@@ -52,18 +52,19 @@
 
             <Label layoutX="20.0" layoutY="368.0" text="Scale:" />
             <ChoiceBox fx:id="scale_select" layoutX="15.0" layoutY="385.0" prefHeight="19.0" prefWidth="110.0" />
-             <CheckBox fx:id="force_zero" layoutX="15.0" layoutY="420.0" mnemonicParsing="false" text="Always centered" />
-            <Label fx:id="rot_label" layoutX="20.0" layoutY="452.0" text="Rotation: [ 0°]" />
+            <CheckBox fx:id="force_zero" layoutX="15.0" layoutY="420.0" mnemonicParsing="false" text="Always centered" />
+            <CheckBox fx:id="corr_zero" layoutX="15.0" layoutY="440.0" mnemonicParsing="false" text="Correct offset" />
+            <Label fx:id="rot_label" layoutX="20.0" layoutY="487.0" text="Rotation: [ 0°]" />
             <Slider fx:id="rotation" blockIncrement="10.0" layoutX="13.0" prefWidth="126.0"
 					layoutY="467" majorTickUnit="10.0" max="180" min="-180" prefHeight="13.0" value="0"/>
 
-		    <CheckBox fx:id="auto_rotate" layoutX="15.0" layoutY="490.0" mnemonicParsing="false" text="Heading autorotate" />
+		    <CheckBox fx:id="auto_rotate" layoutX="15.0" layoutY="510.0" mnemonicParsing="false" text="Heading autorotate" />
 
-            <Separator layoutX="15.0" layoutY="510.0" prefHeight="4.0" prefWidth="126.0" />
-            <CheckBox fx:id="annotation" layoutX="15.0" layoutY="530.0" mnemonicParsing="false" text="Dashboard" selected="true" />
+            <Separator layoutX="15.0" layoutY="530.0" prefHeight="4.0" prefWidth="126.0" />
+            <CheckBox fx:id="annotation" layoutX="15.0" layoutY="550.0" mnemonicParsing="false" text="Dashboard" selected="true" />
 
 
-            <Button fx:id="export" layoutX="15.0" layoutY="570.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
+            <Button fx:id="export" layoutX="15.0" layoutY="590.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 
          </children>
 

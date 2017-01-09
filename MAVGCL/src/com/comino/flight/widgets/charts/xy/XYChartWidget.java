@@ -158,6 +158,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private CheckBox force_zero;
 
 	@FXML
+	private CheckBox corr_zero;
+
+	@FXML
 	private CheckBox annotation;
 
 
@@ -363,6 +366,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					x_desc = x_desc + type2_x.desc1+" ["+type2_x.uom+"] ";
 				xAxis.setLabel(x_desc);
 
+				corr_zero.setDisable(!(type1_y.hash!=0 && (type2_y.hash!=0)));
+
 				updateRequest();
 			}
 		});
@@ -377,6 +382,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				if(type2_y.hash!=0)
 					y_desc = y_desc + type2_y.desc1+" ["+type2_y.uom+"] ";
 				yAxis.setLabel(y_desc);
+
+				corr_zero.setDisable(!(type1_y.hash!=0 && (type2_y.hash!=0)));
 
 				updateRequest();
 			}
@@ -445,6 +452,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		force_zero.setOnAction((ActionEvent event)-> {
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,force_zero.isSelected());
+		});
+
+		corr_zero.setOnAction((ActionEvent event)-> {
+			updateRequest();
 		});
 
 		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
@@ -631,8 +642,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
-						rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
-								rotation_rad);
+						if(corr_zero.isSelected())
+							rotateRad(p2,m.getValue(type2_x)-(s2.center_x-s1.center_x), m.getValue(type2_y)-(s2.center_y-s1.center_y),
+									rotation_rad);
+						else
+							rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
+									rotation_rad);
 						series2.getData().add(pool.checkOut(p2[0],p2[1]));
 					}
 				}
