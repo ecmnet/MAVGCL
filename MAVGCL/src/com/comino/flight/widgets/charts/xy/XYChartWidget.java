@@ -542,6 +542,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		List<AnalysisDataModel> mList = dataService.getModelList();
 
 		if(refresh) {
+
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
@@ -553,8 +554,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 
-			if(slam.isSelected())
+			if(slam.isSelected()) {
+				slamblocks.invalidate();
 				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
+			}
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -608,7 +611,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			float x = 0; float y = 0;
 
 			if(type1_x.hash!=0) {
-	//		if(type1_x.hash!=0 && type2_x.hash==0) {
+				//		if(type1_x.hash!=0 && type2_x.hash==0) {
 				x = s1.center_x;
 				y = s1.center_y;
 			}
@@ -618,10 +621,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				y = s2.center_y;
 			}
 
-//			if(type2_x.hash!=0 && type1_x.hash!=0)	{
-//				x = (s1.center_x + s2.center_x ) / 2f;
-//				y = (s1.center_y + s2.center_y ) / 2f;
-//			}
+			//			if(type2_x.hash!=0 && type1_x.hash!=0)	{
+			//				x = (s1.center_x + s2.center_x ) / 2f;
+			//				y = (s1.center_y + s2.center_y ) / 2f;
+			//			}
 
 			if(Math.abs(x - old_center_x)> scale/4) {
 				x = (int)(x *  100) / (100f);

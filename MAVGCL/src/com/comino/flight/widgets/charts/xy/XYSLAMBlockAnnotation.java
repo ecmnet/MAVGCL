@@ -79,13 +79,15 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		BlockPoint3D p; double ext;
+
+		for(int i=0;i<MAXPANES;i++)
+			pane.getChildren().get(i).setVisible(false);
+
 		if(slam==null)
 			return;
 
 		List<BlockPoint3D> blocks = slam.getBlocks();
 		if(blocks!=null) {
-			for(int i=0;i<20;i++)
-				pane.getChildren().get(i).setVisible(false);
 			for(int i=0; i<blocks.size() && i < MAXPANES;i++) {
 				p = blocks.get(i);
 				ext = xAxis.getDisplayPosition(p.res)-xAxis.getDisplayPosition(0);
@@ -96,6 +98,12 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 				pane.getChildren().get(i).setVisible(true);
 			}
 		}
+	}
+
+	public void invalidate() {
+		slam=null;
+		for(int i=0;i<MAXPANES;i++)
+			pane.getChildren().get(i).setVisible(false);
 	}
 
 

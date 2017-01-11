@@ -78,6 +78,7 @@ public class AnalysisDataModel {
 		data.clear();
 		tms = 0;
 		msg = null;
+		slam = null;
 		status = null;
 	}
 
