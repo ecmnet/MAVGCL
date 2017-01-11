@@ -49,6 +49,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Slam;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -309,6 +310,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 					tms = current.msg.tms+100;
 				} else {
 					current.msg = null; record.msg = null;
+				}
+
+				if(model.slam!=null ) {
+					current.slam = model.slam;
+					record.slam = model.slam;
 				}
 
 				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());

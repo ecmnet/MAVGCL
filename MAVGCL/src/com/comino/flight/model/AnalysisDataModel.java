@@ -38,12 +38,14 @@ import java.util.Map;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.LogMessage;
+import com.comino.msp.model.segment.Slam;
 import com.comino.msp.model.segment.Status;
 
 public class AnalysisDataModel {
 
 	public long       tms  = 0;
 	public LogMessage msg  = null;
+	public Slam      slam  = null;
 	public Status   status = null;
 
 	public float    dt_sec = 0;
@@ -67,6 +69,8 @@ public class AnalysisDataModel {
 			d.msg = msg.clone();
 		if(status!=null)
 			d.status = status.clone();
+		if(slam!=null)
+			d.slam = slam.clone();
 		return d;
 	}
 

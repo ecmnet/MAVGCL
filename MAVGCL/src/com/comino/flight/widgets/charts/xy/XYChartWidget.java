@@ -163,6 +163,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@FXML
 	private CheckBox annotation;
 
+	@FXML
+	private CheckBox slam;
+
 
 
 	private  XYChart.Series<Number,Number> series1;
@@ -205,6 +208,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private PositionAnnotation    endPosition1 = null;
 	private PositionAnnotation    endPosition2 = null;
 
+	private XYSLAMBlockAnnotation slamblocks = null;
+
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
@@ -245,6 +250,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.endPosition1 = new PositionAnnotation("P",Color.DARKSLATEBLUE);
 		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
+
+		this.slamblocks = new XYSLAMBlockAnnotation();
 
 		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -474,6 +481,19 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		annotation.selectedProperty().set(true);
 
+		slam.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		rotation.setDisable(slam.isSelected());
+
+		slam.selectedProperty().addListener((v, ov, nv) -> {
+			if(nv.booleanValue()) {
+				rotation_rad = 0;
+				rotation.setValue(0);
+			}
+			rotation.setDisable(nv.booleanValue());
+			updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,slam.isSelected());
+		});
+
 	}
 
 	private void setXResolution(int frame) {
@@ -531,6 +551,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			pool.invalidateAll();
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+
+			if(slam.isSelected())
+				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -583,7 +607,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			float x = 0; float y = 0;
 
-			if(type1_x.hash!=0 && type2_x.hash==0) {
+			if(type1_x.hash!=0) {
+	//		if(type1_x.hash!=0 && type2_x.hash==0) {
 				x = s1.center_x;
 				y = s1.center_y;
 			}
@@ -593,10 +618,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				y = s2.center_y;
 			}
 
-			if(type2_x.hash!=0 && type1_x.hash!=0)	{
-				x = (s1.center_x + s2.center_x ) / 2f;
-				y = (s1.center_y + s2.center_y ) / 2f;
-			}
+//			if(type2_x.hash!=0 && type1_x.hash!=0)	{
+//				x = (s1.center_x + s2.center_x ) / 2f;
+//				y = (s1.center_y + s2.center_y ) / 2f;
+//			}
 
 			if(Math.abs(x - old_center_x)> scale/4) {
 				x = (int)(x *  100) / (100f);
@@ -624,8 +649,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
-
 					m = mList.get(current_x_pt);
+
+					slamblocks.set(m.slam);
 
 					if(current_x_pt > current_x1_pt) {
 

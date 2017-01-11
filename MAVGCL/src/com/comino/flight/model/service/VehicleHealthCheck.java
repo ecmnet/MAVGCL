@@ -71,7 +71,7 @@ public class VehicleHealthCheck {
 
 	public void check(DataModel model) {
 		if(do_check && healthOk && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION
-				&& (System.currentTimeMillis()-check_start_ms) > WAIT_DURATION ) {
+				&& (System.currentTimeMillis()-check_start_ms) > WAIT_DURATION && model.sys.isStatus(Status.MSP_LANDED) ) {
 
 			reason = null;
 
