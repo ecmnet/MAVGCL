@@ -68,6 +68,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -350,9 +351,10 @@ public class MainApp extends Application  {
 
 	private void showAboutDialog() {
 		VBox box = new VBox();
-		ImageView splash = new ImageView(new Image(getClass().getResource("splash.png").toExternalForm()));
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));
 		box.getChildren().addAll(splash);
 		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("About MAVGAnalysis");
 		alert.getDialogPane().getChildren().add(box);
 		alert.getDialogPane().setPrefHeight(291); alert.getDialogPane().setPrefWidth(600);
 		Platform.runLater(() -> {
