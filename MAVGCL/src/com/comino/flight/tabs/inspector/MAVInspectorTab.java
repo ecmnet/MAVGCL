@@ -204,8 +204,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 			for(String v : msg)
 				if(v.contains("=")) {
+					try {
 					String[] p = v.split("=");
 					variables.put(p[0], new Dataset(p[0],p[1]));
+					} catch(Exception e) {
+						//System.err.println(e.getMessage()+": "+v);
+					}
 				}
 
 			Data data = new Data(_msg,variables);
@@ -226,7 +230,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					String[] p = v.split("=");
 					try {
 						data.getData().get(p[0]).setValue(p[1]);
-					} catch(Exception k) {  System.out.println(_msg); }
+					} catch(Exception k) {   }
 				}
 		}
 
@@ -265,7 +269,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public Dataset(String s, String n) {
 			str.set(s);
-			value.set(n);
+			if(n!=null)
+			  value.set(n);
 		}
 
 
