@@ -60,7 +60,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 		for(int i=0;i<MAXPANES;i++) {
 			Pane p = new Pane();
-			p.setStyle("-fx-background-color: rgba(90.0, 90.0, 90.0, 0.95); -fx-padding:0;");
+			p.setStyle("-fx-background-color: rgba(90.0, 90.0, 90.0, 0.5); -fx-padding:0;");
 			p.setVisible(false);
 			pane.getChildren().add(i,p);
 		}
