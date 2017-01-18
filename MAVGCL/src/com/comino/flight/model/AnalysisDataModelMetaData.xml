@@ -1303,6 +1303,28 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Loc.Pos.X error" uom="m" mask="#0.00" key="LPOSXERR">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="abs(LPOSX - SPLPOSX)" var0="LPOSX" var1="SPLPOSX"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Altitude</Group>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Loc.Pos.Y error" uom="m" mask="#0.00" key="LPOSYERR">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="abs(LPOSY - SPLPOSY)" var0="LPOSY" var1="SPLPOSY"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Altitude</Group>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Loc.Pos.XY error" uom="m" mask="#0.00" key="LPOSXYERR">
 		<VirtualSource>
 		    <Converter class="VirtualConverter"
