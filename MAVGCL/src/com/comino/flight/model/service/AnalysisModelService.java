@@ -221,6 +221,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public void clearModelList() {
 		mode = STOPPED;
+		current.clear();
 		modelList.clear();
 	}
 
