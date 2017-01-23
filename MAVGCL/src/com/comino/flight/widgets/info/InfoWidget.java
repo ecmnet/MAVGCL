@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -109,6 +110,14 @@ public class InfoWidget extends WidgetPane  {
 				}
 			}
 		});
+
+		StateProperties.getInstance().getRecordingProperty().addListener((v,ov,nv) -> {
+			if(nv.booleanValue())
+				Platform.runLater(() -> {
+					clear();
+				});
+		});
+
 	}
 
 	public void setup(IMAVController control) {
@@ -124,11 +133,11 @@ public class InfoWidget extends WidgetPane  {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-								while(!list.isEmpty()) {
-									if(listview.getItems().size()>MAX_ITEMS)
-										listview.getItems().remove(0);
-									listview.getItems().add(list.poll());
-								}
+							while(!list.isEmpty()) {
+								if(listview.getItems().size()>MAX_ITEMS)
+									listview.getItems().remove(0);
+								listview.getItems().add(list.poll());
+							}
 							listview.scrollTo(listview.getItems().size()-1);
 						}
 					});
