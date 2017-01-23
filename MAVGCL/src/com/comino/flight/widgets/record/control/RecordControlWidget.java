@@ -42,6 +42,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
+import com.comino.flight.widgets.info.InfoWidget;
 import com.comino.flight.widgets.status.StatusWidget;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -106,6 +107,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	private AnalysisModelService modelService;
 
 	private ChartControlWidget charts;
+	private InfoWidget info;
 
 
 	public RecordControlWidget() {
@@ -149,6 +151,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			FileHandler.getInstance().clear();
 			StateProperties.getInstance().getLogLoadedProperty().set(false);
 			charts.refreshCharts();
+			info.clear();
 		});
 
 
@@ -233,8 +236,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	}
 
 
-	public void setup(IMAVController control, ChartControlWidget charts, StatusWidget statuswidget) {
+	public void setup(IMAVController control, ChartControlWidget charts, InfoWidget info, StatusWidget statuswidget) {
 		this.charts = charts;
+		this.info = info;
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance();
 		this.control.addStatusChangeListener(this);
