@@ -257,10 +257,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			switch(triggerStartMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
-			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE)
-					&& !newStat.isStatus(Status.MSP_LANDED),0); break;
-			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)
-					&& !newStat.isStatus(Status.MSP_LANDED),0); break;
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) ||
+					newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
+			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
 			}
 		} else {
 			switch(triggerStopMode) {
@@ -268,12 +267,10 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
 			break;
-			case TRIG_ALTHOLD:		recording((newStat.isStatus(Status.MSP_MODE_ALTITUDE)
-					| newStat.isStatus(Status.MSP_MODE_POSITION))
-					&& !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) ||
+					         newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
-			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION)
-					&& !newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
 			}
 		}
