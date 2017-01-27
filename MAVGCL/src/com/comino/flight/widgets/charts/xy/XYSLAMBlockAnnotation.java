@@ -91,8 +91,8 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 			for(int i=0; i<blocks.size() && i < MAXPANES;i++) {
 				p = blocks.get(i);
 				ext = xAxis.getDisplayPosition(p.res)-xAxis.getDisplayPosition(0);
-				pane.getChildren().get(i).setLayoutX(xAxis.getDisplayPosition(p.x));
-				pane.getChildren().get(i).setLayoutY(yAxis.getDisplayPosition(p.y));
+				pane.getChildren().get(i).setLayoutX(xAxis.getDisplayPosition(p.y-p.res/2f));
+				pane.getChildren().get(i).setLayoutY(yAxis.getDisplayPosition(p.x+p.res/2f));
 				((Pane)pane.getChildren().get(i)).setPrefSize(xAxis.getDisplayPosition(p.res)-xAxis.getDisplayPosition(0),
 						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(p.res));;
 				pane.getChildren().get(i).setVisible(true);
