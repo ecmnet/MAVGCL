@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2016 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -120,7 +120,7 @@ public class CommanderWidget extends WidgetPane  {
 		arm_command.disableProperty().bind(state.getLandedProperty().not()
 				.or(state.getRCProperty().not()
 				.and(state.getSimulationProperty().not())));
-		
+
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation()) {

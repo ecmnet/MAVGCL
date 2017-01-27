@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2016 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,7 +56,7 @@ public class XYDataPool {
 		if( unlocked.size() > 0 )
 		{
 			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
-			o = e.nextElement(); 
+			o = e.nextElement();
 			o.setXValue(x);
 			o.setYValue(y);
 			unlocked.remove(o);

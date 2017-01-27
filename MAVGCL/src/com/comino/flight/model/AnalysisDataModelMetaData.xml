@@ -1309,7 +1309,16 @@
 		</VirtualSource>
 		<Validity min="0" max="0.3"/>
 		<Groups>
-			<Group>Altitude</Group>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Heading error" uom="m" mask="#0.00" key="HEADERR">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="abs(HEAD - VISIONH)" var0="HEAD" var1="VISIONH"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
 			<Group>Virtual keyfigures</Group>
 		</Groups>
 	</KeyFigure>
@@ -1320,7 +1329,6 @@
 		</VirtualSource>
 		<Validity min="0" max="0.3"/>
 		<Groups>
-			<Group>Altitude</Group>
 			<Group>Virtual keyfigures</Group>
 		</Groups>
 	</KeyFigure>
