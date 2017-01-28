@@ -160,8 +160,7 @@ public class InfoWidget extends WidgetPane  {
 	}
 
 	public void clear() {
-		list.clear();
-		listview.getItems().clear();
+
 	}
 
 }

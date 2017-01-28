@@ -50,6 +50,7 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {
@@ -101,6 +102,7 @@ public class CameraWidget extends WidgetPane  {
 		});
 
 		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+			image.setImage(null);
 			if(fadeProperty().getValue() && !source.isRunning()) {
 				if(nv.booleanValue()) {
 					connect(); source.start();
