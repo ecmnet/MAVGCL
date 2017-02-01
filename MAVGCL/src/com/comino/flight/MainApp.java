@@ -230,17 +230,6 @@ public class MainApp extends Application  {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			//			ScenicView.show(scene);
 
-			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent event) {
-					if(event.getCode()==KeyCode.ESCAPE) {
-						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
-									MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
-					}
-				}
-			});
-
 			Preferences userPrefs = MAVPreferences.getInstance();
 
 			if(userPrefs.getDouble("stage.width", 100)>0 && userPrefs.getDouble("stage.height", 100) > 0 ) {
@@ -252,6 +241,15 @@ public class MainApp extends Application  {
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
+
+			scene.setOnKeyPressed((event) -> {
+					if(event.getCode()==KeyCode.ESCAPE) {
+						event.consume();
+						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
+							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+									MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+					}
+			});
 
 		} catch (IOException e) {
 			e.printStackTrace();

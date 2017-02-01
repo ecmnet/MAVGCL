@@ -63,14 +63,9 @@ public class InfoWidget extends WidgetPane  {
 	private ListView<LogMessage> listview;
 
 
-	private ConcurrentLinkedQueue<LogMessage> list = null;
-
-
 	public InfoWidget() {
 		super(300, true);
 		FXMLLoadHelper.load(this, "InfoWidget.fxml");
-
-		list = new ConcurrentLinkedQueue<LogMessage>();
 	}
 
 	@FXML
@@ -80,11 +75,9 @@ public class InfoWidget extends WidgetPane  {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
-				super.updateItem(m, empty);
 				if(!empty) {
 					setPrefWidth(130);
 					setWrapText(true);
-					setText(m.msg);
 					switch(m.severity) {
 					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
 						setStyle("-fx-text-fill:lightblue;");
@@ -107,17 +100,10 @@ public class InfoWidget extends WidgetPane  {
 					default:
 						setStyle("-fx-text-fill:darkcyan;");
 					}
+					setText(m.msg);
 				}
 			}
 		});
-
-		StateProperties.getInstance().getRecordingProperty().addListener((v,ov,nv) -> {
-			if(nv.booleanValue())
-				Platform.runLater(() -> {
-					clear();
-				});
-		});
-
 	}
 
 	public void setup(IMAVController control) {
@@ -129,15 +115,14 @@ public class InfoWidget extends WidgetPane  {
 			public void messageReceived(LogMessage message) {
 
 				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG ) {
-					list.add(message);
+					final LogMessage m = message;
+
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
-							while(!list.isEmpty()) {
-								if(listview.getItems().size()>MAX_ITEMS)
-									listview.getItems().remove(0);
-								listview.getItems().add(list.poll());
-							}
+							listview.getItems().add(m);
+							if(listview.getItems().size()>MAX_ITEMS)
+								listview.getItems().remove(0);
 							listview.scrollTo(listview.getItems().size()-1);
 						}
 					});

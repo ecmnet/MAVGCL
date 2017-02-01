@@ -143,7 +143,7 @@ public class VehicleHealthCheck {
 			if(healthOk) healthOk = Math.abs(max_pitch - min_pitch) < 0.1f;
 
 			if(!healthOk)
-				checkFailed("IMU: Pitch/Roll check failed");
+				checkFailed("IMU: Pitch/Roll check failed: ("+(max_roll - min_roll)+","+(max_pitch - min_pitch)+")");
 
 			// TODO:...add more checks here
 
