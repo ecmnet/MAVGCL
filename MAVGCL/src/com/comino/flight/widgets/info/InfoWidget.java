@@ -75,6 +75,7 @@ public class InfoWidget extends WidgetPane  {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
+				super.updateItem(m,empty);
 				if(!empty) {
 					setPrefWidth(130);
 					setWrapText(true);
@@ -123,7 +124,9 @@ public class InfoWidget extends WidgetPane  {
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
-							listview.scrollTo(listview.getItems().size()-1);
+							Platform.runLater(() -> {
+								listview.scrollTo(listview.getItems().size()-1);
+							});
 						}
 					});
 				}
