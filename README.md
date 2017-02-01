@@ -12,10 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 24/01/2017
+**Development Status:** Last updated 01/02/2017
 
 - Minor fixes and enhancements
-- MicroSLAM display overlay
 
 V0.6xx notes:
 
