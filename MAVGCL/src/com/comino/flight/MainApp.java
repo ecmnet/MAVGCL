@@ -74,6 +74,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -226,6 +228,16 @@ public class MainApp extends Application  {
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			//			ScenicView.show(scene);
+
+			scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent event) {
+					if(event.getCode()==KeyCode.ESCAPE) {
+						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
+							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
+					}
+				}
+			});
 
 			Preferences userPrefs = MAVPreferences.getInstance();
 
