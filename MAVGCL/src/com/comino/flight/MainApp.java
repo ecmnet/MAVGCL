@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_autopilot_version;
 
 import com.comino.flight.control.SITLController;
@@ -234,7 +235,8 @@ public class MainApp extends Application  {
 				public void handle(KeyEvent event) {
 					if(event.getCode()==KeyCode.ESCAPE) {
 						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors");
+							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+									MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
 					}
 				}
 			});
