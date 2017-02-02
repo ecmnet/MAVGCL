@@ -59,6 +59,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
@@ -77,6 +78,8 @@ import javafx.util.StringConverter;
 
 public class TuningWidget extends WidgetPane  {
 
+	@FXML
+	private Button reload;
 
 	@FXML
 	private GridPane grid;
@@ -145,6 +148,10 @@ public class TuningWidget extends WidgetPane  {
 				String s = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "None");
 				groups.getSelectionModel().select(s);
 			}
+		});
+
+		reload.setOnAction((ActionEvent event)-> {
+			params.refreshParameterList(false);
 		});
 	}
 
@@ -259,6 +266,7 @@ public class TuningWidget extends WidgetPane  {
 
 			this.editor.setPrefWidth(85);
 			this.editor.setPrefHeight(19);
+	//		this.editor.setTooltip(new Tooltip(att.description_long));
 
 			if(editable)
 				setContextMenu(editor);

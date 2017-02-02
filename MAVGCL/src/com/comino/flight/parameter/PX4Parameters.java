@@ -93,7 +93,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(newValue && control.isConnected()) {
-				  refreshParameterList();
+				  refreshParameterList(true);
 				}
 			}
 		});
@@ -103,20 +103,20 @@ public class PX4Parameters implements IMAVLinkListener {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue && control.isConnected())
-				  refreshParameterList();
+				  refreshParameterList(true);
 			}
 		});
 
 	}
 
-	public void refreshParameterList() {
+	public void refreshParameterList(boolean loaded) {
 		property.setValue(null);
 		parameterList.clear();
 		msg_param_request_list msg = new msg_param_request_list(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
-		stateProperties.getParamLoadedProperty().set(false);
+		stateProperties.getParamLoadedProperty().set(!loaded);
 		MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 			    MAV_SEVERITY.MAV_SEVERITY_INFO);
 	}
