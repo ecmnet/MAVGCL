@@ -35,6 +35,8 @@ package com.comino.flight.widgets.tuning;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -55,10 +57,12 @@ import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
@@ -96,6 +100,8 @@ public class TuningWidget extends WidgetPane  {
 	private ScheduledFuture<?> timeout;
 	private int timeout_count=0;
 
+	private List<ParamItem> items = new ArrayList<ParamItem>();
+
 	public TuningWidget() {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TuningWidget.fxml"));
@@ -109,6 +115,12 @@ public class TuningWidget extends WidgetPane  {
 
 
 		params = PX4Parameters.getInstance();
+
+		params.addRefreshListener(() -> {
+			for(ParamItem i : items) {
+				i.setValueOf(i.editor, i.att.value);
+			}
+		});
 
 		groups.getItems().add("None");
 		groups.getSelectionModel().clearAndSelect(0);
@@ -180,6 +192,7 @@ public class TuningWidget extends WidgetPane  {
 						else
 							name.setTooltip(new Tooltip(p.description));
 						ParamItem item = createParamItem(p, editable);
+						items.add(item);
 						grid.addRow(i++, name,item.editor,unit);
 					}
 				}
@@ -187,6 +200,7 @@ public class TuningWidget extends WidgetPane  {
 		});
 
 		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+
 	}
 
 
@@ -321,7 +335,7 @@ public class TuningWidget extends WidgetPane  {
 
 
 		@SuppressWarnings("unchecked")
-		private float getValueOf(Control p) throws NumberFormatException {
+		public float getValueOf(Control p) throws NumberFormatException {
 			if(p instanceof TextField) {
 				((TextField)p).commitValue();
 				return Float.parseFloat(((TextField)p).getText());
@@ -335,7 +349,7 @@ public class TuningWidget extends WidgetPane  {
 		}
 
 		@SuppressWarnings("unchecked")
-		private void setValueOf(Control p, float v) {
+		public void setValueOf(Control p, float v) {
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 					((TextField)p).setText(String.valueOf((int)v));

@@ -69,6 +69,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private StateProperties stateProperties =  StateProperties.getInstance();
 
+	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
 
 	public static PX4Parameters getInstance(IMAVController control) {
@@ -149,6 +150,8 @@ public class PX4Parameters implements IMAVLinkListener {
 
 			if(msg.param_index >= msg.param_count-1) {
 				stateProperties.getParamLoadedProperty().set(true);
+				for(IPX4ParameterRefresh l : refreshListeners)
+					l.refresh();
 			}
 		}
 	}
@@ -170,6 +173,12 @@ public class PX4Parameters implements IMAVLinkListener {
 			property.setValue(attributes);
 		});
 		stateProperties.getParamLoadedProperty().set(true);
+		for(IPX4ParameterRefresh l : refreshListeners)
+			l.refresh();
+	}
+
+	public void addRefreshListener(IPX4ParameterRefresh listener) {
+		refreshListeners.add(listener);
 	}
 
 
