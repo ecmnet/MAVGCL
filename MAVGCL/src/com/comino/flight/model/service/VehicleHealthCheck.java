@@ -33,6 +33,7 @@
 
 package com.comino.flight.model.service;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -103,14 +104,16 @@ public class VehicleHealthCheck {
 
 
 	public void check(DataModel model) {
-		if(do_check && healthOk && (System.currentTimeMillis()-check_start_ms) < HEALTH_CHECK_DURATION
+		long dt_ms = System.currentTimeMillis()-check_start_ms;
+
+		if(do_check && healthOk && dt_ms < HEALTH_CHECK_DURATION
 				&& (System.currentTimeMillis()-check_start_ms) > WAIT_DURATION && model.sys.isStatus(Status.MSP_LANDED) ) {
 
 			reason = null;
 
 			// Is power > 11V
 
-			if(model.battery.a0 < 11.0f) {
+			if(model.battery.a0 < 11.0f && dt_ms > 500) {
 				checkFailed("Battery too low");
 			}
 
