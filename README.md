@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 02/02/2017
+**Development Status:** Last updated 06/02/2017
 
-- Parameter reload option
+- ULOG parsing fixed
 
 V0.6xx notes:
 
