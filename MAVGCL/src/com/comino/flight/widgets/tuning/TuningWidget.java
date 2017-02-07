@@ -55,6 +55,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -350,6 +351,7 @@ public class TuningWidget extends WidgetPane  {
 
 		@SuppressWarnings("unchecked")
 		public void setValueOf(Control p, float v) {
+			Platform.runLater(() -> {
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 					((TextField)p).setText(String.valueOf((int)v));
@@ -367,6 +369,7 @@ public class TuningWidget extends WidgetPane  {
 			}
 
 			checkDefaultOf(p,v);
+			});
 		}
 
 		@SuppressWarnings("unchecked")
