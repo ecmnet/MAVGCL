@@ -45,6 +45,7 @@ import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -152,6 +153,11 @@ public class PX4Parameters implements IMAVLinkListener {
 				stateProperties.getParamLoadedProperty().set(true);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
+
+				if(get("LND_FLIGHT_T_LO")!=null) {
+					MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", get("LND_FLIGHT_T_LO").value/60000000f),
+							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
 			}
 		}
 	}
