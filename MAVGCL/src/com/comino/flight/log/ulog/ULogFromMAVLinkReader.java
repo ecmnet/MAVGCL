@@ -91,7 +91,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
-				if((System.currentTimeMillis()-tms)>3000) {
+				if((System.currentTimeMillis()-tms)>4000) {
 					MSPLogger.getInstance().writeLocalMsg("Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
