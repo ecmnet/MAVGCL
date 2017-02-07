@@ -171,7 +171,7 @@ public class VehicleHealthCheck {
 			return;
 
 		// Check if kill switch is disabled
-		if(parameters.get("CBRK_IO_SAFETY").value != 0) {
+		if(parameters.get("CBRK_IO_SAFETY")!=null && parameters.get("CBRK_IO_SAFETY").value != 0) {
 			checkFailed("IO SafetyBreaker set");
 		}
 
