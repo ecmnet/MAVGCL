@@ -204,6 +204,7 @@ public class MainApp extends Application  {
 		System.out.println("closing...");
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.close();
+		try { Thread.sleep(200); } catch(Exception e) { }
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
 		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());
 		MAVPreferences.getInstance().putDouble("stage.width", primaryStage.getWidth());
