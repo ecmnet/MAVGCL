@@ -19,7 +19,6 @@ public class UBXRTCM3Base {
 	public static UBXRTCM3Base getInstance(IMAVController control, String port) {
 		if(instance == null) {
 			instance = new UBXRTCM3Base(control, port);
-			System.out.println("States initialized");
 		}
 		return instance;
 	}
