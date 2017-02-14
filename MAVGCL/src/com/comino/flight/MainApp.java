@@ -36,12 +36,14 @@ package com.comino.flight;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Vector;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_autopilot_version;
 
+import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
@@ -57,6 +59,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
+import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;
@@ -167,8 +170,13 @@ public class MainApp extends Application  {
 					File f = new File("/dev/tty.usbmodem1");
 					if(f.exists())
 						control = new MAVSerialController();
-					else
+					else {
 						control = new MAVUdpController(peerAddress,port,14550, false);
+
+						Vector<String> ubx_ports = UBXSerialConnection.getPortList(false);
+						if(ubx_ports.size()>0)
+							UBXRTCM3Base.getInstance(control, ubx_ports.firstElement());
+					}
 				}
 
 			StateProperties.getInstance(control);
