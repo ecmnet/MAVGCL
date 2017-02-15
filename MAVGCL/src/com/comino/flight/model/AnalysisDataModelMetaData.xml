@@ -746,6 +746,13 @@
 		<Validity min="6" max="30"/>
 	</KeyFigure>
 
+	<KeyFigure desc="GPS.Alt." uom="°" mask="#0" key="GPSALT">
+	    <MSPSource class="gps" field="altitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="GPS.HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
 		<MSPSource class="gps" field="hdop"></MSPSource>
 		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
@@ -759,6 +766,38 @@
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Base.Lat." uom="°" mask="#0.0000000" key="BASELAT">
+		<MSPSource class="base" field="latitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Base.Lon." uom="°" mask="#0.0000000" key="BASELON">
+		<MSPSource class="base" field="longitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Base.Alt." uom="°" mask="#0" key="BASEALT">
+	    <MSPSource class="base" field="altitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Base.No.Sat." uom="" mask="#0" key="BASENO">
+		<MSPSource class="gps" field="numsat"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+		</Groups>
+		<Validity min="6" max="30"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Abs.Pressure" uom="hPa" mask="#0" key="ABSPRES">
