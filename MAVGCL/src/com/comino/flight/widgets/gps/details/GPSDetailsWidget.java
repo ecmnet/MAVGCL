@@ -67,7 +67,8 @@ public class GPSDetailsWidget extends WidgetPane  {
 			"RGPSLAT",
 			"RGPSLON",
 			"RGPSNO",
-			"RGPSHDOP"
+			"BASELAT",
+			"BASELON"
 	};
 
 	 @FXML

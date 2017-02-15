@@ -81,6 +81,7 @@ public class DetailsWidget extends WidgetPane  {
 			"ALTSL",
 			"ALTTR",
 			"ALTGL",
+			"RGPSALT",
 			null,
 			"FLOWQL",
 			"LIDAR",

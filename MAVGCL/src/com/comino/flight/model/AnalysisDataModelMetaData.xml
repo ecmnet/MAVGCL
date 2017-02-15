@@ -746,7 +746,7 @@
 		<Validity min="6" max="30"/>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Alt." uom="°" mask="#0" key="GPSALT">
+	<KeyFigure desc="GPS.Alt." uom="m" mask="#0" key="RGPSALT">
 	    <MSPSource class="gps" field="altitude"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
