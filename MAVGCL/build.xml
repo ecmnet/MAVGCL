@@ -55,7 +55,7 @@
 			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar
+				<attribute name="Class-Path" value="mavcomm.jar jssc.jar jna-4.1.0.jar poly2tri-core.jar mavbase.jar
 					                                JCSG.jar medusa-4.7.jar gson-2.4.jar jfxchartext-1.1.jar
 					                                jinput.jar MAVGPreloader.jar exp4j-0.4.7.jar core-0.29.jar" />
 			</manifest>
@@ -84,6 +84,7 @@
 		<copy todir="dist">
 			<fileset dir="lib/">
 				<include name="mavcomm.jar" />
+				<include name="mavbase.jar" />
 				<include name="jssc.jar" />
 				<include name="jna-4.1.0.jar" />
 				<include name="JCSG.jar" />
