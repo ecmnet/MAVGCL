@@ -793,7 +793,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Base.No.Sat." uom="" mask="#0" key="BASENO">
-		<MSPSource class="gps" field="numsat"></MSPSource>
+		<MSPSource class="base" field="numsat"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>

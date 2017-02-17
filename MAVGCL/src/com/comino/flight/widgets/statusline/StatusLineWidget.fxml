@@ -16,6 +16,7 @@
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="DARKCYAN" />
+				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="RC" color="DARKCYAN" />
 				<ProgressBar fx:id="progress" prefHeight="16.0" prefWidth="130.0" />
 			</children>
 		</HBox>

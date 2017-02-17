@@ -173,7 +173,7 @@ public class MainApp extends Application  {
 					else {
 						control = new MAVUdpController(peerAddress,port,14550, false);
 
-						Vector<String> ubx_ports = UBXSerialConnection.getPortList(false);
+						Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
 						if(ubx_ports.size()>0)
 							UBXRTCM3Base.getInstance(control, ubx_ports.firstElement());
 					}

@@ -45,6 +45,7 @@ import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.animation.AnimationTimer;
@@ -82,6 +83,9 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	private Badge rc;
 
 	@FXML
+	private Badge gps;
+
+	@FXML
 	private ProgressBar progress;
 
 	private IMAVController control;
@@ -96,6 +100,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 	private AnimationTimer task;
 
+	private DataModel model;
+
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -108,10 +114,35 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		}
 
 		task = new AnimationTimer() {
+
 			List<AnalysisDataModel> list = null;
 
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>500) {
+
+					switch(model.gps.fixtype) {
+
+					case 2:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS");
+					case 3:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS Fix");
+						break;
+					case 4:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("DGPS");
+						break;
+					case 5:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("DGPS Fix");
+						break;
+
+					default:
+						gps.setText("-");
+						gps.setMode(Badge.MODE_OFF);
+					}
+
 					filename = FileHandler.getInstance().getName();
 
 					if(control.isConnected() && !state.getLogLoadedProperty().get()) {
@@ -178,6 +209,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
 		chartControlWidget.addChart(this);
 		this.control = control;
+		this.model = control.getCurrentModel();
 		this.control.addStatusChangeListener(this);
 		this.state = StateProperties.getInstance();
 

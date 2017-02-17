@@ -61,14 +61,13 @@ public class GPSDetailsWidget extends WidgetPane  {
 	private static String[] key_figures = {
 			"GLOBLAT",
 			"GLOBLON",
-			"HOMLAT",
-			"HOMLON",
 			"ALTSL",
 			"RGPSLAT",
 			"RGPSLON",
 			"RGPSNO",
 			"BASELAT",
-			"BASELON"
+			"BASELON",
+			"BASENO",
 	};
 
 	 @FXML
