@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 06/02/2017
+**Development Status:** Last updated 17/02/2017
 
-- ULOG parsing fixed
+- UBX RTK base added for M8P devices (currently OS X only)
 
 V0.6xx notes:
 
