@@ -75,7 +75,6 @@ public class DetailsWidget extends WidgetPane  {
 			null,
 			"HEAD",
 			"RGPSNO",
-			"BASENO",
 			"GPHACCUR",
 			"GPVACCUR",
 			null,
