@@ -139,7 +139,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 						break;
 
 					default:
-						gps.setText("-");
+						gps.setText("No GPS");
 						gps.setMode(Badge.MODE_OFF);
 					}
 
