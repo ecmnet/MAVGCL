@@ -12,9 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 17/02/2017
+**Development Status:** Last updated 19/02/2017
 
-- UBX RTK base added for M8P devices (currently OS X only)
+- UBX RTK base added for M8P devices (currently OS X only, without UBX configuration)
 
 V0.6xx notes:
 
