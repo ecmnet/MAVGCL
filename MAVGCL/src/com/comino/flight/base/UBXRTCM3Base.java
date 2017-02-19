@@ -80,6 +80,13 @@ public class UBXRTCM3Base {
 			}
 
 			@Override
+			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float mean_acc) {
+				System.out.println("SVIN:"+is_svin+" Active:"+is_valid+" Accuracy: "+mean_acc);
+
+			}
+
+
+			@Override
 			public void getPosition(double lat, double lon, double altitude, int fix, int sats) {
                  GPS base = control.getCurrentModel().base;
                  base.latitude   = (float)lat;
