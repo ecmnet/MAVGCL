@@ -41,17 +41,27 @@ import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.msp.model.segment.GPS;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 public class UBXRTCM3Base {
 
 	private static UBXRTCM3Base instance = null;
 	private final UBXSerialConnection ubx;
 
+	private BooleanProperty svin  = new SimpleBooleanProperty();
+	private BooleanProperty valid = new SimpleBooleanProperty();
 
+	private float mean_acc = 0;
 
 	public static UBXRTCM3Base getInstance(IMAVController control, String port) {
 		if(instance == null) {
 			instance = new UBXRTCM3Base(control, port);
 		}
+		return instance;
+	}
+
+	public static UBXRTCM3Base getInstance() {
 		return instance;
 	}
 
@@ -80,9 +90,9 @@ public class UBXRTCM3Base {
 			}
 
 			@Override
-			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float mean_acc) {
-				System.out.println("SVIN:"+is_svin+" Active:"+is_valid+" Accuracy: "+mean_acc);
-
+			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float meanacc) {
+				svin.set(is_svin); valid.set(is_valid);
+				mean_acc = meanacc;
 			}
 
 
@@ -126,7 +136,18 @@ public class UBXRTCM3Base {
 			}
 
 		});
+	}
 
+	public BooleanProperty getSVINStatus() {
+		return svin;
+	}
+
+	public BooleanProperty getValidStatus() {
+		return valid;
+	}
+
+	public float getBaseAccuracy() {
+		return mean_acc;
 	}
 
 }
