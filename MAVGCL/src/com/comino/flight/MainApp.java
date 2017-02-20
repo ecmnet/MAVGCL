@@ -138,6 +138,8 @@ public class MainApp extends Application  {
 
 			Map<String,String> args = getParameters().getNamed();
 
+			Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
+
 
 			Preferences userPrefs = MAVPreferences.getInstance();
 			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
@@ -173,17 +175,17 @@ public class MainApp extends Application  {
 					else {
 						control = new MAVUdpController(peerAddress,port,14550, false);
 
-						Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
-						if(ubx_ports.size()>0)
-							UBXRTCM3Base.getInstance(control, ubx_ports.firstElement());
 					}
 				}
+
+			MSPLogger.getInstance(control, System.getProperty("user.home")+"/MSPLog");
 
 			StateProperties.getInstance(control);
 
 			AnalysisModelService.getInstance(control);
 
-			MSPLogger.getInstance(control, System.getProperty("user.home")+"/MSPLog");
+			if(ubx_ports.size()>0)
+				UBXRTCM3Base.getInstance(control, ubx_ports.firstElement());
 
 			PX4Parameters.getInstance(control);
 
