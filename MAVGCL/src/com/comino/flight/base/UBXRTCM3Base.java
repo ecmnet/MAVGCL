@@ -85,7 +85,7 @@ public class UBXRTCM3Base {
 
 		valid.addListener((p,o,n) -> {
 			if(n.booleanValue())
-				MSPLogger.getInstance().writeLocalMsg("[mgc] SVIN finalized. RTCM3 active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 stream active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		});
 
 		ubx.addStreamEventListener( new StreamEventListener() {
@@ -94,6 +94,7 @@ public class UBXRTCM3Base {
 			public void streamClosed() {
 				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				try {
+					valid.set(false); svin.set(false);
 					Thread.sleep(10000);
 					ubx.init();
 				} catch (Exception e) {
@@ -103,7 +104,7 @@ public class UBXRTCM3Base {
 
 			@Override
 			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float meanacc) {
-				svin.set(is_svin); valid.set(is_valid);
+				svin.set(is_svin);
 				mean_acc = meanacc;
 			}
 
@@ -115,7 +116,7 @@ public class UBXRTCM3Base {
                  base.longitude  = (float)lon;
                  base.altitude   = (short)altitude;
                  base.numsat     = sats;
-                 System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
+         //        System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
 			}
 
 			@Override
@@ -123,6 +124,8 @@ public class UBXRTCM3Base {
 
 				if(!control.isConnected())
 					return;
+
+				valid.set(true);
 
 				msg_gps_rtcm_data msg = new msg_gps_rtcm_data(2,1);
 				if(len < msg.data.length) {
