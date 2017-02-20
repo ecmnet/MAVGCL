@@ -92,7 +92,7 @@ public class UBXRTCM3Base {
 
 			@Override
 			public void streamClosed() {
-				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 stream lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				try {
 					Thread.sleep(10000);
 					ubx.init();
@@ -115,7 +115,7 @@ public class UBXRTCM3Base {
                  base.longitude  = (float)lon;
                  base.altitude   = (short)altitude;
                  base.numsat     = sats;
-       //          System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
+                 System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
 			}
 
 			@Override

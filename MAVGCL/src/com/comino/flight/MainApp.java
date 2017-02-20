@@ -183,7 +183,7 @@ public class MainApp extends Application  {
 
 			AnalysisModelService.getInstance(control);
 
-			MSPLogger.getInstance(control);
+			MSPLogger.getInstance(control, System.getProperty("user.home")+"/MSPLog");
 
 			PX4Parameters.getInstance(control);
 
