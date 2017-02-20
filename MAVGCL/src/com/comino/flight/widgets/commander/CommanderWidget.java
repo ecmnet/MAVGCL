@@ -147,16 +147,17 @@ public class CommanderWidget extends WidgetPane  {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
+
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
-			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY))
+			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY) && model.sys.isStatus(Status.MSP_GPS_AVAILABILITY))
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 						model.hud.ag+1);
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position not available",
+				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position or GPS not available",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 			}
 
