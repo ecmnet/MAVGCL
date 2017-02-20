@@ -34,11 +34,13 @@
 package com.comino.flight.base;
 
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.GPS;
 
 import javafx.beans.property.BooleanProperty;
@@ -76,11 +78,21 @@ public class UBXRTCM3Base {
 			return;
 		}
 
+		svin.addListener((p,o,n) -> {
+			if(n.booleanValue())
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+		});
+
+		valid.addListener((p,o,n) -> {
+			if(n.booleanValue())
+				MSPLogger.getInstance().writeLocalMsg("[mgc] SVIN finalized. RTCM3 active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+		});
+
 		ubx.addStreamEventListener( new StreamEventListener() {
 
 			@Override
 			public void streamClosed() {
-				System.out.println("RTCM3: lost");
+				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 stream lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				try {
 					Thread.sleep(10000);
 					ubx.init();
