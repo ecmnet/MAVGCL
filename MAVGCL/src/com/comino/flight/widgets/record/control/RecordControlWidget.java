@@ -137,8 +137,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				recording(false,0);
 		});
 
-		recording.disableProperty().bind(state.getConnectedProperty().not());
-
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
 		});
