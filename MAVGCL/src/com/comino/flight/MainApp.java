@@ -178,7 +178,10 @@ public class MainApp extends Application  {
 					}
 				}
 
-			MSPLogger.getInstance(control, System.getProperty("user.home")+"/MSPLog");
+			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/MAVGCL");
+
+
+			MSPLogger.getInstance(control);
 
 			StateProperties.getInstance(control);
 
