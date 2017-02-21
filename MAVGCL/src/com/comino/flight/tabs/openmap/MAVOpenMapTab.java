@@ -93,7 +93,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON" },
-				{ "RGPSLAT",  "RGPSLON" }
+		{   "RGPSLAT",  "RGPSLON" }
 		};
 
 	@FXML
@@ -121,6 +121,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private PositionLayer 		positionLayer;
 	private PositionLayer 		homeLayer;
+	private PositionLayer 		baseLayer;
 	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
@@ -180,6 +181,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 							} else
 								homeLayer.setVisible(false);
 
+							if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
+								baseLayer.setVisible(true);
+								baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
+							} else
+								baseLayer.setVisible(false);
+
 							if(model.getValue("RGPSHDOP") > 2.5)
 								positionLayer.getIcon().setImage(plane_invalid);
 							else
@@ -235,6 +242,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(homeLayer);
+
+		baseLayer = new PositionLayer(new Image(getClass().getResource("antenna.png").toString()));
+		map.getLayers().add(baseLayer);
 
 		plane_valid   = new Image(getClass().getResource("airplane_g.png").toString());
 		plane_lpe     = new Image(getClass().getResource("airplane_b.png").toString());

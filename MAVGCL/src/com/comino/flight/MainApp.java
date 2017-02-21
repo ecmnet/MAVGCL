@@ -174,11 +174,11 @@ public class MainApp extends Application  {
 						control = new MAVSerialController();
 					else {
 						control = new MAVUdpController(peerAddress,port,14550, false);
-
 					}
 				}
 
-			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/MAVGCL");
+			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
+					   System.getProperty("user.home"))+"/MAVGCL");
 
 
 			MSPLogger.getInstance(control);
