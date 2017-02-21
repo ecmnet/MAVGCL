@@ -47,6 +47,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Stop;
 
 public class BatteryWidget extends WidgetPane  {
 
@@ -108,8 +109,6 @@ public class BatteryWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
-
-		//		fadeProperty().bind(state.getConnectedProperty());
 
 		setupGauge(g_voltage,8,13,"V",Color.DARKCYAN);
 		g_voltage.setDecimals(1);
