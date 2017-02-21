@@ -109,7 +109,7 @@ public class UBXRTCM3Base {
 
 				// Log accuracy every 30 secs
 				if((time_svin % 30) == 0)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc, MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 
 			}
 
