@@ -38,7 +38,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.LockSupport;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -48,8 +47,7 @@ import com.comino.jfx.extensions.DashLabel;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -73,7 +71,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 	 @FXML
 	 private GridPane gps_grid;
 
-	private Task<Long> task;
+	private AnimationTimer   task;
 	private AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
 
 	private List<KeyFigure> figures = null;
@@ -99,27 +97,16 @@ public class GPSDetailsWidget extends WidgetPane  {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Task<Long>() {
+		task = new AnimationTimer() {
+			private long tms;
 
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					LockSupport.parkNanos(1000000000L);
-					if(isDisabled()) {
-						continue;
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>333) {
+					 tms = System.currentTimeMillis();
+					for(KeyFigure figure : figures) {
+						figure.setValue(model);
 					}
-
-					if (isCancelled()) {
-						break;
-					}
-					Platform.runLater(() -> {
-						AnalysisDataModel m = model;
-						for(KeyFigure figure : figures) {
-							figure.setValue(m);
-						}
-					});
 				}
-				return model.tms;
 			}
 		};
 	}
@@ -131,11 +118,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 			figures.add(new KeyFigure(gps_grid,k,i));
 			i++;
 		}
-
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
 	}
 
 	private class KeyFigure {

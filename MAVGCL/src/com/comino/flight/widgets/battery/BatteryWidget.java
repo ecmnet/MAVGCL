@@ -92,7 +92,6 @@ public class BatteryWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
-
 		setupGauge(g_voltage,"V",Color.DARKCYAN);
 		g_voltage.setDecimals(1);
 		setupGauge(g_capacity,"%",Color.DARKCYAN);

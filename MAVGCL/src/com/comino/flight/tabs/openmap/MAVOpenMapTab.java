@@ -51,11 +51,13 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.charts.control.IChartControl;
+
 import com.comino.flight.widgets.gps.details.GPSDetailsWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -125,7 +127,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
-	private Task<Long> task;
+	private AnimationTimer task;
 
 	private AnalysisDataModel model;
 	private int type = 0;
@@ -150,28 +152,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new Task<Long>() {
+		task = new AnimationTimer() {
+			private long tms;
 
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-
-					try { Thread.sleep(100); } catch (InterruptedException e) { }
-
-					if(isDisabled()) {
-						try { Thread.sleep(500); } catch (InterruptedException e) { }
-						continue;
-					}
-
-					if (isCancelled() ) {
-						break;
-					}
-
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>100) {
+					tms = System.currentTimeMillis();
 					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
-
-
 					Platform.runLater(() -> {
 						try {
 							if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
@@ -204,9 +193,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						} catch(Exception e) { e.printStackTrace(); }
 					});
 				}
-				return System.currentTimeMillis();
 			}
 		};
+
 	}
 
 
@@ -406,10 +395,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setup(control);
 		recordControl.addChart(this);
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
