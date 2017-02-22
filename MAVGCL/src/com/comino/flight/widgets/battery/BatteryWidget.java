@@ -33,8 +33,6 @@
 
 package com.comino.flight.widgets.battery;
 
-import java.util.concurrent.locks.LockSupport;
-
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -43,18 +41,15 @@ import com.comino.mav.control.IMAVController;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Stop;
 
 public class BatteryWidget extends WidgetPane  {
 
 	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
 	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
 	private static final float ca_range[] = { 0.0f,  100.0f, 60.0f, 0 };
-
 
 
 	@FXML
@@ -65,7 +60,7 @@ public class BatteryWidget extends WidgetPane  {
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
-	private Task<Integer> task;
+	private AnimationTimer   task;
 	private AnalysisDataModel model;
 
 	private float voltage = 0;
@@ -76,32 +71,20 @@ public class BatteryWidget extends WidgetPane  {
 
 		FXMLLoadHelper.load(this, "BatteryWidget.fxml");
 
-		task = new Task<Integer>() {
-
-			@Override
-			protected Integer call() throws Exception {
-				while(true) {
-					LockSupport.parkNanos(1000000000L);
-					if(isDisabled() || !isVisible()) {
-						continue;
+		task = new AnimationTimer() {
+			private long tms;
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>1000) {
+					tms = System.currentTimeMillis();
+					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
+					    voltage = model.getValue("BATV");
+						g_voltage.setValue(voltage);
 					}
-
-					if (isCancelled()) {
-						break;
+					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
+						capacity = model.getValue("BATP");
+						g_capacity.setValue(capacity*100f);
 					}
-
-					Platform.runLater(() -> {
-						if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
-							voltage = model.getValue("BATV");
-							g_voltage.setValue(voltage);
-						}
-						if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
-							capacity = model.getValue("BATP");
-							g_capacity.setValue(capacity*100f);
-						}
-					});
 				}
-				return 0;
 			}
 		};
 	}
@@ -110,20 +93,18 @@ public class BatteryWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-		setupGauge(g_voltage,8,13,"V",Color.DARKCYAN);
+		setupGauge(g_voltage,"V",Color.DARKCYAN);
 		g_voltage.setDecimals(1);
-		setupGauge(g_capacity,0,100,"%",Color.DARKCYAN);
+		setupGauge(g_capacity,"%",Color.DARKCYAN);
 		g_capacity.setDecimals(0);
 
 	}
 
 
-	private void setupGauge(Gauge gauge, float min, float max, String unit, Color color) {
+	private void setupGauge(Gauge gauge, String unit, Color color) {
 		gauge.animatedProperty().set(false);
 		gauge.setSkinType(SkinType.SLIM);
 		gauge.setBarColor(color);
-		gauge.setMinValue(min);
-		gauge.setMaxValue(max);
 		gauge.setDecimals(1);
 		gauge.setTitle(unit);
 		gauge.setUnit("Battery");
@@ -137,10 +118,8 @@ public class BatteryWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 		this.model = dataService.getCurrent();
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
+
 	}
 
 }

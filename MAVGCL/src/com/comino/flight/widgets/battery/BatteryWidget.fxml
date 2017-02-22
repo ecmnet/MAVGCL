@@ -20,9 +20,9 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Gauge fx:id="g_voltage"
+            <Gauge fx:id="g_voltage" minValue="6" maxValue="13"
                  GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Gauge fx:id="g_capacity"
+            <Gauge fx:id="g_capacity" minValue="0" maxValue="100"
                  GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
