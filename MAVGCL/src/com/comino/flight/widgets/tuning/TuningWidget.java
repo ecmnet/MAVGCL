@@ -63,6 +63,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -276,6 +277,22 @@ public class TuningWidget extends WidgetPane  {
 							groups.requestFocus();
 						}
 					});
+
+					if(att.bitMask!=null && att.bitMask.size()>0) {
+						editor.setCursor(Cursor.DEFAULT);
+						((TextField)editor).setEditable(false);
+						editor.setOnMouseClicked((event) -> {
+						   groups.requestFocus();
+                           BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
+                           bd.setValue((int)att.value);
+                           int val = bd.show();
+                           if(val!=att.value) {
+                        	   att.value = val;
+                             setValueOf(editor,val);
+                             sendParameter(att,val);
+                           }
+						});
+					}
 				}
 			}
 
