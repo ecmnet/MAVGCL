@@ -116,6 +116,16 @@ public class ParameterFactMetaData {
 				attributes.valueList.put(0, "disabled");
 				attributes.valueList.put(1, "enabled");
 			}
+			if(node.getNodeName().equals("bitmask")) {
+				attributes.unit = "?";
+				for(int j=0; j<node.getChildNodes().getLength();j++) {
+					Node value = node.getChildNodes().item(j);
+					if(value.getNodeName().equals("bit")) {
+						int index = Integer.parseInt(value.getAttributes().getNamedItem("index").getNodeValue());
+						attributes.bitMask.add(index, value.getTextContent());
+					}
+				}
+			}
 			if(node.getNodeName().equals("reboot_required"))
 				attributes.reboot_required = Boolean.parseBoolean(node.getTextContent());
 			if(node.getNodeName().equals("values")) {
