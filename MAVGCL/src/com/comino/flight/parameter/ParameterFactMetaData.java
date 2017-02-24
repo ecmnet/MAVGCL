@@ -117,7 +117,6 @@ public class ParameterFactMetaData {
 				attributes.valueList.put(1, "enabled");
 			}
 			if(node.getNodeName().equals("bitmask")) {
-				attributes.unit = "?";
 				for(int j=0; j<node.getChildNodes().getLength();j++) {
 					Node value = node.getChildNodes().item(j);
 					if(value.getNodeName().equals("bit")) {
