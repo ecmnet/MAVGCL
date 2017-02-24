@@ -167,16 +167,11 @@ public class MainApp extends Application  {
 						peerAddress = args.get("ip");
 				}
 				else {
-					File f = new File("/dev/tty.usbmodem1");
-					if(f.exists())
-						control = new MAVSerialController();
-					else {
-						control = new MAVUdpController(peerAddress,port,14550, false);
-					}
+					control = new MAVUdpController(peerAddress,port,14550, false);
 				}
 
 			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
-					   System.getProperty("user.home"))+"/MAVGCL");
+					System.getProperty("user.home"))+"/MAVGCL");
 
 
 			MSPLogger.getInstance(control);
@@ -185,7 +180,7 @@ public class MainApp extends Application  {
 
 			AnalysisModelService.getInstance(control);
 
-     		UBXRTCM3Base.getInstance(control);
+			UBXRTCM3Base.getInstance(control);
 
 			PX4Parameters.getInstance(control);
 
@@ -254,12 +249,12 @@ public class MainApp extends Application  {
 			primaryStage.show();
 
 			scene.setOnKeyPressed((event) -> {
-					if(event.getCode()==KeyCode.ESCAPE) {
-						event.consume();
-						if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-							MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
-									MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
-					}
+				if(event.getCode()==KeyCode.ESCAPE) {
+					event.consume();
+					if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
+						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+								MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+				}
 			});
 
 		} catch (IOException e) {
