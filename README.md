@@ -14,13 +14,13 @@ Any feedback, comments and contributions are very welcome.
 
 **Note:** Windows installer doesn't seem to work with Windows10
 
-**Development Status:** Last updated 21/02/2017
+**Development Status:** Last updated 24/02/2017
 
 - MAVGCL support for RTK M8P devices (base connected to USB, currently OS X only)
 
 
 - Logging of all messages (PX4, MAVGCL, MAVComm) to file
-- UI enhancements
+- TuningWidget supports bitfield-entries
 
 V0.6xx notes:
 
@@ -48,6 +48,7 @@ V0.6xx notes:
 - FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org) or any other source
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
+- RTCM3 base supported with automatic survey-in for UBlox M8P devices
 
 **Requirements:**
 
