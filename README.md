@@ -16,12 +16,6 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 24/02/2017
 
-- MAVGCL support for RTK M8P devices (base connected to USB, currently OS X only)
-
-
-- Logging of all messages (PX4, MAVGCL, MAVComm) to file
-- TuningWidget supports bitfield-entries
-
 V0.6xx notes:
 
 - V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0 always') - MAVLink 1.0 no longer supported (for MAVLink 1.0 use V0.536 )
