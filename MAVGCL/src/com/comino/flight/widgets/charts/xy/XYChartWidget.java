@@ -719,8 +719,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
-		scale = Float.parseFloat(scale_select.getSelectionModel().getSelectedItem());
-		setScaling(scale);
+		try {
+		  scale = Float.parseFloat(scale_select.getSelectionModel().getSelectedItem());
+		  setScaling(scale);
+		} catch(NumberFormatException e) {
+
+		}
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
