@@ -138,8 +138,6 @@ public class MainApp extends Application  {
 
 			Map<String,String> args = getParameters().getNamed();
 
-			Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
-
 
 			Preferences userPrefs = MAVPreferences.getInstance();
 			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
@@ -187,8 +185,7 @@ public class MainApp extends Application  {
 
 			AnalysisModelService.getInstance(control);
 
-			if(ubx_ports.size()>0)
-				UBXRTCM3Base.getInstance(control, ubx_ports.firstElement());
+     		UBXRTCM3Base.getInstance(control);
 
 			PX4Parameters.getInstance(control);
 

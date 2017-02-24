@@ -36,6 +36,7 @@ package com.comino.flight.widgets.statusline;
 import java.io.IOException;
 import java.util.List;
 
+import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -120,27 +121,32 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>500) {
 
-					switch(model.gps.fixtype) {
+					if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("SVIN");
+					} else {
+						switch(model.gps.fixtype) {
 
-					case 2:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("GPS");
-					case 3:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("GPS Fix");
-						break;
-					case 4:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("DGPS");
-						break;
-					case 5:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("DGPS Fix");
-						break;
+						case 2:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("GPS");
+						case 3:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("GPS Fix");
+							break;
+						case 4:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("DGPS");
+							break;
+						case 5:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("DGPS Fix");
+							break;
 
-					default:
-						gps.setText("No GPS");
-						gps.setMode(Badge.MODE_OFF);
+						default:
+							gps.setText("No GPS");
+							gps.setMode(Badge.MODE_OFF);
+						}
 					}
 
 					filename = FileHandler.getInstance().getName();

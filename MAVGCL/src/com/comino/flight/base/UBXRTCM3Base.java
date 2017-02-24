@@ -34,6 +34,8 @@
 package com.comino.flight.base;
 
 
+import java.util.Vector;
+
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 
@@ -49,16 +51,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class UBXRTCM3Base {
 
 	private static UBXRTCM3Base instance = null;
-	private final UBXSerialConnection ubx;
+	private UBXSerialConnection ubx = null;
 
 	private BooleanProperty svin  = new SimpleBooleanProperty();
 	private BooleanProperty valid = new SimpleBooleanProperty();
 
 	private float mean_acc = 0;
 
-	public static UBXRTCM3Base getInstance(IMAVController control, String port) {
+	public static UBXRTCM3Base getInstance(IMAVController control) {
 		if(instance == null) {
-			instance = new UBXRTCM3Base(control, port);
+			instance = new UBXRTCM3Base(control);
 		}
 		return instance;
 	}
@@ -67,16 +69,23 @@ public class UBXRTCM3Base {
 		return instance;
 	}
 
-	public UBXRTCM3Base(IMAVController control, String port) {
-		System.out.println("StartUp RTCM3 base...");
-		this.ubx = new UBXSerialConnection(port, 9600);
-		this.ubx.setMeasurementRate(1);
+	public UBXRTCM3Base(IMAVController control) {
 
-		try {
-			this.ubx.init(60,3.5f);
-		} catch (Exception e) {
-			return;
+		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
+		if(ubx_ports.size()>0) {
+			System.out.println("StartUp RTCM3 base...");
+			this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
+			this.ubx.setMeasurementRate(1);
+
+			try {
+				this.ubx.init(60,3.5f);
+			} catch (Exception e) {
+				return;
+			}
 		}
+
+		if(ubx==null)
+			return;
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
@@ -95,7 +104,9 @@ public class UBXRTCM3Base {
 				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				try {
 					valid.set(false); svin.set(false);
+					ubx.release(false, 100);
 					Thread.sleep(10000);
+					ubx.setMeasurementRate(1);
 					ubx.init(60,3.5f);
 				} catch (Exception e) {
 					return;
@@ -116,12 +127,12 @@ public class UBXRTCM3Base {
 
 			@Override
 			public void getPosition(double lat, double lon, double altitude, int fix, int sats) {
-                 GPS base = control.getCurrentModel().base;
-                 base.latitude   = (float)lat;
-                 base.longitude  = (float)lon;
-                 base.altitude   = (short)altitude;
-                 base.numsat     = sats;
-         //        System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
+				GPS base = control.getCurrentModel().base;
+				base.latitude   = (float)lat;
+				base.longitude  = (float)lon;
+				base.altitude   = (short)altitude;
+				base.numsat     = sats;
+				//        System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
 			}
 
 			@Override
@@ -139,7 +150,7 @@ public class UBXRTCM3Base {
 					for(int i = 0;i<len;i++)
 						msg.data[i] = buffer[i];
 					control.sendMAVLinkMessage(msg);
-		//			System.out.println(msg);
+					//			System.out.println(msg);
 				} else {
 					int start = 0;
 					while (start < len) {
@@ -169,5 +180,7 @@ public class UBXRTCM3Base {
 	public float getBaseAccuracy() {
 		return mean_acc;
 	}
+
+
 
 }
