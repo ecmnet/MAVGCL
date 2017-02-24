@@ -4,6 +4,7 @@
     -fx-accent: #000000;
 }
 
+
 .tab-pane {
 	 -fx-background-color: #303030;
 }
@@ -434,3 +435,6 @@
 .text-area .content {
     -fx-cursor: default ;
 }
+
+
+

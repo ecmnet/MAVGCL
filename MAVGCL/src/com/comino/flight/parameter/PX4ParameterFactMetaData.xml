@@ -1415,6 +1415,14 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <decimal>3</decimal>
       <scope>modules/ekf2</scope>
     </parameter>
+    <parameter default="0.0" name="EKF2_RNG_PITCH" type="FLOAT">
+      <short_desc>Range sensor pitch offset</short_desc>
+      <min>-0.75</min>
+      <max>0.75</max>
+      <unit>rad</unit>
+      <decimal>3</decimal>
+      <scope>modules/ekf2</scope>
+    </parameter>
   </group>
   <group name="FW Attitude Control">
     <parameter default="0.4" name="FW_R_TC" type="FLOAT">
@@ -1562,6 +1570,14 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <unit>deg/s</unit>
       <decimal>1</decimal>
       <increment>0.5</increment>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="0.0" name="FW_RLL_TO_YAW_FF" type="FLOAT">
+      <short_desc>Roll control to yaw control feedforward gain</short_desc>
+      <long_desc>This gain can be used to counteract the "adverse yaw" effect for fixed wings. When the plane enters a roll it will tend to yaw the nose out of the turn. This gain enables the use of a yaw actuator (rudder, airbrakes, ...) to counteract this effect.</long_desc>
+      <min>0.0</min>
+      <decimal>1</decimal>
+      <increment>0.01</increment>
       <scope>modules/fw_att_control</scope>
     </parameter>
     <parameter default="0.5" name="FW_WR_P" type="FLOAT">
@@ -1768,6 +1784,39 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <boolean />
       <scope>modules/fw_att_control</scope>
     </parameter>
+    <parameter default="90" name="FW_ACRO_X_MAX" type="FLOAT">
+      <short_desc>Acro body x max rate</short_desc>
+      <long_desc>This is the rate the controller is trying to achieve if the user applies full roll stick input in acro mode.</long_desc>
+      <min>45</min>
+      <max>720</max>
+      <unit>degrees</unit>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="90" name="FW_ACRO_Y_MAX" type="FLOAT">
+      <short_desc>Acro body y max rate</short_desc>
+      <long_desc>This is the body y rate the controller is trying to achieve if the user applies full pitch stick input in acro mode.</long_desc>
+      <min>45</min>
+      <max>720</max>
+      <unit>degrees</unit>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="45" name="FW_ACRO_Z_MAX" type="FLOAT">
+      <short_desc>Acro body z max rate</short_desc>
+      <long_desc>This is the body z rate the controller is trying to achieve if the user applies full yaw stick input in acro mode.</long_desc>
+      <min>10</min>
+      <max>180</max>
+      <unit>degrees</unit>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
+    <parameter default="0.8" name="FW_RATT_TH" type="FLOAT">
+      <short_desc>Threshold for Rattitude mode</short_desc>
+      <long_desc>Manual input needed in order to override attitude control rate setpoints and instead pass manual stick inputs as rate setpoints</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <scope>modules/fw_att_control</scope>
+    </parameter>
   </group>
   <group name="FW L1 Control">
     <parameter default="20.0" name="FW_L1_PERIOD" type="FLOAT">
@@ -1969,6 +2018,16 @@ value will determine the minimum airspeed which will still be fused</short_desc>
     </parameter>
   </group>
   <group name="FW TECS">
+    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
+      <short_desc>Cruise Airspeed</short_desc>
+      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
+      <min>0.0</min>
+      <max>40</max>
+      <unit>m/s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>modules/navigator</scope>
+    </parameter>
     <parameter default="10.0" name="FW_AIRSPD_MIN" type="FLOAT">
       <short_desc>Minimum Airspeed</short_desc>
       <long_desc>If the airspeed falls below this value, the TECS controller will try to increase airspeed more aggressively.</long_desc>
@@ -2137,16 +2196,6 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <decimal>2</decimal>
       <increment>0.01</increment>
       <scope>modules/fw_pos_control_l1</scope>
-    </parameter>
-    <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
-      <short_desc>Cruise Airspeed</short_desc>
-      <long_desc>The fixed wing controller tries to fly at this airspeed.</long_desc>
-      <min>0.0</min>
-      <max>40</max>
-      <unit>m/s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>modules/navigator</scope>
     </parameter>
   </group>
   <group name="Follow target">
@@ -2356,6 +2405,14 @@ but also ignore less noise</short_desc>
       <min>0.02</min>
       <max>5</max>
       <unit>s</unit>
+      <decimal>2</decimal>
+      <scope>modules/land_detector</scope>
+    </parameter>
+    <parameter default="0.15" name="LNDMC_MAN_DWNTHR" type="FLOAT">
+      <short_desc>Manual flight stick down threshold for landing</short_desc>
+      <long_desc>When controlling manually the throttle stick value (0 to 1) has to be bellow this threshold in order to pass the check for landing. So if set to 1 it's allowed to land with any stick position.</long_desc>
+      <min>0</min>
+      <max>1</max>
       <decimal>2</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
@@ -2611,6 +2668,7 @@ EPV used if greater than this value</short_desc>
     </parameter>
     <parameter default="0.1" name="LPE_VIS_DELAY" type="FLOAT">
       <short_desc>Vision delay compensaton</short_desc>
+      <long_desc>Set to zero to enable automatic compensation from measurement timestamps</long_desc>
       <min>0</min>
       <max>0.1</max>
       <unit>sec</unit>
@@ -2690,6 +2748,13 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <max>2</max>
       <unit>Hz</unit>
       <decimal>3</decimal>
+      <scope>modules/local_position_estimator</scope>
+    </parameter>
+    <parameter default="1" name="LPE_FAKE_ORIGIN" type="INT32">
+      <short_desc>Enable publishing of a fake global position (e.g for AUTO missions using Optical Flow)
+by initializing the estimator to the LPE_LAT/LON parameters when global information is unavailable</short_desc>
+      <min>0</min>
+      <max>1</max>
       <scope>modules/local_position_estimator</scope>
     </parameter>
     <parameter default="47.397742" name="LPE_LAT" type="FLOAT">
@@ -3378,7 +3443,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>5</increment>
       <scope>modules/mc_att_control</scope>
     </parameter>
-    <parameter default="1.0" name="MC_RATT_TH" type="FLOAT">
+    <parameter default="0.8" name="MC_RATT_TH" type="FLOAT">
       <short_desc>Threshold for Rattitude mode</short_desc>
       <long_desc>Manual input needed in order to override attitude control rate setpoints and instead pass manual stick inputs as rate setpoints</long_desc>
       <min>0.0</min>
@@ -3699,6 +3764,13 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <decimal>2</decimal>
       <scope>modules/mc_pos_control</scope>
     </parameter>
+    <parameter default="0.1" name="MPC_HOLD_Z_DZ" type="FLOAT">
+      <short_desc>Deadzone of Z stick where altitude hold is enabled</short_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
     <parameter default="0.8" name="MPC_HOLD_MAX_XY" type="FLOAT">
       <short_desc>Maximum horizontal velocity for which position hold is enabled (use 0 to disable check)</short_desc>
       <min>0.0</min>
@@ -3732,7 +3804,7 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>1</increment>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="10.0" name="MPC_ACC_UP_MAX" type="FLOAT">
+    <parameter default="5.0" name="MPC_ACC_UP_MAX" type="FLOAT">
       <short_desc>Maximum vertical acceleration in velocity controlled modes upward</short_desc>
       <min>2.0</min>
       <max>15.0</max>
@@ -3774,6 +3846,96 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
   </group>
   <group name="PWM Outputs">
+    <parameter default="0" name="PWM_AUX_REV1" type="INT32">
+      <short_desc>Invert direction of aux output channel 1</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV2" type="INT32">
+      <short_desc>Invert direction of aux output channel 2</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV3" type="INT32">
+      <short_desc>Invert direction of aux output channel 3</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV4" type="INT32">
+      <short_desc>Invert direction of aux output channel 4</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV5" type="INT32">
+      <short_desc>Invert direction of aux output channel 5</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_REV6" type="INT32">
+      <short_desc>Invert direction of aux output channel 6</short_desc>
+      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM1" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 1</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM2" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 2</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM3" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 3</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM4" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 4</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM5" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 5</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
+    <parameter default="0" name="PWM_AUX_TRIM6" type="FLOAT">
+      <short_desc>Trim value for FMU PWM output channel 6</short_desc>
+      <long_desc>Set to normalized offset</long_desc>
+      <min>-0.2</min>
+      <max>0.2</max>
+      <decimal>2</decimal>
+      <scope>drivers/px4fmu</scope>
+    </parameter>
     <parameter default="0" name="PWM_MAIN_REV1" type="INT32">
       <short_desc>Invert direction of main output channel 1</short_desc>
       <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
@@ -3976,96 +4138,6 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <min>0.0</min>
       <unit>s/(1000*PWM)</unit>
       <scope>modules/sensors</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV1" type="INT32">
-      <short_desc>Invert direction of aux output channel 1</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV2" type="INT32">
-      <short_desc>Invert direction of aux output channel 2</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV3" type="INT32">
-      <short_desc>Invert direction of aux output channel 3</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV4" type="INT32">
-      <short_desc>Invert direction of aux output channel 4</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV5" type="INT32">
-      <short_desc>Invert direction of aux output channel 5</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_REV6" type="INT32">
-      <short_desc>Invert direction of aux output channel 6</short_desc>
-      <long_desc>Set to 1 to invert the channel, 0 for default direction.</long_desc>
-      <boolean />
-      <reboot_required>true</reboot_required>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM1" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 1</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM2" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 2</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM3" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 3</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM4" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 4</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM5" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 5</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
-    </parameter>
-    <parameter default="0" name="PWM_AUX_TRIM6" type="FLOAT">
-      <short_desc>Trim value for FMU PWM output channel 6</short_desc>
-      <long_desc>Set to normalized offset</long_desc>
-      <min>-0.2</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>drivers/px4fmu</scope>
     </parameter>
   </group>
   <group name="Payload drop">
@@ -5990,6 +6062,60 @@ if required for the gimbal (only in AUX output mode)</short_desc>
         <value code="8">Channel 8</value>
       </values>
     </parameter>
+    <parameter default="0" name="RC_MAP_STAB_SW" type="INT32">
+      <short_desc>Stabilize switch channel mapping</short_desc>
+      <min>0</min>
+      <max>18</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="11">Channel 11</value>
+        <value code="10">Channel 10</value>
+        <value code="13">Channel 13</value>
+        <value code="12">Channel 12</value>
+        <value code="15">Channel 15</value>
+        <value code="14">Channel 14</value>
+        <value code="17">Channel 17</value>
+        <value code="16">Channel 16</value>
+        <value code="18">Channel 18</value>
+        <value code="1">Channel 1</value>
+        <value code="0">Unassigned</value>
+        <value code="3">Channel 3</value>
+        <value code="2">Channel 2</value>
+        <value code="5">Channel 5</value>
+        <value code="4">Channel 4</value>
+        <value code="7">Channel 7</value>
+        <value code="6">Channel 6</value>
+        <value code="9">Channel 9</value>
+        <value code="8">Channel 8</value>
+      </values>
+    </parameter>
+    <parameter default="0" name="RC_MAP_MAN_SW" type="INT32">
+      <short_desc>Manual switch channel mapping</short_desc>
+      <min>0</min>
+      <max>18</max>
+      <scope>modules/sensors</scope>
+      <values>
+        <value code="11">Channel 11</value>
+        <value code="10">Channel 10</value>
+        <value code="13">Channel 13</value>
+        <value code="12">Channel 12</value>
+        <value code="15">Channel 15</value>
+        <value code="14">Channel 14</value>
+        <value code="17">Channel 17</value>
+        <value code="16">Channel 16</value>
+        <value code="18">Channel 18</value>
+        <value code="1">Channel 1</value>
+        <value code="0">Unassigned</value>
+        <value code="3">Channel 3</value>
+        <value code="2">Channel 2</value>
+        <value code="5">Channel 5</value>
+        <value code="4">Channel 4</value>
+        <value code="7">Channel 7</value>
+        <value code="6">Channel 6</value>
+        <value code="9">Channel 9</value>
+        <value code="8">Channel 8</value>
+      </values>
+    </parameter>
     <parameter default="0.25" name="RC_ASSIST_TH" type="FLOAT">
       <short_desc>Threshold for selecting assist mode</short_desc>
       <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
@@ -6069,6 +6195,20 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
     <parameter default="0.25" name="RC_GEAR_TH" type="FLOAT">
       <short_desc>Threshold for the landing gear switch</short_desc>
+      <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
+      <min>-1</min>
+      <max>1</max>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.5" name="RC_STAB_TH" type="FLOAT">
+      <short_desc>Threshold for the stabilize switch</short_desc>
+      <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
+      <min>-1</min>
+      <max>1</max>
+      <scope>modules/sensors</scope>
+    </parameter>
+    <parameter default="0.5" name="RC_MAN_TH" type="FLOAT">
+      <short_desc>Threshold for the manual switch</short_desc>
       <long_desc>0-1 indicate where in the full channel range the threshold sits 0 : min 1 : max sign indicates polarity of comparison positive : true when channel&gt;th negative : true when channel&lt;th</long_desc>
       <min>-1</min>
       <max>1</max>
@@ -7513,6 +7653,13 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     </parameter>
   </group>
   <group name="System">
+    <parameter default="15" name="LED_RGB_MAXBRT" type="INT32">
+      <short_desc>RGB Led brightness limit</short_desc>
+      <long_desc>Set to 0 to disable, 1 for minimum brightness up to 15 (max)</long_desc>
+      <min>0</min>
+      <max>15</max>
+      <scope>drivers/rgbled</scope>
+    </parameter>
     <parameter default="0" name="SYS_AUTOSTART" type="INT32">
       <short_desc>Auto-start script index</short_desc>
       <long_desc>CHANGING THIS VALUE REQUIRES A RESTART. Defines the auto-start script used to bootstrap the system.</long_desc>
@@ -7554,7 +7701,7 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     </parameter>
     <parameter default="2" name="SYS_MC_EST_GROUP" type="INT32">
       <short_desc>Set multicopter estimator group</short_desc>
-      <long_desc>Set the group of estimators used for multicopters and vtols</long_desc>
+      <long_desc>Set the group of estimators used for multicopters and VTOLs</long_desc>
       <min>1</min>
       <max>2</max>
       <reboot_required>true</reboot_required>
@@ -7580,10 +7727,11 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="419200">Iridium Telemetry (19200 baud, 8N1)</value>
         <value code="338400">Normal Telemetry (38400 baud, 8N1)</value>
         <value code="0">Disabled</value>
+        <value code="319200">Normal Telemetry (19200 baud, 8N1)</value>
         <value code="1921600">ESP8266 (921600 baud, 8N1)</value>
         <value code="57600">Companion Link (57600 baud, 8N1)</value>
         <value code="921600">Companion Link (921600 baud, 8N1)</value>
-        <value code="319200">Normal Telemetry (19200 baud, 8N1)</value>
+        <value code="3115200">Normal Telemetry (115200 baud, 8N1)</value>
       </values>
     </parameter>
     <parameter default="1" name="SYS_PARAM_VER" type="INT32">
@@ -7629,27 +7777,27 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <max>1</max>
       <scope>modules/systemlib</scope>
     </parameter>
-    <parameter default="24" name="SYS_CAL_TEMP" type="INT32">
+    <parameter default="24" name="SYS_CAL_TDEL" type="INT32">
       <short_desc>Required temperature rise during thermal calibration</short_desc>
-      <long_desc>A temperature increase greater than this value is required during calibration performed by the setting of SYS_TEMP_CAL. Calibration will complete for each sensor when the temperature increase above the starting temeprature exceeds SYS_TEMP_RISE. If the temperature rise is insufficient, the calibration will continue indefinitely and the board will need to be repowered to exit.</long_desc>
+      <long_desc>A temperature increase greater than this value is required during calibration. Calibration will complete for each sensor when the temperature increase above the starting temeprature exceeds the value set by SYS_CAL_TDEL. If the temperature rise is insufficient, the calibration will continue indefinitely and the board will need to be repowered to exit.</long_desc>
       <min>10</min>
-      <max>50</max>
       <unit>deg C</unit>
       <scope>modules/systemlib</scope>
     </parameter>
-    <parameter default="15" name="LED_RGB_MAXBRT" type="INT32">
-      <short_desc>RGB Led brightness limit</short_desc>
-      <long_desc>Set to 0 to disable, 1 for minimum brightness up to 15 (max)</long_desc>
-      <min>0</min>
-      <max>15</max>
-      <scope>drivers/rgbled</scope>
+    <parameter default="5" name="SYS_CAL_TMIN" type="INT32">
+      <short_desc>Minimum starting temperature for thermal calibration</short_desc>
+      <long_desc>Temperature calibration for each sensor will ignore data if the temperature is lower than the value set by SYS_CAL_TMIN.</long_desc>
+      <unit>deg C</unit>
+      <scope>modules/systemlib</scope>
+    </parameter>
+    <parameter default="10" name="SYS_CAL_TMAX" type="INT32">
+      <short_desc>Maximum starting temperature for thermal calibration</short_desc>
+      <long_desc>Temperature calibration will not start if the temperature of any sensor is higher than the value set by SYS_CAL_TMAX.</long_desc>
+      <unit>deg C</unit>
+      <scope>modules/systemlib</scope>
     </parameter>
   </group>
   <group name="Testing">
-    <parameter default="12345678" name="TEST_PARAMS" type="INT32">
-      <short_desc>TEST_PARAMS</short_desc>
-      <scope>systemcmds/tests</scope>
-    </parameter>
     <parameter default="-1.0" name="TEST_MIN" type="FLOAT">
       <short_desc>TEST_MIN</short_desc>
       <scope>modules/controllib_test</scope>
@@ -7697,6 +7845,10 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
     <parameter default="2.0" name="TEST_DEV" type="FLOAT">
       <short_desc>TEST_DEV</short_desc>
       <scope>modules/controllib_test</scope>
+    </parameter>
+    <parameter default="12345678" name="TEST_PARAMS" type="INT32">
+      <short_desc>TEST_PARAMS</short_desc>
+      <scope>systemcmds/tests</scope>
     </parameter>
   </group>
   <group name="UAVCAN">
@@ -7774,6 +7926,23 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <max>12345678</max>
       <decimal>0</decimal>
       <increment>1</increment>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0" name="VT_FW_DIFTHR_EN" type="INT32">
+      <short_desc>Differential thrust in forwards flight</short_desc>
+      <long_desc>Set to 1 to enable differential thrust in fixed-wing flight.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <decimal>0</decimal>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0.1" name="VT_FW_DIFTHR_SC" type="FLOAT">
+      <short_desc>Differential thrust scaling factor</short_desc>
+      <long_desc>This factor specifies how the yaw input gets mapped to differential thrust in forwards flight.</long_desc>
+      <min>0.0</min>
+      <max>1.0</max>
+      <decimal>2</decimal>
+      <increment>0.1</increment>
       <scope>modules/vtol_att_control</scope>
     </parameter>
     <parameter default="0" name="VT_MOT_COUNT" type="INT32">
@@ -8279,6 +8448,10 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
         <value code="8">Channel 8</value>
       </values>
     </parameter>
+    <parameter default="12.0" name="COM_RC_STICK_OV" type="FLOAT">
+      <short_desc>COM_RC_STICK_OV</short_desc>
+      <scope>modules/commander</scope>
+    </parameter>
     <parameter default="-1" name="COM_FLTMODE1" type="INT32">
       <short_desc>First flightmode slot (1000-1160)</short_desc>
       <long_desc>If the main switch channel is in this range the selected flight mode will be applied.</long_desc>
@@ -8408,6 +8581,18 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
       <short_desc>RV_YAW_P</short_desc>
       <scope>examples/rover_steering_control</scope>
+    </parameter>
+    <parameter default="0.1" name="EXFW_HDNG_P" type="FLOAT">
+      <short_desc>EXFW_HDNG_P</short_desc>
+      <scope>examples/fixedwing_control</scope>
+    </parameter>
+    <parameter default="0.2" name="EXFW_ROLL_P" type="FLOAT">
+      <short_desc>EXFW_ROLL_P</short_desc>
+      <scope>examples/fixedwing_control</scope>
+    </parameter>
+    <parameter default="0.2" name="EXFW_PITCH_P" type="FLOAT">
+      <short_desc>EXFW_PITCH_P</short_desc>
+      <scope>examples/fixedwing_control</scope>
     </parameter>
   </group>
 </parameters>

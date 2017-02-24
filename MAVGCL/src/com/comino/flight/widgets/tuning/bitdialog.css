@@ -1,7 +1,21 @@
-.root{
+.bitDialog {
     -fx-font-size: 8.0pt;
     -fx-background-color: #303030;
-    -fx-text-fill: #FFFFFF;
+    -fx-accent: #000000;
+ }
+
+.bitDialog > *.button-bar > *.container{
+     -fx-background-color: #303030;
+}
+.bitDialog > *.label.content{
+   -fx-font-size: 10.0px;
+}
+.bitDialog:header *.header-panel{
+     -fx-background-color: #303030;
+}
+.bitDialog:header *.header-panel *.label{
+    -fx-text-fill: #F0F0F0;
+	-fx-font-size: 10.0px;
 }
 
 .label {

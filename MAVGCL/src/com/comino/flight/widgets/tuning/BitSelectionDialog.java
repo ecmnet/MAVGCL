@@ -5,9 +5,11 @@ import java.util.List;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
@@ -42,14 +44,15 @@ public class BitSelectionDialog  {
 
 		bitDialog = new Dialog<Boolean>();
 		bitDialog.initStyle(StageStyle.UNDECORATED);
-		bitDialog.setTitle("BitMask input");
-		bitDialog.getDialogPane().getStylesheets().add(getClass().getResource("bitdialog.css").toExternalForm());
-		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-		bitDialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
-		ButtonType buttonTypeOk =     new ButtonType("Ok", ButtonData.OK_DONE);
-		bitDialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
 
-		bitDialog.getDialogPane().setContent(pane);
+		DialogPane dialogPane = bitDialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("bitdialog.css").toExternalForm());
+		dialogPane.setContent(pane);
+		dialogPane.getStyleClass().add("bitDialog");
+		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+		dialogPane.getButtonTypes().add(buttonTypeCancel);
+		ButtonType buttonTypeOk =  new ButtonType("Ok", ButtonData.OK_DONE);
+		dialogPane.getButtonTypes().add(buttonTypeOk);
 
 		bitDialog.setResultConverter(new Callback<ButtonType, Boolean>() {
 			@Override
