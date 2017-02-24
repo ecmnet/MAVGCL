@@ -105,9 +105,6 @@ public class UBXRTCM3Base {
 				try {
 					valid.set(false); svin.set(false);
 					ubx.release(false, 100);
-					Thread.sleep(10000);
-					ubx.setMeasurementRate(1);
-					ubx.init(60,3.5f);
 				} catch (Exception e) {
 					return;
 				}
@@ -118,10 +115,8 @@ public class UBXRTCM3Base {
 				svin.set(is_svin);
 				mean_acc = meanacc;
 
-				// Log accuracy every 30 secs
 				if((time_svin % 30) == 0)
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-
 			}
 
 
