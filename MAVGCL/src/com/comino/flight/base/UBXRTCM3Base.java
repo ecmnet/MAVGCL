@@ -118,7 +118,6 @@ public class UBXRTCM3Base {
 			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float meanacc) {
 				svin.set(is_svin);
 				mean_acc = meanacc;
-
 				if((time_svin % 30) == 0)
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
