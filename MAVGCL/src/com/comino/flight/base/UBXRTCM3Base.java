@@ -135,7 +135,7 @@ public class UBXRTCM3Base {
 			@Override
 			public void getRTCM3(byte[] buffer, int len) {
 
-				if(!control.isConnected() || !status.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
+				if(!control.isConnected() || !status.isSensorAvailable(Status.MSP_GPS_AVAILABILITY) || svin.get())
 					return;
 
 				valid.set(true);
