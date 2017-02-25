@@ -44,6 +44,7 @@ import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.GPS;
+import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -74,6 +75,9 @@ public class UBXRTCM3Base {
 		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
 		if(ubx_ports.size()==0)
 			return;
+
+		GPS base = control.getCurrentModel().base;
+		Status status = control.getCurrentModel().sys;
 
 		System.out.println("StartUp RTCM3 base...");
 		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
@@ -113,13 +117,12 @@ public class UBXRTCM3Base {
 				mean_acc = meanacc;
 
 				if((time_svin % 30) == 0)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+" m ["+base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
 
 
 			@Override
 			public void getPosition(double lat, double lon, double altitude, int fix, int sats) {
-				GPS base = control.getCurrentModel().base;
 				base.latitude   = (float)lat;
 				base.longitude  = (float)lon;
 				base.altitude   = (short)altitude;
@@ -130,7 +133,7 @@ public class UBXRTCM3Base {
 			@Override
 			public void getRTCM3(byte[] buffer, int len) {
 
-				if(!control.isConnected())
+				if(!control.isConnected() || !status.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 					return;
 
 				valid.set(true);
