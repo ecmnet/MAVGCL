@@ -232,7 +232,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		homeLayer = new PositionLayer(new Image(getClass().getResource("home.png").toString()));
 		map.getLayers().add(homeLayer);
 
-		baseLayer = new PositionLayer(new Image(getClass().getResource("antenna.png").toString()));
+		baseLayer = new PositionLayer(new Image(getClass().getResource("base.png").toString()));
 		map.getLayers().add(baseLayer);
 
 		plane_valid   = new Image(getClass().getResource("airplane_g.png").toString());

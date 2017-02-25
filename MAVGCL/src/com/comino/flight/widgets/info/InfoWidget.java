@@ -99,7 +99,7 @@ public class InfoWidget extends WidgetPane  {
 						setStyle("-fx-text-fill:orange;");
 						break;
 					default:
-						setStyle("-fx-text-fill:darkcyan;");
+						setStyle("-fx-text-fill:white;");
 					}
 					setText(m.msg);
 				}
