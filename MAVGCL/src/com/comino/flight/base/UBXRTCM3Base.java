@@ -72,20 +72,17 @@ public class UBXRTCM3Base {
 	public UBXRTCM3Base(IMAVController control) {
 
 		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
-		if(ubx_ports.size()>0) {
-			System.out.println("StartUp RTCM3 base...");
-			this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
-			this.ubx.setMeasurementRate(1);
-
-			try {
-				this.ubx.init(60,3.5f);
-			} catch (Exception e) {
-				return;
-			}
-		}
-
-		if(ubx==null)
+		if(ubx_ports.size()==0)
 			return;
+
+		System.out.println("StartUp RTCM3 base...");
+		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
+		this.ubx.setMeasurementRate(1);
+		try {
+			this.ubx.init(60,3.5f);
+		} catch (Exception e) {
+			return;
+		}
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
