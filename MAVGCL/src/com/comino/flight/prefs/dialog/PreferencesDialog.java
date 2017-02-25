@@ -43,6 +43,8 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -88,6 +90,9 @@ public class PreferencesDialog  {
 	@FXML
 	private CheckBox check;
 
+	@FXML
+	private TextField svinacc;
+
 	private IMAVController control;
 	private Preferences userPrefs;
 
@@ -124,6 +129,14 @@ public class PreferencesDialog  {
 			});
 		});
 
+		svinacc.textProperty().addListener(new ChangeListener<String>() {
+		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		        if (newValue.length()>1 && !newValue.matches("[+-]?([0-9]*[.]?)?[0-9]?")) {
+		            svinacc.setText(oldValue);
+		        }
+		    }
+		});
+
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 		prefDialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
 		ButtonType buttonTypeOk =     new ButtonType("Save", ButtonData.OK_DONE);
@@ -148,6 +161,7 @@ public class PreferencesDialog  {
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
 		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
+		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -158,6 +172,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());
+			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 
 			try {
 				userPrefs.flush();

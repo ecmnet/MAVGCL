@@ -58,6 +58,7 @@ public class MAVPreferences {
 	public final static String TUNING_GROUP     = "TUNING_GROUP";
 	public final static String CTRLPOS          = "CTRLPOS";
 	public final static String HEALTHCHECK      = "HEALTHCHECK";
+	public final static String RTKSVINACC       = "RTKSVINACC";
 
 	private static Preferences prefs = null;
 

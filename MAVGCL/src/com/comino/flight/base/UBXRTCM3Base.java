@@ -39,6 +39,7 @@ import java.util.Vector;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
@@ -79,11 +80,13 @@ public class UBXRTCM3Base {
 		GPS base = control.getCurrentModel().base;
 		Status status = control.getCurrentModel().sys;
 
-		System.out.println("StartUp RTCM3 base...");
 		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
 		this.ubx.setMeasurementRate(1);
+
 		try {
-			this.ubx.init(60,3.5f);
+			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
+			this.ubx.init(60,accuracy);
+			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+accuracy+"m");
 		} catch (Exception e) {
 			return;
 		}
@@ -117,7 +120,7 @@ public class UBXRTCM3Base {
 				mean_acc = meanacc;
 
 				if((time_svin % 30) == 0)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+" m ["+base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
 
 

@@ -36,5 +36,9 @@
 	        GridPane.columnSpan="3" text="Perform vehicle healh check" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
 					prefWidth="590.0" GridPane.columnSpan="4" GridPane.rowIndex="9" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy [m]:"
+			GridPane.rowIndex="10" GridPane.columnIndex="0" />
+		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"
+			GridPane.rowIndex="10" GridPane.columnIndex="1" />
 	</children>
 </GridPane>
