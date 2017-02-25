@@ -1121,10 +1121,10 @@
 
 	<KeyFigure desc="RSSI" uom="%" mask="#0" key="RSSI">
 		<MSPSource class="rc" field="rssi">
-		   <Converter class="ExpressionConverter" expression="RSSI/100" />
+		   <Converter class="ExpressionConverter" expression="RSSI/255" />
 		</MSPSource>
 		<ULogSource field="rc_channels_0.rssi">
-		  <Converter class="ExpressionConverter" expression="RSSI/100" />
+		  <Converter class="ExpressionConverter" expression="RSSI/255" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
@@ -1185,7 +1185,7 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="0" max="0.8"/>
+		<Validity min="0" max="0.9"/>
 	</KeyFigure>
 
 	<KeyFigure desc="CPU Load (MSP)" uom="%" mask="#0" key="CPUMSP">
