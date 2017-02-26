@@ -1,4 +1,5 @@
 *.DS_Store
+*.classpath
 *~
 MAVGCL/bin
 MAVGCL/dist
