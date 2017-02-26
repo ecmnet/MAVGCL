@@ -308,7 +308,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 				if(model.msg != null && model.msg.tms > tms) {
 					current.msg = model.msg; record.msg = model.msg;
-					tms = current.msg.tms+100;
+					tms = current.msg.tms+10;
 				} else {
 					current.msg = null; record.msg = null;
 				}
