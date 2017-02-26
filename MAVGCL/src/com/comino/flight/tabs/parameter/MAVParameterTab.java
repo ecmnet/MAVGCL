@@ -366,13 +366,13 @@ public class MAVParameterTab extends Pane {
 
 		private ParameterAttributes att = null;
 		private String group = null;
-		private float value = 0;
-		private float old_val = 0;
+		private double value = 0;
+		private double old_val = 0;
 		private int  type = 0;
 		private TextField textField = null;
 		private Tooltip tip = null;
 
-		public Parameter(ParameterAttributes a, int type, float v, boolean editable) {
+		public Parameter(ParameterAttributes a, int type, double v, boolean editable) {
 			this.att = a;
 			this.value = v;//ParamUtils.paramToVal(type,v);
 			this.type = type;
@@ -484,12 +484,12 @@ public class MAVParameterTab extends Pane {
 			return tip;
 		}
 
-		public float getParamValue() {
+		public double getParamValue() {
 			return value;
 		}
 
 
-		public void changeValue(float v) {
+		public void changeValue(double v) {
 			this.old_val = value;
 			this.value = v; //ParamUtils.paramToVal(type,v);;
 			this.textField.setText(getStringOfValue());

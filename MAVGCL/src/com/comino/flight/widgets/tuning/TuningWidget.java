@@ -367,7 +367,7 @@ public class TuningWidget extends WidgetPane  {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void setValueOf(Control p, float v) {
+		public void setValueOf(Control p, double v) {
 			Platform.runLater(() -> {
 			if(p instanceof TextField) {
 				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
@@ -390,7 +390,7 @@ public class TuningWidget extends WidgetPane  {
 		}
 
 		@SuppressWarnings("unchecked")
-		private void checkDefaultOf(Control p, float v) {
+		private void checkDefaultOf(Control p, double v) {
 			Control e = p;
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();

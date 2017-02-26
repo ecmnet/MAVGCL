@@ -39,11 +39,11 @@ import java.util.List;
 
 public class ParameterAttributes  implements Comparable<ParameterAttributes> {
 
-	public float   default_val = 0;
-	public float   min_val   = -Float.MAX_VALUE;
-	public float   max_val   =  Float.MAX_VALUE;
-	public float   value     = 0;
-	public float   increment = 0;
+	public double  default_val = 0;
+	public double  min_val   = -Double.MAX_VALUE;
+	public double  max_val   =  Double.MAX_VALUE;
+	public double  value     = 0;
+	public double  increment = 0;
 	public int     vtype     = 0;
 	public int     decimals  = 3;
 	public String  name = null;

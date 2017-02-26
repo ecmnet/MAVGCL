@@ -157,9 +157,8 @@ public class PX4Parameters implements IMAVLinkListener {
 					l.refresh();
 
 				if(get("LND_FLIGHT_T_LO")!=null) {
-					flight_time = (((int)get("LND_FLIGHT_T_HI").value & 0xffffffff ) << 32 + ((int)get("LND_FLIGHT_T_LO").value  & 0xffffffff))
-							      / 1000000;
-					MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60f),
+					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
+					MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
 							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
 			}
