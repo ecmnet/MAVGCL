@@ -1121,15 +1121,15 @@
 
 	<KeyFigure desc="RSSI" uom="%" mask="#0" key="RSSI">
 		<MSPSource class="rc" field="rssi">
-		   <Converter class="ExpressionConverter" expression="RSSI/255" />
+		   <Converter class="ExpressionConverter" expression="RSSI/100" />
 		</MSPSource>
 		<ULogSource field="rc_channels_0.rssi">
-		  <Converter class="ExpressionConverter" expression="RSSI/255" />
+		  <Converter class="ExpressionConverter" expression="RSSI/100" />
 		</ULogSource>
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
-		<Validity min="0.4" max="1.0"/>
+		<Validity min="0.4" max="10.0"/>
 	</KeyFigure>
 
 	<!-- System & Power -->
