@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Slam;
+import com.comino.msp.utils.BlockPoint2D;
 import com.comino.msp.utils.BlockPoint3D;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -60,7 +61,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 		for(int i=0;i<MAXPANES;i++) {
 			Pane p = new Pane();
-			p.setStyle("-fx-background-color: rgba(60.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
+			p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
 			p.setVisible(false);
 			pane.getChildren().add(i,p);
 		}
@@ -78,7 +79,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		BlockPoint3D p; double ext;
+		BlockPoint2D p; double ext;
 
 		for(int i=0;i<MAXPANES;i++)
 			pane.getChildren().get(i).setVisible(false);
@@ -86,15 +87,15 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		if(slam==null)
 			return;
 
-		List<BlockPoint3D> blocks = slam.getBlocks();
+		List<BlockPoint2D> blocks = slam.getBlocks();
 		if(blocks!=null) {
 			for(int i=0; i<blocks.size() && i < MAXPANES;i++) {
 				p = blocks.get(i);
-				ext = xAxis.getDisplayPosition(p.res)-xAxis.getDisplayPosition(0);
-				pane.getChildren().get(i).setLayoutX(xAxis.getDisplayPosition(p.y-p.res/2f));
-				pane.getChildren().get(i).setLayoutY(yAxis.getDisplayPosition(p.x+p.res/2f));
-				((Pane)pane.getChildren().get(i)).setPrefSize(xAxis.getDisplayPosition(p.res)-xAxis.getDisplayPosition(0),
-						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(p.res));;
+				ext = xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0);
+				pane.getChildren().get(i).setLayoutX(xAxis.getDisplayPosition(p.y));
+				pane.getChildren().get(i).setLayoutY(yAxis.getDisplayPosition(p.x));
+				((Pane)pane.getChildren().get(i)).setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
+						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));;
 				pane.getChildren().get(i).setVisible(true);
 			}
 		}
