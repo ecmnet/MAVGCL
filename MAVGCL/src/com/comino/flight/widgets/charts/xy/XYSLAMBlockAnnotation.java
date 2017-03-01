@@ -34,7 +34,9 @@
 package com.comino.flight.widgets.charts.xy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Slam;
@@ -46,25 +48,30 @@ import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
-	private static final int MAXPANES = 50;
 
 	private  Pane   	    pane 		= null;
+	private  Pane           vehicle     = null;
 	private  Slam		  	slam 		= null;
+
+	private Map<Integer,Pane> blocks    = null;
 
 
 	public XYSLAMBlockAnnotation() {
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
-		for(int i=0;i<MAXPANES;i++) {
-			Pane p = new Pane();
-			p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
-			p.setVisible(false);
-			pane.getChildren().add(i,p);
-		}
+
+		this.blocks = new HashMap<Integer,Pane>();
+
+		vehicle = new Pane();
+		vehicle.setStyle("-fx-background-color: rgba(60.0, 160.0, 100.0, 0.5);; -fx-padding:-1px; -fx-border-color: #606030;");
+		vehicle.setVisible(false);
+		pane.getChildren().add(vehicle);
 	}
 
 	public void set(Slam slam) {
@@ -78,33 +85,56 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		BlockPoint2D p; double ext;
 
-		for(int i=0;i<MAXPANES;i++)
+		for(int i=0;i<pane.getChildren().size();i++)
 			pane.getChildren().get(i).setVisible(false);
 
 		if(slam==null)
 			return;
 
-		List<BlockPoint2D> blocks = slam.getBlocks();
-		if(blocks!=null) {
-			for(int i=0; i<blocks.size() && i < MAXPANES;i++) {
-				p = blocks.get(i);
-				ext = xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0);
-				pane.getChildren().get(i).setLayoutX(xAxis.getDisplayPosition(p.y));
-				pane.getChildren().get(i).setLayoutY(yAxis.getDisplayPosition(p.x));
-				((Pane)pane.getChildren().get(i)).setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
-						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));;
-				pane.getChildren().get(i).setVisible(true);
-			}
-		}
+		blocks.forEach((i,p) -> {
+			p.setVisible(false);
+		});
+
+		slam.getData().forEach((i,b) -> {
+			Pane bp = getBlockPane(i,b);
+			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
+			bp.setLayoutY(yAxis.getDisplayPosition(b.x+slam.getResolution()));
+			bp.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
+					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));
+			bp.setVisible( true);
+
+		});
+
+
+		vehicle.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
+				yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));;
+				vehicle.setLayoutX(xAxis.getDisplayPosition(slam.getVehicleY()));
+				vehicle.setLayoutY(yAxis.getDisplayPosition(slam.getVehicleX()));
+				vehicle.setVisible(true);
 	}
 
 	public void invalidate() {
 		slam=null;
-		for(int i=0;i<MAXPANES;i++)
-			pane.getChildren().get(i).setVisible(false);
+		blocks.clear();
+//		blocks.forEach((i,p) -> {
+//			p.setVisible(false);
+//		});
+
+		vehicle.setVisible(false);
+	}
+
+	private Pane getBlockPane(int block, BlockPoint2D b) {
+		if(blocks.containsKey(block))
+			return blocks.get(block);
+		Pane p = new Pane();
+		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
+		p.setVisible(false);
+		pane.getChildren().add(p);
+		blocks.put(block, p);
+		return p;
 	}
 
 
