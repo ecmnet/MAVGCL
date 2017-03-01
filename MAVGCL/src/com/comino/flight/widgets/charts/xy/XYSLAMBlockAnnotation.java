@@ -44,6 +44,7 @@ import com.comino.msp.utils.BlockPoint2D;
 import com.comino.msp.utils.BlockPoint3D;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.GridPane;
@@ -60,6 +61,8 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 	private Map<Integer,Pane> blocks    = null;
 
+	private float           scale       = 0;
+
 
 	public XYSLAMBlockAnnotation() {
 		this.pane = new Pane();
@@ -74,8 +77,12 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		pane.getChildren().add(vehicle);
 	}
 
-	public void set(Slam slam) {
-		this.slam = slam;
+	public void set(Slam slam, float scale) {
+		this.slam  = slam;
+		this.scale = scale;
+		slam.getData().forEach((i,b) -> {
+			getBlockPane(i,b);
+		});
 	}
 
 
@@ -98,13 +105,16 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 			p.setVisible(false);
 		});
 
+
 		slam.getData().forEach((i,b) -> {
 			Pane bp = getBlockPane(i,b);
-			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
-			bp.setLayoutY(yAxis.getDisplayPosition(b.x+slam.getResolution()));
-			bp.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
-					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));
-			bp.setVisible( true);
+			if(b.x > -scale && b.x < scale && b.y > -scale && b.y < scale) {
+				bp.setLayoutX(xAxis.getDisplayPosition(b.y));
+				bp.setLayoutY(yAxis.getDisplayPosition(b.x+slam.getResolution()));
+				bp.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
+						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));
+				bp.setVisible( true);
+			}
 
 		});
 
@@ -117,12 +127,9 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 	}
 
 	public void invalidate() {
-		slam=null;
-		blocks.clear();
-//		blocks.forEach((i,p) -> {
-//			p.setVisible(false);
-//		});
-
+		blocks.forEach((i,p) -> {
+			p.setVisible(false);
+		});
 		vehicle.setVisible(false);
 	}
 

@@ -594,6 +594,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			if(current_x_pt < 0) current_x_pt = 0;
+
+			slamblocks.set(control.getCurrentModel().slam,scale);
+		//	slamblocks.invalidate();
 		}
 
 
@@ -654,7 +657,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 					m = mList.get(current_x_pt);
 
-					slamblocks.set(m.slam);
 
 					if(current_x_pt > current_x1_pt) {
 
@@ -790,6 +792,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			xAxis.setUpperBound(+scale);
 			yAxis.setLowerBound(-scale);
 			yAxis.setUpperBound(+scale);
+
 
 			if(scale>10) {
 				xAxis.setTickUnit(10); yAxis.setTickUnit(10);
