@@ -488,6 +488,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		slam.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
+				slamblocks.invalidate();
 				rotation_rad = 0;
 				rotation.setValue(0);
 			}
