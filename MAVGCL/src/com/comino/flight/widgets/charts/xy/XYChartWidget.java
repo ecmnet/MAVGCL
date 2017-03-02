@@ -598,7 +598,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(current_x_pt < 0) current_x_pt = 0;
 
 			slamblocks.set(control.getCurrentModel().slam,scale);
-		//	slamblocks.invalidate();
 		}
 
 
@@ -766,6 +765,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	}
 
 	private void updateRequest() {
+		slamblocks.invalidate();
 		if(!isDisabled()) {
 			old_center_x = 0; old_center_y = 0;
 			if(dataService.isCollecting()) {
