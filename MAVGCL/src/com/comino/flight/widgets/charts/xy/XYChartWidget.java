@@ -40,6 +40,8 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
+import org.mavlink.messages.MSP_CMD;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;

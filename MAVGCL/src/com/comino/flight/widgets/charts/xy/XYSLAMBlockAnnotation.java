@@ -133,9 +133,16 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		vehicle.setVisible(false);
 	}
 
+	public void clear() {
+		blocks.clear();
+		vehicle.setVisible(false);
+	}
+
 	private Pane getBlockPane(int block, BlockPoint2D b) {
+
 		if(blocks.containsKey(block))
 			return blocks.get(block);
+
 		Pane p = new Pane();
 		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
 		p.setVisible(false);

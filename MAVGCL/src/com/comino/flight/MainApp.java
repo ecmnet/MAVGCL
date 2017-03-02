@@ -41,6 +41,7 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_autopilot_version;
 
 import com.comino.flight.base.UBXRTCM3Base;
@@ -177,6 +178,12 @@ public class MainApp extends Application  {
 			MSPLogger.getInstance(control);
 
 			StateProperties.getInstance(control);
+
+			StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+				if(nv.booleanValue()) {
+	              control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				}
+			});
 
 			AnalysisModelService.getInstance(control);
 
