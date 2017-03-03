@@ -98,12 +98,12 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		for(int i=0;i<pane.getChildren().size();i++)
 			pane.getChildren().get(i).setVisible(false);
 
-		if(slam==null)
+		if(slam==null || !slam.hasBlocked())
 			return;
 
-		blocks.forEach((i,p) -> {
-			p.setVisible(false);
-		});
+		if(slam.count==0) {
+			clear();
+		}
 
 
 		slam.getData().forEach((i,b) -> {
