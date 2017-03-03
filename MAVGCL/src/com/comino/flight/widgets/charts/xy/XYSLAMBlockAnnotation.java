@@ -43,6 +43,7 @@ import com.comino.msp.model.segment.Slam;
 import com.comino.msp.utils.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -74,7 +75,9 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		// Workaraound: Refresh annotations if re-connected
 		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
-            clear();
+				Platform.runLater(() -> {
+					clear();
+				});
 			}
 		});
 	}
@@ -136,6 +139,9 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 	}
 
 	public void clear() {
+		blocks.forEach((i,p) -> {
+			pane.getChildren().remove(p);
+		});
 		blocks.clear();
 		vehicle.setVisible(false);
 	}
