@@ -33,24 +33,19 @@
 
 package com.comino.flight.widgets.charts.xy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.comino.msp.model.DataModel;
+import org.mavlink.messages.MSP_CMD;
+
+import com.comino.flight.observables.StateProperties;
 import com.comino.msp.model.segment.Slam;
 import com.comino.msp.utils.BlockPoint2D;
-import com.comino.msp.utils.BlockPoint3D;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
@@ -75,6 +70,13 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		vehicle.setStyle("-fx-background-color: rgba(60.0, 160.0, 100.0, 0.5);; -fx-padding:-1px; -fx-border-color: #606030;");
 		vehicle.setVisible(false);
 		pane.getChildren().add(vehicle);
+
+		// Workaraound: Refresh annotations if re-connected
+		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+            clear();
+			}
+		});
 	}
 
 	public void set(Slam slam, float scale) {
