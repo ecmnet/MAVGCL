@@ -47,6 +47,7 @@ import com.emxsys.chart.extension.XYAnnotation;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class XYSLAMBlockAnnotation  implements XYAnnotation {
@@ -58,8 +59,6 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 	private Map<Integer,Pane> blocks    = null;
 
-	private float           scale       = 0;
-
 
 	public XYSLAMBlockAnnotation() {
 		this.pane = new Pane();
@@ -69,16 +68,13 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		this.blocks = new HashMap<Integer,Pane>();
 
 		vehicle = new Pane();
-		vehicle.setStyle("-fx-background-color: rgba(60.0, 160.0, 100.0, 0.5);; -fx-padding:-1px; -fx-border-color: #606030;");
+		vehicle.setStyle("-fx-background-color: rgba(170.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
 		vehicle.setVisible(false);
 		pane.getChildren().add(vehicle);
-
-
 	}
 
-	public void set(Slam slam, float scale) {
+	public void setModel(Slam slam) {
 		this.slam  = slam;
-		this.scale = scale;
 	}
 
 
@@ -99,13 +95,11 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 		slam.getData().forEach((i,b) -> {
 			Pane bp = getBlockPane(i,b);
-			if(b.x > -scale && b.x < scale && b.y > -scale && b.y < scale) {
 				bp.setLayoutX(xAxis.getDisplayPosition(b.y));
 				bp.setLayoutY(yAxis.getDisplayPosition(b.x+slam.getResolution()));
 				bp.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
 						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));
 				bp.setVisible( true);
-			}
 		});
 
 

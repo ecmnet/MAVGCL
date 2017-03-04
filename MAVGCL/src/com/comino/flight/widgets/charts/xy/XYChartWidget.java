@@ -485,7 +485,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		slam.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
-				System.out.println("slam");
 				slamblocks.invalidate();
 				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
 				rotation_rad = 0;
@@ -504,9 +503,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				Platform.runLater(() -> {
-					System.out.println("refresh");
 					slamblocks.clear();
-					slamblocks.set(control.getCurrentModel().slam,scale);
+					slamblocks.setModel(control.getCurrentModel().slam);
 					updateRequest();
 				});
 			}
@@ -560,6 +558,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(refresh) {
 
+			slamblocks.invalidate();
 
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
@@ -567,8 +566,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			//		synchronized(this) {
 			refreshRequest = false;
 
-			slamblocks.invalidate();
-			slamblocks.set(control.getCurrentModel().slam,scale);
 
 			series1.getData().clear(); series2.getData().clear();
 			pool.invalidateAll();
@@ -722,7 +719,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
-		slamblocks.set(control.getCurrentModel().slam,scale);
+		slamblocks.setModel(control.getCurrentModel().slam);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
