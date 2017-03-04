@@ -39,6 +39,7 @@ import java.util.Map;
 import org.mavlink.messages.MSP_CMD;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.segment.Slam;
 import com.comino.msp.utils.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
@@ -72,22 +73,12 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		vehicle.setVisible(false);
 		pane.getChildren().add(vehicle);
 
-		// Workaraound: Refresh annotations if re-connected
-		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
-				Platform.runLater(() -> {
-					clear();
-				});
-			}
-		});
+
 	}
 
 	public void set(Slam slam, float scale) {
 		this.slam  = slam;
 		this.scale = scale;
-		slam.getData().forEach((i,b) -> {
-			getBlockPane(i,b);
-		});
 	}
 
 
@@ -106,11 +97,6 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		if(slam==null || !slam.hasBlocked())
 			return;
 
-		if(slam.count==0) {
-			clear();
-		}
-
-
 		slam.getData().forEach((i,b) -> {
 			Pane bp = getBlockPane(i,b);
 			if(b.x > -scale && b.x < scale && b.y > -scale && b.y < scale) {
@@ -120,7 +106,6 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));
 				bp.setVisible( true);
 			}
-
 		});
 
 
@@ -139,11 +124,13 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 	}
 
 	public void clear() {
-		blocks.forEach((i,p) -> {
-			pane.getChildren().remove(p);
+		Platform.runLater(() -> {
+			blocks.forEach((i,p) -> {
+				pane.getChildren().remove(p);
+			});
+			vehicle.setVisible(false);
 		});
 		blocks.clear();
-		vehicle.setVisible(false);
 	}
 
 	private Pane getBlockPane(int block, BlockPoint2D b) {

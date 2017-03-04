@@ -247,13 +247,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@FXML
 	private void initialize() {
 
+		this.slamblocks = new XYSLAMBlockAnnotation();
+
 		this.dashboard1 = new XYDashBoardAnnotation(0,s1);
 		this.dashboard2 = new XYDashBoardAnnotation(90,s2);
 
 		this.endPosition1 = new PositionAnnotation("P",Color.DARKSLATEBLUE);
 		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
-
-		this.slamblocks = new XYSLAMBlockAnnotation();
 
 		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -483,20 +483,34 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		annotation.selectedProperty().set(true);
 
-		slam.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
-		rotation.setDisable(slam.isSelected());
-
 		slam.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
+				System.out.println("slam");
 				slamblocks.invalidate();
+				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
-			}
+			} else
+				linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+
 			rotation.setDisable(nv.booleanValue());
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,slam.isSelected());
 		});
 
+		slam.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		rotation.setDisable(slam.isSelected());
+//
+		this.disabledProperty().addListener((l,o,n) -> {
+			if(!n.booleanValue()) {
+				Platform.runLater(() -> {
+					System.out.println("refresh");
+					slamblocks.clear();
+					slamblocks.set(control.getCurrentModel().slam,scale);
+					updateRequest();
+				});
+			}
+		});
 	}
 
 	private void setXResolution(int frame) {
@@ -546,21 +560,20 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(refresh) {
 
+
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
 			//		synchronized(this) {
 			refreshRequest = false;
+
+			slamblocks.invalidate();
+			slamblocks.set(control.getCurrentModel().slam,scale);
+
 			series1.getData().clear(); series2.getData().clear();
 			pool.invalidateAll();
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
-			linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-
-			if(slam.isSelected()) {
-				slamblocks.invalidate();
-				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
-			}
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -598,7 +611,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			if(current_x_pt < 0) current_x_pt = 0;
 
-			slamblocks.set(control.getCurrentModel().slam,scale);
 		}
 
 
@@ -710,6 +722,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
+		slamblocks.set(control.getCurrentModel().slam,scale);
+
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				current_x0_pt = 0;
@@ -729,6 +743,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} catch(NumberFormatException e) {
 
 		}
+
+		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				slamblocks.clear();
+			}
+		});
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
@@ -766,7 +787,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	}
 
 	private void updateRequest() {
-		slamblocks.invalidate();
 		if(!isDisabled()) {
 			old_center_x = 0; old_center_y = 0;
 			if(dataService.isCollecting()) {
