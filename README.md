@@ -14,7 +14,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Note:** Windows installer doesn't seem to work with Windows10
 
-**Development Status:** Last updated 01/03/2017
+**Development Status:** Last updated 07/03/2017
 
 V0.6xx notes:
 
