@@ -36,18 +36,13 @@ package com.comino.flight.widgets.charts.xy;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mavlink.messages.MSP_CMD;
-
-import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.segment.Slam;
-import com.comino.msp.utils.BlockPoint2D;
+import com.comino.msp.slam.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class XYSLAMBlockAnnotation  implements XYAnnotation {
