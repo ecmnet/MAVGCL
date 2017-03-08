@@ -470,7 +470,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		corr_zero.setOnAction((ActionEvent event)-> {
 			updateRequest();
-			prefs.putBoolean(MAVPreferences.XYCHART_OFFSET,force_zero.isSelected());
+			prefs.putBoolean(MAVPreferences.XYCHART_OFFSET,corr_zero.isSelected());
 		});
 
 		corr_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_OFFSET, false));
