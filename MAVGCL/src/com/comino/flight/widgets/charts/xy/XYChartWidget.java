@@ -84,6 +84,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
+// TODO: Add planned path
 
 public class XYChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
 
@@ -92,8 +93,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			{ "LPOSX"	, "LPOSY" 	},
 			{ "LPOSVX"	, "LPOSVY" 	},
 			{ "VISIONX"	, "VISIONY" },
+			{ "SLAMPX"  , "SLAMPY"  },
 			{ "SPLPOSX"	, "SPLPOSY" },
-			{ "PITCH"   , "ROLL"   },
+			{ "PITCH"   , "ROLL"    },
 			{ "ACCX"    , "ACCY"    },
 	};
 
@@ -102,6 +104,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			"Loc.Position",
 			"Loc.Speed",
 			"Vision Position",
+			"Planned path",
 			"SP Loc.Position",
 			"Attitude",
 			"Acceleration"

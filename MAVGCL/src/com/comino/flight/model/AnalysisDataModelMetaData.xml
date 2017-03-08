@@ -1384,6 +1384,23 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- SLAM data -->
+
+	<KeyFigure desc="Path.X" uom="m" mask="#0.00" key="SLAMPX">
+		<MSPSource class="slam" field="px"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mappping</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="Path.Y" uom="m" mask="#0.00" key="SLAMPY">
+		<MSPSource class="slam" field="py"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mappping</Group>
+		</Groups>
+	</KeyFigure>
+
 
 
 </AnalysisDataModel>
