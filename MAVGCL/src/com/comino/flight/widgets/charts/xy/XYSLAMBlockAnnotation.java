@@ -49,7 +49,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 
 	private  Pane   	    pane 		= null;
-	private  Pane           vehicle     = null;
+	private  Pane           indicator   = null;
 	private  Slam		  	slam 		= null;
 
 	private Map<Integer,Pane> blocks    = null;
@@ -62,10 +62,10 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
 		this.blocks = new HashMap<Integer,Pane>();
 
-		vehicle = new Pane();
-		vehicle.setStyle("-fx-background-color: rgba(170.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
-		vehicle.setVisible(false);
-		pane.getChildren().add(vehicle);
+		indicator = new Pane();
+		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
+		indicator.setVisible(false);
+		pane.getChildren().add(indicator);
 	}
 
 	public void setModel(Slam slam) {
@@ -98,18 +98,18 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		});
 
 
-		vehicle.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
+		indicator.setPrefSize(xAxis.getDisplayPosition(slam.getResolution())-xAxis.getDisplayPosition(0),
 				yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(slam.getResolution()));;
-				vehicle.setLayoutX(xAxis.getDisplayPosition(slam.getVehicleY()));
-				vehicle.setLayoutY(yAxis.getDisplayPosition(slam.getVehicleX()));
-				vehicle.setVisible(true);
+				indicator.setLayoutX(xAxis.getDisplayPosition(slam.getIndicatorY()));
+				indicator.setLayoutY(yAxis.getDisplayPosition(slam.getIndicatorX()));
+				indicator.setVisible(true);
 	}
 
 	public void invalidate() {
 		blocks.forEach((i,p) -> {
 			p.setVisible(false);
 		});
-		vehicle.setVisible(false);
+		indicator.setVisible(false);
 	}
 
 	public void clear() {
@@ -117,7 +117,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 			blocks.forEach((i,p) -> {
 				pane.getChildren().remove(p);
 			});
-			vehicle.setVisible(false);
+			indicator.setVisible(false);
 		});
 		blocks.clear();
 	}
