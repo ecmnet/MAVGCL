@@ -33,22 +33,15 @@
 
 package com.comino.flight.widgets.info;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.observables.StateProperties;
-import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.segment.LogMessage;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
