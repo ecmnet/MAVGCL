@@ -51,6 +51,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 
 public class XYSLAMBlockAnnotation  implements XYAnnotation {
 
@@ -125,7 +126,10 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		indicator.setLayoutY(yAxis.getDisplayPosition(slam.getIndicatorX()));
 		indicator.setVisible(true);
 
+		slam.pv = (float)Math.random()*2; slam.pd = (float)MSPMathUtils.toRad(135);
+
 		if(slam.pv != 0) {
+			setArrowLength(slam.pv);
 			direction.setLayoutX(xAxis.getDisplayPosition(state.l_y));
 			direction.setLayoutY(yAxis.getDisplayPosition(state.l_x));
 			rotate.angleProperty().set(180+MSPMathUtils.fromRad(slam.pd));
@@ -151,6 +155,16 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		});
 		blocks.clear();
 	}
+
+	private void setArrowLength(float length) {
+		Double k = (double)(length * 30);
+		direction.getPoints().set(1,k);
+		direction.getPoints().set(3,k);
+		direction.getPoints().set(9,k);
+		direction.getPoints().set(11,k);
+		direction.getPoints().set(13,k+10);
+	}
+
 
 	private Pane getBlockPane(int block, BlockPoint2D b) {
 
