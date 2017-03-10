@@ -125,10 +125,10 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		indicator.setLayoutY(yAxis.getDisplayPosition(slam.getIndicatorX()));
 		indicator.setVisible(true);
 
-		if(slam.px != 0 && slam.py !=0) {
+		if(slam.pv != 0) {
 			direction.setLayoutX(xAxis.getDisplayPosition(state.l_y));
 			direction.setLayoutY(yAxis.getDisplayPosition(state.l_x));
-			rotate.angleProperty().set(180+MSPMathUtils.fromRad((float)Math.atan2((slam.py-state.l_y), (slam.px-state.l_x))));
+			rotate.angleProperty().set(180+MSPMathUtils.fromRad(slam.pd));
 			direction.setVisible(true);
 		} else
 			direction.setVisible(false);
