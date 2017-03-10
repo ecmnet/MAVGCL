@@ -126,8 +126,6 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 		indicator.setLayoutY(yAxis.getDisplayPosition(slam.getIndicatorX()));
 		indicator.setVisible(true);
 
-		slam.pv = (float)Math.random()*2; slam.pd = (float)MSPMathUtils.toRad(135);
-
 		if(slam.pv != 0) {
 			setArrowLength(slam.pv);
 			direction.setLayoutX(xAxis.getDisplayPosition(state.l_y));
