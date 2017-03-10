@@ -507,7 +507,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(!n.booleanValue()) {
 				Platform.runLater(() -> {
 					slamblocks.clear();
-					slamblocks.setModel(control.getCurrentModel().slam);
+					slamblocks.setModel(control.getCurrentModel());
 					updateRequest();
 				});
 			}
@@ -722,7 +722,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
-		slamblocks.setModel(control.getCurrentModel().slam);
+		slamblocks.setModel(control.getCurrentModel());
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
