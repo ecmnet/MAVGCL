@@ -62,7 +62,7 @@
 
             <Separator layoutX="15.0" layoutY="530.0" prefHeight="4.0" prefWidth="126.0" />
             <CheckBox fx:id="annotation" layoutX="15.0" layoutY="550.0" mnemonicParsing="false" text="Dashboard" selected="true" />
-            <CheckBox fx:id="slam" layoutX="15.0" layoutY="570.0" mnemonicParsing="false" text="MicroSLAM blocks" selected="false" />
+            <CheckBox fx:id="show_grid" layoutX="15.0" layoutY="570.0" mnemonicParsing="false" text="MicroSLAM blocks" selected="false" />
 
              <Separator layoutX="15.0" layoutY="590.0" prefHeight="4.0" prefWidth="126.0" />
 

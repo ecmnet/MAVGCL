@@ -169,7 +169,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private CheckBox annotation;
 
 	@FXML
-	private CheckBox slam;
+	private CheckBox show_grid;
 
 
 
@@ -213,7 +213,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private PositionAnnotation    endPosition1 = null;
 	private PositionAnnotation    endPosition2 = null;
 
-	private XYSLAMBlockAnnotation slamblocks = null;
+	private XYGridAnnotation grid = null;
+	private XYSlamAnnotation slam = null;
 
 	private XYDataPool pool = null;
 
@@ -250,7 +251,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@FXML
 	private void initialize() {
 
-		this.slamblocks = new XYSLAMBlockAnnotation();
+		this.grid = new XYGridAnnotation();
+		this.slam = new XYSlamAnnotation();
 
 		this.dashboard1 = new XYDashBoardAnnotation(0,s1);
 		this.dashboard2 = new XYDashBoardAnnotation(90,s2);
@@ -486,10 +488,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		annotation.selectedProperty().set(true);
 
-		slam.selectedProperty().addListener((v, ov, nv) -> {
+		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
-				slamblocks.invalidate();
-				linechart.getAnnotations().add(slamblocks,Layer.BACKGROUND);
+				grid.invalidate();
+				linechart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
 			} else
@@ -497,17 +499,17 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			rotation.setDisable(nv.booleanValue());
 			updateRequest();
-			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,slam.isSelected());
+			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,show_grid.isSelected());
 		});
 
-		slam.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
-		rotation.setDisable(slam.isSelected());
+		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		rotation.setDisable(show_grid.isSelected());
 //
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				Platform.runLater(() -> {
-					slamblocks.clear();
-					slamblocks.setModel(control.getCurrentModel());
+					grid.clear();
+					grid.setModel(control.getCurrentModel());
 					updateRequest();
 				});
 			}
@@ -561,7 +563,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(refresh) {
 
-			slamblocks.invalidate();
+			grid.invalidate();
 
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
@@ -574,6 +576,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			pool.invalidateAll();
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+
+			if(show_grid.isSelected())
+				linechart.getAnnotations().add(slam, Layer.FOREGROUND);
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -671,6 +676,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 					m = mList.get(current_x_pt);
 
+					slam.setModel(m);
+
 
 					if(current_x_pt > current_x1_pt) {
 
@@ -722,7 +729,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
-		slamblocks.setModel(control.getCurrentModel());
+		grid.setModel(control.getCurrentModel());
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
@@ -747,7 +754,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-				slamblocks.clear();
+				grid.clear();
 			}
 		});
 

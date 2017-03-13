@@ -313,11 +313,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 					current.msg = null; record.msg = null;
 				}
 
-				if(model.slam!=null ) {
-					current.slam = model.slam;
-					record.slam = model.slam;
-				}
-
 				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 				}
 
