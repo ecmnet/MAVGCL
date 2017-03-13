@@ -33,18 +33,10 @@
 
 package com.comino.flight.widgets.charts.xy;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Grid;
-import com.comino.msp.model.segment.Slam;
-import com.comino.msp.model.segment.State;
-import com.comino.msp.slam.BlockPoint2D;
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.msp.utils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -52,47 +44,32 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 
-public class XYSlamAnnotation2  implements XYAnnotation {
-
-
-	private  Pane   	    pane 		= null;
-	private  Pane           indicator   = null;
-	private  Polygon        direction   = null;
-	private  Rotate         rotate      = null;
-
-	private  Grid		  	grid 		= null;
-	private  State          state       = null;
-
-	private Map<Integer,Pane> blocks    = null;
+public class XYSlamAnnotation  implements XYAnnotation {
 
 
-	public XYSlamAnnotation2() {
+	private  Pane   	  			  pane 		= null;
+	private  Polygon        		direction   = null;
+	private  Rotate       		    rotate      = null;
+	private  AnalysisDataModel      model       = null;
+
+	public XYSlamAnnotation() {
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
-
-		this.blocks = new HashMap<Integer,Pane>();
 
 		rotate = Rotate.rotate(0, 0, 0);
 		direction = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
 		direction.setFill(Color.YELLOW);
 		direction.getTransforms().add(rotate);
 		direction.setStrokeType(StrokeType.INSIDE);
-		direction.setVisible(true);
+		direction.setVisible(false);
 
 		pane.getChildren().add(direction);
-
-		indicator = new Pane();
-		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
-		indicator.setVisible(false);
-		pane.getChildren().add(indicator);
 	}
 
-	public void setModel(DataModel model) {
-		this.grid  = model.grid;
-		this.state = model.state;
+	public void setModel(AnalysisDataModel model) {
+		this.model = model;
 	}
 
 
@@ -105,56 +82,18 @@ public class XYSlamAnnotation2  implements XYAnnotation {
 	@SuppressWarnings("unchecked")
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
-		for(int i=0;i<pane.getChildren().size();i++)
-			pane.getChildren().get(i).setVisible(false);
-
-		if(grid==null || !grid.hasBlocked())
+		if(model==null)
 			return;
 
-		grid.getData().forEach((i,b) -> {
-			Pane bp = getBlockPane(i,b);
-			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
-			bp.setLayoutY(yAxis.getDisplayPosition(b.x+grid.getResolution()));
-			bp.setPrefSize(xAxis.getDisplayPosition(grid.getResolution())-xAxis.getDisplayPosition(0),
-					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(grid.getResolution()));
-			bp.setVisible( true);
-		});
-
-
-		indicator.setPrefSize(xAxis.getDisplayPosition(grid.getResolution())-xAxis.getDisplayPosition(0),
-				yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(grid.getResolution()));
-		indicator.setLayoutX(xAxis.getDisplayPosition(grid.getIndicatorY()));
-		indicator.setLayoutY(yAxis.getDisplayPosition(grid.getIndicatorX()));
-		indicator.setVisible(true);
-
-//		if(slam.pv != 0) {
-//			setArrowLength(slam.pv);
-//			direction.setLayoutX(xAxis.getDisplayPosition(state.l_y));
-//			direction.setLayoutY(yAxis.getDisplayPosition(state.l_x));
-//			rotate.angleProperty().set(180+MSPMathUtils.fromRad(g.pd));
-//			direction.setVisible(true);
-//		} else
-//			direction.setVisible(false);
-
-	}
-
-	public void invalidate() {
-		blocks.forEach((i,p) -> {
-			p.setVisible(false);
-		});
-		indicator.setVisible(false);
-		direction.setVisible(false);
-	}
-
-	public void clear() {
-		Platform.runLater(() -> {
-			blocks.forEach((i,p) -> {
-				pane.getChildren().remove(p);
-			});
-			indicator.setVisible(false);
+		if(model.getValue("SLAMSPD") != 0) {
+			setArrowLength(model.getValue("SLAMSPD"));
+			direction.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+			direction.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+			rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
+			direction.setVisible(true);
+		} else
 			direction.setVisible(false);
-		});
-		blocks.clear();
+
 	}
 
 	private void setArrowLength(float length) {
@@ -165,20 +104,4 @@ public class XYSlamAnnotation2  implements XYAnnotation {
 		direction.getPoints().set(11,k);
 		direction.getPoints().set(13,k+10);
 	}
-
-
-	private Pane getBlockPane(int block, BlockPoint2D b) {
-
-		if(blocks.containsKey(block))
-			return blocks.get(block);
-
-		Pane p = new Pane();
-		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
-		p.setVisible(false);
-		pane.getChildren().add(p);
-		blocks.put(block, p);
-		return p;
-	}
-
-
 }
