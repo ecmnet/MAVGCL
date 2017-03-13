@@ -37,6 +37,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.msp.utils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -49,8 +50,10 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 
 	private  Pane   	  			  pane 		= null;
-	private  Polygon        		direction   = null;
-	private  Rotate       		    rotate      = null;
+	private  Polygon        		act_dir     = null;
+	private  Polygon        		plan_dir    = null;
+	private  Rotate       		    act_rotate  = null;
+	private  Rotate       		    plan_rotate = null;
 	private  AnalysisDataModel      model       = null;
 
 	public XYSlamAnnotation() {
@@ -58,14 +61,21 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 
-		rotate = Rotate.rotate(0, 0, 0);
-		direction = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
-		direction.setFill(Color.YELLOW);
-		direction.getTransforms().add(rotate);
-		direction.setStrokeType(StrokeType.INSIDE);
-		direction.setVisible(false);
+		plan_rotate = Rotate.rotate(0, 0, 0);
+		plan_dir = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
+		plan_dir.setFill(Color.YELLOW);
+		plan_dir.getTransforms().add(plan_rotate);
+		plan_dir.setStrokeType(StrokeType.INSIDE);
+		plan_dir.setVisible(false);
 
-		pane.getChildren().add(direction);
+		act_rotate = Rotate.rotate(0, 0, 0);
+		act_dir = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
+		act_dir.setFill(Color.DARKRED);
+		act_dir.getTransforms().add(act_rotate);
+		act_dir.setStrokeType(StrokeType.INSIDE);
+		act_dir.setVisible(false);
+
+		pane.getChildren().addAll(act_dir,plan_dir);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -86,22 +96,36 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			return;
 
 		if(model.getValue("SLAMSPD") != 0) {
-			setArrowLength(model.getValue("SLAMSPD"));
-			direction.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
-			direction.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
-			rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
-			direction.setVisible(true);
+			setArrowLength(plan_dir,model.getValue("SLAMSPD"));
+			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
+			plan_dir.setVisible(true);
 		} else
-			direction.setVisible(false);
+			plan_dir.setVisible(false);
+
+			setArrowLength(act_dir,0.5f);
+			act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+			act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+			act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
+			act_dir.setVisible(true);
+
 
 	}
 
-	private void setArrowLength(float length) {
+	public void clear() {
+		Platform.runLater(() -> {
+			act_dir.setVisible(false);
+			plan_dir.setVisible(false);
+		});
+	}
+
+	private void setArrowLength(Polygon p, float length) {
 		Double k = (double)(length * 30);
-		direction.getPoints().set(1,k);
-		direction.getPoints().set(3,k);
-		direction.getPoints().set(9,k);
-		direction.getPoints().set(11,k);
-		direction.getPoints().set(13,k+10);
+		p.getPoints().set(1,k);
+		p.getPoints().set(3,k);
+		p.getPoints().set(9,k);
+		p.getPoints().set(11,k);
+		p.getPoints().set(13,k+10);
 	}
 }

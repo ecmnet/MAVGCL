@@ -508,7 +508,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				Platform.runLater(() -> {
-					grid.clear();
+					grid.clear(); slam.clear();
 					grid.setModel(control.getCurrentModel());
 					updateRequest();
 				});
@@ -577,8 +577,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-			if(show_grid.isSelected())
+			if(show_grid.isSelected() &&  mList.size()>0 )
 				linechart.getAnnotations().add(slam, Layer.FOREGROUND);
+
+			slam.clear();
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -617,8 +619,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(current_x_pt < 0) current_x_pt = 0;
 
 		}
-
-
 
 		if(mList.size()<1)
 			return;
@@ -676,8 +676,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 					m = mList.get(current_x_pt);
 
-					slam.setModel(m);
-
+					if(series1.getData().size()>0 ||series2.getData().size()>0)
+					  slam.setModel(m);
 
 					if(current_x_pt > current_x1_pt) {
 
@@ -809,7 +809,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		}
 	}
-
 
 
 	private void setScaling(float scale) {
