@@ -142,6 +142,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 			p.setVisible(false);
 		});
 		indicator.setVisible(false);
+		direction.setVisible(false);
 	}
 
 	public void clear() {
@@ -150,6 +151,7 @@ public class XYSLAMBlockAnnotation  implements XYAnnotation {
 				pane.getChildren().remove(p);
 			});
 			indicator.setVisible(false);
+			direction.setVisible(false);
 		});
 		blocks.clear();
 	}
