@@ -1400,14 +1400,14 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Path.Direction" uom="m" mask="#0.00" key="SLAMDIR">
+	<KeyFigure desc="Path.Direction" uom="rad" mask="#0.00" key="SLAMDIR">
 		<MSPSource class="slam" field="pd"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Path.Speed" uom="m" mask="#0.00" key="SLAMSPD">
+	<KeyFigure desc="Path.Speed" uom="m/s" mask="#0.0" key="SLAMSPD">
 		<MSPSource class="slam" field="pv"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
