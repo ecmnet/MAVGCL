@@ -37,22 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Grid;
-import com.comino.msp.model.segment.Slam;
-import com.comino.msp.model.segment.State;
 import com.comino.msp.slam.BlockPoint2D;
-import com.comino.msp.utils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.StrokeType;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 
 public class XYGridAnnotation  implements XYAnnotation {
 
