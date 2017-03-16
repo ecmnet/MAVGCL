@@ -498,13 +498,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 
 			rotation.setDisable(nv.booleanValue());
+
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,show_grid.isSelected());
 		});
 
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
-//
+		//
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				Platform.runLater(() -> {
@@ -552,6 +553,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		AnalysisDataModel m =null;
 
+
 		if(disabledProperty().get())
 			return;
 
@@ -568,9 +570,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
-			//		synchronized(this) {
-			refreshRequest = false;
-
 
 			series1.getData().clear(); series2.getData().clear();
 			pool.invalidateAll();
@@ -611,13 +610,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 						,Layer.FOREGROUND);
 
 			}
-			//		}
 
 			current_x_pt = current_x0_pt;
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			if(current_x_pt < 0) current_x_pt = 0;
-
+			refreshRequest = false;
 		}
 
 		if(mList.size()<1)
@@ -677,7 +675,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					m = mList.get(current_x_pt);
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0)
-					  slam.setModel(m);
+						slam.setModel(m);
 
 					if(current_x_pt > current_x1_pt) {
 
@@ -745,8 +743,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
 		try {
-		  scale = Float.parseFloat(scale_select.getSelectionModel().getSelectedItem());
-		  setScaling(scale);
+			scale = Float.parseFloat(scale_select.getSelectionModel().getSelectedItem());
+			setScaling(scale);
 		} catch(NumberFormatException e) {
 
 		}
@@ -787,19 +785,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	}
 
 	private void updateRequest() {
-		if(!isDisabled()) {
+		if(!isDisabled() && !refreshRequest) {
 			old_center_x = 0; old_center_y = 0;
-			if(dataService.isCollecting()) {
-				refreshRequest = true;
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
-			}
-			else {
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
-			}
+			refreshRequest = true;
+			Platform.runLater(() -> {
+				updateGraph(refreshRequest);
+			});
 		}
 	}
 

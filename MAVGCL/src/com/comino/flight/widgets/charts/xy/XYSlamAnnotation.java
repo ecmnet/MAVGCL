@@ -104,11 +104,11 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		} else
 			plan_dir.setVisible(false);
 
-		setArrowLength(act_dir,0.5f);
-		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
-		act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
-		act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
-		act_dir.setVisible(true);
+//		setArrowLength(act_dir,model.getValue("GNDV"));
+//		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+//		act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+//		act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
+//		act_dir.setVisible(true);
 
 
 	}

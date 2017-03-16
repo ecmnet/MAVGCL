@@ -536,8 +536,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-			current_x0_pt =  dataService.calculateX0Index(scroll.get());
-			updateRequest();
+				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+				updateRequest();
 			}
 		});
 
@@ -622,14 +622,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void updateRequest() {
-		if(!isDisabled()) {
-			if(dataService.isCollecting())
-				refreshRequest = true;
-			else {
-				Platform.runLater(() -> {
-					updateGraph(true);
-				});
-			}
+		if(!isDisabled() && !refreshRequest) {
+			refreshRequest = true;
+			Platform.runLater(() -> {
+				updateGraph(refreshRequest);
+			});
 		}
 	}
 
