@@ -41,12 +41,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_CMD;
+
 import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Slam;
@@ -106,6 +110,14 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.ulogger = new ULogFromMAVLinkReader(control);
 
 		control.addMAVLinkListener(this);
+
+		state.getConnectedProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+				control.getCurrentModel().grid.clear();
+				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			}
+		});
 
 		Thread c = new Thread(new CombinedConverter());
 		c.start();

@@ -751,13 +751,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		}
 
-		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
-				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-				grid.clear();
-			}
-		});
-
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				current_x0_pt =  dataService.calculateX0Index(scroll.get());
