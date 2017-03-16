@@ -51,6 +51,7 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -100,8 +101,7 @@ public class ExperimentalWidget extends WidgetPane   {
 
 	private boolean file_enabled = false;
 
-	private Task<Long> task;
-
+	private AnimationTimer task;
 
 	public ExperimentalWidget() {
 
@@ -115,29 +115,18 @@ public class ExperimentalWidget extends WidgetPane   {
 			throw new RuntimeException(exception);
 		}
 
+		task = new AnimationTimer() {
 
-
-		task = new Task<Long>() {
-
-			@Override
-			protected Long call() throws Exception {
-				while(true) {
-					LockSupport.parkNanos(250000000L);
-					if(isDisabled() || !isVisible() || offboard_enabled.isSelected()) {
-						continue;
-					}
-
-					if (isCancelled()) {
-						break;
-					}
-
-					Platform.runLater(() -> {
-						alt_control.setValue(-model.state.l_z * 100f);
-					});
-				}
-				return model.tms;
+			@Override public void handle(long now) {
+				if(isDisabled() || !isVisible())
+					return;
+				Platform.runLater(() -> {
+					alt_control.setValue(-model.state.l_z * 100f);
+				});
 			}
+
 		};
+
 	}
 
 	@FXML
@@ -306,10 +295,7 @@ public class ExperimentalWidget extends WidgetPane   {
 		offboard = new OffboardUpdater(control);
 		vision = new VisionSimulationUpdater(control);
 
-		Thread th = new Thread(task);
-		th.setPriority(Thread.MIN_PRIORITY);
-		th.setDaemon(true);
-		th.start();
+		task.start();
 
 	}
 
