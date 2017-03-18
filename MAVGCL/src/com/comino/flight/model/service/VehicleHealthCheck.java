@@ -34,6 +34,7 @@
 package com.comino.flight.model.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Set;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -64,10 +65,14 @@ public class VehicleHealthCheck {
 	private float max_roll = -Float.MAX_VALUE, min_roll = Float.MAX_VALUE;
 	private float max_pitch= -Float.MAX_VALUE, min_pitch= Float.MAX_VALUE;
 
+	private float max_head= -Float.MAX_VALUE, min_head = Float.MAX_VALUE;
+
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
 	private PX4Parameters parameters = null;
 	private String reason = null;
+
+	private DecimalFormat f = new DecimalFormat("#0.000");
 
 	public VehicleHealthCheck() {
 
@@ -146,7 +151,18 @@ public class VehicleHealthCheck {
 			if(healthOk) healthOk = Math.abs(max_pitch - min_pitch) < 0.1f;
 
 			if(!healthOk)
-				checkFailed("IMU: Pitch/Roll check failed: ("+(max_roll - min_roll)+","+(max_pitch - min_pitch)+")");
+				checkFailed("IMU: Pitch/Roll check failed: ("+f.format(max_roll - min_roll)+","+f.format(max_pitch - min_pitch)+")");
+
+			// check heading
+
+			max_head = model.hud.h > max_head ? model.hud.h : max_head;
+			min_head = model.hud.h < min_head ? model.hud.h : min_head;
+
+
+			if(healthOk) healthOk = Math.abs(max_head - min_head) < 2f;
+
+			if(!healthOk)
+				checkFailed("IMU: heading check failed: ("+f.format(Math.abs(max_head - min_head))+")");
 
 			// TODO:...add more checks here
 
