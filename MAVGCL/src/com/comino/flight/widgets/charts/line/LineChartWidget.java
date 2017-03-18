@@ -233,11 +233,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		xAxis.setUpperBound(timeFrame.intValue());
 		xAxis.setLabel("Seconds");
 		xAxis.setAnimated(false);
+		xAxis.setCache(true);
+		xAxis.setCacheHint(CacheHint.SPEED);
 
 		yAxis.setForceZeroInRange(false);
 		yAxis.setAutoRanging(true);
 		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
+		yAxis.setCache(true);
+		yAxis.setCacheHint(CacheHint.SPEED);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);

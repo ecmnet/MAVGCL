@@ -41,6 +41,7 @@ import com.comino.msp.slam.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -65,6 +66,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 		indicator = new Pane();
 		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
 		indicator.setVisible(false);
+		indicator.setCache(true);
+		indicator.setCacheHint(CacheHint.SPEED);
 		pane.getChildren().add(indicator);
 	}
 
@@ -128,6 +131,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 			return blocks.get(block);
 
 		Pane p = new Pane();
+		p.setCache(true);
+		p.setCacheHint(CacheHint.SPEED);
 		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
 		p.setVisible(false);
 		pane.getChildren().add(p);

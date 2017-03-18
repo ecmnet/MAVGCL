@@ -77,6 +77,7 @@ public class TileType implements MapTileType {
         }
 
         this.cacheThread = new CacheThread(store);
+        this.cacheThread.setName("OpenMap TileType worker");
         this.cacheThread.start();
     }
 
@@ -140,7 +141,7 @@ public class TileType implements MapTileType {
     public String getAttributionNotice() {
         return attributionNotice;
     }
-    
+
     @Override
     public String toString() {
         return getTypeName();

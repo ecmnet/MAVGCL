@@ -188,14 +188,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	@Override
 	public void received(Object _msg) {
 		if(!this.isDisabled())
-			new Thread(() -> {
-				Platform.runLater(() -> {
-					parseMessageString(_msg.toString().split(" "));
-				});
-			}).run();
+			Platform.runLater(() -> {
+				parseMessageString(_msg.toString().split(" "));
+			});
 	}
 
-	private synchronized void parseMessageString(String[] msg) {
+	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].trim();
 
 		if(!allData.containsKey(_msg)) {
@@ -205,8 +203,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			for(String v : msg)
 				if(v.contains("=")) {
 					try {
-					String[] p = v.split("=");
-					variables.put(p[0], new Dataset(p[0],p[1]));
+						String[] p = v.split("=");
+						variables.put(p[0], new Dataset(p[0],p[1]));
 					} catch(Exception e) {
 						//System.err.println(e.getMessage()+": "+v);
 					}
@@ -270,7 +268,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		public Dataset(String s, String n) {
 			str.set(s);
 			if(n!=null)
-			  value.set(n);
+				value.set(n);
 		}
 
 

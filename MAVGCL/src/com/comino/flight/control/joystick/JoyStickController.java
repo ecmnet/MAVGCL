@@ -114,7 +114,9 @@ public class JoyStickController implements Runnable {
 			return false;
 		}
 
-		new Thread(this).start();
+		Thread t = new Thread(this);
+		t.setName("Joystick worker");
+		t.start();
 
 		return true;
 	}

@@ -64,6 +64,7 @@ import javafx.stage.Stage;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
+// TODO: Save Microslam or put microslam into the data collection
 
 public class FileHandler {
 

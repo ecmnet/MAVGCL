@@ -37,6 +37,7 @@ import com.sun.javafx.tk.FontLoader;
 import com.sun.javafx.tk.Toolkit;
 
 import javafx.geometry.Insets;
+import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -48,12 +49,17 @@ public class DashLabel extends GridPane {
 	private Line  line      = null;
 	private Label label     = null;
 
+	private String old_value = null;
+
 
 	@SuppressWarnings("restriction")
 	public DashLabel() {
 		super();
 		this.setPadding(new Insets(3,0,3,0));
 	    this.setHgap(4);
+
+	    this.setCache(true);
+	    this.setCacheHint(CacheHint.SPEED);
 
 	    label = new Label(); label.setTextFill(Color.DARKCYAN.brighter());
 	    line = new Line(); line.setStroke(Color.DARKCYAN.darker());
@@ -83,7 +89,10 @@ public class DashLabel extends GridPane {
     }
 
     public void setText(String value) {
+    	if(value.equals(old_value))
+    		return;
         label.setText(value);
+        old_value = value;
     }
 
     public void setDashColor(Color color) {

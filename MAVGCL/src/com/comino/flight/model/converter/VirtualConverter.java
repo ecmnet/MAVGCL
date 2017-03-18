@@ -57,7 +57,9 @@ public class VirtualConverter extends SourceConverter {
 				calc = exp.build();
 			}
 		};
-		new Thread(r).start();
+		Thread t = new Thread(r);
+		t.setName("Virtual expression worker");
+		t.start();
 	}
 
 	@Override

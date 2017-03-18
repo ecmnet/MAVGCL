@@ -120,6 +120,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		});
 
 		Thread c = new Thread(new CombinedConverter());
+		c.setName("Combined model converter");
 		c.start();
 	}
 
@@ -130,6 +131,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.state         = StateProperties.getInstance();
 
 		Thread c = new Thread(new CombinedConverter());
+		c.setName("Combined model converter");
 		c.start();
 	}
 

@@ -64,7 +64,9 @@ public class OffboardUpdater implements Runnable {
 
 	public void start(int duration_ms) {
 		isRunning = true;
-		new Thread(this).start();
+		Thread t = new Thread(this);
+		t.setName("Offboard worker");
+		t.start();
 
 		try {
 			Thread.sleep(50);

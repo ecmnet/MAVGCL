@@ -62,7 +62,9 @@ public class VisionSimulationUpdater implements Runnable {
 		if(!isRunning) {
 		isRunning = true;
 		System.out.println("Vision updater started");
-		new Thread(this).start();
+		Thread t = new Thread(this);
+		t.setName("VideoSimulation worker");
+		t.start();
 		}
 
 	}

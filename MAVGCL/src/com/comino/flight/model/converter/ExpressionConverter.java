@@ -51,7 +51,9 @@ public class ExpressionConverter extends SourceConverter {
 				calc = new ExpressionBuilder(params[0]).variable(kfname).build();
 			}
 		};
-		new Thread(r).start();
+		Thread t = new Thread(r);
+		t.setName("Expression calculation worker");
+		t.start();
 	}
 
 	@Override

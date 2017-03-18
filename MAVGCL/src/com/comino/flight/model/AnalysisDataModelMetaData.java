@@ -173,11 +173,13 @@ public class AnalysisDataModelMetaData extends Observable {
 	}
 
 	private void sortGroupMaps() {
-		new Thread(()-> {
+		Thread t = new Thread(()-> {
 			groups.forEach((g,l) -> {
 				l.sort((KeyFigureMetaData o1, KeyFigureMetaData o2)->o1.desc1.compareTo(o2.desc1));
 			});
-		}).start();
+		});
+		t.setName("KeyFigure sorter worker");
+		t.start();
 	}
 
 	private List<KeyFigureMetaData> buildSortedList() {

@@ -262,7 +262,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	public Thread start() {
 		isRunning = true;
 		thread = new Thread(this);
-		thread.setPriority(Thread.MAX_PRIORITY);
+		thread.setName("Video worker");
 		thread.start();
 		isAvailable = true;
 		trigger = System.currentTimeMillis();

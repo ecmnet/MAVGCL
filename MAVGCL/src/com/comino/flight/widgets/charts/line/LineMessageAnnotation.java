@@ -38,6 +38,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.msp.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
@@ -59,6 +60,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		this.pane = new Pane();
 		this.pane.setPrefSize(300, 20);
 		this.pane.setCache(true);
+		this.pane.setCacheHint(CacheHint.SPEED);
 
 		this.pane.setOnScroll(event -> {
 			chart.fireEvent(event);
@@ -68,6 +70,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 
 		this.triangle = new Polygon( 0, 0, 14, 0, 7,10);
 		this.triangle.setCache(true);
+		this.triangle.setCacheHint(CacheHint.SPEED);
 
 		switch(message.severity) {
 		case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
