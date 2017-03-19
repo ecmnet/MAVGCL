@@ -116,12 +116,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	public void clear() {
-		Platform.runLater(() -> {
-			blocks.forEach((i,p) -> {
+		blocks.forEach((i,p) -> {
+			Platform.runLater(() -> {
 				pane.getChildren().remove(p);
 			});
-			indicator.setVisible(false);
 		});
+		indicator.setVisible(false);
 		blocks.clear();
 	}
 
@@ -131,8 +131,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 			return blocks.get(block);
 
 		Pane p = new Pane();
-		p.setCache(true);
-		p.setCacheHint(CacheHint.SPEED);
 		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
 		p.setVisible(false);
 		pane.getChildren().add(p);
