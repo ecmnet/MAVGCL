@@ -241,7 +241,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	@Override
 	public void update(long now) {
-		if(isVisible() && !isDisabled() && isRunning) {
+		if(isVisible() && !isDisabled()) {
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest);
 			});
@@ -555,14 +555,18 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		AnalysisDataModel m =null;
 
 
-		if(disabledProperty().get())
+		if(disabledProperty().get()) {
+			refreshRequest = false;
 			return;
+		}
 
 		if(auto_rotate.isSelected()) {
 			rotation_rad = -control.getCurrentModel().attitude.y;
 		}
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
+		if(mList==null)
+			return;
 
 		if(refresh) {
 
