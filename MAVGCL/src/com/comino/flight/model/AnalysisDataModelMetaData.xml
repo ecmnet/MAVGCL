@@ -569,7 +569,7 @@
 
 	<!-- Raw data -->
 
-	<KeyFigure desc="Flow.X" uom="deg/s" mask="#0.00" key="FLOWX">
+	<KeyFigure desc="Flow.X" uom="rad/s" mask="#0.00" key="FLOWX">
 		<MSPSource class="raw" field="fX"></MSPSource>
 		<PX4Source field="FLOW.RawX"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_x_integral"/>
@@ -578,7 +578,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Flow.Y" uom="deg/s" mask="#0.00" key="FLOWY">
+	<KeyFigure desc="Flow.Y" uom="rad/s" mask="#0.00" key="FLOWY">
 		<MSPSource class="raw" field="fY"></MSPSource>
 		<PX4Source field="FLOW.RawY"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_y_integral"/>
@@ -596,7 +596,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Flow.Quality" mask="#0" uom="%" key="FLOWQL">
+	<KeyFigure desc="Flow.Quality" mask="#0.0" uom="%" key="FLOWQL">
 		<MSPSource class="raw" field="fq">
 		   <Converter class="ExpressionConverter" expression="FLOWQL/255" />
 		</MSPSource>
