@@ -67,6 +67,8 @@ public class VehicleHealthCheck {
 
 	private float max_head= -Float.MAX_VALUE, min_head = Float.MAX_VALUE;
 
+	private float agl = 0;
+
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
 	private PX4Parameters parameters = null;
@@ -164,7 +166,12 @@ public class VehicleHealthCheck {
 			if(!healthOk)
 				checkFailed("IMU: heading check failed: ("+f.format(Math.abs(max_head - min_head))+")");
 
+			if(healthOk && Float.isNaN(model.hud.ag))
+				checkFailed("LPE: Altitude amsl not available");
+
+
 			// TODO:...add more checks here
+
 
 
 
