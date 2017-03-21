@@ -575,6 +575,7 @@
 		<ULogSource field="optical_flow_0.pixel_flow_x_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -584,6 +585,7 @@
 		<ULogSource field="optical_flow_0.pixel_flow_y_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -593,6 +595,7 @@
 		<ULogSource field="optical_flow_0.ground_distance_m"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -608,6 +611,7 @@
 		</ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 		<Validity min="0.25" max="1.0"/>
 	</KeyFigure>
@@ -616,6 +620,7 @@
 		<ULogSource field="optical_flow_0.gyro_x_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -623,6 +628,7 @@
 		<ULogSource field="optical_flow_0.gyro_y_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -630,6 +636,7 @@
 		<ULogSource field="optical_flow_0.gyro_z_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>Optical Flow</Group>
 		</Groups>
 	</KeyFigure>
 
