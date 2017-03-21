@@ -33,15 +33,12 @@
 
 package com.comino.flight.model.service;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Set;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
-import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
@@ -66,8 +63,6 @@ public class VehicleHealthCheck {
 	private float max_pitch= -Float.MAX_VALUE, min_pitch= Float.MAX_VALUE;
 
 	private float max_head= -Float.MAX_VALUE, min_head = Float.MAX_VALUE;
-
-	private float agl = 0;
 
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
@@ -165,6 +160,8 @@ public class VehicleHealthCheck {
 
 			if(!healthOk)
 				checkFailed("IMU: heading check failed: ("+f.format(Math.abs(max_head - min_head))+")");
+
+			// check Alt.amsl
 
 			if(healthOk && Float.isNaN(model.hud.ag))
 				checkFailed("LPE: Altitude amsl not available");
