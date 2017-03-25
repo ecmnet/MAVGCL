@@ -113,7 +113,7 @@ public class VehicleHealthCheck {
 
 			reason = null;
 
-			// Is power > 11V
+			// Is power > 10V
 
 			if(model.battery.a0 < 10.0f && dt_ms > 1000) {
 				checkFailed("Battery too low");
