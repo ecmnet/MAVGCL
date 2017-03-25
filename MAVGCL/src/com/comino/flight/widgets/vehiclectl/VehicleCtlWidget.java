@@ -77,6 +77,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 	@FXML
 	private Button   reset_microslam;
 
+	@FXML
+	private CheckBox enable_vision;
+
 
 	private IMAVController control=null;
 
@@ -88,7 +91,6 @@ public class VehicleCtlWidget extends WidgetPane   {
 		try {
 			fxmlLoader.load();
 		} catch (IOException exception) {
-
 			throw new RuntimeException(exception);
 		}
 
@@ -98,29 +100,41 @@ public class VehicleCtlWidget extends WidgetPane   {
 	private void initialize() {
 		pane.setPadding(new Insets(5, 5, 5, 5));
 
+		enable_vision.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_VISION;
+			if(n.booleanValue())
+			   msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+			   msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		reset_odometry.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_VISION;
-            msp.param1  = MSP_COMPONENT_CTRL.RESET;
-            control.sendMAVLinkMessage(msp);
+			msp.param1  = MSP_COMPONENT_CTRL.RESET;
+			control.sendMAVLinkMessage(msp);
 		});
 
 		reset_microslam.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
-            msp.param1  = MSP_COMPONENT_CTRL.RESET;
-            control.sendMAVLinkMessage(msp);
+			msp.param1  = MSP_COMPONENT_CTRL.RESET;
+			control.sendMAVLinkMessage(msp);
 		});
-
 	}
 
 
 
 
 	public void setup(IMAVController control) {
-
 		this.control = control;
 
+		Platform.runLater(() -> {
+			enable_vision.setSelected(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+		});
 	}
 
 }
