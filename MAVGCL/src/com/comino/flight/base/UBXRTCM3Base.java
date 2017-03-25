@@ -99,13 +99,14 @@ public class UBXRTCM3Base {
 		valid.addListener((p,o,n) -> {
 			if(n.booleanValue())
 				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 stream active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			else
+				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 		});
 
 		ubx.addStreamEventListener( new StreamEventListener() {
 
 			@Override
 			public void streamClosed() {
-				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				try {
 					valid.set(false); svin.set(false);
 					ubx.release(false, 100);

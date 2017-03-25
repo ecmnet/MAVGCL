@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root prefWidth="283.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+	    <FlowPane fx:id="pane" hgap="10" vgap="10">
+	       <children>
+	          <Button fx:id="reset_odometry"  prefWidth="161.0" text="Reset odometry" />
+	          <Button fx:id="reset_microslam" prefWidth="161.0" text="Reset local map (microSLAM)" />
+	       </children>
+	    </FlowPane>
+</fx:root>

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <fx:root prefWidth="183.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
-	<GridPane fx:id="grid" layoutX="14.0" layoutY="14.0" prefWidth="163.0">
+	<GridPane fx:id="grid" layoutX="14.0" layoutY="14.0">
 		<rowConstraints>
 			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
 			<RowConstraints minHeight="28.0" vgrow="SOMETIMES" />
