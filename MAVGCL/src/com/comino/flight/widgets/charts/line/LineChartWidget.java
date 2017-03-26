@@ -656,6 +656,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			last_annotation_pos = 0;
 			yoffset = 0;
 
+			current_x_pt  = current_x0_pt;
+			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / dataService.getCollectorInterval_ms());
+			setXAxisBounds(current_x0_pt,current_x1_pt);
+
 			if(dash.isSelected() && dataService.getModelList().size()> 0) {
 
 				if(type1.hash!=0)
@@ -664,14 +668,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				if(type3.hash!=0)
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+
+				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1);
 				setDashboardData(dashboard2,type2);
 				setDashboardData(dashboard3,type3);
-			}
 
-			current_x_pt  = current_x0_pt;
-			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / dataService.getCollectorInterval_ms());
-			setXAxisBounds(current_x0_pt,current_x1_pt);
+			}
 		}
 
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
@@ -683,11 +686,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(dash.isSelected() && dataService.getModelList().size()>0
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 				dashboard_update_tms = System.currentTimeMillis();
-				Platform.runLater(() -> {
-					setDashboardData(dashboard1,type1);
-					setDashboardData(dashboard2,type2);
-					setDashboardData(dashboard3,type3);
-				});
+				setDashboardData(dashboard1,type1);
+				setDashboardData(dashboard2,type2);
+				setDashboardData(dashboard3,type3);
 			}
 
 			while(current_x_pt<max_x ) {
