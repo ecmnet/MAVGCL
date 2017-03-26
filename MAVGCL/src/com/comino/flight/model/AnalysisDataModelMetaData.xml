@@ -686,6 +686,7 @@
 
 	<KeyFigure desc="Mag.X" uom="Gauss" mask="#0.00" key="MAGX">
 		<MSPSource class="imu" field="magx"></MSPSource>
+		<PX4Source field="IMU.MagX"></PX4Source>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[0]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
@@ -694,6 +695,7 @@
 
 	<KeyFigure desc="Mag.Y" uom="Gauss" mask="#0.00" key="MAGY">
 		<MSPSource class="imu" field="magy"></MSPSource>
+		<PX4Source field="IMU.MagY"></PX4Source>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[1]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
@@ -702,6 +704,7 @@
 
 	<KeyFigure desc="Mag.Z" uom="Gauss" mask="#0.00" key="MAGZ">
 		<MSPSource class="imu" field="magz"></MSPSource>
+		<PX4Source field="IMU.MagZ"></PX4Source>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[2]"></ULogSource>
 		<Groups>
 		    <Group>Raw data</Group>
