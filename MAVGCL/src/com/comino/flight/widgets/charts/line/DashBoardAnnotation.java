@@ -122,6 +122,8 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	private class VLabel extends Label {
 
+		private String old_text;
+
 		public VLabel() {
 			super();
 			setAlignment(Pos.CENTER_RIGHT);
@@ -130,7 +132,11 @@ public class DashBoardAnnotation  implements XYAnnotation {
 		}
 
 		public void setValue(float val) {
-			setText(f.format(val));
+			String s = f.format(val);
+			if(!s.equals(old_text))  {
+			   setText(s);
+			   old_text = s;
+			}
 		}
 	}
 
