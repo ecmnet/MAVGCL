@@ -684,7 +684,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Mag.X" uom="m/s^2" mask="#0.00" key="MAGX">
+	<KeyFigure desc="Mag.X" uom="Gauss" mask="#0.00" key="MAGX">
 		<MSPSource class="imu" field="magx"></MSPSource>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[0]"></ULogSource>
 		<Groups>
@@ -692,7 +692,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Mag.Y" uom="m/s^2" mask="#0.00" key="MAGY">
+	<KeyFigure desc="Mag.Y" uom="Gauss" mask="#0.00" key="MAGY">
 		<MSPSource class="imu" field="magy"></MSPSource>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[1]"></ULogSource>
 		<Groups>
@@ -700,7 +700,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Mag.Z" uom="m/s^2" mask="#0.00" key="MAGZ">
+	<KeyFigure desc="Mag.Z" uom="Gauss" mask="#0.00" key="MAGZ">
 		<MSPSource class="imu" field="magz"></MSPSource>
 		<ULogSource field="sensor_combined_0.magnetometer_ga[2]"></ULogSource>
 		<Groups>
