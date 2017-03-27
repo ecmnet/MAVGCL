@@ -79,10 +79,18 @@ public class BatteryWidget extends WidgetPane  {
 					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
 					    voltage = model.getValue("BATV");
 						g_voltage.setValue(voltage);
+						if(voltage < 10.5)
+							g_voltage.setBarColor(Color.RED);
+						if(voltage > 11.0)
+							g_voltage.setBarColor(Color.DARKCYAN);
 					}
 					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
 						capacity = model.getValue("BATP");
 						g_capacity.setValue(capacity*100f);
+						if(capacity < 0.15)
+							g_capacity.setBarColor(Color.RED);
+						if(capacity > 0.20)
+							g_capacity.setBarColor(Color.DARKCYAN);
 					}
 				}
 			}
