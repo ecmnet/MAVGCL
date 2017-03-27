@@ -25,9 +25,10 @@
 	<KeyFigure desc="Alt.baro" uom="m" mask="#0.0" key="ALTBARO">
 		<MSPSource class="hud" field="ap"></MSPSource>
 		<PX4Source field="SENS.BaroAlt"></PX4Source>
-		<ULogSource field="vehicle_global_position_0.pressure_alt"></ULogSource>
+		<ULogSource field="sensor_combined_0.baro_alt_meter"></ULogSource>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>Raw data</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -734,13 +735,6 @@
 		<MSPSource class="imu" field="gyroz"></MSPSource>
 		<PX4Source field="IMU.GyroZ"></PX4Source>
 		<ULogSource field="sensor_combined_0.gyro_rad[2]"></ULogSource>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Baro.Alt" uom="m" mask="#0.00" key="BAROALT">
-		<ULogSource field="sensor_combined_0.baro_alt_meter"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
