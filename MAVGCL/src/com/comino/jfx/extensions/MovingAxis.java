@@ -46,27 +46,38 @@ public class MovingAxis extends ValueAxis<Number> {
 	private List<Number> mticks = new ArrayList<Number>();
 	private List<Number> vticks = new ArrayList<Number>();
 
+	private double mstart = -1;
+	private double vstart = -1;
+
+	private double munit = -1;
+	private double vunit = -1;
+
 	private SimpleObjectProperty<Double> tickUnitProperty = new SimpleObjectProperty<Double>(
 			5d);
 
 	@Override
 	protected List<Number> calculateMinorTickMarks() {
-		mticks.clear();
 		double tickUnit = tickUnitProperty.get() / getMinorTickCount();
 		double start = Math.floor(getLowerBound() / tickUnit) * tickUnit;
-		for (double value = start; value <= getUpperBound(); value += tickUnit) {
-			mticks.add(value);
-		}
+		if(start != mstart || munit != tickUnit ) {
+			mticks.clear();
+			mstart = start; munit = tickUnit;
+			for (double value = start; value <= getUpperBound(); value += tickUnit) {
+				mticks.add(value);
+			}}
 		return mticks;
 	}
 
 	@Override
 	protected List<Number> calculateTickValues(double arg0, Object arg1) {
-		vticks.clear();
 		double tickUnit = tickUnitProperty.get();
 		double start = Math.floor(getLowerBound() / tickUnit) * tickUnit;
-		for (double value = start; value <= getUpperBound(); value += tickUnit) {
-			vticks.add(value);
+		if(start != vstart || vunit != tickUnit  ) {
+			vticks.clear();
+			vstart = start; vunit = tickUnit;
+			for (double value = start; value <= getUpperBound(); value += tickUnit) {
+				vticks.add(value);
+			}
 		}
 		return vticks;
 	}
