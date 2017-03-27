@@ -117,25 +117,11 @@ public class InfoWidget extends WidgetPane  {
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
-							Platform.runLater(() -> {
 								listview.scrollTo(listview.getItems().size()-1);
-							});
+								listview.getSelectionModel().select(-1);
 						}
 					});
 				}
-			}
-
-		});
-
-
-		listview.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
-			@Override
-			public void changed(ObservableValue<?> observable, Object oldvalue, Object newValue) {
-				Platform.runLater(new Runnable() {
-					public void run() {
-						listview.getSelectionModel().select(-1);
-					}
-				});
 			}
 		});
 	}
