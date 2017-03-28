@@ -78,6 +78,9 @@ public class Badge extends Label {
 		toggle=false;
 		setDisable(toggle);
 
+		if(this.mode == mode)
+			return;
+
 		switch(mode) {
 		case MODE_OFF:
 			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
