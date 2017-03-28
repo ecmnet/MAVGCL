@@ -204,13 +204,6 @@ velocity</short_desc>
       <decimal>3</decimal>
       <scope>modules/attitude_estimator_q</scope>
     </parameter>
-    <parameter default="0.2" name="ATT_VIBE_THRESH" type="FLOAT">
-      <short_desc>Threshold (of RMS) to warn about high vibration levels</short_desc>
-      <min>0.01</min>
-      <max>10</max>
-      <decimal>2</decimal>
-      <scope>modules/attitude_estimator_q</scope>
-    </parameter>
   </group>
   <group name="Battery Calibration">
     <parameter default="10000" name="BAT_V_SCALE_IO" type="INT32">
@@ -266,6 +259,7 @@ velocity</short_desc>
       <unit>V</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="4.05" name="BAT_V_CHARGED" type="FLOAT">
@@ -274,6 +268,7 @@ velocity</short_desc>
       <unit>V</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="0.15" name="BAT_LOW_THR" type="FLOAT">
@@ -284,16 +279,29 @@ velocity</short_desc>
       <unit>norm</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="0.07" name="BAT_CRIT_THR" type="FLOAT">
       <short_desc>Critical threshold</short_desc>
-      <long_desc>Sets the threshold when the battery will be reported as critically low. This has to be lower than the low threshold. This threshold commonly will trigger RTL or landing.</long_desc>
+      <long_desc>Sets the threshold when the battery will be reported as critically low. This has to be lower than the low threshold. This threshold commonly will trigger RTL.</long_desc>
       <min>0.05</min>
       <max>0.1</max>
       <unit>norm</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
+      <scope>modules/systemlib</scope>
+    </parameter>
+    <parameter default="0.05" name="BAT_EMERGEN_THR" type="FLOAT">
+      <short_desc>Emergency threshold</short_desc>
+      <long_desc>Sets the threshold when the battery will be reported as dangerously low. This has to be lower than the critical threshold. This threshold commonly will trigger landing.</long_desc>
+      <min>0.03</min>
+      <max>0.07</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="0.3" name="BAT_V_LOAD_DROP" type="FLOAT">
@@ -304,6 +312,7 @@ velocity</short_desc>
       <unit>V</unit>
       <decimal>2</decimal>
       <increment>0.01</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="-1.0" name="BAT_R_INTERNAL" type="FLOAT">
@@ -312,12 +321,14 @@ velocity</short_desc>
       <min>-1.0</min>
       <max>0.2</max>
       <unit>Ohms</unit>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
     <parameter default="0" name="BAT_N_CELLS" type="INT32">
       <short_desc>Number of cells</short_desc>
       <long_desc>Defines the number of cells the attached battery consists of.</long_desc>
       <unit>S</unit>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
       <values>
         <value code="11">11S Battery</value>
@@ -346,6 +357,7 @@ velocity</short_desc>
       <unit>mA</unit>
       <decimal>0</decimal>
       <increment>50</increment>
+      <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
     </parameter>
   </group>
@@ -642,8 +654,9 @@ velocity</short_desc>
       <increment>1</increment>
       <scope>modules/commander</scope>
       <values>
-        <value code="1">Return to Land</value>
+        <value code="1">Return to land</value>
         <value code="0">Warning</value>
+        <value code="3">Return to land at critically low level, land at current position if reaching dangerously low levels</value>
         <value code="2">Land at current position</value>
       </values>
     </parameter>
@@ -1580,6 +1593,11 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <increment>0.01</increment>
       <scope>modules/fw_att_control</scope>
     </parameter>
+    <parameter default="0" name="FW_W_EN" type="INT32">
+      <short_desc>Enable wheel steering controller</short_desc>
+      <boolean />
+      <scope>modules/fw_att_control</scope>
+    </parameter>
     <parameter default="0.5" name="FW_WR_P" type="FLOAT">
       <short_desc>Wheel steering rate proportional gain</short_desc>
       <long_desc>This defines how much the wheel steering input will be commanded depending on the current body angular rate error.</long_desc>
@@ -2413,6 +2431,16 @@ but also ignore less noise</short_desc>
       <long_desc>When controlling manually the throttle stick value (0 to 1) has to be bellow this threshold in order to pass the check for landing. So if set to 1 it's allowed to land with any stick position.</long_desc>
       <min>0</min>
       <max>1</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+      <scope>modules/land_detector</scope>
+    </parameter>
+    <parameter default="0.65" name="LNDMC_POS_UPTHR" type="FLOAT">
+      <short_desc>Manual position flight stick up threshold for taking off</short_desc>
+      <long_desc>When controlling manually in position mode the throttle stick value (0 to 1) has to get above this threshold after arming in order to take off.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <unit>norm</unit>
       <decimal>2</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
@@ -2462,6 +2490,14 @@ but also ignore less noise</short_desc>
       <short_desc>Total flight time in microseconds</short_desc>
       <long_desc>Total flight time of this autopilot. Lower 32 bits of the value. Flight time in microseconds = (LND_FLIGHT_T_HI &lt;&lt; 32) | LND_FLIGHT_T_LO.</long_desc>
       <min>0</min>
+      <scope>modules/land_detector</scope>
+    </parameter>
+    <parameter default="100.0" name="LNDMC_ALT_MAX" type="FLOAT">
+      <short_desc>Maximum altitude that can be reached prior to subconditions</short_desc>
+      <min>10</min>
+      <max>150</max>
+      <unit>m</unit>
+      <decimal>2</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
   </group>
@@ -2750,7 +2786,7 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="1" name="LPE_FAKE_ORIGIN" type="INT32">
+    <parameter default="0" name="LPE_FAKE_ORIGIN" type="INT32">
       <short_desc>Enable publishing of a fake global position (e.g for AUTO missions using Optical Flow)
 by initializing the estimator to the LPE_LAT/LON parameters when global information is unavailable</short_desc>
       <min>0</min>
@@ -2813,9 +2849,9 @@ by initializing the estimator to the LPE_LAT/LON parameters when global informat
       <decimal>3</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
-    <parameter default="247" name="LPE_FUSION" type="INT32">
+    <parameter default="145" name="LPE_FUSION" type="INT32">
       <short_desc>Integer bitmask controlling data fusion</short_desc>
-      <long_desc>Set bits in the following positions to enable: 0 : Set to true to fuse GPS data if available, also requires GPS for altitude init 1 : Set to true to fuse optical flow data if available 2 : Set to true to fuse vision position 3 : Set to true to fuse vision yaw 4 : Set to true to fuse land detector 5 : Set to true to publish AGL as local position down component 6 : Set to true to enable flow gyro compensation 7 : Set to true to enable baro fusion default (247, no vision yaw)</long_desc>
+      <long_desc>Set bits in the following positions to enable: 0 : Set to true to fuse GPS data if available, also requires GPS for altitude init 1 : Set to true to fuse optical flow data if available 2 : Set to true to fuse vision position 3 : Set to true to fuse vision yaw 4 : Set to true to fuse land detector 5 : Set to true to publish AGL as local position down component 6 : Set to true to enable flow gyro compensation 7 : Set to true to enable baro fusion default (145 - GPS only)</long_desc>
       <min>0</min>
       <max>255</max>
       <scope>modules/local_position_estimator</scope>
@@ -3534,24 +3570,6 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>0.01</increment>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="0.1" name="MPC_ALTCTL_DZ" type="FLOAT">
-      <short_desc>ALTCTL throttle curve breakpoint</short_desc>
-      <long_desc>Halfwidth of deadband or reduced sensitivity center portion of curve. This is the halfwidth of the center region of the ALTCTL throttle curve. It extends from center-dz to center+dz.</long_desc>
-      <min>0.0</min>
-      <max>0.2</max>
-      <unit>norm</unit>
-      <decimal>2</decimal>
-      <increment>0.05</increment>
-      <scope>modules/mc_pos_control</scope>
-    </parameter>
-    <parameter default="0.0" name="MPC_ALTCTL_DY" type="FLOAT">
-      <short_desc>ALTCTL throttle curve breakpoint height</short_desc>
-      <long_desc>Controls the slope of the reduced sensitivity region. This is the height of the ALTCTL throttle curve at center-dz and center+dz.</long_desc>
-      <min>0.0</min>
-      <max>0.2</max>
-      <decimal>2</decimal>
-      <scope>modules/mc_pos_control</scope>
-    </parameter>
     <parameter default="0.9" name="MPC_THR_MAX" type="FLOAT">
       <short_desc>Maximum thrust in auto thrust control</short_desc>
       <long_desc>Limit max allowed thrust. Setting a value of one can put the system into actuator saturation as no spread between the motors is possible any more. A value of 0.8 - 0.9 is recommended.</long_desc>
@@ -3620,16 +3638,9 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <decimal>1</decimal>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="1.0" name="MPC_Z_VEL_MAX" type="FLOAT">
+    <parameter default="1.0" name="MPC_Z_VEL_MAX_DN" type="FLOAT">
       <short_desc>Maximum vertical descent velocity</short_desc>
       <long_desc>Maximum vertical velocity in AUTO mode and endpoint for stabilized modes (ALTCTRL, POSCTRL).</long_desc>
-      <min>0.5</min>
-      <max>4.0</max>
-      <unit>m/s</unit>
-      <scope>modules/mc_pos_control</scope>
-    </parameter>
-    <parameter default="1.0" name="MPC_Z_VEL_MAX_DN" type="FLOAT">
-      <short_desc>Transitional support, do not change / use</short_desc>
       <min>0.5</min>
       <max>4.0</max>
       <unit>m/s</unit>
@@ -3678,6 +3689,16 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <min>3.0</min>
       <max>20.0</max>
       <unit>m/s</unit>
+      <decimal>2</decimal>
+      <increment>1</increment>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
+    <parameter default="15.0" name="MPC_TARGET_THRE" type="FLOAT">
+      <short_desc>Distance Threshold Horizontal Auto</short_desc>
+      <long_desc>The distance defines at which point the vehicle has to slow down to reach target if no direct passing to the next target is desired</long_desc>
+      <min>1.0</min>
+      <max>50.0</max>
+      <unit>m</unit>
       <decimal>2</decimal>
       <increment>1</increment>
       <scope>modules/mc_pos_control</scope>
@@ -3757,15 +3778,8 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <decimal>1</decimal>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="0.1" name="MPC_HOLD_XY_DZ" type="FLOAT">
-      <short_desc>Deadzone of X,Y sticks where position hold is enabled</short_desc>
-      <min>0.0</min>
-      <max>1.0</max>
-      <decimal>2</decimal>
-      <scope>modules/mc_pos_control</scope>
-    </parameter>
-    <parameter default="0.1" name="MPC_HOLD_Z_DZ" type="FLOAT">
-      <short_desc>Deadzone of Z stick where altitude hold is enabled</short_desc>
+    <parameter default="0.1" name="MPC_HOLD_DZ" type="FLOAT">
+      <short_desc>Deadzone of sticks where position hold is enabled</short_desc>
       <min>0.0</min>
       <max>1.0</max>
       <decimal>2</decimal>
@@ -3804,6 +3818,15 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <increment>1</increment>
       <scope>modules/mc_pos_control</scope>
     </parameter>
+    <parameter default="10.0" name="MPC_DEC_HOR_MAX" type="FLOAT">
+      <short_desc>Maximum horizonal braking deceleration in velocity controlled modes</short_desc>
+      <min>2.0</min>
+      <max>15.0</max>
+      <unit>m/s/s</unit>
+      <decimal>2</decimal>
+      <increment>1</increment>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
     <parameter default="5.0" name="MPC_ACC_UP_MAX" type="FLOAT">
       <short_desc>Maximum vertical acceleration in velocity controlled modes upward</short_desc>
       <min>2.0</min>
@@ -3834,15 +3857,37 @@ if required for the gimbal (only in AUX output mode)</short_desc>
     </parameter>
     <parameter default="0.0" name="MPC_XY_MAN_EXPO" type="FLOAT">
       <short_desc>Manual control stick exponential curve sensitivity attenuation with small velocity setpoints</short_desc>
-      <long_desc>The higher the value the less sensitivity the stick has around zero while still reaching the maximum value with full stick deflection.</long_desc>
+      <long_desc>The higher the value the less sensitivity the stick has around zero while still reaching the maximum value with full stick deflection. 0 Purely linear input curve (default) 1 Purely cubic input curve</long_desc>
       <min>0</min>
       <max>1</max>
       <decimal>2</decimal>
       <scope>modules/mc_pos_control</scope>
-      <values>
-        <value code="1">Purely cubic input curve</value>
-        <value code="0">Purely linear input curve (default)</value>
-      </values>
+    </parameter>
+    <parameter default="0.0" name="MPC_Z_MAN_EXPO" type="FLOAT">
+      <short_desc>Manual control stick vertical exponential curve</short_desc>
+      <long_desc>The higher the value the less sensitivity the stick has around zero while still reaching the maximum value with full stick deflection. 0 Purely linear input curve (default) 1 Purely cubic input curve</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <decimal>2</decimal>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
+    <parameter default="10.0" name="MPC_LAND_ALT1" type="FLOAT">
+      <short_desc>Altitude for 1. step of slow landing (descend)</short_desc>
+      <long_desc>Below this altitude descending velocity gets limited to a value between "MPC_Z_VEL_MAX" and "MPC_LAND_SPEED" to enable a smooth descent experience Value needs to be higher than "MPC_LAND_ALT2"</long_desc>
+      <min>0</min>
+      <max>122</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
+    <parameter default="5.0" name="MPC_LAND_ALT2" type="FLOAT">
+      <short_desc>Altitude for 2. step of slow landing (landing)</short_desc>
+      <long_desc>Below this altitude descending velocity gets limited to "MPC_LAND_SPEED" Value needs to be lower than "MPC_LAND_ALT1"</long_desc>
+      <min>0</min>
+      <max>122</max>
+      <unit>m</unit>
+      <decimal>1</decimal>
+      <scope>modules/mc_pos_control</scope>
     </parameter>
   </group>
   <group name="PWM Outputs">
@@ -6986,6 +7031,13 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
         <value code="2">Internal is primary Mag</value>
       </values>
     </parameter>
+    <parameter default="0.2" name="ATT_VIBE_THRESH" type="FLOAT">
+      <short_desc>Threshold (of RMS) to warn about high vibration levels</short_desc>
+      <min>0.01</min>
+      <max>10</max>
+      <decimal>2</decimal>
+      <scope>modules/sensors</scope>
+    </parameter>
   </group>
   <group name="Sensor Enable">
     <parameter default="0" name="SENS_EN_LL40LS" type="INT32">
@@ -8126,10 +8178,24 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <scope>modules/vtol_att_control</scope>
     </parameter>
     <parameter default="0.0" name="VT_FW_MIN_ALT" type="FLOAT">
-      <short_desc>QuadChute</short_desc>
+      <short_desc>QuadChute Altitude</short_desc>
       <long_desc>Minimum altitude for fixed wing flight, when in fixed wing the altitude drops below this altitude the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
       <min>0.0</min>
       <max>200.0</max>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0" name="VT_FW_QC_P" type="INT32">
+      <short_desc>QuadChute Max Pith</short_desc>
+      <long_desc>Maximum pitch angle before QuadChute engages Above this the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
+      <min>0</min>
+      <max>180</max>
+      <scope>modules/vtol_att_control</scope>
+    </parameter>
+    <parameter default="0" name="VT_FW_QC_R" type="INT32">
+      <short_desc>QuadChute Max Roll</short_desc>
+      <long_desc>Maximum roll angle before QuadChute engages Above this the vehicle will transition back to MC mode and enter failsafe RTL</long_desc>
+      <min>0</min>
+      <max>180</max>
       <scope>modules/vtol_att_control</scope>
     </parameter>
     <parameter default="6.0" name="VT_F_TR_OL_TM" type="FLOAT">
@@ -8581,6 +8647,22 @@ Maps the change of airspeed error to the acceleration setpoint</short_desc>
     <parameter default="0.1" name="RV_YAW_P" type="FLOAT">
       <short_desc>RV_YAW_P</short_desc>
       <scope>examples/rover_steering_control</scope>
+    </parameter>
+    <parameter default="10.0" name="SEG_TH2V_P" type="FLOAT">
+      <short_desc>SEG_TH2V_P</short_desc>
+      <scope>examples/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I" type="FLOAT">
+      <short_desc>SEG_TH2V_I</short_desc>
+      <scope>examples/segway</scope>
+    </parameter>
+    <parameter default="0.0" name="SEG_TH2V_I_MAX" type="FLOAT">
+      <short_desc>SEG_TH2V_I_MAX</short_desc>
+      <scope>examples/segway</scope>
+    </parameter>
+    <parameter default="1.0" name="SEG_Q2V" type="FLOAT">
+      <short_desc>SEG_Q2V</short_desc>
+      <scope>examples/segway</scope>
     </parameter>
     <parameter default="0.1" name="EXFW_HDNG_P" type="FLOAT">
       <short_desc>EXFW_HDNG_P</short_desc>
