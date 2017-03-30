@@ -34,6 +34,7 @@
 package com.comino.flight.tabs.shell;
 
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
 
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
 import org.mavlink.messages.SERIAL_CONTROL_FLAG;
@@ -59,14 +60,16 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@FXML
 	private TextArea console;
 
-	private StateProperties state  = null;
-	private String         last    = null;
+	private StateProperties     state  = null;
+	private LinkedList<String> last    = null;
+	private int lastindex = 0;
 
 	private int index = 0;
 
 
 	public MavLinkShellTab() {
 		FXMLLoadHelper.load(this, "MavLinkShellTab.fxml");
+		last = new LinkedList<String>();
 	}
 
 	@FXML
@@ -86,17 +89,21 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					String command = console.getText(index,end).trim();
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
-					last = command;
+					if(!command.equals(last.peekLast())) {
+						last.add(command);
+					}
 					scrollIntoView();
 				}
+				lastindex = last.size();
 			} else if (ke.getCode().equals(KeyCode.UP)) {
-				if(last!=null && index == console.getText().length()) {
-					Platform.runLater(() -> {
-						console.appendText(last);
+				Platform.runLater(() -> {
+					if(!last.isEmpty() && lastindex > 0) {
+						console.deleteText(index, console.getText().length());
+						console.appendText(last.get(--lastindex));
 						int end = console.getText().length();
 						console.selectRange(end,end);
-					});
-				}
+					}
+				});
 			} else if (ke.getCode().equals(KeyCode.LEFT)) {
 				Platform.runLater(() -> {
 					int end = console.getText().length();
@@ -143,8 +150,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				Platform.runLater(() -> {
 					if(console.getText().length()==0)
 						writeToShell("\n");
-					scrollIntoView();
 				});
+				scrollIntoView();
 
 			} else {
 				writeToShell(null);
@@ -152,6 +159,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					console.clear();
 				});
 			}
+			lastindex = last.size();
 		});
 
 		return this;
@@ -172,11 +180,11 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					try {
 						console.appendText(new String(bytes,"US-ASCII"));
 						index = console.getText().length();
-						scrollIntoView();
 					} catch (UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
 				});
+				scrollIntoView();
 			}
 		}
 	}
@@ -208,8 +216,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	}
 
 	private void scrollIntoView() {
-		console.requestFocus();
-		console.selectRange(index, index);
+		Platform.runLater(() -> {
+			console.requestFocus();
+			console.selectRange(index, index);
+		});
 	}
 
 
