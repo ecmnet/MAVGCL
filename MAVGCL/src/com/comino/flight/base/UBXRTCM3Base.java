@@ -35,6 +35,7 @@ package com.comino.flight.base;
 
 
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
@@ -46,11 +47,12 @@ import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.GPS;
 import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class UBXRTCM3Base {
+public class UBXRTCM3Base implements Runnable {
 
 	private static UBXRTCM3Base instance = null;
 	private UBXSerialConnection ubx = null;
@@ -58,7 +60,14 @@ public class UBXRTCM3Base {
 	private BooleanProperty svin  = new SimpleBooleanProperty();
 	private BooleanProperty valid = new SimpleBooleanProperty();
 
+	private GPS base = null;
+	private Status status = null;
+
+	private boolean connected = false;
+
 	private float mean_acc = 0;
+
+	private IMAVController control;
 
 	public static UBXRTCM3Base getInstance(IMAVController control) {
 		if(instance == null) {
@@ -73,23 +82,12 @@ public class UBXRTCM3Base {
 
 	public UBXRTCM3Base(IMAVController control) {
 
-		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
-		if(ubx_ports.size()==0)
-			return;
+		this.control = control;
 
-		GPS base = control.getCurrentModel().base;
-		Status status = control.getCurrentModel().sys;
+		base = control.getCurrentModel().base;
+		status = control.getCurrentModel().sys;
 
-		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
-		this.ubx.setMeasurementRate(1);
-
-		try {
-			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
-			this.ubx.init(60,accuracy);
-			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+accuracy+"m");
-		} catch (Exception e) {
-			return;
-		}
+		ExecutorService.get().scheduleAtFixedRate(this, 0, 5, TimeUnit.SECONDS);
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
@@ -103,11 +101,48 @@ public class UBXRTCM3Base {
 				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 		});
 
+	}
+
+	public BooleanProperty getSVINStatus() {
+		return svin;
+	}
+
+	public BooleanProperty getValidStatus() {
+		return valid;
+	}
+
+	public float getBaseAccuracy() {
+		return mean_acc;
+	}
+
+	@Override
+	public void run() {
+
+		if(connected)
+			return;
+
+		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
+		if(ubx_ports.size()==0)
+			return;
+
+		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
+		this.ubx.setMeasurementRate(1);
+
+		try {
+			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
+			this.ubx.init(60,accuracy);
+			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+accuracy+"m");
+			connected = true;
+		} catch (Exception e) {
+			return;
+		}
+
 		ubx.addStreamEventListener( new StreamEventListener() {
 
 			@Override
 			public void streamClosed() {
 				try {
+					connected = false;
 					valid.set(false); svin.set(false);
 					ubx.release(false, 100);
 				} catch (Exception e) {
@@ -165,18 +200,8 @@ public class UBXRTCM3Base {
 			}
 
 		});
-	}
 
-	public BooleanProperty getSVINStatus() {
-		return svin;
-	}
 
-	public BooleanProperty getValidStatus() {
-		return valid;
-	}
-
-	public float getBaseAccuracy() {
-		return mean_acc;
 	}
 
 
