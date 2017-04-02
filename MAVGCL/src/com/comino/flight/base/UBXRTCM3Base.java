@@ -34,6 +34,7 @@
 package com.comino.flight.base;
 
 
+import java.text.DecimalFormat;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -66,6 +67,7 @@ public class UBXRTCM3Base implements Runnable {
 	private boolean connected = false;
 
 	private float mean_acc = 0;
+	private DecimalFormat format = new DecimalFormat("#0.0");
 
 	private IMAVController control;
 
@@ -131,7 +133,7 @@ public class UBXRTCM3Base implements Runnable {
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
 			this.ubx.init(60,accuracy);
-			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+accuracy+"m");
+			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+format.format(accuracy)+"m");
 			connected = true;
 		} catch (Exception e) {
 			return;
@@ -155,7 +157,7 @@ public class UBXRTCM3Base implements Runnable {
 				svin.set(is_svin);
 				mean_acc = meanacc;
 				if((time_svin % 30) == 0 && is_svin)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+meanacc+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+format.format(meanacc)+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
 
 
