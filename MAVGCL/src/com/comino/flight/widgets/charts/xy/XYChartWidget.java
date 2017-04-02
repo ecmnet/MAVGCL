@@ -70,6 +70,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -270,6 +271,26 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				}
 			}
 		});
+
+//		linechart.setOnScroll(event -> {
+//
+//			if(force_zero.isSelected())
+//				return;
+//
+//			xAxis.setLowerBound(xAxis.getLowerBound()+event.getDeltaY()/
+//					((xAxis.getUpperBound()-xAxis.getLowerBound()) *100));
+//			xAxis.setUpperBound(xAxis.getUpperBound()+event.getDeltaY()/
+//					((xAxis.getUpperBound()-xAxis.getLowerBound()) *100));
+//			yAxis.setLowerBound(yAxis.getLowerBound()-event.getDeltaX()/
+//					((yAxis.getUpperBound()-yAxis.getLowerBound()) *100));
+//			yAxis.setUpperBound(yAxis.getUpperBound()-event.getDeltaX()/
+//					((yAxis.getUpperBound()-yAxis.getLowerBound()) *100));
+//
+//			event.consume();
+//
+//			updateGraph(true);
+//		});
+
 
 		xAxis.setAutoRanging(true);
 		xAxis.setForceZeroInRange(false);
@@ -532,7 +553,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		current_x0_pt = dataService.calculateX0Index(1);
 		current_x_pt  = dataService.calculateX0Index(1);
-	    grid.clear();
+		grid.clear();
 		scroll.setValue(1);
 		refreshChart();
 	}

@@ -326,9 +326,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(current_x0_pt<0)
 				current_x0_pt=0;
 
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
+			updateGraph(true);
 		});
 
 		readRecentList();

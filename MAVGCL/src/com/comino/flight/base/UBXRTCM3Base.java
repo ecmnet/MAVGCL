@@ -123,7 +123,7 @@ public class UBXRTCM3Base implements Runnable {
 		if(connected)
 			return;
 
-		Vector<String> ubx_ports = UBXSerialConnection.getPortList(true);
+		Vector<String> ubx_ports = UBXSerialConnection.getPortList(false);
 		if(ubx_ports.size()==0)
 			return;
 
