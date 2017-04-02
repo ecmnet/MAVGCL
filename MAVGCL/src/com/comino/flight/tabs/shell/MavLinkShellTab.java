@@ -55,6 +55,9 @@ import javafx.scene.layout.Pane;
 public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 
+	private final static String[] defaults = { "reboot", "gps status", "sensors status" };
+
+
 	private IMAVController control;
 
 	@FXML
@@ -70,6 +73,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	public MavLinkShellTab() {
 		FXMLLoadHelper.load(this, "MavLinkShellTab.fxml");
 		last = new LinkedList<String>();
+		for(int i=0; i<defaults.length;i++)
+			last.add(defaults[i]);
 	}
 
 	@FXML
@@ -100,6 +105,16 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					if(!last.isEmpty() && lastindex > 0) {
 						console.deleteText(index, console.getText().length());
 						console.appendText(last.get(--lastindex));
+						int end = console.getText().length();
+						console.selectRange(end,end);
+					}
+				});
+			} else if (ke.getCode().equals(KeyCode.DOWN)) {
+				Platform.runLater(() -> {
+					if(!last.isEmpty() && lastindex <= last.size()-1) {
+						console.deleteText(index, console.getText().length());
+						if(lastindex++ < last.size()-1)
+						  console.appendText(last.get(lastindex));
 						int end = console.getText().length();
 						console.selectRange(end,end);
 					}
