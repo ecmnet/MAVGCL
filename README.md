@@ -14,7 +14,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Note:** Windows installer doesn't seem to work with Windows10
 
-**Development Status:** Last updated 30/03/2017
+**Development Status:** Last updated 02/04/2017
 
 V0.6xx notes:
 
@@ -62,7 +62,7 @@ Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot6.png)
 
-
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot8.png)
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
