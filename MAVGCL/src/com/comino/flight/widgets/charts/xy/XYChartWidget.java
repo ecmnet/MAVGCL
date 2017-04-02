@@ -190,7 +190,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 
 	private int resolution_ms 	= 50;
-	private float scale = 0;
+	private float scale = 5;
 
 	private Preferences prefs = MAVPreferences.getInstance();
 
@@ -278,13 +278,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 //				return;
 //
 //			xAxis.setLowerBound(xAxis.getLowerBound()+event.getDeltaY()/
-//					((xAxis.getUpperBound()-xAxis.getLowerBound()) *100));
+//					(scale *1000));
 //			xAxis.setUpperBound(xAxis.getUpperBound()+event.getDeltaY()/
-//					((xAxis.getUpperBound()-xAxis.getLowerBound()) *100));
+//					(scale *1000));
 //			yAxis.setLowerBound(yAxis.getLowerBound()-event.getDeltaX()/
-//					((yAxis.getUpperBound()-yAxis.getLowerBound()) *100));
+//					(scale *1000));
 //			yAxis.setUpperBound(yAxis.getUpperBound()-event.getDeltaX()/
-//					((yAxis.getUpperBound()-yAxis.getLowerBound()) *100));
+//					(scale *1000));
 //
 //			event.consume();
 //
@@ -823,6 +823,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private void setScaling(float scale) {
 		if(scale>0) {
+			this.scale = scale;
 			force_zero.setDisable(false);
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
