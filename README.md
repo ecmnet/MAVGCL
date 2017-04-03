@@ -14,7 +14,10 @@ Any feedback, comments and contributions are very welcome.
 
 **Note:** Windows installer doesn't seem to work with Windows10
 
-**Development Status:** Last updated 02/04/2017
+**Development Status:** Last updated 03/04/2017
+
+- Preferences: Checkbox for local SITL connection, Peer- and Bind-Port
+- Shell enhanced
 
 V0.6xx notes:
 
