@@ -18,7 +18,7 @@ Any feedback, comments and contributions are very welcome.
 
 - Preferences: Checkbox for local SITL connection, Peer- and Bind-Port
 - Shell enhanced
-- Note: ULOG streamin currently broken, falls back to MAVLINK based recording
+- Note: ULOG streaming currently broken, falls back to MAVLINK based recording
 
 V0.6xx notes:
 
