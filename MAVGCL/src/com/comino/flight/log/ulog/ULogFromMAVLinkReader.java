@@ -52,6 +52,8 @@ import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
+	private final static boolean debug = true;
+
 	private final int STATE_HEADER_IDLE				= 0;
 	private final int STATE_HEADER_WAIT				= 1;
 	private final int STATE_DATA            		= 2;
@@ -87,17 +89,17 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-			MSPLogger.getInstance().writeLocalMsg("Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			MSPLogger.getInstance().writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
-				LockSupport.parkNanos(10000000);
+				LockSupport.parkNanos(1000000);
 				if((System.currentTimeMillis()-tms)>4000) {
-					MSPLogger.getInstance().writeLocalMsg("Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
 				}
 			}
-			MSPLogger.getInstance().writeLocalMsg("Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		}
@@ -154,11 +156,12 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_DATA) {
 				msg_logging_data log = (msg_logging_data)o;
 				if(package_processed != log.sequence) {
-					System.err.println("ULOG Sequence failed");
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong ULOG sequence",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					state=STATE_HEADER_IDLE;
 				}
-				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
+				parser.addToBuffer(log.data, log.length,log.first_message_offset, package_processed == log.sequence);
 				parser.parseData();
 				package_processed++;
 			}
