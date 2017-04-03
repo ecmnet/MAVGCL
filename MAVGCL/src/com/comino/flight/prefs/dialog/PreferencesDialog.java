@@ -80,6 +80,9 @@ public class PreferencesDialog  {
 	private TextField bind_port;
 
 	@FXML
+	private CheckBox sitl;
+
+	@FXML
 	private TextField video;
 
 	@FXML
@@ -166,6 +169,7 @@ public class PreferencesDialog  {
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
 		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
+		sitl.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.PREFS_SITL, true));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
@@ -178,6 +182,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());
+			userPrefs.putBoolean(MAVPreferences.PREFS_SITL,sitl.isSelected());
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 
 			try {

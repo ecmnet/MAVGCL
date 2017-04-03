@@ -8,9 +8,10 @@
 	<classpathentry kind="lib" path="lib/jssc.jar"/>
 	<classpathentry kind="lib" path="lib/JCSG.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/medusa-4.7.jar"/>
 	<classpathentry kind="lib" path="lib/jinput.jar"/>
 	<classpathentry kind="lib" path="lib/jfxchartext-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/exp4j-0.4.7.jar"/>
+	<classpathentry kind="lib" path="lib/mavbase.jar"/>
+	<classpathentry kind="lib" path="lib/medusa-7.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

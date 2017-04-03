@@ -146,8 +146,9 @@ public class MainApp extends Application  {
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 
-			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
-				control = new MAVUdpController(peerAddress,peerport,bindport, true);
+			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+					        ||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+				control = new MAVUdpController("127.0.0.1",14557,14540, true);
 				new SITLController(control);
 			}
 			else
