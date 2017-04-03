@@ -61,6 +61,7 @@ public class PreferencesDialog  {
 
 	private static final String DEF_IP_ADDRESS 		= "172.168.178.1";
 	private static final String DEF_IP_PORT 		= "14555";
+	private static final String DEF_BIND_PORT 		= "14550";
 	private static final String DEF_VIDEO_URL       =  "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
 
 
@@ -73,7 +74,10 @@ public class PreferencesDialog  {
 	private TextField ip_address;
 
 	@FXML
-	private TextField ip_port;
+	private TextField peer_port;
+
+	@FXML
+	private TextField bind_port;
 
 	@FXML
 	private TextField video;
@@ -155,7 +159,8 @@ public class PreferencesDialog  {
 	public void show() {
 
 		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, DEF_IP_ADDRESS));
-		ip_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
+		peer_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
+		bind_port.setText(userPrefs.get(MAVPreferences.PREFS_BIND_PORT, DEF_BIND_PORT));
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
@@ -166,7 +171,8 @@ public class PreferencesDialog  {
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
 			userPrefs.put(MAVPreferences.PREFS_IP_ADDRESS, ip_address.getText());
-			userPrefs.put(MAVPreferences.PREFS_IP_PORT, ip_port.getText());
+			userPrefs.put(MAVPreferences.PREFS_IP_PORT, peer_port.getText());
+			userPrefs.put(MAVPreferences.PREFS_BIND_PORT, bind_port.getText());
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());

@@ -134,7 +134,8 @@ public class MainApp extends Application  {
 			FXMLLoadHelper.setApplication(this);
 
 			String peerAddress = null;
-			int port = 14555;
+			int peerport = 14555;
+			int bindport = 14550;
 
 
 			Map<String,String> args = getParameters().getNamed();
@@ -142,10 +143,11 @@ public class MainApp extends Application  {
 
 			Preferences userPrefs = MAVPreferences.getInstance();
 			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
-			port = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
+			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
+			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 
 			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")) {
-				control = new MAVUdpController(peerAddress,port,14550, true);
+				control = new MAVUdpController(peerAddress,peerport,bindport, true);
 				new SITLController(control);
 			}
 			else
@@ -168,7 +170,7 @@ public class MainApp extends Application  {
 						peerAddress = args.get("ip");
 				}
 				else {
-					control = new MAVUdpController(peerAddress,port,14550, false);
+					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 				}
 
 			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,

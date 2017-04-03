@@ -40,6 +40,7 @@ public class MAVPreferences {
 
 	public final static String PREFS_IP_ADDRESS = "IP_ADDRESS";
 	public final static String PREFS_IP_PORT    = "IP_PORT";
+	public final static String PREFS_BIND_PORT  = "BIND_PORT";
 	public final static String PREFS_VIDEO      = "VIDEOURL";
 	public final static String PREFS_DIR        = "DIRECTORY";
 	public final static String AUTOSAVE         = "AUTOSAVE";
