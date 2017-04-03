@@ -79,6 +79,7 @@
 								</AnchorPane>
 							</content>
 						</Tab>
+						<!--
 						<Tab text="Parameters">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
@@ -91,6 +92,7 @@
 								</AnchorPane>
 							</content>
 							</Tab>
+						-->
 						<Tab text="NuttShell">
 							<content>
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
