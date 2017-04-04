@@ -1,4 +1,4 @@
-<AnalysisDataModel version="0.6" description ="Built-In model definition">
+<AnalysisDataModel version="0.7" description ="Built-In model definition">
 
     <!-- Altitudes -->
 
@@ -744,59 +744,10 @@
 		<ULogSource field="sensor_combined_0.baro_temp_celcius"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
+			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
-		<MSPSource class="gps" field="latitude"></MSPSource>
-		<PX4Source field="GPS.Lat"></PX4Source>
-		<ULogSource field="vehicle_gps_position_0.lat"/>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
-		<MSPSource class="gps" field="longitude"></MSPSource>
-		<PX4Source field="GPS.Lon"></PX4Source>
-		<ULogSource field="vehicle_gps_position_0.lon"/>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
-		<MSPSource class="gps" field="numsat"></MSPSource>
-		<PX4Source field="GPS.nSat"></PX4Source>
-		<ULogSource field="vehicle_gps_position_0.satellites_used"/>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-		<PX4Source field="GPS.nSat"></PX4Source>
-		<Validity min="6" max="30"/>
-	</KeyFigure>
-
-	<KeyFigure desc="GPS.Alt." uom="m" mask="#0" key="RGPSALT">
-	    <MSPSource class="gps" field="altitude"></MSPSource>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="GPS.HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
-		<MSPSource class="gps" field="hdop"></MSPSource>
-		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="GPS.Speed" uom="m/s" mask="#0.0" key="RGPSV">
-		<MSPSource class="gps" field="speed"></MSPSource>
-		<Groups>
-			<Group>Raw data</Group>
-		</Groups>
-	</KeyFigure>
 
 	<KeyFigure desc="Base.Lat." uom="°" mask="#0.0000000" key="BASELAT">
 		<MSPSource class="base" field="latitude"></MSPSource>
@@ -907,24 +858,92 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- GPS Data -->
 
-	<!-- PX4 only figures (https://github.com/PX4/Firmware/blob/master/src/modules/sdlog2/sdlog2_messages.h#L614-L673)-->
 
-	<KeyFigure desc="Raw GPS EPH" uom="m" mask="#0.0" key="RGPSEPH">
-		<PX4Source field="LPOS.EPH"></PX4Source>
-		<ULogSource field="vehicle_local_position_0.eph"/>
+    <KeyFigure desc="GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
+		<MSPSource class="gps" field="latitude"></MSPSource>
+		<PX4Source field="GPS.Lat"></PX4Source>
+		<ULogSource field="vehicle_gps_position_0.lat"/>
 		<Groups>
-			<Group>Raw data</Group>
+			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Raw GPS EPV" uom="m" mask="#0.0" key="RGPSEPV">
-		<PX4Source field="LPOS.EPV"></PX4Source>
-		<ULogSource field="vehicle_local_position_0.epv"/>
+	<KeyFigure desc="GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
+		<MSPSource class="gps" field="longitude"></MSPSource>
+		<PX4Source field="GPS.Lon"></PX4Source>
+		<ULogSource field="vehicle_gps_position_0.lon"/>
 		<Groups>
-			<Group>Raw data</Group>
+			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
+
+	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
+		<MSPSource class="gps" field="numsat"></MSPSource>
+		<PX4Source field="GPS.nSat"></PX4Source>
+		<ULogSource field="vehicle_gps_position_0.satellites_used"/>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+		<Validity min="6" max="30"/>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Alt." uom="m" mask="#0" key="RGPSALT">
+	    <MSPSource class="gps" field="altitude"></MSPSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
+		<MSPSource class="gps" field="hdop"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Speed" uom="m/s" mask="#0.0" key="RGPSV">
+		<MSPSource class="gps" field="speed"></MSPSource>
+		<ULogSource field="vehicle_gps_position_0.vel_m_s"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Eph" uom="m" mask="#0.00" key="RGPSEPH">
+	    <PX4Source field="LPOS.EPH"></PX4Source>
+		<ULogSource field="vehicle_gps_position_0.eph"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Epv" uom="m" mask="#0.00" key="RGPSEPV">
+	    <PX4Source field="LPOS.EPV"></PX4Source>
+		<ULogSource field="vehicle_gps_position_0.epv"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Noise" uom="pms" mask="#0" key="RGPSNOISE">
+		<ULogSource field="vehicle_gps_position_0.noise_per_ms"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="GPS.Variance" uom="m/s" mask="#0" key="RGPSVAR">
+		<ULogSource field="vehicle_gps_position_0.s_variance_m_s"></ULogSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	<!-- Estimator data -->
+
 
 	<KeyFigure desc="EST0.s0" uom="" mask="#0.00" key="EST0S0">
 		<PX4Source field="EST0.s0"></PX4Source>
