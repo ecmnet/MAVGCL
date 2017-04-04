@@ -112,7 +112,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
+			if(nv.booleanValue() && !control.isSimulation()) {
 				control.getCurrentModel().grid.clear();
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
