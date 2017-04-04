@@ -31,13 +31,10 @@ V0.6xx notes:
 
 - Realtime data acquisition (50ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
 - Timechart annotated by messages (MAVLink and ULog) and parameter changes (MAVLink only)
-- Trigger recording manually or by selectable flight-mode/state changes with adjustable stop-recording delay
-- Display of  key-figures during and after recording (with 'Replay')
 - XY Analysis for selected key-figures
 - MAVLink inspector (reporting raw MAVlink messages)
 - Zooming (Click&Drag), pause / continue rolling update while continue recording in the background
 - MAVLinkShell provides NutShell over MAVLink (Console)
-- Easy to use parameter editor and In-Flight-Tuning-Widget
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
@@ -46,7 +43,7 @@ V0.6xx notes:
 - FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org) or any other source
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
-- RTCM3 base supported with automatic survey-in for UBlox M8P devices
+- RTCM3 base supported with automatic survey-in for UBlox M8P devices (OS X only)
 
 **Requirements:**
 
