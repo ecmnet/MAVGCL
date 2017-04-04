@@ -92,7 +92,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-			MSPLogger.getInstance().writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+		//	MSPLogger.getInstance().writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
