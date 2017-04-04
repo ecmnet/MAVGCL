@@ -307,7 +307,7 @@ public class UlogMAVLinkParser {
 			return null;
 		default:
 			buffer.position(buffer.position() + msgSize);
-			System.err.println("Unknown message type: " + msgType);
+		//	System.err.println("Unknown message type: " + msgType);
 		}
 		return null;
 	}
