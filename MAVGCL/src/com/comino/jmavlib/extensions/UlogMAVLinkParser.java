@@ -88,7 +88,7 @@ public class UlogMAVLinkParser {
 	private long timeStart=-1;
 
 	public UlogMAVLinkParser() {
-		buffer = ByteBuffer.allocate(32768);
+		buffer = ByteBuffer.allocate(131078);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.flip();
 	}
@@ -231,10 +231,12 @@ public class UlogMAVLinkParser {
 
 	}
 
+
 	public void buildSubscriptions() {
 		for (int k = 0; k < messageSubscriptions.size(); ++k) {
 			Subscription s = messageSubscriptions.get(k);
 			if (s != null) {
+				//		System.out.println(k+": "+s.format.name);
 				MessageFormat msgFormat = s.format;
 				if (msgFormat.name.charAt(0) != '_') {
 					int maxInstance = msgFormat.maxMultiID;
@@ -278,7 +280,7 @@ public class UlogMAVLinkParser {
 			if (msgID < messageSubscriptions.size())
 				subscription = messageSubscriptions.get(msgID);
 			if (subscription == null) {
-				System.err.println("Unknown DATA subscription ID: " + msgID);
+				//	System.err.println("Unknown DATA subscription ID: " + msgID);
 				return new DummyMessage(buffer,msgSize,2);
 			}
 			try {
@@ -304,8 +306,8 @@ public class UlogMAVLinkParser {
 			buffer.position(buffer.position() + msgSize);
 			return null;
 		default:
-			//			buffer.position(buffer.position() + msgSize);
-			//			System.err.println("Unknown message type: " + msgType);
+			buffer.position(buffer.position() + msgSize);
+			System.err.println("Unknown message type: " + msgType);
 		}
 		return null;
 	}
@@ -347,7 +349,7 @@ public class UlogMAVLinkParser {
 				}
 			} else {
 				update.put(msg_name + "." + field.name, msg.get(i));
-			//	System.out.println(msg_name+":"+msg.get(i));
+				//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
 			}
 		}
 	}

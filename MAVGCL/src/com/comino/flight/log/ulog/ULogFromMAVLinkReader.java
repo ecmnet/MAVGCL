@@ -62,6 +62,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private int state = STATE_HEADER_IDLE;
 	private UlogMAVLinkParser parser = null;
 	private int package_processed = 0;
+	private int data_processed = 0;
 
 
 	public ULogFromMAVLinkReader(IMAVController control)  {
@@ -83,6 +84,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		state=STATE_HEADER_IDLE;
 
 		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
+			if(enable)
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			return;
 		}
 
@@ -92,8 +95,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			MSPLogger.getInstance().writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
-				LockSupport.parkNanos(1000000);
-				if((System.currentTimeMillis()-tms)>4000) {
+				LockSupport.parkNanos(10000000);
+				if((System.currentTimeMillis()-tms)>5000) {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					return;
@@ -113,10 +116,11 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	public synchronized void received(Object o) {
 
 		if( o instanceof msg_logging_data_acked) {
-			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
+			if(state==STATE_HEADER_IDLE ) {
 				parser.reset();
 				package_processed = 0;
 			}
+
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 			msg_logging_ack ack = new msg_logging_ack(255,1);
 			ack.target_component=1;
@@ -124,9 +128,18 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			ack.isValid = true;
 			ack.sequence = log.sequence;
 			control.sendMAVLinkMessage(ack);
-			parser.addToBuffer(log.data, log.length,log.first_message_offset, package_processed == log.sequence);
+			parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
+
+			if(state==STATE_DATA ) {
+				parser.parseData();
+				package_processed++;
+				return;
+			}
+
 			if(package_processed != log.sequence) {
-				System.err.println(package_processed+":"+log.sequence);
+				System.err.println("Header sequence error:"+package_processed+":"+log.sequence);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				state=STATE_HEADER_IDLE;
 			}
 
 			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
@@ -142,6 +155,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		if( o instanceof msg_logging_data) {
 
+			msg_logging_data log = (msg_logging_data)o;
+
 			if(state==STATE_HEADER_IDLE) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				return;
@@ -149,45 +164,45 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
+				data_processed = 0;
 				System.out.println("Header valid: "+parser.getSystemInfo());
 				state = STATE_DATA;
 			}
 
 			if(state==STATE_DATA) {
-				msg_logging_data log = (msg_logging_data)o;
 				if(package_processed != log.sequence) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong ULOG sequence",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					System.err.println("DATA sequence error:"+data_processed+"/"+package_processed+":"+log.sequence);
 					state=STATE_HEADER_IDLE;
 				}
-				parser.addToBuffer(log.data, log.length,log.first_message_offset, package_processed == log.sequence);
+				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
 				parser.parseData();
 				package_processed++;
+				data_processed++;
 			}
 		}
 	}
 
 	//  helpers for dev
-//	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-//	public static String bytesToHex(byte[] bytes, int len) {
-//		char[] hexChars = new char[len * 2];
-//		for ( int j = 0; j <len; j++ ) {
-//			int v = bytes[j] & 0xFF;
-//			hexChars[j * 2] = hexArray[v >>> 4];
-//			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-//		}
-//		return new String(hexChars);
-//	}
-//
-//	public static String intsToHex(int[] bytes, int len) {
-//		char[] hexChars = new char[len * 2];
-//		for ( int j = 0; j <len; j++ ) {
-//			int v = bytes[j] & 0xFF;
-//			hexChars[j * 2] = hexArray[v >>> 4];
-//			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-//		}
-//		return new String(hexChars);
-//	}
+	//	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	//	public static String bytesToHex(byte[] bytes, int len) {
+	//		char[] hexChars = new char[len * 2];
+	//		for ( int j = 0; j <len; j++ ) {
+	//			int v = bytes[j] & 0xFF;
+	//			hexChars[j * 2] = hexArray[v >>> 4];
+	//			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	//		}
+	//		return new String(hexChars);
+	//	}
+	//
+	//	public static String intsToHex(int[] bytes, int len) {
+	//		char[] hexChars = new char[len * 2];
+	//		for ( int j = 0; j <len; j++ ) {
+	//			int v = bytes[j] & 0xFF;
+	//			hexChars[j * 2] = hexArray[v >>> 4];
+	//			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+	//		}
+	//		return new String(hexChars);
+	//	}
 
 }
