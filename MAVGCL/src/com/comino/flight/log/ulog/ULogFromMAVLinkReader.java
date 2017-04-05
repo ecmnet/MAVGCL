@@ -63,6 +63,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private int package_processed = 0;
 	private int data_processed = 0;
 
+	private MSPLogger logger = null;
+
 	private boolean isUlog = false;
 
 
@@ -70,6 +72,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		this.parser = new UlogMAVLinkParser();
 		this.control = control;
 		this.control.addMAVLinkListener(this);
+		this.logger = MSPLogger.getInstance();
 	}
 
 	public Map<String, Object> getData() {
@@ -86,29 +89,29 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
 			if(enable)
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			return;
 		}
 
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-		//	MSPLogger.getInstance().writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+		    logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>5000) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					isUlog = false;
 					return;
 				}
 			}
 			isUlog = true;
-			MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
 			if(isUlog)
-				System.out.println("Packages processed: "+data_processed+"/"+package_processed);
+				logger.writeLocalMsg("[mgc] Logging packages processed: "+data_processed+"/"+package_processed,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		}
 	}
