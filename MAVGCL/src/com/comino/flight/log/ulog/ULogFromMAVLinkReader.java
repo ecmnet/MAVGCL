@@ -59,8 +59,11 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private IMAVController control   = null;
 	private int state = STATE_HEADER_IDLE;
 	private UlogMAVLinkParser parser = null;
+
 	private int package_processed = 0;
 	private int data_processed = 0;
+
+	private boolean isUlog = false;
 
 
 	public ULogFromMAVLinkReader(IMAVController control)  {
@@ -97,11 +100,15 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				if((System.currentTimeMillis()-tms)>5000) {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+					isUlog = false;
 					return;
 				}
 			}
+			isUlog = true;
 			MSPLogger.getInstance().writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
+			if(isUlog)
+				System.out.println("Packages processed: "+data_processed+"/"+package_processed);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		}
 	}
