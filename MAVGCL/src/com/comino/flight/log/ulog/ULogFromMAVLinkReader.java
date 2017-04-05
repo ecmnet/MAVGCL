@@ -41,7 +41,6 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
-import org.mavlink.messages.lquac.msg_serial_control;
 
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
@@ -52,7 +51,6 @@ import com.comino.msp.main.control.listener.IMAVLinkListener;
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
-	private final static boolean debug = true;
 
 	private final int STATE_HEADER_IDLE				= 0;
 	private final int STATE_HEADER_WAIT				= 1;
@@ -116,6 +114,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	public synchronized void received(Object o) {
 
 		if( o instanceof msg_logging_data_acked) {
+
 			if(state==STATE_HEADER_IDLE ) {
 				parser.reset();
 				package_processed = 0;
@@ -130,7 +129,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			control.sendMAVLinkMessage(ack);
 			parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
 
-			if(state==STATE_DATA ) {
+			if(state==STATE_DATA) {
 				parser.parseData();
 				package_processed++;
 				return;
@@ -142,7 +141,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				state=STATE_HEADER_IDLE;
 			}
 
-			if(state==STATE_HEADER_IDLE || state==STATE_DATA) {
+			if(state==STATE_HEADER_IDLE) {
 				if(parser.checkHeader()) {
 					state = STATE_HEADER_WAIT;
 					System.out.println("Start reading header");
@@ -181,6 +180,14 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				data_processed++;
 			}
 		}
+	}
+
+	public int getPackagesProcessed() {
+		return package_processed;
+	}
+
+	public int getDataPackagesProcessed() {
+		return data_processed;
 	}
 
 	//  helpers for dev
