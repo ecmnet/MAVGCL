@@ -133,7 +133,8 @@ public class UBXRTCM3Base implements Runnable {
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
 			this.ubx.init(60,accuracy);
-			System.out.println("StartUp RTCM3 base...with SVIN accuracy: "+format.format(accuracy)+"m");
+			MSPLogger.getInstance().writeLocalMsg("[mgc] StartUp RTCM3 base...with SVIN accuracy: "
+			                              +format.format(accuracy)+"m",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			connected = true;
 		} catch (Exception e) {
 			return;

@@ -40,6 +40,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
+import com.comino.msp.log.MSPLogger;
+
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.FieldFormat;
 import me.drton.jmavlib.log.ulog.MessageAddLogged;
@@ -134,7 +138,8 @@ public class UlogMAVLinkParser {
 			buffer.clear();
 			return false;
 		}
-		System.out.println("ULOG Logging started at: " + logStartTimestamp);
+		MSPLogger.getInstance().writeLocalMsg("[mgc] ULOG Logging started at: " + logStartTimestamp,
+				  MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		buffer.compact();
 		logStartTimestamp = 0;
 		return true;
@@ -197,7 +202,8 @@ public class UlogMAVLinkParser {
 				MessageParameter msgParam = (MessageParameter) msg;
 				lastTime = System.currentTimeMillis();
 				if (parameters.containsKey(msgParam.getKey())) {
-					System.out.println("Update to parameter: " + msgParam.getKey() + " value: " + msgParam.value + " at t = " + lastTime);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Update to parameter: " + msgParam.getKey() +
+							" value: " + msgParam.value + " at t = " + lastTime,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					// maintain a record of parameters which change during flight
 					if (parameterUpdates.containsKey(msgParam.getKey())) {
 						parameterUpdates.get(msgParam.getKey()).add(new ParamUpdate(msgParam.getKey(), msgParam.value, lastTime));
@@ -329,7 +335,8 @@ public class UlogMAVLinkParser {
 		if ((buffer.get() & 0xFF) != 0x35)
 			error = false;
 		if ((buffer.get() & 0xFF) != 0x00 && !error) {
-			System.out.println("ULog: Different version than expected. Will try anyway");
+			MSPLogger.getInstance().writeLocalMsg("[mgc] ULog: Different version than expected. Will try anyway",
+					    MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		}
 		logStartTimestamp = buffer.getLong();
 		return error;

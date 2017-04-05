@@ -37,12 +37,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.prefs.Preferences;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
 
@@ -135,7 +138,7 @@ public class CameraWidget extends WidgetPane  {
 
 
 	private boolean connect() {
-		System.out.println("VideSource connect");
+		MSPLogger.getInstance().writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		if(url_string.isEmpty())
@@ -150,7 +153,6 @@ public class CameraWidget extends WidgetPane  {
 				  });
 			});
 		} catch (MalformedURLException e) {
-			System.out.println("Camera "+e.getMessage());
 			return false;
 		}
 		return true;

@@ -344,7 +344,8 @@ public class TuningWidget extends WidgetPane  {
 							MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					setValueOf(editor,att.value); }
 				else {
-					System.out.println("Timeout setting parameter. Retry "+timeout_count);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Timeout setting parameter. Retry "
+				            +timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					sendParameter(att,val);
 				}
 			}, 200, TimeUnit.MILLISECONDS);

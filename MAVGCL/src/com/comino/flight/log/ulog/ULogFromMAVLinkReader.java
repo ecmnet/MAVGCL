@@ -174,7 +174,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
 				data_processed = 0;
-				System.out.println("Header valid: "+parser.getSystemInfo());
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Header valid: "+parser.getSystemInfo(),
+						 MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				state = STATE_DATA;
 			}
 

@@ -210,7 +210,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void stop() throws Exception {
-		System.out.println("closing...");
+		MSPLogger.getInstance().writeLocalMsg("[mgc] Closing...",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.close();
 		try { Thread.sleep(200); } catch(Exception e) { }

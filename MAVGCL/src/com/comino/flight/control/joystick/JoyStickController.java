@@ -35,10 +35,12 @@ package com.comino.flight.control.joystick;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.log.MSPLogger;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -103,7 +105,8 @@ public class JoyStickController implements Runnable {
 					this.ch_sw1 = adapter.getField("SW1").getInt(null);
 					this.ch_sw2 = adapter.getField("SW2").getInt(null);
 					found = true;
-					System.out.println(pad.getName()+" connected to adapter "+adapter.getSimpleName());
+					MSPLogger.getInstance().writeLocalMsg("[mgc]"+pad.getName()
+					               +" connected to adapter "+adapter.getSimpleName(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					break;
 				}
 			}

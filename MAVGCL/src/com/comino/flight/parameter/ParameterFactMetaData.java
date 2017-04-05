@@ -39,10 +39,13 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.comino.msp.log.MSPLogger;
 
 public class ParameterFactMetaData {
 
@@ -60,9 +63,7 @@ public class ParameterFactMetaData {
 			if (doc.hasChildNodes()) {
 				String v_major = doc.getElementsByTagName("parameter_version_major").item(0).getTextContent();
 				String v_minor = doc.getElementsByTagName("parameter_version_minor").item(0).getTextContent();
-
-				System.out.println("ParameterFactMetaData Version: "+v_major+"."+v_minor);
-
+				MSPLogger.getInstance().writeLocalMsg("ParameterFactMetaData Version: "+v_major+"."+v_minor,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				buildParameterList(doc.getElementsByTagName("group"));
 			}
 		} catch (Exception e) {
