@@ -65,8 +65,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	private MSPLogger logger = null;
 
-	private boolean isUlog = false;
-
 
 	public ULogFromMAVLinkReader(IMAVController control)  {
 		this.parser = new UlogMAVLinkParser();
@@ -96,23 +94,24 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-		    logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>5000) {
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-					isUlog = false;
+					state=STATE_HEADER_IDLE;
 					return;
 				}
 			}
-			isUlog = true;
 			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
-			if(isUlog)
+			if(state==STATE_DATA) {
 				logger.writeLocalMsg("[mgc] Logging packages processed: "+data_processed+"/"+package_processed,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				state=STATE_HEADER_IDLE;
+			}
 		}
 	}
 
@@ -139,16 +138,20 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			control.sendMAVLinkMessage(ack);
 			parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
 
-			if(state==STATE_DATA) {
-				parser.parseData();
-				package_processed++;
-				return;
-			}
-
 			if(package_processed != log.sequence) {
+				logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+package_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				System.err.println("Header sequence error:"+package_processed+":"+log.sequence);
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				state=STATE_HEADER_IDLE;
+				return;
+			}
+
+			package_processed++;
+
+			if(state==STATE_DATA) {
+				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
+				parser.parseData();
+				return;
 			}
 
 			if(state==STATE_HEADER_IDLE) {
@@ -159,12 +162,12 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					return;
 			}
 			parser.parseHeader();
-			package_processed++;
 		}
 
 		if( o instanceof msg_logging_data) {
 
 			msg_logging_data log = (msg_logging_data)o;
+			//		System.out.println("D"+package_processed+":"+log.sequence);
 
 			if(state==STATE_HEADER_IDLE) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
@@ -174,22 +177,29 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
 				data_processed = 0;
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Header valid: "+parser.getSystemInfo(),
-						 MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Header valid: "+log.sequence,
+						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				state = STATE_DATA;
 			}
 
 			if(state==STATE_DATA) {
 				if(package_processed != log.sequence) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-					System.err.println("DATA sequence error:"+data_processed+"/"+package_processed+":"+log.sequence);
-					state=STATE_HEADER_IDLE;
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+//					logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+data_processed+":"+
+//							package_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+//					state=STATE_HEADER_IDLE;
+//					return;
+					package_processed = log.sequence;
+					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
+					package_processed++;
+					return;
 				}
 				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
 				parser.parseData();
-				package_processed++;
 				data_processed++;
 			}
+			package_processed++;
 		}
 	}
 

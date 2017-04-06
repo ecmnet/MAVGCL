@@ -116,6 +116,10 @@ public class UlogMAVLinkParser {
 		return data;
 	}
 
+	public void clearBuffer() {
+		buffer.clear();
+	}
+
 	public void reset() {
 		messageFormats.clear();
 		parameters.clear();
@@ -149,13 +153,13 @@ public class UlogMAVLinkParser {
 		Object msg = null;
 		buffer.flip();
 		while ((msg = readMessage()) != null) {
+			buffer.compact();
 			if(msg instanceof MessageData) {
 				if (timeStart < 0)
 					timeStart = ((MessageData)msg).timestamp;
 				applyMsg(data, (MessageData) msg);
 			}
 		}
-		buffer.compact();
 	}
 
 	public void parseHeader()   {
@@ -313,7 +317,7 @@ public class UlogMAVLinkParser {
 			return null;
 		default:
 			buffer.position(buffer.position() + msgSize);
-		//	System.err.println("Unknown message type: " + msgType);
+			System.err.println("Unknown message type: " + msgType);
 		}
 		return null;
 	}
