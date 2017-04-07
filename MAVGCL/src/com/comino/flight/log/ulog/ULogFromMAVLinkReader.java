@@ -34,6 +34,7 @@
 package com.comino.flight.log.ulog;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
@@ -47,6 +48,7 @@ import com.comino.jmavlib.extensions.UlogMAVLinkParser;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.utils.ExecutorService;
 
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {
@@ -105,6 +107,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			parser.reset();
 			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
+
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>5000) {
@@ -114,6 +117,13 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					return;
 				}
 			}
+
+			ExecutorService.get().schedule(() -> {
+				if(state==STATE_DATA)
+					logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
+							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			}, 3, TimeUnit.SECONDS);
+
 			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
@@ -149,6 +159,12 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					System.out.println("Start reading header");
 				} else
 					return;
+			}
+
+			if(state==STATE_DATA) {
+				parser.parseHeader();
+				header_processed++;
+				return;
 			}
 
 			if(header_processed != log.sequence) {
@@ -191,6 +207,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				   parser.addToBuffer(log, true);
 				parser.parseData(debug);
 			}
+
 			if(++data_processed > 65535)
 				data_processed = 0;
 		}
