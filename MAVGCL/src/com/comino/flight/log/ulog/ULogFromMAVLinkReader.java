@@ -104,7 +104,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-			parser.reset();
+			parser.reset(); header_processed = 0; package_lost = 0;
 			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 
@@ -125,7 +125,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				if(state==STATE_DATA)
 					logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
 							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			}, 3, TimeUnit.SECONDS);
+			}, 5, TimeUnit.SECONDS);
 
 			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
