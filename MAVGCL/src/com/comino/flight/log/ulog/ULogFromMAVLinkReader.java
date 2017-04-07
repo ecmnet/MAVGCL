@@ -60,8 +60,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private int state = STATE_HEADER_IDLE;
 	private UlogMAVLinkParser parser = null;
 
-	private int package_processed = 0;
+	private int header_processed = 0;
 	private int data_processed = 0;
+	private int package_lost=0;
 
 	private boolean debug = false;
 
@@ -101,18 +102,12 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			parser.reset();
 			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
-				if((System.currentTimeMillis()-tms)>50000) {
+				if((System.currentTimeMillis()-tms)>5000) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					state=STATE_HEADER_IDLE;
@@ -121,9 +116,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			}
 			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			if(state==STATE_DATA) {
-				logger.writeLocalMsg("[mgc] Logging packages processed: "+data_processed+"/"+package_processed,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				state=STATE_HEADER_IDLE;
 			}
 		}
@@ -136,14 +130,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	@Override
 	public  void received(Object o) {
 
-
-
 		if( o instanceof msg_logging_data_acked) {
-
-			if(state==STATE_HEADER_IDLE ) {
-				parser.reset();
-				package_processed = 0;
-			}
 
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 			msg_logging_ack ack = new msg_logging_ack(255,1);
@@ -154,68 +141,74 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			control.sendMAVLinkMessage(ack);
 
 			parser.addToBuffer(log);
-			//
-			if(package_processed != log.sequence) {
-				logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+package_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				System.err.println("Header sequence error:"+package_processed+":"+log.sequence);
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-				state=STATE_HEADER_IDLE;
-				return;
-			}
-			//
+
 			if(state==STATE_HEADER_IDLE) {
 				if(parser.checkHeader()) {
+					header_processed = log.sequence;
 					state = STATE_HEADER_WAIT;
 					System.out.println("Start reading header");
 				} else
 					return;
 			}
+
+			if(header_processed != log.sequence) {
+				logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+header_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				System.err.println("Header sequence error:"+header_processed+":"+log.sequence);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				header_processed = 0;
+				state=STATE_HEADER_IDLE;
+				return;
+			}
 			parser.parseHeader();
-			package_processed++;
+			header_processed++;
 		}
 
 		if( o instanceof msg_logging_data) {
 
-//			System.out.println(o);
-
-
 			msg_logging_data log = (msg_logging_data)o;
 
-
 			if(state==STATE_HEADER_IDLE) {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				parser.reset();
+				data_processed = 0;
+				package_lost=0;
 				return;
 			}
 
 			if(state==STATE_HEADER_WAIT) {
-				//parser.buildSubscriptions();
-				data_processed = 0;
+				parser.buildSubscriptions();
+				data_processed = header_processed;
 				parser.clearBuffer();
 				state = STATE_DATA;
 			}
 
 			if(state==STATE_DATA) {
 
-				if(package_processed != log.sequence) {
-			//		System.err.println("Package lost: "+(log.sequence-package_processed));
-					package_processed = log.sequence;
-
-				}
-				parser.addToBuffer(log);
-				parser.parseData();
-				data_processed++;
+				if(data_processed != log.sequence) {
+					data_processed = log.sequence;
+					package_lost++;
+					parser.addToBuffer(log, false);
+				} else
+				   parser.addToBuffer(log, true);
+				parser.parseData(debug);
 			}
-			if(++package_processed > 65535)
-				package_processed = 0;
+			if(++data_processed > 65535)
+				data_processed = 0;
 		}
 	}
 
-	public int getPackagesProcessed() {
-		return package_processed;
+	public int getHeaderProcessed() {
+		return header_processed;
 	}
 
 	public int getDataPackagesProcessed() {
 		return data_processed;
+	}
+
+	public float lostPackageRatio() {
+		if(data_processed == 0)
+			return Float.NaN;
+		else
+			return (float)package_lost/data_processed;
 	}
 
 	//  helpers for dev

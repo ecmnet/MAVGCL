@@ -17,7 +17,7 @@ public class UlogFromMavLinkTest implements Runnable {
 	//	control = new MAVUdpController("127.0.0.1",14556,14550, true);
 		MSPLogger.getInstance(control);
 
-		logger = new ULogFromMAVLinkReader(control, true);
+		logger = new ULogFromMAVLinkReader(control, false);
 
 		while(!control.isConnected()) {
 			try {
@@ -43,10 +43,16 @@ public class UlogFromMavLinkTest implements Runnable {
 	@Override
 	public void run() {
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+
+		}
 		 logger.enableLogging(true);
 		while(true) {
 			try {
 				Thread.sleep(200);
+				System.out.println(logger.lostPackageRatio());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

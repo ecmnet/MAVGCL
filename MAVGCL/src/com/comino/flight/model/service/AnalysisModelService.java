@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 
@@ -112,6 +113,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			if(nv.booleanValue() && !control.isSimulation()) {
 				control.getCurrentModel().grid.clear();
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);

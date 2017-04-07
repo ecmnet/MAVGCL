@@ -99,10 +99,16 @@ public class UlogMAVLinkParser {
 		buffer.clear();
 	}
 
-	public void addToBuffer(msg_logging_data msg) {
-		buffer.clear();
-		for (int i = msg.first_message_offset; i < msg.length; i++)
-			buffer.put((byte)(msg.data[i] & 0x00FF));
+	public void addToBuffer(msg_logging_data msg, boolean ok) {
+		if(ok) {
+			for (int i = 0; i < msg.length; i++)
+				buffer.put((byte)(msg.data[i] & 0x00FF));
+		} else {
+			buffer.clear();
+			for (int i = msg.first_message_offset; i < msg.length; i++)
+				buffer.put((byte)(msg.data[i] & 0x00FF));
+
+		}
 	}
 
 	public void addToBuffer(msg_logging_data_acked msg) {
@@ -150,11 +156,12 @@ public class UlogMAVLinkParser {
 		return true;
 	}
 
-	public void parseData() {
+	public void parseData(boolean debug) {
 		Object msg = null;
 		buffer.flip();
 		while ((msg = readMessage()) != null) {
-			//System.out.println(msg);
+			if(debug)
+				System.out.println(msg);
 			if(msg instanceof MessageData) {
 				if (timeStart < 0)
 					timeStart = ((MessageData)msg).timestamp;
@@ -278,13 +285,12 @@ public class UlogMAVLinkParser {
 		int msgSize = s1 + (256 * s2);
 		int msgType = buffer.get() & 0x00FF;
 
-	//	System.out.println((char)msgType+" => "+msgSize+" C"+buffer.remaining()+")");
+		//	System.out.println((char)msgType+" => "+msgSize+" C"+buffer.remaining()+")");
 
 		if (msgSize > buffer.remaining()-3) {
 			buffer.position(buffer.position()-3);
 			return null;
 		}
-
 
 		switch (msgType) {
 
@@ -327,7 +333,7 @@ public class UlogMAVLinkParser {
 		default:
 
 			buffer.position(buffer.position() + msgSize);
-//			System.err.println("Unknown message type: " + msgType+":"+msgSize);
+			//			System.err.println("Unknown message type: " + msgType+":"+msgSize);
 		}
 		return null;
 	}
