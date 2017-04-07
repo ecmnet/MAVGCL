@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_logging_data;
+import org.mavlink.messages.lquac.msg_logging_data_acked;
 
 import com.comino.msp.log.MSPLogger;
 
@@ -92,20 +94,19 @@ public class UlogMAVLinkParser {
 	private long timeStart=-1;
 
 	public UlogMAVLinkParser() {
-		buffer = ByteBuffer.allocate(131078);
+		buffer = ByteBuffer.allocate(32768);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
-		buffer.flip();
+		buffer.clear();
 	}
 
-	public void addToBuffer(int[] data, int len, int offset, boolean sequence_ok) {
-		if (sequence_ok) {
-			for (int i = 0; i < len; i++)
-				buffer.put((byte) (data[i] & 0x00FF));
-		} else {
-			buffer.clear();
-			for (int i = offset; i < len; i++)
-				buffer.put((byte) (data[i] & 0x00FF));
-		}
+	public void addToBuffer(msg_logging_data msg) {
+		for (int i = 0; i < msg.length; i++)
+			buffer.put((byte)(msg.data[i] & 0x00FF));
+	}
+
+	public void addToBuffer(msg_logging_data_acked msg) {
+		for (int i = 0; i < msg.length; i++)
+			buffer.put((byte)(msg.data[i] & 0x00FF));
 	}
 
 	public Map<String, String> getFieldList() {
@@ -127,7 +128,6 @@ public class UlogMAVLinkParser {
 		messageSubscriptions.clear();
 		fieldsList.clear();
 		data.clear();
-
 		nestedParsingDone = false;
 		buffer.clear();
 	}
@@ -139,11 +139,11 @@ public class UlogMAVLinkParser {
 	public boolean checkHeader() {
 		buffer.flip();
 		if (!checkMagicHeader()) {
-			buffer.clear();
+			buffer.compact();
 			return false;
 		}
 		MSPLogger.getInstance().writeLocalMsg("[mgc] ULOG Logging started at: " + logStartTimestamp,
-				  MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		buffer.compact();
 		logStartTimestamp = 0;
 		return true;
@@ -153,13 +153,14 @@ public class UlogMAVLinkParser {
 		Object msg = null;
 		buffer.flip();
 		while ((msg = readMessage()) != null) {
-			buffer.compact();
+			//System.out.println(msg);
 			if(msg instanceof MessageData) {
 				if (timeStart < 0)
 					timeStart = ((MessageData)msg).timestamp;
 				applyMsg(data, (MessageData) msg);
 			}
 		}
+		buffer.compact();
 	}
 
 	public void parseHeader()   {
@@ -271,8 +272,8 @@ public class UlogMAVLinkParser {
 
 	public Object readMessage()  {
 
-		int s1 = buffer.get() & 0xFF;
-		int s2 = buffer.get() & 0xFF;
+		int s1 = buffer.get() & 0x00FF;
+		int s2 = buffer.get() & 0x00FF;
 		int msgSize = s1 + (256 * s2);
 		int msgType = buffer.get() & 0xFF;
 
@@ -314,10 +315,11 @@ public class UlogMAVLinkParser {
 		case MESSAGE_TYPE_REMOVE_LOGGED_MSG:
 		case MESSAGE_TYPE_SYNC:
 			buffer.position(buffer.position() + msgSize);
+			System.err.println("Sync: " + msgType+":"+msgSize);
 			return null;
 		default:
 			buffer.position(buffer.position() + msgSize);
-			System.err.println("Unknown message type: " + msgType);
+			System.err.println("Unknown message type: " + msgType+":"+msgSize);
 		}
 		return null;
 	}
@@ -340,7 +342,7 @@ public class UlogMAVLinkParser {
 			error = false;
 		if ((buffer.get() & 0xFF) != 0x00 && !error) {
 			MSPLogger.getInstance().writeLocalMsg("[mgc] ULog: Different version than expected. Will try anyway",
-					    MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		}
 		logStartTimestamp = buffer.getLong();
 		return error;
@@ -360,7 +362,7 @@ public class UlogMAVLinkParser {
 				}
 			} else {
 				update.put(msg_name + "." + field.name, msg.get(i));
-				//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
+			//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
 			}
 		}
 	}

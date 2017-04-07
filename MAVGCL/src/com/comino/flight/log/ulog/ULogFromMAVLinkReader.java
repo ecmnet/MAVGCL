@@ -94,13 +94,20 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		long tms = System.currentTimeMillis();
 
 		if(enable)  {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 			while(state!=STATE_DATA ) {
 				LockSupport.parkNanos(10000000);
 				if((System.currentTimeMillis()-tms)>5000) {
-					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					state=STATE_HEADER_IDLE;
 					return;
 				}
@@ -123,6 +130,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	public synchronized void received(Object o) {
 
 		if( o instanceof msg_logging_data_acked) {
+			//			System.out.println(package_processed+":"+o);
 
 			if(state==STATE_HEADER_IDLE ) {
 				parser.reset();
@@ -136,8 +144,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			ack.isValid = true;
 			ack.sequence = log.sequence;
 			control.sendMAVLinkMessage(ack);
-			parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
 
+			parser.addToBuffer(log);
+			//
 			if(package_processed != log.sequence) {
 				logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+package_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				System.err.println("Header sequence error:"+package_processed+":"+log.sequence);
@@ -145,15 +154,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				state=STATE_HEADER_IDLE;
 				return;
 			}
-
-			package_processed++;
-
-			if(state==STATE_DATA) {
-				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
-				parser.parseData();
-				return;
-			}
-
+			//
 			if(state==STATE_HEADER_IDLE) {
 				if(parser.checkHeader()) {
 					state = STATE_HEADER_WAIT;
@@ -162,12 +163,13 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					return;
 			}
 			parser.parseHeader();
+			package_processed++;
 		}
 
 		if( o instanceof msg_logging_data) {
+			//		System.out.println(package_processed+":"+o);
 
 			msg_logging_data log = (msg_logging_data)o;
-			//		System.out.println("D"+package_processed+":"+log.sequence);
 
 			if(state==STATE_HEADER_IDLE) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
@@ -177,25 +179,17 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			if(state==STATE_HEADER_WAIT) {
 				parser.buildSubscriptions();
 				data_processed = 0;
-
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Header valid: "+log.sequence,
-						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				parser.clearBuffer();
 				state = STATE_DATA;
 			}
 
 			if(state==STATE_DATA) {
 				if(package_processed != log.sequence) {
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-//					logger.writeLocalMsg("[mgc] Fallback to MAVLink logging: "+data_processed+":"+
-//							package_processed+":"+log.sequence,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-//					state=STATE_HEADER_IDLE;
-//					return;
-					package_processed = log.sequence;
-					parser.addToBuffer(log.data, log.length,log.first_message_offset, false);
-					package_processed++;
+					System.err.println("Package lost: "+(log.sequence-package_processed));
+					package_processed = log.sequence+1;
 					return;
 				}
-				parser.addToBuffer(log.data, log.length,log.first_message_offset, true);
+				parser.addToBuffer(log);
 				parser.parseData();
 				data_processed++;
 			}
