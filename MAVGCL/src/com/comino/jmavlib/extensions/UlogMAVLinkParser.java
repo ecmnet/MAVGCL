@@ -100,7 +100,8 @@ public class UlogMAVLinkParser {
 	}
 
 	public void addToBuffer(msg_logging_data msg) {
-		for (int i = 0; i < msg.length; i++)
+		buffer.clear();
+		for (int i = msg.first_message_offset; i < msg.length; i++)
 			buffer.put((byte)(msg.data[i] & 0x00FF));
 	}
 
@@ -275,18 +276,24 @@ public class UlogMAVLinkParser {
 		int s1 = buffer.get() & 0x00FF;
 		int s2 = buffer.get() & 0x00FF;
 		int msgSize = s1 + (256 * s2);
-		int msgType = buffer.get() & 0xFF;
+		int msgType = buffer.get() & 0x00FF;
+
+	//	System.out.println((char)msgType+" => "+msgSize+" C"+buffer.remaining()+")");
 
 		if (msgSize > buffer.remaining()-3) {
 			buffer.position(buffer.position()-3);
 			return null;
 		}
+
+
 		switch (msgType) {
+
 		case MESSAGE_TYPE_DATA:
 
 			s1 = buffer.get() & 0xFF;
 			s2 = buffer.get() & 0xFF;
 			int msgID = s1 + (256 * s2);
+
 			Subscription subscription = null;
 			if (msgID < messageSubscriptions.size())
 				subscription = messageSubscriptions.get(msgID);
@@ -318,8 +325,9 @@ public class UlogMAVLinkParser {
 			System.err.println("Sync: " + msgType+":"+msgSize);
 			return null;
 		default:
+
 			buffer.position(buffer.position() + msgSize);
-			System.err.println("Unknown message type: " + msgType+":"+msgSize);
+//			System.err.println("Unknown message type: " + msgType+":"+msgSize);
 		}
 		return null;
 	}
@@ -362,9 +370,20 @@ public class UlogMAVLinkParser {
 				}
 			} else {
 				update.put(msg_name + "." + field.name, msg.get(i));
-			//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
+				//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
 			}
 		}
+	}
+
+	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	public static String bytesToHex(int[] bytes, int len) {
+		char[] hexChars = new char[len * 2];
+		for ( int j = 0; j <len; j++ ) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
 	}
 
 	// private classes

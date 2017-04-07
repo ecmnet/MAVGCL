@@ -13,11 +13,11 @@ public class UlogFromMavLinkTest implements Runnable {
 
 	public UlogFromMavLinkTest() {
 
-	//	control = new MAVUdpController("172.168.178.1",14555,14550, false);
-		control = new MAVUdpController("127.0.0.1",14556,14550, true);
+		control = new MAVUdpController("172.168.178.1",14555,14550, false);
+	//	control = new MAVUdpController("127.0.0.1",14556,14550, true);
 		MSPLogger.getInstance(control);
 
-		logger = new ULogFromMAVLinkReader(control);
+		logger = new ULogFromMAVLinkReader(control, true);
 
 		while(!control.isConnected()) {
 			try {
