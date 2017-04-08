@@ -122,11 +122,11 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				}
 			}
 
-			ExecutorService.get().schedule(() -> {
-				if(state==STATE_DATA)
+			ExecutorService.get().scheduleAtFixedRate(() -> {
+				if(state==STATE_DATA && lostPackageRatio() > 0.02f)
 					logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
 							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			}, 5, TimeUnit.SECONDS);
+			}, 5, 60, TimeUnit.SECONDS);
 
 			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		} else {
