@@ -52,7 +52,8 @@ public class UlogFromMavLinkTest implements Runnable {
 		while(true) {
 			try {
 				Thread.sleep(200);
-				System.out.println(logger.lostPackageRatio());
+				if(control.isConnected())
+				  System.out.println((int)(logger.lostPackageRatio()*100f)+"%");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

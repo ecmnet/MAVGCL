@@ -94,7 +94,7 @@ public class UlogMAVLinkParser {
 	private long timeStart=-1;
 
 	public UlogMAVLinkParser() {
-		buffer = ByteBuffer.allocate(65536);
+		buffer = ByteBuffer.allocate(32768);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.clear();
 	}
@@ -107,7 +107,6 @@ public class UlogMAVLinkParser {
 			buffer.clear();
 			for (int i = msg.first_message_offset; i < msg.length; i++)
 				buffer.put((byte)(msg.data[i] & 0x00FF));
-
 		}
 	}
 
@@ -280,61 +279,71 @@ public class UlogMAVLinkParser {
 
 	public Object readMessage()  {
 
+		if(buffer.remaining()<3)
+			return null;
+
 		int s1 = buffer.get() & 0x00FF;
 		int s2 = buffer.get() & 0x00FF;
 		int msgSize = s1 + (256 * s2);
 		int msgType = buffer.get() & 0x00FF;
 
-		//	System.out.println((char)msgType+" => "+msgSize+" C"+buffer.remaining()+")");
+		try {
 
-		if (msgSize > buffer.remaining()-3) {
-			buffer.position(buffer.position()-3);
-			return null;
-		}
-
-		switch (msgType) {
-
-		case MESSAGE_TYPE_DATA:
-
-			s1 = buffer.get() & 0xFF;
-			s2 = buffer.get() & 0xFF;
-			int msgID = s1 + (256 * s2);
-
-			Subscription subscription = null;
-			if (msgID < messageSubscriptions.size())
-				subscription = messageSubscriptions.get(msgID);
-			if (subscription == null) {
-				//	System.err.println("Unknown DATA subscription ID: " + msgID);
-				return new DummyMessage(buffer,msgSize,2);
+			if (msgSize > buffer.remaining()-3) {
+				buffer.position(buffer.position()-3);
+				return null;
 			}
-			try {
-				return new MessageData(subscription.format, buffer, subscription.multiID);
-			} catch (FormatErrorException e) {
-				System.err.println(e.getMessage()+": " + msgID);
-				return new DummyMessage(buffer,msgSize,2);
-			}
-		case MESSAGE_TYPE_INFO:
-			return new MessageInfo(buffer);
-		case MESSAGE_TYPE_PARAMETER:
-			return new MessageParameter(buffer);
-		case MESSAGE_TYPE_FORMAT:
-			return new MessageFormat(buffer, msgSize);
-		case MESSAGE_TYPE_ADD_LOGGED_MSG:
-			return new MessageAddLogged(buffer, msgSize);
-		case MESSAGE_TYPE_DROPOUT:
-			return new MessageDropout(buffer);
-		case MESSAGE_TYPE_LOG:
-			return new MessageLog(buffer, msgSize);
-		case MESSAGE_TYPE_REMOVE_LOGGED_MSG:
-		case MESSAGE_TYPE_SYNC:
-			buffer.position(buffer.position() + msgSize);
-			System.err.println("Sync: " + msgType+":"+msgSize);
-			return null;
-		default:
 
-			buffer.position(buffer.position() + msgSize);
-			//			System.err.println("Unknown message type: " + msgType+":"+msgSize);
-		}
+			switch (msgType) {
+
+			case MESSAGE_TYPE_DATA:
+
+				s1 = buffer.get() & 0x00FF;
+				s2 = buffer.get() & 0x00FF;
+				int msgID = s1 + (256 * s2);
+
+				Subscription subscription = null;
+				if (msgID < messageSubscriptions.size())
+					subscription = messageSubscriptions.get(msgID);
+				if (subscription == null) {
+					//System.err.println("Unknown DATA subscription ID: " + msgID);
+					buffer.position(buffer.position()+msgSize-5);
+					return null;
+				}
+				try {
+					return new MessageData(subscription.format, buffer, subscription.multiID);
+				} catch (FormatErrorException e) {
+					//System.err.println(e.getMessage()+": " + msgID);
+					buffer.position(buffer.position()+msgSize-5);
+					return null;
+				}
+			case MESSAGE_TYPE_INFO:
+				return new MessageInfo(buffer);
+			case MESSAGE_TYPE_PARAMETER:
+				return new MessageParameter(buffer);
+			case MESSAGE_TYPE_FORMAT:
+				return new MessageFormat(buffer, msgSize);
+			case MESSAGE_TYPE_ADD_LOGGED_MSG:
+				return new MessageAddLogged(buffer, msgSize);
+			case MESSAGE_TYPE_DROPOUT:
+				return new MessageDropout(buffer);
+			case MESSAGE_TYPE_LOG:
+				return new MessageLog(buffer, msgSize);
+			case MESSAGE_TYPE_REMOVE_LOGGED_MSG:
+			case MESSAGE_TYPE_SYNC:
+				buffer.position(buffer.position() + msgSize);
+				System.err.println("Sync: " +  (char)msgType+":"+msgSize);
+				return null;
+			default:
+				if (msgSize == 0 && msgType == 0) {
+					// This is an error (corrupt file): likely the file is filled with zeros from this point on.
+					// Not much we can do except to ensure that we make progress and don't spam the error console.
+				} else {
+					buffer.position(buffer.position()+msgSize);
+					//	System.err.println("Exc: " + msgType+":"+msgSize);
+				}
+			}
+		} catch(Exception e) {  }
 		return null;
 	}
 

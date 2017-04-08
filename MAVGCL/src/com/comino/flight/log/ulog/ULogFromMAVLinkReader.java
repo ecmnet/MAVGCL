@@ -68,6 +68,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	private boolean debug = false;
 
+
 	private MSPLogger logger = null;
 
 
@@ -147,6 +148,18 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 			msg_logging_data_acked log = (msg_logging_data_acked)o;
 
+			if(state==STATE_DATA) {
+				parser.parseHeader();
+				header_processed++;
+				msg_logging_ack ack = new msg_logging_ack(255,1);
+				ack.target_component=1;
+				ack.target_system=1;
+				ack.isValid = true;
+				ack.sequence = log.sequence;
+				control.sendMAVLinkMessage(ack);
+				return;
+			}
+
 			if(header_processed != log.sequence) {
 				return;
 			}
@@ -166,12 +179,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					System.out.println("Start reading header");
 				} else
 					return;
-			}
-
-			if(state==STATE_DATA) {
-				parser.parseHeader();
-				header_processed++;
-				return;
 			}
 
 			parser.parseHeader();
@@ -197,13 +204,13 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			}
 
 			if(state==STATE_DATA) {
-
 				if(data_processed != log.sequence) {
 					data_processed = log.sequence;
 					package_lost++;
 					parser.addToBuffer(log, false);
-				} else
+				} else {
 					parser.addToBuffer(log, true);
+				}
 				parser.parseData(debug);
 			}
 
