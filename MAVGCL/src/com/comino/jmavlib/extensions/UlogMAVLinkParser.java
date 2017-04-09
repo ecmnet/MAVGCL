@@ -148,7 +148,7 @@ public class UlogMAVLinkParser {
 			buffer.compact();
 			return false;
 		}
-		MSPLogger.getInstance().writeLocalMsg("[mgc] ULOG Logging started at: " + logStartTimestamp,
+		MSPLogger.getInstance().writeLocalMsg("[mgc] ULOG Logging started",
 				MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		buffer.compact();
 		logStartTimestamp = 0;
