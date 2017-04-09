@@ -116,6 +116,11 @@ public class TuningWidget extends WidgetPane  {
 		}
 
 
+	}
+
+	@FXML
+	public void initialize() {
+
 		params = PX4Parameters.getInstance();
 
 		params.addRefreshListener(() -> {
@@ -127,30 +132,6 @@ public class TuningWidget extends WidgetPane  {
 		groups.getItems().add("None");
 		groups.getSelectionModel().clearAndSelect(0);
 
-		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
-			@Override
-			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
-				if(newValue!=null) {
-					ParameterAttributes p = (ParameterAttributes)newValue;
-					if(!groups.getItems().contains(p.group_name) && p !=null)
-						groups.getItems().add(p.group_name);
-
-					if(timeout!=null && !timeout.isDone()) {
-						BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-						MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						if(p.reboot_required)
-							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						timeout.cancel(true);  timeout_count=0;
-					}
-
-				}
-			}
-		});
-
-	}
-
-	@FXML
-	public void initialize() {
 		scroll.setBorder(Border.EMPTY);
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
@@ -166,6 +147,29 @@ public class TuningWidget extends WidgetPane  {
 
 		reload.setOnAction((ActionEvent event)-> {
 			params.refreshParameterList(false);
+		});
+
+		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+				if(newValue!=null) {
+					ParameterAttributes p = (ParameterAttributes)newValue;
+					synchronized(this) {
+						if(!groups.getItems().contains(p.group_name) && p !=null)
+							groups.getItems().add(p.group_name);
+
+
+						if(timeout!=null && !timeout.isDone()) {
+							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+							MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							if(p.reboot_required)
+								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							timeout.cancel(true);  timeout_count=0;
+						}
+					}
+
+				}
+			}
 		});
 	}
 
@@ -282,15 +286,15 @@ public class TuningWidget extends WidgetPane  {
 						editor.setCursor(Cursor.DEFAULT);
 						((TextField)editor).setEditable(false);
 						editor.setOnMouseClicked((event) -> {
-						   groups.requestFocus();
-                           BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
-                           bd.setValue((int)att.value);
-                           int val = bd.show();
-                           if(val!=att.value) {
-                        	   att.value = val;
-                             setValueOf(editor,val);
-                             sendParameter(att,val);
-                           }
+							groups.requestFocus();
+							BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
+							bd.setValue((int)att.value);
+							int val = bd.show();
+							if(val!=att.value) {
+								att.value = val;
+								setValueOf(editor,val);
+								sendParameter(att,val);
+							}
 						});
 					}
 				}
@@ -298,7 +302,7 @@ public class TuningWidget extends WidgetPane  {
 
 			this.editor.setPrefWidth(85);
 			this.editor.setPrefHeight(19);
-	//		this.editor.setTooltip(new Tooltip(att.description_long));
+			//		this.editor.setTooltip(new Tooltip(att.description_long));
 
 			if(editable)
 				setContextMenu(editor);
@@ -345,7 +349,7 @@ public class TuningWidget extends WidgetPane  {
 					setValueOf(editor,att.value); }
 				else {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Timeout setting parameter. Retry "
-				            +timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+							+timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					sendParameter(att,val);
 				}
 			}, 200, TimeUnit.MILLISECONDS);
@@ -370,23 +374,23 @@ public class TuningWidget extends WidgetPane  {
 		@SuppressWarnings("unchecked")
 		public void setValueOf(Control p, double v) {
 			Platform.runLater(() -> {
-			if(p instanceof TextField) {
-				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
-					((TextField)p).setText(String.valueOf((int)v));
-				else {
-					BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
-					((TextField)p).setText(bd.toPlainString());
+				if(p instanceof TextField) {
+					if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
+						((TextField)p).setText(String.valueOf((int)v));
+					else {
+						BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+						((TextField)p).setText(bd.toPlainString());
+					}
 				}
-			}
-			else if(p instanceof Spinner)
-				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
-			else {
-				for(Entry<Integer,String> e : att.valueList.entrySet())
-					if(e.getKey()==(int)v)
-						((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().select(e);
-			}
+				else if(p instanceof Spinner)
+					((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
+				else {
+					for(Entry<Integer,String> e : att.valueList.entrySet())
+						if(e.getKey()==(int)v)
+							((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().select(e);
+				}
 
-			checkDefaultOf(p,v);
+				checkDefaultOf(p,v);
 			});
 		}
 
