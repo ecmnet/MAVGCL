@@ -230,16 +230,18 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			Data data = allData.get(_msg);
 			dt = System.currentTimeMillis() - data.old_tms;
 			data.old_tms = System.currentTimeMillis();
-			if(dt > 0)
-			  data.getData().get("rate").setValue(String.format("%3d",1000/dt));
-
-			for(String v : msg) {
-				if(v.contains("=")) {
-					String[] p = v.split("=");
-					try {
-						data.getData().get(p[0]).setValue(p[1]);
-					} catch(Exception k) {   }
+			if((System.currentTimeMillis() - data.last_update)> 333) {
+				if(dt > 0)
+					data.getData().get("rate").setValue(String.format("%3d",(int)((1000f/dt)+0.5)));
+				for(String v : msg) {
+					if(v.contains("=")) {
+						String[] p = v.split("=");
+						try {
+							data.getData().get(p[0]).setValue(p[1]);
+						} catch(Exception k) {   }
+					}
 				}
+				data.last_update = System.currentTimeMillis();
 			}
 
 		}
@@ -252,6 +254,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		private String name;
 		private Map<String,Dataset> data = new HashMap<String,Dataset>();
 		public long old_tms;
+		public long last_update;
 
 		public Data(String name, ObservableMap<String,Dataset> data) {
 			this.name = name;
@@ -273,8 +276,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	class Dataset {
 
-		long tms = 0;
-
 		StringProperty str = new SimpleStringProperty();
 		StringProperty value = new SimpleStringProperty();
 
@@ -290,10 +291,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public void setValue(String no) {
-			if((System.currentTimeMillis() - tms)> 100) {
-				tms = System.currentTimeMillis();
-				this.value.set(no);
-			}
+			this.value.set(no);
 		}
 
 		public String getStr() {
