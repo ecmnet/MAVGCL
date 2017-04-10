@@ -23,6 +23,7 @@ V0.6xx notes:
 - V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0 always') - MAVLink 1.0 no longer supported (for MAVLink 1.0 use V0.536 )
 - Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
 - Mapping between ULog data and MAVGCL key-figures is still ongoing and not completed (refer to the [Mapping documentation](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/UlogKeyFiguresAssignment.xlsx) )
+- Serial connection no longer available as it is currently used for RTK base stations
 
 
 **Features:**
@@ -76,8 +77,6 @@ Binaries for Linux, OS X and Windows (64bit) can be found [here](https://github.
 - Start with `java -jar MAVGAnalysis.jar`
 
 - Set IP address and port in `File->Preferences` and restart (For local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
-
-- For USB connected devices start with`java -jar MAVGAnalysis.jar --SERIAL=true`)
 
 - Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
 
