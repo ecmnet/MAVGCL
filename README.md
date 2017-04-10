@@ -10,8 +10,6 @@
 
 This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or offline based on PX4Logs or ULogs. It is not intended to replace the QGC. 
 
-Binaries available for Linux, OS X and Windows (64bit)
-
 Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 10/04/2017
@@ -53,7 +51,7 @@ V0.6xx notes:
 
 **Binaries:**
 
-Binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
+Binaries for Linux, OS X and Windows (64bit) can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 **Screenshots**:
 
