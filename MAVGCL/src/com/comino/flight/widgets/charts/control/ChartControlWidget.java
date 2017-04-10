@@ -75,7 +75,7 @@ public class ChartControlWidget extends WidgetPane  {
 	private IMAVController control;
 	private List<IChartControl> charts = null;
 
-	protected int totalTime_sec = 0;
+	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
 
 	private long scroll_tms = 0;
@@ -105,7 +105,8 @@ public class ChartControlWidget extends WidgetPane  {
 					chart.getTimeFrameProperty().set(newValue.intValue());
 			}
 
-			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
+			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms()
+					|| modelService.isCollecting() || modelService.getModelList().size()==0)
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
@@ -121,9 +122,9 @@ public class ChartControlWidget extends WidgetPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if((System.currentTimeMillis() - scroll_tms)>20) {
+			if((System.currentTimeMillis() - scroll_tms)>50) {
 				charts.forEach((chart) -> {
-					if(chart.getScrollProperty()!=null)
+					if(chart.getScrollProperty()!=null && chart.isVisible())
 						chart.getScrollProperty().set(1f-newvalue.floatValue()/1000000);
 				});
 				scroll_tms = System.currentTimeMillis();
@@ -151,10 +152,11 @@ public class ChartControlWidget extends WidgetPane  {
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue()) {
 				scroll.setDisable(true);
-				scroll.setValue(1);
+				scroll.setValue(0);
 				return;
 			}
-			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
+
+			if(modelService.getModelList().size() < totalTime_sec * 1000 / modelService.getCollectorInterval_ms())
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
@@ -166,13 +168,10 @@ public class ChartControlWidget extends WidgetPane  {
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					if(scroll.getValue()==1000)
-						scroll.setValue(0);
-					else
-						scroll.setValue(1000);
+					scroll.setValue(scroll.getValue() == 1000000 ? 0 : 1000000);
 					for(IChartControl chart : charts) {
 						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set((float)(1f-scroll.getValue()/1000));
+							chart.getScrollProperty().set((float)(1f-scroll.getValue()/1000000));
 					}
 				}
 			}
