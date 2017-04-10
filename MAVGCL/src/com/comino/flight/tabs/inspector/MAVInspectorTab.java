@@ -33,6 +33,8 @@
 
 package com.comino.flight.tabs.inspector;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -194,7 +196,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	}
 
 	private void parseMessageString(String[] msg) {
-		String _msg = msg[0].trim();
+		String _msg = msg[0].trim(); long dt = 0;
 
 		if(!allData.containsKey(_msg)) {
 
@@ -209,6 +211,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						//System.err.println(e.getMessage()+": "+v);
 					}
 				}
+			variables.put("rate", new Dataset("rate","0"));
+
 
 			Data data = new Data(_msg,variables);
 			allData.put(_msg,data);
@@ -216,6 +220,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			TreeItem<Dataset> ti = new TreeItem<>(new Dataset(data.getName(), null));
 			ti.setExpanded(false);
 			treetableview.getRoot().getChildren().add(ti);
+
 			for (Dataset dataset : data.getData().values()) {
 				TreeItem treeItem = new TreeItem(dataset);
 				ti.getChildren().add(treeItem);
@@ -223,13 +228,20 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		} else {
 
 			Data data = allData.get(_msg);
-			for(String v : msg)
+			dt = System.currentTimeMillis() - data.old_tms;
+			data.old_tms = System.currentTimeMillis();
+			if(dt > 0)
+			  data.getData().get("rate").setValue(String.format("%3d",1000/dt));
+
+			for(String v : msg) {
 				if(v.contains("=")) {
 					String[] p = v.split("=");
 					try {
 						data.getData().get(p[0]).setValue(p[1]);
 					} catch(Exception k) {   }
 				}
+			}
+
 		}
 
 	}
@@ -239,6 +251,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		private String name;
 		private Map<String,Dataset> data = new HashMap<String,Dataset>();
+		public long old_tms;
 
 		public Data(String name, ObservableMap<String,Dataset> data) {
 			this.name = name;
