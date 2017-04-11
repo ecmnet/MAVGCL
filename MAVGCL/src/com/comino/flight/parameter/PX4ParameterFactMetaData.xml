@@ -590,12 +590,6 @@ velocity</short_desc>
       <increment>0.5</increment>
       <scope>modules/commander</scope>
     </parameter>
-    <parameter default="1" name="COM_AUTOS_PAR" type="INT32">
-      <short_desc>Autosaving of params</short_desc>
-      <long_desc>If not equal to zero the commander will automatically save parameters to persistent storage once changed. Default is on, as the interoperability with currently deployed GCS solutions depends on parameters being sticky. Developers can default it to off.</long_desc>
-      <boolean />
-      <scope>modules/commander</scope>
-    </parameter>
     <parameter default="0" name="COM_RC_IN_MODE" type="INT32">
       <short_desc>RC control input mode</short_desc>
       <long_desc>The default value of 0 requires a valid RC transmitter setup. Setting this to 1 allows joystick control and disables RC input handling and the associated checks. A value of 2 will generate RC control data from manual input received via MAVLink instead of directly forwarding the manual input data.</long_desc>
@@ -2192,17 +2186,17 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <scope>modules/fw_pos_control_l1</scope>
     </parameter>
     <parameter default="0.05" name="FW_T_HRATE_P" type="FLOAT">
-      <short_desc>Height rate P factor</short_desc>
+      <short_desc>Height rate proportional factor</short_desc>
       <min>0.0</min>
-      <max>2.0</max>
+      <max>1.0</max>
       <decimal>2</decimal>
       <increment>0.05</increment>
       <scope>modules/fw_pos_control_l1</scope>
     </parameter>
-    <parameter default="0.0" name="FW_T_HRATE_FF" type="FLOAT">
-      <short_desc>Height rate FF factor</short_desc>
+    <parameter default="0.8" name="FW_T_HRATE_FF" type="FLOAT">
+      <short_desc>Height rate feed forward</short_desc>
       <min>0.0</min>
-      <max>2.0</max>
+      <max>1.0</max>
       <decimal>2</decimal>
       <increment>0.05</increment>
       <scope>modules/fw_pos_control_l1</scope>
@@ -2379,7 +2373,7 @@ but also ignore less noise</short_desc>
     </parameter>
   </group>
   <group name="Land Detector">
-    <parameter default="0.70" name="LNDMC_Z_VEL_MAX" type="FLOAT">
+    <parameter default="0.50" name="LNDMC_Z_VEL_MAX" type="FLOAT">
       <short_desc>Multicopter max climb rate</short_desc>
       <long_desc>Maximum vertical velocity allowed in the landed state (m/s up and down)</long_desc>
       <unit>m/s</unit>
@@ -2624,7 +2618,7 @@ but also ignore less noise</short_desc>
       <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz) Larger than data sheet to account for tilt error.</long_desc>
       <min>0.00001</min>
       <max>2</max>
-      <unit>m/s^2/srqt(Hz)</unit>
+      <unit>m/s^2/sqrt(Hz)</unit>
       <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
@@ -2633,7 +2627,7 @@ but also ignore less noise</short_desc>
       <long_desc>Data sheet noise density = 150ug/sqrt(Hz) = 0.0015 m/s^2/sqrt(Hz)</long_desc>
       <min>0.00001</min>
       <max>2</max>
-      <unit>m/s^2/srqt(Hz)</unit>
+      <unit>m/s^2/sqrt(Hz)</unit>
       <decimal>4</decimal>
       <scope>modules/local_position_estimator</scope>
     </parameter>
@@ -3084,7 +3078,7 @@ by initializing the estimator to the LPE_LAT/LON parameters when global informat
       <increment>0.5</increment>
       <scope>modules/navigator</scope>
     </parameter>
-    <parameter default="3.0" name="NAV_MC_ALT_RAD" type="FLOAT">
+    <parameter default="0.8" name="NAV_MC_ALT_RAD" type="FLOAT">
       <short_desc>MC Altitude Acceptance Radius</short_desc>
       <long_desc>Acceptance radius for multicopter altitude.</long_desc>
       <min>0.05</min>
@@ -3684,8 +3678,17 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <scope>modules/mc_pos_control</scope>
     </parameter>
     <parameter default="5.0" name="MPC_XY_CRUISE" type="FLOAT">
-      <short_desc>Nominal horizontal velocity</short_desc>
+      <short_desc>Nominal horizontal velocity in mission</short_desc>
       <long_desc>Normal horizontal velocity in AUTO modes (includes also RTL / hold / etc.) and endpoint for position stabilized mode (POSCTRL).</long_desc>
+      <min>3.0</min>
+      <max>20.0</max>
+      <unit>m/s</unit>
+      <decimal>2</decimal>
+      <increment>1</increment>
+      <scope>modules/mc_pos_control</scope>
+    </parameter>
+    <parameter default="10.0" name="MPC_VEL_MAN_MAX" type="FLOAT">
+      <short_desc>Nominal horizontal velocity for manual controlled mode</short_desc>
       <min>3.0</min>
       <max>20.0</max>
       <unit>m/s</unit>
@@ -6410,6 +6413,14 @@ FW_AIRSPD_MIN * RWTO_AIRSPD_SCL</short_desc>
         <value code="2">from boot until shutdown</value>
       </values>
     </parameter>
+    <parameter default="0" name="SDLOG_DIRS_MAX" type="INT32">
+      <short_desc>Maximum number of log directories to keep</short_desc>
+      <long_desc>If there are more log directories than this value, the system will delete the oldest directories during startup. In addition, the system will delete old logs if there is not enough free space left. The minimum amount is 300 MB. If this is set to 0, old directories will only be removed if the free space falls below the minimum.</long_desc>
+      <min>0</min>
+      <max>1000</max>
+      <reboot_required>true</reboot_required>
+      <scope>modules/logger</scope>
+    </parameter>
     <parameter default="1" name="SDLOG_UUID" type="INT32">
       <short_desc>Log UUID</short_desc>
       <long_desc>If set to 1, add an ID to the log, which uniquely identifies the vehicle</long_desc>
@@ -8105,21 +8116,21 @@ This is used for gathering replay logs for the ekf2 module</short_desc>
       <boolean />
       <scope>modules/vtol_att_control</scope>
     </parameter>
-    <parameter default="3.0" name="VT_F_TRANS_DUR" type="FLOAT">
+    <parameter default="5.0" name="VT_F_TRANS_DUR" type="FLOAT">
       <short_desc>Duration of a front transition</short_desc>
       <long_desc>Time in seconds used for a transition</long_desc>
       <min>0.00</min>
-      <max>10.00</max>
+      <max>20.00</max>
       <unit>s</unit>
       <decimal>2</decimal>
       <increment>1</increment>
       <scope>modules/vtol_att_control</scope>
     </parameter>
-    <parameter default="2.0" name="VT_B_TRANS_DUR" type="FLOAT">
+    <parameter default="4.0" name="VT_B_TRANS_DUR" type="FLOAT">
       <short_desc>Duration of a back transition</short_desc>
       <long_desc>Time in seconds used for a back transition</long_desc>
       <min>0.00</min>
-      <max>10.00</max>
+      <max>20.00</max>
       <unit>s</unit>
       <decimal>2</decimal>
       <increment>1</increment>
