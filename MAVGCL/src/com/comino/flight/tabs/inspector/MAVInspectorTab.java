@@ -226,6 +226,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
 				ti.getChildren().add(treeItem);
 			}
+			treetableview.sort();
 		} else {
 
 			Data data = allData.get(_msg);
@@ -239,7 +240,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					}
 				}
 				data.last_update = System.currentTimeMillis();
-				treetableview.sort();
 			}
 
 		}
