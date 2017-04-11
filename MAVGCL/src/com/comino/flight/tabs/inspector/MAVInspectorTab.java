@@ -254,14 +254,14 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		private float rate;
 		private long  tms;
-		private long  count;
+		private long  count = 1;
 		private long  last_update;
 
 		public Data(String name, ObservableMap<String,DataSet> data) {
 			this.name = name;
 			this.data = data;
 			this.data.put("rate",new DataSet("rate", "0"));
-			this.tms = System.currentTimeMillis();
+			this.tms = 0;
 		}
 
 		public Map<String,DataSet> getData() {
@@ -269,7 +269,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public String getName() {
-			return name;
+			return name.substring(15);
 		}
 
 		public void setName(String name) {
@@ -277,6 +277,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public boolean updateRate() {
+			if((System.currentTimeMillis() - tms)>0)
 			rate = (rate *  count + 1000/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 			if((System.currentTimeMillis() - last_update) > 333) {
