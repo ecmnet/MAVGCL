@@ -38,6 +38,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
@@ -55,14 +56,15 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private BooleanProperty rcProperty = new SimpleBooleanProperty();
 
 
-	private BooleanProperty armedProperty = new SimpleBooleanProperty();
-	private BooleanProperty landedProperty = new SimpleBooleanProperty(true);
-	private BooleanProperty altholdProperty = new SimpleBooleanProperty();
-	private BooleanProperty posholdProperty = new SimpleBooleanProperty();
+	private BooleanProperty armedProperty 					= new SimpleBooleanProperty();
+	private BooleanProperty landedProperty 					= new SimpleBooleanProperty(true);
+	private BooleanProperty altholdProperty 				= new SimpleBooleanProperty();
+	private BooleanProperty posholdProperty 				= new SimpleBooleanProperty();
 
-	private BooleanProperty recordingProperty     = new SimpleBooleanProperty();
-	private BooleanProperty isLogLoadedProperty   = new SimpleBooleanProperty();
-	private BooleanProperty isParamLoadedProperty = new SimpleBooleanProperty();
+	private BooleanProperty recordingProperty     			= new SimpleBooleanProperty();
+	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
+	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
+	private BooleanProperty isRecordingAvailableProperty	= new SimpleBooleanProperty();
 
 	private FloatProperty progress = new SimpleFloatProperty(-1);
 
@@ -155,6 +157,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public FloatProperty getProgressProperty() {
 		return progress;
+	}
+
+	public BooleanProperty getRecordingAvailableProperty() {
+		return isRecordingAvailableProperty;
 	}
 
 }

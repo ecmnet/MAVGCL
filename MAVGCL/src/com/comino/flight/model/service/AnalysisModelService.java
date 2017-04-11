@@ -358,6 +358,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 						updater.update(System.nanoTime());
 				}
 
+				state.getRecordingAvailableProperty().set(modelList.size()>0);
+
 				old_mode = mode;
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
