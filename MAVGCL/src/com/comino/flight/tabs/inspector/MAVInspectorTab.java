@@ -33,8 +33,6 @@
 
 package com.comino.flight.tabs.inspector;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +49,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
@@ -60,22 +57,21 @@ import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Shape;
 import javafx.util.Callback;
 
 public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@FXML
-	private TreeTableView<Dataset> treetableview;
+	private TreeTableView<DataSet> treetableview;
 
 	@FXML
-	private TreeTableColumn<Dataset, String> message_col;
+	private TreeTableColumn<DataSet, String> message_col;
 
 	@FXML
-	private TreeTableColumn<Dataset, String> variable_col;
+	private TreeTableColumn<DataSet, String> variable_col;
 
 	@FXML
-	private TreeTableColumn<Dataset, String>  value_col;
+	private TreeTableColumn<DataSet, String>  value_col;
 
 
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
@@ -85,11 +81,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
 	}
 
+	@SuppressWarnings("unchecked")
 	@FXML
 	private void initialize() {
 
 
-		TreeItem<Dataset> root = new TreeItem<Dataset>(new Dataset("", ""));
+		TreeItem<DataSet> root = new TreeItem<DataSet>(new DataSet("", ""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
@@ -107,7 +104,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 
 		message_col.setCellFactory(column -> {
-			return new TreeTableCell<Dataset, String>() {
+			return new TreeTableCell<DataSet, String>() {
 
 				@Override
 				protected void updateItem(String item, boolean empty) {
@@ -121,15 +118,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 
-		variable_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, String>, ObservableValue<String>>() {
+		variable_col.setCellValueFactory(new Callback<CellDataFeatures<DataSet, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Dataset, String> param) {
+			public ObservableValue<String> call(CellDataFeatures<DataSet, String> param) {
 				return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
 			}
 		});
 
 		variable_col.setCellFactory(column -> {
-			return new TreeTableCell<Dataset, String>() {
+			return new TreeTableCell<DataSet, String>() {
 
 				@Override
 				protected void updateItem(String item, boolean empty) {
@@ -146,15 +143,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		variable_col.setSortable(true);
 
 
-		value_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, String>, ObservableValue<String>>() {
+		value_col.setCellValueFactory(new Callback<CellDataFeatures<DataSet, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Dataset, String> param) {
+			public ObservableValue<String> call(CellDataFeatures<DataSet, String> param) {
 				return param.getValue().getValue().getValue();
 			}
 		});
 
 		value_col.setCellFactory(column -> {
-			return new TreeTableCell<Dataset, String>() {
+			return new TreeTableCell<DataSet, String>() {
 
 				@Override
 				protected void updateItem(String item, boolean empty) {
@@ -202,43 +199,37 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	}
 
 	private void parseMessageString(String[] msg) {
-		String _msg = msg[0].trim(); long dt = 0;
+		String _msg = msg[0].trim();
 
 		if(!allData.containsKey(_msg)) {
 
-			ObservableMap<String,Dataset> variables =  FXCollections.observableHashMap();
+			ObservableMap<String,DataSet> variables =  FXCollections.observableHashMap();
 
 			for(String v : msg)
 				if(v.contains("=")) {
 					try {
 						String[] p = v.split("=");
-						variables.put(p[0], new Dataset(p[0],p[1]));
+						variables.put(p[0], new DataSet(p[0],p[1]));
 					} catch(Exception e) {
 						//System.err.println(e.getMessage()+": "+v);
 					}
 				}
-			variables.put("rate", new Dataset("rate","0"));
-
 
 			Data data = new Data(_msg,variables);
 			allData.put(_msg,data);
 
-			TreeItem<Dataset> ti = new TreeItem<>(new Dataset(data.getName(), null));
+			TreeItem<DataSet> ti = new TreeItem<>(new DataSet(data.getName(), null));
 			ti.setExpanded(false);
 			treetableview.getRoot().getChildren().add(ti);
 
-			for (Dataset dataset : data.getData().values()) {
-				TreeItem treeItem = new TreeItem(dataset);
+			for (DataSet dataset : data.getData().values()) {
+				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
 				ti.getChildren().add(treeItem);
 			}
 		} else {
 
 			Data data = allData.get(_msg);
-			dt = System.currentTimeMillis() - data.old_tms;
-			data.old_tms = System.currentTimeMillis();
-			if((System.currentTimeMillis() - data.last_update)> 333) {
-				if(dt > 0)
-					data.getData().get("rate").setValue(String.format("%3d",(int)((1000f/dt)+0.5)));
+			if(data.updateRate()) {
 				for(String v : msg) {
 					if(v.contains("=")) {
 						String[] p = v.split("=");
@@ -259,16 +250,21 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	class Data {
 
 		private String name;
-		private Map<String,Dataset> data = new HashMap<String,Dataset>();
-		public long old_tms;
-		public long last_update;
+		private Map<String,DataSet> data = new HashMap<String,DataSet>();
 
-		public Data(String name, ObservableMap<String,Dataset> data) {
+		private float rate;
+		private long  tms;
+		private long  count;
+		private long  last_update;
+
+		public Data(String name, ObservableMap<String,DataSet> data) {
 			this.name = name;
 			this.data = data;
+			this.data.put("rate",new DataSet("rate", "0"));
+			this.tms = System.currentTimeMillis();
 		}
 
-		public Map<String,Dataset> getData() {
+		public Map<String,DataSet> getData() {
 			return data;
 		}
 
@@ -279,14 +275,25 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		public void setName(String name) {
 			this.name = name;
 		}
+
+		public boolean updateRate() {
+			rate = (rate *  count + 1000/(System.currentTimeMillis() - tms)) / ++count;
+			tms = System.currentTimeMillis();
+			if((System.currentTimeMillis() - last_update) > 333) {
+				data.get("rate").setValue(String.format("%3.1f",rate));
+				last_update = System.currentTimeMillis();
+				return true;
+			}
+			return false;
+		}
 	}
 
-	class Dataset {
+	class DataSet {
 
 		StringProperty str = new SimpleStringProperty();
 		StringProperty value = new SimpleStringProperty();
 
-		public Dataset(String s, String n) {
+		public DataSet(String s, String n) {
 			str.set(s);
 			if(n!=null)
 				value.set(n);
