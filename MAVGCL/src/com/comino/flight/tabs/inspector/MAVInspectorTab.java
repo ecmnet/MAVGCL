@@ -51,6 +51,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
@@ -59,6 +60,7 @@ import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Shape;
 import javafx.util.Callback;
 
 public class MAVInspectorTab extends Pane implements IMAVLinkListener {
@@ -141,6 +143,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 		variable_col.setSortType(SortType.ASCENDING);
+		variable_col.setSortable(true);
+
 
 		value_col.setCellValueFactory(new Callback<CellDataFeatures<Dataset, String>, ObservableValue<String>>() {
 			@Override
@@ -167,6 +171,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
 		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
+		treetableview.getSortOrder().addAll(message_col,variable_col);
+
 
 		StateProperties.getInstance().getConnectedProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
@@ -242,6 +248,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					}
 				}
 				data.last_update = System.currentTimeMillis();
+				treetableview.sort();
 			}
 
 		}
