@@ -71,6 +71,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -84,6 +86,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 
 // TODO: Add planned path
 
@@ -220,9 +223,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
-	private boolean isRunning = false;
 
 	private float old_center_x, old_center_y;
+	private double scale_rounding;
+	private double scale_factor;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
@@ -272,24 +276,24 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
-//		linechart.setOnScroll(event -> {
-//
-//			if(force_zero.isSelected())
-//				return;
-//
-//			xAxis.setLowerBound(xAxis.getLowerBound()+event.getDeltaY()/
-//					(scale *1000));
-//			xAxis.setUpperBound(xAxis.getUpperBound()+event.getDeltaY()/
-//					(scale *1000));
-//			yAxis.setLowerBound(yAxis.getLowerBound()-event.getDeltaX()/
-//					(scale *1000));
-//			yAxis.setUpperBound(yAxis.getUpperBound()-event.getDeltaX()/
-//					(scale *1000));
-//
-//			event.consume();
-//
-//			updateGraph(true);
-//		});
+		//		linechart.setOnScroll(event -> {
+		//
+		//			if(force_zero.isSelected())
+		//				return;
+		//
+		//			xAxis.setLowerBound(xAxis.getLowerBound()+event.getDeltaY()/
+		//					(scale *1000));
+		//			xAxis.setUpperBound(xAxis.getUpperBound()+event.getDeltaY()/
+		//					(scale *1000));
+		//			yAxis.setLowerBound(yAxis.getLowerBound()-event.getDeltaX()/
+		//					(scale *1000));
+		//			yAxis.setUpperBound(yAxis.getUpperBound()-event.getDeltaX()/
+		//					(scale *1000));
+		//
+		//			event.consume();
+		//
+		//			updateGraph(true);
+		//		});
 
 
 		xAxis.setAutoRanging(true);
@@ -297,24 +301,32 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		yAxis.setAutoRanging(true);
 		yAxis.setForceZeroInRange(false);
 
+
 		cseries1.getItems().addAll(PRESET_NAMES);
 		cseries2.getItems().addAll(PRESET_NAMES);
 
 		linechart.setLegendVisible(false);
-		linechart.prefWidthProperty().bind(heightProperty().subtract(20).multiply(1.05f));
+		linechart.prefWidthProperty().bind(widthProperty().subtract(20));
 		linechart.prefHeightProperty().bind(heightProperty().subtract(20));
+		//		linechart.prefWidthProperty().bind(heightProperty().subtract(20).multiply(1.05f));
+		//		linechart.prefHeightProperty().bind(heightProperty().subtract(20));
 
 		initKeyFigureSelection(meta.getKeyFigures());
 
 		scale_select.getItems().addAll(SCALES);
 		scale_select.getSelectionModel().select(0);
 
-		xAxis.setLowerBound(-5);
-		xAxis.setUpperBound(5);
-		yAxis.setLowerBound(-5);
-		yAxis.setUpperBound(5);
+		setScaling(5);
 
 		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
+
+		linechart.heightProperty().addListener((e,o,n) -> {
+			setScaling(scale);
+		});
+
+		linechart.widthProperty().addListener((e,o,n) -> {
+			setScaling(scale);
+		});
 
 		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
 
@@ -673,15 +685,18 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			//			}
 
 			if(Math.abs(x - old_center_x)> scale/4) {
-				x = (int)(x *  100) / (100f);
+				//				x = (int)(x *  100) / (100f);
+				x = (float)(Math.round(x * scale_rounding ) /scale_rounding);
 				xAxis.setLowerBound(x-scale);
 				xAxis.setUpperBound(x+scale);
 				old_center_x = x;
 			}
 			if(Math.abs(y - old_center_y)> scale/4) {
-				y = (int)(y *  100) / (100f);
-				yAxis.setLowerBound(y-scale);
-				yAxis.setUpperBound(y+scale);
+				//		y = (int)(y *  100) / (100f);
+				y = (float)(Math.round(y * scale_rounding ) /scale_rounding);
+				scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+				yAxis.setLowerBound(y-scale_factor);
+				yAxis.setUpperBound(y+scale_factor);
 				old_center_y = y;
 			}
 
@@ -760,9 +775,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
-				isRunning = true;
-			} else
-				isRunning = false;
+			}
 		});
 		current_x0_pt = dataService.calculateX0Index(1);
 		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
@@ -822,27 +835,41 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 
 	private void setScaling(float scale) {
+
+
 		if(scale>0) {
+
 			this.scale = scale;
 			force_zero.setDisable(false);
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
-
-			xAxis.setLowerBound(-scale);
-			xAxis.setUpperBound(+scale);
-			yAxis.setLowerBound(-scale);
-			yAxis.setUpperBound(+scale);
 
 
 			if(scale>10) {
 				xAxis.setTickUnit(10); yAxis.setTickUnit(10);
 			} else if(scale>2) {
 				xAxis.setTickUnit(1); yAxis.setTickUnit(1);
-			} else if(scale>0.5f) {
+			} else if(scale>1f) {
 				xAxis.setTickUnit(0.5); yAxis.setTickUnit(0.5);
-			} else {
+			} else if(scale>0.5f) {
 				xAxis.setTickUnit(0.1); yAxis.setTickUnit(0.1);
+			} else {
+				xAxis.setTickUnit(0.05); yAxis.setTickUnit(0.05);
 			}
+
+			scale_rounding = 1/yAxis.getTickUnit();
+			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+
+
+			if(!force_zero.isSelected()) {
+				xAxis.setLowerBound(-scale);
+				xAxis.setUpperBound(+scale);
+				yAxis.setLowerBound(-scale_factor);
+				yAxis.setUpperBound(+scale_factor);
+			} else
+				updateRequest();
+
+
 		} else {
 			xAxis.setAutoRanging(true);
 			yAxis.setAutoRanging(true);
