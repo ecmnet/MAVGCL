@@ -224,7 +224,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private boolean refreshRequest = false;
 
-	private float old_center_x, old_center_y;
+	private float center_x, center_y;
 	private double scale_rounding;
 	private double scale_factor;
 
@@ -496,9 +496,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			setXResolution(nv.intValue());
 		});
 
-		force_zero.setOnAction((ActionEvent event)-> {
-			updateRequest();
-			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,force_zero.isSelected());
+		force_zero.selectedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				center_x = 0; center_y=0;
+				setScaling(scale);
+			} else
+				updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_CENTER,n.booleanValue());
 		});
 
 		force_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_CENTER, false));
@@ -668,6 +672,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			float x = 0; float y = 0;
 
+			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+
+
 			if(type1_x.hash!=0) {
 				//		if(type1_x.hash!=0 && type2_x.hash==0) {
 				x = s1.center_x;
@@ -684,20 +691,20 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			//				y = (s1.center_y + s2.center_y ) / 2f;
 			//			}
 
-			if(Math.abs(x - old_center_x)> scale/4) {
+			if(Math.abs(x - center_x)> scale/4) {
 				//				x = (int)(x *  100) / (100f);
 				x = (float)(Math.round(x * scale_rounding ) /scale_rounding);
 				xAxis.setLowerBound(x-scale);
 				xAxis.setUpperBound(x+scale);
-				old_center_x = x;
+				center_x = x;
 			}
-			if(Math.abs(y - old_center_y)> scale/4) {
+			if(Math.abs(y - center_y)> scale/4) {
 				//		y = (int)(y *  100) / (100f);
 				y = (float)(Math.round(y * scale_rounding ) /scale_rounding);
-				scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+				//System.out.println(scale_factor);
 				yAxis.setLowerBound(y-scale_factor);
 				yAxis.setUpperBound(y+scale_factor);
-				old_center_y = y;
+				center_y = y;
 			}
 
 		}
@@ -825,7 +832,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private void updateRequest() {
 		if(!isDisabled() && !refreshRequest) {
-			old_center_x = 0; old_center_y = 0;
+			center_x = 0; center_y = 0;
 			refreshRequest = true;
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest);
@@ -836,14 +843,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private void setScaling(float scale) {
 
+		this.scale = scale;
 
 		if(scale>0) {
 
-			this.scale = scale;
 			force_zero.setDisable(false);
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
-
 
 			if(scale>10) {
 				xAxis.setTickUnit(10); yAxis.setTickUnit(10);
@@ -860,14 +866,20 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			scale_rounding = 1/yAxis.getTickUnit();
 			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
 
-
-			if(!force_zero.isSelected() || dataService.getModelList().size()==0) {
-				xAxis.setLowerBound(-scale);
-				xAxis.setUpperBound(+scale);
-				yAxis.setLowerBound(-scale_factor);
-				yAxis.setUpperBound(+scale_factor);
-			} else
-				updateRequest();
+			//			if(force_zero.isSelected() && dataService.getModelList().size()>0) {
+			////				old_center_x = Float.MAX_VALUE;
+			////				old_center_y = Float.MAX_VALUE;
+			////				updateGraph(true);
+			xAxis.setLowerBound(center_x-scale);
+			xAxis.setUpperBound(center_x+scale);
+			yAxis.setLowerBound(center_y-scale_factor);
+			yAxis.setUpperBound(center_y+scale_factor);
+			//			} else {
+			//				xAxis.setLowerBound(-scale);
+			//				xAxis.setUpperBound(+scale);
+			//				yAxis.setLowerBound(-scale_factor);
+			//				yAxis.setUpperBound(+scale_factor);
+			//			}
 
 
 		} else {
@@ -881,10 +893,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private  void rotateRad(float[] rotated, float posx, float posy, float heading_rad) {
 		if(heading_rad!=0) {
-			rotated[1] =  ( posx - old_center_x ) * (float)Math.cos(heading_rad) +
-					( posy - old_center_y ) * (float)Math.sin(heading_rad) + old_center_x;
-			rotated[0] = -( posx - old_center_x ) * (float)Math.sin(heading_rad) +
-					( posy - old_center_y ) * (float)Math.cos(heading_rad) + old_center_y;
+			rotated[1] =  ( posx - center_x ) * (float)Math.cos(heading_rad) +
+					( posy - center_y ) * (float)Math.sin(heading_rad) + center_x;
+			rotated[0] = -( posx - center_x ) * (float)Math.sin(heading_rad) +
+					( posy - center_y ) * (float)Math.cos(heading_rad) + center_y;
 		} else {
 			rotated[1] = posx;
 			rotated[0] = posy;
