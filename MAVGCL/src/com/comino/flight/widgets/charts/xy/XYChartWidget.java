@@ -51,6 +51,7 @@ import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
+import com.comino.flight.widgets.charts.line.IChartSyncControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.mav.control.IMAVController;
@@ -86,6 +87,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 
 // TODO: Add planned path
@@ -193,7 +195,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 
 	private int resolution_ms 	= 50;
-	private float scale = 5;
+	private float scale     = 5;
 
 	private Preferences prefs = MAVPreferences.getInstance();
 
@@ -223,6 +225,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
+
+	private double  zoom_beg_x, zoom_beg_y;
 
 	private float center_x, center_y;
 	private double scale_rounding;
@@ -265,17 +269,66 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.endPosition1 = new PositionAnnotation("P",Color.DARKSLATEBLUE);
 		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
 
-		linechart.lookup(".chart-plot-background").setOnMouseClicked(new EventHandler<MouseEvent>() {
+		final Group chartArea = (Group)linechart.getAnnotationArea();
+		final Rectangle zoom = new Rectangle();
+		zoom.setStrokeWidth(0);
+		chartArea.getChildren().add(zoom);
+		zoom.setFill(Color.color(0,0.6,1.0,0.1));
+		zoom.setVisible(false);
+		zoom.setY(0);
 
-			@Override
-			public void handle(MouseEvent click) {
-				if (click.getClickCount() == 2) {
-					force_zero.setSelected(true);
-					setScaling(scale);
-					updateGraph(true);
-				}
+		linechart.lookup(".chart-plot-background").setOnMouseClicked(click -> {
+			if (click.getClickCount() == 2) {
+				force_zero.setSelected(true);
+				try {
+					setScaling(Float.parseFloat(scale_select.getValue()));
+				} catch(Exception e) { setScaling(0); };
+				updateGraph(true);
 			}
 		});
+
+//		linechart.setOnMousePressed(mouseEvent -> {
+//			if(dataService.isCollecting())
+//				return;
+//			zoom_beg_x = mouseEvent.getX();
+//			zoom_beg_y = mouseEvent.getY();
+//			zoom.setX(zoom_beg_x-chartArea.getLayoutX()-7);
+//			zoom.setY(zoom_beg_y-chartArea.getLayoutY()-7);
+//
+//			mouseEvent.consume();
+//		});
+//
+//		linechart.setOnMouseDragged(mouseEvent -> {
+//			if(dataService.isCollecting())
+//				return;
+//			zoom.setVisible(true);
+//			linechart.setCursor(Cursor.CROSSHAIR);
+//			zoom.setWidth(mouseEvent.getX()-zoom_beg_x);
+//			zoom.setHeight(mouseEvent.getY()-zoom_beg_y);
+//			mouseEvent.consume();
+//		});
+//
+//		linechart.setOnMouseReleased(mouseEvent -> {
+//			if(dataService.isCollecting())
+//				return;
+//			linechart.setCursor(Cursor.DEFAULT);
+//			zoom.setVisible(false);
+//
+//			double dx = Math.abs(xAxis.getValueForDisplay(mouseEvent.getX()).doubleValue()-xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
+//			double dy = Math.abs(yAxis.getValueForDisplay(mouseEvent.getY()).doubleValue()-yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
+//
+//			//			System.out.println(dx+":"+dy+ "=> "+xAxis.getValueForDisplay(+zoom_beg_x).doubleValue()
+//			//					+":"+yAxis.getValueForDisplay(+zoom_beg_y).doubleValue());
+//
+//			scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
+//			//
+//			center_x = (float)(xAxis.getValueForDisplay(+zoom_beg_x).doubleValue() + dx /2.0);
+//			center_y = (float)(yAxis.getValueForDisplay(+zoom_beg_y).doubleValue() + dy /2.0);
+//
+//			setScaling(scale);
+//
+//			mouseEvent.consume();
+//		});
 
 		linechart.setOnScroll(event -> {
 			force_zero.setSelected(false);
