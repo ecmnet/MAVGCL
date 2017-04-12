@@ -861,7 +861,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
 
 
-			if(!force_zero.isSelected()) {
+			if(!force_zero.isSelected() || dataService.getModelList().size()==0) {
 				xAxis.setLowerBound(-scale);
 				xAxis.setUpperBound(+scale);
 				yAxis.setLowerBound(-scale_factor);
