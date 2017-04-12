@@ -270,30 +270,21 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					System.out.println(xAxis.getValueForDisplay(click.getX())+":"
-							+yAxis.getValueForDisplay(click.getY()));
+					force_zero.setSelected(true);
+					setScaling(scale);
+					updateGraph(true);
 				}
 			}
 		});
 
-		//		linechart.setOnScroll(event -> {
-		//
-		//			if(force_zero.isSelected())
-		//				return;
-		//
-		//			xAxis.setLowerBound(xAxis.getLowerBound()+event.getDeltaY()/
-		//					(scale *1000));
-		//			xAxis.setUpperBound(xAxis.getUpperBound()+event.getDeltaY()/
-		//					(scale *1000));
-		//			yAxis.setLowerBound(yAxis.getLowerBound()-event.getDeltaX()/
-		//					(scale *1000));
-		//			yAxis.setUpperBound(yAxis.getUpperBound()-event.getDeltaX()/
-		//					(scale *1000));
-		//
-		//			event.consume();
-		//
-		//			updateGraph(true);
-		//		});
+		linechart.setOnScroll(event -> {
+			force_zero.setSelected(false);
+			center_x += event.getDeltaY()* scale / 500.0;
+			center_y -= event.getDeltaX()* scale / 500.0;
+			event.consume();
+			setScaling(scale);
+			updateGraph(true);
+		});
 
 
 		xAxis.setAutoRanging(true);
@@ -308,8 +299,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		linechart.setLegendVisible(false);
 		linechart.prefWidthProperty().bind(widthProperty().subtract(20));
 		linechart.prefHeightProperty().bind(heightProperty().subtract(20));
-		//		linechart.prefWidthProperty().bind(heightProperty().subtract(20).multiply(1.05f));
-		//		linechart.prefHeightProperty().bind(heightProperty().subtract(20));
 
 		initKeyFigureSelection(meta.getKeyFigures());
 
@@ -866,21 +855,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			scale_rounding = 1/yAxis.getTickUnit();
 			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
 
-			//			if(force_zero.isSelected() && dataService.getModelList().size()>0) {
-			////				old_center_x = Float.MAX_VALUE;
-			////				old_center_y = Float.MAX_VALUE;
-			////				updateGraph(true);
 			xAxis.setLowerBound(center_x-scale);
 			xAxis.setUpperBound(center_x+scale);
 			yAxis.setLowerBound(center_y-scale_factor);
 			yAxis.setUpperBound(center_y+scale_factor);
-			//			} else {
-			//				xAxis.setLowerBound(-scale);
-			//				xAxis.setUpperBound(+scale);
-			//				yAxis.setLowerBound(-scale_factor);
-			//				yAxis.setUpperBound(+scale_factor);
-			//			}
-
 
 		} else {
 			xAxis.setAutoRanging(true);
