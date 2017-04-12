@@ -146,33 +146,33 @@ public class MainApp extends Application  {
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 
-			if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-					        ||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-				control = new MAVUdpController("127.0.0.1",14557,14540, true);
-				new SITLController(control);
-			}
-			else
-				if(args.size()>0) {
-					if(args.get("SITL")!=null) {
-						control = new MAVUdpController("127.0.0.1",14557,14540, true);
-						new SITLController(control);
-					}
-					else  if(args.get("PROXY")!=null) {
-						control = new MAVUdpController("127.0.0.1",14656,14650, true);
-						new SITLController(control);
-					}
-					else  if(args.get("SERIAL")!=null) {
-						control = new MAVSerialController();
-					}
 
-					else if(args.get("SIM")!=null)
-						control = new MAVSimController();
-					else if(args.get("ip")!=null)
-						peerAddress = args.get("ip");
+			if(args.size()>0) {
+				if(args.get("SITL")!=null) {
+					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+					new SITLController(control);
 				}
-				else {
+				else  if(args.get("PROXY")!=null) {
+					control = new MAVUdpController("127.0.0.1",14656,14650, true);
+					new SITLController(control);
+				}
+				else  if(args.get("SERIAL")!=null) {
+					control = new MAVSerialController();
+				}
+
+				else if(args.get("SIM")!=null)
+					control = new MAVSimController();
+				else if(args.get("ip")!=null)
+					peerAddress = args.get("ip");
+			}
+			else {
+				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+					new SITLController(control);
+				} else
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
-				}
+			}
 
 			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");

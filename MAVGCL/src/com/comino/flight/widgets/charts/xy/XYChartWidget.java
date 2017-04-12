@@ -311,21 +311,24 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 //		linechart.setOnMouseReleased(mouseEvent -> {
 //			if(dataService.isCollecting())
 //				return;
+//
 //			linechart.setCursor(Cursor.DEFAULT);
 //			zoom.setVisible(false);
 //
 //			double dx = Math.abs(xAxis.getValueForDisplay(mouseEvent.getX()).doubleValue()-xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
 //			double dy = Math.abs(yAxis.getValueForDisplay(mouseEvent.getY()).doubleValue()-yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
 //
-//			//			System.out.println(dx+":"+dy+ "=> "+xAxis.getValueForDisplay(+zoom_beg_x).doubleValue()
-//			//					+":"+yAxis.getValueForDisplay(+zoom_beg_y).doubleValue());
+//			if(dx > yAxis.getTickUnit() && dy > yAxis.getTickUnit()) {
 //
-//			scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
-//			//
-//			center_x = (float)(xAxis.getValueForDisplay(+zoom_beg_x).doubleValue() + dx /2.0);
-//			center_y = (float)(yAxis.getValueForDisplay(+zoom_beg_y).doubleValue() + dy /2.0);
+//				scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
+//				//
+//				center_x = (float)(xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
+//				center_y = (float)(yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
 //
-//			setScaling(scale);
+//				System.out.println(center_x+":"+center_y);
+//
+//			//	setScaling(scale);
+//			}
 //
 //			mouseEvent.consume();
 //		});

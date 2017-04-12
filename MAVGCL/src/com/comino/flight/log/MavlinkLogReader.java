@@ -188,7 +188,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			log_bytes_read = data.ofs;
 
 			if((System.currentTimeMillis()-tms)>5000) {
-				System.out.print(".");
 				state.getProgressProperty().set(getProgress()/100f);
 				tms = System.currentTimeMillis();
 			}

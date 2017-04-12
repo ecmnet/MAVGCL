@@ -53,7 +53,6 @@ public class FXMLLoadHelper {
 		fxmlLoader.setController(obj);
 		try {
 			fxmlLoader.load();
-			System.out.print(".");
 			app.notifyPreloader(new ProgressNotification(count++));
 		} catch (Exception exception) {
 			throw new RuntimeException(exception);
