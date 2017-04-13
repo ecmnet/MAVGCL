@@ -79,10 +79,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private VehicleHealthCheck health = null;
 
-	private int     mode = 0;
+	private int mode = 0;
 
-	private  int  totalTime_sec = 30;
-	private  int collector_interval_us = 50000;
+	private int totalTime_sec = 30;
+	private int collector_interval_us = 50000;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -287,7 +287,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
-		record.setValues(KeyFigureMetaData.MAV_SOURCE,_msg,meta);
+		record.setValues(KeyFigureMetaData.MAV_SOURCE,_msg, meta);
 	}
 
 
@@ -298,12 +298,13 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		@Override
 		public void run() {
-//			try { Thread.sleep(2000); } catch(Exception e) { }
+			//			try { Thread.sleep(2000); } catch(Exception e) { }
 			System.out.println("CombinedConverter started");
 			while(true) {
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
+					ulogger.enableLogging(false);
 					LockSupport.parkNanos(2000000000);
 				}
 
@@ -313,36 +314,36 @@ public class AnalysisModelService implements IMAVLinkListener {
 				current.setValue("MAVGCLACC", perf2);
 
 				synchronized(this) {
-				current.msg = null; wait = System.nanoTime();
-				current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					current.msg = null; wait = System.nanoTime();
+					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
 
-				if(ulogger.isLogging()) {
-					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-				}
-				if(model.msg != null && model.msg.tms > tms) {
-					current.msg = model.msg;
-					record.msg = model.msg;
-					tms = model.msg.tms+10;
-				} else {
-					current.msg = null; record.msg = null;
-				}
+					if(ulogger.isLogging()) {
+						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					}
+					if(model.msg != null && model.msg.tms > tms) {
+						current.msg = model.msg;
+						record.msg  = model.msg;
+						tms = model.msg.tms+10;
+					} else {
+						current.msg = null; record.msg = null;
+					}
 
-				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-				}
+					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 
-				if(mode!=STOPPED && old_mode == STOPPED) {
-					state.getLogLoadedProperty().set(false);
-					state.getRecordingProperty().set(true);
-					ulogger.enableLogging(true);
-					tms_start = System.nanoTime() / 1000;
-				}
+					if(mode!=STOPPED && old_mode == STOPPED) {
+						ulogger.enableLogging(true);
+						state.getLogLoadedProperty().set(false);
+						state.getRecordingProperty().set(true);
+						tms_start = System.nanoTime() / 1000;
+					}
 
-				if(mode==STOPPED && old_mode != STOPPED) {
-					ulogger.enableLogging(false);
-					state.getRecordingProperty().set(false);
+					if(mode==STOPPED && old_mode != STOPPED) {
+						ulogger.enableLogging(false);
+						state.getRecordingProperty().set(false);
+					}
 				}
 
 				if(mode!=STOPPED) {
@@ -351,7 +352,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					else
 						m = current.clone();
 					m.tms = System.nanoTime() / 1000 - tms_start;
-                    m.dt_sec = m.tms / 1e6f;
+					m.dt_sec = m.tms / 1e6f;
 					modelList.add(m);
 
 					for(ICollectorRecordingListener updater : listener)

@@ -154,6 +154,17 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			info.clear();
 		});
 
+		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.booleanValue()) {
+				AnalysisModelService.getInstance().clearModelList();
+				FileHandler.getInstance().clear();
+				StateProperties.getInstance().getLogLoadedProperty().set(false);
+				charts.refreshCharts();
+				info.clear();
+			}
+		});
+
+
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
