@@ -121,7 +121,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	};
 
 	@FXML
-	private SectionLineChart<Number,Number> linechart;
+	private SectionLineChart<Number,Number> xychart;
 
 	@FXML
 	private NumberAxis xAxis;
@@ -269,7 +269,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.endPosition1 = new PositionAnnotation("P",Color.DARKSLATEBLUE);
 		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
 
-		final Group chartArea = (Group)linechart.getAnnotationArea();
+		final Group chartArea = (Group)xychart.getAnnotationArea();
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
@@ -277,7 +277,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		zoom.setVisible(false);
 		zoom.setY(0);
 
-		linechart.lookup(".chart-plot-background").setOnMouseClicked(click -> {
+		xychart.lookup(".chart-plot-background").setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
 				force_zero.setSelected(true);
 				try {
@@ -287,56 +287,56 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
-//		linechart.setOnMousePressed(mouseEvent -> {
-//			if(dataService.isCollecting())
-//				return;
-//			zoom_beg_x = mouseEvent.getX();
-//			zoom_beg_y = mouseEvent.getY();
-//			zoom.setX(zoom_beg_x-chartArea.getLayoutX()-7);
-//			zoom.setY(zoom_beg_y-chartArea.getLayoutY()-7);
-//
-//			mouseEvent.consume();
-//		});
-//
-//		linechart.setOnMouseDragged(mouseEvent -> {
-//			if(dataService.isCollecting())
-//				return;
-//			zoom.setVisible(true);
-//			linechart.setCursor(Cursor.CROSSHAIR);
-//			zoom.setWidth(mouseEvent.getX()-zoom_beg_x);
-//			zoom.setHeight(mouseEvent.getY()-zoom_beg_y);
-//			mouseEvent.consume();
-//		});
-//
-//		linechart.setOnMouseReleased(mouseEvent -> {
-//			if(dataService.isCollecting())
-//				return;
-//
-//			linechart.setCursor(Cursor.DEFAULT);
-//			zoom.setVisible(false);
-//
-//			double dx = Math.abs(xAxis.getValueForDisplay(mouseEvent.getX()).doubleValue()-xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
-//			double dy = Math.abs(yAxis.getValueForDisplay(mouseEvent.getY()).doubleValue()-yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
-//
-//			if(dx > yAxis.getTickUnit() && dy > yAxis.getTickUnit()) {
-//
-//				scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
-//				//
-//				center_x = (float)(xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
-//				center_y = (float)(yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
-//
-//				System.out.println(center_x+":"+center_y);
-//
-//			//	setScaling(scale);
-//			}
-//
-//			mouseEvent.consume();
-//		});
+		//		linechart.setOnMousePressed(mouseEvent -> {
+		//			if(dataService.isCollecting())
+		//				return;
+		//			zoom_beg_x = mouseEvent.getX();
+		//			zoom_beg_y = mouseEvent.getY();
+		//			zoom.setX(zoom_beg_x-chartArea.getLayoutX()-7);
+		//			zoom.setY(zoom_beg_y-chartArea.getLayoutY()-7);
+		//
+		//			mouseEvent.consume();
+		//		});
+		//
+		//		linechart.setOnMouseDragged(mouseEvent -> {
+		//			if(dataService.isCollecting())
+		//				return;
+		//			zoom.setVisible(true);
+		//			linechart.setCursor(Cursor.CROSSHAIR);
+		//			zoom.setWidth(mouseEvent.getX()-zoom_beg_x);
+		//			zoom.setHeight(mouseEvent.getY()-zoom_beg_y);
+		//			mouseEvent.consume();
+		//		});
+		//
+		//		linechart.setOnMouseReleased(mouseEvent -> {
+		//			if(dataService.isCollecting())
+		//				return;
+		//
+		//			linechart.setCursor(Cursor.DEFAULT);
+		//			zoom.setVisible(false);
+		//
+		//			double dx = Math.abs(xAxis.getValueForDisplay(mouseEvent.getX()).doubleValue()-xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
+		//			double dy = Math.abs(yAxis.getValueForDisplay(mouseEvent.getY()).doubleValue()-yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
+		//
+		//			if(dx > yAxis.getTickUnit() && dy > yAxis.getTickUnit()) {
+		//
+		//				scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
+		//				//
+		//				center_x = (float)(xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
+		//				center_y = (float)(yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
+		//
+		//				System.out.println(center_x+":"+center_y);
+		//
+		//			//	setScaling(scale);
+		//			}
+		//
+		//			mouseEvent.consume();
+		//		});
 
-		linechart.setOnScroll(event -> {
+		xychart.setOnScroll(event -> {
 			force_zero.setSelected(false);
-			center_x += event.getDeltaY()* scale / 500.0;
-			center_y -= event.getDeltaX()* scale / 500.0;
+			center_x += (Math.round(event.getDeltaY() * scale / 100.0 * scale_rounding ) / (scale_rounding * 5 ));
+			center_y -= (Math.round(event.getDeltaX() * scale / 100.0 * scale_rounding ) / (scale_rounding * 5 ));
 			event.consume();
 			setScaling(scale);
 			updateGraph(true);
@@ -352,9 +352,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		cseries1.getItems().addAll(PRESET_NAMES);
 		cseries2.getItems().addAll(PRESET_NAMES);
 
-		linechart.setLegendVisible(false);
-		linechart.prefWidthProperty().bind(widthProperty().subtract(20));
-		linechart.prefHeightProperty().bind(heightProperty().subtract(20));
+		xychart.setLegendVisible(false);
+		xychart.prefWidthProperty().bind(widthProperty().subtract(20));
+		xychart.prefHeightProperty().bind(heightProperty().subtract(20));
 
 		initKeyFigureSelection(meta.getKeyFigures());
 
@@ -365,15 +365,21 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		xAxis.setTickUnit(1); yAxis.setTickUnit(1);
 
-		linechart.heightProperty().addListener((e,o,n) -> {
+		xychart.heightProperty().addListener((e,o,n) -> {
 			setScaling(scale);
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 		});
 
-		linechart.widthProperty().addListener((e,o,n) -> {
+		xychart.widthProperty().addListener((e,o,n) -> {
 			setScaling(scale);
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
 		});
 
-		linechart.prefHeightProperty().bind(heightProperty().subtract(10));
+		xychart.prefHeightProperty().bind(heightProperty().subtract(10));
 
 
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -543,7 +549,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		force_zero.selectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
-				center_x = 0; center_y=0;
+				//		center_x = 0; center_y=0;
 				setScaling(scale);
 			} else
 				updateRequest();
@@ -573,11 +579,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
 				grid.invalidate();
-				linechart.getAnnotations().add(grid,Layer.BACKGROUND);
+				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
 			} else
-				linechart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+				xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 
 			rotation.setDisable(nv.booleanValue());
 
@@ -622,7 +628,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	public void saveAsPng(String path) {
 		SnapshotParameters param = new SnapshotParameters();
 		param.setFill(Color.BLACK);
-		WritableImage image = linechart.snapshot(param, null);
+		WritableImage image = xychart.snapshot(param, null);
 		File file = new File(path+"/xychart.png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
@@ -661,10 +667,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			series1.getData().clear(); series2.getData().clear();
 			pool.invalidateAll();
 
-			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			if(show_grid.isSelected() &&  mList.size()>0 )
-				linechart.getAnnotations().add(slam, Layer.FOREGROUND);
+				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 
 			slam.clear();
 
@@ -674,9 +680,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 						rotation_rad);
 
-				linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
-				linechart.getAnnotations().add(endPosition1, Layer.FOREGROUND);
-				linechart.getAnnotations().add(
+				xychart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+				xychart.getAnnotations().add(endPosition1, Layer.FOREGROUND);
+				xychart.getAnnotations().add(
 						new PositionAnnotation(p1[0],p1[1],"S", Color.DARKSLATEBLUE)
 						,Layer.FOREGROUND);
 			}
@@ -690,9 +696,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				else
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 							rotation_rad);
-				linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
-				linechart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
-				linechart.getAnnotations().add(
+				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+				xychart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
+				xychart.getAnnotations().add(
 						new PositionAnnotation(p2[0],p2[1],"S", Color.DARKOLIVEGREEN)
 						,Layer.FOREGROUND);
 
@@ -717,7 +723,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			float x = 0; float y = 0;
 
-			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+			scale_factor = Math.round(scale * xychart.getWidth()/xychart.getHeight()*scale_rounding ) /scale_rounding;
 
 
 			if(type1_x.hash!=0) {
@@ -731,13 +737,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				y = s2.center_y;
 			}
 
-			//			if(type2_x.hash!=0 && type1_x.hash!=0)	{
-			//				x = (s1.center_x + s2.center_x ) / 2f;
-			//				y = (s1.center_y + s2.center_y ) / 2f;
-			//			}
-
 			if(Math.abs(x - center_x)> scale/4) {
-				//				x = (int)(x *  100) / (100f);
 				x = (float)(Math.round(x * scale_rounding ) /scale_rounding);
 				xAxis.setLowerBound(x-scale);
 				xAxis.setUpperBound(x+scale);
@@ -814,9 +814,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	public XYChartWidget setup(IMAVController control) {
 		series1 = new XYChart.Series<Number,Number>();
 
-		linechart.getData().add(series1);
+		xychart.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
-		linechart.getData().add(series2);
+		xychart.getData().add(series2);
 
 		this.control = control;
 
@@ -909,7 +909,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 
 			scale_rounding = 1/yAxis.getTickUnit();
-			scale_factor = Math.round(scale * linechart.getWidth()/linechart.getHeight()*scale_rounding ) /scale_rounding;
+			scale_factor = Math.round(scale * xychart.getWidth()/xychart.getHeight()*scale_rounding ) /scale_rounding;
 
 			xAxis.setLowerBound(center_x-scale);
 			xAxis.setUpperBound(center_x+scale);
