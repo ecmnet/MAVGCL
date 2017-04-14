@@ -179,13 +179,9 @@ public class MainApp extends Application  {
 
 
 			MSPLogger.getInstance(control);
-
 			StateProperties.getInstance(control);
-
 			AnalysisModelService.getInstance(control);
-
 			UBXRTCM3Base.getInstance(control);
-
 			PX4Parameters.getInstance(control);
 
 		} catch(Exception e) {
