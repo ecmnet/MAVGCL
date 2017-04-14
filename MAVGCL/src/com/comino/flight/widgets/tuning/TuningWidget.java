@@ -399,7 +399,7 @@ public class TuningWidget extends WidgetPane  {
 			Control e = p;
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
-			else if(v==att.default_val)
+			if(v==att.default_val)
 				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
 			else
 				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
