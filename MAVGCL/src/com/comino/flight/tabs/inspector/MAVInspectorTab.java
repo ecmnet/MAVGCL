@@ -239,7 +239,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						} catch(Exception k) {   }
 					}
 				}
-				data.last_update = System.currentTimeMillis();
 			}
 
 		}
@@ -254,7 +253,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		private float rate;
 		private long  tms;
-		private long  count = 1;
+		private long  count = 0;
 		private long  last_update;
 
 		public Data(String name, ObservableMap<String,DataSet> data) {
@@ -277,8 +276,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public boolean updateRate() {
-			if((System.currentTimeMillis() - tms)>0)
-			rate = (rate *  count + 1000/(System.currentTimeMillis() - tms)) / ++count;
+			if(tms != 0 && (System.currentTimeMillis() - tms) > 0)
+			  rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 			if((System.currentTimeMillis() - last_update) > 333) {
 				data.get("rate").setValue(String.format("%3.1f",rate));
