@@ -246,12 +246,13 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 					}
 
 				} catch (Exception e) {
+					if(m_collecting)
+						e.printStackTrace();
 					m_collecting = false;
 					try {
 						stream.close();
 					} catch (Exception e1) { }
 					connectionError = e.getMessage();
-					System.err.println(connectionError);
 				}
 
 			} while (m_collecting);

@@ -48,14 +48,14 @@ public class StreamSplit {
 	protected DataInputStream m_dis;
 	private boolean m_streamEnd;
 
-	private ByteBuffer buf = null;
+	private static ByteBuffer buf = ByteBuffer.allocate(1000000);;
 
 
 	public StreamSplit(DataInputStream dis)
 	{
 		m_dis = dis;
 		m_streamEnd = false;
-        buf = ByteBuffer.allocate(30000);
+
 	}
 
 
