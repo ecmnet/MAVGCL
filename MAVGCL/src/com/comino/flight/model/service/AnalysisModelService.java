@@ -81,6 +81,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private int mode = 0;
 
+	private boolean isConnected = false;
+
 	private int totalTime_sec = 30;
 	private int collector_interval_us = 50000;
 
@@ -114,16 +116,19 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-			if(nv.booleanValue() && !control.isSimulation()) {
-				control.getCurrentModel().grid.clear();
-				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			}
+			if(nv.booleanValue()) {
+				isConnected = true;
+				Thread c = new Thread(new CombinedConverter());
+				c.setName("Combined model converter");
+				c.start();
+				if(!control.isSimulation()) {
+					model.grid.clear();
+					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
+			} else
+				isConnected = false;
 		});
-
-		Thread c = new Thread(new CombinedConverter());
-		c.setName("Combined model converter");
-		c.start();
 	}
 
 	public AnalysisModelService(DataModel model) {
@@ -300,7 +305,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		public void run() {
 			//			try { Thread.sleep(2000); } catch(Exception e) { }
 			System.out.println("CombinedConverter started");
-			while(true) {
+			while(isConnected) {
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
@@ -366,6 +371,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
 				perf2 = (System.nanoTime()-wait)/1e6f;
 			}
+			System.out.println("Combined converter stopped");
 		}
 	}
 
