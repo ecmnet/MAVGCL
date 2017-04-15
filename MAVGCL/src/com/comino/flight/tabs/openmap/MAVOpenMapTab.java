@@ -134,6 +134,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 	private int index=0;
+	private boolean gpos_init = false;
 
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
@@ -242,7 +243,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		positionLayer = new PositionLayer(plane_valid);
 		map.getLayers().add(positionLayer);
 		positionLayer.setVisible(true);
-
 
 		positionLayer.updatePosition(49.142899,11.577723);
 
@@ -405,6 +405,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				else
 					model = dataService.getCurrent();
 			}
+		});
+
+		state.getGPOSAvailableProperty().addListener((e,o,n) -> {
+			if(n.booleanValue())
+				Platform.runLater(() -> {
+				   gpos_init = true;
+				   mapfollow.setSelected(false);
+				});
+			   refreshChart();
 		});
 
 		return this;
