@@ -66,6 +66,9 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
 	private BooleanProperty isRecordingAvailableProperty	= new SimpleBooleanProperty();
 
+	private BooleanProperty isGPOSAvailable                 = new SimpleBooleanProperty();
+	private BooleanProperty isLPOSAvailable                 = new SimpleBooleanProperty();
+
 	private FloatProperty progress = new SimpleFloatProperty(-1);
 
 	private IMAVController control;
@@ -104,6 +107,9 @@ public class StateProperties implements IMSPStatusChangedListener{
 		altholdProperty.set(newStatus.isStatus(Status.MSP_MODE_ALTITUDE));
 		posholdProperty.set(newStatus.isStatus(Status.MSP_MODE_POSITION));
 		rcProperty.set(newStatus.isStatus(Status.MSP_RC_ATTACHED));
+
+		isGPOSAvailable.set(newStatus.isStatus(Status.MSP_GPOS_AVAILABILITY));
+		isLPOSAvailable.set(newStatus.isStatus(Status.MSP_LPOS_AVAILABILITY));
 
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
 			MSPLogger.getInstance().writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
@@ -151,6 +157,14 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
+	}
+
+	public BooleanProperty getGPOSAvailableProperty() {
+		return isGPOSAvailable;
+	}
+
+	public BooleanProperty getLPOSAvailableProperty() {
+		return isLPOSAvailable;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {
