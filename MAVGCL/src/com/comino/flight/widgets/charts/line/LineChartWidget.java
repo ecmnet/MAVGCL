@@ -174,6 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private boolean isRunning = false;
 
 	private long dashboard_update_tms = 0;
+	private long last_update_ms = 0;
 
 	public LineChartWidget() {
 
@@ -195,10 +196,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void update(long now) {
 		if(!isRunning || isDisabled() || !isVisible() )
 			return;
-		Platform.runLater(() -> {
-			updateGraph(refreshRequest);
-		});
-
+		if((System.currentTimeMillis()-last_update_ms)> 25) {
+			Platform.runLater(() -> {
+				updateGraph(refreshRequest);
+			});
+			last_update_ms = System.currentTimeMillis();
+		}
 	}
 
 	@FXML
