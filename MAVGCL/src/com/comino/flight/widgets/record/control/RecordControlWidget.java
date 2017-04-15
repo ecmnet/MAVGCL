@@ -40,6 +40,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.log.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.ChartControlWidget;
 import com.comino.flight.widgets.info.InfoWidget;
@@ -149,7 +150,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		clear.setOnAction((ActionEvent event)-> {
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
-			StateProperties.getInstance().getLogLoadedProperty().set(false);
+			if(state.getLogLoadedProperty().get()) {
+				state.getLogLoadedProperty().set(false);
+			}
 			charts.refreshCharts();
 			info.clear();
 		});
@@ -158,7 +161,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			if(newValue.booleanValue()) {
 				AnalysisModelService.getInstance().clearModelList();
 				FileHandler.getInstance().clear();
-				StateProperties.getInstance().getLogLoadedProperty().set(false);
+				state.getLogLoadedProperty().set(false);
 				charts.refreshCharts();
 				info.clear();
 			}
@@ -279,7 +282,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
 			break;
 			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) ||
-					         newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
+					newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
