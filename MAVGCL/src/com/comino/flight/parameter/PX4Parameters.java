@@ -72,6 +72,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
+	private boolean is_reading = false;
 
 	public static PX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
@@ -95,7 +96,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(newValue && control.isConnected()) {
-				  refreshParameterList(true);
+					refreshParameterList(true);
 				}
 			}
 		});
@@ -105,22 +106,24 @@ public class PX4Parameters implements IMAVLinkListener {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue && control.isConnected())
-				  refreshParameterList(true);
+					refreshParameterList(true);
 			}
 		});
 
 	}
 
 	public void refreshParameterList(boolean loaded) {
-		property.setValue(null);
-		parameterList.clear();
-		msg_param_request_list msg = new msg_param_request_list(255,1);
-		msg.target_component = 1;
-		msg.target_system = 1;
-		control.sendMAVLinkMessage(msg);
-		stateProperties.getParamLoadedProperty().set(!loaded);
-		MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
-			    MAV_SEVERITY.MAV_SEVERITY_INFO);
+		if(!is_reading) {
+			property.setValue(null);
+			parameterList.clear();
+			msg_param_request_list msg = new msg_param_request_list(255,1);
+			msg.target_component = 1;
+			msg.target_system = 1;
+			control.sendMAVLinkMessage(msg);
+			stateProperties.getParamLoadedProperty().set(!loaded);
+			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
+					MAV_SEVERITY.MAV_SEVERITY_INFO);
+		}
 	}
 
 
@@ -134,6 +137,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		long flight_time = 0;
 
 		if( _msg instanceof msg_param_value) {
+			is_reading = true;
 			property.setValue(null);
 
 			msg_param_value msg = (msg_param_value)_msg;
@@ -155,12 +159,12 @@ public class PX4Parameters implements IMAVLinkListener {
 				stateProperties.getParamLoadedProperty().set(true);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
-
+				is_reading = false;
 				if(get("LND_FLIGHT_T_LO")!=null) {
 					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
 					if(flight_time <1e10f && flight_time > 0)
-					 MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
-							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
+								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
 			}
 		}
@@ -175,9 +179,9 @@ public class PX4Parameters implements IMAVLinkListener {
 				attributes = new ParameterAttributes(s,"(DefaultGroup)");
 
 			if(o instanceof Float)
-			   attributes.value = ((Float)(o)).floatValue();
+				attributes.value = ((Float)(o)).floatValue();
 			if(o instanceof Integer)
-				 attributes.value = ((Integer)(o)).floatValue();
+				attributes.value = ((Integer)(o)).floatValue();
 
 			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
@@ -205,9 +209,9 @@ public class PX4Parameters implements IMAVLinkListener {
 	}
 
 	private List<ParameterAttributes> asSortedList(Map<String,ParameterAttributes> c) {
-	  List<ParameterAttributes> list = new ArrayList<ParameterAttributes>(c.values());
-	  java.util.Collections.sort(list);
-	  return list;
+		List<ParameterAttributes> list = new ArrayList<ParameterAttributes>(c.values());
+		java.util.Collections.sort(list);
+		return list;
 	}
 
 }
