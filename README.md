@@ -12,11 +12,12 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 13/04/2017
+**Development Status:** Last updated 15/04/2017
 
 - Preferences: Checkbox for local SITL connection, Peer- and Bind-Port
 - Shell enhanced
 - Recording via ULog fixed
+- Connection issues fixed
 
 V0.6xx notes:
 
