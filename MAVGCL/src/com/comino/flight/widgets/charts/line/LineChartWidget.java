@@ -196,7 +196,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void update(long now) {
 		if(!isRunning || isDisabled() || !isVisible() )
 			return;
-		if((System.currentTimeMillis()-last_update_ms)> 25) {
+		if((System.currentTimeMillis()-last_update_ms)> 25 || resolution_ms <= 100) {
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest);
 			});
