@@ -67,6 +67,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private BooleanProperty isGPOSAvailable                 = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                 = new SimpleBooleanProperty();
+	private BooleanProperty isBaseAvailable                 = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 
@@ -167,6 +168,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getLPOSAvailableProperty() {
 		return isLPOSAvailable;
+	}
+
+	public BooleanProperty getBaseAvailableProperty() {
+		return isBaseAvailable;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {
