@@ -278,8 +278,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public int calculateXIndexByTime(double time) {
 		int x = (int)(1000f / getCollectorInterval_ms() * time);
-		if(x < 0 || x > modelList.size())
+		if(x < 0)
 			return 0;
+		if(x > modelList.size()-1)
+			return modelList.size()-1;
 		return x;
 	}
 
