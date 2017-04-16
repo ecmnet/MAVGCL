@@ -52,8 +52,8 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
+import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
-import com.emxsys.chart.extension.XYAnnotations.Layer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -312,6 +312,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				if((mouseEvent.getX()-x)>0) {
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
+					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
+						int x0 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
+						int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()
+								                                              -xAxis.getLayoutX()).doubleValue());
+						setDashboardData(dashboard1,type1,x0,x1);
+						setDashboardData(dashboard2,type2,x0,x1);
+						setDashboardData(dashboard3,type3,x0,x1);
+						linechart.getPlotArea().requestLayout();
+						dashboard_update_tms = System.currentTimeMillis();
+					}
 				}
 				else {
 					if((mouseEvent.getX()-x)<-5) {
@@ -697,9 +707,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
 
 				dashboard_update_tms = System.currentTimeMillis();
-				setDashboardData(dashboard1,type1);
-				setDashboardData(dashboard2,type2);
-				setDashboardData(dashboard3,type3);
+				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 
 			}
 		}
@@ -713,9 +723,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(dash.isSelected() && dataService.getModelList().size()>0
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 				dashboard_update_tms = System.currentTimeMillis();
-				setDashboardData(dashboard1,type1);
-				setDashboardData(dashboard2,type2);
-				setDashboardData(dashboard3,type3);
+				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 			}
 
 			while(current_x_pt<max_x ) {
@@ -789,7 +799,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}
 	}
 
-	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf) {
+	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf, int x0, int x1) {
 		int count=0; float val=0;
 		float _min = Float.NaN; float _max = Float.NaN;
 		float _avg = 0; float mean = 0; float std=0;
@@ -798,7 +808,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			return;
 
 		d.setKeyFigure(kf);
-		for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
+		for(int i =x0; i < x1 && i< dataService.getModelList().size();i++) {
 			val = dataService.getModelList().get(i).getValue(kf);
 			if(val<_min || Float.isNaN(_min)) _min = val;
 			if(val>_max || Float.isNaN(_max)) _max = val;
@@ -808,7 +818,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		d.setMinMax(_min, _max);
 		if(count>0) {
 			mean = _avg / count; std = 0;
-			for(int i = current_x0_pt; i < current_x1_pt && i< dataService.getModelList().size();i++) {
+			for(int i = x0; i < x1 && i< dataService.getModelList().size();i++) {
 				val = dataService.getModelList().get(i).getValue(kf);
 				std = std + (val - mean) * (val - mean);
 			}

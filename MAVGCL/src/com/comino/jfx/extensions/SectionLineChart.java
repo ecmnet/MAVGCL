@@ -33,7 +33,6 @@
 
 package com.comino.jfx.extensions;
 
-import com.emxsys.chart.extension.XYAnnotations;
 
 import javafx.beans.NamedArg;
 import javafx.scene.Group;

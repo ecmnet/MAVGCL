@@ -51,9 +51,9 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.jfx.extensions.SectionLineChart;
+import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.MSPMathUtils;
-import com.emxsys.chart.extension.XYAnnotations.Layer;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
