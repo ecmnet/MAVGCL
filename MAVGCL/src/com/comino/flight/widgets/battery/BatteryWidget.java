@@ -42,14 +42,15 @@ import com.comino.mav.control.IMAVController;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
 
 public class BatteryWidget extends WidgetPane  {
 
-	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
-	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
-	private static final float ca_range[] = { 0.0f,  100.0f, 60.0f, 0 };
+//	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
+//	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };
+//	private static final float ca_range[] = { 0.0f,  100.0f, 60.0f, 0 };
 
 
 	@FXML
@@ -77,7 +78,7 @@ public class BatteryWidget extends WidgetPane  {
 				if((System.currentTimeMillis()-tms)>1000) {
 					tms = System.currentTimeMillis();
 					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
-					    voltage = model.getValue("BATV");
+						voltage = model.getValue("BATV");
 						g_voltage.setValue(voltage);
 						if(voltage < 10.5 && voltage > 0)
 							g_voltage.setBarColor(Color.RED);
@@ -105,6 +106,19 @@ public class BatteryWidget extends WidgetPane  {
 		setupGauge(g_capacity,"%",Color.DARKCYAN);
 		g_capacity.setDecimals(0);
 
+		state.getCurrentUpToDate().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
+				if(n.booleanValue()) {
+					setColor(g_voltage,Color.WHITE);
+					setColor(g_capacity,Color.WHITE);
+				}
+				else {
+					setColor(g_voltage,Color.LIGHTGRAY);
+					setColor(g_capacity,Color.LIGHTGRAY);
+				}
+			});
+		});
+
 	}
 
 
@@ -119,7 +133,12 @@ public class BatteryWidget extends WidgetPane  {
 		gauge.setValueColor(Color.WHITE);
 		gauge.setTitleColor(Color.WHITE);
 		gauge.setUnitColor(Color.WHITE);
+	}
 
+	private void setColor(Gauge gauge, Color color) {
+		gauge.setValueColor(color);
+		gauge.setTitleColor(color);
+		gauge.setUnitColor(color);
 	}
 
 

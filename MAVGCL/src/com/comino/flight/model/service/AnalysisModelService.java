@@ -54,7 +54,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Slam;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -161,14 +160,18 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public AnalysisDataModel getLast(float f) {
 		if(mode==STOPPED && modelList.size()>0)
-			return modelList.get(calculateX1Index(f));
+			return modelList.get(calculateX1IndexByFactor(f));
 		return current;
 	}
 
 	public void setCurrent(int index) {
 		if(modelList.size() > index) {
-			current = modelList.get(index);
+			current.set(modelList.get(index));
 		}
+	}
+
+	public void setCurrent(double time) {
+		setCurrent(calculateXIndexByTime(time));
 	}
 
 	public int getCollectorInterval_ms() {
@@ -254,7 +257,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		return totalTime_sec;
 	}
 
-	public int calculateX0Index(double factor) {
+	public int calculateX0IndexByFactor(double factor) {
 		int current_x0_pt = (int)((modelList.size() - totalTime_sec *  1000f / getCollectorInterval_ms()) * factor);
 
 		if(current_x0_pt<0)
@@ -263,14 +266,21 @@ public class AnalysisModelService implements IMAVLinkListener {
 		return current_x0_pt;
 	}
 
-	public int calculateX1Index(double factor) {
+	public int calculateX1IndexByFactor(double factor) {
 
-		int current_x1_pt = calculateX0Index(factor) + (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
+		int current_x1_pt = calculateX0IndexByFactor(factor) + (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
 
 		if(current_x1_pt>modelList.size()-1)
 			current_x1_pt = modelList.size()-1;
 
 		return (int)(current_x1_pt);
+	}
+
+	public int calculateXIndexByTime(double time) {
+		int x = (int)(1000f / getCollectorInterval_ms() * time);
+		if(x < 0 || x > modelList.size())
+			return 0;
+		return x;
 	}
 
 	public long getTotalRecordingTimeMS() {
@@ -320,8 +330,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				synchronized(this) {
 					current.msg = null; wait = System.nanoTime();
-					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
+					if(state.getCurrentUpToDate().getValue())
+						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
 					if(ulogger.isLogging()) {
 						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);

@@ -269,12 +269,20 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				return;
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
+
+			zoom.setVisible(true);
+			zoom.setWidth(1);
+
+			state.getCurrentUpToDate().set(false);
+			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
+			dataService.setCurrent(x1);
+
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
 			if(dataService.isCollecting() && !isPaused)
 				return;
-
+			state.getCurrentUpToDate().set(true);
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
@@ -287,6 +295,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		linechart.setOnMouseClicked(click -> {
+
 			if (click.getClickCount() == 2) {
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalZoom();
@@ -300,9 +309,22 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 				zoom.setVisible(true);
-				linechart.setCursor(Cursor.H_RESIZE);
-				zoom.setWidth(mouseEvent.getX()-x);
+				if((mouseEvent.getX()-x)>0) {
+					linechart.setCursor(Cursor.H_RESIZE);
+					zoom.setWidth(mouseEvent.getX()-x);
+				}
+				else {
+					if((mouseEvent.getX()-x)<-5) {
+						linechart.setCursor(Cursor.DEFAULT);
+						zoom.setWidth(1);
+					}
+					zoom.setX(mouseEvent.getX()-chartArea.getLayoutX()-7);
+				}
 			}
+
+			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
+			dataService.setCurrent(x1);
+
 			mouseEvent.consume();
 		});
 
@@ -413,12 +435,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
-			current_x0_pt =  dataService.calculateX0Index(1);
+			current_x0_pt =  dataService.calculateX0IndexByFactor(1);
 		});
 
 
 		scroll.addListener((v, ov, nv) -> {
-			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
+			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
 			updateRequest();
 		});
 
@@ -432,8 +454,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		this.disabledProperty().addListener((v, ov, nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x0_pt = dataService.calculateX0Index(1);
-				current_x0_pt = dataService.calculateX0Index(1);
+				current_x0_pt = dataService.calculateX0IndexByFactor(1);
+				current_x0_pt = dataService.calculateX0IndexByFactor(1);
 				setXResolution(timeFrame.get());
 			}
 		});
@@ -453,7 +475,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(dataService.isCollecting()) {
 			if(isPaused) {
 				Platform.runLater(() -> {
-					current_x0_pt =  dataService.calculateX0Index(scroll.get());
+					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 					setXResolution(timeFrame.get());
 					updateGraph(true);
 				});
@@ -465,7 +487,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			isPaused = !isPaused;
 		}
 		else {
-			current_x0_pt =  dataService.calculateX0Index(scroll.get());
+			current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 			Platform.runLater(() -> {
 				setXResolution(timeFrame.get());
 				updateGraph(true);
@@ -545,7 +567,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 				updateRequest();
 			}
 		});
@@ -568,7 +590,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@Override
 	public void refreshChart() {
-		current_x0_pt = dataService.calculateX0Index(1);
+		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
 		if(!isDisabled())
 			updateRequest();

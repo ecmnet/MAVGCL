@@ -40,8 +40,6 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
-import org.mavlink.messages.MSP_CMD;
-
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -51,7 +49,6 @@ import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.widgets.charts.control.IChartControl;
-import com.comino.flight.widgets.charts.line.IChartSyncControl;
 import com.comino.flight.widgets.charts.line.XYDataPool;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.mav.control.IMAVController;
@@ -71,9 +68,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -88,7 +83,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.StringConverter;
 
 // TODO: Add planned path
 
@@ -226,7 +220,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private boolean refreshRequest = false;
 
-	private double  zoom_beg_x, zoom_beg_y;
+//	private double  zoom_beg_x, zoom_beg_y;
 
 	private float center_x, center_y;
 	private double scale_rounding;
@@ -566,7 +560,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		corr_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_OFFSET, false));
 
 		scroll.addListener((v, ov, nv) -> {
-			current_x0_pt =  dataService.calculateX0Index(nv.floatValue());
+			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
 			updateRequest();
 		});
 
@@ -618,8 +612,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
 
-		current_x0_pt = dataService.calculateX0Index(1);
-		current_x_pt  = dataService.calculateX0Index(1);
+		current_x0_pt = dataService.calculateX0IndexByFactor(1);
+		current_x_pt  = dataService.calculateX0IndexByFactor(1);
 		grid.clear();
 		scroll.setValue(1);
 		refreshChart();
@@ -829,7 +823,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				scroll.setValue(0);
 			}
 		});
-		current_x0_pt = dataService.calculateX0Index(1);
+		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
@@ -842,7 +836,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				current_x0_pt =  dataService.calculateX0Index(scroll.get());
+				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 				current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 				updateRequest();
 			}

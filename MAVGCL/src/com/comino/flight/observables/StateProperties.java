@@ -38,7 +38,6 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.beans.property.BooleanProperty;
@@ -68,6 +67,8 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private BooleanProperty isGPOSAvailable                 = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                 = new SimpleBooleanProperty();
+
+	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 
 	private FloatProperty progress = new SimpleFloatProperty(-1);
 
@@ -170,6 +171,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	public BooleanProperty getParamLoadedProperty() {
 		return isParamLoadedProperty;
+	}
+
+	public BooleanProperty getCurrentUpToDate() {
+		return isCurrentUpToDate;
 	}
 
 	public FloatProperty getProgressProperty() {

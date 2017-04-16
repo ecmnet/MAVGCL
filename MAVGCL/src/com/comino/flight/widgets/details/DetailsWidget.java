@@ -47,6 +47,7 @@ import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -179,9 +180,20 @@ public class DetailsWidget extends WidgetPane  {
 			i++;
 		}
 
+		state.getCurrentUpToDate().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
+				for(KeyFigure figure : figures) {
+					if(n.booleanValue())
+						figure.setColor(Color.WHITE);
+					else
+						figure.setColor(Color.LIGHTGRAY);
+				}
+			});
+		});
+
 		task.start();
 
-	//	this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+		//	this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 
 	}
 
@@ -214,6 +226,11 @@ public class DetailsWidget extends WidgetPane  {
 				}
 				grid.add(p, 0, row);
 			}
+		}
+
+		public void setColor(Color color) {
+		  if(label != null)
+			  label.setTextColor(color);
 		}
 
 		public void setValue(AnalysisDataModel model, int row) {

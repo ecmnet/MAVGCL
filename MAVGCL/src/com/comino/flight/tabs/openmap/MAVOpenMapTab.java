@@ -259,7 +259,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 				if(refresh) {
-					index = dataService.calculateX0Index(1);
+					index = dataService.calculateX0IndexByFactor(1);
 					first = true;
 				}
 
@@ -356,7 +356,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		scroll.addListener((v, ov, nv) -> {
 			if(!state.getRecordingProperty().get()) {
 
-				int current_x1_pt = dataService.calculateX0Index(nv.floatValue());
+				int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
 
 				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
 					model = dataService.getModelList().get(current_x1_pt);
@@ -398,7 +398,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				int current_x1_pt = dataService.calculateX0Index(scroll.get());
+				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
 				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
 					model = dataService.getModelList().get(current_x1_pt);
 				else

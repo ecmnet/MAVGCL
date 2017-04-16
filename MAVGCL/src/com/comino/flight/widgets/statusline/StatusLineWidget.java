@@ -170,8 +170,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 					if(list.size()>0) {
 
-						int current_x0_pt = collector.calculateX0Index(scroll.floatValue());
-						int current_x1_pt = collector.calculateX1Index(scroll.floatValue());
+						int current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
+						int current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
 						time.setText(
 								String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
 										list.get(current_x0_pt).tms/1000,
