@@ -90,12 +90,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static int MAP_UPDATE_MS = 100;
 
-	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data" };
+	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data", "Base postion" };
 
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON" },
-		{   "RGPSLAT",  "RGPSLON" }
+		{   "RGPSLAT",  "RGPSLON" },
+		{   "BASELAT",  "BASELON" },
 		};
 
 	@FXML
@@ -147,13 +148,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private  StateProperties state;
 
+	private long tms;
+
 	public MAVOpenMapTab() {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
 		this.state = StateProperties.getInstance();
 
 		task = new AnimationTimer() {
-			private long tms;
 
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>100) {
@@ -180,12 +182,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 								positionLayer.getIcon().setImage(plane_invalid);
 							else
 								positionLayer.getIcon().setImage(plane_valid);
+
 							if(mapfollow.selectedProperty().get()) {
 								map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 								canvasLayer.redraw(true);
 							} else {
 								canvasLayer.redraw(false);
 							}
+
 							positionLayer.updatePosition(
 									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
 
@@ -302,10 +306,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
+				if((System.currentTimeMillis()-tms)>100) {
+					tms = System.currentTimeMillis();
 				Platform.runLater(() -> {
 					map.setZoom(zoom.getValue());
 					canvasLayer.redraw(true);
 				});
+				}
 			}
 		});
 
