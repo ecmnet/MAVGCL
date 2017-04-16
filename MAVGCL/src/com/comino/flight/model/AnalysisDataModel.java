@@ -71,6 +71,11 @@ public class AnalysisDataModel {
 		return d;
 	}
 
+	public void set(AnalysisDataModel model) {
+		this.data.clear();
+		this.data.putAll(model.data);
+	}
+
 	public void clear()  {
 		data.clear();
 		tms = 0;
