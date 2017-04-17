@@ -56,6 +56,8 @@ public class Badge extends Label {
 	private boolean toggle = false;
 	private Timeline timeline = null;
 
+	private String oldcolor;
+
 	public Badge() {
 		super();
 		this.setDisable(false);
@@ -78,8 +80,10 @@ public class Badge extends Label {
 		toggle=false;
 		setDisable(toggle);
 
-		if(this.mode == mode)
+		if(this.mode == mode && color == oldcolor)
 			return;
+
+		oldcolor = color;
 
 		switch(mode) {
 		case MODE_OFF:
