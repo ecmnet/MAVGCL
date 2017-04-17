@@ -116,10 +116,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			if(nv.booleanValue()) {
-				isConnected = true;
-				Thread c = new Thread(new CombinedConverter());
-				c.setName("Combined model converter");
-				c.start();
+				if(!isConnected) {
+					Thread c = new Thread(new CombinedConverter());
+					c.setName("Combined model converter");
+					c.start();
+					isConnected = true;
+				}
 				if(!control.isSimulation()) {
 					model.grid.clear();
 					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
@@ -315,8 +317,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		@Override
 		public void run() {
-			//			try { Thread.sleep(2000); } catch(Exception e) { }
+
 			System.out.println("CombinedConverter started");
+
 			while(isConnected) {
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
@@ -331,6 +334,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				current.setValue("MAVGCLACC", perf2);
 
 				synchronized(this) {
+
 					current.msg = null; wait = System.nanoTime();
 
 					if(state.getCurrentUpToDate().getValue())
