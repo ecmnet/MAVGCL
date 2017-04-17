@@ -97,7 +97,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON"   },
-		  { "RGPSLAT",  "RGPSLON" }
+				{ "RGPSLAT",  "RGPSLON" }
 		};
 
 	@FXML
@@ -163,52 +163,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>100) {
 					tms = System.currentTimeMillis();
-					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
-						canvasLayer.redraw(true);
-					}
-
-
-					switch(centermode) {
-					case 0:
-						if(model.getValue(TYPES[type][0])!=0)
-							map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
-						break;
-					case 1:
-						if(model.getValue("HOMLAT")!=0)
-							map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-						break;
-					case 2:
-						if(model.getValue("BASELAT")!=0)
-							map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
-						break;
-					}
-
-
-					Platform.runLater(() -> {
-						try {
-							if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
-								//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-								homeLayer.setVisible(true);
-								homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-							} else
-								homeLayer.setVisible(false);
-
-							if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
-								baseLayer.setVisible(true);
-								baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
-							} else
-								baseLayer.setVisible(false);
-
-							if(model.getValue("RGPSHDOP") > 2.5)
-								positionLayer.getIcon().setImage(plane_invalid);
-							else
-								positionLayer.getIcon().setImage(plane_valid);
-
-							positionLayer.updatePosition(
-									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
-
-						} catch(Exception e) { e.printStackTrace(); }
-					});
+					updateMap(true);
 				}
 			}
 		};
@@ -320,13 +275,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-//				if((System.currentTimeMillis()-tms)>100) {
-//					tms = System.currentTimeMillis();
-					Platform.runLater(() -> {
-						map.setZoom(zoom.getValue());
-						canvasLayer.redraw(true);
-					});
-//				}
+				//				if((System.currentTimeMillis()-tms)>100) {
+				//					tms = System.currentTimeMillis();
+				Platform.runLater(() -> {
+					map.setZoom(zoom.getValue());
+					updateMap(true);
+				});
+				//				}
 			}
 		});
 
@@ -338,7 +293,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					zoom.setValue(19.5f);
 					Platform.runLater(() -> {
 						map.setZoom(zoom.getValue());
-						canvasLayer.redraw(true);
+						updateMap(true);
 					});
 				}
 			}
@@ -363,7 +318,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				centermode = newValue.intValue();
 				Platform.runLater(() -> {
-					canvasLayer.redraw(true);
+					updateMap(true);
 				});
 			}
 
@@ -454,8 +409,56 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		Platform.runLater(() -> {
 			this.model=dataService.getLast(1);
-			map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
+			updateMap(true);
+		});
+	}
+
+	private void updateMap(boolean refreshCanvas) {
+
+		if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 			canvasLayer.redraw(true);
+		}
+
+		switch(centermode) {
+		case 0:
+			if(model.getValue(TYPES[type][0])!=0)
+				map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
+			break;
+		case 1:
+			if(model.getValue("HOMLAT")!=0)
+				map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			break;
+		case 2:
+			if(model.getValue("BASELAT")!=0)
+				map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
+			break;
+		}
+
+
+		Platform.runLater(() -> {
+			try {
+				if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
+					//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+					homeLayer.setVisible(true);
+					homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+				} else
+					homeLayer.setVisible(false);
+
+				if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
+					baseLayer.setVisible(true);
+					baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
+				} else
+					baseLayer.setVisible(false);
+
+				if(model.getValue("RGPSHDOP") > 2.5)
+					positionLayer.getIcon().setImage(plane_invalid);
+				else
+					positionLayer.getIcon().setImage(plane_valid);
+
+				positionLayer.updatePosition(
+						model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
+
+			} catch(Exception e) { e.printStackTrace(); }
 		});
 	}
 
