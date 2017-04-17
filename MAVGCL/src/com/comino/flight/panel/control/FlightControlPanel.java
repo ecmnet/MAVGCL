@@ -96,16 +96,15 @@ public class FlightControlPanel extends Pane  {
 
 		status.setup(control);
 		recordcontrol.setup(control, chartcontrol, info, status);
-		battery.setup(control);
+
+		if(battery!=null)
+		  battery.setup(control);
 
 		if(details!=null)
 			details.setup(control);
 
 		if(commander!=null)
 		  commander.setup(control);
-
-		if(air!=null)
-			  air.setup(control);
 
 		info.setup(control);
 
