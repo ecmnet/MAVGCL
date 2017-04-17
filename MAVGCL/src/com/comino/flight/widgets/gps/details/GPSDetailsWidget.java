@@ -81,6 +81,8 @@ public class GPSDetailsWidget extends WidgetPane  {
 
 
 	public GPSDetailsWidget() {
+		super();
+
 		figures = new ArrayList<KeyFigure>();
 
 		DecimalFormatSymbols f_symbols = new DecimalFormatSymbols();

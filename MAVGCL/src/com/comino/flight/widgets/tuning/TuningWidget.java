@@ -96,7 +96,6 @@ public class TuningWidget extends WidgetPane  {
 	@FXML
 	private ChoiceBox<String> groups;
 
-	private IMAVController control;
 	private PX4Parameters  params;
 
 	private ScheduledFuture<?> timeout;
@@ -180,13 +179,12 @@ public class TuningWidget extends WidgetPane  {
 
 
 	public void setup(IMAVController control) {
-		this.control = control;
+		super.setup(control);
 
 		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				boolean editable = !StateProperties.getInstance().getLogLoadedProperty().get();
-				MAVPreferences.getInstance().put(MAVPreferences.TUNING_GROUP, newValue);
+				prefs.put(MAVPreferences.TUNING_GROUP, newValue);
 				grid.getChildren().clear();
 				int i = 0;
 				for(ParameterAttributes p : params.getList()) {
@@ -197,7 +195,7 @@ public class TuningWidget extends WidgetPane  {
 							name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
 						else
 							name.setTooltip(new Tooltip(p.description));
-						ParamItem item = createParamItem(p, editable);
+						ParamItem item = createParamItem(p, true);
 						items.add(item);
 						grid.addRow(i++, name,item.editor,unit);
 					}
@@ -205,7 +203,7 @@ public class TuningWidget extends WidgetPane  {
 			}
 		});
 
-		this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+		this.disableProperty().bind(state.getLogLoadedProperty().and(state.getConnectedProperty().not()));
 
 	}
 
@@ -322,7 +320,7 @@ public class TuningWidget extends WidgetPane  {
 								checkDefaultOf(editor,val);
 							}
 							else {
-								MSPLogger.getInstance().writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+								logger.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 								setValueOf(editor,att.value);
 							}
 						}

@@ -117,7 +117,12 @@ public class ControlWidget extends WidgetPane  {
 				experimental.setSelected(false);
 				vehiclectl.setSelected(false);
 				details.setSelected(false);
+			} else {
+				if(stateProperties.getConnectedProperty().get()) {
+					details.setSelected(true);
+				}
 			}
+
 		});
 
 		stateProperties.getParamLoadedProperty().addListener((e,o,n) -> {
@@ -136,7 +141,6 @@ public class ControlWidget extends WidgetPane  {
 	}
 
 	public void setup(IMAVController control) {
-
 		this.details.selectedProperty().set(false);
 	}
 

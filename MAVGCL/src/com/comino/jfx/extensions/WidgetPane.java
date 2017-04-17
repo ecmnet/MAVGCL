@@ -33,8 +33,12 @@
 
 package com.comino.jfx.extensions;
 
+import java.util.prefs.Preferences;
+
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -46,7 +50,11 @@ import javafx.util.Duration;
 
 public class WidgetPane extends Pane {
 
+	protected IMAVController control = null;
+
 	protected StateProperties state = null;
+	protected Preferences     prefs = null;
+	protected MSPLogger      logger = null;
 
 	private FadeTransition in = null;
 	private FadeTransition out = null;
@@ -69,7 +77,10 @@ public class WidgetPane extends Pane {
 
 	public WidgetPane(int duration_ms, boolean visible) {
 
-		this.state = StateProperties.getInstance();
+		this.state  = StateProperties.getInstance();
+		this.prefs  = MAVPreferences.getInstance();
+		this.logger = MSPLogger.getInstance();
+
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
 		in.setToValue(1.0);
@@ -125,6 +136,11 @@ public class WidgetPane extends Pane {
 				MAVPreferences.getInstance().putDouble(prefKey+"Y",getLayoutY());
 			}
 		});
+
+	}
+
+	public void setup(IMAVController control) {
+		this.control = control;
 
 	}
 

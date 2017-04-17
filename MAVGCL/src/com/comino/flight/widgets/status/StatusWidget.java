@@ -64,9 +64,6 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 	@FXML
 	private DashLabelLED landed;
 
-
-	private IMAVController control;
-
 	private DataModel model;
 
 	public StatusWidget() {
@@ -76,9 +73,8 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 	}
 
 	public void setup(IMAVController control) {
-
+        super.setup(control);
 		this.model = control.getCurrentModel();
-		this.control = control;
 		this.control.addStatusChangeListener(this);
 		update(model.sys,model.sys);
 	}

@@ -104,7 +104,7 @@ public class CameraWidget extends WidgetPane  {
 
 		});
 
-		StateProperties.getInstance().getConnectedProperty().addListener((o,ov,nv) -> {
+		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			image.setImage(null);
 			if(fadeProperty().getValue() && !source.isRunning()) {
 				if(nv.booleanValue()) {
@@ -138,7 +138,7 @@ public class CameraWidget extends WidgetPane  {
 
 
 	private boolean connect() {
-		MSPLogger.getInstance().writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		if(url_string.isEmpty())
