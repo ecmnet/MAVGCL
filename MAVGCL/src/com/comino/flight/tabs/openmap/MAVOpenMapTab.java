@@ -287,8 +287,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
-					gc.setStroke(Color.STEELBLUE); gc.setFill(Color.DARKKHAKI);
-					gc.setLineWidth(1);
+					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
+					gc.setLineWidth(1.5);
 					for(int i=index; i<dataService.getModelList().size();
 							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
@@ -320,13 +320,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				if((System.currentTimeMillis()-tms)>100) {
-					tms = System.currentTimeMillis();
+//				if((System.currentTimeMillis()-tms)>100) {
+//					tms = System.currentTimeMillis();
 					Platform.runLater(() -> {
 						map.setZoom(zoom.getValue());
 						canvasLayer.redraw(true);
 					});
-				}
+//				}
 			}
 		});
 

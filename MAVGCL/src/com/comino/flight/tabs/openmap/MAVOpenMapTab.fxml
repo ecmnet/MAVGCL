@@ -13,17 +13,17 @@
 		<Pane prefHeight="34">
 			<children>
 				<Slider fx:id="zoom" blockIncrement="5.0" layoutX="10.0"
-					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="17.0" prefHeight="15.0"
+					layoutY="8.0" majorTickUnit="1.0" max="20.0" min="15.0" prefHeight="15.0"
 					prefWidth="161.0" showTickMarks="true" value="19.5" />
 				<ChoiceBox fx:id="gpssource" layoutX="185.0" layoutY="5.0"
 					maxHeight="17.0" prefWidth="100.0" />
 				<CheckBox fx:id="viewdetails" layoutX="310.0" layoutY="9.0"
 					mnemonicParsing="false" text="GPS Details" />
-				<Label text="Center on" layoutX="390.0" layoutY="5.0"
+				<Label text="Center on" layoutX="390.0" layoutY="5.5"
 					prefHeight="19.0"/>
 				<ChoiceBox fx:id="center" layoutX="445.0" layoutY="5.0"
-					maxHeight="19.0" prefWidth="60.0" />
-				<Button fx:id="export" layoutX="540.0" layoutY="5.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="110.0" text="PNG export" />
+					maxHeight="17.0" prefWidth="60.0" />
+				<Button fx:id="export" layoutX="640.0" layoutY="7.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 
 			</children>
 		</Pane>
