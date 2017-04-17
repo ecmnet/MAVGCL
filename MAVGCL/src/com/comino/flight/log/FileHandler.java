@@ -178,6 +178,7 @@ public class FileHandler {
 				gson.toJson(modelService.getModelList(), writer);
 				writer.close();
 				stage.getScene().setCursor(Cursor.DEFAULT);
+				StateProperties.getInstance().getLogLoadedProperty().set(true);
 				name = file.getName();
 
 			}
@@ -203,6 +204,7 @@ public class FileHandler {
 		gson.toJson(modelService.getModelList(), writer);
 		writer.close();
 		stage.getScene().setCursor(Cursor.DEFAULT);
+		StateProperties.getInstance().getLogLoadedProperty().set(true);
 	}
 
 
