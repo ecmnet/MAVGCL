@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.prefs.Preferences;
 
+import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
@@ -53,6 +55,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -190,11 +193,12 @@ public class FileHandler {
 
 
 	public void autoSave() throws IOException {
+
 		stage.getScene().setCursor(Cursor.WAIT);
 		name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 		String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 		File f = new File(path+"/"+name);
-		System.out.println("Autosave to "+f.getPath());
+		MSPLogger.getInstance().writeLocalMsg("[msgc] Saving to "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		if(f.exists())
 			f.delete();
 		f.createNewFile();
