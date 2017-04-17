@@ -160,6 +160,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
+					if(log_bytes_total==0) {
+						state.getLogLoadedProperty().set(false);
+						MSPLogger.getInstance().writeLocalMsg("Loading log failed: Timeout");
+						sendEndNotice();
+						return;
+					}
 					MSPLogger.getInstance().writeLocalMsg(
 							"Loading log from vehicle ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
@@ -221,6 +227,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					sendEndNotice();
 					state.getLogLoadedProperty().set(false);
 					MSPLogger.getInstance().writeLocalMsg("Loading log failed: "+e.getMessage());
+					e.printStackTrace();
 				}
 				state.getLogLoadedProperty().set(true);
 			}
