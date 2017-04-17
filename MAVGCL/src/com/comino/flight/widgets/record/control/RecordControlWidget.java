@@ -215,7 +215,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				recording.selectedProperty().set(false);
 				isrecording.setFill(Color.LIGHTGREY);
 
-				if(MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false)) {
+				if(MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
+						modelService.getTotalRecordingTimeMS() / 1000 > 5) {
 					try {
 						FileHandler.getInstance().autoSave();
 					} catch (IOException e) {
