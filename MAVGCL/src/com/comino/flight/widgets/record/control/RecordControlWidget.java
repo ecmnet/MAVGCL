@@ -150,9 +150,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		clear.setOnAction((ActionEvent event)-> {
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
-			if(state.getLogLoadedProperty().get()) {
-				state.getLogLoadedProperty().set(false);
-			}
+			state.getLogLoadedProperty().set(false);
 			charts.refreshCharts();
 			info.clear();
 		});
