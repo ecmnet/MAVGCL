@@ -183,7 +183,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 						time.setBackgroundColor(Color.GRAY);
 					}
 
-					if(filename.isEmpty()) {
+					if(!state.getLogLoadedProperty().get()) {
 						if(control.isConnected()) {
 							time.setMode(Badge.MODE_ON);
 							if(control.isSimulation()) {
