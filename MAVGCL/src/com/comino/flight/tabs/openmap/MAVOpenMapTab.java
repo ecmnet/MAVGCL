@@ -90,13 +90,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static int MAP_UPDATE_MS = 100;
 
-	private final static String[] GPS_SOURCES = { "Global Position", "Raw GPS data", "Base postion" };
+	private final static String[] GPS_SOURCES    = { "Global Position", "Raw GPS data" };
+
+	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base" };
 
 
 	private final static String TYPES[][] =
-		{ { "GLOBLAT",  "GLOBLON" },
-		{   "RGPSLAT",  "RGPSLON" },
-		{   "BASELAT",  "BASELON" },
+		{ { "GLOBLAT",  "GLOBLON"   },
+		  { "RGPSLAT",  "RGPSLON" }
 		};
 
 	@FXML
@@ -112,7 +113,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private CheckBox viewdetails;
 
 	@FXML
-	private CheckBox mapfollow;
+	private ChoiceBox<String> center;
 
 	@FXML
 	private GPSDetailsWidget gpsdetails;
@@ -150,6 +151,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private long tms;
 
+	protected int centermode;
+
 	public MAVOpenMapTab() {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
@@ -163,6 +166,24 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
 						canvasLayer.redraw(true);
 					}
+
+
+					switch(centermode) {
+					case 0:
+						if(model.getValue(TYPES[type][0])!=0)
+							map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
+						break;
+					case 1:
+						if(model.getValue("HOMLAT")!=0)
+							map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+						break;
+					case 2:
+						if(model.getValue("BASELAT")!=0)
+							map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
+						break;
+					}
+
+
 					Platform.runLater(() -> {
 						try {
 							if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
@@ -183,16 +204,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 							else
 								positionLayer.getIcon().setImage(plane_valid);
 
-							if(mapfollow.selectedProperty().get()) {
-								map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
-								canvasLayer.redraw(true);
-							} else {
-								canvasLayer.redraw(false);
-							}
-
 							positionLayer.updatePosition(
 									model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
-
 
 						} catch(Exception e) { e.printStackTrace(); }
 					});
@@ -210,7 +223,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
 
-		mapfollow.selectedProperty().set(true);
+		center.getItems().addAll(CENTER_OPTIONS);
+		center.getSelectionModel().select(0);
 
 		String mapFileName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
@@ -273,8 +287,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
-					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
-					gc.setLineWidth(2);
+					gc.setStroke(Color.STEELBLUE); gc.setFill(Color.DARKKHAKI);
+					gc.setLineWidth(1);
 					for(int i=index; i<dataService.getModelList().size();
 							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
@@ -308,10 +322,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					Number old_val, Number new_val) {
 				if((System.currentTimeMillis()-tms)>100) {
 					tms = System.currentTimeMillis();
-				Platform.runLater(() -> {
-					map.setZoom(zoom.getValue());
-					canvasLayer.redraw(true);
-				});
+					Platform.runLater(() -> {
+						map.setZoom(zoom.getValue());
+						canvasLayer.redraw(true);
+					});
 				}
 			}
 		});
@@ -343,22 +357,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		});
 
-		mapfollow.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		center.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if(oldValue.booleanValue() && !newValue) {
-					if(model.getValue("HOMLAT")!=0)
-						map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-					else
-						map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
-					Platform.runLater(() -> {
-						canvasLayer.redraw(true);
-					});
-				}
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				centermode = newValue.intValue();
+				Platform.runLater(() -> {
+					canvasLayer.redraw(true);
+				});
 			}
-		});
 
+		});
 
 		scroll.addListener((v, ov, nv) -> {
 			if(!state.getRecordingProperty().get()) {
@@ -413,13 +422,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-//		state.getGPOSAvailableProperty().addListener((e,o,n) -> {
-//			if(n.booleanValue())
-//				Platform.runLater(() -> {
-//				   mapfollow.setSelected(false);
-//				});
-//			   refreshChart();
-//		});
+		//		state.getGPOSAvailableProperty().addListener((e,o,n) -> {
+		//			if(n.booleanValue())
+		//				Platform.runLater(() -> {
+		//				   mapfollow.setSelected(false);
+		//				});
+		//			   refreshChart();
+		//		});
 
 		return this;
 	}
