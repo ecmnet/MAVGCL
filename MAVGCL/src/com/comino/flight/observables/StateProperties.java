@@ -75,6 +75,8 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private IMAVController control;
 
+	private MSPLogger logger;
+
 
 	public static StateProperties getInstance() {
 		return instance;
@@ -91,7 +93,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private StateProperties(IMAVController control) {
 		this.control = control;
 		this.control.addStatusChangeListener(this);
-
+        this.logger = MSPLogger.getInstance();
 		simulationProperty.set(control.isSimulation());
 	}
 
@@ -115,11 +117,11 @@ public class StateProperties implements IMSPStatusChangedListener{
 		isLPOSAvailable.set(newStatus.isStatus(Status.MSP_LPOS_AVAILABILITY));
 
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
-			MSPLogger.getInstance().writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_POSITION))
-			MSPLogger.getInstance().writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_OFFBOARD))
-			MSPLogger.getInstance().writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 		if(!newStatus.isStatus(Status.MSP_CONNECTED))
 				control.getCurrentModel().clear();
