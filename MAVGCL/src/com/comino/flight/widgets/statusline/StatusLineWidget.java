@@ -151,7 +151,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 					filename = FileHandler.getInstance().getName();
 
-					if(control.isConnected() && !state.getLogLoadedProperty().get()) {
+					if(control.isConnected()) {
 						messages.setMode(Badge.MODE_ON);
 						driver.setText(control.getCurrentModel().sys.getSensorString());
 						driver.setMode(Badge.MODE_ON);
