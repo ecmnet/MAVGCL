@@ -98,7 +98,7 @@
 								<AnchorPane xmlns="http://javafx.com/javafx/8.0.51"
 									xmlns:fx="http://javafx.com/fxml/1">
 									<children>
-										<MavLinkShellTab fx:id="mavlinkshelltab" styleClass="glass"
+										<MavLinkShellTab fx:id="mavlinkshelltab"
 											AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0"
 											AnchorPane.bottomAnchor="2.0" AnchorPane.topAnchor="1.0" />
 									</children>
