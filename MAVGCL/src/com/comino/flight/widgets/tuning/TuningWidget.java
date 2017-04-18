@@ -148,6 +148,7 @@ public class TuningWidget extends WidgetPane  {
 			groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
+		reload.disableProperty().bind(state.getArmedProperty().or(state.getRecordingProperty()));
 
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
@@ -208,16 +209,12 @@ public class TuningWidget extends WidgetPane  {
 
 	}
 
-
-
 	private class ParamItem {
 
 		public Control editor = null;
 		private ParameterAttributes att = null;
-		private ParamItem item = null;
 
 		public ParamItem(ParameterAttributes att, boolean editable) {
-			this.item = this;
 			this.att= att;
 
 			if(att.increment != 0) {
