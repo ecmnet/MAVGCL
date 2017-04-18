@@ -145,6 +145,7 @@ public class TuningWidget extends WidgetPane  {
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
+			groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
 

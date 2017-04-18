@@ -98,8 +98,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 
 		to = new FutureTask<Void>(() -> {
-			System.out.println("Timout reading log from device");
-			cancel();
+			System.out.println("Timout reading MAVLinkLog");
 			return null;
 		});
 		log_bytes_read = 0; log_bytes_total = 0;
@@ -112,7 +111,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		state.getProgressProperty().set(0);
 		state.getLogLoadedProperty().set(false);
 		FileHandler.getInstance().setName("Log loading..");
-		MSPLogger.getInstance().writeLocalMsg("Request log from vehicle");
+		MSPLogger.getInstance().writeLocalMsg("Request MAVLinkLog");
 		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
 	}
 
@@ -129,7 +128,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		} catch (Exception e) {  }
 		sendEndNotice();
 		state.getLogLoadedProperty().set(false);
-		MSPLogger.getInstance().writeLocalMsg("Loading log from vehicle cancelled");
+		MSPLogger.getInstance().writeLocalMsg("Loading MAVLinkLog cancelled");
 	}
 
 	@Override
@@ -161,13 +160,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
 					if(log_bytes_total==0) {
-						state.getLogLoadedProperty().set(false);
-						MSPLogger.getInstance().writeLocalMsg("Loading log failed: Timeout");
-						sendEndNotice();
+						MSPLogger.getInstance().writeLocalMsg("Loading MAVLinkLog failed: Timeout");
+						cancel();
 						return;
 					}
 					MSPLogger.getInstance().writeLocalMsg(
-							"Loading log from vehicle ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"Loading MAVLinkLog ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;

@@ -68,7 +68,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
-	private StateProperties stateProperties =  StateProperties.getInstance();
+	private StateProperties stateProperties =  null;
 
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
@@ -88,6 +88,7 @@ public class PX4Parameters implements IMAVLinkListener {
 	private PX4Parameters(IMAVController control) {
 		this.control  = control;
 		this.control.addMAVLinkListener(this);
+		this.stateProperties = StateProperties.getInstance();
 
 		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
 		this.parameterList = new HashMap<String,ParameterAttributes>();
@@ -123,6 +124,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			stateProperties.getParamLoadedProperty().set(!loaded);
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
+			is_reading = true;
 		}
 	}
 
@@ -137,7 +139,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		long flight_time = 0;
 
 		if( _msg instanceof msg_param_value) {
-			is_reading = true;
+
 			property.setValue(null);
 
 			msg_param_value msg = (msg_param_value)_msg;
@@ -155,8 +157,12 @@ public class PX4Parameters implements IMAVLinkListener {
 			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
 
+			if(is_reading)
+			  stateProperties.getProgressProperty().set((float)msg.param_index/msg.param_count);
+
 			if(msg.param_index >= msg.param_count-1) {
 				stateProperties.getParamLoadedProperty().set(true);
+				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
 				is_reading = false;

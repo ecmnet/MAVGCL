@@ -47,6 +47,8 @@ import javafx.beans.property.SimpleFloatProperty;
 
 public class StateProperties implements IMSPStatusChangedListener{
 
+	public static final int NO_PROGRESS = -1;
+
 	private static StateProperties instance = null;
 
 	private BooleanProperty connectedProperty = new SimpleBooleanProperty();
