@@ -2,7 +2,7 @@
 
     <!-- Altitudes -->
 
-	<KeyFigure desc="Alt.SL" uom="m" mask="#0.0" key="ALTSL">
+	<KeyFigure desc="Alt.Sea level" uom="m" mask="#0.0" key="ALTSL">
 		<MSPSource class="hud" field="ag"></MSPSource>
 		<PX4Source field="GPOS.Alt"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.alt"/>
@@ -12,8 +12,8 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.GL" uom="m" mask="#0.0" key="ALTGL">
-		<MSPSource class="hud" field="ar"></MSPSource>
+	<KeyFigure desc="Alt.Ground level" uom="m" mask="#0.0" key="ALTGL">
+		<MSPSource class="hud" field="al"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
 		<Groups>
