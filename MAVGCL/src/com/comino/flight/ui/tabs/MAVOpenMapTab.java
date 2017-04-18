@@ -380,13 +380,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-		//		state.getGPOSAvailableProperty().addListener((e,o,n) -> {
-		//			if(n.booleanValue())
-		//				Platform.runLater(() -> {
-		//				   mapfollow.setSelected(false);
-		//				});
-		//			   refreshChart();
-		//		});
+		state.getBaseAvailableProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				Platform.runLater(() -> {
+					updateMap(true);
+				});
+			}
+		});
 
 		return this;
 	}
