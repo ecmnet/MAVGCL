@@ -106,7 +106,7 @@
 				    maxWidth="245"  visible="false"
 					styleClass="widget">
 					<StackPane.margin>
-						<Insets right="10.0" top="32.0" bottom="0.0" />
+						<Insets right="10.0" top="32.0" bottom="6.0" />
 					</StackPane.margin>
 				</TuningWidget>
 
