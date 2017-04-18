@@ -1,0 +1,11 @@
+<?import com.comino.flight.ui.widgets.charts.xy.XYChartWidget?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="164.0" type="javafx.scene.layout.Pane"
+	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<VBox spacing="0">
+			<XYChartWidget fx:id="chart1" layoutX="0" layoutY="2.0" />
+		</VBox>
+	</children>
+</fx:root>
