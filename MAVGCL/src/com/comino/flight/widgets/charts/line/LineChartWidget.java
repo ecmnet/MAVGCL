@@ -828,10 +828,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private  void setXAxisBounds(int lower_pt, int upper_pt) {
-		double tick = timeframe/5;
+		double tick = timeframe/6;
 		if(tick < 1) tick = 1;
 		xAxis.setTickUnit(tick);
-		//xAxis.setMinorTickCount(10);
 		xAxis.setLowerBound(lower_pt * dataService.getCollectorInterval_ms() / 1000F);
 		xAxis.setUpperBound(upper_pt * dataService.getCollectorInterval_ms() / 1000f);
 	}
