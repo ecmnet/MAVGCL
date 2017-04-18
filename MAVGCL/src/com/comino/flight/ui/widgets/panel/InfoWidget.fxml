@@ -9,7 +9,6 @@
 	<children>
 		<ListView fx:id="listview" layoutX="5" layoutY="5" prefWidth="194"
 			prefHeight="120" editable="false">
-
 		</ListView>
 	</children>
 </fx:root>
