@@ -168,6 +168,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public void setCurrent(int index) {
 		if(modelList.size() > index) {
+			if(index < 0)
+				index = 0;
 			current.set(modelList.get(index));
 		}
 	}
