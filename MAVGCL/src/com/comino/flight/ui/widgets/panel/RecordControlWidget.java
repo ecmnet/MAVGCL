@@ -159,6 +159,16 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				state.getLogLoadedProperty().set(false);
 				charts.refreshCharts();
 				info.clear();
+			} else {
+
+				if( state.getRecordingProperty().get()
+					&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+					try {
+						FileHandler.getInstance().autoSave();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 
