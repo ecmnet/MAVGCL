@@ -116,7 +116,6 @@ public class ControlWidget extends WidgetPane  {
 			if(n.booleanValue()) {
 				experimental.setSelected(false);
 				vehiclectl.setSelected(false);
-				details.setSelected(false);
 			} else {
 				if(stateProperties.getConnectedProperty().get()) {
 					details.setSelected(true);
