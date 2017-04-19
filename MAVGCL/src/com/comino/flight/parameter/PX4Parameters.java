@@ -111,6 +111,14 @@ public class PX4Parameters implements IMAVLinkListener {
 			}
 		});
 
+		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				is_reading = false;
+				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
+				parameterList.clear();
+			}
+		});
+
 	}
 
 	public void refreshParameterList(boolean loaded) {
