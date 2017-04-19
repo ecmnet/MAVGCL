@@ -942,6 +942,12 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc= "SVIN accuracy" uom="m" mask="#0.0" key="SVINACC">
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+  </KeyFigure>
+
 	<!-- Estimator data -->
 
 

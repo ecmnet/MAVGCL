@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
@@ -58,6 +59,8 @@ public class UBXRTCM3Base implements Runnable {
 	private static UBXRTCM3Base instance = null;
 	private UBXSerialConnection ubx = null;
 
+	private AnalysisModelService analysisModelService = null;
+
 	private BooleanProperty svin  = new SimpleBooleanProperty();
 	private BooleanProperty valid = new SimpleBooleanProperty();
 
@@ -71,9 +74,9 @@ public class UBXRTCM3Base implements Runnable {
 
 	private IMAVController control;
 
-	public static UBXRTCM3Base getInstance(IMAVController control) {
+	public static UBXRTCM3Base getInstance(IMAVController control, AnalysisModelService analysisModelService) {
 		if(instance == null) {
-			instance = new UBXRTCM3Base(control);
+			instance = new UBXRTCM3Base(control, analysisModelService);
 		}
 		return instance;
 	}
@@ -82,9 +85,10 @@ public class UBXRTCM3Base implements Runnable {
 		return instance;
 	}
 
-	public UBXRTCM3Base(IMAVController control) {
+	public UBXRTCM3Base(IMAVController control, AnalysisModelService analysisModelService) {
 
 		this.control = control;
+		this.analysisModelService = analysisModelService;
 
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
@@ -159,6 +163,7 @@ public class UBXRTCM3Base implements Runnable {
 				mean_acc = meanacc;
 				if((time_svin % 30) == 0 && is_svin)
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+format.format(meanacc)+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			    analysisModelService.getCurrent().setValue("SVINACC", meanacc);
 			}
 
 
