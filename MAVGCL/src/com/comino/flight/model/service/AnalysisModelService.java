@@ -84,6 +84,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private int totalTime_sec = 30;
 	private int collector_interval_us = 50000;
+	private IMAVController control = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -98,6 +99,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private AnalysisModelService(IMAVController control) {
 
+		this.control = control;
 		this.health = new VehicleHealthCheck();
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
@@ -182,6 +184,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public boolean start() {
+
+		if(!control.isConnected()) {
+			return false;
+		}
 
 		if(mode==PRE_COLLECTING) {
 			mode = COLLECTING;
