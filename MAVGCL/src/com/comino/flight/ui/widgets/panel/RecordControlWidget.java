@@ -172,8 +172,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			}
 		});
 
-
-
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
 		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
