@@ -151,7 +151,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.collector_interval_us = interval_us;
 	}
 
-
 	public List<AnalysisDataModel> getModelList() {
 		return modelList;
 	}
