@@ -154,7 +154,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
-				AnalysisModelService.getInstance().clearModelList();
+	//			AnalysisModelService.getInstance().clearModelList();
 				FileHandler.getInstance().clear();
 				state.getLogLoadedProperty().set(false);
 				charts.refreshCharts();
