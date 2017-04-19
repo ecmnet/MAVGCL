@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.charts.line;
+package com.comino.flight.ui.widgets.charts.annotations;
 
 import com.emxsys.chart.extension.XYAnnotation;
 

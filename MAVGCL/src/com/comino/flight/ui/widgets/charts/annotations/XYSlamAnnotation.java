@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.charts.xy;
+package com.comino.flight.ui.widgets.charts.annotations;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.msp.utils.MSPMathUtils;

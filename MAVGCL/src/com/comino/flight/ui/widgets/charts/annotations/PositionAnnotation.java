@@ -31,58 +31,68 @@
  *
  ****************************************************************************/
 
+package com.comino.flight.ui.widgets.charts.annotations;
 
-package com.comino.flight.ui.widgets.charts.line;
+import com.emxsys.chart.extension.XYAnnotation;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import javafx.scene.Node;
+import javafx.scene.chart.ValueAxis;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-import javafx.scene.chart.XYChart;
+public class PositionAnnotation  implements XYAnnotation {
 
-public class XYDataPool {
+	private final int SIZE = 14;
 
-	private static final int INIT_CAPACITY = 500;
+	private  Pane    pane 		= null;
+	private  Label   label 		= null;
+	private float    xpos   	= 0;
+	private float    ypos  	    = 0;
+	private Circle circle       = null;
 
-	private Hashtable<XYChart.Data<Number,Number>,Boolean> locked, unlocked;
+	public PositionAnnotation(float xpos, float ypos, String text, Color color) {
+		this.xpos = xpos;
+		this.ypos = ypos;
 
-	public XYDataPool() {
-		locked   = new Hashtable<XYChart.Data<Number,Number>,Boolean>(0);
-		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
+		this.pane = new Pane();
+		this.pane.setPrefSize(SIZE, SIZE);
+		this.pane.setCache(true);
+	//	this.pane.setBackground(null);
+
+		this.circle = new Circle();
+		this.circle.setCenterX(SIZE/2);
+		this.circle.setCenterY(SIZE/2);
+		this.circle.setRadius(SIZE/2);
+		this.circle.setFill(color);
+
+		this.label = new Label(text);
+		this.label.setLayoutX(4);
+		this.label.setLayoutY(1);
+
+		this.pane.getChildren().addAll(circle, label);
 	}
 
-	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
-	{
-		XYChart.Data<Number,Number> o;
-		if( unlocked.size() > 0 )
-		{
-			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
-			o = e.nextElement();
-			o.setXValue(x);
-			o.setYValue(y);
-			unlocked.remove(o);
-			locked.put(o, true);
-			return(o);
-		}
-		o = new XYChart.Data<Number,Number>(x,y);
-		locked.put( o, true );
-		return( o );
+	public PositionAnnotation(String text, Color color) {
+		this(0,0,text,color.brighter());
 	}
 
-	public synchronized void invalidate(XYChart.Data<Number,Number> o) {
-		if(locked.size()>0) {
-			locked.remove(o);
-			unlocked.put(o, true);
-		}
+	public void setPosition(float xpos, float ypos) {
+		this.xpos = xpos;
+		this.ypos = ypos;
 	}
 
-	public synchronized void invalidateAll() {
-		unlocked.clear();
-		unlocked.putAll(locked);
-		locked.clear();
+	@Override
+	public Node getNode() {
+		return pane;
 	}
 
-	public int getLockedSize() {
-		return locked.size();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
+		pane.setLayoutX(xAxis.getDisplayPosition(xpos)-SIZE/2);
+		pane.setLayoutY(yAxis.getDisplayPosition(ypos)-SIZE/2);
 	}
 
 }

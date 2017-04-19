@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.charts.xy;
+package com.comino.flight.ui.widgets.charts.utils;
 
 import java.util.List;
 

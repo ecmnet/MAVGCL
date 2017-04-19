@@ -30,11 +30,59 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
-package com.comino.flight.ui.widgets.charts.line;
 
-public interface IChartSyncControl {
 
-	public void setZoom(double x0, double x1);
-	public void returnToOriginalZoom();
+package com.comino.flight.ui.widgets.charts.utils;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import javafx.scene.chart.XYChart;
+
+public class XYDataPool {
+
+	private static final int INIT_CAPACITY = 500;
+
+	private Hashtable<XYChart.Data<Number,Number>,Boolean> locked, unlocked;
+
+	public XYDataPool() {
+		locked   = new Hashtable<XYChart.Data<Number,Number>,Boolean>(0);
+		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
+	}
+
+	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
+	{
+		XYChart.Data<Number,Number> o;
+		if( unlocked.size() > 0 )
+		{
+			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
+			o = e.nextElement();
+			o.setXValue(x);
+			o.setYValue(y);
+			unlocked.remove(o);
+			locked.put(o, true);
+			return(o);
+		}
+		o = new XYChart.Data<Number,Number>(x,y);
+		locked.put( o, true );
+		return( o );
+	}
+
+	public synchronized void invalidate(XYChart.Data<Number,Number> o) {
+		if(locked.size()>0) {
+			locked.remove(o);
+			unlocked.put(o, true);
+		}
+	}
+
+	public synchronized void invalidateAll() {
+		unlocked.clear();
+		unlocked.putAll(locked);
+		locked.clear();
+	}
+
+	public int getLockedSize() {
+		return locked.size();
+	}
 
 }

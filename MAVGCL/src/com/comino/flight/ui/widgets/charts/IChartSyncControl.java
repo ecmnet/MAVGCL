@@ -30,69 +30,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
+package com.comino.flight.ui.widgets.charts;
 
-package com.comino.flight.ui.widgets.charts.xy;
+public interface IChartSyncControl {
 
-import com.emxsys.chart.extension.XYAnnotation;
-
-import javafx.scene.Node;
-import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-
-public class PositionAnnotation  implements XYAnnotation {
-
-	private final int SIZE = 14;
-
-	private  Pane    pane 		= null;
-	private  Label   label 		= null;
-	private float    xpos   	= 0;
-	private float    ypos  	    = 0;
-	private Circle circle       = null;
-
-	public PositionAnnotation(float xpos, float ypos, String text, Color color) {
-		this.xpos = xpos;
-		this.ypos = ypos;
-
-		this.pane = new Pane();
-		this.pane.setPrefSize(SIZE, SIZE);
-		this.pane.setCache(true);
-	//	this.pane.setBackground(null);
-
-		this.circle = new Circle();
-		this.circle.setCenterX(SIZE/2);
-		this.circle.setCenterY(SIZE/2);
-		this.circle.setRadius(SIZE/2);
-		this.circle.setFill(color);
-
-		this.label = new Label(text);
-		this.label.setLayoutX(4);
-		this.label.setLayoutY(1);
-
-		this.pane.getChildren().addAll(circle, label);
-	}
-
-	public PositionAnnotation(String text, Color color) {
-		this(0,0,text,color.brighter());
-	}
-
-	public void setPosition(float xpos, float ypos) {
-		this.xpos = xpos;
-		this.ypos = ypos;
-	}
-
-	@Override
-	public Node getNode() {
-		return pane;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-		pane.setLayoutX(xAxis.getDisplayPosition(xpos)-SIZE/2);
-		pane.setLayoutY(yAxis.getDisplayPosition(ypos)-SIZE/2);
-	}
+	public void setZoom(double x0, double x1);
+	public void returnToOriginalZoom();
 
 }
