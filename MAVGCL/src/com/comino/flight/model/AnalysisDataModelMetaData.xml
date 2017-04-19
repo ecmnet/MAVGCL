@@ -299,7 +299,7 @@
 	</KeyFigure>
 
 
-	<KeyFigure desc="SP.Thrust" uom="" mask="#0.00" key="SPTHRUST">
+	<KeyFigure desc="SP.Thrust" uom="%" mask="#0.00" key="SPTHRUST">
 	    <MSPSource class="attitude" field="st"></MSPSource>
 		<PX4Source field="ATSP.ThrustSP"></PX4Source>
 		<ULogSource field="vehicle_attitude_setpoint_0.thrust"/>
