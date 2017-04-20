@@ -53,6 +53,7 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -206,7 +207,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					collector.clearModelList();
 					sendEndNotice();
 					Thread.sleep(100);
-					if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false)) {
+					if(PX4Parameters.getInstance().get("SYS_LOGGER").value==1) {
 						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
 						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
 						converter.doConversion();
