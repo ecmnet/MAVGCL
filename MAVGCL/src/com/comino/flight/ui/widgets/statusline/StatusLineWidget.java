@@ -87,9 +87,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	@FXML
 	private Badge gps;
 
-	@FXML
-	private ProgressBar progress;
-
 	private IMAVController control;
 
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
@@ -228,19 +225,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 				if(filename.isEmpty()) {
 					tms = System.currentTimeMillis();
 					messages.setText(msg.msg);
-				}
-			});
-		});
-
-		progress.setVisible(false);
-
-		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
-			Platform.runLater(() -> {
-				if(nv.floatValue() > -1) {
-					progress.setVisible(true);
-					progress.setProgress(nv.floatValue());
-				} else {
-					progress.setVisible(false);
 				}
 			});
 		});

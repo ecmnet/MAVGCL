@@ -271,6 +271,11 @@
   -fx-shadow-highlight-color: #303030;
 }
 
+.progress-bar > .bar {
+    -fx-background-insets: 0 0 0 0;
+    -fx-padding: 0.13em;
+}
+
 .tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
 	 -fx-background-color:#404040;
 	 -fx-border-style: none;
