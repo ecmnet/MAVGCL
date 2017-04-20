@@ -183,6 +183,7 @@ public class MainApp extends Application  {
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			UBXRTCM3Base.getInstance(control, analysisModelService);
 			PX4Parameters.getInstance(control);
+		
 
 		} catch(Exception e) {
 			e.printStackTrace();
