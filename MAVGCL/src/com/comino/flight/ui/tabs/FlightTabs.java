@@ -158,13 +158,13 @@ public class FlightTabs extends Pane {
 
 		});
 
-		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(control.isConnected()) {
-				this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
-				this.tabpane.getTabs().get(4).setDisable(newvalue.booleanValue());
-				flightControl.getControl().getDetailVisibility().set(false);
-			}
-		});
+//		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
+//			if(control.isConnected()) {
+//				this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
+//				this.tabpane.getTabs().get(4).setDisable(newvalue.booleanValue());
+//				flightControl.getControl().getDetailVisibility().set(false);
+//			}
+//		});
 
 
 		flightControl.getControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
