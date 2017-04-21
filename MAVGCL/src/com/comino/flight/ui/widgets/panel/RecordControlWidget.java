@@ -104,6 +104,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
 
+	private long service_up_tms = 0;
+
 	private ChartControlWidget charts;
 	private InfoWidget info;
 
@@ -111,6 +113,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	public RecordControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
+		this.service_up_tms = System.currentTimeMillis();
 	}
 
 	@FXML
@@ -268,7 +271,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		if(!modetrigger)
+		if(!modetrigger || (System.currentTimeMillis()-this.service_up_tms) < 500)
 			return;
 
 		if(!modelService.isCollecting()) {
