@@ -335,7 +335,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 					LockSupport.parkNanos(2000000000);
 				}
 
-				health.check(model);
+				if(!control.isSimulation())
+					health.check(model);
 
 				current.setValue("MAVGCLPERF", perf);
 				current.setValue("MAVGCLACC", perf2);

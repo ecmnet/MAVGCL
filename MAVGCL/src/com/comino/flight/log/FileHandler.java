@@ -156,6 +156,7 @@ public class FileHandler {
 			}
 		} catch (Exception e) {
 			stage.getScene().setCursor(Cursor.DEFAULT);
+			e.printStackTrace();
 			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
 	}

@@ -166,7 +166,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						return;
 					}
 					MSPLogger.getInstance().writeLocalMsg(
-							"Loading MAVLinkLog ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"Loading Log ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
