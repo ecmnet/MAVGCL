@@ -37,16 +37,22 @@ import java.io.IOException;
 
 import com.comino.flight.observables.StateProperties;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 public class ProgressWidget extends Pane   {
 
 	@FXML
 	private ProgressBar progress;
+
+	private Timeline out = null;
 
 	public ProgressWidget() {
 
@@ -59,24 +65,27 @@ public class ProgressWidget extends Pane   {
 			throw new RuntimeException(exception);
 		}
 
+		out = new Timeline(new KeyFrame(
+				Duration.millis(750),
+				ae -> progress.setVisible(false)));
+
 	}
 
 	@FXML
 	private void initialize() {
-         progress.prefWidthProperty().bind(this.widthProperty());
-         progress.setVisible(false);
+		progress.prefWidthProperty().bind(this.widthProperty());
+		progress.setVisible(false);
 
-         StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
- 			Platform.runLater(() -> {
- 				if(nv.floatValue() > -1) {
- 					progress.setVisible(true);
- 					progress.setProgress(nv.floatValue());
- 				} else {
- 					progress.setVisible(false);
- 				}
- 			});
- 		});
+		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
+			Platform.runLater(() -> {
+				if(nv.floatValue() > -1) {
+					progress.setVisible(true);
+					progress.setProgress(nv.floatValue());
+				} else {
+					out.play();
+				}
+			});
+		});
 	}
-
 
 }
