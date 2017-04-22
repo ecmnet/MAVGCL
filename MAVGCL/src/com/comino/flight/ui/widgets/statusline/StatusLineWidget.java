@@ -50,6 +50,8 @@ import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -63,6 +65,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusChangedListener  {
 
@@ -98,6 +101,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	private long tms;
 
 	private AnimationTimer task;
+	private Timeline out = null;
 
 	private DataModel model;
 
@@ -118,7 +122,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>500) {
-
+                    tms = System.currentTimeMillis();
 					if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
 						gps.setMode(Badge.MODE_ON);
 						gps.setText("SVIN");
@@ -157,11 +161,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 						messages.setMode(Badge.MODE_OFF);
 						driver.setText("no sensor info available");
 						driver.setMode(Badge.MODE_OFF);
-					}
-
-					if((System.currentTimeMillis() - tms)>30000) {
-						messages.clear();
-						tms = System.currentTimeMillis();
 					}
 
 					list = collector.getModelList();
@@ -222,12 +221,17 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
-				if(filename.isEmpty()) {
-					tms = System.currentTimeMillis();
+				if(filename.isEmpty())  {
+					out.stop();
 					messages.setText(msg.msg);
+					out.play();
 				}
 			});
 		});
+
+		out = new Timeline(new KeyFrame(
+				Duration.millis(5000),
+				ae -> messages.clear()));
 
 		task.start();
 	}
