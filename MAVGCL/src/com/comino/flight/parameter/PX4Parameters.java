@@ -39,6 +39,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
@@ -49,6 +51,7 @@ import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -73,6 +76,8 @@ public class PX4Parameters implements IMAVLinkListener {
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
 	private boolean is_reading = false;
+
+	private ScheduledFuture timeout = null;
 
 	public static PX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
@@ -133,6 +138,13 @@ public class PX4Parameters implements IMAVLinkListener {
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 			is_reading = true;
+			timeout = ExecutorService.get().schedule(() -> {
+				stateProperties.getParamLoadedProperty().set(false);
+				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
+				MSPLogger.getInstance().writeLocalMsg("Timeout reading parameters",
+						MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				is_reading = false;
+			}, 20, TimeUnit.SECONDS);
 		}
 	}
 
@@ -169,6 +181,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			  stateProperties.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
+				timeout.cancel(true);
 				stateProperties.getParamLoadedProperty().set(true);
 				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
