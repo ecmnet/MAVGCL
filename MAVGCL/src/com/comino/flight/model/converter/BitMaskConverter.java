@@ -56,10 +56,4 @@ public class BitMaskConverter extends SourceConverter {
 		super();
 	}
 
-
-	@Override
-	public float convert(AnalysisDataModel md) {
-		return 0;
-	}
-
 }

@@ -151,7 +151,7 @@ public class KeyFigureMetaData {
 			value = (float)(Float)o;
 
 		if(source.converter != null)
-			return source.converter.convert(value);
+			return source.converter.convert(data, value);
 		return value;
 	}
 

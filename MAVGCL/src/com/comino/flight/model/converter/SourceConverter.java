@@ -33,6 +33,8 @@
 
 package com.comino.flight.model.converter;
 
+import java.util.Map;
+
 import com.comino.flight.model.AnalysisDataModel;
 
 public abstract class SourceConverter {
@@ -41,9 +43,17 @@ public abstract class SourceConverter {
 
 	public abstract void setParameter(String kfname,String[] params);
 
-	public abstract float convert(float val);
+	public  float convert(float val) {
+		return 0;
+	}
 
-	public abstract float convert(AnalysisDataModel data);
+	public float convert(AnalysisDataModel data) {
+		return 0;
+	}
+
+	public float convert(Map<String,Object> ulogdata, float val) {
+		return convert(val);
+	}
 
 
 }
