@@ -24,7 +24,7 @@ import me.drton.jmavlib.log.FormatErrorException;
 /**
  * User: ton Date: 03.06.13 Time: 14:18
  */
-public class ULogReader extends BinaryLogReader implements IUlogParser {
+public class ULogReader extends BinaryLogReader  {
     static final byte MESSAGE_TYPE_FORMAT = (byte) 'F';
     static final byte MESSAGE_TYPE_DATA = (byte) 'D';
     static final byte MESSAGE_TYPE_INFO = (byte) 'I';

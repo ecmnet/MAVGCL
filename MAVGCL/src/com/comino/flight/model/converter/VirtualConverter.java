@@ -62,10 +62,6 @@ public class VirtualConverter extends SourceConverter {
 		t.start();
 	}
 
-	@Override
-	public float convert(float val) {
-		return 0;
-	}
 
 	public VirtualConverter() {
 		super();

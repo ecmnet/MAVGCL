@@ -56,7 +56,7 @@ import me.drton.jmavlib.log.ulog.MessageInfo;
 import me.drton.jmavlib.log.ulog.MessageLog;
 import me.drton.jmavlib.log.ulog.MessageParameter;
 
-public class UlogMAVLinkParser implements IUlogParser {
+public class UlogMAVLinkParser  {
 
 	private static final byte MESSAGE_TYPE_FORMAT = (byte) 'F';
 	private static final byte MESSAGE_TYPE_DATA = (byte) 'D';
