@@ -362,7 +362,7 @@ velocity</short_desc>
     </parameter>
   </group>
   <group name="Camera trigger">
-    <parameter default="2" name="TRIG_INTERFACE" type="INT32">
+    <parameter default="4" name="TRIG_INTERFACE" type="INT32">
       <short_desc>Camera trigger Interface</short_desc>
       <long_desc>Selects the trigger interface</long_desc>
       <reboot_required>true</reboot_required>
@@ -370,7 +370,8 @@ velocity</short_desc>
       <values>
         <value code="1">GPIO</value>
         <value code="3">MAVLink (forward via MAV_CMD_IMAGE_START_CAPTURE)</value>
-        <value code="2">Seagull MAP2 (PWM)</value>
+        <value code="2">Seagull MAP2 (over PWM)</value>
+        <value code="4">Generic PWM (IR trigger, servo)</value>
       </values>
     </parameter>
     <parameter default="40.0" name="TRIG_INTERVAL" type="FLOAT">
@@ -393,7 +394,7 @@ velocity</short_desc>
         <value code="0">Active low</value>
       </values>
     </parameter>
-    <parameter default="0.5" name="TRIG_ACT_TIME" type="FLOAT">
+    <parameter default="40.0" name="TRIG_ACT_TIME" type="FLOAT">
       <short_desc>Camera trigger activation time</short_desc>
       <long_desc>This parameter sets the time the trigger needs to pulled high or low.</long_desc>
       <min>0.1</min>
@@ -622,13 +623,8 @@ velocity</short_desc>
     <parameter default="1" name="COM_ARM_WO_GPS" type="INT32">
       <short_desc>Allow arming without GPS</short_desc>
       <long_desc>The default allows to arm the vehicle without GPS signal.</long_desc>
-      <min>0</min>
-      <max>1</max>
+      <boolean />
       <scope>modules/commander</scope>
-      <values>
-        <value code="1">Allow arming without GPS</value>
-        <value code="0">Don't allow arming without GPS</value>
-      </values>
     </parameter>
     <parameter default="0" name="COM_ARM_SWISBTN" type="INT32">
       <short_desc>Arm switch is only a button</short_desc>
@@ -733,6 +729,17 @@ See COM_OBL_ACT and COM_OBL_RC_ACT to configure action</short_desc>
       <unit>rad/s</unit>
       <decimal>3</decimal>
       <increment>0.01</increment>
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0" name="COM_RC_OVERRIDE" type="INT32">
+      <short_desc>Enable RC stick override of auto modes</short_desc>
+      <boolean />
+      <scope>modules/commander</scope>
+    </parameter>
+    <parameter default="0" name="COM_ARM_MIS_REQ" type="INT32">
+      <short_desc>Require valid mission to arm</short_desc>
+      <long_desc>The default allows to arm the vehicle without a valid mission.</long_desc>
+      <boolean />
       <scope>modules/commander</scope>
     </parameter>
   </group>
@@ -2029,6 +2036,52 @@ value will determine the minimum airspeed which will still be fused</short_desc>
       <scope>modules/fw_pos_control_l1</scope>
     </parameter>
   </group>
+  <group name="FW Launch detection">
+    <parameter default="0" name="LAUN_ALL_ON" type="INT32">
+      <short_desc>Launch detection</short_desc>
+      <boolean />
+      <scope>lib/launchdetection</scope>
+    </parameter>
+    <parameter default="30.0" name="LAUN_CAT_A" type="FLOAT">
+      <short_desc>Catapult accelerometer threshold</short_desc>
+      <long_desc>LAUN_CAT_A for LAUN_CAT_T serves as threshold to trigger launch detection.</long_desc>
+      <min>0</min>
+      <unit>m/s/s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>lib/launchdetection</scope>
+    </parameter>
+    <parameter default="0.05" name="LAUN_CAT_T" type="FLOAT">
+      <short_desc>Catapult time threshold</short_desc>
+      <long_desc>LAUN_CAT_A for LAUN_CAT_T serves as threshold to trigger launch detection.</long_desc>
+      <min>0.0</min>
+      <max>5.0</max>
+      <unit>s</unit>
+      <decimal>2</decimal>
+      <increment>0.05</increment>
+      <scope>lib/launchdetection</scope>
+    </parameter>
+    <parameter default="0.0" name="LAUN_CAT_MDEL" type="FLOAT">
+      <short_desc>Motor delay</short_desc>
+      <long_desc>Delay between starting attitude control and powering up the throttle (giving throttle control to the controller) Before this timespan is up the throttle will be set to FW_THR_IDLE, set to 0 to deactivate</long_desc>
+      <min>0.0</min>
+      <max>10.0</max>
+      <unit>s</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>lib/launchdetection</scope>
+    </parameter>
+    <parameter default="30.0" name="LAUN_CAT_PMAX" type="FLOAT">
+      <short_desc>Maximum pitch before the throttle is powered up (during motor delay phase)</short_desc>
+      <long_desc>This is an extra limit for the maximum pitch which is imposed in the phase before the throttle turns on. This allows to limit the maximum pitch angle during a bungee launch (make the launch less steep).</long_desc>
+      <min>0.0</min>
+      <max>45.0</max>
+      <unit>deg</unit>
+      <decimal>1</decimal>
+      <increment>0.5</increment>
+      <scope>lib/launchdetection</scope>
+    </parameter>
+  </group>
   <group name="FW TECS">
     <parameter default="15.0" name="FW_AIRSPD_TRIM" type="FLOAT">
       <short_desc>Cruise Airspeed</short_desc>
@@ -2495,52 +2548,6 @@ but also ignore less noise</short_desc>
       <scope>modules/land_detector</scope>
     </parameter>
   </group>
-  <group name="Launch detection">
-    <parameter default="0" name="LAUN_ALL_ON" type="INT32">
-      <short_desc>Launch detection</short_desc>
-      <boolean />
-      <scope>lib/launchdetection</scope>
-    </parameter>
-    <parameter default="30.0" name="LAUN_CAT_A" type="FLOAT">
-      <short_desc>Catapult accelerometer threshold</short_desc>
-      <long_desc>LAUN_CAT_A for LAUN_CAT_T serves as threshold to trigger launch detection.</long_desc>
-      <min>0</min>
-      <unit>m/s/s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>lib/launchdetection</scope>
-    </parameter>
-    <parameter default="0.05" name="LAUN_CAT_T" type="FLOAT">
-      <short_desc>Catapult time threshold</short_desc>
-      <long_desc>LAUN_CAT_A for LAUN_CAT_T serves as threshold to trigger launch detection.</long_desc>
-      <min>0.0</min>
-      <max>5.0</max>
-      <unit>s</unit>
-      <decimal>2</decimal>
-      <increment>0.05</increment>
-      <scope>lib/launchdetection</scope>
-    </parameter>
-    <parameter default="0.0" name="LAUN_CAT_MDEL" type="FLOAT">
-      <short_desc>Motor delay</short_desc>
-      <long_desc>Delay between starting attitude control and powering up the throttle (giving throttle control to the controller) Before this timespan is up the throttle will be set to FW_THR_IDLE, set to 0 to deactivate</long_desc>
-      <min>0.0</min>
-      <max>10.0</max>
-      <unit>s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>lib/launchdetection</scope>
-    </parameter>
-    <parameter default="30.0" name="LAUN_CAT_PMAX" type="FLOAT">
-      <short_desc>Maximum pitch before the throttle is powered up (during motor delay phase)</short_desc>
-      <long_desc>This is an extra limit for the maximum pitch which is imposed in the phase before the throttle turns on. This allows to limit the maximum pitch angle during a bungee launch (make the launch less steep).</long_desc>
-      <min>0.0</min>
-      <max>45.0</max>
-      <unit>deg</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-      <scope>lib/launchdetection</scope>
-    </parameter>
-  </group>
   <group name="Local Position Estimator">
     <parameter default="0.0" name="LPE_FLW_OFF_Z" type="FLOAT">
       <short_desc>Optical flow z offset from center</short_desc>
@@ -2982,7 +2989,7 @@ by initializing the estimator to the LPE_LAT/LON parameters when global informat
     </parameter>
     <parameter default="900" name="MIS_DIST_1WP" type="FLOAT">
       <short_desc>Maximal horizontal distance from home to first waypoint</short_desc>
-      <long_desc>Failsafe check to prevent running mission stored from previous flight at a new takeoff location. Set a value of zero or less to disable. The mission will not be started if the current waypoint is more distant than MIS_DIS_1WP from the current position.</long_desc>
+      <long_desc>Failsafe check to prevent running mission stored from previous flight at a new takeoff location. Set a value of zero or less to disable. The mission will not be started if the current waypoint is more distant than MIS_DIS_1WP from the home position.</long_desc>
       <min>0</min>
       <max>1000</max>
       <unit>m</unit>
@@ -3123,19 +3130,21 @@ by initializing the estimator to the LPE_LAT/LON parameters when global informat
     </parameter>
   </group>
   <group name="Mount">
-    <parameter default="0" name="MNT_MODE_IN" type="INT32">
+    <parameter default="-1" name="MNT_MODE_IN" type="INT32">
       <short_desc>Mount input mode
 RC uses the AUX input channels (see MNT_MAN_* parameters),
 MAVLINK_ROI uses the MAV_CMD_DO_SET_ROI Mavlink message, and MAVLINK_DO_MOUNT the
 MAV_CMD_DO_MOUNT_CONFIGURE and MAV_CMD_DO_MOUNT_CONTROL messages to control a mount</short_desc>
-      <min>0</min>
+      <min>-1</min>
       <max>3</max>
+      <reboot_required>true</reboot_required>
       <scope>drivers/vmount</scope>
       <values>
         <value code="1">RC</value>
-        <value code="0">DISABLE</value>
+        <value code="0">AUTO</value>
         <value code="3">MAVLINK_DO_MOUNT</value>
         <value code="2">MAVLINK_ROI</value>
+        <value code="-1">DISABLED</value>
       </values>
     </parameter>
     <parameter default="0" name="MNT_MODE_OUT" type="INT32">
@@ -3173,12 +3182,6 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <min>-1.0</min>
       <max>1.0</max>
       <decimal>3</decimal>
-      <scope>drivers/vmount</scope>
-    </parameter>
-    <parameter default="0" name="MNT_MAN_CONTROL" type="INT32">
-      <short_desc>This enables the mount to be manually controlled when no ROI is set</short_desc>
-      <long_desc>If set to 1, the mount will be controlled by the AUX channels below when no ROI is set.</long_desc>
-      <boolean />
       <scope>drivers/vmount</scope>
     </parameter>
     <parameter default="0" name="MNT_MAN_ROLL" type="INT32">
@@ -3757,16 +3760,8 @@ if required for the gimbal (only in AUX output mode)</short_desc>
       <decimal>2</decimal>
       <scope>modules/mc_pos_control</scope>
     </parameter>
-    <parameter default="35.0" name="MPC_MAN_R_MAX" type="FLOAT">
-      <short_desc>Max manual roll</short_desc>
-      <min>0.0</min>
-      <max>90.0</max>
-      <unit>deg</unit>
-      <decimal>1</decimal>
-      <scope>modules/mc_pos_control</scope>
-    </parameter>
-    <parameter default="35.0" name="MPC_MAN_P_MAX" type="FLOAT">
-      <short_desc>Max manual pitch</short_desc>
+    <parameter default="35.0" name="MPC_MAN_TILT_MAX" type="FLOAT">
+      <short_desc>Maximal tilt angle in manual or altitude mode</short_desc>
       <min>0.0</min>
       <max>90.0</max>
       <unit>deg</unit>
