@@ -56,7 +56,7 @@ import me.drton.jmavlib.log.ulog.MessageInfo;
 import me.drton.jmavlib.log.ulog.MessageLog;
 import me.drton.jmavlib.log.ulog.MessageParameter;
 
-public class UlogMAVLinkParser {
+public class UlogMAVLinkParser implements IUlogParser {
 
 	private static final byte MESSAGE_TYPE_FORMAT = (byte) 'F';
 	private static final byte MESSAGE_TYPE_DATA = (byte) 'D';
@@ -377,7 +377,7 @@ public class UlogMAVLinkParser {
 
 	private void applyMsgAsName(Map<String, Object> update, MessageData msg, String msg_name) {
 		final ArrayList<FieldFormat> fields = msg.format.fields;
-		for (int i = 0; i < fields.size(); i++) {
+		for (int i = 0; i < fields.size(); i++)  {
 			FieldFormat field = fields.get(i);
 			if (field.isArray()) {
 				for (int j = 0; j < field.size; j++) {
@@ -385,7 +385,6 @@ public class UlogMAVLinkParser {
 				}
 			} else {
 				update.put(msg_name + "." + field.name, msg.get(i));
-				//	System.out.println(msg_name+"-"+field.name+":"+msg.get(i));
 			}
 		}
 	}
