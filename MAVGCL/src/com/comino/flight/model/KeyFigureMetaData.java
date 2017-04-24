@@ -86,6 +86,7 @@ public class KeyFigureMetaData {
 
 	public void setSource(int type,String field, String class_c, String[] params) {
 		setSource(type,null,field,class_c,params);
+
 	}
 
 	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
@@ -113,10 +114,12 @@ public class KeyFigureMetaData {
 	public Float getValueFromMSPModel(DataModel m) throws Exception {
 		float value = Float.NaN;
 		DataSource source = sources.get(MSP_SOURCE);
-		Field mclass_field = m.getClass().getField(source.class_n);
-		Object mclass = mclass_field.get(m);
-		Field mfield_field = mclass.getClass().getField(source.field);
-		value = new Double(mfield_field.getDouble(mclass)).floatValue();
+		if(source.field!=null) {
+			Field mclass_field = m.getClass().getField(source.class_n);
+			Object mclass = mclass_field.get(m);
+			Field mfield_field = mclass.getClass().getField(source.field);
+			value = new Double(mfield_field.getDouble(mclass)).floatValue();
+		}
 		if(source.converter != null)
 			return source.converter.convert(value);
 		return value;
@@ -126,30 +129,32 @@ public class KeyFigureMetaData {
 	public Float getValueFromPX4Model(Map<String,Object> data) {
 		float value = Float.NaN;;
 		DataSource source = sources.get(PX4_SOURCE);
-		Object o = data.get(source.field);
-		if(o instanceof Integer)
-			value = (float)(Integer)o;
-		else if(o instanceof Double)
-			value = ((Double)o).floatValue();
-		else
-			value = (float)(Float)o;
-
+		if(source.field!=null) {
+			Object o = data.get(source.field);
+			if(o instanceof Integer)
+				value = (float)(Integer)o;
+			else if(o instanceof Double)
+				value = ((Double)o).floatValue();
+			else
+				value = (float)(Float)o;
+		}
 		if(source.converter != null)
 			return source.converter.convert(value);
 		return value;
 	}
 
 	public Float getValueFromULogModel(Map<String,Object> data) {
-		float value = Float.NaN;;
+		float value = Float.NaN;
 		DataSource source = sources.get(ULG_SOURCE);
-		Object o = data.get(source.field);
-		if(o instanceof Integer)
-			value = (float)(Integer)o;
-		else if(o instanceof Double)
-			value = ((Double)o).floatValue();
-		else
-			value = (float)(Float)o;
-
+		if(source.field!=null) {
+			Object o = data.get(source.field);
+			if(o instanceof Integer)
+				value = (float)(Integer)o;
+			else if(o instanceof Double)
+				value = ((Double)o).floatValue();
+			else
+				value = (float)(Float)o;
+		}
 		if(source.converter != null)
 			return source.converter.convert(data, value);
 		return value;
@@ -158,9 +163,11 @@ public class KeyFigureMetaData {
 	public Float getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
 		float value = Float.NaN;;
 		DataSource source = sources.get(MAV_SOURCE);
-		if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
-		    Field mfield_field = mavlink_message.getClass().getField(source.field);
-		    value = new Double(mfield_field.getDouble(mavlink_message)).floatValue();
+		if(source.field!=null) {
+			if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
+				Field mfield_field = mavlink_message.getClass().getField(source.field);
+				value = new Double(mfield_field.getDouble(mavlink_message)).floatValue();
+			}
 			if(source.converter != null)
 				return source.converter.convert(value);
 			return value;

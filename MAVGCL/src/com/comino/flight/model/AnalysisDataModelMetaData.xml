@@ -211,7 +211,9 @@
 	<KeyFigure desc="Roll" uom="rad" mask="#0.00" key="ROLL">
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.q[1]"></ULogSource>
+		<ULogSource>
+		  <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="0"/>
+		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
 			<Group>Telemetry</Group>
@@ -222,7 +224,9 @@
 	<KeyFigure desc="Pitch" uom="rad" mask="#0.00" key="PITCH">
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<PX4Source field="ATT.Pitch"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.q[2]"></ULogSource>
+		<ULogSource>
+		   <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="1"/>
+		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
 			<Group>Telemetry</Group>
@@ -233,7 +237,9 @@
 	<KeyFigure desc="Yaw" uom="rad" mask="#0.00" key="YAW">
 		<MSPSource class="attitude" field="y"></MSPSource>
 		<PX4Source field="ATT.Yaw"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.q[3]"></ULogSource>
+		<ULogSource>
+		 <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="2"/>
+		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
 			<Group>Telemetry</Group>
