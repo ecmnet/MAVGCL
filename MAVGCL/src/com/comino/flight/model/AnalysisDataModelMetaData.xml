@@ -212,7 +212,7 @@
 		<MSPSource class="attitude" field="r"></MSPSource>
 		<PX4Source  field="ATT.Roll"></PX4Source>
 		<ULogSource>
-		  <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="0"/>
+		  <Converter class="QuaternionConverter" p1="vehicle_attitude_0.q" p2="0"/>
 		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -225,7 +225,7 @@
 		<MSPSource class="attitude" field="p"></MSPSource>
 		<PX4Source field="ATT.Pitch"></PX4Source>
 		<ULogSource>
-		   <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="1"/>
+		   <Converter class="QuaternionConverter" p1="vehicle_attitude_0.q" p2="1"/>
 		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>
@@ -238,7 +238,7 @@
 		<MSPSource class="attitude" field="y"></MSPSource>
 		<PX4Source field="ATT.Yaw"></PX4Source>
 		<ULogSource>
-		 <Converter class="QuarternionConverter" p1="vehicle_attitude_0.q" p2="2"/>
+		 <Converter class="QuaternionConverter" p1="vehicle_attitude_0.q" p2="2"/>
 		</ULogSource>
 		<Groups>
 			<Group>Attitude</Group>

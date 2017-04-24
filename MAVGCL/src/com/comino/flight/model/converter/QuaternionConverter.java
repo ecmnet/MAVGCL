@@ -37,7 +37,7 @@ import java.util.Map;
 
 import com.comino.msp.utils.MSPMathUtils;
 
-public class QuarternionConverter extends SourceConverter {
+public class QuaternionConverter extends SourceConverter {
 
 	private String ulogKeyFigure = null;
 	private int    index;
@@ -48,7 +48,7 @@ public class QuarternionConverter extends SourceConverter {
 		this.index = Integer.parseInt(params[1]);
 	}
 
-	public QuarternionConverter() {
+	public QuaternionConverter() {
 		super();
 	}
 
