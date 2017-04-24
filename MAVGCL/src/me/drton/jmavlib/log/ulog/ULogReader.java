@@ -16,13 +16,15 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
+import com.comino.jmavlib.extensions.IUlogParser;
+
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
 
 /**
  * User: ton Date: 03.06.13 Time: 14:18
  */
-public class ULogReader extends BinaryLogReader {
+public class ULogReader extends BinaryLogReader implements IUlogParser {
     static final byte MESSAGE_TYPE_FORMAT = (byte) 'F';
     static final byte MESSAGE_TYPE_DATA = (byte) 'D';
     static final byte MESSAGE_TYPE_INFO = (byte) 'I';
@@ -105,6 +107,10 @@ public class ULogReader extends BinaryLogReader {
         parameterUpdates = new HashMap<String, List<ParamUpdate>>();
         updateStatistics();
     }
+
+    public Map<String, String> getFieldList() {
+		return fieldsList;
+	}
 
     @Override
     public String getFormat() {
@@ -294,6 +300,7 @@ public class ULogReader extends BinaryLogReader {
                         FieldFormat fieldDescr = msgFormat.fields.get(i);
                         if (!fieldDescr.name.contains("_padding") && fieldDescr.name != "timestamp") {
                             for (int mid = 0; mid <= maxInstance; mid++) {
+                            //	System.out.println(msgFormat.name+" "+fieldDescr.name);
                                 if (fieldDescr.isArray()) {
                                     for (int j = 0; j < fieldDescr.size; j++) {
                                         fieldsList.put(msgFormat.name + "_" + mid + "." + fieldDescr.name + "[" + j + "]", fieldDescr.type);
