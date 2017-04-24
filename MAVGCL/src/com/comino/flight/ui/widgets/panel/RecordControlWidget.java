@@ -146,7 +146,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			recording(newvalue, 0);
 		});
 
-		clear.disableProperty().bind(state.getRecordingProperty().or(state.getRecordingAvailableProperty().not()));
+		clear.disableProperty().bind(state.getRecordingProperty()
+				.or(state.getRecordingAvailableProperty().not()
+				.and(state.getLogLoadedProperty().not())));
 		clear.setOnAction((ActionEvent event)-> {
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
