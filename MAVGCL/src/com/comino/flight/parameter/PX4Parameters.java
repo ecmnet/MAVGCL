@@ -77,7 +77,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private boolean is_reading = false;
 
-	private ScheduledFuture timeout = null;
+	private ScheduledFuture<?> timeout = null;
 
 	public static PX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
