@@ -140,6 +140,9 @@ public class FileHandler {
 
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
+
+					state.getLogLoadedProperty().set(false);
+
 					if(file.getName().endsWith("ulg")) {
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
 						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
@@ -154,7 +157,7 @@ public class FileHandler {
 						raw.addListener(new ProgressInputStream.Listener() {
 							@Override
 							public void onProgressChanged(int percentage) {
-								state.getProgressProperty().set(percentage);
+									state.getProgressProperty().set(percentage);
 							}
 						});
 						Reader reader = new BufferedReader(new InputStreamReader(raw));

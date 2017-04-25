@@ -75,13 +75,14 @@ public class ProgressWidget extends Pane   {
 	private void initialize() {
 		progress.prefWidthProperty().bind(this.widthProperty());
 		progress.setVisible(false);
-
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
 			Platform.runLater(() -> {
 				if(nv.floatValue() > -1) {
 					progress.setVisible(true);
 					progress.setProgress(nv.floatValue());
 				} else {
+					if(progress.getProgress()>0.9)
+						progress.setProgress(1);
 					out.play();
 				}
 			});
