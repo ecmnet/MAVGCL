@@ -121,7 +121,8 @@ public class ExperimentalWidget extends WidgetPane   {
 				if(isDisabled() || !isVisible())
 					return;
 				Platform.runLater(() -> {
-					alt_control.setValue(-model.state.l_z * 100f);
+					if(!offboard_enabled.isSelected())
+					 alt_control.setValue(-model.state.l_z * 100f);
 				});
 			}
 
