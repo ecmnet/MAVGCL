@@ -41,8 +41,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
@@ -58,6 +60,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -81,13 +84,17 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private long start = 0;
 	private long time_utc=0;
 
-	private FutureTask<Void> to = null;
+	private ScheduledFuture<?> timeout = null;
 	private StateProperties state = null;
+	private MSPLogger logger;
+	private FileHandler fh;
 
 	public MavlinkLogReader(IMAVController control) {
 		this.control = control;
 		this.control.addMAVLinkListener(this);
 		this.state = StateProperties.getInstance();
+		this.logger = MSPLogger.getInstance();
+		this.fh     = FileHandler.getInstance();
 	}
 
 	public void requestLastLog() {
@@ -98,10 +105,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			e.printStackTrace();
 		}
 
-		to = new FutureTask<Void>(() -> {
-			System.out.println("Timout reading MAVLinkLog");
-			return null;
-		});
 		log_bytes_read = 0; log_bytes_total = 0;
 		start = System.currentTimeMillis();
 		isCollecting.set(true);
@@ -111,14 +114,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		control.sendMAVLinkMessage(msg);
 		state.getProgressProperty().set(0);
 		state.getLogLoadedProperty().set(false);
-		FileHandler.getInstance().setName("Log loading..");
-		MSPLogger.getInstance().writeLocalMsg("Request MAVLinkLog");
-		Executors.newSingleThreadScheduledExecutor().schedule(to,10,TimeUnit.SECONDS);
+		fh.setName("Log loading..");
+		logger.writeLocalMsg("[mgc] Request MAVLinkLog");
+		setTimeout();
 	}
 
 	public void cancel() {
 
-		if(!to.cancel(true))
+		if(!timeout.cancel(true))
 			System.out.println("LOG Worker thread cancelling failed");
 
 		if(!isCollecting.get())
@@ -129,7 +132,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		} catch (Exception e) {  }
 		sendEndNotice();
 		state.getLogLoadedProperty().set(false);
-		MSPLogger.getInstance().writeLocalMsg("Loading MAVLinkLog cancelled");
+		logger.writeLocalMsg("[mgc] Loading MAVLinkLog cancelled");
 	}
 
 	@Override
@@ -143,6 +146,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;
+			setTimeout();
 
 			if(last_log_id > -1) {
 				if(entry.id != last_log_id) {
@@ -154,19 +158,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					control.sendMAVLinkMessage(msg);
 				}
 				else {
-					to.cancel(true);
+					timeout.cancel(true);
 					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
 					if(log_bytes_total==0) {
-						MSPLogger.getInstance().writeLocalMsg("Loading MAVLinkLog failed: Timeout");
+						logger.writeLocalMsg("[mgc] Loading log failed: Timeout");
 						cancel();
 						return;
 					}
 					MSPLogger.getInstance().writeLocalMsg(
-							"Loading Log ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"[mgc] Loading Log ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
@@ -183,7 +187,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				return;
 
 			msg_log_data data = (msg_log_data) o;
-
 			for(int i=0;i< data.count;i++) {
 				try {
 					out.write(data.data[i]);
@@ -197,7 +200,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				tms = System.currentTimeMillis();
 			}
 
-			if(log_bytes_read >= (log_bytes_total-90)) {
+			if(log_bytes_read >= (log_bytes_total-240)) {
 				try {
 					System.out.println();
 					out.flush();
@@ -206,6 +209,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				try {
 					collector.clearModelList();
 					sendEndNotice();
+					timeout.cancel(true);
 					Thread.sleep(100);
 					if(PX4Parameters.getInstance().get("SYS_LOGGER").value==1) {
 						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
@@ -219,17 +223,18 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						reader.close();
 					}
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
-					MSPLogger.getInstance().writeLocalMsg("Reading log from device finished ("+speed+" kbtyes/sec)");
+					logger.writeLocalMsg("[mgc] Reading log finished ("+speed+" kbtyes/sec)");
 					state.getLogLoadedProperty().set(true);
-					FileHandler.getInstance().setName("Log-"+last_log_id+"-"+time_utc);
+					fh.setName("Log-"+last_log_id+"-"+time_utc);
 				} catch (Exception e) {
 					sendEndNotice();
 					state.getLogLoadedProperty().set(false);
-					MSPLogger.getInstance().writeLocalMsg("Loading log failed: "+e.getMessage());
+					logger.writeLocalMsg("[mgc] Loading log failed: "+e.getMessage());
 					e.printStackTrace();
 				}
 				state.getLogLoadedProperty().set(true);
-			}
+			} else
+				setTimeout();
 		}
 	}
 
@@ -241,8 +246,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return isCollecting;
 	}
 
+
+	private void setTimeout() {
+		if(timeout!=null)
+			timeout.cancel(true);
+		timeout = ExecutorService.get().schedule(() -> {
+			sendEndNotice();
+			logger.writeLocalMsg("[mgc] Loading log failed: Timeout");
+			state.getLogLoadedProperty().set(false);
+		}, 2, TimeUnit.SECONDS);
+	}
+
 	private void sendEndNotice() {
-		FileHandler.getInstance().setName("");
+		fh.setName("");
 		isCollecting.set(false);
 		state.getProgressProperty().set(-1);
 		msg_log_request_end msg = new msg_log_request_end(255,1);
