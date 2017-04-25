@@ -183,7 +183,7 @@ public class MainApp extends Application  {
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			UBXRTCM3Base.getInstance(control, analysisModelService);
 			PX4Parameters.getInstance(control);
-		
+
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -271,6 +271,7 @@ public class MainApp extends Application  {
 		m_import.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				AnalysisModelService.getInstance().stop();
 				FileHandler.getInstance().fileImport();
 				controlpanel.getChartControl().refreshCharts();
 			}
@@ -289,6 +290,8 @@ public class MainApp extends Application  {
 					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
 					return;
 				}
+
+				AnalysisModelService.getInstance().stop();
 
 				r_px4log.setText("Cancel import from device...");
 
@@ -309,6 +312,7 @@ public class MainApp extends Application  {
 		});
 
 		m_export.setOnAction(event -> {
+			AnalysisModelService.getInstance().stop();
 			if(AnalysisModelService.getInstance().getModelList().size()>0)
 				FileHandler.getInstance().fileExport();
 		});
