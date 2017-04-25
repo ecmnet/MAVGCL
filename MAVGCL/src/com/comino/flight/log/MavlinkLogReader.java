@@ -169,7 +169,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						cancel();
 						return;
 					}
-					MSPLogger.getInstance().writeLocalMsg(
+					logger.writeLocalMsg(
 							"[mgc] Loading Log ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
@@ -187,6 +187,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				return;
 
 			msg_log_data data = (msg_log_data) o;
+		//	System.out.println(data.id+":"+log_bytes_total+"."+data.ofs);
 			for(int i=0;i< data.count;i++) {
 				try {
 					out.write(data.data[i]);
@@ -200,7 +201,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				tms = System.currentTimeMillis();
 			}
 
-			if(log_bytes_read >= (log_bytes_total-240)) {
+			if(data.count==0) {
 				try {
 					System.out.println();
 					out.flush();
@@ -251,6 +252,9 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		if(timeout!=null)
 			timeout.cancel(true);
 		timeout = ExecutorService.get().schedule(() -> {
+			try {
+				out.close();
+			} catch (IOException e) { }
 			sendEndNotice();
 			logger.writeLocalMsg("[mgc] Loading log failed: Timeout");
 			state.getLogLoadedProperty().set(false);

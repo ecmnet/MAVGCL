@@ -42,6 +42,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.msp.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;
@@ -53,11 +54,13 @@ public class UlogtoModelConverter {
 	private List<AnalysisDataModel> list;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	private StateProperties state;
 
 
 	public UlogtoModelConverter(ULogReader reader, List<AnalysisDataModel> list) {
 		this.reader = reader;
 		this.list = list;
+		this.state = StateProperties.getInstance();
 	}
 
 
@@ -76,6 +79,7 @@ public class UlogtoModelConverter {
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data) - reader.getStartMicroseconds();
 				if(tms > tms_slot) {
+					state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
 					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;
 					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()*1000;
@@ -94,7 +98,7 @@ public class UlogtoModelConverter {
 				}
 			});
 
-
+			state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {

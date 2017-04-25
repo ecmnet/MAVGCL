@@ -42,6 +42,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
@@ -55,6 +56,7 @@ public class PX4toModelConverter {
 	private long tms_total_us =0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	private StateProperties state;
 
 
 	public PX4toModelConverter(BinaryLogReader reader, List<AnalysisDataModel> list) {
@@ -64,6 +66,7 @@ public class PX4toModelConverter {
 		System.out.println("Conversion of "+reader.getSizeMicroseconds()/1000+"ms");
 		tms_start_us = reader.getStartMicroseconds();
 		tms_total_us = reader.getSizeMicroseconds();
+		this.state = StateProperties.getInstance();
 	}
 
 
@@ -79,6 +82,7 @@ public class PX4toModelConverter {
 		try {
 
 			while(tms < reader.getSizeMicroseconds()) {
+				state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
 				tms_tmp = reader.readUpdate(data)-tms_start_us;
 				if(tms_tmp > tms_slot && tms_tmp < tms_total_us) {
 					tms = tms_tmp;
@@ -89,6 +93,7 @@ public class PX4toModelConverter {
 					list.add(model.clone());
 				}
 			}
+			state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {

@@ -33,10 +33,13 @@
 
 package com.comino.flight.log;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -60,10 +63,12 @@ import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.utils.ExecutorService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -128,42 +133,49 @@ public class FileHandler {
 				new ExtensionFilter("PX4Log Files", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
-		try {
-			if(file!=null) {
-				stage.getScene().setCursor(Cursor.WAIT);
-				if(file.getName().endsWith("ulg")) {
-					ULogReader reader = new ULogReader(file.getAbsolutePath());
-					PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-					converter = new UlogtoModelConverter(reader,modelService.getModelList());
-					converter.doConversion();
+
+		if(file!=null) {
+
+			new Thread(new Task<Void>() {
+				@Override protected Void call() throws Exception {
+					if(file.getName().endsWith("ulg")) {
+						ULogReader reader = new ULogReader(file.getAbsolutePath());
+						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+						converter = new UlogtoModelConverter(reader,modelService.getModelList());
+						converter.doConversion();
+					}
+
+					if(file.getName().endsWith("mgc")) {
+						Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
+
+						StateProperties state = StateProperties.getInstance();
+						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
+						raw.addListener(new ProgressInputStream.Listener() {
+						    @Override
+						    public void onProgressChanged(int percentage) {
+						    	state.getProgressProperty().set(percentage);
+						    }
+						});
+						Reader reader = new BufferedReader(new InputStreamReader(raw));
+						Gson gson = new GsonBuilder().create();
+						ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
+						reader.close();
+						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
+						modelService.setModelList(modelList);
+					}
+
+					if(file.getName().endsWith("px4log")) {
+						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+						converter.doConversion();
+					}
+					name = file.getName();
 					StateProperties.getInstance().getLogLoadedProperty().set(true);
+					return null;
 				}
 
-				if(file.getName().endsWith("mgc")) {
-
-					Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
-					Reader reader = new FileReader(file);
-					Gson gson = new GsonBuilder().create();
-					ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
-					reader.close();
-					modelService.setModelList(modelList);
-					StateProperties.getInstance().getLogLoadedProperty().set(true);
-				}
-
-				if(file.getName().endsWith("px4log")) {
-					PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
-					PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-					PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
-					converter.doConversion();
-					StateProperties.getInstance().getLogLoadedProperty().set(true);
-				}
-				stage.getScene().setCursor(Cursor.DEFAULT);
-				name = file.getName();
-			}
-		} catch (Exception e) {
-			stage.getScene().setCursor(Cursor.DEFAULT);
-			e.printStackTrace();
-			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
+			}).start();
 		}
 	}
 
