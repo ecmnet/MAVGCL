@@ -132,6 +132,8 @@ public class FileHandler {
 				new ExtensionFilter("ULog Files", "*.ulg"),
 				new ExtensionFilter("PX4Log Files", "*.px4log"));
 
+		final StateProperties state = StateProperties.getInstance();
+
 		File file = fileChooser.showOpenDialog(stage);
 
 		if(file!=null) {
@@ -148,13 +150,12 @@ public class FileHandler {
 					if(file.getName().endsWith("mgc")) {
 						Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 
-						StateProperties state = StateProperties.getInstance();
 						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
 						raw.addListener(new ProgressInputStream.Listener() {
-						    @Override
-						    public void onProgressChanged(int percentage) {
-						    	state.getProgressProperty().set(percentage);
-						    }
+							@Override
+							public void onProgressChanged(int percentage) {
+								state.getProgressProperty().set(percentage);
+							}
 						});
 						Reader reader = new BufferedReader(new InputStreamReader(raw));
 						Gson gson = new GsonBuilder().create();
@@ -171,10 +172,9 @@ public class FileHandler {
 						converter.doConversion();
 					}
 					name = file.getName();
-					StateProperties.getInstance().getLogLoadedProperty().set(true);
+					state.getLogLoadedProperty().set(true);
 					return null;
 				}
-
 			}).start();
 		}
 	}
@@ -190,41 +190,45 @@ public class FileHandler {
 
 		fileChooser.setInitialFileName(name);
 		File file = fileChooser.showSaveDialog(stage);
-		try {
-			if(file!=null) {
-				Writer writer = new FileWriter(file);
-				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-				stage.getScene().setCursor(Cursor.WAIT);
-				gson.toJson(modelService.getModelList(), writer);
-				writer.close();
-				stage.getScene().setCursor(Cursor.DEFAULT);
-				StateProperties.getInstance().getLogLoadedProperty().set(true);
-				name = file.getName();
+		if(file!=null) {
+			new Thread(new Task<Void>() {
+				@Override protected Void call() throws Exception {
+					Writer writer = new FileWriter(file);
+					Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+					stage.getScene().setCursor(Cursor.WAIT);
+					gson.toJson(modelService.getModelList(), writer);
+					writer.close();
+					stage.getScene().setCursor(Cursor.DEFAULT);
+					StateProperties.getInstance().getLogLoadedProperty().set(true);
+					name = file.getName();
+					return null;
+				}
+			}).start();
 
-			}
-		} catch (IOException e) {
-			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 		}
-
 	}
 
 
 	public void autoSave() throws IOException {
 
-		stage.getScene().setCursor(Cursor.WAIT);
-		name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
-		String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
-		File f = new File(path+"/"+name);
-		MSPLogger.getInstance().writeLocalMsg("[msgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
-		if(f.exists())
-			f.delete();
-		f.createNewFile();
-		Writer writer = new FileWriter(f);
-		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-		stage.getScene().setCursor(Cursor.WAIT);
-		gson.toJson(modelService.getModelList(), writer);
-		writer.close();
-		stage.getScene().setCursor(Cursor.DEFAULT);
+		new Thread(new Task<Void>() {
+			@Override protected Void call() throws Exception {
+				stage.getScene().setCursor(Cursor.WAIT);
+				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
+				File f = new File(path+"/"+name);
+				MSPLogger.getInstance().writeLocalMsg("[msgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				if(f.exists())
+					f.delete();
+				f.createNewFile();
+				Writer writer = new FileWriter(f);
+				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+				gson.toJson(modelService.getModelList(), writer);
+				writer.close();
+				stage.getScene().setCursor(Cursor.DEFAULT);
+				return null;
+			}
+		}).start();
 	}
 
 
