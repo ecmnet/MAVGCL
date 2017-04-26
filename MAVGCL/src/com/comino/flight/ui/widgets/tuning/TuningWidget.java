@@ -205,7 +205,7 @@ public class TuningWidget extends WidgetPane  {
 			}
 		});
 
-		this.disableProperty().bind(state.getLogLoadedProperty().and(state.getConnectedProperty().not()));
+		this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
 
 	}
 
