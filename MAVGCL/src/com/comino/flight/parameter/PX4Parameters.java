@@ -54,6 +54,7 @@ import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -179,7 +180,7 @@ public class PX4Parameters implements IMAVLinkListener {
 			property.setValue(attributes);
 
 			if(is_reading)
-			  stateProperties.getProgressProperty().set((float)msg.param_index/msg.param_count);
+				stateProperties.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
 				timeout.cancel(true);
@@ -214,9 +215,11 @@ public class PX4Parameters implements IMAVLinkListener {
 			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
 		});
-		stateProperties.getParamLoadedProperty().set(true);
-		for(IPX4ParameterRefresh l : refreshListeners)
-			l.refresh();
+		Platform.runLater(() -> {
+			stateProperties.getParamLoadedProperty().set(true);
+			for(IPX4ParameterRefresh l : refreshListeners)
+				l.refresh();
+		});
 	}
 
 	public void addRefreshListener(IPX4ParameterRefresh listener) {
