@@ -132,12 +132,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		predelay.getSelectionModel().select(0);
 		predelay.setDisable(true);
 
-		state.getConnectedProperty().addListener((l,o,n) -> {
-			recording.setDisable(!n.booleanValue());
-			if(!n.booleanValue())
-				recording(false,0);
-		});
-
+		recording.disableProperty().bind(state.getConnectedProperty().not());
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
 		});
@@ -168,6 +163,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 				if( state.getRecordingProperty().get()
 					&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+					recording(false,0);
 					try {
 						FileHandler.getInstance().autoSave();
 					} catch (IOException e) {
