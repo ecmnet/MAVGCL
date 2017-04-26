@@ -286,6 +286,8 @@ public class TuningWidget extends WidgetPane  {
 					});
 
 					if(att.bitMask!=null && att.bitMask.size()>0) {
+						editor.setStyle("-fx-text-fill: #B0F0B0; -fx-control-inner-background: #606060;");
+						att.decimals = 0;
 						editor.setCursor(Cursor.DEFAULT);
 						((TextField)editor).setEditable(false);
 						editor.setOnMouseClicked((event) -> {
@@ -402,6 +404,9 @@ public class TuningWidget extends WidgetPane  {
 			Control e = p;
 			if(p instanceof Spinner)
 				e = ((Spinner<Double>)p).getEditor();
+			if(att.bitMask!=null && att.bitMask.size()>0) {
+				return;
+			}
 			if(v==att.default_val)
 				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
 			else
