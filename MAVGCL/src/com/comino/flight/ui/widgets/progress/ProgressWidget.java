@@ -71,6 +71,8 @@ public class ProgressWidget extends Pane   {
 
 	}
 
+	// smoothing: https://pivii.co/blog/smooth-progress-bars/
+
 	@FXML
 	private void initialize() {
 		progress.prefWidthProperty().bind(this.widthProperty());
