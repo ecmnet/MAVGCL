@@ -147,8 +147,8 @@ public class TuningWidget extends WidgetPane  {
 			params.refreshParameterList(false);
 		});
 		reload.disableProperty().bind(state.getArmedProperty()
-				                  .or(state.getRecordingProperty())
-				                  .or(state.getConnectedProperty().not()));
+				.or(state.getRecordingProperty())
+				.or(state.getConnectedProperty().not()));
 
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
@@ -181,12 +181,6 @@ public class TuningWidget extends WidgetPane  {
 		});
 	}
 
-	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
-		ParamItem item = new ParamItem(p,editable);
-		return item;
-	}
-
-
 	public void setup(IMAVController control) {
 		super.setup(control);
 
@@ -194,6 +188,7 @@ public class TuningWidget extends WidgetPane  {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				prefs.put(MAVPreferences.TUNING_GROUP, newValue);
+				grid.setVisible(false);
 				grid.getChildren().clear();
 				int i = 0;
 				for(ParameterAttributes p : params.getList()) {
@@ -209,12 +204,21 @@ public class TuningWidget extends WidgetPane  {
 						grid.addRow(i++, name,item.editor,unit);
 					}
 				}
+				Platform.runLater(() -> {
+					grid.setVisible(true);
+				});
 			}
 		});
 
 		this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
 
 	}
+
+	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
+		ParamItem item = new ParamItem(p,editable);
+		return item;
+	}
+
 
 	private class ParamItem {
 
