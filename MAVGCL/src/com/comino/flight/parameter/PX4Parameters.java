@@ -34,6 +34,7 @@
 package com.comino.flight.parameter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -237,7 +238,12 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private List<ParameterAttributes> asSortedList(Map<String,ParameterAttributes> c) {
 		List<ParameterAttributes> list = new ArrayList<ParameterAttributes>(c.values());
-		java.util.Collections.sort(list);
+		java.util.Collections.sort(list, new Comparator<ParameterAttributes>() {
+			@Override
+			public int compare(ParameterAttributes o1, ParameterAttributes o2) {
+				return o1.description.compareTo(o2.description);
+			}
+		});
 		return list;
 	}
 

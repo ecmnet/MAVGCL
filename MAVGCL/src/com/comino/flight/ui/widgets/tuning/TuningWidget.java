@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.tuning;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
@@ -128,7 +129,7 @@ public class TuningWidget extends WidgetPane  {
 			}
 		});
 
-		groups.getItems().add("None");
+		groups.getItems().add("-None-");
 		groups.getSelectionModel().clearAndSelect(0);
 
 		scroll.setBorder(Border.EMPTY);
@@ -148,7 +149,9 @@ public class TuningWidget extends WidgetPane  {
 			groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
-		reload.disableProperty().bind(state.getArmedProperty().or(state.getRecordingProperty()));
+		reload.disableProperty().bind(state.getArmedProperty()
+				                  .or(state.getRecordingProperty())
+				                  .or(state.getConnectedProperty().not()));
 
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {
 			@Override
@@ -156,8 +159,17 @@ public class TuningWidget extends WidgetPane  {
 				if(newValue!=null) {
 					ParameterAttributes p = (ParameterAttributes)newValue;
 					synchronized(this) {
-						if(!groups.getItems().contains(p.group_name) && p !=null)
+						if(!groups.getItems().contains(p.group_name) && p !=null) {
 							groups.getItems().add(p.group_name);
+							groups.getItems().sort(new Comparator<String>() {
+								@Override
+								public int compare(String o1, String o2) {
+									return o1.compareTo(o2);
+								}
+
+							});
+						}
+
 
 
 						if(timeout!=null && !timeout.isDone()) {
