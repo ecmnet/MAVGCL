@@ -219,9 +219,9 @@ public class DetailsWidget extends WidgetPane  {
 					value = l2;
 					p.addRow(row, label,l2);
 				} else {
-					Label l2 = new Label("-"); l2.setPrefWidth(55); l2.setAlignment(Pos.CENTER_RIGHT);
+					Label l2 = new Label("-"); l2.setPrefWidth(58); l2.setAlignment(Pos.CENTER_RIGHT);
 					value = l2;
-					Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(50);
+					Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(48);
 					p.addRow(row, label,l2,l3);
 				}
 				grid.add(p, 0, row);
