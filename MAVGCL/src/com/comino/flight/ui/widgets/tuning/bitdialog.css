@@ -1,17 +1,21 @@
 .bitDialog {
     -fx-font-size: 8.0pt;
-    -fx-background-color: #303030;
+    -fx-background-color: #404040;
     -fx-accent: #000000;
+    -fx-border-color: #909090;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-border-insets: 0,0,0,0 ;
  }
 
 .bitDialog > *.button-bar > *.container{
-     -fx-background-color: #303030;
+     -fx-background-color: #404040;
 }
 .bitDialog > *.label.content{
    -fx-font-size: 10.0px;
 }
 .bitDialog:header *.header-panel{
-     -fx-background-color: #303030;
+     -fx-background-color: #404040;
 }
 .bitDialog:header *.header-panel *.label{
     -fx-text-fill: #F0F0F0;
@@ -42,11 +46,11 @@
 }
 
 .check-box *.box {
-  -fx-background-color:#404040;
+  -fx-background-color:#505050;
 }
 
 .check-box {
-	-fx-background-color: #303030;
+	-fx-background-color: #404040;
 	-fx-text-fill: #F0F0F0;
 }
 
