@@ -100,7 +100,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisModelService(IMAVController control) {
 
 		this.control = control;
-		this.health = new VehicleHealthCheck();
+		this.health = new VehicleHealthCheck(control);
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 		this.listener = new ArrayList<ICollectorRecordingListener>();
