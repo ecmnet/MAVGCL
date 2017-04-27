@@ -220,7 +220,7 @@ public class FileHandler {
 				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				File f = new File(path+"/"+name);
-				MSPLogger.getInstance().writeLocalMsg("[msgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				if(f.exists())
 					f.delete();
 				f.createNewFile();
