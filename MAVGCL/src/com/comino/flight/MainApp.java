@@ -88,13 +88,6 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application  {
 
-	private static IMAVController control = null;
-
-	private static FlightControlPanel controlpanel = null;
-
-	private Stage primaryStage;
-	private BorderPane rootLayout;
-
 	@FXML
 	private MenuItem m_close;
 
@@ -117,18 +110,22 @@ public class MainApp extends Application  {
 	private MenuItem m_about;
 
 	@FXML
+	private MenuItem m_log;
+
+	@FXML
 	private MenuBar menubar;
 
 
-	public MainApp() {
-		super();
-	}
+	private static String log_filename;
+	private static IMAVController control = null;
+	private static FlightControlPanel controlpanel = null;
 
+	private Stage primaryStage;
+	private BorderPane rootLayout;
 
 
 	@Override
 	public void init() throws Exception {
-		super.init();
 		try {
 
 			FXMLLoadHelper.setApplication(this);
@@ -174,7 +171,7 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 			}
 
-			control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
+			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
 
 
@@ -220,10 +217,6 @@ public class MainApp extends Application  {
 		System.exit(0);
 	}
 
-
-	public static void main(String[] args) {
-		launch(args);
-	}
 
 	public void initRootLayout() {
 		try {
@@ -275,7 +268,12 @@ public class MainApp extends Application  {
 				FileHandler.getInstance().fileImport();
 				controlpanel.getChartControl().refreshCharts();
 			}
+		});
 
+		m_log.setOnAction(event -> {
+			try {
+				Runtime.getRuntime().exec("open "+log_filename);
+			} catch (IOException e) { }
 		});
 
 

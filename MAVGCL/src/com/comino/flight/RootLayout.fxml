@@ -49,6 +49,10 @@
 							</accelerator>
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_log" mnemonicParsing="false"
+							text="Show local log...">
+						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_dump" mnemonicParsing="false"
 							text="Dump key figures to console">
 						</MenuItem>
