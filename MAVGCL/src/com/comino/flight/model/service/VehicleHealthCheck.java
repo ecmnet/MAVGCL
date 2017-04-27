@@ -36,8 +36,6 @@ package com.comino.flight.model.service;
 import java.text.DecimalFormat;
 
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.lquac.msg_play_tune;
-
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
@@ -182,12 +180,10 @@ public class VehicleHealthCheck {
 				healthProperty.set(healthOk);
 				if(!healthOk) {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] "+reason, MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
-					msg_play_tune msg = new msg_play_tune(255,1);
-					msg.tune = "M".toCharArray();
-					control.sendMAVLinkMessage(msg);
 				}
-				else
+				else {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
 
 			}
 		}
