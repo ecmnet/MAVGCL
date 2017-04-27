@@ -171,7 +171,7 @@ public class PX4Parameters implements IMAVLinkListener {
 
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
-				attributes = new ParameterAttributes(msg.getParam_id(),"(DefaultGroup)");
+				attributes = new ParameterAttributes(msg.getParam_id(),"Default Group");
 			attributes.value = ParamUtils.paramToVal(msg.param_type, msg.param_value);
 			attributes.vtype = msg.param_type;
 
@@ -244,7 +244,7 @@ public class PX4Parameters implements IMAVLinkListener {
 		java.util.Collections.sort(list, new Comparator<ParameterAttributes>() {
 			@Override
 			public int compare(ParameterAttributes o1, ParameterAttributes o2) {
-				return o1.description.compareTo(o2.description);
+				return o1.name.compareTo(o2.name);
 			}
 		});
 		return list;
