@@ -73,7 +73,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 
-	private FloatProperty progress = new SimpleFloatProperty(-1);
+	private FloatProperty progress 							= new SimpleFloatProperty(-1);
 
 	private IMAVController control;
 
