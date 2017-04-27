@@ -83,6 +83,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -268,6 +269,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		zoom.setY(0);
 		zoom.setHeight(1000);
 
+		Label zoom_label = new Label();
+		zoom_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #9090D0; -fx-padding:3;");
+		zoom_label.setVisible(false);
+		chartArea.getChildren().add(zoom_label);
+
 		linechart.setOnMousePressed(mouseEvent -> {
 			if(dataService.isCollecting() && !isPaused)
 				return;
@@ -289,6 +295,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			state.getCurrentUpToDate().set(true);
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
+			zoom_label.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 
@@ -317,9 +324,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
 					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
-						int x0 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
-						int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()
-								                                              -xAxis.getLayoutX()).doubleValue());
+						double xt0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
+						double dtx = xAxis.getValueForDisplay(mouseEvent.getX() -xAxis.getLayoutX()).doubleValue() - xt0;
+						int x0 = dataService.calculateXIndexByTime(xt0);
+						int x1 = dataService.calculateXIndexByTime(xt0+dtx);
+						if((mouseEvent.getX() - x)> 30) {
+							zoom_label.setVisible(true);
+							zoom_label.setText(String.format("%#.1fs", dtx));
+							zoom_label.setLayoutX(x-xAxis.getLayoutX());
+						} else
+							zoom_label.setVisible(false);
+
+
 						setDashboardData(dashboard1,type1,x0,x1);
 						setDashboardData(dashboard2,type2,x0,x1);
 						setDashboardData(dashboard3,type3,x0,x1);
