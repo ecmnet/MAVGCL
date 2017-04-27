@@ -180,6 +180,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private long dashboard_update_tms = 0;
 	private long last_update_ms = 0;
+	private String last_message = null;
 
 	public LineChartWidget() {
 
@@ -703,6 +704,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(dataService.getModelList().size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
+			last_message = null;
 
 			refreshRequest = false;
 			pool.invalidateAll();
@@ -755,13 +757,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
-						&& display_annotations) {
+						&& display_annotations && !m.msg.msg.equals(last_message)) {
+
 					if((current_x_pt - last_annotation_pos) > 150 || yoffset > 12)
 						yoffset=0;
 
 					linechart.getAnnotations().add(new LineMessageAnnotation(this,dt_sec,yoffset++, m.msg,
 							(resolution_ms<300) && annotations.isSelected()),
 							Layer.FOREGROUND);
+					last_message = m.msg.msg;
 					last_annotation_pos = current_x_pt;
 				}
 

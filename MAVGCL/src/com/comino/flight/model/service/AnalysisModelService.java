@@ -319,7 +319,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class CombinedConverter implements Runnable {
 
-		long tms = 0; long tms_start =0; long wait = 0; int old_mode=STOPPED;
+		int old_msg_hash = 0; long tms_start =0; long wait = 0; int old_mode=STOPPED;
 		float perf = 0; float perf2=0; AnalysisDataModel m = null;
 
 		@Override
@@ -353,10 +353,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 					}
-					if(model.msg != null && model.msg.tms > tms) {
+					if(model.msg != null && model.msg.msg.hashCode()!=old_msg_hash) {
 						current.msg = model.msg;
 						record.msg  = model.msg;
-						tms = model.msg.tms+10;
+						old_msg_hash = model.msg.msg.hashCode();
 					} else {
 						current.msg = null; record.msg = null;
 					}
