@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 27/04/2017
+**Development Status:** Last updated 28/04/2017
 
 V0.6xx notes:
 
