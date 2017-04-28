@@ -39,6 +39,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -46,8 +47,11 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -99,6 +103,7 @@ public class FileHandler {
 	private IMAVController control;
 
 	private Map<String,String> ulogFields = null;
+	private List<String> presetfiles = null;
 
 
 	public static FileHandler getInstance() {
@@ -114,8 +119,35 @@ public class FileHandler {
 	private FileHandler(Stage stage, IMAVController control) {
 		super();
 		this.stage = stage;
+		this.presetfiles = new ArrayList<String>();
 		this.userPrefs = MAVPreferences.getInstance();
 		this.control = control;
+
+		readPresetFiles();
+
+	}
+
+	private void readPresetFiles() {
+		presetfiles.clear();
+		File file = new File(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
+		if(file.isDirectory()) {
+			File[] list = file.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.contains(".mgs");
+				}
+			});
+			Arrays.sort(list, new Comparator<File>() {
+				@Override
+				public int compare(File o1, File o2) {
+					return (int)(o2.lastModified() - o1.lastModified());
+				}
+			});
+			System.out.println(list.length+" presets found");
+			for(int i=0;i<list.length && i< 5;i++)
+				presetfiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
+		}
+
 	}
 
 	public String getName() {
@@ -132,6 +164,10 @@ public class FileHandler {
 
 	public String getBasePath() {
 		return System.getProperty("user.home")+BASEPATH;
+	}
+
+	public List<String> getPresetList() {
+		return presetfiles;
 	}
 
 	public void fileImport() {
@@ -271,7 +307,7 @@ public class FileHandler {
 		File file = null;
 
 		if(name!=null) {
-			file = new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/"+name+".mgs");
+			file = new File(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home"))+"/"+name+".mgs");
 		} else {
 			FileChooser fileChooser = getFileDialog("Open key figure preset to...",
 					userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")),

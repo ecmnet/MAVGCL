@@ -276,11 +276,12 @@ public class ChartControlWidget extends WidgetPane  {
 
 	private void buildKeyfigureModelSelection() {
 
-
-		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-
-		keyfigures.getItems().add("- Select presets -");
+		keyfigures.getItems().add("Select presets...");
 		keyfigures.getItems().add("Open...");
+
+		for(String p : FileHandler.getInstance().getPresetList())
+			keyfigures.getItems().add(p);
+
 		keyfigures.setEditable(true);
 		keyfigures.getEditor().setEditable(false);
 		keyfigures.getEditor().setCursor(Cursor.DEFAULT);
@@ -299,6 +300,15 @@ public class ChartControlWidget extends WidgetPane  {
 				//				break;
 			case 1:
 				pr = FileHandler.getInstance().presetsImport(null);
+				if(pr != null) {
+					this.presets.clear(); this.presets.putAll(pr);
+					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
+						charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+					}
+				}
+				break;
+			default:
+				pr = FileHandler.getInstance().presetsImport(keyfigures.getItems().get(nv.intValue()));
 				if(pr != null) {
 					this.presets.clear(); this.presets.putAll(pr);
 					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
