@@ -500,6 +500,14 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Throttle" uom="%" mask="#0.0" key="THROT">
+		<MSPSource class="hud" field="th"></MSPSource>
+		<Groups>
+			<Group>Telemetry</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- Servo output -->
 
 	<KeyFigure desc="Output 1" uom="" mask="#0.0" key="SERVO1">
