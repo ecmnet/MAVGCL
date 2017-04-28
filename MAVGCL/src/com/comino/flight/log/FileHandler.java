@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -93,6 +94,8 @@ public class FileHandler {
 
 	private AnalysisModelService modelService = AnalysisModelService.getInstance();
 	private IMAVController control;
+
+	private Map<String,String> ulogFields = null;
 
 
 	public static FileHandler getInstance() {
@@ -150,6 +153,7 @@ public class FileHandler {
 						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());
 						converter.doConversion();
+						ulogFields = reader.getFieldList();
 					}
 
 					if(file.getName().endsWith("mgc")) {
@@ -236,6 +240,26 @@ public class FileHandler {
 				return null;
 			}
 		}).start();
+	}
+
+
+	public void dumpUlogFields() {
+		if(ulogFields==null)
+			return;
+		System.out.println("=======DUMP ULOG Fields===================");
+		List<String> sortedKeys=new ArrayList<String>(ulogFields.keySet());
+		Collections.sort(sortedKeys);
+		sortedKeys.forEach((e) -> {
+			System.out.print(e);
+//			AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
+//				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
+//					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
+//						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
+//					}
+//				}
+//			});
+			System.out.println();
+		});
 	}
 
 

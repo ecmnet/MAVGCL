@@ -236,22 +236,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		});
 	}
 
-	public void dumpUlogFields() {
-		List<String> sortedKeys=new ArrayList<String>(ulogger.getFieldList().keySet());
-		Collections.sort(sortedKeys);
-		sortedKeys.forEach((e) -> {
-			System.out.print(e);
-			meta.getKeyFigures().forEach((k) -> {
-				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
-					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
-						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
-					}
-				}
-			});
-			System.out.println();
-		});
-	}
-
 	public void clearModelList() {
 		mode = STOPPED;
 		current.clear();

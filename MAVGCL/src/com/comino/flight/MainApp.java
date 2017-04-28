@@ -320,8 +320,9 @@ public class MainApp extends Application  {
 			new PreferencesDialog(control).show();
 		});
 
+	//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
 		m_dump.setOnAction(event -> {
-			AnalysisModelService.getInstance().dumpUlogFields();
+			FileHandler.getInstance().dumpUlogFields();
 		});
 
 		m_about.setOnAction(event -> {
