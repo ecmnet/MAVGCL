@@ -37,10 +37,14 @@ package com.comino.flight.ui.widgets.panel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.file.FileHandler;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -48,8 +52,11 @@ import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
@@ -71,19 +78,23 @@ public class ChartControlWidget extends WidgetPane  {
 	@FXML
 	private Slider scroll;
 
+	@FXML
+	private Button save;
+
 	private IMAVController control;
-	private List<IChartControl> charts = null;
+	private Map<Integer,IChartControl> charts = null;
 
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
 
 	private long scroll_tms = 0;
 
+	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
 	public ChartControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
-		charts = new ArrayList<IChartControl>();
+		charts = new HashMap<Integer,IChartControl>();
 	}
 
 	@FXML
@@ -99,9 +110,9 @@ public class ChartControlWidget extends WidgetPane  {
 			totalTime_sec  = newValue.intValue();
 			modelService.setTotalTimeSec(totalTime_sec);
 
-			for(IChartControl chart : charts) {
-				if(chart.getTimeFrameProperty()!=null)
-					chart.getTimeFrameProperty().set(newValue.intValue());
+			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+				if(chart.getValue().getTimeFrameProperty()!=null)
+					chart.getValue().getTimeFrameProperty().set(newValue.intValue());
 			}
 
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms()
@@ -116,24 +127,24 @@ public class ChartControlWidget extends WidgetPane  {
 		scroll.setDisable(true);
 
 		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
-			keyfigures.setDisable(n.booleanValue());
+			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
 		});
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if((System.currentTimeMillis() - scroll_tms)>50) {
-				charts.forEach((chart) -> {
-					if(chart.getScrollProperty()!=null && chart.isVisible())
-						chart.getScrollProperty().set(1f-newvalue.floatValue()/1000000);
+				charts.entrySet().forEach((chart) -> {
+					if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
+						chart.getValue().getScrollProperty().set(1f-newvalue.floatValue()/1000000);
 				});
 				scroll_tms = System.currentTimeMillis();
 			}
 		});
 
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
-			charts.forEach((chart) -> {
-				if(chart.getIsScrollingProperty()!=null)
-					chart.getIsScrollingProperty().set(newvalue.booleanValue());
+			charts.entrySet().forEach((chart) -> {
+				if(chart.getValue().getIsScrollingProperty()!=null)
+					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
 			});
 		});
 
@@ -168,13 +179,19 @@ public class ChartControlWidget extends WidgetPane  {
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
 					scroll.setValue(scroll.getValue() == 1000000 ? 0 : 1000000);
-					for(IChartControl chart : charts) {
-						if(chart.getScrollProperty()!=null)
-							chart.getScrollProperty().set((float)(1f-scroll.getValue()/1000000));
+					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+						if(chart.getValue().getScrollProperty()!=null)
+							chart.getValue().getScrollProperty().set((float)(1f-scroll.getValue()/1000000));
 					}
 				}
 			}
 		});
+
+		save.setOnAction((ActionEvent event)-> {
+			saveKeyFigureSelection();
+			event.consume();
+		});
+
 	}
 
 
@@ -184,73 +201,113 @@ public class ChartControlWidget extends WidgetPane  {
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
-		for(IChartControl chart : charts) {
-			if(chart.getTimeFrameProperty()!=null)
-				chart.getTimeFrameProperty().set(totalTime_sec);
-			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(1);
+		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+			if(chart.getValue().getTimeFrameProperty()!=null)
+				chart.getValue().getTimeFrameProperty().set(totalTime_sec);
+			if(chart.getValue().getScrollProperty()!=null)
+				chart.getValue().getScrollProperty().set(1);
 		}
 	}
 
 
-	public void addChart(IChartControl chart) {
-		charts.add(chart);
+	public void addChart(int id,IChartControl chart) {
+		charts.put(id,chart);
 	}
 
 	public void refreshCharts() {
 
-		for(IChartControl chart : charts) {
-			if(chart.getScrollProperty()!=null)
-				chart.getScrollProperty().set(1);
-			chart.refreshChart();
+		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+			if(chart.getValue().getScrollProperty()!=null)
+				chart.getValue().getScrollProperty().set(1);
+			chart.getValue().refreshChart();
 		}
 		scroll.setValue(0);
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
 
+	//	private void buildKeyfigureModelSelection() {
+	//
+	//		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	//
+	//		keyfigures.getItems().add("Built-In model definition");
+	//		keyfigures.getItems().add("Select custom model (xml)...");
+	//		keyfigures.getEditor().setText(meta.getDescription());
+	//		keyfigures.setEditable(true);
+	//		keyfigures.getEditor().setEditable(false);
+	//
+	//
+	//		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
+	//			switch(nv.intValue()) {
+	//			case 0: meta.loadModelMetaData(null);
+	//			break;
+	//			case 1:
+	//				try {
+	//					FileChooser metaFile = new FileChooser();
+	//					metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
+	//
+	//					File f = metaFile.showOpenDialog(ChartControlWidget.this.getScene().getWindow());
+	//					if(f!=null)
+	//						meta.loadModelMetaData(new FileInputStream(f));
+	//
+	//					Platform.runLater(() -> {
+	//						keyfigures.getSelectionModel().clearSelection();
+	//						keyfigures.getEditor().setText(meta.getDescription());
+	//					});
+	//				} catch(Exception e) {
+	//					Platform.runLater(() -> {
+	//						keyfigures.getSelectionModel().select(0);
+	//					});
+	//				}
+	//				break;
+	//			}
+	//			clearData();
+	//		});
+	//	}
+
+	private void saveKeyFigureSelection() {
+		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+			presets.put(chart.getKey(), chart.getValue().getKeyFigureSelection());
+		}
+		FileHandler.getInstance().presetsExport(presets);
+	}
+
+
 	private void buildKeyfigureModelSelection() {
 
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
-		keyfigures.getItems().add("Built-In model definition");
-		keyfigures.getItems().add("Select custom model (xml)...");
-		keyfigures.getEditor().setText(meta.getDescription());
+		keyfigures.getItems().add("- Select presets -");
+		keyfigures.getItems().add("Open...");
 		keyfigures.setEditable(true);
 		keyfigures.getEditor().setEditable(false);
-
+		keyfigures.getEditor().setCursor(Cursor.DEFAULT);
+		keyfigures.getSelectionModel().select(0);
 
 		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
 			switch(nv.intValue()) {
-			case 0: meta.loadModelMetaData(null);
-			break;
+			case 0:
+				break;
+//			case 1:
+//				for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
+//					charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+//				}
+//				break;
 			case 1:
-				try {
-					FileChooser metaFile = new FileChooser();
-					metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
-
-					File f = metaFile.showOpenDialog(ChartControlWidget.this.getScene().getWindow());
-					if(f!=null)
-						meta.loadModelMetaData(new FileInputStream(f));
-
-					Platform.runLater(() -> {
-						keyfigures.getSelectionModel().clearSelection();
-						keyfigures.getEditor().setText(meta.getDescription());
-					});
-				} catch(Exception e) {
-					Platform.runLater(() -> {
-						keyfigures.getSelectionModel().select(0);
-					});
+				Map<Integer,KeyFigurePreset> pr = FileHandler.getInstance().presetsImport();
+				if(pr != null) {
+					this.presets.clear(); this.presets.putAll(pr);
+					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
+						charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+					}
 				}
 				break;
+			default:
 			}
-			clearData();
+			Platform.runLater(() -> {
+				keyfigures.getSelectionModel().select(0);
+			});
 		});
-	}
-
-	private void clearData() {
-		FileHandler.getInstance().clear();
-		modelService.clearModelList();
 
 	}
 

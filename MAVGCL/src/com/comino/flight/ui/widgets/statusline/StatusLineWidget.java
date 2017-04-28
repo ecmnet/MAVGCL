@@ -37,7 +37,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.comino.flight.base.UBXRTCM3Base;
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.file.FileHandler;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -210,7 +211,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	}
 
 	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
-		chartControlWidget.addChart(this);
+		chartControlWidget.addChart(99,this);
 		this.control = control;
 		this.model = control.getCurrentModel();
 		this.control.addStatusChangeListener(this);
@@ -268,5 +269,14 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	public void refreshChart() {
 
 	}
+
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+
+	}
+
+	public KeyFigurePreset getKeyFigureSelection() {
+		return null;
+	}
+
 
 }

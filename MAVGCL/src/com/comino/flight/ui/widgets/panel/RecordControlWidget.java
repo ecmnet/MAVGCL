@@ -37,7 +37,7 @@ package com.comino.flight.ui.widgets.panel;
 import java.io.IOException;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.file.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;

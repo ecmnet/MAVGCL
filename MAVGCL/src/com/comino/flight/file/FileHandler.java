@@ -31,11 +31,12 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.log;
+package com.comino.flight.file;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,6 +54,8 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+import com.comino.flight.log.ProgressInputStream;
+import com.comino.flight.log.ProgressInputStream.Listener;
 import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
@@ -133,9 +136,9 @@ public class FileHandler {
 
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
-				new ExtensionFilter("MAVGCL Model Files", "*.mgc"),
-				new ExtensionFilter("ULog Files", "*.ulg"),
-				new ExtensionFilter("PX4Log Files", "*.px4log"));
+				new ExtensionFilter("MAVGCL model files", "*.mgc"),
+				new ExtensionFilter("ULog files", "*.ulg"),
+				new ExtensionFilter("PX4Log files", "*.px4log"));
 
 		final StateProperties state = StateProperties.getInstance();
 
@@ -192,7 +195,7 @@ public class FileHandler {
 	public void fileExport() {
 
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
-				new ExtensionFilter("MAVGCL Model Files", "*.mgc"));
+				new ExtensionFilter("MAVGCL model files", "*.mgc"));
 
 		if(name.length()<2)
 			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
@@ -242,6 +245,60 @@ public class FileHandler {
 		}).start();
 	}
 
+	public void presetsExport(Map<Integer,KeyFigurePreset> preset) {
+		FileChooser fileChooser = getFileDialog("Save key figure preset to...",
+				new ExtensionFilter("MAVGCL preset files", "*.mgs"));
+		File file = fileChooser.showSaveDialog(stage);
+		if(file!=null) {
+			new Thread(new Task<Void>() {
+				@Override protected Void call() throws Exception {
+					Writer writer = new FileWriter(file);
+					stage.getScene().setCursor(Cursor.WAIT);
+					Gson gson = new GsonBuilder().create();
+					gson.toJson(preset, writer);
+					writer.close();
+					stage.getScene().setCursor(Cursor.DEFAULT);
+					return null;
+				}
+			}).start();
+		}
+	}
+
+	public Map<Integer,KeyFigurePreset> presetsImport() {
+		Type listType = new TypeToken<Map<Integer,KeyFigurePreset>>() {}.getType();
+		FileChooser fileChooser = getFileDialog("Open key figure preset to...",
+				new ExtensionFilter("MAVGCL preset files", "*.mgs"));
+		File file = fileChooser.showOpenDialog(stage);
+		if(file!=null) {
+			try {
+				stage.getScene().setCursor(Cursor.WAIT);
+				Reader reader = new FileReader(file);
+				Gson gson = new GsonBuilder().create();
+				stage.getScene().setCursor(Cursor.DEFAULT);
+				return gson.fromJson(reader,listType);
+			} catch(Exception e) { };
+		}
+		return null;
+	}
+
+
+	public void openKeyFigureMetaDataDefinition() {
+		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+
+		FileChooser metaFile = new FileChooser();
+		metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
+		File f = metaFile.showOpenDialog(stage);
+		if(f!=null) {
+			try {
+				meta.loadModelMetaData(new FileInputStream(f));
+				clear();
+				modelService.clearModelList();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 
 	public void dumpUlogFields() {
 		if(ulogFields==null)
@@ -251,13 +308,13 @@ public class FileHandler {
 		Collections.sort(sortedKeys);
 		sortedKeys.forEach((e) -> {
 			System.out.print(e);
-//			AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
-//				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
-//					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
-//						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
-//					}
-//				}
-//			});
+			//			AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
+			//				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
+			//					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
+			//						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
+			//					}
+			//				}
+			//			});
 			System.out.println();
 		});
 	}

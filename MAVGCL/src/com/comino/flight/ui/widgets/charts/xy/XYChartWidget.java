@@ -41,6 +41,7 @@ import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
@@ -225,11 +226,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private boolean refreshRequest = false;
 
-//	private double  zoom_beg_x, zoom_beg_y;
+	//	private double  zoom_beg_x, zoom_beg_y;
 
 	private float center_x, center_y;
 	private double scale_rounding;
 	private double scale_factor;
+
+	private int id = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
@@ -636,6 +639,28 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		}
 	}
 
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+
+		Platform.runLater(() -> {
+			if(preset!=null) {
+				cseries1.getSelectionModel().select(0);
+				cseries2.getSelectionModel().select(0);
+
+				setKeyFigure(cseries1_x,preset.getKeyFigure(0));
+				setKeyFigure(cseries1_y,preset.getKeyFigure(1));
+				setKeyFigure(cseries2_x,preset.getKeyFigure(2));
+				setKeyFigure(cseries2_y,preset.getKeyFigure(3));
+
+				updateGraph(true);
+			}
+		});
+	}
+
+	public KeyFigurePreset getKeyFigureSelection() {
+		KeyFigurePreset preset = new KeyFigurePreset(id,0,type1_x.hash,type1_y.hash,type2_x.hash, type2_y.hash);
+		return preset;
+	}
+
 
 	private void updateGraph(boolean refresh) {
 
@@ -933,6 +958,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} else {
 			rotated[1] = posx;
 			rotated[0] = posy;
+		}
+	}
+
+	private void setKeyFigure(ChoiceBox<KeyFigureMetaData> series,int keyFigureHash) {
+		KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
+		if(v!=null) {
+			series.getSelectionModel().select(v);
+		} else {
+			series.getSelectionModel().select(0);
 		}
 	}
 

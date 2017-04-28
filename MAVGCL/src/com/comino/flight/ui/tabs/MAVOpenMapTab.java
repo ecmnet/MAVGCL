@@ -45,7 +45,8 @@ import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.file.FileHandler;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -366,7 +367,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		this.control = control;
 
 		gpsdetails.setup(control);
-		recordControl.addChart(this);
+		recordControl.addChart(3,this);
 
 		task.start();
 
@@ -463,6 +464,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			} catch(Exception e) { e.printStackTrace(); }
 		});
+	}
+
+
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+
+	}
+
+	public KeyFigurePreset getKeyFigureSelection() {
+		return null;
 	}
 
 }

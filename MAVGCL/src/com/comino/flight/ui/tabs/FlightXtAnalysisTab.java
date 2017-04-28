@@ -75,8 +75,8 @@ public class FlightXtAnalysisTab extends Pane {
 		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
 		chart2.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
 
-		recordControl.addChart(chart1.setup(control,1));
-		recordControl.addChart(chart2.setup(control,2));
+		recordControl.addChart(0,chart1.setup(control,1));
+		recordControl.addChart(1,chart2.setup(control,2));
 
 	}
 }

@@ -42,6 +42,7 @@ import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
@@ -502,6 +503,26 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		annotations.setSelected(false);
 	}
 
+
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+
+		Platform.runLater(() -> {
+			if(preset!=null) {
+				type1 = setKeyFigure(cseries1,preset.getKeyFigure(0));
+				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
+				type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
+				group.getSelectionModel().select(preset.getGroup());
+				updateGraph(true);
+			}
+		});
+	}
+
+	public KeyFigurePreset getKeyFigureSelection() {
+		KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
+				    type1.hash,type2.hash,type3.hash);
+		return preset;
+	}
+
 	public void returnToOriginalZoom() {
 		if(dataService.isCollecting()) {
 			if(isPaused) {
@@ -828,7 +849,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		float _min = Float.NaN; float _max = Float.NaN;
 		float _avg = 0; float mean = 0; float std=0;
 
-		if(kf.hash==0)
+		if(kf== null || kf.hash==0)
 			return;
 
 		d.setKeyFigure(kf);
@@ -860,6 +881,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 
+	private KeyFigureMetaData setKeyFigure(ChoiceBox<KeyFigureMetaData> series,int keyFigureHash) {
+		KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
+		if(v!=null) {
+			if(!series.getItems().contains(v))
+				series.getItems().add(v);
+			series.getSelectionModel().select(v);
+			return v;
+		} else {
+			series.getSelectionModel().select(0);
+		}
+		return new KeyFigureMetaData();
+	}
 
 	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 

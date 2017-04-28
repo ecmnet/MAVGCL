@@ -59,7 +59,7 @@ public class FlightXYAnalysisTab extends Pane {
 
 
 	public void setup(ChartControlWidget recordControl,IMAVController control) {
-		recordControl.addChart(chart1.setup(control));
+		recordControl.addChart(2,chart1.setup(control));
 		chart1.prefHeightProperty().bind(heightProperty().subtract(1));
 	}
 

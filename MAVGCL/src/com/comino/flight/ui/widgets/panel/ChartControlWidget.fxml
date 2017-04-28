@@ -21,8 +21,11 @@
 			min="0" prefHeight="13.0" value="0" />
 		<Separator layoutX="13.0" layoutY="102.0" prefHeight="0.0"
 			prefWidth="176.0" />
-		<ComboBox fx:id="keyfigures" prefHeight="19.0" prefWidth="176.0"
+		<ComboBox fx:id="keyfigures" prefHeight="19.0" prefWidth="125.0"
 			layoutY="112.0" layoutX="11.0" />
+		<Button fx:id="save" layoutX="140.0" layoutY="112.0"
+			mnemonicParsing="false" prefHeight="20.0" prefWidth="50.0" text="Save..."
+			textFill="#FFFFFF" />
 
 	</children>
 </fx:root>

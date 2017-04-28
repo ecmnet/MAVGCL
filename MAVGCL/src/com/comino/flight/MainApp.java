@@ -46,7 +46,7 @@ import org.mavlink.messages.lquac.msg_autopilot_version;
 
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
-import com.comino.flight.log.FileHandler;
+import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -108,6 +108,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_about;
+
+	@FXML
+	private MenuItem m_def;
 
 	@FXML
 	private MenuItem m_log;
@@ -274,6 +277,10 @@ public class MainApp extends Application  {
 			try {
 				Runtime.getRuntime().exec("open "+log_filename);
 			} catch (IOException e) { }
+		});
+
+		m_def.setOnAction(event -> {
+			FileHandler.getInstance().openKeyFigureMetaDataDefinition();
 		});
 
 

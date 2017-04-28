@@ -33,6 +33,8 @@
 package com.comino.flight.ui.widgets.panel;
 
 
+import com.comino.flight.file.KeyFigurePreset;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -45,5 +47,8 @@ public interface IChartControl {
 
 	public boolean isVisible();
 	public void refreshChart();
+
+	public KeyFigurePreset getKeyFigureSelection();
+	public void setKeyFigureSeletcion(KeyFigurePreset preset);
 
 }
