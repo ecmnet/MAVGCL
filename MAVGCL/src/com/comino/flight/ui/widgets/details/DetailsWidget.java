@@ -57,11 +57,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 
 public class DetailsWidget extends WidgetPane  {
+
+	private final static int SEPHEIGHT = 12;
+	private final static int ROWHEIGHT = 19;
+
 
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
 	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;";
@@ -69,6 +75,7 @@ public class DetailsWidget extends WidgetPane  {
 	private final static String[] key_figures_details = {
 			"ROLL",
 			"PITCH",
+			"THRUST",
 			null,
 			"GNDV",
 			"CLIMB",
@@ -211,6 +218,7 @@ public class DetailsWidget extends WidgetPane  {
 			this.kf = meta.getMetaData(k);
 			if(kf==null) {
 				grid.add(new Label(),0,row);
+				grid.getRowConstraints().add(row,new RowConstraints(SEPHEIGHT,SEPHEIGHT,SEPHEIGHT));
 			} else {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130); label.setPrefHeight(19);
@@ -225,6 +233,7 @@ public class DetailsWidget extends WidgetPane  {
 					p.addRow(row, label,l2,l3);
 				}
 				grid.add(p, 0, row);
+				grid.getRowConstraints().add(row,new RowConstraints(ROWHEIGHT,ROWHEIGHT,ROWHEIGHT));
 			}
 		}
 
