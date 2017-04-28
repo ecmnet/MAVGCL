@@ -92,6 +92,7 @@ public class FileHandler {
 	private UlogtoModelConverter converter = null;
 
 	private AnalysisModelService modelService = AnalysisModelService.getInstance();
+	private IMAVController control;
 
 
 	public static FileHandler getInstance() {
@@ -108,6 +109,7 @@ public class FileHandler {
 		super();
 		this.stage = stage;
 		this.userPrefs = MAVPreferences.getInstance();
+		this.control = control;
 	}
 
 	public String getName() {
@@ -157,7 +159,7 @@ public class FileHandler {
 						raw.addListener(new ProgressInputStream.Listener() {
 							@Override
 							public void onProgressChanged(int percentage) {
-									state.getProgressProperty().set(percentage);
+								state.getProgressProperty().set(percentage);
 							}
 						});
 						Reader reader = new BufferedReader(new InputStreamReader(raw));
@@ -216,6 +218,8 @@ public class FileHandler {
 
 		new Thread(new Task<Void>() {
 			@Override protected Void call() throws Exception {
+				if(control.isSimulation())
+					return null;
 				stage.getScene().setCursor(Cursor.WAIT);
 				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
