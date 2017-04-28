@@ -246,6 +246,14 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Thrust" uom="%" mask="#0.0" key="THRUST">
+		<MSPSource class="attitude" field="t"></MSPSource>
+		<Groups>
+			<Group>Telemetry</Group>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- Attitude rates -->
 
 	<KeyFigure desc="RollRate" uom="rad/s" mask="#0.00" key="ROLLR">
@@ -500,13 +508,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Throttle" uom="%" mask="#0.0" key="THROT">
-		<MSPSource class="hud" field="th"></MSPSource>
-		<Groups>
-			<Group>Telemetry</Group>
-			<Group>Attitude</Group>
-		</Groups>
-	</KeyFigure>
 
 	<!-- Servo output -->
 
