@@ -89,6 +89,9 @@ public class PreferencesDialog  {
 	private ComboBox<?> path;
 
 	@FXML
+	private ComboBox<?> prespath;
+
+	@FXML
 	private CheckBox autosave;
 
 	@FXML
@@ -136,6 +139,19 @@ public class PreferencesDialog  {
 			});
 		});
 
+		prespath.setEditable(true);
+		prespath.setOnShowing(event -> {
+			DirectoryChooser dir = new DirectoryChooser();
+			if(!prespath.getEditor().getText().isEmpty())
+				dir.setInitialDirectory(new File(prespath.getEditor().getText()));
+			File file = dir.showDialog(null);
+			Platform.runLater(() -> {
+				if(file!=null)
+					prespath.getEditor().setText(file.getAbsolutePath());
+				prespath.hide();
+			});
+		});
+
 		svinacc.textProperty().addListener(new ChangeListener<String>() {
 		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		        if (newValue.length()>1 && !newValue.matches("[+-]?([0-9]*[.]?)?[0-9]?")) {
@@ -166,6 +182,7 @@ public class PreferencesDialog  {
 		bind_port.setText(userPrefs.get(MAVPreferences.PREFS_BIND_PORT, DEF_BIND_PORT));
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
+		prespath.getEditor().setText(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
 		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
@@ -179,6 +196,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_BIND_PORT, bind_port.getText());
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
+			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());

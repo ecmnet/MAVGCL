@@ -48,6 +48,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -275,6 +276,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 	private void buildKeyfigureModelSelection() {
 
+
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 		keyfigures.getItems().add("- Select presets -");
@@ -285,16 +287,18 @@ public class ChartControlWidget extends WidgetPane  {
 		keyfigures.getSelectionModel().select(0);
 
 		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
+			Map<Integer,KeyFigurePreset> pr = null;
+
 			switch(nv.intValue()) {
 			case 0:
 				break;
-//			case 1:
-//				for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
-//					charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
-//				}
-//				break;
+				//			case 1:
+				//				for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
+				//					charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+				//				}
+				//				break;
 			case 1:
-				Map<Integer,KeyFigurePreset> pr = FileHandler.getInstance().presetsImport();
+				pr = FileHandler.getInstance().presetsImport(null);
 				if(pr != null) {
 					this.presets.clear(); this.presets.putAll(pr);
 					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
@@ -302,7 +306,7 @@ public class ChartControlWidget extends WidgetPane  {
 					}
 				}
 				break;
-			default:
+
 			}
 			Platform.runLater(() -> {
 				keyfigures.getSelectionModel().select(0);

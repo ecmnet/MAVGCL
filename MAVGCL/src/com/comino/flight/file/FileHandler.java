@@ -136,6 +136,7 @@ public class FileHandler {
 
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
+				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
 				new ExtensionFilter("MAVGCL model files", "*.mgc"),
 				new ExtensionFilter("ULog files", "*.ulg"),
 				new ExtensionFilter("PX4Log files", "*.px4log"));
@@ -195,6 +196,7 @@ public class FileHandler {
 	public void fileExport() {
 
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
+				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
 				new ExtensionFilter("MAVGCL model files", "*.mgc"));
 
 		if(name.length()<2)
@@ -247,6 +249,7 @@ public class FileHandler {
 
 	public void presetsExport(Map<Integer,KeyFigurePreset> preset) {
 		FileChooser fileChooser = getFileDialog("Save key figure preset to...",
+				userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")),
 				new ExtensionFilter("MAVGCL preset files", "*.mgs"));
 		File file = fileChooser.showSaveDialog(stage);
 		if(file!=null) {
@@ -264,13 +267,20 @@ public class FileHandler {
 		}
 	}
 
-	public Map<Integer,KeyFigurePreset> presetsImport() {
-		Type listType = new TypeToken<Map<Integer,KeyFigurePreset>>() {}.getType();
-		FileChooser fileChooser = getFileDialog("Open key figure preset to...",
-				new ExtensionFilter("MAVGCL preset files", "*.mgs"));
-		File file = fileChooser.showOpenDialog(stage);
+	public Map<Integer,KeyFigurePreset> presetsImport(String name) {
+		File file = null;
+
+		if(name!=null) {
+			file = new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))+"/"+name+".mgs");
+		} else {
+			FileChooser fileChooser = getFileDialog("Open key figure preset to...",
+					userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")),
+					new ExtensionFilter("MAVGCL preset files", "*.mgs"));
+			file = fileChooser.showOpenDialog(stage);
+		}
 		if(file!=null) {
 			try {
+				Type listType = new TypeToken<Map<Integer,KeyFigurePreset>>() {}.getType();
 				stage.getScene().setCursor(Cursor.WAIT);
 				Reader reader = new FileReader(file);
 				Gson gson = new GsonBuilder().create();
@@ -331,12 +341,12 @@ public class FileHandler {
 
 
 
-	private FileChooser getFileDialog(String title, ExtensionFilter...filter) {
+	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(filter);
 		fileChooser.setInitialDirectory(
-				new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"))));
+				new File(initDir));
 		return fileChooser;
 	}
 

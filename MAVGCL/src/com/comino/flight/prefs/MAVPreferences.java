@@ -44,6 +44,7 @@ public class MAVPreferences {
 	public final static String PREFS_SITL       = "SITL";
 	public final static String PREFS_VIDEO      = "VIDEOURL";
 	public final static String PREFS_DIR        = "DIRECTORY";
+	public final static String PRESET_DIR       = "PRESETDIRECTORY";
 	public final static String AUTOSAVE         = "AUTOSAVE";
 	public final static String PREFS_XMLDIR     = "XMLDIRECTORY";
 	public final static String RECENT_FIGS      = "RECENTFIGS";

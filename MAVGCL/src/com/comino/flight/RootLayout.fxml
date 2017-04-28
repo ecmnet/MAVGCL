@@ -48,14 +48,14 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem fx:id="m_def" mnemonicParsing="false"
-							text="Open custom key figure definition...">
-						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_log" mnemonicParsing="false"
 							text="Show local log...">
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_def" mnemonicParsing="false"
+							text="Open custom key figure definition...">
+						</MenuItem>
 						<MenuItem fx:id="m_dump" mnemonicParsing="false"
 							text="Dump key figures to console">
 						</MenuItem>
