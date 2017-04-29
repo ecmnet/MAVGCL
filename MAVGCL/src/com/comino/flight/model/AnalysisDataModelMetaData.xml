@@ -1412,6 +1412,16 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Loc.Pos.VZ error" uom="m" mask="#0.00" key="LPOSVZERR">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="abs(LPOSVZ - SPLPOSVZ)" var0="LPOSVZ" var1="SPLPOSVZ"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Loc.Pos.X error" uom="m" mask="#0.00" key="LPOSXERR">
 		<VirtualSource>
 		    <Converter class="VirtualConverter" expression="abs(LPOSX - SPLPOSX)" var0="LPOSX" var1="SPLPOSX"/>
