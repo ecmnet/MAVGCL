@@ -127,9 +127,9 @@ public class ChartControlWidget extends WidgetPane  {
 		scroll.setSnapToTicks(false); scroll.setSnapToPixel(false);
 		scroll.setDisable(true);
 
-		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
-			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
-		});
+//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
+//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
+//		});
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -226,45 +226,6 @@ public class ChartControlWidget extends WidgetPane  {
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
-
-	//	private void buildKeyfigureModelSelection() {
-	//
-	//		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	//
-	//		keyfigures.getItems().add("Built-In model definition");
-	//		keyfigures.getItems().add("Select custom model (xml)...");
-	//		keyfigures.getEditor().setText(meta.getDescription());
-	//		keyfigures.setEditable(true);
-	//		keyfigures.getEditor().setEditable(false);
-	//
-	//
-	//		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
-	//			switch(nv.intValue()) {
-	//			case 0: meta.loadModelMetaData(null);
-	//			break;
-	//			case 1:
-	//				try {
-	//					FileChooser metaFile = new FileChooser();
-	//					metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
-	//
-	//					File f = metaFile.showOpenDialog(ChartControlWidget.this.getScene().getWindow());
-	//					if(f!=null)
-	//						meta.loadModelMetaData(new FileInputStream(f));
-	//
-	//					Platform.runLater(() -> {
-	//						keyfigures.getSelectionModel().clearSelection();
-	//						keyfigures.getEditor().setText(meta.getDescription());
-	//					});
-	//				} catch(Exception e) {
-	//					Platform.runLater(() -> {
-	//						keyfigures.getSelectionModel().select(0);
-	//					});
-	//				}
-	//				break;
-	//			}
-	//			clearData();
-	//		});
-	//	}
 
 	private void saveKeyFigureSelection() {
 		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {

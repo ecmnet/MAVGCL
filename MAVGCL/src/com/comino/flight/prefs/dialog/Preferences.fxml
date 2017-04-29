@@ -40,7 +40,7 @@
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
 		<CheckBox fx:id="ulog" GridPane.rowIndex="8" GridPane.columnIndex="0"
 	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for data recording (experimental)" />
-	    <CheckBox fx:id="check" GridPane.rowIndex="8" GridPane.columnIndex="0"
+	    <CheckBox fx:id="check" GridPane.rowIndex="9" GridPane.columnIndex="0"
 	        GridPane.columnSpan="4" text="Perform vehicle healh check" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="10" />
