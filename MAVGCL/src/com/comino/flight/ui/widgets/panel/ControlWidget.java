@@ -89,7 +89,7 @@ public class ControlWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
-		tuning.setDisable(true);
+
 		tuning.selectedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				video.setSelected(false);
@@ -122,14 +122,6 @@ public class ControlWidget extends WidgetPane  {
 				}
 			}
 
-		});
-
-		stateProperties.getParamLoadedProperty().addListener((e,o,n) -> {
-			if(!n.booleanValue()) {
-				tuning.setDisable(true);
-				tuning.setSelected(false);
-			} else
-				tuning.setDisable(false);
 		});
 
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {

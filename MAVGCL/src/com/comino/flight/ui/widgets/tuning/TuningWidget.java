@@ -129,6 +129,7 @@ public class TuningWidget extends WidgetPane  {
 			});
 		});
 
+
 		groups.getItems().add("-None-");
 		groups.getSelectionModel().clearAndSelect(0);
 
@@ -139,10 +140,11 @@ public class TuningWidget extends WidgetPane  {
 		grid.setVgap(4); grid.setHgap(6);
 
 		this.visibleProperty().addListener((e,o,n) -> {
-			if(n.booleanValue() && params.getList().size()>0) {
-				String s = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "None");
-				groups.getSelectionModel().select(s);
-			}
+			if(n.booleanValue() && state.getParamLoadedProperty().get()) {
+				String group = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "-None-");
+				groups.getSelectionModel().select(group);
+			} else
+				groups.getSelectionModel().select(0);
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
@@ -181,286 +183,292 @@ public class TuningWidget extends WidgetPane  {
 					}
 
 
-			}
-		}
-	});
-}
-
-public void setup(IMAVController control) {
-	super.setup(control);
-
-	groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-		@Override
-		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-			prefs.put(MAVPreferences.TUNING_GROUP, newValue);
-			grid.setVisible(false);
-			grid.getChildren().clear();
-			int i = 0;
-			for(ParameterAttributes p : params.getList()) {
-				if(newValue.contains(p.group_name)) {
-					Label unit = new Label(p.unit); unit.setPrefWidth(30);
-					Label name = new Label(p.name); name.setPrefWidth(95);
-					if(p.unit!=null && p.unit.length()>0)
-						name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
-					else
-						name.setTooltip(new Tooltip(p.description));
-					ParamItem item = createParamItem(p, true);
-					items.add(item);
-					grid.addRow(i++, name,item.editor,unit);
 				}
 			}
-			Platform.runLater(() -> {
-				grid.setVisible(true);
-			});
+		});
+	}
+
+	public void setup(IMAVController control) {
+		super.setup(control);
+
+		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if(state.getParamLoadedProperty().get()) {
+					prefs.put(MAVPreferences.TUNING_GROUP, newValue);
+					populateParameterList(newValue);
+				}
+			}
+		});
+
+		this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
+
+	}
+
+	private void populateParameterList(String group) {
+		grid.setVisible(false);
+		grid.getChildren().clear();
+		int i = 0;
+		for(ParameterAttributes p : params.getList()) {
+			if(group.contains(p.group_name)) {
+				Label unit = new Label(p.unit); unit.setPrefWidth(30);
+				Label name = new Label(p.name); name.setPrefWidth(95);
+				if(p.unit!=null && p.unit.length()>0)
+					name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
+				else
+					name.setTooltip(new Tooltip(p.description));
+				ParamItem item = createParamItem(p, true);
+				items.add(item);
+				grid.addRow(i++, name,item.editor,unit);
+			}
 		}
-	});
+		Platform.runLater(() -> {
+			grid.setVisible(true);
+		});
+	}
 
-	this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
-
-}
-
-private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
-	ParamItem item = new ParamItem(p,editable);
-	return item;
-}
+	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
+		ParamItem item = new ParamItem(p,editable);
+		return item;
+	}
 
 
-private class ParamItem {
+	private class ParamItem {
 
-	public Control editor = null;
-	private ParameterAttributes att = null;
+		public Control editor = null;
+		private ParameterAttributes att = null;
 
-	public ParamItem(ParameterAttributes att, boolean editable) {
-		this.att= att;
+		public ParamItem(ParameterAttributes att, boolean editable) {
+			this.att= att;
 
-		if(att.increment != 0) {
-			if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32) {
-				Spinner<Integer> sp = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
-				sp.setEditable(true);
-				this.editor = sp;
-				sp.getEditor().setOnKeyPressed(keyEvent -> {
-					if(keyEvent.getCode() == KeyCode.ENTER) {
-						setValueOf(editor,getValueOf(sp.getEditor()));
-						groups.requestFocus();
-					}
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						setValueOf(editor,att.value);
-						groups.requestFocus();
-					}
-				});
-			} else {
-				Spinner<Double> sp = new Spinner<Double>(new SpinnerAttributeFactory(att));
-				sp.setEditable(true);
-				this.editor = sp;
-				sp.getEditor().setOnKeyPressed(keyEvent -> {
-					if(keyEvent.getCode() == KeyCode.ENTER) {
-						setValueOf(editor,getValueOf(sp.getEditor()));
-						groups.requestFocus();
-					}
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						setValueOf(editor,att.value);
-						groups.requestFocus();
-					}
-				});
-			}
-		} else {
-			if(att.valueList.size()>0) {
-				ChoiceBox<Entry<Integer,String>> cb = new ChoiceBox<Entry<Integer,String>>();
-				this.editor = cb;
-				cb.getItems().addAll(att.valueList.entrySet());
-				cb.setConverter(new StringConverter<Entry<Integer,String>>() {
-					@Override
-					public String toString(Entry<Integer, String> o) {
-						return o.getValue();
-					}
-					@Override
-					public Entry<Integer, String> fromString(String o) {
-						return null;
-					}
-				});
-				cb.getSelectionModel().
-				selectedItemProperty().addListener((v,ov,nv) -> {
-					groups.requestFocus();
-				});
-			}
-			else {
-				this.editor = new TextField();
-				this.editor.setOnKeyPressed(keyEvent -> {
-					if(keyEvent.getCode() == KeyCode.ENTER)
-						groups.requestFocus();
-					if(keyEvent.getCode() == KeyCode.ESCAPE) {
-						setValueOf(editor,att.value);
-						groups.requestFocus();
-					}
-				});
-
-				if(att.bitMask!=null && att.bitMask.size()>0) {
-					editor.setStyle("-fx-text-fill: #B0F0B0; -fx-control-inner-background: #606060;");
-					att.decimals = 0;
-					editor.setCursor(Cursor.DEFAULT);
-					((TextField)editor).setEditable(false);
-					editor.setOnMouseClicked((event) -> {
-						groups.requestFocus();
-						BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
-						bd.setValue((int)att.value);
-						int val = bd.show();
-						if(val!=att.value) {
-							att.value = val;
-							setValueOf(editor,val);
-							sendParameter(att,val);
+			if(att.increment != 0) {
+				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32) {
+					Spinner<Integer> sp = new Spinner<Integer>(att.min_val, att.max_val, att.value,1);
+					sp.setEditable(true);
+					this.editor = sp;
+					sp.getEditor().setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER) {
+							setValueOf(editor,getValueOf(sp.getEditor()));
+							groups.requestFocus();
+						}
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							groups.requestFocus();
+						}
+					});
+				} else {
+					Spinner<Double> sp = new Spinner<Double>(new SpinnerAttributeFactory(att));
+					sp.setEditable(true);
+					this.editor = sp;
+					sp.getEditor().setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER) {
+							setValueOf(editor,getValueOf(sp.getEditor()));
+							groups.requestFocus();
+						}
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							groups.requestFocus();
 						}
 					});
 				}
-			}
-		}
-
-		this.editor.setPrefWidth(85);
-		this.editor.setPrefHeight(19);
-		//		this.editor.setTooltip(new Tooltip(att.description_long));
-
-		if(editable)
-			setContextMenu(editor);
-		else
-			editor.setDisable(true);
-
-		setValueOf(editor,att.value);
-
-		this.editor.focusedProperty().addListener((observable, oldValue, newValue) -> {
-			if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
-				try {
-					float val =  getValueOf(editor);
-					if(val != att.value) {
-						if((val >= att.min_val && val <= att.max_val) ||
-								att.min_val == att.max_val ) {
-							sendParameter(att,val);
-							checkDefaultOf(editor,val);
+			} else {
+				if(att.valueList.size()>0) {
+					ChoiceBox<Entry<Integer,String>> cb = new ChoiceBox<Entry<Integer,String>>();
+					this.editor = cb;
+					cb.getItems().addAll(att.valueList.entrySet());
+					cb.setConverter(new StringConverter<Entry<Integer,String>>() {
+						@Override
+						public String toString(Entry<Integer, String> o) {
+							return o.getValue();
 						}
-						else {
-							logger.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-							setValueOf(editor,att.value);
+						@Override
+						public Entry<Integer, String> fromString(String o) {
+							return null;
 						}
-					}
-				} catch(NumberFormatException e) {
-					setValueOf(editor,att.value);
+					});
+					cb.getSelectionModel().
+					selectedItemProperty().addListener((v,ov,nv) -> {
+						groups.requestFocus();
+					});
 				}
-			}
-		});
-	}
-
-	private void sendParameter(ParameterAttributes att, float val) {
-		System.out.println("Try to set "+att.name+" to "+val+"...");
-		final msg_param_set msg = new msg_param_set(255,1);
-		msg.target_component = 1;
-		msg.target_system = 1;
-		msg.param_type = att.vtype;
-		msg.setParam_id(att.name);
-		msg.param_value = ParamUtils.valToParam(att.vtype, val);
-		control.sendMAVLinkMessage(msg);
-		timeout = ExecutorService.get().schedule(() -> {
-			if(++timeout_count > 3) {
-				MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
-						MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				setValueOf(editor,att.value); }
-			else {
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Timeout setting parameter. Retry "
-						+timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-				sendParameter(att,val);
-			}
-		}, 200, TimeUnit.MILLISECONDS);
-	}
-
-
-
-	@SuppressWarnings("unchecked")
-	public float getValueOf(Control p) throws NumberFormatException {
-		if(p instanceof TextField) {
-			((TextField)p).commitValue();
-			return Float.parseFloat(((TextField)p).getText());
-		}
-		else if(p instanceof Spinner)
-			return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
-		else if(p instanceof ChoiceBox) {
-			return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
-		} else
-			return 0;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void setValueOf(Control p, double v) {
-		Platform.runLater(() -> {
-			if(p instanceof TextField) {
-				if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
-					((TextField)p).setText(String.valueOf((int)v));
 				else {
-					BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
-					((TextField)p).setText(bd.toPlainString());
+					this.editor = new TextField();
+					this.editor.setOnKeyPressed(keyEvent -> {
+						if(keyEvent.getCode() == KeyCode.ENTER)
+							groups.requestFocus();
+						if(keyEvent.getCode() == KeyCode.ESCAPE) {
+							setValueOf(editor,att.value);
+							groups.requestFocus();
+						}
+					});
+
+					if(att.bitMask!=null && att.bitMask.size()>0) {
+						editor.setStyle("-fx-text-fill: #B0F0B0; -fx-control-inner-background: #606060;");
+						att.decimals = 0;
+						editor.setCursor(Cursor.DEFAULT);
+						((TextField)editor).setEditable(false);
+						editor.setOnMouseClicked((event) -> {
+							groups.requestFocus();
+							BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
+							bd.setValue((int)att.value);
+							int val = bd.show();
+							if(val!=att.value) {
+								att.value = val;
+								setValueOf(editor,val);
+								sendParameter(att,val);
+							}
+						});
+					}
 				}
+			}
+
+			this.editor.setPrefWidth(85);
+			this.editor.setPrefHeight(19);
+			//		this.editor.setTooltip(new Tooltip(att.description_long));
+
+			if(editable)
+				setContextMenu(editor);
+			else
+				editor.setDisable(true);
+
+			setValueOf(editor,att.value);
+
+			this.editor.focusedProperty().addListener((observable, oldValue, newValue) -> {
+				if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
+					try {
+						float val =  getValueOf(editor);
+						if(val != att.value) {
+							if((val >= att.min_val && val <= att.max_val) ||
+									att.min_val == att.max_val ) {
+								sendParameter(att,val);
+								checkDefaultOf(editor,val);
+							}
+							else {
+								logger.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+								setValueOf(editor,att.value);
+							}
+						}
+					} catch(NumberFormatException e) {
+						setValueOf(editor,att.value);
+					}
+				}
+			});
+		}
+
+		private void sendParameter(ParameterAttributes att, float val) {
+			System.out.println("Try to set "+att.name+" to "+val+"...");
+			final msg_param_set msg = new msg_param_set(255,1);
+			msg.target_component = 1;
+			msg.target_system = 1;
+			msg.param_type = att.vtype;
+			msg.setParam_id(att.name);
+			msg.param_value = ParamUtils.valToParam(att.vtype, val);
+			control.sendMAVLinkMessage(msg);
+			timeout = ExecutorService.get().schedule(() -> {
+				if(++timeout_count > 3) {
+					MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
+							MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					setValueOf(editor,att.value); }
+				else {
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Timeout setting parameter. Retry "
+							+timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					sendParameter(att,val);
+				}
+			}, 200, TimeUnit.MILLISECONDS);
+		}
+
+
+
+		@SuppressWarnings("unchecked")
+		public float getValueOf(Control p) throws NumberFormatException {
+			if(p instanceof TextField) {
+				((TextField)p).commitValue();
+				return Float.parseFloat(((TextField)p).getText());
 			}
 			else if(p instanceof Spinner)
-				((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
-			else {
-				for(Entry<Integer,String> e : att.valueList.entrySet())
-					if(e.getKey()==(int)v)
-						((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().select(e);
-			}
-
-			checkDefaultOf(p,v);
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private void checkDefaultOf(Control p, double v) {
-		Control e = p;
-		if(p instanceof Spinner)
-			e = ((Spinner<Double>)p).getEditor();
-		if(att.bitMask!=null && att.bitMask.size()>0) {
-			return;
+				return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
+			else if(p instanceof ChoiceBox) {
+				return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
+			} else
+				return 0;
 		}
-		if(v==att.default_val)
-			e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
-		else
-			e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
+
+		@SuppressWarnings("unchecked")
+		public void setValueOf(Control p, double v) {
+			Platform.runLater(() -> {
+				if(p instanceof TextField) {
+					if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
+						((TextField)p).setText(String.valueOf((int)v));
+					else {
+						BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+						((TextField)p).setText(bd.toPlainString());
+					}
+				}
+				else if(p instanceof Spinner)
+					((Spinner<Double>)p).getValueFactory().setValue(new Double(v));
+				else {
+					for(Entry<Integer,String> e : att.valueList.entrySet())
+						if(e.getKey()==(int)v)
+							((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().select(e);
+				}
+
+				checkDefaultOf(p,v);
+			});
+		}
+
+		@SuppressWarnings("unchecked")
+		private void checkDefaultOf(Control p, double v) {
+			Control e = p;
+			if(p instanceof Spinner)
+				e = ((Spinner<Double>)p).getEditor();
+			if(att.bitMask!=null && att.bitMask.size()>0) {
+				return;
+			}
+			if(v==att.default_val)
+				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
+			else
+				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
+		}
+
+		@SuppressWarnings("unchecked")
+		private void setContextMenu(Control p) {
+			ContextMenu ctxm = new ContextMenu();
+			MenuItem cmItem1 = new MenuItem("Set default");
+			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					setValueOf(p,att.default_val);
+				}
+			});
+			ctxm.getItems().add(cmItem1);
+			if(p instanceof Spinner)
+				((Spinner<Double>)p).getEditor().setContextMenu(ctxm);
+			else
+				p.setContextMenu(ctxm);
+
+		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void setContextMenu(Control p) {
-		ContextMenu ctxm = new ContextMenu();
-		MenuItem cmItem1 = new MenuItem("Set default");
-		cmItem1.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				setValueOf(p,att.default_val);
-			}
-		});
-		ctxm.getItems().add(cmItem1);
-		if(p instanceof Spinner)
-			((Spinner<Double>)p).getEditor().setContextMenu(ctxm);
-		else
-			p.setContextMenu(ctxm);
+	private class SpinnerAttributeFactory extends DoubleSpinnerValueFactory {
 
+		public SpinnerAttributeFactory(ParameterAttributes att) {
+			super(att.min_val, att.max_val, att.value, att.increment);
+			if(att.increment==0)
+				this.setAmountToStepBy(1);
+
+			setConverter(new StringConverter<Double>() {
+
+				@Override public String toString(Double value) {
+					BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+					return bd.toPlainString();
+				}
+
+				@Override
+				public Double fromString(String string) {
+					if(string!=null)
+						return Double.valueOf(string);
+					return 0.0;
+				}
+			});
+		}
 	}
-}
-
-private class SpinnerAttributeFactory extends DoubleSpinnerValueFactory {
-
-	public SpinnerAttributeFactory(ParameterAttributes att) {
-		super(att.min_val, att.max_val, att.value, att.increment);
-		if(att.increment==0)
-			this.setAmountToStepBy(1);
-
-		setConverter(new StringConverter<Double>() {
-
-			@Override public String toString(Double value) {
-				BigDecimal bd = new BigDecimal(value).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
-				return bd.toPlainString();
-			}
-
-			@Override
-			public Double fromString(String string) {
-				if(string!=null)
-					return Double.valueOf(string);
-				return 0.0;
-			}
-		});
-	}
-}
 }
