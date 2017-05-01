@@ -113,8 +113,10 @@ public class PX4Parameters implements IMAVLinkListener {
 		StateProperties.getInstance().getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				if(!newValue && control.isConnected())
+				if(!newValue && control.isConnected()) {
 					refreshParameterList(true);
+					is_reading = false;
+				}
 			}
 		});
 
