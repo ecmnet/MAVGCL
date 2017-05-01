@@ -89,7 +89,7 @@ import me.drton.jmavlib.log.ulog.ULogReader;
 public class FileHandler {
 
 	private static final String BASEPATH = "/.MAVGCL";
-	private static final String TMPFILE  =  "/logtmp.tmp";
+	private static final String TMPFILE  =  "/logtmp.px4log";
 
 	private static FileHandler handler = null;
 

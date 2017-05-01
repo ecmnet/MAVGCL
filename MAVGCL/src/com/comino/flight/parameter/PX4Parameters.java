@@ -105,7 +105,9 @@ public class PX4Parameters implements IMAVLinkListener {
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(newValue && control.isConnected()) {
 					refreshParameterList(true);
-				}
+				} else
+					if(!stateProperties.getArmedProperty().get())
+					   stateProperties.getParamLoadedProperty().set(false);
 			}
 		});
 
