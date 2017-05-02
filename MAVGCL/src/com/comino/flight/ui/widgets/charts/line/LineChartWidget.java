@@ -771,7 +771,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 			}
 
-			while(current_x_pt<max_x ) {
+			while(current_x_pt<max_x && dataService.getModelList().size()>0 ) {
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
