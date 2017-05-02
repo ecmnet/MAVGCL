@@ -99,6 +99,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private MSPLogger logger;
 	private FileHandler fh;
 
+	private ScheduledFuture<?> timeout;
+
 	public MavlinkLogReader(IMAVController control) {
 		this.control = control;
 		this.control.addMAVLinkListener(this);
@@ -134,9 +136,9 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		fh.setName("Log loading..");
 		logger.writeLocalMsg("[mgc] Request latest log");
 
-		ExecutorService.get().scheduleAtFixedRate(() -> {
+		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
 			if((System.currentTimeMillis()-received_ms)>5000)
-				cancel("[mgc] Timeout reading log");
+				cancel("[mgc] Importing log failed: Timeout");
 		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
 
@@ -167,13 +169,9 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
-					if(log_bytes_total==0) {
-						logger.writeLocalMsg("[mgc] Loading log failed: Timeout");
-						cancel();
-						return;
-					}
+
 					logger.writeLocalMsg(
-							"[mgc] Loading Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
+							"[mgc] Importing Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
 					package_count = 0;
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
@@ -225,7 +223,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				} catch (Exception e) {
 					sendEndNotice();
 					state.getLogLoadedProperty().set(false);
-					logger.writeLocalMsg("[mgc] Loading log failed: "+e.getMessage());
+					logger.writeLocalMsg("[mgc] Importing log failed: "+e.getMessage());
 					e.printStackTrace();
 				}
 				state.getLogLoadedProperty().set(true);
@@ -259,6 +257,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		state.getLogLoadedProperty().set(false);
 		logger.writeLocalMsg(s);
+		killTimeOut();
 	}
 
 
@@ -270,6 +269,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		msg.target_component = 1;
 		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
+		killTimeOut();
+	}
+
+	private void killTimeOut() {
+		if(timeout!=null)
+			timeout.cancel(true);
 	}
 
 }
