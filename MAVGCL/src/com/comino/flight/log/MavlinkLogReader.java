@@ -134,14 +134,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	public void cancel() {
-		if(!isCollecting.get())
-			return;
-		try {
-			out.close();
-		} catch (Exception e) {  }
-		sendEndNotice();
-		state.getLogLoadedProperty().set(false);
-		logger.writeLocalMsg("[mgc] Loading log cancelled");
+		cancel("[mgc] Loading log cancelled");
 	}
 
 	@Override
@@ -195,22 +188,21 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 			msg_log_data data = (msg_log_data) o;
 			//			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
-			for(int i=0;i< data.count;i++) {
-				try {
+			try {
+				for(int i=0;i< data.count;i++)
 					out.write(data.data[i]);
-				} catch (IOException e) { cancel(); }
-			}
+			} catch (IOException e) { cancel(); return; }
+
 			log_bytes_read = data.ofs;
 
 			if(data.count<LOG_PACKAG_DATA_LENGTH) {
 				try {
-					System.out.println();
 					out.flush();
 					out.close();
-				} catch (IOException e) { cancel();  }
+				} catch (IOException e) { cancel(); return; }
 				try {
-					collector.clearModelList();
 					sendEndNotice();
+					collector.clearModelList();
 					if(isUlog) {
 						ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
 						UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
@@ -234,7 +226,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				}
 				state.getLogLoadedProperty().set(true);
 			} else {
-
 				if(++package_count>=package_size) {
 					package_count = 0;
 					msg_log_request_data msg = new msg_log_request_data(255,1);
@@ -244,18 +235,26 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					msg.ofs   = data.ofs+LOG_PACKAG_DATA_LENGTH;
 					msg.count = LOG_PACKAG_DATA_LENGTH * package_size;
 					control.sendMAVLinkMessage(msg);
-					state.getProgressProperty().set(getProgress()/100f);
+					state.getProgressProperty().set((float)log_bytes_read / log_bytes_total);
 				}
 			}
 		}
 	}
 
-	public int getProgress() {
-		return (int)((log_bytes_read * 100) / log_bytes_total);
-	}
-
 	public BooleanProperty isCollecting() {
 		return isCollecting;
+	}
+
+
+	private void cancel(String s) {
+		if(!isCollecting.get())
+			return;
+		try {
+			out.close();
+		} catch (Exception e) {  }
+		sendEndNotice();
+		state.getLogLoadedProperty().set(false);
+		logger.writeLocalMsg(s);
 	}
 
 
