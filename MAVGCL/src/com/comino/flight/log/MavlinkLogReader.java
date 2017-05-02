@@ -83,9 +83,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private File tmpfile = null;
 	private BufferedOutputStream out = null;
 
-	private BooleanProperty isCollecting = new SimpleBooleanProperty();
+	private BooleanProperty   isCollecting = new SimpleBooleanProperty();
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
+	private long received_ms=0;
 	private long start = 0;
 	private long time_utc=0;
 
@@ -118,6 +119,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			this.tmpfile = FileHandler.getInstance().getTempFile();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return;
 		}
 
 		log_bytes_read = 0; log_bytes_total = 0;
@@ -131,6 +133,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		state.getLogLoadedProperty().set(false);
 		fh.setName("Log loading..");
 		logger.writeLocalMsg("[mgc] Request latest log");
+
+		ExecutorService.get().scheduleAtFixedRate(() -> {
+			if((System.currentTimeMillis()-received_ms)>5000)
+				cancel("[mgc] Timeout reading log");
+		}, 2000, 1000, TimeUnit.MILLISECONDS);
 	}
 
 	public void cancel() {
@@ -140,9 +147,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	@Override
 	public void received(Object o) {
 
-		if( o instanceof msg_log_entry) {
-			if(!isCollecting.get())
-				return;
+		if( o instanceof msg_log_entry && isCollecting.get()) {
 
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;
@@ -181,10 +186,9 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			}
 		}
 
-		if( o instanceof msg_log_data) {
+		if( o instanceof msg_log_data && isCollecting.get()) {
 
-			if(!isCollecting.get())
-				return;
+			received_ms = System.currentTimeMillis();
 
 			msg_log_data data = (msg_log_data) o;
 			//			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
@@ -199,7 +203,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				try {
 					out.flush();
 					out.close();
-				} catch (IOException e) { cancel(); return; }
+				} catch (IOException e) { return; }
 				try {
 					sendEndNotice();
 					collector.clearModelList();
@@ -245,14 +249,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return isCollecting;
 	}
 
-
 	private void cancel(String s) {
 		if(!isCollecting.get())
 			return;
+		isCollecting.set(false);
 		try {
 			out.close();
 		} catch (Exception e) {  }
-		sendEndNotice();
+		state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		state.getLogLoadedProperty().set(false);
 		logger.writeLocalMsg(s);
 	}
@@ -261,7 +265,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private void sendEndNotice() {
 		fh.setName("");
 		isCollecting.set(false);
-		state.getProgressProperty().set(-1);
+		state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		msg_log_request_end msg = new msg_log_request_end(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
