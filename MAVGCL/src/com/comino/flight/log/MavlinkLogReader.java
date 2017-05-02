@@ -70,6 +70,9 @@ import me.drton.jmavlib.log.ulog.ULogReader;
 
 public class MavlinkLogReader implements IMAVLinkListener {
 
+	private static final int LOG_PACKAGES_SITL = 1000;
+	private static final int LOG_PACKAGES_PX4  = 100;
+
 	private IMAVController control = null;
 	private int     last_log_id   = 0;
 	private long  log_bytes_read  = 0;
@@ -81,11 +84,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private BooleanProperty isCollecting = new SimpleBooleanProperty();
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 
-	private long tms = 0;
 	private long start = 0;
 	private long time_utc=0;
 
-	private ScheduledFuture<?> timeout = null;
+	private long package_count=0;
+	private int package_size=0;
+
 	private StateProperties state = null;
 	private MSPLogger logger;
 	private FileHandler fh;
@@ -96,6 +100,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		this.state = StateProperties.getInstance();
 		this.logger = MSPLogger.getInstance();
 		this.fh     = FileHandler.getInstance();
+
+		if(control.isSimulation()) {
+			package_size = LOG_PACKAGES_SITL;
+		}
+		else
+			package_size = LOG_PACKAGES_PX4;
 	}
 
 	public void requestLastLog() {
@@ -116,14 +126,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		state.getProgressProperty().set(0);
 		state.getLogLoadedProperty().set(false);
 		fh.setName("Log loading..");
-		logger.writeLocalMsg("[mgc] Request MAVLinkLog");
-		setTimeout();
+		logger.writeLocalMsg("[mgc] Request latest log");
 	}
 
 	public void cancel() {
-
-		if(!timeout.cancel(true))
-			System.out.println("LOG Worker thread cancelling failed");
 
 		if(!isCollecting.get())
 			return;
@@ -133,7 +139,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		} catch (Exception e) {  }
 		sendEndNotice();
 		state.getLogLoadedProperty().set(false);
-		logger.writeLocalMsg("[mgc] Loading MAVLinkLog cancelled");
+		logger.writeLocalMsg("[mgc] Loading log cancelled");
 	}
 
 	@Override
@@ -147,7 +153,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 			msg_log_entry entry = (msg_log_entry) o;
 			last_log_id = entry.num_logs - 1;
-			setTimeout();
 
 			if(last_log_id > -1) {
 				if(entry.id != last_log_id) {
@@ -159,7 +164,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					control.sendMAVLinkMessage(msg);
 				}
 				else {
-					timeout.cancel(true);
 					time_utc = entry.time_utc;
 					try {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
@@ -171,12 +175,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						return;
 					}
 					logger.writeLocalMsg(
-							"[mgc] Loading Log ("+last_log_id+") - Size: "+(entry.size/1024)+" kb");
+							"[mgc] Loading Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
+					package_count = 0;
 					msg_log_request_data msg = new msg_log_request_data(255,1);
 					msg.target_component = 1;
 					msg.target_system = 1;
 					msg.id = last_log_id;
-					msg.count = Long.MAX_VALUE;
+					msg.ofs   = 0;
+					msg.count = 90 * package_size;
 					control.sendMAVLinkMessage(msg);
 				}
 			}
@@ -188,21 +194,15 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				return;
 
 			msg_log_data data = (msg_log_data) o;
-		//	System.out.println(data.id+":"+log_bytes_total+"."+data.ofs);
+			//			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
 			for(int i=0;i< data.count;i++) {
 				try {
 					out.write(data.data[i]);
-					out.flush();
 				} catch (IOException e) { cancel(); }
 			}
 			log_bytes_read = data.ofs;
 
-			if((System.currentTimeMillis()-tms)>5000) {
-				state.getProgressProperty().set(getProgress()/100f);
-				tms = System.currentTimeMillis();
-			}
-
-			if(data.count==0) {
+			if(data.count<90) {
 				try {
 					System.out.println();
 					out.flush();
@@ -211,21 +211,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				try {
 					collector.clearModelList();
 					sendEndNotice();
-					timeout.cancel(true);
-					Thread.sleep(100);
-					if(PX4Parameters.getInstance().get("SYS_LOGGER").value==1) {
-						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
-						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
-						converter.doConversion();
-						reader.close();
-					} else {
-						ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
-						UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
-						converter.doConversion();
-						reader.close();
-					}
+					//					if(PX4Parameters.getInstance().get("SYS_LOGGER").value==1) {
+					//						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
+					//						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
+					//						converter.doConversion();
+					//						reader.close();
+					//					} else {
+					ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
+					UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
+					converter.doConversion();
+					reader.close();
+					//					}
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
-					logger.writeLocalMsg("[mgc] Reading log finished ("+speed+" kbtyes/sec)");
+					logger.writeLocalMsg("[mgc] Reading log finished ("+speed+" kb/sec)");
 					state.getLogLoadedProperty().set(true);
 					fh.setName("Log-"+last_log_id+"-"+time_utc);
 				} catch (Exception e) {
@@ -235,8 +233,20 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					e.printStackTrace();
 				}
 				state.getLogLoadedProperty().set(true);
-			} else
-				setTimeout();
+			} else {
+
+				if(++package_count>=package_size) {
+					package_count = 0;
+					msg_log_request_data msg = new msg_log_request_data(255,1);
+					msg.target_component = 1;
+					msg.target_system = 1;
+					msg.id = last_log_id;
+					msg.ofs   = data.ofs+90;
+					msg.count = 90 * package_size;
+					control.sendMAVLinkMessage(msg);
+					state.getProgressProperty().set(getProgress()/100f);
+				}
+			}
 		}
 	}
 
@@ -248,19 +258,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return isCollecting;
 	}
 
-
-	private void setTimeout() {
-		if(timeout!=null)
-			timeout.cancel(true);
-		timeout = ExecutorService.get().schedule(() -> {
-			try {
-				out.close();
-			} catch (IOException e) { }
-			sendEndNotice();
-			logger.writeLocalMsg("[mgc] Loading log failed: Timeout");
-			state.getLogLoadedProperty().set(false);
-		}, 2, TimeUnit.SECONDS);
-	}
 
 	private void sendEndNotice() {
 		fh.setName("");
