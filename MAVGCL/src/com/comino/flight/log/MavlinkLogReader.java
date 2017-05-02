@@ -70,6 +70,8 @@ import me.drton.jmavlib.log.ulog.ULogReader;
 
 public class MavlinkLogReader implements IMAVLinkListener {
 
+	private static final int LOG_PACKAG_DATA_LENGTH = 90;
+
 	private static final int LOG_PACKAGES_SITL = 1000;
 	private static final int LOG_PACKAGES_PX4  = 100;
 
@@ -86,6 +88,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private long start = 0;
 	private long time_utc=0;
+
+	private boolean isUlog = true;
 
 	private long package_count=0;
 	private int package_size=0;
@@ -130,10 +134,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	public void cancel() {
-
 		if(!isCollecting.get())
 			return;
-
 		try {
 			out.close();
 		} catch (Exception e) {  }
@@ -145,9 +147,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	@Override
 	public void received(Object o) {
 
-
 		if( o instanceof msg_log_entry) {
-
 			if(!isCollecting.get())
 				return;
 
@@ -182,7 +182,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					msg.target_system = 1;
 					msg.id = last_log_id;
 					msg.ofs   = 0;
-					msg.count = 90 * package_size;
+					msg.count = LOG_PACKAG_DATA_LENGTH * package_size;
 					control.sendMAVLinkMessage(msg);
 				}
 			}
@@ -202,7 +202,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			}
 			log_bytes_read = data.ofs;
 
-			if(data.count<90) {
+			if(data.count<LOG_PACKAG_DATA_LENGTH) {
 				try {
 					System.out.println();
 					out.flush();
@@ -211,19 +211,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				try {
 					collector.clearModelList();
 					sendEndNotice();
-					//					if(PX4Parameters.getInstance().get("SYS_LOGGER").value==1) {
-					//						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
-					//						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
-					//						converter.doConversion();
-					//						reader.close();
-					//					} else {
-					ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
-					UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
-					converter.doConversion();
-					reader.close();
-					//					}
+					if(isUlog) {
+						ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
+						UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
+						converter.doConversion();
+						reader.close();
+					} else {
+						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
+						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
+						converter.doConversion();
+						reader.close();
+					}
 					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
-					logger.writeLocalMsg("[mgc] Reading log finished ("+speed+" kb/sec)");
+					logger.writeLocalMsg("[mgc] Import completed ("+speed+" kb/sec)");
 					state.getLogLoadedProperty().set(true);
 					fh.setName("Log-"+last_log_id+"-"+time_utc);
 				} catch (Exception e) {
@@ -241,8 +241,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					msg.target_component = 1;
 					msg.target_system = 1;
 					msg.id = last_log_id;
-					msg.ofs   = data.ofs+90;
-					msg.count = 90 * package_size;
+					msg.ofs   = data.ofs+LOG_PACKAG_DATA_LENGTH;
+					msg.count = LOG_PACKAG_DATA_LENGTH * package_size;
 					control.sendMAVLinkMessage(msg);
 					state.getProgressProperty().set(getProgress()/100f);
 				}
