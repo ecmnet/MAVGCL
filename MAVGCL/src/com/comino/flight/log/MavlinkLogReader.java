@@ -39,12 +39,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
@@ -56,8 +53,6 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
-import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
@@ -73,7 +68,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 
 	private static final int LOG_PACKAGES_SITL = 1000;
-	private static final int LOG_PACKAGES_PX4  = 100;
+	private static final int LOG_PACKAGES_PX4  = 1;
 
 	private IMAVController control = null;
 	private int     last_log_id   = 0;
@@ -139,7 +134,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
 			if((System.currentTimeMillis()-received_ms)>5000)
 				cancel("[mgc] Importing log failed: Timeout");
-		}, 2000, 1000, TimeUnit.MILLISECONDS);
+		}, 2000, 5000, TimeUnit.MILLISECONDS);
 	}
 
 	public void cancel() {
