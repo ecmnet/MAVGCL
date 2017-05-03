@@ -127,11 +127,7 @@ public class UBXRTCM3Base implements Runnable {
 		if(connected)
 			return;
 
-		Vector<String> ubx_ports = UBXSerialConnection.getPortList(false);
-		if(ubx_ports.size()==0)
-			return;
-
-		this.ubx = new UBXSerialConnection(ubx_ports.firstElement(), 9600);
+		this.ubx = new UBXSerialConnection(9600);
 		this.ubx.setMeasurementRate(1);
 
 		try {
