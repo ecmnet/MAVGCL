@@ -72,6 +72,8 @@ public class UBXRTCM3Base implements Runnable {
 	private float mean_acc = 0;
 	private DecimalFormat format = new DecimalFormat("#0.0");
 
+	private MSPLogger logger =null;
+
 	private IMAVController control;
 
 	public static UBXRTCM3Base getInstance(IMAVController control, AnalysisModelService analysisModelService) {
@@ -89,6 +91,7 @@ public class UBXRTCM3Base implements Runnable {
 
 		this.control = control;
 		this.analysisModelService = analysisModelService;
+		this.logger = MSPLogger.getInstance();
 
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
@@ -97,14 +100,14 @@ public class UBXRTCM3Base implements Runnable {
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				logger.writeLocalMsg("[mgc] Survey-In started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 		});
 
 		valid.addListener((p,o,n) -> {
 			if(n.booleanValue())
-				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 stream active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				logger.writeLocalMsg("[mgc] RTCM3 stream active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			else
-				MSPLogger.getInstance().writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				logger.writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 		});
 
 	}
@@ -133,8 +136,6 @@ public class UBXRTCM3Base implements Runnable {
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
 			this.ubx.init(60,accuracy);
-			MSPLogger.getInstance().writeLocalMsg("[mgc] StartUp RTCM3 base...with SVIN accuracy: "
-			                              +format.format(accuracy)+"m",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 			connected = true;
 		} catch (Exception e) {
 			return;
@@ -145,6 +146,8 @@ public class UBXRTCM3Base implements Runnable {
 			@Override
 			public void streamClosed() {
 				try {
+					if(svin.get())
+						logger.writeLocalMsg("[mgc] Survey-In timeout", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 					connected = false;
 					valid.set(false); svin.set(false);
 					ubx.release(false, 100);
@@ -158,7 +161,7 @@ public class UBXRTCM3Base implements Runnable {
 				svin.set(is_svin);
 				mean_acc = meanacc;
 				if((time_svin % 30) == 0 && is_svin)
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Survey-In: "+format.format(meanacc)+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					logger.writeLocalMsg("[mgc] Survey-In: "+format.format(meanacc)+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			    analysisModelService.getCurrent().setValue("SVINACC", meanacc);
 			}
 
@@ -202,12 +205,6 @@ public class UBXRTCM3Base implements Runnable {
 				}
 
 			}
-
 		});
-
-
 	}
-
-
-
 }
