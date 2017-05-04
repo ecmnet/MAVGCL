@@ -68,7 +68,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 
 	private static final int LOG_PACKAGES_SITL = 1000;
-	private static final int LOG_PACKAGES_PX4  = 1;
+	private static final int LOG_PACKAGES_PX4  = 5;
 
 	private IMAVController control = null;
 	private int     last_log_id   = 0;
