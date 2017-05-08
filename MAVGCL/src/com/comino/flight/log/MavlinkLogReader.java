@@ -68,7 +68,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 
 	private static final int LOG_PACKAGES_SITL = 1000;
-	private static final int LOG_PACKAGES_PX4  = 5;
+	private static final int LOG_PACKAGES_PX4  = 10;
 
 	private IMAVController control = null;
 	private int     last_log_id   = 0;
@@ -132,7 +132,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		logger.writeLocalMsg("[mgc] Request latest log");
 
 		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
-			if((System.currentTimeMillis()-received_ms)>5000)
+			if((System.currentTimeMillis()-received_ms)>15000)
 				cancel("[mgc] Importing log failed: Timeout");
 		}, 2000, 5000, TimeUnit.MILLISECONDS);
 	}
@@ -164,6 +164,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
 					} catch (FileNotFoundException e) { cancel(); }
 					log_bytes_read = 0; log_bytes_total = entry.size;
+
+					if(entry.size==0) {
+						cancel("[mgc] No import: LogSize zero");
+						return;
+					}
 
 					logger.writeLocalMsg(
 							"[mgc] Importing Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
