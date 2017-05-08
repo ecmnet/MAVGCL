@@ -67,7 +67,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 
-	private static final int LOG_PACKAGES_SITL = 1000;
+	private static final int LOG_PACKAGES_SITL = 10;
 	private static final int LOG_PACKAGES_PX4  = 10;
 
 	private IMAVController control = null;
@@ -189,7 +189,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			received_ms = System.currentTimeMillis();
 
 			msg_log_data data = (msg_log_data) o;
-			//			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
+			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
+			
 			try {
 				for(int i=0;i< data.count;i++)
 					out.write(data.data[i]);
