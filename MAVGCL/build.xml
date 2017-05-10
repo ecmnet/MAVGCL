@@ -73,7 +73,8 @@
 
 		<copy todir="dist">
 			<fileset dir=".">
-				<include name="*.icns" />
+				<include name="MAV*.icns" />
+				<include name="MAV*.png" />
 			</fileset>
 		</copy>
 		<copy todir="dist">
