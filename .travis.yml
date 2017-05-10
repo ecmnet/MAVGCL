@@ -1,6 +1,6 @@
 language: java
 
-#sudo: required
+sudo: required
 
 matrix:
   fast_finish: true
