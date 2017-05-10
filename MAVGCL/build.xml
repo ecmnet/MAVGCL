@@ -124,7 +124,7 @@
 							<fx:fileset requiredFor="preloader" dir="dist" includes="MAVGPreloader.jar"/>
 						</fx:resources>
 						<fx:info title="MAVGAnalysis" vendor="ecmnet">
-							<fx:icon href="MAVGAnalysis.icns" />
+							<fx:icon href="MAVGAnalysis.png" />
 						</fx:info>
 		</fx:deploy>
 	</target>
