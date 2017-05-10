@@ -48,6 +48,7 @@ import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
+import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
@@ -310,7 +311,7 @@ public class MainApp extends Application  {
 				});
 
 				if(log.isCollecting().get())
-					log.cancel();
+				    log.abortReadingLog();
 				else
 					log.requestLastLog();
 			}

@@ -34,22 +34,19 @@
 
 package com.comino.flight.log;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
-import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
 import com.comino.flight.file.FileHandler;
-import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -60,222 +57,232 @@ import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
 public class MavlinkLogReader implements IMAVLinkListener {
 
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 
-	private static final int LOG_PACKAGES_SITL = 10;
-	private static final int LOG_PACKAGES_PX4  = 10;
+	private static final int IDLE  = 0;
+	private static final int ENTRY = 1;
+	private static final int DATA  = 2;
+
+	private int state = 0;
 
 	private IMAVController control = null;
-	private int     last_log_id   = 0;
-	private long  log_bytes_read  = 0;
-	private long  log_bytes_total = 0;
 
-	private File tmpfile = null;
-	private BufferedOutputStream out = null;
+	private int      last_log_id  = 0;
+	private long     log_size     = 0;
+	private long     received_ms  = 0;
+	private int      retry        = 0;
+	private long     start        = 0;
+	private long     time_utc     = 0;
 
-	private BooleanProperty   isCollecting = new SimpleBooleanProperty();
-	private AnalysisModelService collector = AnalysisModelService.getInstance();
+	private int total_package_count = 0;
 
-	private long received_ms=0;
-	private long start = 0;
-	private long time_utc=0;
+	private RandomAccessFile           file = null;
 
-	private boolean isUlog = true;
+	private BooleanProperty            isCollecting    = null;
+	private List<Long>                 unread_packages = null;
+	private ScheduledFuture<?>         timeout;
 
-	private long package_count=0;
-	private int package_size=0;
+	private String path    = null;
 
-	private StateProperties state = null;
-	private MSPLogger logger;
-	private FileHandler fh;
 
-	private ScheduledFuture<?> timeout;
+	private final StateProperties      props;
+	private final MSPLogger            logger;
+	private final AnalysisModelService modelService;
+	private final FileHandler          fh;
+
 
 	public MavlinkLogReader(IMAVController control) {
-		this.control = control;
-		this.control.addMAVLinkListener(this);
-		this.state = StateProperties.getInstance();
-		this.logger = MSPLogger.getInstance();
-		this.fh     = FileHandler.getInstance();
+		this.control      = control;
+		this.props        = StateProperties.getInstance();
+		this.logger       = MSPLogger.getInstance();
+		this.fh           = FileHandler.getInstance();
+		this.modelService = AnalysisModelService.getInstance();
+		this.isCollecting = new SimpleBooleanProperty();
 
-		if(control.isSimulation()) {
-			package_size = LOG_PACKAGES_SITL;
-		}
-		else
-			package_size = LOG_PACKAGES_PX4;
+		this.control.addMAVLinkListener(this);
 	}
 
 	public void requestLastLog() {
-
 		try {
-			this.tmpfile = FileHandler.getInstance().getTempFile();
+			this.path = fh.getTempFile().getPath();
+			this.file = new RandomAccessFile(path, "rw");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		log_bytes_read = 0; log_bytes_total = 0;
-		start = System.currentTimeMillis();
-		isCollecting.set(true);
-		msg_log_request_list msg = new msg_log_request_list(255,1);
-		msg.target_component = 1;
-		msg.target_system = 1;
-		control.sendMAVLinkMessage(msg);
-		state.getProgressProperty().set(0);
-		state.getLogLoadedProperty().set(false);
-		fh.setName("Log loading..");
-		logger.writeLocalMsg("[mgc] Request latest log");
+		isCollecting.set(true); state = ENTRY; retry = 0;
+
+		modelService.getModelList().clear();
+
+		props.getProgressProperty().set(0);
+		props.getLogLoadedProperty().set(false);
 
 		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
-			if((System.currentTimeMillis()-received_ms)>15000)
-				cancel("[mgc] Importing log failed: Timeout");
-		}, 2000, 5000, TimeUnit.MILLISECONDS);
-	}
+			if((System.currentTimeMillis()-received_ms)>250) {
 
-	public void cancel() {
-		cancel("[mgc] Loading log cancelled");
-	}
-
-	@Override
-	public void received(Object o) {
-
-		if( o instanceof msg_log_entry && isCollecting.get()) {
-
-			msg_log_entry entry = (msg_log_entry) o;
-			last_log_id = entry.num_logs - 1;
-
-			if(last_log_id > -1) {
-				if(entry.id != last_log_id) {
-					msg_log_request_list msg = new msg_log_request_list(255,1);
-					msg.target_component = 1;
-					msg.target_system = 1;
-					msg.start= last_log_id;
-					msg.end = last_log_id;
-					control.sendMAVLinkMessage(msg);
-				}
-				else {
-					time_utc = entry.time_utc;
-					try {
-						out = new BufferedOutputStream(new FileOutputStream(tmpfile));
-					} catch (FileNotFoundException e) { cancel(); }
-					log_bytes_read = 0; log_bytes_total = entry.size;
-
-					if(entry.size==0) {
-						cancel("[mgc] No import: LogSize zero");
+				switch(state) {
+				case IDLE:
+					timeout.cancel(true);
+					break;
+				case ENTRY:
+					if(++retry > 3) {
+						abortReadingLog();
 						return;
 					}
-
-					logger.writeLocalMsg(
-							"[mgc] Importing Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
-					package_count = 0;
-					msg_log_request_data msg = new msg_log_request_data(255,1);
-					msg.target_component = 1;
-					msg.target_system = 1;
-					msg.id = last_log_id;
-					msg.ofs   = 0;
-					msg.count = LOG_PACKAG_DATA_LENGTH * package_size;
-					control.sendMAVLinkMessage(msg);
-				}
-			}
-		}
-
-		if( o instanceof msg_log_data && isCollecting.get()) {
-
-			received_ms = System.currentTimeMillis();
-
-			msg_log_data data = (msg_log_data) o;
-			System.out.println(data.id+":"+log_bytes_total+"."+data.ofs+":"+data.count);
-			
-			try {
-				for(int i=0;i< data.count;i++)
-					out.write(data.data[i]);
-			} catch (IOException e) { cancel(); return; }
-
-			log_bytes_read = data.ofs;
-
-			if(data.count<LOG_PACKAG_DATA_LENGTH) {
-				try {
-					out.flush();
-					out.close();
-				} catch (IOException e) { return; }
-				try {
-					sendEndNotice();
-					collector.clearModelList();
-					if(isUlog) {
-						ULogReader reader = new ULogReader(tmpfile.getAbsolutePath());
-						UlogtoModelConverter converter = new UlogtoModelConverter(reader,collector.getModelList());
-						converter.doConversion();
-						reader.close();
-					} else {
-						PX4LogReader reader = new PX4LogReader(tmpfile.getAbsolutePath());
-						PX4toModelConverter converter = new PX4toModelConverter(reader,collector.getModelList());
-						converter.doConversion();
-						reader.close();
+					requestLogList(0);
+					break;
+				case DATA:
+					if(++retry > 5) {
+						abortReadingLog();
+						return;
 					}
-					long speed = log_bytes_total * 1000 / ( 1024 * (System.currentTimeMillis() - start));
-					logger.writeLocalMsg("[mgc] Import completed ("+speed+" kb/sec)");
-					state.getLogLoadedProperty().set(true);
-					fh.setName("Log-"+last_log_id+"-"+time_utc);
-				} catch (Exception e) {
-					sendEndNotice();
-					state.getLogLoadedProperty().set(false);
-					logger.writeLocalMsg("[mgc] Importing log failed: "+e.getMessage());
-					e.printStackTrace();
-				}
-				state.getLogLoadedProperty().set(true);
-			} else {
-				if(++package_count>=package_size) {
-					package_count = 0;
-					msg_log_request_data msg = new msg_log_request_data(255,1);
-					msg.target_component = 1;
-					msg.target_system = 1;
-					msg.id = last_log_id;
-					msg.ofs   = data.ofs+LOG_PACKAG_DATA_LENGTH;
-					msg.count = LOG_PACKAG_DATA_LENGTH * package_size;
-					control.sendMAVLinkMessage(msg);
-					state.getProgressProperty().set((float)log_bytes_read / log_bytes_total);
+					int p = searchForNextUnreadPackage();
+					if(p != -1)
+						requestDataPackages(unread_packages.get(p),log_size);
+					break;
 				}
 			}
-		}
+		}, 200, 250, TimeUnit.MILLISECONDS);
+
+		logger.writeLocalMsg("[mgc] Request latest log");
+		start = System.currentTimeMillis();
+		requestLogList(0);
 	}
 
 	public BooleanProperty isCollecting() {
 		return isCollecting;
 	}
 
-	private void cancel(String s) {
-		if(!isCollecting.get())
-			return;
-		isCollecting.set(false);
+	public void abortReadingLog() {
 		try {
-			out.close();
-		} catch (Exception e) {  }
-		state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-		state.getLogLoadedProperty().set(false);
-		logger.writeLocalMsg(s);
-		killTimeOut();
+			file.close();
+		} catch (IOException e) { e.printStackTrace(); }
+		timeout.cancel(true); state = IDLE; isCollecting.set(false);
+		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
+		logger.writeLocalMsg("[mgc] Abort reading log");
 	}
 
+	@Override
+	public void received(Object o) {
+			if( o instanceof msg_log_entry && isCollecting.get())
+				handleLogEntry((msg_log_entry)o);
 
-	private void sendEndNotice() {
-		fh.setName("");
-		isCollecting.set(false);
-		state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-		msg_log_request_end msg = new msg_log_request_end(255,1);
+			if( o instanceof msg_log_data && isCollecting.get())
+				handleLogData((msg_log_data) o);
+	}
+
+	private void handleLogEntry(msg_log_entry entry) {
+		last_log_id = entry.num_logs - 1;
+		received_ms = System.currentTimeMillis();
+		if(last_log_id > -1) {
+			if(entry.id != last_log_id)
+				requestLogList(last_log_id);
+			else {
+
+				if(entry.size==0) {
+					timeout.cancel(false); state = IDLE; isCollecting.set(false);
+					return;
+				}
+				log_size = entry.size; time_utc = entry.time_utc;
+				total_package_count = prepareUnreadPackageList(entry.size);
+				System.out.println("Expected packages: "+unread_packages.size());
+				logger.writeLocalMsg("[mgc] Importing Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
+				state = DATA;
+				requestDataPackages(0,entry.size);
+
+			}
+		}
+	}
+
+	private void handleLogData(msg_log_data data) {
+		received_ms = System.currentTimeMillis(); retry = 0;
+
+		int p = getPackageNumber(data.ofs);
+
+		if(p >= unread_packages.size()|| unread_packages.get(p)== -1)
+			return;
+
+		try {
+			file.seek(data.ofs);
+			for(int i=0;i<data.count;i++)
+				file.write((byte)(data.data[i] & 0x00FF));
+		} catch (IOException e) { return; }
+
+		unread_packages.set(p, (long) -1);
+		//System.out.println("Package: "+p +" -> "+unread_packages.get(p));
+
+		int unread_count = getUnreadPackageCount();
+		props.getProgressProperty().set(1.0f - (float)unread_count / total_package_count);
+		if(unread_count==0) {
+			timeout.cancel(false); state = IDLE;
+			long speed = data.ofs * 1000 / ( 1024 * (System.currentTimeMillis() - start));
+			try {
+				file.close();
+				ULogReader reader = new ULogReader(path);
+				UlogtoModelConverter converter = new UlogtoModelConverter(reader,modelService.getModelList());
+				converter.doConversion();
+				reader.close();
+			} catch (Exception e) { e.printStackTrace(); }
+			isCollecting.set(false);
+			logger.writeLocalMsg("[mgc] Import completed ("+speed+" kb/sec)");
+			props.getLogLoadedProperty().set(true);
+			fh.setName("Log-"+last_log_id+"-"+time_utc);
+			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
+		}
+	}
+
+	private int searchForNextUnreadPackage() {
+		for(int i=0;i<unread_packages.size();i++) {
+			if(unread_packages.get(i)!= -1)
+				return i;
+		}
+		return -1;
+	}
+
+	private int getUnreadPackageCount() {
+		int c=0;
+		for(int i=0;i<unread_packages.size();i++) {
+			if(unread_packages.get(i)!= -1)
+				c++;
+		}
+		return c;
+	}
+
+	private int prepareUnreadPackageList(long size) {
+		unread_packages = new ArrayList<Long>();
+		// TODO determine count of packages and fill list with offset
+		int count = getPackageNumber(size);
+		for(long i=0;i<count+1;i++)
+			unread_packages.add(i * LOG_PACKAG_DATA_LENGTH);
+		return count;
+	}
+
+	private int getPackageNumber(long offset) {
+		return (int)(offset / LOG_PACKAG_DATA_LENGTH);
+	}
+
+	private void requestDataPackages(long offset, long len) {
+		System.out.println("Request packages from: "+offset);
+		msg_log_request_data msg = new msg_log_request_data(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
+		msg.id = last_log_id;
+		msg.ofs   = offset;
+		msg.count = len;
 		control.sendMAVLinkMessage(msg);
-		killTimeOut();
 	}
 
-	private void killTimeOut() {
-		if(timeout!=null)
-			timeout.cancel(true);
+	private void requestLogList(int id) {
+		msg_log_request_list msg = new msg_log_request_list(255,1);
+		msg.target_component = 1;
+		msg.target_system = 1;
+		msg.start= id;
+		msg.end = id;
+		control.sendMAVLinkMessage(msg);
 	}
-
 }
