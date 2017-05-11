@@ -104,6 +104,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		this.isCollecting = new SimpleBooleanProperty();
 
 		this.control.addMAVLinkListener(this);
+
 	}
 
 	public void requestLastLog() {
@@ -130,7 +131,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					timeout.cancel(true);
 					break;
 				case ENTRY:
-					if(++retry > 3) {
+					if(++retry > 5) {
 						abortReadingLog();
 						return;
 					}
@@ -169,11 +170,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	@Override
 	public void received(Object o) {
-			if( o instanceof msg_log_entry && isCollecting.get())
-				handleLogEntry((msg_log_entry)o);
+		if( o instanceof msg_log_entry && isCollecting.get())
+			handleLogEntry((msg_log_entry)o);
 
-			if( o instanceof msg_log_data && isCollecting.get())
-				handleLogData((msg_log_data) o);
+		if( o instanceof msg_log_data && isCollecting.get())
+			handleLogData((msg_log_data) o);
 	}
 
 	private void handleLogEntry(msg_log_entry entry) {
@@ -211,7 +212,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			file.seek(data.ofs);
 			for(int i=0;i<data.count;i++)
 				file.write((byte)(data.data[i] & 0x00FF));
-		} catch (IOException e) { return; }
+		} catch (IOException e) { System.err.println(e.getLocalizedMessage()); return; }
 
 		unread_packages.set(p, (long) -1);
 		//System.out.println("Package: "+p +" -> "+unread_packages.get(p));
@@ -221,6 +222,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		if(unread_count==0) {
 			timeout.cancel(false); state = IDLE;
 			long speed = data.ofs * 1000 / ( 1024 * (System.currentTimeMillis() - start));
+
 			try {
 				file.close();
 				ULogReader reader = new ULogReader(path);
@@ -228,6 +230,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				converter.doConversion();
 				reader.close();
 			} catch (Exception e) { e.printStackTrace(); }
+
 			isCollecting.set(false);
 			logger.writeLocalMsg("[mgc] Import completed ("+speed+" kb/sec)");
 			props.getLogLoadedProperty().set(true);
@@ -267,7 +270,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void requestDataPackages(long offset, long len) {
-		System.out.println("Request packages from: "+offset);
+		//System.out.println("Request packages from: "+offset);
 		msg_log_request_data msg = new msg_log_request_data(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
