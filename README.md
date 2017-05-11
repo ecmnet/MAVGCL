@@ -4,7 +4,7 @@
 
 ## In-Flight/PX4Log/ULog Analyzer for PX4
 
-![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
+![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 
 
@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 10/05/2017
+**Development Status:** Last updated 11/05/2017
 
 - Import of latest log file fixing (WIP, Ulog supported only)
 
