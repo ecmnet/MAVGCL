@@ -66,19 +66,22 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private static final int IDLE  = 0;
 	private static final int ENTRY = 1;
 	private static final int DATA  = 2;
+	private static final int RETRY = 3;
 
 	private int state = 0;
 
 	private IMAVController control = null;
 
 	private int      last_log_id  = 0;
-	private long     log_size     = 0;
 	private long     received_ms  = 0;
 	private int      retry        = 0;
 	private long     start        = 0;
 	private long     time_utc     = 0;
 
 	private int total_package_count = 0;
+
+	private int chunk_offset = 0;
+	private int chunk_size = 0;
 
 	private RandomAccessFile           file = null;
 
@@ -124,31 +127,33 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getLogLoadedProperty().set(false);
 
 		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
-			if((System.currentTimeMillis()-received_ms)>250) {
+			if((System.currentTimeMillis()-received_ms)>50) {
 
 				switch(state) {
 				case IDLE:
 					timeout.cancel(true);
 					break;
 				case ENTRY:
-					if(++retry > 5) {
+					if(++retry > 25) {
 						abortReadingLog();
 						return;
 					}
+					received_ms = System.currentTimeMillis();
 					requestLogList(0);
 					break;
 				case DATA:
-					if(++retry > 5) {
+					if(++retry > 25) {
 						abortReadingLog();
 						return;
 					}
-					int p = searchForNextUnreadPackage();
-					if(p != -1)
-						requestDataPackages(unread_packages.get(p),log_size);
+					if(searchForNextUnreadPackage()) {
+						requestDataPackages(chunk_offset*LOG_PACKAG_DATA_LENGTH,chunk_size*LOG_PACKAG_DATA_LENGTH);
+					}
+					received_ms = System.currentTimeMillis();
 					break;
 				}
 			}
-		}, 200, 250, TimeUnit.MILLISECONDS);
+		}, 2000, 50, TimeUnit.MILLISECONDS);
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
@@ -189,7 +194,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					timeout.cancel(false); state = IDLE; isCollecting.set(false);
 					return;
 				}
-				log_size = entry.size; time_utc = entry.time_utc;
+				time_utc = entry.time_utc;
 				total_package_count = prepareUnreadPackageList(entry.size);
 				System.out.println("Expected packages: "+unread_packages.size());
 				logger.writeLocalMsg("[mgc] Importing Log ("+last_log_id+") - "+(entry.size/1024)+" kb");
@@ -239,12 +244,22 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 	}
 
-	private int searchForNextUnreadPackage() {
-		for(int i=0;i<unread_packages.size();i++) {
-			if(unread_packages.get(i)!= -1)
-				return i;
+	private boolean searchForNextUnreadPackage() {
+		chunk_offset = -1;
+		for(int i=0;i<unread_packages.size() && chunk_offset== -1;i++) {
+			if(unread_packages.get(i)!= -1) {
+				chunk_offset = i; chunk_size=unread_packages.size();
+			}
 		}
-		return -1;
+
+		if(chunk_offset==-1)
+			return false;
+
+		chunk_size = 0;
+		for(int i=chunk_offset; i<unread_packages.size() && unread_packages.get(i) != -1;i++ )
+			chunk_size++;
+
+		return true;
 	}
 
 	private int getUnreadPackageCount() {
@@ -270,7 +285,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void requestDataPackages(long offset, long len) {
-		//System.out.println("Request packages from: "+offset);
+//		System.out.println("Request packages from: "+offset+ " ("+len+" bytes)");
 		msg_log_request_data msg = new msg_log_request_data(255,1);
 		msg.target_component = 1;
 		msg.target_system = 1;
@@ -288,4 +303,5 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		msg.end = id;
 		control.sendMAVLinkMessage(msg);
 	}
+
 }
