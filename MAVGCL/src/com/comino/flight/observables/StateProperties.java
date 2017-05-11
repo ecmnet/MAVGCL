@@ -33,12 +33,15 @@
 
 package com.comino.flight.observables;
 
+import java.util.concurrent.TimeUnit;
+
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -72,6 +75,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private BooleanProperty isBaseAvailable                 = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
+	private BooleanProperty isInitializedProperty           = new SimpleBooleanProperty();
 
 	private FloatProperty progress 							= new SimpleFloatProperty(-1);
 
@@ -97,6 +101,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 		this.control.addStatusChangeListener(this);
         this.logger = MSPLogger.getInstance();
 		simulationProperty.set(control.isSimulation());
+		ExecutorService.get().schedule(() -> { isInitializedProperty.set(true); }, 5, TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -193,5 +198,10 @@ public class StateProperties implements IMSPStatusChangedListener{
 	public BooleanProperty getRecordingAvailableProperty() {
 		return isRecordingAvailableProperty;
 	}
+
+	public BooleanProperty getInitializedProperty() {
+		return isInitializedProperty;
+	}
+
 
 }

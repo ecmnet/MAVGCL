@@ -132,7 +132,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		predelay.getSelectionModel().select(0);
 		predelay.setDisable(true);
 
-		recording.disableProperty().bind(state.getConnectedProperty().not());
+		recording.disableProperty().bind(state.getConnectedProperty().not().or(state.getInitializedProperty().not()));
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
 		});
