@@ -4,7 +4,8 @@
 
 ## In-Flight/PX4Log/ULog Analyzer for PX4 
 
-![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true) ![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
+[![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)](https://travis-ci.org/ecmnet/MAVGCL) [![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)](https://ci.appveyor.com/project/ecmnet/mavgcl) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
+
 
 
 
@@ -14,7 +15,8 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 12/05/2017
 
-- Import of latest log file fixing (WIP, Ulog supported only)
+- Import of latest log file fixing
+- Currently no linux build via travis
 
 V0.6xx notes:
 
