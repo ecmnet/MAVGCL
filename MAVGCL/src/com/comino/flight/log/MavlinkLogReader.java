@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
 import org.mavlink.messages.lquac.msg_log_request_data;
+import org.mavlink.messages.lquac.msg_log_request_end;
 import org.mavlink.messages.lquac.msg_log_request_list;
 
 import com.comino.flight.file.FileHandler;
@@ -71,7 +72,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private static final int IDLE = 0;
 	private static final int ENTRY = 1;
 	private static final int DATA = 2;
-	private static final int RETRY = 3;
 
 	private int state = 0;
 
@@ -186,6 +186,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private void handleLogEntry(msg_log_entry entry) {
 		last_log_id = entry.num_logs - 1;
+		System.out.println(entry);
 		received_ms = System.currentTimeMillis();
 		if (last_log_id > -1) {
 			if (entry.id != last_log_id)
@@ -233,7 +234,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		if (unread_count == 0) {
 			stop();
 			long speed = data.ofs * 1000 / (1024 * (System.currentTimeMillis() - start));
-
+			sendEndNotice();
 			try {
 				ParameterAttributes pa = PX4Parameters.getInstance().get("SYS_LOGGER");
 				if (pa == null || pa.value != 0) {
@@ -260,6 +261,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void stop() {
+		sendEndNotice();
 		timeout.cancel(false);
 		state = IDLE;
 		isCollecting.set(false);
@@ -328,6 +330,13 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		msg.target_system = 1;
 		msg.start = id;
 		msg.end = id;
+		control.sendMAVLinkMessage(msg);
+	}
+
+	private void sendEndNotice() {
+		msg_log_request_end msg = new msg_log_request_end(255,1);
+		msg.target_component = 1;
+		msg.target_system = 1;
 		control.sendMAVLinkMessage(msg);
 	}
 
