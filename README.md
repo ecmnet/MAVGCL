@@ -4,7 +4,7 @@
 
 ## In-Flight/PX4Log/ULog Analyzer for PX4
 
-![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true) ![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
+![Build status](https://ci.appveyor.com/api/projects/status/jqo0dnkcksaj6b3s?svg=true)![Build Status](https://travis-ci.org/ecmnet/MAVGCL.svg?branch=master)![alt tag](https://img.shields.io/github/release/ecmnet/MAVGCL.svg)
 
 
 
