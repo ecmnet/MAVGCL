@@ -144,7 +144,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						return;
 					}
 					received_ms = System.currentTimeMillis();
-					requestLogList(0);
+					requestLogList(9999);
 					break;
 				case DATA:
 					if (++retry > 10) {
@@ -162,7 +162,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
-		requestLogList(0);
+		requestLogList(9999);
 	}
 
 	public BooleanProperty isCollecting() {
