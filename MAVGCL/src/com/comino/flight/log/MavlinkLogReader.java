@@ -36,6 +36,8 @@ package com.comino.flight.log;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -153,7 +155,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					break;
 				}
 			}
-		}, 2000, 50, TimeUnit.MILLISECONDS);
+		}, 5000, 50, TimeUnit.MILLISECONDS);
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
@@ -239,7 +241,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			isCollecting.set(false);
 			logger.writeLocalMsg("[mgc] Import completed ("+speed+" kb/sec)");
 			props.getLogLoadedProperty().set(true);
-			fh.setName("Log-"+last_log_id+"-"+time_utc);
+			DateFormat formatter = new SimpleDateFormat("YYYY-MM-DD");
+			fh.setName("Log-"+last_log_id+"-"+formatter.format(time_utc));
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		}
 	}
