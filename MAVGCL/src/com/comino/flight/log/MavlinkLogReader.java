@@ -68,6 +68,7 @@ import me.drton.jmavlib.log.ulog.ULogReader;
 public class MavlinkLogReader implements IMAVLinkListener {
 
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
+	private static final int GET_LAST_LOG_ID = 99999;
 
 	private static final int IDLE = 0;
 	private static final int ENTRY = 1;
@@ -144,7 +145,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 						return;
 					}
 					received_ms = System.currentTimeMillis();
-					requestLogList(9999);
+					requestLogList(GET_LAST_LOG_ID);
 					break;
 				case DATA:
 					if (++retry > 10) {
@@ -162,7 +163,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
-		requestLogList(9999);
+		requestLogList(GET_LAST_LOG_ID);
 	}
 
 	public BooleanProperty isCollecting() {
@@ -186,7 +187,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private void handleLogEntry(msg_log_entry entry) {
 		last_log_id = entry.num_logs - 1;
-		System.out.println(entry);
 		received_ms = System.currentTimeMillis();
 		if (last_log_id > -1) {
 			if (entry.id != last_log_id)
