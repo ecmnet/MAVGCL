@@ -134,9 +134,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		predelay.setDisable(true);
 
 		recording.disableProperty().bind(
-				    state.getConnectedProperty().not()
+				state.getConnectedProperty().not()
 				.or(state.getInitializedProperty().not())
-				 );
+				);
 
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
@@ -148,7 +148,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		clear.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
 				.or(state.getRecordingAvailableProperty().not()
-				.and(state.getLogLoadedProperty().not())));
+						.and(state.getLogLoadedProperty().not())));
 		clear.setOnAction((ActionEvent event)-> {
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
@@ -159,7 +159,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
-	//			AnalysisModelService.getInstance().clearModelList();
+				//			AnalysisModelService.getInstance().clearModelList();
 				FileHandler.getInstance().clear();
 				state.getLogLoadedProperty().set(false);
 				charts.refreshCharts();
@@ -167,7 +167,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			} else {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
-					&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+						&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
 					recording(false,0);
 					try {
 						FileHandler.getInstance().autoSave();
@@ -221,45 +221,43 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			Platform.runLater(() -> {
 			switch(nv.intValue()) {
+				case AnalysisModelService.STOPPED:
+					recording.selectedProperty().set(false);
+					isrecording.setFill(Color.LIGHTGREY);
 
-			case AnalysisModelService.STOPPED:
-
-				recording.selectedProperty().set(false);
-				isrecording.setFill(Color.LIGHTGREY);
-
-				if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
-						modelService.getTotalRecordingTimeMS() / 1000 > 5) {
-					try {
-						FileHandler.getInstance().autoSave();
-					} catch (IOException e) {
-						e.printStackTrace();
+					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
+							modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+						try {
+							FileHandler.getInstance().autoSave();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
+					break;
+
+				case AnalysisModelService.READING_HEADER:
+					FileHandler.getInstance().clear();
+					recording.selectedProperty().set(true);
+					isrecording.setFill(Color.STEELBLUE);
+					break;
+
+				case AnalysisModelService.PRE_COLLECTING:
+					FileHandler.getInstance().clear();
+					recording.selectedProperty().set(true);
+					isrecording.setFill(Color.LIGHTBLUE);
+					break;
+
+				case AnalysisModelService.POST_COLLECTING:
+					recording.selectedProperty().set(true);
+					isrecording.setFill(Color.LIGHTYELLOW);
+					break;
+
+				case AnalysisModelService.COLLECTING:
+					FileHandler.getInstance().clear();
+					recording.selectedProperty().set(true);
+					isrecording.setFill(Color.RED);
+					break;
 				}
-				break;
-
-			case AnalysisModelService.READING_HEADER:
-				FileHandler.getInstance().clear();
-				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.STEELBLUE);
-				break;
-
-			case AnalysisModelService.PRE_COLLECTING:
-				FileHandler.getInstance().clear();
-				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.LIGHTBLUE);
-				break;
-
-			case AnalysisModelService.POST_COLLECTING:
-				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.LIGHTYELLOW);
-				break;
-
-			case AnalysisModelService.COLLECTING:
-				FileHandler.getInstance().clear();
-				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.RED);
-				break;
-			}
 			});
 		});
 
