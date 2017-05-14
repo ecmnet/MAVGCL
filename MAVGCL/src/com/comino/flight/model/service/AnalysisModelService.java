@@ -329,7 +329,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				current.setValue("MAVGCLPERF", perf);
 				current.setValue("MAVGCLACC", perf2);
 
-				synchronized(this) {
+//				synchronized(this) {
 
 					current.msg = null; wait = System.nanoTime();
 
@@ -363,7 +363,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 						ulogger.enableLogging(false);
 						state.getRecordingProperty().set(false);
 					}
-				}
+//				}
 
 				if(mode!=STOPPED) {
 
