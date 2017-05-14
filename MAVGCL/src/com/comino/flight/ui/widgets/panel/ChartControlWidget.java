@@ -161,7 +161,7 @@ public class ChartControlWidget extends WidgetPane  {
 		});
 
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.booleanValue()) {
+			if(newvalue.intValue()!=AnalysisModelService.STOPPED) {
 				scroll.setDisable(true);
 				scroll.setValue(0);
 				return;

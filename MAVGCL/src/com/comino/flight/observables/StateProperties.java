@@ -45,8 +45,10 @@ import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class StateProperties implements IMSPStatusChangedListener{
 
@@ -65,7 +67,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 	private BooleanProperty altholdProperty 				= new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty 				= new SimpleBooleanProperty();
 
-	private BooleanProperty recordingProperty     			= new SimpleBooleanProperty();
+	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
 	private BooleanProperty isRecordingAvailableProperty	= new SimpleBooleanProperty();
@@ -163,7 +165,7 @@ public class StateProperties implements IMSPStatusChangedListener{
 		return rcProperty;
 	}
 
-	public BooleanProperty getRecordingProperty() {
+	public IntegerProperty getRecordingProperty() {
 		return recordingProperty;
 	}
 

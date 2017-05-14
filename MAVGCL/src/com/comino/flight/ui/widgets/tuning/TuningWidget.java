@@ -46,6 +46,7 @@ import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
@@ -152,7 +153,7 @@ public class TuningWidget extends WidgetPane  {
 			params.refreshParameterList(false);
 		});
 		reload.disableProperty().bind(state.getArmedProperty()
-				.or(state.getRecordingProperty())
+				.or(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED))
 				.or(state.getConnectedProperty().not()));
 
 		params.getAttributeProperty().addListener(new ChangeListener<Object>() {

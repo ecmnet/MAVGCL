@@ -48,6 +48,7 @@ import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -145,7 +146,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			recording(newvalue, 0);
 		});
 
-		clear.disableProperty().bind(state.getRecordingProperty()
+		clear.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
 				.or(state.getRecordingAvailableProperty().not()
 				.and(state.getLogLoadedProperty().not())));
 		clear.setOnAction((ActionEvent event)-> {
@@ -165,7 +166,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				info.clear();
 			} else {
 
-				if( state.getRecordingProperty().get()
+				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
 					&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
 					recording(false,0);
 					try {
@@ -207,20 +208,21 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(!newvalue.booleanValue())
-				state.getRecordingProperty().set(false);
+				state.getRecordingProperty().set(AnalysisModelService.STOPPED);
 		});
 
 		this.disabledProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.booleanValue())
-				state.getRecordingProperty().set(false);
+				state.getRecordingProperty().set(AnalysisModelService.STOPPED);
 		});
 
 		enablemodetrig.selectedProperty().set(true);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			switch(modelService.getMode()) {
+			Platform.runLater(() -> {
+			switch(nv.intValue()) {
 
-			case ModelCollectorService.STOPPED:
+			case AnalysisModelService.STOPPED:
 
 				recording.selectedProperty().set(false);
 				isrecording.setFill(Color.LIGHTGREY);
@@ -235,20 +237,30 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				}
 				break;
 
-			case ModelCollectorService.PRE_COLLECTING:
+			case AnalysisModelService.READING_HEADER:
 				FileHandler.getInstance().clear();
 				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.LIGHTBLUE); break;
-			case ModelCollectorService.POST_COLLECTING:
+				isrecording.setFill(Color.STEELBLUE);
+				break;
 
-				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.LIGHTYELLOW); break;
-			case ModelCollectorService.COLLECTING:
-
+			case AnalysisModelService.PRE_COLLECTING:
 				FileHandler.getInstance().clear();
 				recording.selectedProperty().set(true);
-				isrecording.setFill(Color.RED); break;
+				isrecording.setFill(Color.LIGHTBLUE);
+				break;
+
+			case AnalysisModelService.POST_COLLECTING:
+				recording.selectedProperty().set(true);
+				isrecording.setFill(Color.LIGHTYELLOW);
+				break;
+
+			case AnalysisModelService.COLLECTING:
+				FileHandler.getInstance().clear();
+				recording.selectedProperty().set(true);
+				isrecording.setFill(Color.RED);
+				break;
 			}
+			});
 		});
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> {

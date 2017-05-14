@@ -781,7 +781,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			int max_x = mList.size();
-			if(!state.getRecordingProperty().get() && current_x1_pt < max_x)
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
 
@@ -847,7 +847,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		grid.setModel(control.getCurrentModel());
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
+			if(nv.intValue()!=AnalysisModelService.STOPPED) {
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);

@@ -573,7 +573,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		series3.setName(type3.desc1);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
+			if(nv.intValue()!=AnalysisModelService.STOPPED ) {
 				current_x0_pt = 0;
 				scroll.setValue(0);
 				isRunning = true;
@@ -760,7 +760,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
 			int max_x = dataService.getModelList().size();
-			if((!state.getRecordingProperty().get() || isPaused) && current_x1_pt < max_x)
+			if((state.getRecordingProperty().get()==AnalysisModelService.STOPPED || isPaused) && current_x1_pt < max_x)
 				max_x = current_x1_pt;
 
 			if(dash.isSelected() && dataService.getModelList().size()>0

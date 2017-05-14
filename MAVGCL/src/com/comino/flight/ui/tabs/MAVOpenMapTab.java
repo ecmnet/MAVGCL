@@ -238,7 +238,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 				// TODO MAVOpenMapTab: Draw path also in replay
 
-				if(state.getRecordingProperty().get() &&
+				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
 						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
 
 
@@ -325,7 +325,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		});
 
 		scroll.addListener((v, ov, nv) -> {
-			if(!state.getRecordingProperty().get()) {
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED) {
 
 				int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
 
@@ -419,7 +419,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private void updateMap(boolean refreshCanvas) {
 
-		if(!state.getRecordingProperty().get() && dataService.isCollecting()) {
+		if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  && dataService.isCollecting()) {
 			canvasLayer.redraw(true);
 		}
 

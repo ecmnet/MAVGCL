@@ -65,6 +65,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public static  final int PRE_COLLECTING 	= 1;
 	public static  final int COLLECTING     	= 2;
 	public static  final int POST_COLLECTING    = 3;
+	public static  final int READING_HEADER     = 4;
 
 	private volatile List<AnalysisDataModel>      modelList   = null;
 
@@ -336,6 +337,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					if(state.getCurrentUpToDate().getValue())
 						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
+
 					if(ulogger.isLogging()) {
 						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
@@ -353,15 +355,16 @@ public class AnalysisModelService implements IMAVLinkListener {
 					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 
 					if(mode!=STOPPED && old_mode == STOPPED) {
+						state.getRecordingProperty().set(READING_HEADER);
 						ulogger.enableLogging(true);
 						state.getLogLoadedProperty().set(false);
-						state.getRecordingProperty().set(true);
+						state.getRecordingProperty().set(COLLECTING);
 						tms_start = System.nanoTime() / 1000;
 					}
 
 					if(mode==STOPPED && old_mode != STOPPED) {
 						ulogger.enableLogging(false);
-						state.getRecordingProperty().set(false);
+						state.getRecordingProperty().set(STOPPED);
 					}
 //				}
 
