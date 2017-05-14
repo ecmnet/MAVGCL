@@ -66,11 +66,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public static  final int COLLECTING     	= 2;
 	public static  final int POST_COLLECTING    = 3;
 
+	private volatile List<AnalysisDataModel>      modelList   = null;
+
 	private DataModel								  model   = null;
 	private ULogFromMAVLinkReader                   ulogger   = null;
 	private AnalysisDataModel				    	current   = null;
 	private AnalysisDataModel                        record   = null;
-	private List<AnalysisDataModel> 		      modelList   = null;
 	private StateProperties                           state   = null;
 
 	private AnalysisDataModelMetaData                  meta  =  null;
@@ -81,6 +82,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int mode = 0;
 
 	private boolean isConnected = false;
+	private boolean isFirst = false;
 
 	private int totalTime_sec = 30;
 	private int collector_interval_us = 50000;
@@ -188,6 +190,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(!control.isConnected()) {
 			return false;
 		}
+
+		this.isFirst=true;
 
 		if(mode==PRE_COLLECTING) {
 			mode = COLLECTING;
@@ -337,6 +341,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 					}
+
 					if(model.msg != null && model.msg.msg!=null && model.msg.msg.hashCode()!=old_msg_hash) {
 						current.msg = model.msg;
 						record.msg  = model.msg;
@@ -361,16 +366,24 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 
 				if(mode!=STOPPED) {
-					if(ulogger.isLogging())
-						m = record.clone();
-					else
-						m = current.clone();
-					m.tms = System.nanoTime() / 1000 - tms_start;
-					m.dt_sec = m.tms / 1e6f;
-					modelList.add(m);
 
-					for(ICollectorRecordingListener updater : listener)
-						updater.update(System.nanoTime());
+					// Skip first
+					if(!isFirst) {
+
+						if(ulogger.isLogging())
+							m = record.clone();
+						else
+							m = current.clone();
+						m.tms = System.nanoTime() / 1000 - tms_start;
+						m.dt_sec = m.tms / 1e6f;
+						modelList.add(m);
+					}
+
+					try {
+						for(ICollectorRecordingListener updater : listener)
+							updater.update(System.nanoTime());
+					} catch(Exception e) { }
+					isFirst = false;
 				}
 
 				state.getRecordingAvailableProperty().set(modelList.size()>0);
