@@ -58,6 +58,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -209,6 +210,7 @@ public class DetailsWidget extends WidgetPane  {
 		Control  value = null;
 		GridPane p = null;
 		DashLabel label = null;
+		Tooltip   tip = null;
 
 		float val=0, old_val=Float.NaN;
 
@@ -223,8 +225,10 @@ public class DetailsWidget extends WidgetPane  {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130); label.setPrefHeight(19);
 				if(kf.uom.contains("%")) {
+					tip = new Tooltip();
 					ProgressBar l2 = new ProgressBar(); l2.setPrefWidth(105);
 					value = l2;
+					l2.setTooltip(tip);
 					p.addRow(row, label,l2);
 				} else {
 					Label l2 = new Label("-"); l2.setPrefWidth(58); l2.setAlignment(Pos.CENTER_RIGHT);
@@ -272,8 +276,10 @@ public class DetailsWidget extends WidgetPane  {
 				f.applyPattern(kf.mask);
 				if(value instanceof Label)
 					((Label)value).setText(f.format(val));
-				if(value instanceof ProgressBar)
+				if(value instanceof ProgressBar) {
+					tip.setText((int)(val*100)+"%");
 					((ProgressBar)value).setProgress(val);
+				}
 			}
 		}
 	}
