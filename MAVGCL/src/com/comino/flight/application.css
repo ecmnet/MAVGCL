@@ -273,7 +273,7 @@
 
 .progress-bar > .bar {
     -fx-background-insets: 0 0 0 0;
-    -fx-padding: 0.13em;
+    -fx-padding: 0.15em;
 }
 
 .tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
