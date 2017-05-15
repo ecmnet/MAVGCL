@@ -274,6 +274,8 @@ public class MainApp extends Application  {
 			}
 		});
 
+
+		m_log.setDisable(!System.getProperty("os.name").toUpperCase().contains("MAC"));
 		m_log.setOnAction(event -> {
 			try {
 				Runtime.getRuntime().exec("open "+log_filename);
@@ -317,7 +319,7 @@ public class MainApp extends Application  {
 				});
 
 				if(log.isCollecting().get())
-				    log.abortReadingLog();
+					log.abortReadingLog();
 				else
 					log.requestLastLog();
 			}
@@ -334,7 +336,7 @@ public class MainApp extends Application  {
 			new PreferencesDialog(control).show();
 		});
 
-	//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
+		//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
 		m_dump.setOnAction(event -> {
 			FileHandler.getInstance().dumpUlogFields();
 		});
