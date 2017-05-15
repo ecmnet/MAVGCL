@@ -137,7 +137,7 @@ public class StreamSplit {
 			try {
 				//m_dis.readFully(buffer);
 				ch = m_dis.readByte();
-			} catch (EOFException e) {
+			} catch (Exception e) {
 				m_streamEnd = true;
 				break;
 			}

@@ -167,7 +167,9 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 			//
 			// Boundary will always be something - '--' or '--foobar'
 			//
-			int bidx = ctype.indexOf("boundary=");
+			int bidx = -1;
+			if(ctype!=null)
+				bidx = ctype.indexOf("boundary=");
 			String boundary = StreamSplit.BOUNDARY_MARKER_PREFIX;
 			if (bidx != -1) {
 				boundary = ctype.substring(bidx + 9);
@@ -217,7 +219,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							boundary = ctype.substring(bidx + 9);
 							ssplit.skipToBoundary(boundary);
 						} else {
-						//	System.out.println("FC: "+(++framecounter)+"   ");
+							//	System.out.println("FC: "+(++framecounter)+"   ");
 							byte[] img = ssplit.readToBoundary(boundary);
 							if (img.length == 0) {
 								System.out.println("BREAK");
