@@ -285,6 +285,12 @@ public class MainApp extends Application  {
 		});
 
 
+		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
+				r_px4log.setDisable(!n.booleanValue());
+			});
+		});
+
 		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 
 			String m_text = r_px4log.getText();
