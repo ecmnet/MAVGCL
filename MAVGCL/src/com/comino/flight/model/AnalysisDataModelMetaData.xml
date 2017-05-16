@@ -1495,6 +1495,15 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- Debugging
+
+	<KeyFigure desc="MGC Service Cycle" uom="ms" mask="#0" key="MAVGCLPERF">
+		<Groups>
+			<Group>Debugging</Group>
+		</Groups>
+	</KeyFigure>
+
+    -->
 
 
 </AnalysisDataModel>

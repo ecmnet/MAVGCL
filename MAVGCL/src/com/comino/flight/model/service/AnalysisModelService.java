@@ -309,7 +309,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private class CombinedConverter implements Runnable {
 
 		int old_msg_hash = 0; long tms_start =0; long wait = 0; int old_mode=STOPPED;
-		float perf = 0; float perf2=0; AnalysisDataModel m = null;
+		float perf = 0; AnalysisDataModel m = null;
 
 		@Override
 		public void run() {
@@ -328,45 +328,44 @@ public class AnalysisModelService implements IMAVLinkListener {
 					health.check(model);
 
 				current.setValue("MAVGCLPERF", perf);
-				current.setValue("MAVGCLACC", perf2);
 
-//				synchronized(this) {
+				if(mode!=STOPPED && old_mode == STOPPED) {
+					state.getRecordingProperty().set(READING_HEADER);
+					ulogger.enableLogging(true);
+					state.getLogLoadedProperty().set(false);
+					state.getRecordingProperty().set(COLLECTING);
+					tms_start = System.nanoTime() / 1000;
+				}
 
-					current.msg = null; wait = System.nanoTime();
+				if(mode==STOPPED && old_mode != STOPPED) {
+					ulogger.enableLogging(false);
+					state.getRecordingProperty().set(STOPPED);
+				}
 
-					if(state.getCurrentUpToDate().getValue())
-						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+				old_mode = mode;
+
+				current.msg = null; wait = System.nanoTime();
+
+				if(state.getCurrentUpToDate().getValue())
+					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 
 
-					if(ulogger.isLogging()) {
-						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-					}
+				if(ulogger.isLogging()) {
+					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				}
 
-					if(model.msg != null && model.msg.msg!=null && model.msg.msg.hashCode()!=old_msg_hash) {
-						current.msg = model.msg;
-						record.msg  = model.msg;
-						old_msg_hash = model.msg.msg.hashCode();
-					} else {
-						current.msg = null; record.msg = null;
-					}
+				if(model.msg != null && model.msg.msg!=null && model.msg.msg.hashCode()!=old_msg_hash) {
+					current.msg = model.msg;
+					record.msg  = model.msg;
+					old_msg_hash = model.msg.msg.hashCode();
+				} else {
+					current.msg = null; record.msg = null;
+				}
 
-					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
 
-					if(mode!=STOPPED && old_mode == STOPPED) {
-						state.getRecordingProperty().set(READING_HEADER);
-						ulogger.enableLogging(true);
-						state.getLogLoadedProperty().set(false);
-						state.getRecordingProperty().set(COLLECTING);
-						tms_start = System.nanoTime() / 1000;
-					}
-
-					if(mode==STOPPED && old_mode != STOPPED) {
-						ulogger.enableLogging(false);
-						state.getRecordingProperty().set(STOPPED);
-					}
-//				}
 
 				if(mode!=STOPPED) {
 
@@ -391,10 +390,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				state.getRecordingAvailableProperty().set(modelList.size()>0);
 
-				old_mode = mode;
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
-				perf2 = (System.nanoTime()-wait)/1e6f;
 			}
 			System.out.println("Combined converter stopped");
 		}
