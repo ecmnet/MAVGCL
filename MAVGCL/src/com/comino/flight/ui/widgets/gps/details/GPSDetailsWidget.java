@@ -104,14 +104,9 @@ public class GPSDetailsWidget extends WidgetPane  {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Timeline(new KeyFrame(Duration.millis(333), new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				for(KeyFigure figure : figures) {
-					figure.setValue(model);
-				}
-			}
+		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+			for(KeyFigure figure : figures)
+				figure.setValue(model);
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 	}

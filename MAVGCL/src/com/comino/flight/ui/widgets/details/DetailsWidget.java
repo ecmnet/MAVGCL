@@ -138,7 +138,6 @@ public class DetailsWidget extends WidgetPane  {
 	private GridPane grid;
 
 	private Timeline task = null;
-	private long tms = 0;
 
 	private List<KeyFigure> figures = null;
 
@@ -163,16 +162,12 @@ public class DetailsWidget extends WidgetPane  {
 
 		}
 
-		task = new Timeline(new KeyFrame(Duration.millis(333), new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent event) {
-				if((System.currentTimeMillis()-tms)>333) {
-					int i=0; tms = System.currentTimeMillis();
-					for(KeyFigure figure : figures) {
-						figure.setValue(model,i++);
-					}
-				}
-			}
+		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+			int i=0;
+			for(KeyFigure figure : figures)
+				figure.setValue(model,i++);
 		} ) );
+
 		task.setCycleCount(Timeline.INDEFINITE);
 	}
 

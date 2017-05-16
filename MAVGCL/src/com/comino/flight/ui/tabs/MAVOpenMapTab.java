@@ -57,7 +57,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -68,7 +67,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -160,13 +158,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-					updateMap(true);
-
-			}
+		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+			updateMap(true);
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 	}
