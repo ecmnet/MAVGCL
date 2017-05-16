@@ -58,6 +58,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -99,9 +101,8 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 	private StateProperties state = null;
 
 	private String filename;
-	private long tms;
 
-	private AnimationTimer task;
+	private Timeline task = null;
 	private Timeline out = null;
 
 	private DataModel model;
@@ -117,96 +118,97 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 			throw new RuntimeException(exception);
 		}
 
-		task = new AnimationTimer() {
+		task = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 
 			List<AnalysisDataModel> list = null;
 
-			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>500) {
-                    tms = System.currentTimeMillis();
-					if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
+			@Override
+			public void handle(ActionEvent event) {
+
+				if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
+					gps.setMode(Badge.MODE_ON);
+					gps.setText("SVIN");
+				} else {
+					switch(model.gps.fixtype) {
+
+					case 2:
 						gps.setMode(Badge.MODE_ON);
-						gps.setText("SVIN");
-					} else {
-						switch(model.gps.fixtype) {
+						gps.setText("GPS");
+					case 3:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS Fix");
+						break;
+					case 4:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("DGPS");
+						break;
+					case 5:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("DGPS Fix");
+						break;
 
-						case 2:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("GPS");
-						case 3:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("GPS Fix");
-							break;
-						case 4:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("DGPS");
-							break;
-						case 5:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("DGPS Fix");
-							break;
-
-						default:
-							gps.setText("No GPS");
-							gps.setMode(Badge.MODE_OFF);
-						}
+					default:
+						gps.setText("No GPS");
+						gps.setMode(Badge.MODE_OFF);
 					}
-
-					filename = FileHandler.getInstance().getName();
-
-					if(control.isConnected()) {
-						messages.setMode(Badge.MODE_ON);
-						driver.setText(control.getCurrentModel().sys.getSensorString());
-						driver.setMode(Badge.MODE_ON);
-					} else {
-						messages.setMode(Badge.MODE_OFF);
-						driver.setText("no sensor info available");
-						driver.setMode(Badge.MODE_OFF);
-					}
-
-					list = collector.getModelList();
-
-					if(list.size()>0) {
-
-						int current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
-						int current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
-						time.setText(
-								String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
-										list.get(current_x0_pt).tms/1000,
-										list.get(current_x1_pt).tms/1000)
-								);
-						time.setBackgroundColor(Color.DARKCYAN);
-					} else {
-						time.setText("TimeFrame: [ 00:00 - 00:00 ]");
-						time.setBackgroundColor(Color.GRAY);
-					}
-
-					if(!state.getLogLoadedProperty().get()) {
-						if(control.isConnected()) {
-							time.setMode(Badge.MODE_ON);
-							if(control.isSimulation()) {
-								mode.setBackgroundColor(Color.BEIGE);
-								mode.setText("SITL");
-							} else {
-								mode.setBackgroundColor(Color.DARKCYAN);
-								mode.setText("Connected");
-							}
-							mode.setMode(Badge.MODE_ON);
-						} else {
-							mode.setMode(Badge.MODE_OFF); mode.setText("offline");
-							time.setMode(Badge.MODE_OFF);
-						}
-					} else {
-						time.setMode(Badge.MODE_ON);
-						messages.clear();
-						mode.setBackgroundColor(Color.LIGHTSKYBLUE);
-						mode.setText(filename);
-						mode.setMode(Badge.MODE_ON);
-					}
-
 				}
+
+				filename = FileHandler.getInstance().getName();
+
+				if(control.isConnected()) {
+					messages.setMode(Badge.MODE_ON);
+					driver.setText(control.getCurrentModel().sys.getSensorString());
+					driver.setMode(Badge.MODE_ON);
+				} else {
+					messages.setMode(Badge.MODE_OFF);
+					driver.setText("no sensor info available");
+					driver.setMode(Badge.MODE_OFF);
+				}
+
+				list = collector.getModelList();
+
+				if(list.size()>0) {
+
+					int current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
+					int current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
+					time.setText(
+							String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
+									list.get(current_x0_pt).tms/1000,
+									list.get(current_x1_pt).tms/1000)
+							);
+					time.setBackgroundColor(Color.DARKCYAN);
+				} else {
+					time.setText("TimeFrame: [ 00:00 - 00:00 ]");
+					time.setBackgroundColor(Color.GRAY);
+				}
+
+				if(!state.getLogLoadedProperty().get()) {
+					if(control.isConnected()) {
+						time.setMode(Badge.MODE_ON);
+						if(control.isSimulation()) {
+							mode.setBackgroundColor(Color.BEIGE);
+							mode.setText("SITL");
+						} else {
+							mode.setBackgroundColor(Color.DARKCYAN);
+							mode.setText("Connected");
+						}
+						mode.setMode(Badge.MODE_ON);
+					} else {
+						mode.setMode(Badge.MODE_OFF); mode.setText("offline");
+						time.setMode(Badge.MODE_OFF);
+					}
+				} else {
+					time.setMode(Badge.MODE_ON);
+					messages.clear();
+					mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+					mode.setText(filename);
+					mode.setMode(Badge.MODE_ON);
+				}
+
 			}
-		};
+		} ) );
+
+		task.setCycleCount(Timeline.INDEFINITE);
 		driver.setAlignment(Pos.CENTER_LEFT);
 	}
 
@@ -234,7 +236,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 				Duration.millis(5000),
 				ae -> messages.clear()));
 
-		task.start();
+		task.play();
 	}
 
 	@Override

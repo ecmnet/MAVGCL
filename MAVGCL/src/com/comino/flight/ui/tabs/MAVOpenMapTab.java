@@ -58,6 +58,8 @@ import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -85,6 +87,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
@@ -129,7 +132,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
-	private AnimationTimer task;
+	private Timeline task = null;
 
 	private AnalysisDataModel model;
 	private int type = 0;
@@ -149,7 +152,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private  StateProperties state;
 
-	private long tms;
 
 	protected int centermode;
 
@@ -158,16 +160,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new AnimationTimer() {
+		task = new Timeline(new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
 
-			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>100) {
-					tms = System.currentTimeMillis();
+			@Override
+			public void handle(ActionEvent event) {
 					updateMap(true);
-				}
-			}
-		};
 
+			}
+		} ) );
+		task.setCycleCount(Timeline.INDEFINITE);
 	}
 
 
@@ -369,7 +370,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
 
-		task.start();
+		task.play();
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {

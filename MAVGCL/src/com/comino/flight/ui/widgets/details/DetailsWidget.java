@@ -47,7 +47,11 @@ import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -63,6 +67,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class DetailsWidget extends WidgetPane  {
 
@@ -132,7 +137,7 @@ public class DetailsWidget extends WidgetPane  {
 	@FXML
 	private GridPane grid;
 
-	private AnimationTimer task;
+	private Timeline task = null;
 	private long tms = 0;
 
 	private List<KeyFigure> figures = null;
@@ -158,8 +163,8 @@ public class DetailsWidget extends WidgetPane  {
 
 		}
 
-		task = new AnimationTimer() {
-			@Override public void handle(long now) {
+		task = new Timeline(new KeyFrame(Duration.millis(333), new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
 				if((System.currentTimeMillis()-tms)>333) {
 					int i=0; tms = System.currentTimeMillis();
 					for(KeyFigure figure : figures) {
@@ -167,7 +172,8 @@ public class DetailsWidget extends WidgetPane  {
 					}
 				}
 			}
-		};
+		} ) );
+		task.setCycleCount(Timeline.INDEFINITE);
 	}
 
 	@FXML
@@ -199,7 +205,7 @@ public class DetailsWidget extends WidgetPane  {
 			});
 		});
 
-		task.start();
+		task.play();
 
 		//	this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 

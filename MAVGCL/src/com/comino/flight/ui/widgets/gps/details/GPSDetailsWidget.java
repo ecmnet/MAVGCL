@@ -48,11 +48,16 @@ import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.util.Duration;
 
 public class GPSDetailsWidget extends WidgetPane  {
 
@@ -68,10 +73,10 @@ public class GPSDetailsWidget extends WidgetPane  {
 			"BASENO",
 	};
 
-	 @FXML
-	 private GridPane gps_grid;
+	@FXML
+	private GridPane gps_grid;
 
-	private AnimationTimer   task;
+	private Timeline task = null;
 	private AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
 
 	private List<KeyFigure> figures = null;
@@ -99,18 +104,16 @@ public class GPSDetailsWidget extends WidgetPane  {
 			throw new RuntimeException(exception);
 		}
 
-		task = new AnimationTimer() {
-			private long tms;
+		task = new Timeline(new KeyFrame(Duration.millis(333), new EventHandler<ActionEvent>() {
 
-			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>333) {
-					 tms = System.currentTimeMillis();
-					for(KeyFigure figure : figures) {
-						figure.setValue(model);
-					}
+			@Override
+			public void handle(ActionEvent event) {
+				for(KeyFigure figure : figures) {
+					figure.setValue(model);
 				}
 			}
-		};
+		} ) );
+		task.setCycleCount(Timeline.INDEFINITE);
 	}
 
 
@@ -120,7 +123,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 			figures.add(new KeyFigure(gps_grid,k,i));
 			i++;
 		}
-		task.start();
+		task.play();
 	}
 
 	private class KeyFigure {
@@ -132,20 +135,20 @@ public class GPSDetailsWidget extends WidgetPane  {
 			if(kf==null) {
 				grid.add(new Label(),0,row);
 			} else {
-			DashLabel l1 = new DashLabel(kf.desc1);
-			l1.setPrefWidth(100); l1.setPrefHeight(19);
-			grid.add(l1, 0, row);
-			value = new Label("-"); value.setPrefWidth(100); value.setAlignment(Pos.CENTER_RIGHT);
-			grid.add(value, 1, row);
-			Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(30);
-			grid.add(l3, 2, row);
+				DashLabel l1 = new DashLabel(kf.desc1);
+				l1.setPrefWidth(100); l1.setPrefHeight(19);
+				grid.add(l1, 0, row);
+				value = new Label("-"); value.setPrefWidth(100); value.setAlignment(Pos.CENTER_RIGHT);
+				grid.add(value, 1, row);
+				Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(30);
+				grid.add(l3, 2, row);
 			}
 		}
 
 		public void setValue(AnalysisDataModel model) {
 			if(kf!=null) {
 				f.applyPattern(kf.mask);
-			    value.setText(f.format(model.getValue(kf)));
+				value.setText(f.format(model.getValue(kf)));
 			}
 		}
 	}

@@ -40,16 +40,17 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
-import com.comino.msp.model.collector.ModelCollectorService;
 import com.comino.msp.model.segment.Status;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -58,6 +59,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 public class RecordControlWidget extends WidgetPane implements IMSPStatusChangedListener {
 
@@ -107,6 +109,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 	private long service_up_tms = 0;
 
+	private Timeline blink = null;
+	private boolean toggle = false;
+
 	private ChartControlWidget charts;
 	private InfoWidget info;
 
@@ -115,6 +120,18 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		super(300,true);
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
 		this.service_up_tms = System.currentTimeMillis();
+
+		blink = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if(toggle)
+					isrecording.setFill(Color.RED);
+				else
+					isrecording.setFill(Color.LIGHTGREY);
+				toggle = !toggle;
+			}
+		} ) );
+		blink.setCycleCount(Timeline.INDEFINITE);
 	}
 
 	@FXML
@@ -220,10 +237,11 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			Platform.runLater(() -> {
-			switch(nv.intValue()) {
+				switch(nv.intValue()) {
 				case AnalysisModelService.STOPPED:
 					recording.selectedProperty().set(false);
 					isrecording.setFill(Color.LIGHTGREY);
+					blink.stop();
 
 					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
 							modelService.getTotalRecordingTimeMS() / 1000 > 5) {
@@ -237,25 +255,27 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 				case AnalysisModelService.READING_HEADER:
 					FileHandler.getInstance().clear();
-					recording.selectedProperty().set(true);
-					isrecording.setFill(Color.STEELBLUE);
+					blink.play();
 					break;
 
 				case AnalysisModelService.PRE_COLLECTING:
 					FileHandler.getInstance().clear();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTBLUE);
+					blink.stop();
 					break;
 
 				case AnalysisModelService.POST_COLLECTING:
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.LIGHTYELLOW);
+					blink.stop();
 					break;
 
 				case AnalysisModelService.COLLECTING:
 					FileHandler.getInstance().clear();
 					recording.selectedProperty().set(true);
 					isrecording.setFill(Color.RED);
+					blink.stop();
 					break;
 				}
 			});
