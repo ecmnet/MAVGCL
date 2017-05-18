@@ -13,7 +13,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 15/05/2017
+**Development Status:** Last updated 18/05/2017
 
 - Import of latest log file fixing 
 - Currently no linux build via travis available
@@ -22,7 +22,7 @@ V0.6xx notes:
 
 - V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0 always') - MAVLink 1.0 no longer supported (for MAVLink 1.0 use V0.536 )
 - Recording based on ULOG over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
-- Mapping between ULog data and MAVGCL key-figures is still ongoing and not completed (refer to the [Mapping documentation](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/UlogKeyFiguresAssignment.xlsx) )
+- Mapping between ULog data and MAVGCL key-figures is still ongoing 
 - Serial connection no longer available as it is currently used for RTK base stations
 
 
