@@ -94,7 +94,7 @@ public class UlogMAVLinkParser  {
 	private long timeStart=-1;
 
 	public UlogMAVLinkParser() {
-		buffer = ByteBuffer.allocate(32768);
+		buffer = ByteBuffer.allocate(65536);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.clear();
 	}
