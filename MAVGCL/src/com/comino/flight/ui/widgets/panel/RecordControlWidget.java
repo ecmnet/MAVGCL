@@ -255,6 +255,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 				case AnalysisModelService.READING_HEADER:
 					FileHandler.getInstance().clear();
+					isrecording.setFill(Color.RED);
 					blink.play();
 					break;
 
