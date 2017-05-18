@@ -114,7 +114,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {	}
 
-				if((System.currentTimeMillis()-tms)>6000) {
+				if((System.currentTimeMillis()-tms)>12000) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					state=STATE_HEADER_IDLE;
