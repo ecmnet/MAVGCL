@@ -634,6 +634,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.X" uom="m" mask="#0.00" key="FLOWGYX">
+	    <MSPSource class="raw" field="fgX"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_x_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -642,6 +643,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.Y" uom="m" mask="#0.00" key="FLOWGYY">
+	    <MSPSource class="raw" field="fgY"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_y_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -650,6 +652,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.Z" uom="m" mask="#0.00" key="FLOWGYZ">
+	    <MSPSource class="raw" field="fgZ"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_z_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
