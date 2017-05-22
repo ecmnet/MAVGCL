@@ -174,26 +174,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			info.clear();
 		});
 
-		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
-			if(newValue.booleanValue()) {
-				//			AnalysisModelService.getInstance().clearModelList();
-				FileHandler.getInstance().clear();
-				state.getLogLoadedProperty().set(false);
-				charts.refreshCharts();
-				info.clear();
-			} else {
-
-				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
-						&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
-					recording(false,0);
-					try {
-						FileHandler.getInstance().autoSave();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
@@ -298,6 +278,27 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
+
+		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.booleanValue()) {
+				//			AnalysisModelService.getInstance().clearModelList();
+				FileHandler.getInstance().clear();
+				state.getLogLoadedProperty().set(false);
+				charts.refreshCharts();
+				info.clear();
+			} else {
+
+				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
+						&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+					recording(false,0);
+					try {
+						FileHandler.getInstance().autoSave();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 
 	}
 
