@@ -24,29 +24,31 @@
 			GridPane.rowIndex="2" GridPane.columnIndex="0" />
 		<TextField fx:id="video" prefHeight="19.0" prefWidth="380.0"
 			GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="4" />
+	    <CheckBox fx:id="vidrec" GridPane.rowIndex="3" GridPane.columnIndex="0"
+	         text="Record video while collecting data" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="3" />
+					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="4" />
 	    <Label prefHeight="19.0" prefWidth="158.0" text="Path to store data:"
-			GridPane.rowIndex="4" GridPane.columnIndex="0" />
-		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"
-			GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Path to store presets:"
 			GridPane.rowIndex="5" GridPane.columnIndex="0" />
-		<ComboBox fx:id="prespath" prefHeight="19.0" prefWidth="380.0"
+		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"
 			GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-		<CheckBox fx:id="autosave" GridPane.rowIndex="6" GridPane.columnIndex="0"
+		<Label prefHeight="19.0" prefWidth="158.0" text="Path to store presets:"
+			GridPane.rowIndex="6" GridPane.columnIndex="0" />
+		<ComboBox fx:id="prespath" prefHeight="19.0" prefWidth="380.0"
+			GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="4" />
+		<CheckBox fx:id="autosave" GridPane.rowIndex="7" GridPane.columnIndex="0"
 	        GridPane.columnSpan="3" text="Save automatically when recording is stopped" />
 	    <Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-		<CheckBox fx:id="ulog" GridPane.rowIndex="8" GridPane.columnIndex="0"
+					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
+		<CheckBox fx:id="ulog" GridPane.rowIndex="9" GridPane.columnIndex="0"
 	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for data recording (experimental)" />
-	    <CheckBox fx:id="check" GridPane.rowIndex="9" GridPane.columnIndex="0"
+	    <CheckBox fx:id="check" GridPane.rowIndex="10" GridPane.columnIndex="0"
 	        GridPane.columnSpan="4" text="Perform vehicle healh check" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="10" />
+					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="11" />
 		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy [m]:"
-			GridPane.rowIndex="11" GridPane.columnIndex="0" />
+			GridPane.rowIndex="12" GridPane.columnIndex="0" />
 		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"
-			GridPane.rowIndex="11" GridPane.columnIndex="1" />
+			GridPane.rowIndex="12" GridPane.columnIndex="1" />
 	</children>
 </GridPane>

@@ -48,6 +48,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
+import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
@@ -69,8 +70,13 @@ public class CameraWidget extends WidgetPane  {
 	private boolean			big_size=false;
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
+	private MP4Recorder     recorder = null;
+	private boolean         mp4Enabled = true;
+	private boolean         isConnected = false;
+
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
+		recorder = new MP4Recorder(X,Y);
 	}
 
 
@@ -86,7 +92,8 @@ public class CameraWidget extends WidgetPane  {
 			if(newvalue.booleanValue())
 				source.start();
 			else {
-				source.stop();
+				if(!recorder.getRecordMP4Property().get())
+					source.stop();
 			}
 		});
 
@@ -113,6 +120,14 @@ public class CameraWidget extends WidgetPane  {
 			}
 		});
 
+		state.getRecordingProperty().addListener((o,ov,nv) -> {
+			if(mp4Enabled && nv.intValue()==AnalysisModelService.COLLECTING && source!=null && source.isRunning()) {
+				recorder.getRecordMP4Property().set(true);
+			} else
+				recorder.getRecordMP4Property().set(false);
+
+		});
+
 	}
 
 	public FloatProperty getScrollProperty() {
@@ -133,11 +148,14 @@ public class CameraWidget extends WidgetPane  {
 	}
 
 	public void setup(IMAVController control) {
-
+		mp4Enabled = MAVPreferences.getInstance().getBoolean(MAVPreferences.VIDREC, false);
 	}
 
 
 	private boolean connect() {
+		if(isConnected)
+			return true;
+
 		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
@@ -148,13 +166,15 @@ public class CameraWidget extends WidgetPane  {
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source.addProcessListener((im,buf) -> {
 				if(isVisible())
-				  Platform.runLater(() -> {
-					image.setImage(im);
-				  });
+					Platform.runLater(() -> {
+						image.setImage(im);
+					});
 			});
+			source.addProcessListener(recorder);
 		} catch (MalformedURLException e) {
 			return false;
 		}
+		isConnected = true;
 		return true;
 	}
 }

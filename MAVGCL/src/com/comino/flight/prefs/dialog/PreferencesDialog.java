@@ -95,6 +95,9 @@ public class PreferencesDialog  {
 	private CheckBox autosave;
 
 	@FXML
+	private CheckBox vidrec;
+
+	@FXML
 	private CheckBox ulog;
 
 	@FXML
@@ -188,6 +191,7 @@ public class PreferencesDialog  {
 		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
 		sitl.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.PREFS_SITL, true));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
+		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -201,6 +205,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());
 			userPrefs.putBoolean(MAVPreferences.PREFS_SITL,sitl.isSelected());
+			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 
 			try {

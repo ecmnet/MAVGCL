@@ -41,7 +41,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.video.src.IMWStreamVideoProcessListener;
@@ -58,7 +60,7 @@ import javafx.scene.image.Image;
  */
 public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
-	private static final int RATE = 50;
+	private static final int RATE = 40;
 
 	public static final String BOUNDARY_MARKER_PREFIX  = "--";
 
@@ -77,11 +79,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 	private int  fps=0;
 
-	private AnalysisDataModel model = null;
-
-
-
-	private IMWStreamVideoProcessListener listener = null;
+	private List<IMWStreamVideoProcessListener> listener = new ArrayList<IMWStreamVideoProcessListener>();
 
 
 	public StreamVideoSource(URL url, AnalysisDataModel model) {
@@ -91,15 +89,12 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 			throw new NullPointerException();
 
 		isAvailable = true;
-		this.model = model;
 		this.url = url;
 	}
 
 	public void addProcessListener(IMWStreamVideoProcessListener listener) {
-		this.listener = listener;
+		this.listener.add(listener);
 	}
-
-
 
 	@SuppressWarnings("rawtypes")
 	public void run()
@@ -109,8 +104,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		String ctype = null;
 		Hashtable headers = null;
 		URLConnection conn = null;
-		int framecounter=0;
-
 
 		while(isRunning) {
 
@@ -229,9 +222,15 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							try {
 								if(System.currentTimeMillis() >= trigger) {
 
-									if(listener!=null) {
-										listener.process(getfromjpeg(img),img);
-									}
+									Image raw_img = getfromjpeg(img);
+									listener.forEach((l) -> {
+										try {
+										l.process(raw_img, img);
+										} catch (Exception e) {
+											System.err.println(e.getMessage());
+										}
+									} );
+
 
 									fps = (int)(1000 / (System.currentTimeMillis() - tms));
 									tms = System.currentTimeMillis();
@@ -263,6 +262,9 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 	public Thread start() {
+		if(isRunning)
+			return thread;
+
 		isRunning = true;
 		thread = new Thread(this);
 		thread.setName("Video worker");
@@ -310,6 +312,12 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 	private Image getfromjpeg(byte[] in) {
 		return new Image(new ByteArrayInputStream(in));
+	}
+
+	@Override
+	public void removeListeners() {
+		this.listener.clear();
+
 	}
 
 }

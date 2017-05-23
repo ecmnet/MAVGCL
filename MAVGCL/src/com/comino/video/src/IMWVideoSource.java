@@ -36,6 +36,7 @@ package com.comino.video.src;
 public interface IMWVideoSource {
 
 	void addProcessListener(IMWStreamVideoProcessListener listener);
+	void removeListeners();
 
 	Thread start();
 	void stop();
