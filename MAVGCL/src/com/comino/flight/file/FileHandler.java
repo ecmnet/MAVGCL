@@ -90,6 +90,7 @@ public class FileHandler {
 
 	private static final String BASEPATH = "/.MAVGCL";
 	private static final String TMPFILE  =  "/logtmp.tmp";
+	private static final int MAX_PRESETS = 10;
 
 	private static FileHandler handler = null;
 
@@ -144,7 +145,7 @@ public class FileHandler {
 				}
 			});
 			System.out.println(list.length+" presets found");
-			for(int i=0;i<list.length && i< 5;i++)
+			for(int i=0;i<list.length && i< MAX_PRESETS;i++)
 				presetfiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
 			Collections.sort(presetfiles);
 		}
