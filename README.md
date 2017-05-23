@@ -16,6 +16,7 @@ Any feedback, comments and contributions are very welcome.
 **Development Status:** Last updated 23/05/2017
 
 - Import of latest log file fixing 
+- Video stream recorded as H264/MP4 file
 - Currently no linux build via travis available
 
 V0.6xx notes:
@@ -41,6 +42,7 @@ V0.6xx notes:
 - Key figure conversion based on expressions
 - FrSky Taranis USB supported in SITL
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org) or any other source
+- Video stream recorded as H264/MP4 file while collecting data
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
 - RTCM3 base supported with automatic survey-in for UBlox M8P devices (OS X only)
 
