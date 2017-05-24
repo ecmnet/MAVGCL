@@ -12,8 +12,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
-//TODO: Framerate to fast
-
 public class MP4Recorder implements IMWStreamVideoProcessListener {
 
 	private MSPSequenceEncoder encoder = null;
