@@ -75,10 +75,10 @@ public class CameraWidget extends WidgetPane  {
 	private boolean         isConnected = false;
 
 	private MSPLogger       logger = null;
+	private Preferences userPrefs;
 
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
-		recorder = new MP4Recorder(X,Y);
 	}
 
 
@@ -162,8 +162,10 @@ public class CameraWidget extends WidgetPane  {
 	}
 
 	public void setup(IMAVController control) {
-		mp4Enabled = MAVPreferences.getInstance().getBoolean(MAVPreferences.VIDREC, false);
+		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
+		mp4Enabled = userPrefs.getBoolean(MAVPreferences.VIDREC, false);
+		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 	}
 
 
@@ -172,7 +174,6 @@ public class CameraWidget extends WidgetPane  {
 			return true;
 
 		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-		Preferences userPrefs = MAVPreferences.getInstance();
 		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 		if(url_string.isEmpty())
 			url_string = "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";

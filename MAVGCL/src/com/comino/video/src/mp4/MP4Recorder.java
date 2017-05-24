@@ -53,13 +53,13 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 
 	private BufferedImage bimg = null;
 
-	public MP4Recorder(int width, int height) {
+	public MP4Recorder(String path, int width, int height) {
 
 		recording.addListener((c,o,n) -> {
 			try {
 				if(n.booleanValue()) {
 					System.out.println("MP4 recording started");
-					encoder = new MSPSequenceEncoder(new File(System.getProperty("user.home")+"/video.mp4"));
+					encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
 				}
 				else {
 					System.out.println("MP4 recording stopped");
