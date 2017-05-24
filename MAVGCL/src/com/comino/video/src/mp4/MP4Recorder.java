@@ -12,9 +12,11 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
+//TODO: Framerate to fast
+
 public class MP4Recorder implements IMWStreamVideoProcessListener {
 
-	private SequenceEncoder encoder = null;
+	private MSPSequenceEncoder encoder = null;
 	private BooleanProperty recording = new SimpleBooleanProperty();
 
 	private BufferedImage bimg = null;
@@ -25,7 +27,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 			try {
 				if(n.booleanValue()) {
 					System.out.println("MP4 recording started");
-					encoder = new SequenceEncoder(new File(System.getProperty("user.home")+"/video.mp4"));
+					encoder = new MSPSequenceEncoder(new File(System.getProperty("user.home")+"/video.mp4"));
 				}
 				else {
 					System.out.println("MP4 recording stopped");

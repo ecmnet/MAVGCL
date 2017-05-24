@@ -60,7 +60,7 @@ import javafx.scene.image.Image;
  */
 public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
-	private static final int RATE = 40;
+	private static final int RATE = 50;
 
 	public static final String BOUNDARY_MARKER_PREFIX  = "--";
 
@@ -237,7 +237,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 									trigger = System.currentTimeMillis()+RATE;
 								}
 								else
-									Thread.sleep(10);
+									Thread.sleep(20);
 
 							} catch (Exception e) {
 								throw new Exception(e.getMessage());
