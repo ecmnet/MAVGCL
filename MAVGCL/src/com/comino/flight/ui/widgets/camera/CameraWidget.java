@@ -74,6 +74,8 @@ public class CameraWidget extends WidgetPane  {
 	private boolean         mp4Enabled = true;
 	private boolean         isConnected = false;
 
+	private MSPLogger       logger = null;
+
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 		recorder = new MP4Recorder(X,Y);
@@ -121,10 +123,22 @@ public class CameraWidget extends WidgetPane  {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(mp4Enabled && nv.intValue()==AnalysisModelService.COLLECTING && source!=null && source.isRunning()) {
+			if(!mp4Enabled)
+				return;
+
+			if(nv.intValue()==AnalysisModelService.COLLECTING) {
+				if(source==null)
+					connect();
+				if(!source.isRunning())
+					source.start();
 				recorder.getRecordMP4Property().set(true);
-			} else
-				recorder.getRecordMP4Property().set(false);
+				logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			} else {
+				if(recorder.getRecordMP4Property().get()) {
+					recorder.getRecordMP4Property().set(false);
+					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
+			}
 
 		});
 
@@ -149,6 +163,7 @@ public class CameraWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 		mp4Enabled = MAVPreferences.getInstance().getBoolean(MAVPreferences.VIDREC, false);
+		logger = MSPLogger.getInstance();
 	}
 
 
