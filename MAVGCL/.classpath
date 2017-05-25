@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="lib/exp4j-0.4.7.jar"/>
 	<classpathentry kind="lib" path="lib/mavbase.jar"/>
 	<classpathentry kind="lib" path="lib/medusa-7.4.jar"/>
+	<classpathentry kind="lib" path="lib/jcodec-0.1.9.jar"/>
+	<classpathentry kind="lib" path="lib/jcodec-javase-0.1.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
