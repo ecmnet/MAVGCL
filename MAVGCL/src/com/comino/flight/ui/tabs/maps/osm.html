@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>TilesFX</title>
+    <link rel="stylesheet" href="leaflet.css" type="text/css" charset="utf-8"/>
+    <script>L_PREFER_CANVAS = true; </script>
+    <script type="text/javascript" src="leaflet.js"></script>
+    <script type="text/javascript" src="leaflet-providers.js"></script>
+</head>
+<style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0px; padding: 0px; }
+    #map { width: 100%; height: 100%; }
+    /*#map_canvas { height: 100%; background-color: #666970; }*/
+</style>
+<body>
+<div id="map" style="width: 100%; height: 100%; position: relative;" class="leaflet-container leaflet-fade-anim" tabindex="0">
+
+    <script type="text/javascript">
+      var map = L.map('map').setView([0, 0], 15);
+      map.attributionControl.setPrefix('');
+      map.removeControl(map.zoomControl);
+      map.scrollWheelZoom.disable();
+
+      // TileLayer
+      var mapnikBw           = L.tileLayer.provider('OpenStreetMap.BlackAndWhite', {attribution: ''});
+      var cartoDBPositron    = L.tileLayer.provider('CartoDB.Positron', {attribution: ''});
+      var cartoDBDarkMatter  = L.tileLayer.provider('CartoDB.DarkMatter', {attribution: ''});
+      var googleSat          = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+      var googleStreets      = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+      var googleTerrain      = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+      //var googleHybrid       = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] });
+      //var hydda              = L.tileLayer.provider('Hydda.Full', {attribution: ''});
+      //var esriWorldTopoMap   = L.tileLayer.provider('Esri.WorldTopoMap', {attribution: ''});
+      //var esriWorldImagery   = L.tileLayer.provider('Esri.WorldImagery', {attribution: ''});
+      //var esriGray           = L.tileLayer.provider('Esri.WorldGrayCanvas', {attribution: ''});
+      //var esriWorldStreetMap = L.tileLayer.provider('Esri.WorldStreetMap', {attribution: ''});
+      //var mapQuestOpen       = L.tileLayer.provider('MapQuestOpen.OSM', {attribution: ''});
+      //var mapnikHot          = L.tileLayer.provider('OpenStreetMap.HOT', {attribution: ''});
+      //var mapnik             = L.tileLayer.provider('OpenStreetMap.Mapnik', {attribution: ''});
+      //var openStreetMapDE    = L.tileLayer.provider('OpenStreetMap.DE', {attribution: ''});
+
+      mapnikBw.addTo(map);
+
+      L.control.layers({
+                         "B&W"   : mapnikBw,
+                         "Street": googleStreets,
+                         "Bright": cartoDBPositron,
+                         "Dark"  : cartoDBDarkMatter,
+                         "Sat"   : googleSat,
+                         "Topo"  : googleTerrain
+                       }, {},{position:'topright'}).addTo(map);
+      L.control.scale({metric: true, imperial: false}).addTo(map);
+      L.control.zoom({position: 'bottomright'}).addTo(map);
+
+      L.Marker.prototype.setTitle = function (title) {
+        if (this._icon) {
+          this._icon.title = title;
+        } else {
+          this.options.title = title;
+        }
+      };
+
+      var locationIconBlue         = L.icon({
+                                    iconUrl     : 'location_blue.png',
+                                    iconSize    : [19, 19],   // size of the icon
+                                    iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                    popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                  });
+      var locationIconGray         = L.icon({
+                                           iconUrl     : 'location_gray.png',
+                                           iconSize    : [19, 19],   // size of the icon
+                                           iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                           popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                         });
+      var locationIconGreen        = L.icon({
+                                           iconUrl     : 'location_green.png',
+                                           iconSize    : [19, 19],   // size of the icon
+                                           iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                           popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                         });
+      var locationIconMagenta      = L.icon({
+                                           iconUrl     : 'location_magenta.png',
+                                           iconSize    : [19, 19],   // size of the icon
+                                           iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                           popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                         });
+      var locationIconOrange       = L.icon({
+                                           iconUrl     : 'location_orange.png',
+                                           iconSize    : [19, 19],   // size of the icon
+                                           iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                           popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                         });
+      var locationIconRed          = L.icon({
+                                            iconUrl     : 'location_red.png',
+                                            iconSize    : [19, 19],   // size of the icon
+                                            iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var locationIconYellowOrange = L.icon({
+                                            iconUrl     : 'location_yellow_orange.png',
+                                            iconSize    : [19, 19],   // size of the icon
+                                            iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var locationIconYellow       = L.icon({
+                                            iconUrl     : 'location_yellow.png',
+                                            iconSize    : [19, 19],   // size of the icon
+                                            iconAnchor  : [9.5, 9.5], // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -19]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var locationMarker           = L.marker([0, 0], {
+                                     icon        : locationIconBlue,
+                                     opacity     : 1.0,
+                                     draggable   : false,
+                                     title       : 'Current Location',
+                                     riseOnHover : true,
+                                     riseOffset  : 250,
+                                     zIndexOffset: 1000
+                                   }).bindPopup('<p>-</p>').addTo(map);
+
+      var track                    = [];
+      var poiArray                 = new Array();
+
+      var Poi                      = L.Class.extend({
+                                     initialize: function (title, marker) {
+                                      this.title  = title;
+                                      this.marker = marker;
+                                    },
+                                     title : this.title,
+                                     marker: this.marker
+                                  });
+
+      var poiIconBlue              = L.icon({
+                                            iconUrl     : 'poi_blue.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconGreen             = L.icon({
+                                            iconUrl     : 'poi_green.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconGray              = L.icon({
+                                            iconUrl     : 'poi_gray.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconMagenta           = L.icon({
+                                            iconUrl     : 'poi_magenta.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconOrange            = L.icon({
+                                            iconUrl     : 'poi_orange.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconRed               = L.icon({
+                                            iconUrl     : 'poi_red.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconYellowOrange      = L.icon({
+                                            iconUrl     : 'poi_yellow_orange.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var poiIconYellow            = L.icon({
+                                            iconUrl     : 'poi_yellow.png',
+                                            iconSize    : [14, 14],   // size of the icon
+                                            iconAnchor  : [7, 7],     // point of the icon which will correspond to marker's location
+                                            popupAnchor : [0, -14]    // point from which the popup should open relative to the iconAnchor
+                                          });
+      var startIcon                = L.icon({
+                                            iconUrl    : 'start.png',
+                                            iconSize   : [14, 20],
+                                            iconAnchor : [7, 20],
+                                            popupAnchor: [7, -20]
+                                          });
+      var stopIcon                 = L.icon({
+                                            iconUrl    : 'stop.png',
+                                            iconSize   : [14, 20],
+                                            iconAnchor : [7, 20],
+                                            popupAnchor: [7, -20]
+                                          });
+
+      document.setLocationColor    = function(color) {
+        if ('blue' === color) {
+          locationMarker.setIcon(locationIconBlue);
+        } else if ('gray' === color) {
+          locationMarker.setIcon(locationIconGray);
+        } else if ('green' === color) {
+          locationMarker.setIcon(locationIconGreen);
+        } else if ('magenta' === color) {
+          locationMarker.setIcon(locationIconMagenta);
+        } else if ('orange' === color) {
+          locationMarker.setIcon(locationIconOrange);
+        } else if ('red' === color) {
+          locationMarker.setIcon(locationIconRed);
+        } else if ('yellow-orange' === color) {
+          locationMarker.setIcon(locationIconYellowOrange);
+        } else if ('yellow' === color) {
+          locationMarker.setIcon(locationIconYellow);
+        } else {
+          locationMarker.setIcon(locationIconBlue);
+        }
+        locationMarker.update();
+      };
+
+      document.setTrackColor       = function(color) {
+        var trackColor;
+        if ('blue' === color) {
+          trackColor = "#37b3fc";
+        } else if ('gray' === color) {
+          trackColor = "#8b9092";
+        } else if ('green' === color) {
+          trackColor = "#8fc65e";
+        } else if ('magenta' === color) {
+          trackColor = "#c64be8";
+        } else if ('orange' === color) {
+          trackColor = "#eda239";
+        } else if ('red' === color) {
+          trackColor = "#e5504c";
+        } else if ('yellow-orange' === color) {
+          trackColor = "#e5c64c";
+        } else if ('yellow' === color) {
+          trackColor = "#e5e54c";
+        } else {
+          trackColor = "#37b3fc";
+        }
+        track.forEach(function(segment) {
+          segment.color = trackColor;
+        });
+      };
+
+      document.panTo               = function(x, y) {
+        map.panTo([x, y]);
+      };
+
+      document.goToLocation        = function(x, y, follow) {
+        accuracy = acc;
+        document.showOnlineMarker();
+        onlineMarker.setLatLng([x, y]);
+        onlineMarker.update();
+        onlineMarker._icon.title = 'Tracked Object\nAccuracy: ' + accuracy.toFixed(1) + 'm';
+        if (follow) map.panTo([x, y]);
+      };
+
+      document.setOnline           = function() {
+        if (onlineMarker.opacity < 1.0) {
+          document.showOnlineMarker();
+        }
+      };
+      document.setOffline          = function() {
+        document.hideOnlineMarker();
+      };
+
+      document.moveMarker          = function(locationName, locationInfo, x, y, zoomLevel) {
+        locationMarker.setLatLng([x, y]);
+        locationMarker.update();
+        locationMarker.setTitle(locationName);
+        locationMarker._popup.setContent('<p>'+ locationInfo + '</p>');
+        map.panTo(locationMarker.getLatLng());
+        map.setZoom(zoomLevel);
+      };
+
+      document.clearMarkers        = function() {
+        while(markerArray.length > 0) { markerArray.pop(); }
+      };
+      document.zoomToLocation      = function(zoomLevel) {
+        map.setZoom(zoomLevel);
+        map.panTo(locationMarker.getLatLng());
+      };
+
+      document.addPoi              = function(poiName, poiInfo, x, y, color) {
+        var poiIcon;
+        if ('blue' === color) {
+          poiIcon = poiIconBlue;
+        } else if ('gray' === color) {
+          poiIcon = poiIconGray;
+        } else if ('green' === color) {
+          poiIcon = poiIconGreen;
+        } else if ('magenta' === color) {
+          poiIcon = poiIconMagenta;
+        } else if ('orange' === color) {
+          poiIcon = poiIconOrange;
+        } else if ('red' === color) {
+          poiIcon = poiIconRed;
+        } else if ('yellow-orange' === color) {
+          poiIcon = poiIconYellowOrange;
+        } else if ('yellow' === color) {
+          poiIcon = poiIconYellow;
+        } else {
+          poiIcon = poiIconBlue;
+        }
+
+        var poiMarker = L.marker([x, y], {
+          icon       : poiIcon,
+          draggable  : false,
+          riseOnHover: true,
+          riseOffset : 249,
+          title      : "Poi:" + "\n" + poiName + "\n" + poiInfo
+        }).addTo(map);
+        poiArray.push(poiMarker);
+      };
+      document.removePoi           = function(poiName) {
+        var size = poiArray.length;
+        for (var i = 0 ; i < size ; i++) {
+          var poi = poiArray[i];
+          if (poi.title.startsWith(poiName)) {
+            poiArray[i] = '';
+            break;
+          }
+        }
+      };
+      document.removePois          = function() {
+        for (var i = 0 ; i < poiArray.length ; i++) {
+          document.removeLayer(poiArray[i]); // removes poi from map
+        }
+      };
+      document.clearPois           = function() {
+        while(poiArray.length > 0) { poiArray.pop(); }
+      };
+
+      document.addToTrack          = function(x1, y1, x2, y2, name, date, time, color) {
+        if (x1 === 0 && y1 === 0 || x2 === 0 && y2 === 0) return;
+
+        var trackColor;
+        if ('blue' === color) {
+          trackColor = "#37b3fc";
+        } else if ('gray' === color) {
+          trackColor = "#8b9092";
+        } else if ('green' === color) {
+          trackColor = "#8fc65e";
+        } else if ('magenta' === color) {
+          trackColor = "#c64be8";
+        } else if ('orange' === color) {
+          trackColor = "#eda239";
+        } else if ('red' === color) {
+          trackColor = "#e5504c";
+        } else if ('yellow-orange' === color) {
+          trackColor = "#e5c64c";
+        } else if ('yellow' === color) {
+          trackColor = "#e5e54c";
+        } else {
+          trackColor = "#37b3fc";
+        }
+        var segment    = L.polyline([[x1, y1], [x2, y2]], {
+          weight      : 5,
+          opacity     : 0.8,
+          color       : trackColor,
+          lineCap     : 'round',
+          lineJoin    : 'round',
+          smoothFactor: 5
+        }).addTo(map);
+        segment.on('click', function(e) {
+          L.popup().setLatLng(e.latlng)
+                   .setContent('<table>' +
+                               '<tr><td>Name</td><td>' + name + '</td></tr>' +
+                               '<tr><td>Date</td><td>' + date + '</td></tr>' +
+                               '<tr><td>Time</td><td>' + time + '</td></tr>' +
+                               '</table>')
+                   .openOn(map);
+        });
+        track.push(segment);
+      };
+      document.clearTrack          = function() {
+        while(track.length > 0) {
+          map.removeLayer(track.pop());
+        }
+      };
+      document.addStartPoiMarker   = function(x, y, name, date, time) {
+        var startMarker = L.marker([x, y], {
+          icon       : startIcon,
+          draggable  : false,
+          riseOnHover: true,
+          riseOffset : 249,
+          title      : "Start:" + "\n" + name + "\n" + date + "\n" + time
+        }).addTo(map);
+        poiArray.push(startMarker);
+      };
+      document.addStopPoiMarker    = function(x, y, name, date, time) {
+        var stopMarker = L.marker([x, y], {
+          icon       : stopIcon,
+          draggable  : false,
+          riseOnHover: true,
+          riseOffset : 249,
+          title      : "Stop:" + "\n" + name + "\n" + date + "\n" + time
+        }).addTo(map);
+        poiArray.push(stopMarker);
+      };
+
+      document.changeMapProvider   = function(provider) {
+        if (provider === 'blackwhite') {
+          mapnikBw.addTo(map);
+        } else if (provider === 'street') {
+          googleStreets.addTo(map);
+        } else if (provider === 'bright') {
+          cartoDBPositron.addTo(map);
+        } else if (provider === 'dark') {
+          cartoDBDarkMatter.addTo(map);
+        } else if (provider === 'sat') {
+          googleSat.addTo(map);
+        } else if (provider === 'topo') {
+          googleTerrain.addTo(map);
+        }
+      };
+    </script>
+
+</div>
+</body>
+</html>
