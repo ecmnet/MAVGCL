@@ -14,7 +14,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -25,8 +24,8 @@ public class MapWidget extends Pane {
 	private              WebEngine                    webEngine;
 	private              boolean                      readyToGo;
 
-	private              MapProvider                            _mapProvider;
-	private              ObjectProperty<MapProvider>            mapProvider;
+	private              MapProvider                  _mapProvider = MapProvider.TOPO;
+	private              ObjectProperty<MapProvider>   mapProvider;
 
 
 	private              Location               currentLocation;
