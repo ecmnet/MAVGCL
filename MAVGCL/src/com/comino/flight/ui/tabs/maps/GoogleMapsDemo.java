@@ -1,4 +1,3 @@
-package com.comino.flight.ui.widgets.map;
 ///*
 // * Copyright (c) 2017 by Gerrit Grunwald
 // *
