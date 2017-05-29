@@ -33,6 +33,7 @@
 
 package com.comino.flight.prefs;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 
@@ -70,6 +71,12 @@ public class MAVPreferences {
 	public static Preferences getInstance() {
 		if(prefs==null) {
 			prefs = Preferences.userRoot().node("com.comino.mavgcl");
+		}
+		try {
+			prefs.sync();
+		} catch (BackingStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return prefs;
 	}
