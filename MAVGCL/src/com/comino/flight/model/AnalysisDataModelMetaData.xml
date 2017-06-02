@@ -1394,6 +1394,35 @@
 		</Groups>
   </KeyFigure>
 
+  <KeyFigure desc="Debug V1" uom="-" mask="#0.00" key="DEBUGV1">
+		<MSPSource class="debug" field="v1"/>
+		<Groups>
+			<Group>Debug</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Debug V2" uom="-" mask="#0.00" key="DEBUGV2">
+		<MSPSource class="debug" field="v2"/>
+		<Groups>
+			<Group>Debug</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Debug V3" uom="-" mask="#0.00" key="DEBUGV3">
+		<MSPSource class="debug" field="v3"/>
+		<Groups>
+			<Group>Debug</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Debug V4" uom="-" mask="#0.00" key="DEBUGV4">
+		<MSPSource class="debug" field="v4"/>
+		<Groups>
+			<Group>Debug</Group>
+		</Groups>
+  </KeyFigure>
+
+
 <!--
   <KeyFigure desc="UI ThreadTime" uom="ms" mask="#0.00" key="MAVGCLPERF">
 		<Groups>
@@ -1503,16 +1532,6 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-
-	<!-- Debugging
-
-	<KeyFigure desc="MGC Service Cycle" uom="ms" mask="#0" key="MAVGCLPERF">
-		<Groups>
-			<Group>Debugging</Group>
-		</Groups>
-	</KeyFigure>
-
-    -->
 
 
 </AnalysisDataModel>
