@@ -224,7 +224,7 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 
 		control.addMAVMessageListener(msg -> {
 			Platform.runLater(() -> {
-				if(filename.isEmpty())  {
+				if(filename!=null && filename.isEmpty())  {
 					out.stop();
 					messages.setText(msg.msg);
 					out.play();
