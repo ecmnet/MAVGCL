@@ -75,7 +75,6 @@ public class MAVPreferences {
 		try {
 			prefs.sync();
 		} catch (BackingStoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return prefs;
