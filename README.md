@@ -13,8 +13,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 12/06/2017
+**Development Status:** Last updated 29/06/2017
 
+- Fixes related to timestamp synchronization
 - Import of latest log file fixing 
 - Video stream recorded as H264/MP4 file
 - Currently no linux build via travis available
