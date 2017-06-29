@@ -96,6 +96,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 		state=STATE_HEADER_IDLE;
 
+		if(!control.isConnected())
+			return;
+
 		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
 			if(enable)
 				logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);

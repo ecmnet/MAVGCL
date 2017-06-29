@@ -82,7 +82,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private int mode = 0;
 
-	private boolean isConnected = false;
 	private boolean isFirst = false;
 
 	private int totalTime_sec = 30;
@@ -119,22 +118,19 @@ public class AnalysisModelService implements IMAVLinkListener {
 		control.addMAVLinkListener(this);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 			if(nv.booleanValue()) {
-				if(!isConnected) {
-					Thread c = new Thread(new CombinedConverter());
-					c.setName("Combined model converter");
-					c.start();
-					isConnected = true;
-				}
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				if(!control.isSimulation()) {
 					model.grid.clear();
 					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
-			} else
-				isConnected = false;
+			}
 		});
+
+		Thread c = new Thread(new CombinedConverter());
+		c.setName("Combined model converter");
+		c.start();
 	}
 
 	public AnalysisModelService(DataModel model) {
@@ -194,10 +190,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.isFirst=true;
 
-//		if(mode==PRE_COLLECTING) {
-//			mode = COLLECTING;
-//			return true;
-//		}
+		//		if(mode==PRE_COLLECTING) {
+		//			mode = COLLECTING;
+		//			return true;
+		//		}
 
 		if(mode==STOPPED) {
 			modelList.clear();
@@ -225,7 +221,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 			public void run() {
 				mode = STOPPED;
 				try {
-					Thread.sleep(100);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 				}
 			}
@@ -318,7 +314,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 			System.out.println("CombinedConverter started");
 			mode = STOPPED;
 
-			while(isConnected) {
+			while(true) {
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
@@ -395,7 +391,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
 			}
-			System.out.println("Combined converter stopped");
 		}
 	}
 
