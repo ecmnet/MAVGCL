@@ -194,10 +194,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.isFirst=true;
 
-		if(mode==PRE_COLLECTING) {
-			mode = COLLECTING;
-			return true;
-		}
+//		if(mode==PRE_COLLECTING) {
+//			mode = COLLECTING;
+//			return true;
+//		}
+
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
@@ -315,6 +316,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		public void run() {
 
 			System.out.println("CombinedConverter started");
+			mode = STOPPED;
 
 			while(isConnected) {
 

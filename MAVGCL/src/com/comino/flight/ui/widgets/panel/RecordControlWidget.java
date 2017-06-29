@@ -119,7 +119,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	public RecordControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "RecordControlWidget.fxml");
-		this.service_up_tms = System.currentTimeMillis();
 
 		blink = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 			@Override
@@ -158,6 +157,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		recording.setOnMousePressed(event -> {
 			enablemodetrig.selectedProperty().set(false);
 		});
+
+		recording.selectedProperty().set(false);
 
 		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			recording(newvalue, 0);
@@ -300,12 +301,14 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			}
 		});
 
+		this.service_up_tms = System.currentTimeMillis();
+
 	}
 
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		if(!modetrigger || (System.currentTimeMillis()-this.service_up_tms) < 500)
+		if(!modetrigger || (System.currentTimeMillis()-this.service_up_tms) < 5000)
 			return;
 
 		if(!modelService.isCollecting()) {
