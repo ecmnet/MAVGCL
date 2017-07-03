@@ -51,16 +51,16 @@ import javafx.util.Duration;
 @SuppressWarnings("restriction")
 public class DashLabelLED extends GridPane {
 
-	public final static int MODE_OFF 		=  0;
-	public final static int MODE_ON 		=  1;
-	public final static int MODE_BLINK  	=  2;
+	public final static int MODE_OFF = 0;
+	public final static int MODE_ON = 1;
+	public final static int MODE_BLINK = 2;
 
-	private Line  line      = null;
-	private Label label     = null;
-	private Circle circle   = null;
-	private Color color     = null;
+	private Line line = null;
+	private Label label = null;
+	private Circle circle = null;
+	private Color color = null;
 
-	private int  mode = -1;
+	private int mode = -1;
 	private boolean toggle = false;
 	private Timeline timeline;
 
@@ -68,11 +68,13 @@ public class DashLabelLED extends GridPane {
 	public DashLabelLED() {
 		super();
 		this.color = Color.WHITE;
-		this.setPadding(new Insets(3,0,3,0));
+		this.setPadding(new Insets(3, 0, 3, 0));
 		this.setHgap(4);
 
-		label = new Label(); label.setTextFill(Color.DARKCYAN.brighter());
-		line = new Line(); line.setStroke(Color.DARKCYAN.darker());
+		label = new Label();
+		label.setTextFill(Color.DARKCYAN.brighter());
+		line = new Line();
+		line.setStroke(Color.DARKCYAN.darker());
 
 		this.addColumn(0, label);
 		this.addColumn(1, line);
@@ -86,11 +88,11 @@ public class DashLabelLED extends GridPane {
 
 		final FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 
-		this.widthProperty().addListener((v,ov,nv) -> {
+		this.widthProperty().addListener((v, ov, nv) -> {
 			line.setStartX(0.0f);
-			line.setStartY(this.prefHeightProperty().floatValue()/2);
-			line.setEndX(this.getWidth()-fontLoader.computeStringWidth(label.getText(), label.getFont())-25);
-			line.setEndY(this.prefHeightProperty().floatValue()/2);
+			line.setStartY(this.prefHeightProperty().floatValue() / 2);
+			line.setEndX(this.getWidth() - fontLoader.computeStringWidth(label.getText(), label.getFont()) - 25);
+			line.setEndY(this.prefHeightProperty().floatValue() / 2);
 		});
 	}
 
@@ -109,19 +111,22 @@ public class DashLabelLED extends GridPane {
 
 	public void setMode(int mode) {
 
-		if(timeline!=null)
-		   timeline.stop();
+		if (timeline != null)
+			timeline.stop();
 
-		if(this.mode==mode)
+		if (this.mode == mode)
 			return;
 
-		switch(mode) {
+		switch (mode) {
 		case MODE_OFF:
-			circle.setFill(Color.TRANSPARENT); break;
+			circle.setFill(Color.TRANSPARENT);
+			break;
 		case MODE_ON:
-			circle.setFill(color); break;
+			circle.setFill(color);
+			break;
 		case MODE_BLINK:
-			if(timeline!=null) timeline.play();
+			if (timeline != null)
+				timeline.play();
 			break;
 		}
 		this.mode = mode;
@@ -132,15 +137,13 @@ public class DashLabelLED extends GridPane {
 	}
 
 	public void setRate(String rate) {
-		timeline = new Timeline(new KeyFrame(
-				Duration.millis(Integer.parseInt(rate)),
-				ae -> {
-					if(toggle)
-						circle.setFill(color);
-					else
-						circle.setFill(Color.TRANSPARENT);
-					toggle = !toggle;
-				}));
+		timeline = new Timeline(new KeyFrame(Duration.millis(Integer.parseInt(rate)), ae -> {
+			if (toggle)
+				circle.setFill(color);
+			else
+				circle.setFill(Color.TRANSPARENT);
+			toggle = !toggle;
+		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 
@@ -148,13 +151,12 @@ public class DashLabelLED extends GridPane {
 		return null;
 	}
 
-	 public String getColor() {
-	        return color.toString();
-	    }
+	public String getColor() {
+		return color.toString();
+	}
 
-	    public void setColor(String value) {
-	       this.color = Color.valueOf(value);
-	    }
-
+	public void setColor(String value) {
+		this.color = Color.valueOf(value);
+	}
 
 }

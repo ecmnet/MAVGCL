@@ -73,7 +73,7 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 	}
 
 	public void setup(IMAVController control) {
-        super.setup(control);
+		super.setup(control);
 		this.model = control.getCurrentModel();
 		this.control.addStatusChangeListener(this);
 		update(model.sys,model.sys);
@@ -84,38 +84,48 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 
 		Platform.runLater(() -> {
 
-			if(newStat.isStatus(Status.MSP_ARMED) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(!newStat.isStatus(Status.MSP_CONNECTED)) {
+				armed.setMode(DashLabelLED.MODE_OFF);
+				althold.setMode(DashLabelLED.MODE_OFF);
+				poshold.setMode(DashLabelLED.MODE_OFF);
+				mission.setMode(DashLabelLED.MODE_OFF);
+				offboard.setMode(DashLabelLED.MODE_OFF);
+				landed.setMode(DashLabelLED.MODE_OFF);
+				return;
+			}
+
+			if(newStat.isStatus(Status.MSP_ARMED))
 				armed.setMode(DashLabelLED.MODE_ON);
 			else
 				armed.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE))
 				althold.setMode(DashLabelLED.MODE_ON);
 			else
 				althold.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_MODE_POSITION) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_MODE_POSITION))
 				poshold.setMode(DashLabelLED.MODE_ON);
 			else
 				poshold.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_MODE_MISSION) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_MODE_MISSION))
 				mission.setMode(DashLabelLED.MODE_ON);
 			else
-				if(newStat.isStatus(Status.MSP_MODE_RTL) && newStat.isStatus(Status.MSP_CONNECTED))
+				if(newStat.isStatus(Status.MSP_MODE_RTL))
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD))
 				offboard.setMode(DashLabelLED.MODE_ON);
 			else
 				offboard.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_LANDED) && newStat.isStatus(Status.MSP_CONNECTED))
+			if(newStat.isStatus(Status.MSP_LANDED))
 				landed.setMode(DashLabelLED.MODE_ON);
 			else {
-				if((newStat.isStatus(Status.MSP_MODE_LANDING)) && newStat.isStatus(Status.MSP_CONNECTED))
+				if(newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF))
 					landed.setMode(DashLabelLED.MODE_BLINK);
 				else
 					landed.setMode(DashLabelLED.MODE_OFF);

@@ -37,7 +37,7 @@
 					GridPane.rowIndex="3" />
 				<DashLabelLED fx:id="offboard" text="Offboard"
 					GridPane.rowIndex="4" />
-				<DashLabelLED fx:id="landed" text="Landed"  rate="500"
+				<DashLabelLED fx:id="landed" text="Landed"  rate="100"
 					GridPane.rowIndex="5" />
 			</children>
 		</GridPane>
