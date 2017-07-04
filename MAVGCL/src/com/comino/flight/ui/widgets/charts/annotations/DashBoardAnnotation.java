@@ -64,7 +64,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	private int posy;
 
-	private DecimalFormat f = new DecimalFormat("#0.00");
+	private KeyFigureMetaData kf;
 
 	public DashBoardAnnotation(int posy) {
 
@@ -80,8 +80,6 @@ public class DashBoardAnnotation  implements XYAnnotation {
 		this.pane.addRow(2,delta,delta_v);
 		this.pane.addRow(3,avg,avg_v,std,std_v);
 
-		DecimalFormatSymbols sym = new DecimalFormatSymbols();
-		sym.setNaN("-"); f.setDecimalFormatSymbols(sym);
 	}
 
 	public void setPosY(int y) {
@@ -89,7 +87,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	}
 
 	public void setKeyFigure(KeyFigureMetaData kf) {
-		f.applyPattern(kf.mask);
+		this.kf = kf;
 		if(kf.uom!=null && kf.uom.length()>0)
 		  header.setText(kf.desc1+" ["+kf.uom+"]:");
 		else
@@ -97,12 +95,12 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	}
 
 	public void setMinMax(float min, float max) {
-	  min_v.setValue(min); max_v.setValue(max);
-	  delta_v.setValue(max-min);
+	  min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
+	  delta_v.setValue(kf.getValueString(max-min));
 	}
 
 	public void setAvg(float avg, float std) {
-		avg_v.setValue(avg); std_v.setValue(std);
+		avg_v.setValue(kf.getValueString(avg)); std_v.setValue(kf.getValueString(std));
 	}
 
 	@Override
@@ -131,8 +129,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
 		}
 
-		public void setValue(float val) {
-			String s = f.format(val);
+		public void setValue(String s) {
 			if(!s.equals(old_text))  {
 			   setText(s);
 			   old_text = s;

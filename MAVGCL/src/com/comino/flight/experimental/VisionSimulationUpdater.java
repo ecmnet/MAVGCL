@@ -98,7 +98,7 @@ public class VisionSimulationUpdater implements Runnable {
 			cmd.usec = System.nanoTime()/1000;
 			cmd.x = x;
 			cmd.y = y;
-			cmd.z = model.state.l_z;
+			cmd.z = Float.NaN;
 			cmd.isValid = true;
 			if(!control.sendMAVLinkMessage(cmd))
 				stop();

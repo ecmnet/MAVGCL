@@ -34,6 +34,8 @@
 package com.comino.flight.model;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +43,17 @@ import com.comino.flight.model.converter.SourceConverter;
 import com.comino.msp.model.DataModel;
 
 public class KeyFigureMetaData {
+
+	private static final DecimalFormat f1 = new DecimalFormat("#0.0");
+	private static final DecimalFormat f2 = new DecimalFormat("#0.00");
+	private static final DecimalFormatSymbols sym = new DecimalFormatSymbols();
+
+	{
+		sym.setNaN("-");
+		f1.setDecimalFormatSymbols(sym);
+		f2.setDecimalFormatSymbols(sym);
+
+	}
 
 	public static final int MSP_SOURCE = 1;
 	public static final int PX4_SOURCE = 2;
@@ -52,10 +65,12 @@ public class KeyFigureMetaData {
 	public String desc1;
 	public String desc2;
 	public String uom;
-	public String mask;
+//	public String mask;
 	public int    hash;
 	public float  min=0;
 	public float  max=0;
+
+	private DecimalFormat formatting = null;
 
 	public boolean isVirtual = false;
 
@@ -72,9 +87,24 @@ public class KeyFigureMetaData {
 	public KeyFigureMetaData(String key, String desc, String uom, String mask) {
 		this.desc1  = desc;
 		this.uom    = uom;
-		this.mask   = mask;
 		this.key    = key;
 		this.hash   = key.toLowerCase().hashCode();
+
+		if(mask!=null && !mask.equalsIgnoreCase("auto")) {
+			formatting = new DecimalFormat(mask);
+			formatting.setDecimalFormatSymbols(sym);
+		}
+
+	}
+
+	public String getValueString(float val) {
+		if(formatting!=null)
+			return formatting.format(val);
+		if(Math.abs(val)<100)
+			return f2.format(val);
+		if(Math.abs(val)<1000)
+			return f1.format(val);
+		return String.valueOf(val);
 	}
 
 	public void setBounds(float min, float max) {

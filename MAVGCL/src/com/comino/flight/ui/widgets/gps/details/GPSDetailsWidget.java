@@ -142,8 +142,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 
 		public void setValue(AnalysisDataModel model) {
 			if(kf!=null) {
-				f.applyPattern(kf.mask);
-				value.setText(f.format(model.getValue(kf)));
+				value.setText(kf.getValueString(model.getValue(kf)));
 			}
 		}
 	}

@@ -69,65 +69,19 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-public class DetailsWidget extends WidgetPane  {
+public class DetailsWidget extends WidgetPane {
 
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 19;
 
-
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
-	private final static String STYLE_VALIDDATA   = "-fx-background-color:transparent;";
+	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
 
-	private final static String[] key_figures_details = {
-			"ROLL",
-			"PITCH",
-			"THRUST",
-			null,
-			"GNDV",
-			"CLIMB",
-			"AIRV",
-			null,
-			"HEAD",
-			"RGPSNO",
-			"GPHACCUR",
-			"GPVACCUR",
-			null,
-			"ALTSL",
-			"ALTTR",
-			"ALTGL",
-			null,
-			"FLOWQL",
-			"LIDAR",
-			"FLOWDI",
-			null,
-			"LPOSX",
-			"LPOSY",
-			"LPOSZ",
-			null,
-			"LPOSXYERR",
-			"LPOSZERR",
-			null,
-			"VISIONX",
-			"VISIONY",
-			"VISIONZ",
-			null,
-			"VISIONH",
-			"VISIONR",
-			"VISIONP",
-			null,
-			"VISIONFPS",
-			"VISIONQUAL",
-			null,
-			"BATC",
-			"BATH",
-			"BATP",
-			null,
-			"TEMP",
-			"CPUPX4",
-			"RSSI",
-			null,
-			"TARM",
-			"TBOOT",
+	private final static String[] key_figures_details = { "ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
+			null, "HEAD", "RGPSNO", "GPHACCUR", "GPVACCUR", null, "ALTSL", "ALTTR", "ALTGL", null, "FLOWQL", "LIDAR",
+			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
+			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "VISIONFPS", "VISIONQUAL", null, "BATC", "BATH",
+			"BATP", null, "TEMP", "CPUPX4", "RSSI", null, "TARM", "TBOOT",
 
 	};
 
@@ -140,8 +94,6 @@ public class DetailsWidget extends WidgetPane  {
 	private Timeline task = null;
 
 	private List<KeyFigure> figures = null;
-
-	private DecimalFormat f = new DecimalFormat("#0.#");
 
 	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
 
@@ -163,10 +115,10 @@ public class DetailsWidget extends WidgetPane  {
 		}
 
 		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
-			int i=0;
-			for(KeyFigure figure : figures)
-				figure.setValue(model,i++);
-		} ) );
+			int i = 0;
+			for (KeyFigure figure : figures)
+				figure.setValue(model, i++);
+		}));
 
 		task.setCycleCount(Timeline.INDEFINITE);
 	}
@@ -183,16 +135,16 @@ public class DetailsWidget extends WidgetPane  {
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setBorder(Border.EMPTY);
 
-		int i=0;
-		for(String k : key_figures_details) {
-			figures.add(new KeyFigure(grid,k,i));
+		int i = 0;
+		for (String k : key_figures_details) {
+			figures.add(new KeyFigure(grid, k, i));
 			i++;
 		}
 
-		state.getCurrentUpToDate().addListener((e,o,n) -> {
+		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
-				for(KeyFigure figure : figures) {
-					if(n.booleanValue())
+				for (KeyFigure figure : figures) {
+					if (n.booleanValue())
 						figure.setColor(Color.WHITE);
 					else
 						figure.setColor(Color.LIGHTGRAY);
@@ -202,68 +154,73 @@ public class DetailsWidget extends WidgetPane  {
 
 		task.play();
 
-		//	this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+		// this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
 
 	}
 
 	private class KeyFigure {
-		KeyFigureMetaData kf  = null;
-		Control  value = null;
+		KeyFigureMetaData kf = null;
+		Control value = null;
 		GridPane p = null;
 		DashLabel label = null;
-		Tooltip   tip = null;
+		Tooltip tip = null;
 
-		float val=0, old_val=Float.NaN;
+		float val = 0, old_val = Float.NaN;
 
 		public KeyFigure(GridPane grid, String k, int row) {
 			p = new GridPane();
-			p.setPadding(new Insets(0,2,0,2));
+			p.setPadding(new Insets(0, 2, 0, 2));
 			this.kf = meta.getMetaData(k);
-			if(kf==null) {
-				grid.add(new Label(),0,row);
-				grid.getRowConstraints().add(row,new RowConstraints(SEPHEIGHT,SEPHEIGHT,SEPHEIGHT));
+			if (kf == null) {
+				grid.add(new Label(), 0, row);
+				grid.getRowConstraints().add(row, new RowConstraints(SEPHEIGHT, SEPHEIGHT, SEPHEIGHT));
 			} else {
 				label = new DashLabel(kf.desc1);
-				label.setPrefWidth(130); label.setPrefHeight(19);
-				if(kf.uom.contains("%")) {
+				label.setPrefWidth(130);
+				label.setPrefHeight(19);
+				if (kf.uom.contains("%")) {
 					tip = new Tooltip();
-					ProgressBar l2 = new ProgressBar(); l2.setPrefWidth(105);
+					ProgressBar l2 = new ProgressBar();
+					l2.setPrefWidth(105);
 					value = l2;
 					l2.setTooltip(tip);
-					p.addRow(row, label,l2);
+					p.addRow(row, label, l2);
 				} else {
-					Label l2 = new Label("-"); l2.setPrefWidth(58); l2.setAlignment(Pos.CENTER_RIGHT);
+					Label l2 = new Label("-");
+					l2.setPrefWidth(58);
+					l2.setAlignment(Pos.CENTER_RIGHT);
 					value = l2;
-					Label l3 = new Label(" "+kf.uom); l3.setPrefWidth(48);
-					p.addRow(row, label,l2,l3);
+					Label l3 = new Label(" " + kf.uom);
+					l3.setPrefWidth(48);
+					p.addRow(row, label, l2, l3);
 				}
 				grid.add(p, 0, row);
-				grid.getRowConstraints().add(row,new RowConstraints(ROWHEIGHT,ROWHEIGHT,ROWHEIGHT));
+				grid.getRowConstraints().add(row, new RowConstraints(ROWHEIGHT, ROWHEIGHT, ROWHEIGHT));
 			}
 		}
 
 		public void setColor(Color color) {
-		  if(label != null)
-			  label.setTextColor(color);
+			if (label != null)
+				label.setTextColor(color);
 		}
 
 		public void setValue(AnalysisDataModel model, int row) {
-			if(kf!=null) {
-				val =model.getValue(kf);
+			if (kf != null) {
+				val = model.getValue(kf);
 
-				if(Float.isNaN(val)) {
+				if (Float.isNaN(val)) {
 					label.setDashColor(Color.GRAY);
-					if(value instanceof ProgressBar)
-						((ProgressBar)value).setProgress(0);
+					if (value instanceof ProgressBar)
+						((ProgressBar) value).setProgress(0);
 					return;
 				}
 
-				if(val==old_val)
+				if (val == old_val)
 					return;
 				old_val = val;
 
-				if(kf.min!=kf.max) {
-					if(val < kf.min || val > kf.max) {
+				if (kf.min != kf.max) {
+					if (val < kf.min || val > kf.max) {
 						label.setDashColor(Color.WHITE);
 						p.setStyle(STYLE_OUTOFBOUNDS);
 					} else {
@@ -274,12 +231,11 @@ public class DetailsWidget extends WidgetPane  {
 					label.setDashColor(null);
 					p.setStyle(STYLE_VALIDDATA);
 				}
-				f.applyPattern(kf.mask);
-				if(value instanceof Label)
-					((Label)value).setText(f.format(val));
-				if(value instanceof ProgressBar) {
-					tip.setText((int)(val*100)+"%");
-					((ProgressBar)value).setProgress(val);
+				if (value instanceof Label)
+					((Label) value).setText(kf.getValueString(val));
+				if (value instanceof ProgressBar) {
+					tip.setText((int) (val * 100) + "%");
+					((ProgressBar) value).setProgress(val);
 				}
 			}
 		}
