@@ -1,5 +1,65 @@
 <AnalysisDataModel version="0.7" description ="Built-In model definition">
 
+    <!-- EKF2 Innovation Status -->
+
+    <KeyFigure desc="Tst.Ratio Hgt." uom="" mask="#0.00" key="EKFHTR">
+		<ULogSource field="estimator_status_0.hgt_test_ratio"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Tst.Ratio Vel." uom="" mask="#0.00" key="EKFVTR">
+		<ULogSource field="estimator_status_0.vel_test_ratio"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Tst.Ratio Pos." uom="" mask="#0.00" key="EKFPTR">
+		<ULogSource field="estimator_status_0.pos_test_ratio"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Tst.Ratio GPS" uom="" mask="#0.00" key="EKFGTR">
+		<ULogSource field="estimator_status_0.gps_test_ratio"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Tst.Ratio Mag." uom="" mask="#0.00" key="EKFMTR">
+		<ULogSource field="estimator_status_0.mag_test_ratio"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <!-- EKF2 Vibration -->
+
+	<KeyFigure desc="Ang.coning vibrations" uom="m" mask="#0.0" key="EKFDACV">
+		<ULogSource field="estimator_status.vibe[0]"/>
+		<Groups>
+			<Group>EKF2 Vibration</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="HF.ang.vibrations" uom="m" mask="#0.0" key="EKFHACV">
+		<ULogSource field="estimator_status.vibe[1]"/>
+		<Groups>
+			<Group>EKF2 Vibration</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="HF.vel.vibrations" uom="m" mask="#0.0" key="EKFHVCV">
+		<ULogSource field="estimator_status.vibe[2]"/>
+		<Groups>
+			<Group>EKF2 Vibration</Group>
+		</Groups>
+	</KeyFigure>
+
     <!-- Altitudes -->
 
 	<KeyFigure desc="Alt.Sea level" uom="m" mask="#0.0" key="ALTSL">
