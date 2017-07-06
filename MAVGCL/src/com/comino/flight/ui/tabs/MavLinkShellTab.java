@@ -98,7 +98,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					if(command.equalsIgnoreCase("reboot")) {
 						ExecutorService.get().schedule(()-> {
 							reloadShell();
-						},5, TimeUnit.SECONDS);
+						},6, TimeUnit.SECONDS);
 					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
