@@ -166,7 +166,7 @@ public class VehicleHealthCheck {
 			// check Alt.amsl
 
 			if(healthOk && Float.isNaN(model.hud.ag))
-				checkFailed("LPE: Altitude amsl not available");
+				checkFailed("Altitude amsl not available");
 
 
 			// TODO:...add more checks here
