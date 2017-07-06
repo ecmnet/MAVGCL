@@ -35,6 +35,7 @@ package com.comino.flight.ui.tabs;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
 import org.mavlink.messages.SERIAL_CONTROL_FLAG;
@@ -45,6 +46,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -93,6 +95,11 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				int end = console.getText().length();
 				if(end > index) {
 					String command = console.getText(index,end).trim();
+					if(command.equalsIgnoreCase("reboot")) {
+						ExecutorService.get().schedule(()-> {
+							reloadShell();
+						},5, TimeUnit.SECONDS);
+					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
 					if(!command.equals(last.peekLast())) {
@@ -143,14 +150,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.setWrapText(true);
 
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
-			if(nv.booleanValue()) {
-				Platform.runLater(() -> {
-					console.clear();
-					if(!isDisabled())
-						writeToShell("\n");
-					scrollIntoView();
-				});
-			}
+			if(nv.booleanValue())
+				reloadShell();
 			console.setDisable(!nv.booleanValue());
 		});
 	}
@@ -207,6 +208,15 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	public void setWidthBinding(double horizontal_space) {
 		console.prefWidthProperty().bind(widthProperty().subtract(horizontal_space+5));
+	}
+
+	private void reloadShell() {
+			Platform.runLater(() -> {
+				console.clear();
+				if(!isDisabled())
+					writeToShell("\n");
+				scrollIntoView();
+			});
 	}
 
 
