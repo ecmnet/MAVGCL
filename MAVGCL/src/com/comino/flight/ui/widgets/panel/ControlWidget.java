@@ -90,15 +90,6 @@ public class ControlWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
-		tuning.selectedProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
-				video.setSelected(false);
-				video.setDisable(true);
-			}
-			else
-				video.setDisable(false);
-		});
-
 		vehiclectl.setDisable(true);
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
