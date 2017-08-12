@@ -33,12 +33,14 @@
 
 package com.comino.jmavlib.extensions;
 
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_logging_data;
@@ -51,8 +53,10 @@ import me.drton.jmavlib.log.ulog.FieldFormat;
 import me.drton.jmavlib.log.ulog.MessageAddLogged;
 import me.drton.jmavlib.log.ulog.MessageData;
 import me.drton.jmavlib.log.ulog.MessageDropout;
+import me.drton.jmavlib.log.ulog.MessageFlagBits;
 import me.drton.jmavlib.log.ulog.MessageFormat;
 import me.drton.jmavlib.log.ulog.MessageInfo;
+import me.drton.jmavlib.log.ulog.MessageInfoMultiple;
 import me.drton.jmavlib.log.ulog.MessageLog;
 import me.drton.jmavlib.log.ulog.MessageParameter;
 
@@ -63,10 +67,14 @@ public class UlogMAVLinkParser  {
 	private static final byte MESSAGE_TYPE_INFO = (byte) 'I';
 	private static final byte MESSAGE_TYPE_PARAMETER = (byte) 'P';
 	private static final byte MESSAGE_TYPE_ADD_LOGGED_MSG = (byte) 'A';
+	private static final byte MESSAGE_TYPE_INFO_MULTIPLE = (byte) 'M';
 	private static final byte MESSAGE_TYPE_REMOVE_LOGGED_MSG = (byte) 'R';
 	private static final byte MESSAGE_TYPE_SYNC = (byte) 'S';
 	private static final byte MESSAGE_TYPE_DROPOUT = (byte) 'O';
 	private static final byte MESSAGE_TYPE_LOG = (byte) 'L';
+	private static final byte MESSAGE_TYPE_FLAG_BITS = (byte) 'B';
+
+	private static final int INCOMPAT_FLAG0_DATA_APPENDED_MASK = 1<<0;
 
 	private ByteBuffer buffer = null;
 	private long logStartTimestamp;
@@ -91,6 +99,11 @@ public class UlogMAVLinkParser  {
 	// Helpers
 	private boolean nestedParsingDone = false;
 
+	private String hardfaultPlainText = "";
+
+	private Vector<Long> appendedOffsets = new Vector<Long>();
+	int currentAppendingOffsetIndex = 0; // current index to appendedOffsets for the next appended offset
+
 	private long timeStart=-1;
 
 	public UlogMAVLinkParser() {
@@ -100,13 +113,17 @@ public class UlogMAVLinkParser  {
 	}
 
 	public void addToBuffer(msg_logging_data msg, boolean ok) {
-		if(ok) {
-			for (int i = 0; i < msg.length; i++)
-				buffer.put((byte)(msg.data[i] & 0x00FF));
-		} else {
-			buffer.clear();
-			for (int i = msg.first_message_offset; i < msg.length; i++)
-				buffer.put((byte)(msg.data[i] & 0x00FF));
+		try {
+			if(ok) {
+				for (int i = 0; i < msg.length; i++)
+					buffer.put((byte)(msg.data[i] & 0x00FF));
+			} else {
+				buffer.clear();
+				for (int i = msg.first_message_offset; i < msg.length; i++)
+					buffer.put((byte)(msg.data[i] & 0x00FF));
+			}
+		} catch(Exception o) {
+			//           o.printStackTrace();
 		}
 	}
 
@@ -174,12 +191,47 @@ public class UlogMAVLinkParser  {
 		Object msg = null;  long lastTime = -1;
 		buffer.flip();
 		while ((msg = readMessage()) != null) {
+			//System.err.println(msg);
 
-			if (msg instanceof MessageFormat) {
+			if (msg instanceof MessageFlagBits) {
+				MessageFlagBits msgFlags = (MessageFlagBits) msg;
+				// check flags
+				if ((msgFlags.incompatFlags[0] & INCOMPAT_FLAG0_DATA_APPENDED_MASK) != 0) {
+					for (int i = 0; i < msgFlags.appendedOffsets.length; ++i) {
+						if (msgFlags.appendedOffsets[i] > 0) {
+							appendedOffsets.add(msgFlags.appendedOffsets[i]);
+						}
+					}
+					if (appendedOffsets.size() > 0) {
+						System.out.println("log contains appended data");
+					}
+				}
+				boolean containsUnknownIncompatBits = false;
+				if ((msgFlags.incompatFlags[0] & ~0x1) != 0)
+					containsUnknownIncompatBits = true;
+				for (int i = 1; i < msgFlags.incompatFlags.length; ++i) {
+					if (msgFlags.incompatFlags[i] != 0)
+						containsUnknownIncompatBits = true;
+				}
+				if (containsUnknownIncompatBits) {
+					System.err.println("Log contains unknown incompatible bits. Refusing to parse the log.");
+				}
+
+			} else if (msg instanceof MessageFormat) {
 				MessageFormat msgFormat = (MessageFormat) msg;
 				messageFormats.put(msgFormat.name, msgFormat);
 
+			} else if (msg instanceof MessageInfoMultiple) {
+				MessageInfoMultiple msgInfo = (MessageInfoMultiple) msg;
+				//System.out.println(msgInfo.getKey());
+				if ("hardfault_plain".equals(msgInfo.getKey())) {
+					// append all hardfaults to one String (we should be looking at msgInfo.isContinued as well)
+					hardfaultPlainText += (String)msgInfo.value;
+				}
+
+
 			} else if (msg instanceof MessageAddLogged) {
+
 				//from now on we cannot have any new MessageFormat's, so we
 				//can parse the nested types
 				if (!nestedParsingDone) {
@@ -199,6 +251,7 @@ public class UlogMAVLinkParser  {
 					continue;
 				}
 				Subscription subscription = new Subscription(msgFormat, msgAddLogged.multiID);
+
 				if (msgAddLogged.msgID < messageSubscriptions.size()) {
 					messageSubscriptions.set(msgAddLogged.msgID, subscription);
 				} else {
@@ -254,7 +307,7 @@ public class UlogMAVLinkParser  {
 		for (int k = 0; k < messageSubscriptions.size(); ++k) {
 			Subscription s = messageSubscriptions.get(k);
 			if (s != null) {
-				//		System.out.println(k+": "+s.format.name);
+				//	System.out.println(k+": "+s.format.name);
 				MessageFormat msgFormat = s.format;
 				if (msgFormat.name.charAt(0) != '_') {
 					int maxInstance = msgFormat.maxMultiID;
@@ -287,6 +340,15 @@ public class UlogMAVLinkParser  {
 		int msgSize = s1 + (256 * s2);
 		int msgType = buffer.get() & 0x00FF;
 
+		// check if we cross an appending boundary: if so, we need to reset the position and skip this message
+		if (currentAppendingOffsetIndex < appendedOffsets.size()) {
+			if (buffer.position() + 3 + msgSize > appendedOffsets.get(currentAppendingOffsetIndex)) {
+				//System.out.println("Jumping to next position: "+pos + ", next: "+appendedOffsets.get(currentAppendingOffsetIndex));
+				buffer.position((appendedOffsets.get(currentAppendingOffsetIndex).intValue()));
+				++currentAppendingOffsetIndex;
+			}
+		}
+
 		try {
 
 			if (msgSize > buffer.remaining()-3) {
@@ -306,7 +368,7 @@ public class UlogMAVLinkParser  {
 				if (msgID < messageSubscriptions.size())
 					subscription = messageSubscriptions.get(msgID);
 				if (subscription == null) {
-					//System.err.println("Unknown DATA subscription ID: " + msgID);
+					// System.err.println("Unknown DATA subscription ID: " + msgID);
 					buffer.position(buffer.position()+msgSize-5);
 					return null;
 				}
@@ -317,8 +379,13 @@ public class UlogMAVLinkParser  {
 					buffer.position(buffer.position()+msgSize-5);
 					return null;
 				}
+			case MESSAGE_TYPE_FLAG_BITS:
+				return  new MessageFlagBits(buffer, msgSize);
 			case MESSAGE_TYPE_INFO:
 				return new MessageInfo(buffer);
+			case MESSAGE_TYPE_INFO_MULTIPLE:
+				return new MessageInfoMultiple(buffer);
+
 			case MESSAGE_TYPE_PARAMETER:
 				return new MessageParameter(buffer);
 			case MESSAGE_TYPE_FORMAT:
@@ -340,7 +407,7 @@ public class UlogMAVLinkParser  {
 					// Not much we can do except to ensure that we make progress and don't spam the error console.
 				} else {
 					buffer.position(buffer.position()+msgSize);
-					//	System.err.println("Exc: " + msgType+":"+msgSize);
+					//System.out.println((char)msgType);
 				}
 			}
 		} catch(Exception e) {  }

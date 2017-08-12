@@ -26,6 +26,6 @@ public class MessageAddLogged {
 
     @Override
     public String toString() {
-        return String.format("AddLoggingMsg: name=%s, ID=%i, multiID=%i", name, msgID, multiID);
+        return String.format("AddLoggingMsg: name=%s, ID=%d, multiID=%d", name, msgID, multiID);
     }
 }
