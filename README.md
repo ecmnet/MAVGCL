@@ -13,6 +13,8 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
+**Note:** Reading ULOG via MAVLink currently broken due to changes to ULOG2 in the PX4 stack
+
 **Development Status:** Last updated 29/06/2017
 
 - Fixes related to timestamp synchronization
