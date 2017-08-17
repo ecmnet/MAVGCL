@@ -144,7 +144,11 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 						break;
 					case 5:
 						gps.setMode(Badge.MODE_ON);
-						gps.setText("DGPS Fix");
+						gps.setText("RTK float");
+						break;
+					case 6:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("RTK fixed");
 						break;
 
 					default:
