@@ -345,6 +345,8 @@
 .tree-table-row-cell {
   -fx-background: -fx-control-inner-background ;
   -fx-background-color: -fx-control-inner-background  ;
+   -fx-border-color: #232323;
+    -fx-border-style: solid;
 
 
 }
