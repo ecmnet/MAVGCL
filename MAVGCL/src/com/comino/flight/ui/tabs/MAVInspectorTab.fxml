@@ -12,8 +12,8 @@
 		<TreeTableView fx:id="treetableview" layoutX="2.0" layoutY="5.0"  styleClass="widget">
 			<columns>
 				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="320.0" text="Message" />
-				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
-				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="120.0" sortable="false" text="Value" />
+				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="120.0" text="Variable" />
+				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="280.0" sortable="false" text="Value" />
 			</columns>
 		</TreeTableView>
 		</children>
