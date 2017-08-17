@@ -39,26 +39,52 @@
 
 	 <!-- EKF2 Vibration -->
 
-	<KeyFigure desc="Ang.coning vibrations" uom="m" mask="#0.0" key="EKFDACV">
+	<KeyFigure desc="Ang.coning vibrations" uom="mrad" mask="#0.0" key="EKFDACV">
 		<ULogSource field="estimator_status.vibe[0]"/>
 		<Groups>
 			<Group>EKF2 Vibration</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="HF.ang.vibrations" uom="m" mask="#0.0" key="EKFHACV">
+	<KeyFigure desc="HF.ang.vibrations" uom="mrad" mask="#0.0" key="EKFHACV">
 		<ULogSource field="estimator_status.vibe[1]"/>
 		<Groups>
 			<Group>EKF2 Vibration</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="HF.vel.vibrations" uom="m" mask="#0.0" key="EKFHVCV">
+	<KeyFigure desc="HF.vel.vibrations" uom="m/s" mask="#0.0" key="EKFHVCV">
 		<ULogSource field="estimator_status.vibe[2]"/>
 		<Groups>
 			<Group>EKF2 Vibration</Group>
 		</Groups>
 	</KeyFigure>
+
+	<!-- EKF2 state estimations -->
+
+
+    <KeyFigure desc="IMU X delta ang.state" uom="rad/s" mask="#0.0" key="EKFIXDA">
+		<ULogSource field="estimator_status.states[10]"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="IMU Y delta ang.state" uom="rad/s" mask="#0.0" key="EKFIYDA">
+		<ULogSource field="estimator_status.states[11]"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="IMU Z delta ang.state" uom="rad/s" mask="#0.0" key="EKFIZDA">
+		<ULogSource field="estimator_status.states[12]"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+
+
 
     <!-- Altitudes -->
 
