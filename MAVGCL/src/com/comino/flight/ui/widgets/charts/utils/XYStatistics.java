@@ -75,7 +75,7 @@ public class XYStatistics {
 		center_y = vy / (i - x0);
 
 		vx = 0; vy = 0;
-		for(i = x0; i< x1 ;i++) {
+		for(i = x1-10; i< x1 ;i++) {
 	        vx += (list.get(i).getValue(fx) - center_x) * (list.get(i).getValue(fx) - center_x);
 	        vy += (list.get(i).getValue(fy) - center_y) * (list.get(i).getValue(fy) - center_y);
 	        if(Math.abs(list.get(i).getValue(fx)-center_x) > radius)
