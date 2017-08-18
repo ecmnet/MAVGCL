@@ -52,6 +52,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.annotations.PositionAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYDashBoardAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYGridAnnotation;
+import com.comino.flight.ui.widgets.charts.annotations.XYSigmaAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSlamAnnotation;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
 import com.comino.flight.ui.widgets.charts.utils.XYStatistics;
@@ -219,6 +220,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private PositionAnnotation    endPosition1 = null;
 	private PositionAnnotation    endPosition2 = null;
 
+	private XYSigmaAnnotation     sigma1 = null;
+	private XYSigmaAnnotation     sigma2 = null;
+
 	private XYGridAnnotation grid = null;
 	private XYSlamAnnotation slam = null;
 
@@ -264,6 +268,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.grid = new XYGridAnnotation();
 		this.slam = new XYSlamAnnotation();
+
+		this.sigma1 = new XYSigmaAnnotation(Color.AZURE);
+		this.sigma2 = new XYSigmaAnnotation(Color.LINEN);
 
 		this.dashboard1 = new XYDashBoardAnnotation(0,s1);
 		this.dashboard2 = new XYDashBoardAnnotation(90,s2);
@@ -709,6 +716,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().add(
 						new PositionAnnotation(p1[0],p1[1],"S", Color.DARKSLATEBLUE)
 						,Layer.FOREGROUND);
+
+				xychart.getAnnotations().add(sigma1, Layer.FOREGROUND);
 			}
 
 			s2.setKeyFigures(type2_x, type2_y);
@@ -725,6 +734,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().add(
 						new PositionAnnotation(p2[0],p2[1],"S", Color.DARKOLIVEGREEN)
 						,Layer.FOREGROUND);
+
+				xychart.getAnnotations().add(sigma2, Layer.FOREGROUND);
 
 			}
 
@@ -827,6 +838,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				}
 				current_x_pt++;
 			}
+
+			sigma1.setPosition(p1[0], p1[1],s1.stddev_xy);
+			sigma2.setPosition(p2[0], p2[1],s2.stddev_xy);
 
 			endPosition1.setPosition(p1[0], p1[1]);
 			endPosition2.setPosition(p2[0], p2[1]);
