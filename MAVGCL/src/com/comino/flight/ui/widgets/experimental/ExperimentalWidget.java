@@ -42,12 +42,12 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.experimental.OffboardUpdater;
 import com.comino.flight.experimental.VisionSimulationUpdater;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.main.offboard.OffboardPositionUpdater;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
@@ -96,12 +96,10 @@ public class ExperimentalWidget extends WidgetPane   {
 
 	private DataModel model;
 	private VisionSimulationUpdater vision = null;
-	private OffboardUpdater offboard = null;
+	private OffboardPositionUpdater offboard = null;
 	private IMAVController control;
 
 	private boolean file_enabled = false;
-
-	private AnimationTimer task;
 
 	public ExperimentalWidget() {
 
@@ -114,19 +112,6 @@ public class ExperimentalWidget extends WidgetPane   {
 
 			throw new RuntimeException(exception);
 		}
-
-		task = new AnimationTimer() {
-
-			@Override public void handle(long now) {
-				if(isDisabled() || !isVisible())
-					return;
-				Platform.runLater(() -> {
-					if(!offboard_enabled.isSelected())
-					 alt_control.setValue(-model.state.l_z * 100f);
-				});
-			}
-
-		};
 
 	}
 
@@ -146,48 +131,6 @@ public class ExperimentalWidget extends WidgetPane   {
 			msp.command = MSP_CMD.MSP_CMD_VISION;
 			msp.param1 = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
-		});
-
-		offboard_enabled.selectedProperty().addListener((v,ov,nv) -> {
-
-			//
-			//			if(!model.sys.isStatus(Status.MSP_ARMED))
-			//				return;
-
-			if(nv.booleanValue()) {
-				if(!offboard.isRunning()) {
-					offboard.start();
-
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
-					msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
-					control.sendMAVLinkMessage(msp);
-
-				}
-
-				if(control.isSimulation()) {
-					if(!control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
-				}
-			} else {
-				offboard.stop();
-
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_OFFBOARD;
-				msp.param1 = MSP_COMPONENT_CTRL.ENABLE;
-				control.sendMAVLinkMessage(msp);
-
-
-				if(control.isSimulation()) {
-					if(control.getCurrentModel().sys.isStatus(Status.MSP_MODE_OFFBOARD))
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-				}
-			}
-
 		});
 
 
@@ -218,35 +161,35 @@ public class ExperimentalWidget extends WidgetPane   {
 		file_command.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_COMBINEDFILESTREAM;
-            if(file_enabled) {
-            	System.out.println("Stop stream recording");
-            	msp.param1 = 0;
-            } else {
-            	System.out.println("Start stream recording");
-    			msp.param1 = 1;
-            }
-            control.sendMAVLinkMessage(msp);
-            file_enabled = !file_enabled;
+			if(file_enabled) {
+				System.out.println("Stop stream recording");
+				msp.param1 = 0;
+			} else {
+				System.out.println("Start stream recording");
+				msp.param1 = 1;
+			}
+			control.sendMAVLinkMessage(msp);
+			file_enabled = !file_enabled;
 
 		});
 
-//		poshold_command.setOnAction((ActionEvent event)-> {
-//
-//			if(!model.sys.isStatus(Status.MSP_ARMED))
-//				return;
-//
-//			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
-//
-//
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-//			}
-//			else
-//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-//		});
+		//		poshold_command.setOnAction((ActionEvent event)-> {
+		//
+		//			if(!model.sys.isStatus(Status.MSP_ARMED))
+		//				return;
+		//
+		//			if(!model.sys.isStatus(Status.MSP_MODE_POSITION)) {
+		//
+		//
+		//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+		//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+		//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+		//			}
+		//			else
+		//				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+		//						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+		//						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+		//		});
 
 		alt_control.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(offboard_enabled.isSelected())
@@ -293,10 +236,19 @@ public class ExperimentalWidget extends WidgetPane   {
 
 		this.control = control;
 		this.model   = control.getCurrentModel();
-		offboard = new OffboardUpdater(control);
+		offboard = new OffboardPositionUpdater(control);
 		vision = new VisionSimulationUpdater(control);
 
-		task.start();
+		offboard.enableProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue())
+				Platform.runLater(() -> { offboard_enabled.setSelected(false);
+				});
+		});
+
+		offboard_enabled.selectedProperty().addListener((e,o,n) -> {
+			offboard.setNEDZ(1);
+			offboard.enableProperty().set(n.booleanValue());
+		});
 
 	}
 
