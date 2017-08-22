@@ -34,37 +34,23 @@
 package com.comino.flight.ui.widgets.vehiclectl;
 
 import java.io.IOException;
-import java.util.concurrent.locks.LockSupport;
 
-import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.experimental.OffboardUpdater;
-import com.comino.flight.experimental.VisionSimulationUpdater;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 
 public class VehicleCtlWidget extends WidgetPane   {
 
