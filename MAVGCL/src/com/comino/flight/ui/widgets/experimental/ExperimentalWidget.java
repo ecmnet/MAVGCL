@@ -246,7 +246,6 @@ public class ExperimentalWidget extends WidgetPane   {
 		});
 
 		offboard_enabled.selectedProperty().addListener((e,o,n) -> {
-			offboard.setNEDZ(1);
 			offboard.enableProperty().set(n.booleanValue());
 		});
 
