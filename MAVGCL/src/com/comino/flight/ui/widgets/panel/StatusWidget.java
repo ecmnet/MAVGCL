@@ -122,15 +122,18 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 			else
 				offboard.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_LANDED))
+
+
+			if(newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF))
+				landed.setMode(DashLabelLED.MODE_BLINK);
+			else { if(newStat.isStatus(Status.MSP_LANDED))
 				landed.setMode(DashLabelLED.MODE_ON);
-			else {
-				if(newStat.isStatus(Status.MSP_MODE_LANDING) || newStat.isStatus(Status.MSP_MODE_TAKEOFF))
-					landed.setMode(DashLabelLED.MODE_BLINK);
-				else
-					landed.setMode(DashLabelLED.MODE_OFF);
+			else
+				landed.setMode(DashLabelLED.MODE_OFF);
 			}
-		});
-	}
+
+
+	});
+}
 
 }
