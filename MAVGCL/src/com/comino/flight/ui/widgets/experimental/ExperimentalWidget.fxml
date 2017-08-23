@@ -26,9 +26,9 @@
 		    <Label text="Experimental vehicle control" GridPane.rowIndex="0" />
 			<CheckBox fx:id="offboard_enabled" prefWidth="80.0" text="offboard" GridPane.rowIndex="1" />
 
-			<CheckBox fx:id="vision_enabled" prefWidth="161.0" text="vision" GridPane.rowIndex="2" />
+			<CheckBox fx:id="circlemode" prefWidth="161.0" text="CircleMode" GridPane.rowIndex="2" />
 
-			<Button fx:id="althold_command" prefWidth="161.0" text="Alt.hold" GridPane.rowIndex="3" />
+			<Button fx:id="jump_back" prefWidth="161.0" text="Jump back" GridPane.rowIndex="3" />
 			<Button fx:id="file_command" prefWidth="161.0" text="Record stream" GridPane.rowIndex="4" />
 			<Button fx:id="vis_reset"  prefWidth="161.0" text="Vis.Reset" GridPane.rowIndex="5"/>
 			<Slider fx:id="alt_control" blockIncrement="20.0" majorTickUnit="100.0" max="300" min="50" prefHeight="13.0" prefWidth="161.0" value="50" GridPane.rowIndex="6" />

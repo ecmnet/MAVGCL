@@ -74,10 +74,10 @@ public class ExperimentalWidget extends WidgetPane   {
 	private CheckBox offboard_enabled;
 
 	@FXML
-	private CheckBox vision_enabled;
+	private CheckBox circlemode;
 
 	@FXML
-	private Button althold_command;
+	private Button jump_back;
 
 	@FXML
 	private Button file_command;
@@ -118,12 +118,8 @@ public class ExperimentalWidget extends WidgetPane   {
 	@FXML
 	private void initialize() {
 
-		vision_enabled.selectedProperty().addListener((v,ov,nv) -> {
-			if(nv.booleanValue())  {
-				vision.start();
-			} else {
-				vision.stop();
-			}
+		circlemode.selectedProperty().addListener((v,ov,nv) -> {
+			offboard.setExperimentalCirleMode(nv.booleanValue());
 		});
 
 		vis_reset.setOnAction((ActionEvent event)-> {
@@ -134,7 +130,7 @@ public class ExperimentalWidget extends WidgetPane   {
 		});
 
 
-		althold_command.setOnAction((ActionEvent event)-> {
+		jump_back.setOnAction((ActionEvent event)-> {
 
 			//			msg_msp_command msp = new msg_msp_command(255,1);
 			//			msp.command = MSP_CMD.MSP_CMD_RESTART;
@@ -143,18 +139,7 @@ public class ExperimentalWidget extends WidgetPane   {
 			if(!model.sys.isStatus(Status.MSP_ARMED))
 				return;
 
-			if(!model.sys.isStatus(Status.MSP_MODE_ALTITUDE))
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-			else {
-				if(!model.sys.isStatus(Status.MSP_LANDED))
-					MSPLogger.getInstance().writeLocalMsg("AltHold mode cannot be reversed by GCL in flight");
-				else
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
-			}
+			offboard.jumpBack(1.0f);
 
 		});
 
@@ -240,8 +225,7 @@ public class ExperimentalWidget extends WidgetPane   {
 		vision = new VisionSimulationUpdater(control);
 
 		offboard.enableProperty().addListener((e,o,n) -> {
-			if(!n.booleanValue())
-				Platform.runLater(() -> { offboard_enabled.setSelected(false);
+				Platform.runLater(() -> { offboard_enabled.setSelected(n.booleanValue());
 				});
 		});
 
