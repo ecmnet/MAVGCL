@@ -105,14 +105,15 @@ public class JoyStickController implements Runnable {
 					this.ch_sw1 = adapter.getField("SW1").getInt(null);
 					this.ch_sw2 = adapter.getField("SW2").getInt(null);
 					found = true;
-					MSPLogger.getInstance().writeLocalMsg("[mgc]"+pad.getName()
-					               +" connected to adapter "+adapter.getSimpleName(),MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+					System.out.println("[mgc]"+pad.getName()
+					               +" connected to adapter "+adapter.getSimpleName());
 					break;
 				}
 			}
 			if(!found)
 				throw new Exception("Controller "+pad.getName()+" not registered");
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
 			return false;
 		}
