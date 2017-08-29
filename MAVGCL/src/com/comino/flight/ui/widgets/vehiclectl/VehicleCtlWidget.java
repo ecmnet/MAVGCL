@@ -35,10 +35,12 @@ package com.comino.flight.ui.widgets.vehiclectl;
 
 import java.io.IOException;
 
+import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
+import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.segment.Status;
@@ -66,6 +68,16 @@ public class VehicleCtlWidget extends WidgetPane   {
 	@FXML
 	private CheckBox enable_vision;
 
+	@FXML
+	private CheckBox enable_jumpback;
+
+	@FXML
+	private CheckBox enable_circle;
+
+	@FXML
+	private DashLabelLED jumpback;
+
+
 
 	private IMAVController control=null;
 
@@ -90,9 +102,33 @@ public class VehicleCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_VISION;
 			if(n.booleanValue())
-			   msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
-			   msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_jumpback.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			 msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_circle.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			 msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
 		});
@@ -117,6 +153,15 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 	public void setup(IMAVController control) {
 		this.control = control;
+
+		control.addStatusChangeListener((o,n) -> {
+			Platform.runLater(() -> {
+				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
+					jumpback.setMode(DashLabelLED.MODE_ON);
+				else
+					jumpback.setMode(DashLabelLED.MODE_OFF);
+			});
+		});
 
 		Platform.runLater(() -> {
 			enable_vision.setSelected(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));

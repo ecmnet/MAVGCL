@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
+<?import com.comino.jfx.extensions.*?>
 
 <fx:root prefWidth="283.0" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	    <FlowPane fx:id="pane" hgap="10" vgap="10">
@@ -10,6 +11,9 @@
 	          <Button fx:id="reset_odometry"  prefWidth="161.0" text="Reset odometry" />
 	          <Button fx:id="reset_microslam" prefWidth="161.0" text="Reset local map (microSLAM)" />
 	          <CheckBox fx:id="enable_vision" text="Publish odometry" />
+	          <CheckBox fx:id="enable_jumpback" text="JumpBack" />
+	          <CheckBox fx:id="enable_circle" text="CircleMode" />
+	          <DashLabelLED fx:id="jumpback" prefWidth="161.0" text="JumpBack enabled" />
 	       </children>
 	    </FlowPane>
 </fx:root>
