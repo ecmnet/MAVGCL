@@ -126,11 +126,11 @@ public class StateProperties implements IMSPStatusChangedListener{
 		isLPOSAvailable.set(newStatus.isStatus(Status.MSP_LPOS_AVAILABILITY));
 
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
-			logger.writeLocalMsg("Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("[mgc] Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_POSITION))
-			logger.writeLocalMsg("Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("[mgc] Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_OFFBOARD))
-			logger.writeLocalMsg("Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
+			logger.writeLocalMsg("[mgc] Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 		if(!newStatus.isStatus(Status.MSP_CONNECTED))
 				control.getCurrentModel().clear();
