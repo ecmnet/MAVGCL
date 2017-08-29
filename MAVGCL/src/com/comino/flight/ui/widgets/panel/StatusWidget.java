@@ -109,7 +109,7 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 			else
 				poshold.setMode(DashLabelLED.MODE_OFF);
 
-			if(newStat.isStatus(Status.MSP_MODE_RTL, Status.MSP_INAIR))
+			if(newStat.isStatus(Status.MSP_MODE_RTL))
 				mission.setMode(DashLabelLED.MODE_BLINK);
 			else {
 				if(newStat.isStatus(Status.MSP_MODE_MISSION))
@@ -125,8 +125,13 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 
 			if(newStat.isStatus(Status.MSP_LANDED))
 				landed.setMode(DashLabelLED.MODE_ON);
-			else
-				landed.setMode(DashLabelLED.MODE_OFF);
+			else {
+
+				if(newStat.isStatus(Status.MSP_LANDING))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else
+				   landed.setMode(DashLabelLED.MODE_OFF);
+			}
 
 		});
 	}
