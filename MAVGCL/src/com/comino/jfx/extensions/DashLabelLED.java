@@ -111,11 +111,11 @@ public class DashLabelLED extends GridPane {
 
 	public void setMode(int mode) {
 
-		if (timeline != null)
-			timeline.stop();
-
 		if (this.mode == mode)
 			return;
+
+		if (timeline != null)
+			timeline.stop();
 
 		switch (mode) {
 		case MODE_OFF:
