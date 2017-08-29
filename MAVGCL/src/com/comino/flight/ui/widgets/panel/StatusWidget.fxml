@@ -33,11 +33,11 @@
 					GridPane.rowIndex="1" />
 				<DashLabelLED fx:id="poshold" text="Position hold"
 					GridPane.rowIndex="2" />
-				<DashLabelLED fx:id="mission" text="Mission"
+				<DashLabelLED fx:id="mission" text="Mission" rate="300"
 					GridPane.rowIndex="3" />
 				<DashLabelLED fx:id="offboard" text="Offboard"
 					GridPane.rowIndex="4" />
-				<DashLabelLED fx:id="landed" text="Landed"  rate="100"
+				<DashLabelLED fx:id="landed" text="Landed"
 					GridPane.rowIndex="5" />
 			</children>
 		</GridPane>
