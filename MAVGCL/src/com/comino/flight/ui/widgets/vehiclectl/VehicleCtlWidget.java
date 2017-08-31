@@ -77,6 +77,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 	@FXML
 	private DashLabelLED jumpback;
 
+	@FXML
+	private DashLabelLED circlemode;
+
 
 
 	private IMAVController control=null;
@@ -160,6 +163,11 @@ public class VehicleCtlWidget extends WidgetPane   {
 					jumpback.setMode(DashLabelLED.MODE_ON);
 				else
 					jumpback.setMode(DashLabelLED.MODE_OFF);
+
+				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
+					circlemode.setMode(DashLabelLED.MODE_ON);
+				else
+					circlemode.setMode(DashLabelLED.MODE_OFF);
 			});
 		});
 

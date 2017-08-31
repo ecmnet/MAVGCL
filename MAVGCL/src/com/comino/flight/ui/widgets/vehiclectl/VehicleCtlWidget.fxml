@@ -14,6 +14,7 @@
 	          <CheckBox fx:id="enable_jumpback" text="JumpBack" />
 	          <CheckBox fx:id="enable_circle" text="CircleMode" />
 	          <DashLabelLED fx:id="jumpback" prefWidth="161.0" text="JumpBack enabled" />
+	          <DashLabelLED fx:id="circlemode" prefWidth="161.0" text="Circle mode" />
 	       </children>
 	    </FlowPane>
 </fx:root>
