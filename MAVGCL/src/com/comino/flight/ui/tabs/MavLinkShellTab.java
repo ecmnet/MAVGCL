@@ -86,8 +86,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 		state = StateProperties.getInstance();
 
-		console.prefHeightProperty().bind(heightProperty());
-		console.prefWidthProperty().bind(widthProperty().subtract(5));
+		console.prefHeightProperty().bind(heightProperty().subtract(2));
+		console.prefWidthProperty().bind(widthProperty());
 
 		console.setOnKeyPressed(ke -> {
 
@@ -204,10 +204,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				scrollIntoView();
 			}
 		}
-	}
-
-	public void setWidthBinding(double horizontal_space) {
-		console.prefWidthProperty().bind(widthProperty().subtract(horizontal_space+5));
 	}
 
 	private void reloadShell() {

@@ -63,12 +63,4 @@ public class FlightXYAnalysisTab extends Pane {
 		chart1.prefHeightProperty().bind(heightProperty().subtract(1));
 	}
 
-	public void setWidthBinding(double horizontal_space) {
-		chart1.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
-	}
-
-
-
-
-
 }

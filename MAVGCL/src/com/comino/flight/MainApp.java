@@ -54,8 +54,8 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
+import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
-import com.comino.flight.ui.tabs.FlightTabs;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
@@ -359,7 +359,7 @@ public class MainApp extends Application  {
 		try {
 			// Load person overview.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("ui/tabs/MAVGCL2.fxml"));
+			loader.setLocation(MainApp.class.getResource("ui/MAVGCL2.fxml"));
 			AnchorPane flightPane = (AnchorPane) loader.load();
 
 			// Set person overview into the center of root layout.

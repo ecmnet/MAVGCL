@@ -43,6 +43,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.jfx.extensions.CloseButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -84,6 +85,7 @@ public class CameraWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
+
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
@@ -141,6 +143,13 @@ public class CameraWidget extends WidgetPane  {
 			}
 
 		});
+
+//		CloseButton close = new CloseButton();
+//		close.setOnMouseClicked(e -> {
+//			this.visibleProperty().set(false);
+//		});
+//
+//		this.getChildren().add(close);
 
 	}
 

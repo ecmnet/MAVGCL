@@ -31,13 +31,18 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.tabs;
+package com.comino.flight.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
+import com.comino.flight.ui.tabs.FlightXYAnalysisTab;
+import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
+import com.comino.flight.ui.tabs.MAVInspectorTab;
+import com.comino.flight.ui.tabs.MAVOpenMapTab;
+import com.comino.flight.ui.tabs.MavLinkShellTab;
 import com.comino.flight.ui.widgets.camera.CameraWidget;
 import com.comino.flight.ui.widgets.details.DetailsWidget;
 import com.comino.flight.ui.widgets.experimental.ExperimentalWidget;
@@ -49,7 +54,9 @@ import com.comino.mav.control.IMAVController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 
 public class FlightTabs extends Pane {
 
@@ -67,6 +74,9 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private MAVOpenMapTab mavmaptab;
+
+	@FXML
+	private HBox sidebar;
 
 	@FXML
 	private DetailsWidget details;
@@ -112,6 +122,7 @@ public class FlightTabs extends Pane {
 	public void setup(FlightControlPanel flightControl, StatusLineWidget statusline, IMAVController control) {
 
 		tabpane.prefHeightProperty().bind(heightProperty());
+		tabpane.prefWidthProperty().bind(widthProperty());
 
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
@@ -139,10 +150,7 @@ public class FlightTabs extends Pane {
 
 		mavmaptab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);
-
 		xtanalysistab.setup(flightControl.getChartControl(),control);
-		xtanalysistab.setWidthBinding(0);
-
 		xyanalysistab.setup(flightControl.getChartControl(),control);
 
 		mavlinkshelltab.setup(control);
@@ -158,67 +166,11 @@ public class FlightTabs extends Pane {
 
 		});
 
-//		StateProperties.getInstance().getLogLoadedProperty().addListener((observable, oldvalue, newvalue) -> {
-//			if(control.isConnected()) {
-//				this.tabpane.getTabs().get(3).setDisable(newvalue.booleanValue());
-//				this.tabpane.getTabs().get(4).setDisable(newvalue.booleanValue());
-//				flightControl.getControl().getDetailVisibility().set(false);
-//			}
-//		});
+		HBox.setHgrow(tabpane, Priority.ALWAYS);
 
-
-		flightControl.getControl().getDetailVisibility().addListener((observable, oldvalue, newvalue) -> {
-
-			if(tuning.isVisible())
-				return;
-
-			if(newvalue.booleanValue()) {
-				xtanalysistab.setWidthBinding(details.getWidth()+3);
-				xyanalysistab.setWidthBinding(details.getWidth()+3);
-				mavlinkshelltab.setWidthBinding(details.getWidth()+3);
-				mavinspectortab.setWidthBinding(details.getWidth()+3);
-				mavmaptab.setWidthBinding(details.getWidth()+3);
-
-			}
-			else {
-				xtanalysistab.setWidthBinding(0);
-				xyanalysistab.setWidthBinding(0);
-				mavlinkshelltab.setWidthBinding(0);
-				mavinspectortab.setWidthBinding(0);
-				mavmaptab.setWidthBinding(0);
-
-			}
-		});
-
-		flightControl.getControl().getTuningVisibility().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.booleanValue()) {
-				xtanalysistab.setWidthBinding(tuning.getWidth()+3);
-				xyanalysistab.setWidthBinding(tuning.getWidth()+3);
-				mavlinkshelltab.setWidthBinding(tuning.getWidth()+3);
-				mavinspectortab.setWidthBinding(tuning.getWidth()+3);
-				mavmaptab.setWidthBinding(tuning.getWidth()+3);
-
-			}
-			else {
-				if(details.isVisible() ) {
-					mavlinkshelltab.setWidthBinding(details.getWidth()+3);
-					mavinspectortab.setWidthBinding(details.getWidth()+3);
-					mavmaptab.setWidthBinding(details.getWidth()+3);
-					xtanalysistab.setWidthBinding(details.getWidth()+3);
-					xyanalysistab.setWidthBinding(details.getWidth()+3);
-
-
-				}
-				else {
-					xtanalysistab.setWidthBinding(0);
-					xyanalysistab.setWidthBinding(0);
-					mavlinkshelltab.setWidthBinding(0);
-					mavinspectortab.setWidthBinding(0);
-					mavmaptab.setWidthBinding(0);
-
-				}
-			}
-		});
+		tuning.managedProperty().bind(tuning.visibleProperty());
+		details.managedProperty().bind(details.visibleProperty());
+		vehiclectl.managedProperty().bind(vehiclectl.visibleProperty());
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 			for(int i =0; i<tabs.size();i++)

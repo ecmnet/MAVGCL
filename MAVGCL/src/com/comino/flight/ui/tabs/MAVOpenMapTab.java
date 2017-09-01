@@ -339,9 +339,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
 
-	public void setWidthBinding(double horizontal_space) {
-		this.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
-	}
 
 	public void saveAsPng(String path) {
 		SnapshotParameters param = new SnapshotParameters();
@@ -358,14 +355,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.model=dataService.getCurrent();
-		this.control = control;
+    	this.control = control;
 
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
 
 		task.play();
 
-		this.getParent().disabledProperty().addListener((l,o,n) -> {
+		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
 				if(dataService.getModelList().size()>0 && current_x1_pt > 0)

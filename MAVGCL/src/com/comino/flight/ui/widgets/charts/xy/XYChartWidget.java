@@ -362,8 +362,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		cseries2.getItems().addAll(PRESET_NAMES);
 
 		xychart.setLegendVisible(false);
-		xychart.prefWidthProperty().bind(widthProperty().subtract(20));
-		xychart.prefHeightProperty().bind(heightProperty().subtract(20));
+//		xychart.prefWidthProperty().bind(widthProperty().subtract(20));
+//		xychart.prefHeightProperty().bind(heightProperty().subtract(20));
 
 		initKeyFigureSelection(meta.getKeyFigures());
 

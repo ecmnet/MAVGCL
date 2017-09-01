@@ -8,7 +8,6 @@
 		<VBox spacing="0">
 			<LineChartWidget fx:id="chart1" />
 			<LineChartWidget fx:id="chart2" />
-		<!--	<LineChartWidget fx:id="chart3" /> -->
 		</VBox>
 	</children>
 </fx:root>

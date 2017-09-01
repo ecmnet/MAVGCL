@@ -56,8 +56,7 @@ import javafx.scene.layout.FlowPane;
 
 public class VehicleCtlWidget extends WidgetPane   {
 
-	@FXML
-	private FlowPane pane;
+
 
 	@FXML
 	private Button   reset_odometry;
@@ -99,7 +98,7 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 	@FXML
 	private void initialize() {
-		pane.setPadding(new Insets(5, 5, 5, 5));
+
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);

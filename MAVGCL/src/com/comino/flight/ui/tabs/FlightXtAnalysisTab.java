@@ -62,18 +62,16 @@ public class FlightXtAnalysisTab extends Pane {
 
 		chart2.registerSyncChart(chart1);
 		chart1.registerSyncChart(chart2);
-	}
 
-	public void setWidthBinding(double horizontal_space) {
-		chart1.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
-		chart2.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
+		chart1.prefWidthProperty().bind(widthProperty());
+		chart2.prefWidthProperty().bind(widthProperty());
+
+		chart1.prefHeightProperty().bind(heightProperty().divide(2));
+		chart2.prefHeightProperty().bind(heightProperty().divide(2));
 	}
 
 
 	public void setup(ChartControlWidget recordControl,IMAVController control) {
-
-		chart1.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
-		chart2.prefHeightProperty().bind(heightProperty().divide(2).subtract(2));
 
 		recordControl.addChart(0,chart1.setup(control,1));
 		recordControl.addChart(1,chart2.setup(control,2));

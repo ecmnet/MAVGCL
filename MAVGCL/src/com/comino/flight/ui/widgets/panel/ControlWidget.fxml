@@ -30,7 +30,7 @@
 				<CheckBox fx:id="video" GridPane.rowIndex="1"
 					GridPane.columnIndex="1" text="Video" />
 				<CheckBox fx:id="vehiclectl" GridPane.rowIndex="0"
-					GridPane.columnIndex="1" text="MSP control" />
+					GridPane.columnIndex="1" text="MSP Control" />
 				<CheckBox fx:id="experimental" GridPane.rowIndex="2"
 					GridPane.columnIndex="0" text="Experimental" />
 			</children>

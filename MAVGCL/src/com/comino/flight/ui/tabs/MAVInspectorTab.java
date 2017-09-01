@@ -166,8 +166,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		treetableview.setPlaceholder(new Label("Messages are shown when published"));
 
-		treetableview.prefWidthProperty().bind(widthProperty().subtract(195));
-		treetableview.prefHeightProperty().bind(heightProperty().subtract(3));
+		treetableview.prefHeightProperty().bind(heightProperty().subtract(5));
+		treetableview.prefWidthProperty().bind(widthProperty().subtract(2));
+
 		treetableview.getSortOrder().addAll(message_col,variable_col);
 
 
@@ -179,10 +180,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 
-	}
-
-	public void setWidthBinding(double horizontal_space) {
-		treetableview.prefWidthProperty().bind(widthProperty().subtract(horizontal_space));
 	}
 
 	public MAVInspectorTab setup(IMAVController control) {

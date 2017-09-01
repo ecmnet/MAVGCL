@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import com.comino.flight.ui.tabs.*?>
+
+<?import com.comino.flight.ui.widgets.details.DetailsWidget?>
+<?import com.comino.flight.ui.widgets.tuning.TuningWidget?>
+<?import com.comino.flight.ui.widgets.experimental.ExperimentalWidget?>
+<?import com.comino.flight.ui.widgets.vehiclectl.VehicleCtlWidget?>
+<?import com.comino.flight.ui.widgets.camera.CameraWidget?>
+<?import com.comino.flight.ui.widgets.progress.ProgressWidget?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.comino.flight.ui.FlightTabs">
+	<children>
+		<StackPane alignment="TOP_LEFT" AnchorPane.leftAnchor="0.0"
+			AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0"
+			AnchorPane.bottomAnchor="2.0">
+			<children>
+				<HBox fx:id="sidebar" alignment="TOP_RIGHT">
+					<children>
+						<TabPane fx:id="tabpane" tabClosingPolicy="UNAVAILABLE" >
+							<tabs>
+								<Tab text="Time-Series">
+									<content>
+										<FlightXtAnalysisTab fx:id="xtanalysistab" />
+									</content>
+								</Tab>
+								<Tab text="XY-Analysis">
+									<content>
+										<FlightXYAnalysisTab fx:id="xyanalysistab" />
+									</content>
+								</Tab>
+								<Tab text="Map">
+									<content>
+										<MAVOpenMapTab fx:id="mavmaptab" />
+									</content>
+								</Tab>
+							</tabs>
+							<Tab text="Inspector">
+								<content>
+									<MAVInspectorTab fx:id="mavinspectortab" />
+								</content>
+							</Tab>
+							<Tab text="NuttShell">
+								<content>
+									<MavLinkShellTab fx:id="mavlinkshelltab" />
+								</content>
+							</Tab>
+						</TabPane>
+						<TuningWidget fx:id="tuning" maxWidth="245"
+						    visible="false" styleClass="widget">
+						   <HBox.margin><Insets top="3"/></HBox.margin>
+						</TuningWidget>
+						<VehicleCtlWidget fx:id="vehiclectl" maxWidth="185"
+					        visible="false" styleClass="widget">
+					       <HBox.margin><Insets top="3"/></HBox.margin>
+					    </VehicleCtlWidget>
+					    <DetailsWidget fx:id="details" maxWidth="195"
+							visible="false" styleClass="widget">
+							 <HBox.margin><Insets top="3"/></HBox.margin>
+						</DetailsWidget>
+					</children>
+				</HBox>
+
+				<CameraWidget fx:id="camera" visible="false" moveable="true"
+					initialWidth="325" initialHeight="225" layoutX="300" layoutY="500" />
+
+				<ExperimentalWidget fx:id="experimental"
+					moveable="true" visible="false" initialWidth="185" initialHeight="260"
+					layoutX="30" layoutY="250" styleClass="glass" />
+
+
+				<ProgressWidget maxHeight="15">
+					<StackPane.margin>
+						<Insets right="10.0" left="5.0" top="-5.0" />
+					</StackPane.margin>
+				</ProgressWidget>
+
+			</children>
+		</StackPane>
+	</children>
+</AnchorPane>
