@@ -1,4 +1,4 @@
-package com.comino.flight.ui.sidebar.widgets.bitselection;
+package com.comino.flight.ui.sidebar.bitselection;
 
 import java.util.List;
 

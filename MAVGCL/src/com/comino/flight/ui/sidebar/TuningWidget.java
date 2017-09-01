@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.sidebar.widgets;
+package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.ui.sidebar.widgets.bitselection.BitSelectionDialog;
+import com.comino.flight.ui.sidebar.bitselection.BitSelectionDialog;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;

@@ -33,7 +33,7 @@
 package com.comino.flight.ui.panel.control;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.ui.sidebar.widgets.DetailsWidget;
+import com.comino.flight.ui.sidebar.DetailsWidget;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.BatteryWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
