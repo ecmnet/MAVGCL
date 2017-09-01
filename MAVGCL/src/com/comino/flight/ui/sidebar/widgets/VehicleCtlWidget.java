@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.vehiclectl;
+package com.comino.flight.ui.sidebar.widgets;
 
 import java.io.IOException;
 

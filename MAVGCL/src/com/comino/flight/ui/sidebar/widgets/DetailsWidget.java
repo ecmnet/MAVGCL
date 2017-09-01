@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.details;
+package com.comino.flight.ui.sidebar.widgets;
 
 import java.io.IOException;
 import java.text.DecimalFormat;

@@ -7,10 +7,8 @@
 
 <?import com.comino.flight.ui.tabs.*?>
 
-<?import com.comino.flight.ui.widgets.details.DetailsWidget?>
-<?import com.comino.flight.ui.widgets.tuning.TuningWidget?>
+<?import com.comino.flight.ui.sidebar.widgets.*?>
 <?import com.comino.flight.ui.widgets.experimental.ExperimentalWidget?>
-<?import com.comino.flight.ui.widgets.vehiclectl.VehicleCtlWidget?>
 <?import com.comino.flight.ui.widgets.camera.CameraWidget?>
 <?import com.comino.flight.ui.widgets.progress.ProgressWidget?>
 <?import javafx.scene.layout.AnchorPane?>

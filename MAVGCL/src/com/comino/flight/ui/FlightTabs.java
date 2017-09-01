@@ -38,17 +38,17 @@ import java.util.List;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
+import com.comino.flight.ui.sidebar.widgets.DetailsWidget;
+import com.comino.flight.ui.sidebar.widgets.TuningWidget;
+import com.comino.flight.ui.sidebar.widgets.VehicleCtlWidget;
 import com.comino.flight.ui.tabs.FlightXYAnalysisTab;
 import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
 import com.comino.flight.ui.tabs.MAVInspectorTab;
 import com.comino.flight.ui.tabs.MAVOpenMapTab;
 import com.comino.flight.ui.tabs.MavLinkShellTab;
 import com.comino.flight.ui.widgets.camera.CameraWidget;
-import com.comino.flight.ui.widgets.details.DetailsWidget;
 import com.comino.flight.ui.widgets.experimental.ExperimentalWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
-import com.comino.flight.ui.widgets.tuning.TuningWidget;
-import com.comino.flight.ui.widgets.vehiclectl.VehicleCtlWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
