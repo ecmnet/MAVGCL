@@ -117,7 +117,7 @@ public class VehicleCtlWidget extends WidgetPane   {
 		enable_jumpback.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			 msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
 			if(n.booleanValue())
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
@@ -129,7 +129,7 @@ public class VehicleCtlWidget extends WidgetPane   {
 		enable_circle.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			 msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
 			if(n.booleanValue())
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
@@ -163,9 +163,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 			Platform.runLater(() -> {
 				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
 					jumpback.setMode(DashLabelLED.MODE_ON);
-				else
+				else {
 					jumpback.setMode(DashLabelLED.MODE_OFF);
-
+				}
 				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
 					circlemode.setMode(DashLabelLED.MODE_ON);
 				else
