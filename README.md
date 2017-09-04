@@ -13,11 +13,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 16/08/2017
+**Development Status:** Last updated 04/09/2017
 
-- Fixes related to timestamp synchronization
-- Fixes missing status text messages
-- Recording via ULOG streaming fixed (supports Multi-Info)
+- Various layout changes
 
 V0.6xx notes:
 
