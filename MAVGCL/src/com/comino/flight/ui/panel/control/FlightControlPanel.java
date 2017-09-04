@@ -46,8 +46,12 @@ import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class FlightControlPanel extends Pane  {
+
+	@FXML
+	private VBox     box;
 
 	@FXML
 	private ControlWidget control;
@@ -93,6 +97,8 @@ public class FlightControlPanel extends Pane  {
 	}
 
 	public void setup(IMAVController control) {
+
+		box.prefHeightProperty().bind(this.heightProperty().subtract(2));
 
 		status.setup(control);
 		recordcontrol.setup(control, chartcontrol, info, status);

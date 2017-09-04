@@ -7,7 +7,7 @@
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 
 	<children>
-			<VBox>
+			<VBox fx:id="box">
 				<padding>
 					<Insets top="5" left="5" bottom="0" right="0" />
 				</padding>
@@ -18,7 +18,7 @@
 					<RecordControlWidget fx:id="recordcontrol" />
 					<ChartControlWidget fx:id="chartcontrol" />
 					<CommanderWidget fx:id="commander" />
-					<InfoWidget fx:id="info" />
+					<InfoWidget fx:id="info" VBox.vgrow="ALWAYS"/>
 				</children>
 			</VBox>
 	</children>

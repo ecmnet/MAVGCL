@@ -64,6 +64,8 @@ public class InfoWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
+		listview.prefHeightProperty().bind(this.heightProperty().subtract(13));
+
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
 			@Override

@@ -55,8 +55,8 @@
 						    visible="false" styleClass="widget">
 						   <HBox.margin><Insets top="3"/></HBox.margin>
 						</TuningWidget>
-						<VehicleCtlWidget fx:id="vehiclectl" maxWidth="185"
-					        visible="false" styleClass="widget">
+						<VehicleCtlWidget fx:id="vehiclectl" maxWidth="195"
+					        visible="false">
 					       <HBox.margin><Insets top="3"/></HBox.margin>
 					    </VehicleCtlWidget>
 					    <DetailsWidget fx:id="details" maxWidth="195"

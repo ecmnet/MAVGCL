@@ -56,9 +56,6 @@ public class ControlWidget extends WidgetPane  {
 	@FXML
 	private CheckBox vehiclectl;
 
-	@FXML
-	private CheckBox experimental;
-
 	private StateProperties stateProperties = StateProperties.getInstance();
 
 	public ControlWidget() {
@@ -79,10 +76,6 @@ public class ControlWidget extends WidgetPane  {
 		return vehiclectl.selectedProperty();
 	}
 
-	public BooleanProperty getExperimentalVisibility() {
-		return experimental.selectedProperty();
-	}
-
 	public BooleanProperty getTuningVisibility() {
 		return tuning.selectedProperty();
 	}
@@ -95,17 +88,13 @@ public class ControlWidget extends WidgetPane  {
 			if(!n.booleanValue()) {
 				vehiclectl.setDisable(true);
 				vehiclectl.setSelected(false);
-				experimental.setDisable(true);
-				experimental.setSelected(false);
 			} else {
 				vehiclectl.setDisable(false);
-				experimental.setDisable(false);
 			}
 		});
 
 		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
-				experimental.setSelected(false);
 				vehiclectl.setSelected(false);
 				tuning.setSelected(false);
 			} else {

@@ -20,7 +20,6 @@
 			<rowConstraints>
 				<RowConstraints minHeight="20.0" />
 				<RowConstraints minHeight="25.0" />
-				<RowConstraints minHeight="25.0" />
 			</rowConstraints>
 			<children>
 				<CheckBox fx:id="details" GridPane.rowIndex="0"
@@ -31,8 +30,6 @@
 					GridPane.columnIndex="1" text="Video" />
 				<CheckBox fx:id="vehiclectl" GridPane.rowIndex="0"
 					GridPane.columnIndex="1" text="MSP Control" />
-				<CheckBox fx:id="experimental" GridPane.rowIndex="2"
-					GridPane.columnIndex="0" text="Experimental" />
 			</children>
 		</GridPane>
 	</children>
