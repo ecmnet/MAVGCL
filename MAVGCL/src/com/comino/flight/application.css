@@ -211,11 +211,9 @@
     -fx-background-color: #405058;
 }
 
-
 .check-box {
 	-fx-text-fill: #F0F0F0;
 }
-
 
 .check-box .mark {
     -fx-background-color: transparent;
@@ -230,6 +228,7 @@
 
 .toggle-button {
 	 -fx-background-color: #606060;
+	 -fx-text-fill: #F0F0F0;
 }
 
 .toggle-button:hover {
@@ -238,6 +237,10 @@
 
 .toggle-button:pressed {
 	-fx-background-color: #505050;
+}
+
+.toggle-button:selected {
+	 -fx-background-color: #805050;
 }
 
 .emergency   {
