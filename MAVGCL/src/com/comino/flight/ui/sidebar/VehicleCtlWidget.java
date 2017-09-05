@@ -51,6 +51,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
 public class VehicleCtlWidget extends WidgetPane   {
@@ -69,17 +70,10 @@ public class VehicleCtlWidget extends WidgetPane   {
 	private CheckBox enable_vision;
 
 	@FXML
-	private CheckBox enable_jumpback;
+	private Button enable_jumpback;
 
 	@FXML
-	private CheckBox enable_circle;
-
-	@FXML
-	private DashLabelLED jumpback;
-
-	@FXML
-	private DashLabelLED circlemode;
-
+	private Button enable_circle;
 
 
 	private IMAVController control=null;
@@ -114,23 +108,26 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 		});
 
-		enable_jumpback.selectedProperty().addListener((v,o,n) -> {
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
-			if(n.booleanValue())
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
+//		enable_jumpback.selectedProperty().addListener((v,o,n) -> {
+//			msg_msp_command msp = new msg_msp_command(255,1);
+//			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+//			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
+//			if(n.booleanValue())
+//				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+//			else
+//				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+//			control.sendMAVLinkMessage(msp);
+//
+//		});
 
-		});
 
-		enable_circle.selectedProperty().addListener((v,o,n) -> {
+	//	enable_circle.selectedProperty().addListener((v,o,n) -> {
+		enable_circle.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
-			if(n.booleanValue())
+	//		if(n.booleanValue())
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -161,15 +158,12 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 		control.addStatusChangeListener((o,n) -> {
 			Platform.runLater(() -> {
-				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
-					jumpback.setMode(DashLabelLED.MODE_ON);
-				else {
-					jumpback.setMode(DashLabelLED.MODE_OFF);
-				}
 				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
-					circlemode.setMode(DashLabelLED.MODE_ON);
+					enable_circle.setStyle("-fx-background-color: #805050");
 				else
-					circlemode.setMode(DashLabelLED.MODE_OFF);
+					enable_circle.setStyle("-fx-background-color: #606060");
+//				enable_circle.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE));
+//				enable_jumpback.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
 			});
 		});
 

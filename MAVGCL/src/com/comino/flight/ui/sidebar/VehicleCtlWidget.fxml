@@ -21,12 +21,8 @@
 			<VBox spacing="10" styleClass="widget" prefWidth="193" VBox.vgrow="ALWAYS">
 			<padding><Insets top="14" left="10" bottom="14" /></padding>
 				<children>
-					<CheckBox fx:id="enable_jumpback" text="JumpBack" />
-					<DashLabelLED fx:id="jumpback" prefWidth="165.0"
-						text="JumpBack enabled" />
-					<CheckBox fx:id="enable_circle" text="CircleMode" />
-					<DashLabelLED fx:id="circlemode" prefWidth="165.0"
-						text="Circle mode" />
+					<Button fx:id="enable_jumpback" text="JumpBack"  prefWidth="165.0"/>
+					<Button fx:id="enable_circle" text="CircleMode"  prefWidth="165.0"/>
 				</children>
 			</VBox>
 		</children>
