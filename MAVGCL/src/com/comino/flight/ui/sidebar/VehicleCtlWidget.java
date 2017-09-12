@@ -40,9 +40,11 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.main.control.StatusManager;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -108,25 +110,24 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 		});
 
-//		enable_jumpback.selectedProperty().addListener((v,o,n) -> {
-//			msg_msp_command msp = new msg_msp_command(255,1);
-//			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-//			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
-//			if(n.booleanValue())
-//				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-//			else
-//				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-//			control.sendMAVLinkMessage(msp);
-//
-//		});
+		enable_jumpback.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
 
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
 
-	//	enable_circle.selectedProperty().addListener((v,o,n) -> {
+		});
+
 		enable_circle.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
-	//		if(n.booleanValue())
+
 			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
@@ -134,6 +135,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
+
+		enable_circle.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
+	//	enable_circle.disableProperty().bind(StateProperties.getInstance().getLandedProperty());
 
 		reset_odometry.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -156,14 +160,21 @@ public class VehicleCtlWidget extends WidgetPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 
-		control.addStatusChangeListener((o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.CIRCLE_MODE,(o,n) -> {
 			Platform.runLater(() -> {
 				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
 					enable_circle.setStyle("-fx-background-color: #805050");
 				else
 					enable_circle.setStyle("-fx-background-color: #606060");
-//				enable_circle.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE));
-//				enable_jumpback.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
+			});
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
+			Platform.runLater(() -> {
+				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
+					enable_jumpback.setStyle("-fx-background-color: #805050");
+				else
+					enable_jumpback.setStyle("-fx-background-color: #606060");
 			});
 		});
 
