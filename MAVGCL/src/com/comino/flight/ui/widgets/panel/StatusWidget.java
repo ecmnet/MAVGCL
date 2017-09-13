@@ -37,14 +37,12 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
-public class StatusWidget extends WidgetPane implements IMSPStatusChangedListener {
+public class StatusWidget extends WidgetPane  {
 
 	@FXML
 	private DashLabelLED armed;
@@ -64,8 +62,6 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 	@FXML
 	private DashLabelLED landed;
 
-	private DataModel model;
-
 	public StatusWidget() {
 		super(300,true);
 
@@ -74,66 +70,59 @@ public class StatusWidget extends WidgetPane implements IMSPStatusChangedListene
 
 	public void setup(IMAVController control) {
 		super.setup(control);
-		this.model = control.getCurrentModel();
-		this.control.addStatusChangeListener(this);
-		update(model.sys,model.sys);
-	}
 
-	@Override
-	public void update(Status arg0, Status newStat) {
-
-		Platform.runLater(() -> {
-
-			if(!newStat.isStatus(Status.MSP_CONNECTED)) {
-				armed.setMode(DashLabelLED.MODE_OFF);
-				althold.setMode(DashLabelLED.MODE_OFF);
-				poshold.setMode(DashLabelLED.MODE_OFF);
-				mission.setMode(DashLabelLED.MODE_OFF);
-				offboard.setMode(DashLabelLED.MODE_OFF);
-				landed.setMode(DashLabelLED.MODE_OFF);
-				return;
-			}
-
-			if(newStat.isStatus(Status.MSP_ARMED))
-				armed.setMode(DashLabelLED.MODE_ON);
-			else
-				armed.setMode(DashLabelLED.MODE_OFF);
-
-			if(newStat.isStatus(Status.MSP_MODE_ALTITUDE))
-				althold.setMode(DashLabelLED.MODE_ON);
-			else
-				althold.setMode(DashLabelLED.MODE_OFF);
-
-			if(newStat.isStatus(Status.MSP_MODE_POSITION))
-				poshold.setMode(DashLabelLED.MODE_ON);
-			else
-				poshold.setMode(DashLabelLED.MODE_OFF);
-
-			if(newStat.isStatus(Status.MSP_MODE_RTL))
-				mission.setMode(DashLabelLED.MODE_BLINK);
-			else {
-				if(newStat.isStatus(Status.MSP_MODE_MISSION))
-					mission.setMode(DashLabelLED.MODE_ON);
-				else
+		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
+			if(!n.isStatus(Status.MSP_CONNECTED)) {
+				Platform.runLater(() -> {
+					armed.setMode(DashLabelLED.MODE_OFF);
+					althold.setMode(DashLabelLED.MODE_OFF);
+					poshold.setMode(DashLabelLED.MODE_OFF);
 					mission.setMode(DashLabelLED.MODE_OFF);
+					offboard.setMode(DashLabelLED.MODE_OFF);
+					landed.setMode(DashLabelLED.MODE_OFF);
+				});
 			}
+		});
 
-			if(newStat.isStatus(Status.MSP_MODE_OFFBOARD))
-				offboard.setMode(DashLabelLED.MODE_ON);
-			else
-				offboard.setMode(DashLabelLED.MODE_OFF);
+		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
+			Platform.runLater(() -> {
+				armed.set(n.isStatus(Status.MSP_ARMED));
+			});
+		});
 
-			if(newStat.isStatus(Status.MSP_LANDED))
-				landed.setMode(DashLabelLED.MODE_ON);
-			else {
+		control.getStatusManager().addListener(Status.MSP_MODE_ALTITUDE, (o,n) -> {
+			Platform.runLater(() -> {
+				althold.set(n.isStatus(Status.MSP_MODE_ALTITUDE));
+			});
+		});
 
-				if(newStat.isStatus(Status.MSP_LANDING))
+		control.getStatusManager().addListener(Status.MSP_MODE_POSITION, (o,n) -> {
+			Platform.runLater(() -> {
+				poshold.set(n.isStatus(Status.MSP_MODE_POSITION));
+			});
+		});
+
+		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
+			Platform.runLater(() -> {
+				landed.set(n.isStatus(Status.MSP_LANDED));
+			});
+		});
+
+		control.getStatusManager().addListener(Status.MSP_MODE_OFFBOARD, (o,n) -> {
+			Platform.runLater(() -> {
+				offboard.set(n.isStatus(Status.MSP_MODE_OFFBOARD));
+			});
+		});
+
+		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
+			Platform.runLater(() -> {
+				if(n.isStatus(Status.MSP_MODE_RTL) && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
-				   landed.setMode(DashLabelLED.MODE_OFF);
-			}
-
+					mission.set(n.isStatus(Status.MSP_MODE_MISSION));
+			});
 		});
+
 	}
 
 }

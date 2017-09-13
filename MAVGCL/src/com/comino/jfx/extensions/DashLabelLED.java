@@ -109,6 +109,10 @@ public class DashLabelLED extends GridPane {
 		label.setText(value);
 	}
 
+	public void set(boolean on) {
+		if(on) setMode(MODE_ON); else setMode(MODE_OFF);
+	}
+
 	public void setMode(int mode) {
 
 		if (this.mode == mode)
