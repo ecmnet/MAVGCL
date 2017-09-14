@@ -43,6 +43,7 @@ import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -50,7 +51,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class StateProperties implements IMSPStatusChangedListener{
+public class StateProperties {
 
 	public static final int NO_PROGRESS = -1;
 
@@ -100,42 +101,45 @@ public class StateProperties implements IMSPStatusChangedListener{
 
 	private StateProperties(IMAVController control) {
 		this.control = control;
-		this.control.addStatusChangeListener(this);
         this.logger = MSPLogger.getInstance();
 		simulationProperty.set(control.isSimulation());
 		ExecutorService.get().schedule(() -> { isInitializedProperty.set(true); }, 5, TimeUnit.SECONDS);
+
+
+		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
+			armedProperty.set(n.isStatus(Status.MSP_ARMED));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
+			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
+			landedProperty.set(n.isStatus(Status.MSP_LANDED));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_MODE_ALTITUDE, (o,n) -> {
+			altholdProperty.set(n.isStatus(Status.MSP_MODE_ALTITUDE));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_MODE_POSITION, (o,n) -> {
+			posholdProperty.set(n.isStatus(Status.MSP_MODE_POSITION));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {
+			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_GPOS_AVAILABILITY, (o,n) -> {
+			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_AVAILABILITY));
+		});
+
+		control.getStatusManager().addListener(Status.MSP_LPOS_AVAILABILITY, (o,n) -> {
+			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_AVAILABILITY));
+		});
+
+
 	}
-
-	@Override
-	public void update(Status oldStatus, Status newStatus) {
-
-		if(oldStatus==null)
-			return;
-
-  //      System.out.println(oldStatus+" => "+newStatus);
-
-
-		armedProperty.set(newStatus.isStatus(Status.MSP_ARMED));
-		connectedProperty.set(newStatus.isStatus(Status.MSP_CONNECTED));
-		landedProperty.set(newStatus.isStatus(Status.MSP_LANDED));
-		altholdProperty.set(newStatus.isStatus(Status.MSP_MODE_ALTITUDE));
-		posholdProperty.set(newStatus.isStatus(Status.MSP_MODE_POSITION));
-		rcProperty.set(newStatus.isStatus(Status.MSP_RC_ATTACHED));
-
-		isGPOSAvailable.set(newStatus.isStatus(Status.MSP_GPOS_AVAILABILITY));
-		isLPOSAvailable.set(newStatus.isStatus(Status.MSP_LPOS_AVAILABILITY));
-
-//		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_ALTITUDE))
-//			logger.writeLocalMsg("[mgc] Altitude hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
-//		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_POSITION))
-//			logger.writeLocalMsg("[mgc] Position hold enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
-//		if(newStatus.isStatusChanged(oldStatus,Status.MSP_MODE_OFFBOARD))
-//			logger.writeLocalMsg("[mgc] Offboard enabled", MAV_SEVERITY.MAV_SEVERITY_INFO);
-
-		if(!newStatus.isStatus(Status.MSP_CONNECTED))
-				control.getCurrentModel().clear();
-	}
-
 
 	public BooleanProperty getArmedProperty() {
 		return armedProperty;

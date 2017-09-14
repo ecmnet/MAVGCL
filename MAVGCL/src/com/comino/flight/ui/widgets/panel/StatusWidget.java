@@ -114,7 +114,7 @@ public class StatusWidget extends WidgetPane  {
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_MODE_RTL, (o,n) -> {
 			Platform.runLater(() -> {
 				if(n.isStatus(Status.MSP_MODE_RTL) && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
