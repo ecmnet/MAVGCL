@@ -46,11 +46,9 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -62,15 +60,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusChangedListener  {
+public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Label version;
@@ -220,7 +216,6 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 		chartControlWidget.addChart(99,this);
 		this.control = control;
 		this.model = control.getCurrentModel();
-		this.control.addStatusChangeListener(this);
 		this.state = StateProperties.getInstance();
 
 		messages.setText(control.getClass().getSimpleName()+ " loaded");
@@ -236,25 +231,18 @@ public class StatusLineWidget extends Pane implements IChartControl, IMSPStatusC
 			});
 		});
 
+		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {
+			if((n.isStatus(Status.MSP_RC_ATTACHED)) && n.isStatus(Status.MSP_CONNECTED))
+				rc.setMode(Badge.MODE_ON);
+			else
+				rc.setMode(Badge.MODE_OFF);
+		});
+
 		out = new Timeline(new KeyFrame(
 				Duration.millis(5000),
 				ae -> messages.clear()));
 
 		task.play();
-	}
-
-	@Override
-	public void update(Status arg0, Status newStat) {
-
-		Platform.runLater(() -> {
-
-			if((newStat.isStatus(Status.MSP_RC_ATTACHED) || newStat.isStatus(Status.MSP_JOY_ATTACHED))
-					&& newStat.isStatus(Status.MSP_CONNECTED))
-				rc.setMode(Badge.MODE_ON);
-			else
-				rc.setMode(Badge.MODE_OFF);
-
-		});
 	}
 
 	@Override
