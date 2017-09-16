@@ -33,21 +33,16 @@
 
 package com.comino.flight;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Vector;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.MSP_CMD;
-import org.mavlink.messages.lquac.msg_autopilot_version;
 
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
-import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -61,7 +56,6 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
-import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.msp.log.MSPLogger;
 
 import javafx.application.Application;
@@ -74,14 +68,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;

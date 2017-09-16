@@ -40,6 +40,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
+import com.comino.msp.model.segment.LogMessage;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
@@ -112,6 +113,8 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
 			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+			if(!n.isStatus(Status.MSP_CONNECTED))
+				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost",MAV_SEVERITY.MAV_SEVERITY_ALERT));
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
