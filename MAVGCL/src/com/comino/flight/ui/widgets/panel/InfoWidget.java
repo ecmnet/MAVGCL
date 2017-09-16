@@ -104,7 +104,8 @@ public class InfoWidget extends WidgetPane  {
 						setStyle("-fx-text-fill:white;");
 					}
 					setText(m.msg);
-				}
+				} else
+					setText(null);
 			}
 		});
 
