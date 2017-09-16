@@ -137,8 +137,8 @@ public class InfoWidget extends WidgetPane  {
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
-								listview.scrollTo(listview.getItems().size()-1);
-								listview.getSelectionModel().select(-1);
+							listview.scrollTo(listview.getItems().size()-1);
+							listview.getSelectionModel().select(-1);
 						}
 					});
 				}
@@ -147,7 +147,9 @@ public class InfoWidget extends WidgetPane  {
 	}
 
 	public void clear() {
-
+		Platform.runLater(() -> {
+			listview.getItems().clear();
+		});
 	}
 
 }
