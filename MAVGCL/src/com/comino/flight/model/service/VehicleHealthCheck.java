@@ -179,7 +179,7 @@ public class VehicleHealthCheck {
 				do_check = false;
 				healthProperty.set(healthOk);
 				if(!healthOk) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] "+reason, MAV_SEVERITY.MAV_SEVERITY_CRITICAL);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] "+reason, MAV_SEVERITY.MAV_SEVERITY_ALERT);
 				}
 				else {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] vehicle healthcheck passed", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
