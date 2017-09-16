@@ -189,11 +189,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		this.isFirst=true;
 
-		//		if(mode==PRE_COLLECTING) {
-		//			mode = COLLECTING;
-		//			return true;
-		//		}
-
 		if(mode==STOPPED) {
 			modelList.clear();
 			mode = COLLECTING;
@@ -205,11 +200,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public boolean stop() {
 		mode = STOPPED;
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-
-		}
 		return false;
 	}
 
@@ -218,11 +208,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 		ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
-				mode = STOPPED;
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
+				stop();
 			}
 		}, delay_sec, TimeUnit.SECONDS);
 	}
@@ -318,7 +304,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
 					ulogger.enableLogging(false);
-					LockSupport.parkNanos(2000000000);
+				//	LockSupport.parkNanos(2000000000);
 				}
 
 				if(!control.isSimulation())
@@ -376,16 +362,17 @@ public class AnalysisModelService implements IMAVLinkListener {
 						m.tms = System.nanoTime() / 1000 - tms_start;
 						m.dt_sec = m.tms / 1e6f;
 						modelList.add(m);
-					}
 
-					try {
-						for(ICollectorRecordingListener updater : listener)
-							updater.update(System.nanoTime());
-					} catch(Exception e) { }
+						state.getRecordingAvailableProperty().set(modelList.size()>0);
+
+						try {
+							for(ICollectorRecordingListener updater : listener)
+								updater.update(System.nanoTime());
+						} catch(Exception e) { }
+
+					}
 					isFirst = false;
 				}
-
-				state.getRecordingAvailableProperty().set(modelList.size()>0);
 
 				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
