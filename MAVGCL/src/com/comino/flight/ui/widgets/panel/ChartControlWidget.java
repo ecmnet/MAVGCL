@@ -34,21 +34,14 @@
 package com.comino.flight.ui.widgets.panel;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
-import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.observables.StateProperties;
-import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -62,8 +55,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ChartControlWidget extends WidgetPane  {
 
@@ -82,7 +73,6 @@ public class ChartControlWidget extends WidgetPane  {
 	@FXML
 	private Button save;
 
-	private IMAVController control;
 	private Map<Integer,IChartControl> charts = null;
 
 	protected int totalTime_sec = 30;

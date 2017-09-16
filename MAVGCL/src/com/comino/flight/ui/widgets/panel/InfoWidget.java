@@ -42,8 +42,6 @@ import com.comino.msp.main.control.listener.IMAVMessageListener;
 import com.comino.msp.model.segment.LogMessage;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
