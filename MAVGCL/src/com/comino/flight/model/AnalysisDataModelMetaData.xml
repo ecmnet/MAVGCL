@@ -1379,6 +1379,13 @@
 		</MSPSource>
 	</KeyFigure>
 
+	<KeyFigure desc="Wifi quality" uom="%" mask="#0" key="SWIFI">
+		<MSPSource class="sys" field="wifi_quality">
+		    <Converter class="ExpressionConverter" expression="SWIFI/100"/>
+		</MSPSource>
+		<Validity min="0.6" max="1.0"/>
+	</KeyFigure>
+
   <!-- VISION definitions -->
 
   <KeyFigure desc="Vis.X" uom="m" mask="#0.00" key="VISIONX">

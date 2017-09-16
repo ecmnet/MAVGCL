@@ -34,7 +34,6 @@
 package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,12 +45,9 @@ import com.comino.jfx.extensions.DashLabel;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -61,7 +57,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
@@ -81,7 +76,7 @@ public class DetailsWidget extends WidgetPane {
 			null, "HEAD", "RGPSNO", "GPHACCUR", "GPVACCUR", null, "ALTSL", "ALTTR", "ALTGL", null, "FLOWQL", "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "VISIONFPS", "VISIONQUAL", null, "BATC", "BATH",
-			"BATP", null, "TEMP", "CPUPX4", "RSSI", null, "TARM", "TBOOT",
+			"BATP", null, "TEMP", "CPUPX4", "RSSI", "SWIFI", null, "TARM", "TBOOT",
 
 	};
 
