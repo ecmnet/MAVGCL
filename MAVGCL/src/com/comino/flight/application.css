@@ -240,7 +240,7 @@
 }
 
 .toggle-button:selected {
-	 -fx-background-color: #805050;
+	 -fx-background-color: #808080;
 }
 
 .emergency   {
