@@ -327,7 +327,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				current.setValue("MAVGCLPERF", perf);
 
-				if(mode!=STOPPED && old_mode == STOPPED) {
+				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					state.getRecordingProperty().set(READING_HEADER);
 					ulogger.enableLogging(true);
 					state.getLogLoadedProperty().set(false);
