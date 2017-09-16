@@ -42,6 +42,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.DashLabelLED;
+import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.main.control.StatusManager;
@@ -72,10 +73,10 @@ public class VehicleCtlWidget extends WidgetPane   {
 	private CheckBox enable_vision;
 
 	@FXML
-	private Button enable_jumpback;
+	private StateButton enable_jumpback;
 
 	@FXML
-	private Button enable_circle;
+	private StateButton enable_circle;
 
 
 	private IMAVController control=null;
@@ -161,21 +162,11 @@ public class VehicleCtlWidget extends WidgetPane   {
 		this.control = control;
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.CIRCLE_MODE,(o,n) -> {
-			Platform.runLater(() -> {
-				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
-					enable_circle.setStyle("-fx-background-color: #805050");
-				else
-					enable_circle.setStyle("-fx-background-color: #606060");
-			});
+			enable_circle.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
-			Platform.runLater(() -> {
-				if(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
-					enable_jumpback.setStyle("-fx-background-color: #805050");
-				else
-					enable_jumpback.setStyle("-fx-background-color: #606060");
-			});
+			enable_jumpback.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
 		});
 
 		Platform.runLater(() -> {
