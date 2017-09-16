@@ -35,7 +35,6 @@ package com.comino.flight.base;
 
 
 import java.text.DecimalFormat;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;

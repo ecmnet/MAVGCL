@@ -70,10 +70,8 @@ public class VehicleHealthCheck {
 	private String reason = null;
 
 	private DecimalFormat f = new DecimalFormat("#0.000");
-	private IMAVController control;
 
 	public VehicleHealthCheck(IMAVController control) {
-		this.control = control;
 
 		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.HEALTHCHECK, true))
 			return;

@@ -35,12 +35,10 @@ package com.comino.flight.control.joystick;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
-import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
-import com.comino.msp.log.MSPLogger;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;

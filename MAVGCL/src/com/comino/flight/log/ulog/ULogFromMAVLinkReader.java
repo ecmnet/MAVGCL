@@ -35,7 +35,6 @@ package com.comino.flight.log.ulog;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;

@@ -33,8 +33,6 @@
 
 package com.comino.flight.model.converter;
 
-import com.comino.flight.model.AnalysisDataModel;
-
 public class BitMaskConverter extends SourceConverter {
 
 	int mask = 0;

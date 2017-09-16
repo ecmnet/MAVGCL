@@ -33,8 +33,6 @@
 
 package com.comino.flight.model.converter;
 
-import com.comino.flight.model.AnalysisDataModel;
-
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 

@@ -38,7 +38,6 @@ import java.util.Map;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.LogMessage;
-import com.comino.msp.model.segment.Slam;
 import com.comino.msp.model.segment.Status;
 
 public class AnalysisDataModel {
