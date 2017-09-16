@@ -44,9 +44,13 @@ import com.comino.msp.model.segment.LogMessage;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 
 public class InfoWidget extends WidgetPane  {
 
@@ -103,6 +107,16 @@ public class InfoWidget extends WidgetPane  {
 				}
 			}
 		});
+
+		ContextMenu ctxm = new ContextMenu();
+		MenuItem cmItem1 = new MenuItem("Clear list");
+		cmItem1.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) {
+				listview.getItems().clear();
+			}
+		});
+		ctxm.getItems().add(cmItem1);
+		listview.setContextMenu(ctxm);
 	}
 
 	public void setup(IMAVController control) {
