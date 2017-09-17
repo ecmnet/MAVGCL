@@ -47,12 +47,10 @@ import com.comino.flight.ui.tabs.MAVInspectorTab;
 import com.comino.flight.ui.tabs.MAVOpenMapTab;
 import com.comino.flight.ui.tabs.MavLinkShellTab;
 import com.comino.flight.ui.widgets.camera.CameraWidget;
-import com.comino.flight.ui.widgets.experimental.ExperimentalWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -87,8 +85,6 @@ public class FlightTabs extends Pane {
 	@FXML
 	private VehicleCtlWidget vehiclectl;
 
-	@FXML
-	private ExperimentalWidget experimental;
 
 	@FXML
 	private CameraWidget camera;

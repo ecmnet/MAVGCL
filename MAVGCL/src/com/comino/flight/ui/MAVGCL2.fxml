@@ -8,7 +8,6 @@
 <?import com.comino.flight.ui.tabs.*?>
 
 <?import com.comino.flight.ui.sidebar.*?>
-<?import com.comino.flight.ui.widgets.experimental.ExperimentalWidget?>
 <?import com.comino.flight.ui.widgets.camera.CameraWidget?>
 <?import com.comino.flight.ui.widgets.progress.ProgressWidget?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -68,10 +67,6 @@
 
 				<CameraWidget fx:id="camera" visible="false" moveable="true"
 					initialWidth="325" initialHeight="225" layoutX="300" layoutY="500" />
-
-				<ExperimentalWidget fx:id="experimental"
-					moveable="true" visible="false" initialWidth="185" initialHeight="260"
-					layoutX="30" layoutY="250" styleClass="glass" />
 
 
 				<ProgressWidget maxHeight="15">
