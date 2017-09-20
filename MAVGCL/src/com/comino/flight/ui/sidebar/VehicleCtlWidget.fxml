@@ -23,6 +23,7 @@
 				<children>
 					<StateButton fx:id="enable_jumpback" text="JumpBack"  prefWidth="165.0"/>
 					<StateButton fx:id="enable_circle" text="CircleMode"  prefWidth="165.0"/>
+					<Button fx:id="execute_waypoints" prefWidth="165.0" text="Execute WaypointList" />
 				</children>
 			</VBox>
 		</children>

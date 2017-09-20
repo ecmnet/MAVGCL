@@ -78,6 +78,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 	@FXML
 	private StateButton enable_circle;
 
+	@FXML
+	private Button   execute_waypoints;
+
 
 	private IMAVController control=null;
 
@@ -135,6 +138,14 @@ public class VehicleCtlWidget extends WidgetPane   {
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
+		});
+
+		execute_waypoints.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.WAYPOINT_MODE;
+		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			control.sendMAVLinkMessage(msp);
 		});
 
 		enable_circle.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
