@@ -68,24 +68,26 @@ public class XYStatistics {
 			return;
 
 		for(i = x0; i< x1;i++) {
-	        vx += list.get(i).getValue(fx);
-	        vy += list.get(i).getValue(fy);
+			vx += list.get(i).getValue(fx);
+			vy += list.get(i).getValue(fy);
 		}
 		center_x = vx / (i - x0);
 		center_y = vy / (i - x0);
 
 		vx = 0; vy = 0;
 		for(i = x1-20; i< x1 ;i++) {
-	        vx += (list.get(i).getValue(fx) - center_x) * (list.get(i).getValue(fx) - center_x);
-	        vy += (list.get(i).getValue(fy) - center_y) * (list.get(i).getValue(fy) - center_y);
-	        if(Math.abs(list.get(i).getValue(fx)-center_x) > radius)
-	        	radius = Math.abs(list.get(i).getValue(fx)-center_x);
-	        if(Math.abs(list.get(i).getValue(fy)-center_y) > radius)
-	        	radius = Math.abs(list.get(i).getValue(fy)-center_y);
+			if(i>0) {
+				vx += (list.get(i).getValue(fx) - center_x) * (list.get(i).getValue(fx) - center_x);
+				vy += (list.get(i).getValue(fy) - center_y) * (list.get(i).getValue(fy) - center_y);
+				if(Math.abs(list.get(i).getValue(fx)-center_x) > radius)
+					radius = Math.abs(list.get(i).getValue(fx)-center_x);
+				if(Math.abs(list.get(i).getValue(fy)-center_y) > radius)
+					radius = Math.abs(list.get(i).getValue(fy)-center_y);
+			}
 
 		}
 
-        this.radius = radius;
+		this.radius = radius;
 		stddev_x =(float)Math.sqrt( vx / (i - x0));
 		stddev_y =(float)Math.sqrt( vy / (i - x0));
 
@@ -100,7 +102,7 @@ public class XYStatistics {
 
 	public String getHeader() {
 		if(fx!=null && fy!=null)
-		   return fx.desc1+" / "+fy.desc1+" ["+fx.uom+"]";
+			return fx.desc1+" / "+fy.desc1+" ["+fx.uom+"]";
 		return null;
 	}
 
