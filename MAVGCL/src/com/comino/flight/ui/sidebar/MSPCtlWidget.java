@@ -57,11 +57,17 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
-public class VehicleCtlWidget extends WidgetPane   {
+public class MSPCtlWidget extends WidgetPane   {
 
 
 	@FXML
 	private VBox     box;
+
+	@FXML
+	private VBox     settings;
+
+	@FXML
+	private VBox     modes;
 
 	@FXML
 	private Button   reset_odometry;
@@ -84,9 +90,9 @@ public class VehicleCtlWidget extends WidgetPane   {
 
 	private IMAVController control=null;
 
-	public VehicleCtlWidget() {
+	public MSPCtlWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("VehicleCtlWidget.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MSPCtlWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -101,6 +107,8 @@ public class VehicleCtlWidget extends WidgetPane   {
 	private void initialize() {
 
 		box.prefHeightProperty().bind(this.heightProperty());
+
+		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty());
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
@@ -147,9 +155,6 @@ public class VehicleCtlWidget extends WidgetPane   {
 		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
-
-		enable_circle.disableProperty().bind(StateProperties.getInstance().getArmedProperty().not());
-	//	enable_circle.disableProperty().bind(StateProperties.getInstance().getLandedProperty());
 
 		reset_odometry.setOnAction((ActionEvent event)-> {
 			msg_msp_command msp = new msg_msp_command(255,1);
