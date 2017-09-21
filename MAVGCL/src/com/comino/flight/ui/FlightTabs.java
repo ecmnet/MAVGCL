@@ -40,7 +40,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.sidebar.DetailsWidget;
 import com.comino.flight.ui.sidebar.TuningWidget;
-import com.comino.flight.ui.sidebar.VehicleCtlWidget;
+import com.comino.flight.ui.sidebar.MSPCtlWidget;
 import com.comino.flight.ui.tabs.FlightXYAnalysisTab;
 import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
 import com.comino.flight.ui.tabs.MAVInspectorTab;
@@ -83,7 +83,7 @@ public class FlightTabs extends Pane {
 	private TuningWidget tuning;
 
 	@FXML
-	private VehicleCtlWidget vehiclectl;
+	private MSPCtlWidget mspctl;
 
 
 	@FXML
@@ -138,8 +138,8 @@ public class FlightTabs extends Pane {
 		tuning.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
 		tuning.setup(control);
 
-		vehiclectl.fadeProperty().bind(flightControl.getControl().getVehicleCtlVisibility());
-		vehiclectl.setup(control);
+		mspctl.fadeProperty().bind(flightControl.getControl().getVehicleCtlVisibility());
+		mspctl.setup(control);
 
 //		experimental.fadeProperty().bind(flightControl.getControl().getExperimentalVisibility());
 //		experimental.setup(control);
@@ -166,7 +166,7 @@ public class FlightTabs extends Pane {
 
 		tuning.managedProperty().bind(tuning.visibleProperty());
 		details.managedProperty().bind(details.visibleProperty());
-		vehiclectl.managedProperty().bind(vehiclectl.visibleProperty());
+		mspctl.managedProperty().bind(mspctl.visibleProperty());
 
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 			for(int i =0; i<tabs.size();i++)
