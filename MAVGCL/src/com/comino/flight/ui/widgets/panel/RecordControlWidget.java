@@ -263,11 +263,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			});
 		});
 
-		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue() && modelService.isCollecting()) {
-				modelService.stop(0);
-			}
-		});
 	}
 
 
@@ -302,13 +297,16 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		});
 
 		this.service_up_tms = System.currentTimeMillis();
+		state.getInitializedProperty().addListener((e,o,n) -> {
+		   update(null,control.getCurrentModel().sys);
+		});
 
 	}
 
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		if(!modetrigger || (System.currentTimeMillis()-this.service_up_tms) < 5000)
+		if(!modetrigger)
 			return;
 
 		if(!modelService.isCollecting()) {
