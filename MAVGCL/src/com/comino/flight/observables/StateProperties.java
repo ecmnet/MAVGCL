@@ -65,23 +65,23 @@ public class StateProperties {
 
 
 	private BooleanProperty armedProperty 					= new SimpleBooleanProperty();
-	private BooleanProperty landedProperty 					= new SimpleBooleanProperty(true);
-	private BooleanProperty altholdProperty 				= new SimpleBooleanProperty();
-	private BooleanProperty posholdProperty 				= new SimpleBooleanProperty();
+	private BooleanProperty landedProperty 					= new SimpleBooleanProperty();
+	private BooleanProperty altholdProperty 				    = new SimpleBooleanProperty();
+	private BooleanProperty posholdProperty 				    = new SimpleBooleanProperty();
 
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
-	private BooleanProperty isRecordingAvailableProperty	= new SimpleBooleanProperty();
+	private BooleanProperty isRecordingAvailableProperty	    = new SimpleBooleanProperty();
 
-	private BooleanProperty isGPOSAvailable                 = new SimpleBooleanProperty();
-	private BooleanProperty isLPOSAvailable                 = new SimpleBooleanProperty();
-	private BooleanProperty isBaseAvailable                 = new SimpleBooleanProperty();
+	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
+	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
+	private BooleanProperty isBaseAvailable                  = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty           = new SimpleBooleanProperty();
 
-	private FloatProperty progress 							= new SimpleFloatProperty(-1);
+	private FloatProperty progress 						   = new SimpleFloatProperty(-1);
 
 	private IMAVController control;
 
@@ -140,8 +140,6 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_LPOS_AVAILABILITY, (o,n) -> {
 			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_AVAILABILITY));
 		});
-
-
 	}
 
 	public BooleanProperty getArmedProperty() {
@@ -211,6 +209,4 @@ public class StateProperties {
 	public BooleanProperty getInitializedProperty() {
 		return isInitializedProperty;
 	}
-
-
 }
