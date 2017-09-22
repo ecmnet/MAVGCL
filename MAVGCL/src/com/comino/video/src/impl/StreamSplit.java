@@ -35,7 +35,6 @@ package com.comino.video.src.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;

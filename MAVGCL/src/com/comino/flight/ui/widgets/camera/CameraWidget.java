@@ -41,9 +41,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.jfx.extensions.CloseButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -55,7 +53,6 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {

@@ -39,12 +39,10 @@ import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMSPStatusChangedListener;
 import com.comino.msp.model.segment.LogMessage;
 import com.comino.msp.model.segment.Status;
 import com.comino.msp.utils.ExecutorService;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;

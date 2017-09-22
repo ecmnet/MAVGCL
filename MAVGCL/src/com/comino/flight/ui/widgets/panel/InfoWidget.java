@@ -38,7 +38,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMAVMessageListener;
+import com.comino.msp.execution.control.listener.IMAVMessageListener;
 import com.comino.msp.model.segment.LogMessage;
 
 import javafx.application.Platform;

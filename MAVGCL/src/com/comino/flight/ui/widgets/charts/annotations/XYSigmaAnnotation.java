@@ -37,7 +37,6 @@ import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;

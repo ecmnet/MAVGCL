@@ -56,8 +56,8 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.execution.control.listener.IMAVLinkListener;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;

@@ -36,6 +36,7 @@ package com.comino.flight.model.service;
 import java.text.DecimalFormat;
 
 import org.mavlink.messages.MAV_SEVERITY;
+
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.PX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;

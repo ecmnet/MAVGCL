@@ -37,8 +37,6 @@ package com.comino.video.src.mp4;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import org.jcodec.api.awt.SequenceEncoder;
-
 import com.comino.video.src.IMWStreamVideoProcessListener;
 
 import javafx.beans.property.BooleanProperty;

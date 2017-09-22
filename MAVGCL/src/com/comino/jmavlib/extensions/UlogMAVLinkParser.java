@@ -33,7 +33,6 @@
 
 package com.comino.jmavlib.extensions;
 
-import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;

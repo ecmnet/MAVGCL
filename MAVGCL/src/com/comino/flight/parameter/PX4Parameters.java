@@ -36,10 +36,8 @@ package com.comino.flight.parameter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -48,10 +46,9 @@ import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.execution.control.listener.IMAVLinkListener;
 import com.comino.msp.log.MSPLogger;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;

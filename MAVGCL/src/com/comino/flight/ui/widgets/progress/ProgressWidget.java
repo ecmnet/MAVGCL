@@ -37,7 +37,6 @@ import java.io.IOException;
 
 import com.comino.flight.observables.StateProperties;
 
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;

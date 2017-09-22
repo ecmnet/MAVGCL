@@ -43,9 +43,8 @@ import org.mavlink.messages.lquac.msg_serial_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.listener.IMAVLinkListener;
+import com.comino.msp.execution.control.listener.IMAVLinkListener;
 import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Platform;

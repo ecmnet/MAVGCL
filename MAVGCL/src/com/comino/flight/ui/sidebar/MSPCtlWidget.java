@@ -41,11 +41,10 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.main.control.StatusManager;
+import com.comino.msp.execution.control.StatusManager;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -54,7 +53,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends WidgetPane   {

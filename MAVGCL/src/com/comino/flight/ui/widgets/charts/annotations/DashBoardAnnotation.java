@@ -33,9 +33,6 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-
 import com.comino.flight.model.KeyFigureMetaData;
 import com.emxsys.chart.extension.XYAnnotation;
 

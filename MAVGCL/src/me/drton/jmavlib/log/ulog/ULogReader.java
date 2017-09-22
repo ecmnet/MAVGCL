@@ -17,8 +17,6 @@ import java.util.Vector;
 
 import javax.swing.JFileChooser;
 
-import com.comino.jmavlib.extensions.IUlogParser;
-
 import me.drton.jmavlib.log.BinaryLogReader;
 import me.drton.jmavlib.log.FormatErrorException;
 
