@@ -158,7 +158,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			updateMap(true);
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
