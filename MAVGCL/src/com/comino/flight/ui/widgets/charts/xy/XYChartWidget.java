@@ -443,6 +443,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					x_desc = x_desc + type2_x.desc1+" ["+type2_x.uom+"] ";
 				xAxis.setLabel(x_desc);
 
+
 				updateRequest();
 			}
 		});
@@ -700,7 +701,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
-			if(show_grid.isSelected() &&  mList.size()>0 )
+			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash))
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 
 			slam.clear();
@@ -982,6 +983,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} else {
 			series.getSelectionModel().select(0);
 		}
+	}
+
+	private boolean isLocalPositionSelected(int hashx, int hashy) {
+		return meta.getMetaData(PRESETS[1][0]).hash == hashx && meta.getMetaData(PRESETS[1][1]).hash == hashy;
 	}
 
 	private void initKeyFigureSelection(List<KeyFigureMetaData> kfl) {
