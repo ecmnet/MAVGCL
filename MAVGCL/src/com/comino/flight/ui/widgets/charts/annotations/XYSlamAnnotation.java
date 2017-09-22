@@ -55,8 +55,11 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
 	private  AnalysisDataModel      model       = null;
+	private float scale;
 
 	public XYSlamAnnotation() {
+		this.scale = 1f;
+
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
@@ -96,7 +99,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			return;
 
 		if(model.getValue("SLAMSPD") != 0) {
-			setArrowLength(plan_dir,model.getValue("SLAMSPD"));
+			setArrowLength(plan_dir,model.getValue("SLAMSPD")/scale);
 			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
@@ -113,6 +116,10 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 	}
 
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+
 	public void clear() {
 		Platform.runLater(() -> {
 			act_dir.setVisible(false);
@@ -121,7 +128,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	}
 
 	private void setArrowLength(Polygon p, float length) {
-		Double k = (double)(length * 30);
+		Double k = (double)(length * 90);
 		p.getPoints().set(1,k);
 		p.getPoints().set(3,k);
 		p.getPoints().set(9,k);
