@@ -93,12 +93,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String[] GPS_SOURCES    = { "Global Position", "Raw GPS data" };
 
-	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base" };
+	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base", "Takeoff" };
 
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON"   },
-				{ "RGPSLAT",  "RGPSLON" }
+				{ "RGPSLAT",  "RGPSLON"   }
 		};
 
 	@FXML
@@ -135,6 +135,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private AnalysisDataModel model;
 	private int type = 0;
 
+	private double takeoff_lon = 0;
+	private double takeoff_lat = 0;
+
 
 	private int index=0;
 
@@ -158,7 +161,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(30), ae -> {
 			updateMap(true);
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
@@ -167,6 +170,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	@FXML
 	private void initialize() {
+
+		this.boundsInParentProperty().addListener((e,o,n) -> {
+
+		});
 
 
 		gpsdetails.setVisible(false);
@@ -355,10 +362,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.model=dataService.getCurrent();
-    	this.control = control;
+		this.control = control;
 
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
+
+		StateProperties.getInstance().getLandedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				takeoff_lon = model.getValue( "GLOBLON");
+				takeoff_lat = model.getValue( "GLOBLAT");
+			}
+		});
 
 		task.play();
 
@@ -410,6 +424,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private void updateMap(boolean refreshCanvas) {
 
+		if(!isVisible())
+			return;
+
 		if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  && dataService.isCollecting()) {
 			canvasLayer.redraw(true);
 		}
@@ -427,6 +444,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			if(model.getValue("BASELAT")!=0)
 				map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
 			break;
+		case 3:
+			if(takeoff_lat!=0)
+				map.setCenter(takeoff_lat, takeoff_lon);
+			break;
+
 		}
 
 
