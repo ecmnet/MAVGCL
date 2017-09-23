@@ -223,55 +223,55 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
-		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
-
-			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
-
-
-			@Override
-			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
-
-
-				if(refresh) {
-					index = dataService.calculateX0IndexByFactor(1);
-					first = true;
-				}
-
-				// TODO MAVOpenMapTab: Draw path also in replay
-
-				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
-						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-
-
-					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
-					gc.setLineWidth(1.5);
-					for(int i=index; i<dataService.getModelList().size();
-							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-
-						m = dataService.getModelList().get(i);
-
-						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
-							continue;
-
-						if(first) {
-							p0 = map.getMapArea().getMapPoint(
-									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-
-							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
-							first = false; continue;
-						}
-						p1 = map.getMapArea().getMapPoint(
-								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-
-						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-						p0 = map.getMapArea().getMapPoint(
-								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-					}
-					index = dataService.getModelList().size();
-				}
-			}
-
-		});
+//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+//
+//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
+//
+//
+//			@Override
+//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+//
+//
+//				if(refresh) {
+//					index = dataService.calculateX0IndexByFactor(1);
+//					first = true;
+//				}
+//
+//				// TODO MAVOpenMapTab: Draw path also in replay
+//
+//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
+//						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+//
+//
+//					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
+//					gc.setLineWidth(1.5);
+//					for(int i=index; i<dataService.getModelList().size();
+//							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+//
+//						m = dataService.getModelList().get(i);
+//
+//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
+//							continue;
+//
+//						if(first) {
+//							p0 = map.getMapArea().getMapPoint(
+//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//
+//							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
+//							first = false; continue;
+//						}
+//						p1 = map.getMapArea().getMapPoint(
+//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//
+//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+//						p0 = map.getMapArea().getMapPoint(
+//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//					}
+//					index = dataService.getModelList().size();
+//				}
+//			}
+//
+//		});
 
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
@@ -428,7 +428,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			return;
 
 		if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  && dataService.isCollecting()) {
-			canvasLayer.redraw(true);
+			canvasLayer.redraw(refreshCanvas);
 		}
 
 		switch(centermode) {
