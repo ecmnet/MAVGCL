@@ -27,6 +27,7 @@
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193" VBox.vgrow="ALWAYS">
 			<padding><Insets top="14" left="10" bottom="14" /></padding>
 				<children>
+				    <Button fx:id="abort" prefWidth="165.0" text="Abort autopilot" styleClass="emergency" />
 					<StateButton fx:id="enable_circle" text="CircleMode"  prefWidth="165.0"/>
 					<Button fx:id="execute_waypoints" prefWidth="165.0" text="Execute WaypointList" />
 				</children>
