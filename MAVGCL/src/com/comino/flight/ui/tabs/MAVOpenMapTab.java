@@ -161,7 +161,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		task = new Timeline(new KeyFrame(Duration.millis(30), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			updateMap(true);
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
@@ -423,9 +423,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	}
 
 	private void updateMap(boolean refreshCanvas) {
-
-		if(!isVisible())
-			return;
 
 		if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  && dataService.isCollecting()) {
 			canvasLayer.redraw(refreshCanvas);
