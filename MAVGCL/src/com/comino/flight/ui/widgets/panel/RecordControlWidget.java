@@ -306,15 +306,16 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		if(!modetrigger)
+		if(!modetrigger || oldStat==null || newStat.isEqual(oldStat) )
 			return;
+
+		//System.err.println("START recording: "+oldStat+"/"+newStat);
 
 		if(!modelService.isCollecting()) {
 			switch(triggerStartMode) {
 			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
-			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) ||
-					newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) || newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),0); break;
 			}
 		} else {
@@ -323,8 +324,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			break;
 			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
 			break;
-			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) ||
-					newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
+			case TRIG_ALTHOLD:		recording(newStat.isStatus(Status.MSP_MODE_ALTITUDE) || newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
 			case TRIG_POSHOLD:	    recording(newStat.isStatus(Status.MSP_MODE_POSITION),triggerDelay);
 			break;
