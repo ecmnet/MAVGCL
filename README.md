@@ -9,14 +9,15 @@
 
 
 
-This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or offline based on PX4Logs or ULogs. It is not intended to replace the QGC. 
+This JavaFx based tool enables PX4 Users to record and analyse data published via UDP during flight or offline based on PX4Logs or ULogs. It is not intended to replace the QGC. It is not tested with ardupilot.
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 21/09/2017
+**Development Status:** Last updated 01/10/2017
 
 - Various layout changes
 - Performance improvements
+- Recording state fixed
 
 V0.6xx notes:
 
