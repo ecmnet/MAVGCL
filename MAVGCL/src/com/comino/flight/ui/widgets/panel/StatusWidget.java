@@ -102,9 +102,27 @@ public class StatusWidget extends WidgetPane  {
 			});
 		});
 
+		control.getStatusManager().addListener(Status.MSP_MODE_TAKEOFF, (o,n) -> {
+			Platform.runLater(() -> {
+				if(n.isStatus(Status.MSP_MODE_TAKEOFF) && !n.isStatus(Status.MSP_LANDED))
+					landed.setMode(DashLabelLED.MODE_BLINK);
+				else
+				    landed.set(n.isStatus(Status.MSP_LANDED));
+			});
+		});
+
+		control.getStatusManager().addListener(Status.MSP_MODE_LANDING, (o,n) -> {
+			Platform.runLater(() -> {
+				if(n.isStatus(Status.MSP_MODE_LANDING) && !n.isStatus(Status.MSP_LANDED))
+					landed.setMode(DashLabelLED.MODE_BLINK);
+				else
+				    landed.set(n.isStatus(Status.MSP_LANDED));
+			});
+		});
+
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
 			Platform.runLater(() -> {
-				landed.set(n.isStatus(Status.MSP_LANDED));
+				    landed.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
 
