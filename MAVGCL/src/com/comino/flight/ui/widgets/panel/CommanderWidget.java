@@ -151,9 +151,10 @@ public class CommanderWidget extends WidgetPane  {
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
-			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY) )//&& model.sys.isStatus(Status.MSP_GPS_AVAILABILITY))
+			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY) ) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 						model.hud.at);
+		    }
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
