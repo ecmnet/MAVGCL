@@ -223,55 +223,55 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
-//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
-//
-//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
-//
-//
-//			@Override
-//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
-//
-//
-//				if(refresh) {
-//					index = dataService.calculateX0IndexByFactor(1);
-//					first = true;
-//				}
-//
-//				// TODO MAVOpenMapTab: Draw path also in replay
-//
-//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
-//						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-//
-//
-//					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
-//					gc.setLineWidth(1.5);
-//					for(int i=index; i<dataService.getModelList().size();
-//							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-//
-//						m = dataService.getModelList().get(i);
-//
-//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
-//							continue;
-//
-//						if(first) {
-//							p0 = map.getMapArea().getMapPoint(
-//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//
-//							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
-//							first = false; continue;
-//						}
-//						p1 = map.getMapArea().getMapPoint(
-//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//
-//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-//						p0 = map.getMapArea().getMapPoint(
-//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//					}
-//					index = dataService.getModelList().size();
-//				}
-//			}
-//
-//		});
+		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+		//
+		//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
+		//
+		//
+		//			@Override
+		//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+		//
+		//
+		//				if(refresh) {
+		//					index = dataService.calculateX0IndexByFactor(1);
+		//					first = true;
+		//				}
+		//
+		//				// TODO MAVOpenMapTab: Draw path also in replay
+		//
+		//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
+		//						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+		//
+		//
+		//					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
+		//					gc.setLineWidth(1.5);
+		//					for(int i=index; i<dataService.getModelList().size();
+		//							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
+		//
+		//						m = dataService.getModelList().get(i);
+		//
+		//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
+		//							continue;
+		//
+		//						if(first) {
+		//							p0 = map.getMapArea().getMapPoint(
+		//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//
+		//							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
+		//							first = false; continue;
+		//						}
+		//						p1 = map.getMapArea().getMapPoint(
+		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//
+		//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+		//						p0 = map.getMapArea().getMapPoint(
+		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//					}
+		//					index = dataService.getModelList().size();
+		//				}
+		//			}
+		//
+		//		});
 
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
@@ -448,32 +448,29 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		}
 
+		try {
+			if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
+				//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+				homeLayer.setVisible(true);
+				homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			} else
+				homeLayer.setVisible(false);
 
-		Platform.runLater(() -> {
-			try {
-				if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
-					//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
-					homeLayer.setVisible(true);
-					homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-				} else
-					homeLayer.setVisible(false);
+			if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
+				baseLayer.setVisible(true);
+				baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
+			} else
+				baseLayer.setVisible(false);
 
-				if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
-					baseLayer.setVisible(true);
-					baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
-				} else
-					baseLayer.setVisible(false);
+			if(model.getValue("RGPSHDOP") > 2.5)
+				positionLayer.getIcon().setImage(plane_invalid);
+			else
+				positionLayer.getIcon().setImage(plane_valid);
 
-				if(model.getValue("RGPSHDOP") > 2.5)
-					positionLayer.getIcon().setImage(plane_invalid);
-				else
-					positionLayer.getIcon().setImage(plane_valid);
+			positionLayer.updatePosition(
+					model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
 
-				positionLayer.updatePosition(
-						model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
-
-			} catch(Exception e) { e.printStackTrace(); }
-		});
+		} catch(Exception e) { e.printStackTrace(); }
 	}
 
 
