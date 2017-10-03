@@ -160,7 +160,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
 		this.state = StateProperties.getInstance();
-
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			updateMap(true);
 		} ) );
@@ -378,10 +377,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
-				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
-					model = dataService.getModelList().get(current_x1_pt);
-				else
+//				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
+//				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+//					model = dataService.getModelList().get(current_x1_pt);
+//				else
 					model = dataService.getCurrent();
 			}
 		});
@@ -417,7 +416,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	public void refreshChart() {
 
 		Platform.runLater(() -> {
-			this.model=dataService.getLast(1);
+		//	this.model=dataService.getLast(1);
 			updateMap(true);
 		});
 	}
