@@ -122,6 +122,7 @@ public class StatusWidget extends WidgetPane  {
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
 			Platform.runLater(() -> {
+				if(!n.isStatus(Status.MSP_MODE_TAKEOFF))
 				    landed.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
