@@ -11,7 +11,7 @@ public class StateButton extends Button {
 		this.state = state;
 		Platform.runLater(() -> {
 			if(state)
-				setStyle("-fx-background-color: steelblue");
+				setStyle("-fx-background-color: #006C6C");
 			else
 				setStyle("-fx-background-color: #606060");
 		});
