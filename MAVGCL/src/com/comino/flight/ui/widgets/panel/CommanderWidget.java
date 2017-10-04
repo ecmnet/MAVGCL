@@ -118,16 +118,9 @@ public class CommanderWidget extends WidgetPane  {
 		});
 
 		arm_command.disableProperty().bind(state.getLandedProperty().not()
-				.or(state.getRCProperty().not()
-				.and(state.getSimulationProperty().not())));
+				.and(state.getSimulationProperty().not()));
 
 		arm_command.setOnAction((ActionEvent event)-> {
-
-			if(!model.sys.isStatus(Status.MSP_RC_ATTACHED) && !control.isSimulation()) {
-				MSPLogger.getInstance().writeLocalMsg("Attach RC before arming",
-						MAV_SEVERITY.MAV_SEVERITY_WARNING);
-				return;
-			}
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
@@ -149,6 +142,7 @@ public class CommanderWidget extends WidgetPane  {
 
 
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
+				.or(state.getRCProperty())
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_AVAILABILITY) ) {

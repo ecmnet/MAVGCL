@@ -66,6 +66,7 @@ public class StateProperties {
 	private BooleanProperty landedProperty 					= new SimpleBooleanProperty();
 	private BooleanProperty altholdProperty 				    = new SimpleBooleanProperty();
 	private BooleanProperty posholdProperty 				    = new SimpleBooleanProperty();
+	private BooleanProperty offboardProperty 			    = new SimpleBooleanProperty();
 
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
@@ -127,6 +128,10 @@ public class StateProperties {
 			posholdProperty.set(n.isStatus(Status.MSP_MODE_POSITION));
 		});
 
+		control.getStatusManager().addListener(Status.MSP_MODE_OFFBOARD, (o,n) -> {
+			offboardProperty.set(n.isStatus(Status.MSP_MODE_OFFBOARD));
+		});
+
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
@@ -162,6 +167,10 @@ public class StateProperties {
 
 	public BooleanProperty getPosHoldProperty() {
 		return posholdProperty;
+	}
+
+	public BooleanProperty getOffboardProperty() {
+		return offboardProperty;
 	}
 
 	public BooleanProperty getRCProperty() {

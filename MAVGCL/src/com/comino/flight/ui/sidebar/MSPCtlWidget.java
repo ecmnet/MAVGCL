@@ -77,6 +77,9 @@ public class MSPCtlWidget extends WidgetPane   {
 	private CheckBox enable_vision;
 
 	@FXML
+	private StateButton enable_offboard;
+
+	@FXML
 	private StateButton enable_jumpback;
 
 	@FXML
@@ -113,7 +116,8 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		box.prefHeightProperty().bind(this.heightProperty());
 
-		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty());
+		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty()
+				     .or(StateProperties.getInstance().getOffboardProperty().not()));
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
@@ -146,6 +150,19 @@ public class MSPCtlWidget extends WidgetPane   {
 			msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
 
 			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_offboard.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -203,6 +220,10 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
 			enable_jumpback.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER,(o,n) -> {
+			enable_offboard.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER));
 		});
 
 		Platform.runLater(() -> {
