@@ -87,6 +87,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+// TODO: Base MAP drawing on local position instead of global
+
 public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static int MAP_UPDATE_MS = 100;
@@ -98,7 +100,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON"   },
-				{ "RGPSLAT",  "RGPSLON"   }
+		  { "RGPSLAT",  "RGPSLON"   }
 		};
 
 	@FXML
