@@ -73,7 +73,7 @@ public class DetailsWidget extends WidgetPane {
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
 
 	private final static String[] key_figures_details = { "ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
-			null, "HEAD", "RGPSNO", "GPHACCUR", "GPVACCUR", null, "ALTSL", "ALTTR", "ALTGL", null, "FLOWQL", "LIDAR",
+			null, "HEAD", "RGPSNO", "GPHACCUR", "GPVACCUR", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "FLOWQL", "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "VISIONFPS", "VISIONQUAL", null, "BATC", "BATH",
 			"BATP", null, "TEMP", "CPUPX4", "RSSI", "SWIFI", null, "TARM", "TBOOT",

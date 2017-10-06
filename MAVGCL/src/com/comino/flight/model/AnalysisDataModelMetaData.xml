@@ -98,7 +98,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.Ground level" uom="m" mask="#0.0" key="ALTGL">
+	<KeyFigure desc="Alt.Local" uom="m" mask="#0.0" key="ALTGL">
 		<MSPSource class="hud" field="al"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
@@ -108,7 +108,17 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.baro" uom="m" mask="#0.0" key="ALTBARO">
+	<KeyFigure desc="Alt.Relative" uom="m" mask="#0.0" key="ALTRE">
+		<MSPSource class="hud" field="ar"></MSPSource>
+		<PX4Source field="LPOS.Dist"></PX4Source>
+		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
+		<Groups>
+			<Group>Altitude</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Alt.Baro" uom="m" mask="#0.0" key="ALTBARO">
 		<MSPSource class="hud" field="ap"></MSPSource>
 		<PX4Source field="SENS.BaroAlt"></PX4Source>
 		<ULogSource field="sensor_combined_0.baro_alt_meter"></ULogSource>
