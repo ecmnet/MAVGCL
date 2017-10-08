@@ -47,6 +47,8 @@ import net.java.games.input.ControllerEnvironment;
 
 public class JoyStickController implements Runnable {
 
+	private final static int UNDEFINED  = -99;
+
 	private Controller     pad		   = null;
 	private IMAVController control     = null;
 	private Component[]    components  = null;
@@ -135,6 +137,8 @@ public class JoyStickController implements Runnable {
 			} catch (InterruptedException e) {
 			}
 		}
+
+		state_sw2 = UNDEFINED;
 
 		while(true) {
 			try {
