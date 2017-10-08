@@ -185,7 +185,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				if(!state.getLogLoadedProperty().get()) {
 					if(control.isConnected()) {
 						time.setMode(Badge.MODE_ON);
-						if(control.isSimulation()) {
+						if(model.sys.isStatus(Status.MSP_SITL)) {
 							mode.setBackgroundColor(Color.BEIGE);
 							mode.setText("SITL");
 						} else {
