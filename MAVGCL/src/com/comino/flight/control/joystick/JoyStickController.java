@@ -39,6 +39,7 @@ import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.model.segment.Status;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -104,7 +105,7 @@ public class JoyStickController implements Runnable {
 					this.ch_sw2 = adapter.getField("SW2").getInt(null);
 					found = true;
 					System.out.println("[mgc]"+pad.getName()
-					               +" connected to adapter "+adapter.getSimpleName());
+					+" connected to adapter "+adapter.getSimpleName());
 					break;
 				}
 			}
@@ -157,18 +158,25 @@ public class JoyStickController implements Runnable {
 
 
 
-				if(control.isConnected())
+				if(control.isConnected()) {
 					control.sendMAVLinkMessage(rc);
+					control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, true);
+
+				}
 
 				// Simple switch mapping for ALT/POS-CTL
 
 				if(state_sw2 != (int)components[ch_sw2].getPollData() ) {
 					state_sw2 = (int)components[ch_sw2].getPollData();
 					if(components[ch_sw1].getPollData() > -0.5 ) {
-						if((int)components[ch_sw2].getPollData() != 0) {
+						if((int)components[ch_sw2].getPollData() < 0) {
 							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
+						} else if((int)components[ch_sw2].getPollData() > 0) {
+							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
 						} else {
 							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
@@ -189,7 +197,9 @@ public class JoyStickController implements Runnable {
 
 				Thread.sleep(50);
 
-			} catch(Exception e ) {  }
+			} catch(Exception e ) {
+				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
+			}
 		}
 	}
 
