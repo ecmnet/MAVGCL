@@ -76,6 +76,7 @@ public class StateProperties {
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isBaseAvailable                  = new SimpleBooleanProperty();
+	private BooleanProperty isMSPAvailable                   = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty           = new SimpleBooleanProperty();
@@ -105,6 +106,9 @@ public class StateProperties {
 		simulationProperty.set(control.isSimulation());
 		ExecutorService.get().schedule(() -> { isInitializedProperty.set(true); }, 5, TimeUnit.SECONDS);
 
+		control.getStatusManager().addListener(Status.MSP_ACTIVE, (o,n) -> {
+			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
+		});
 
 		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
 			armedProperty.set(n.isStatus(Status.MSP_ARMED));
@@ -143,6 +147,10 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_LPOS_AVAILABILITY, (o,n) -> {
 			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_AVAILABILITY));
 		});
+	}
+
+	public BooleanProperty getMSPProperty() {
+		return isMSPAvailable;
 	}
 
 	public BooleanProperty getArmedProperty() {

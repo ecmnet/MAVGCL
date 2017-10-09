@@ -86,10 +86,8 @@ public class ControlWidget extends WidgetPane  {
 		vehiclectl.setDisable(true);
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
-				vehiclectl.setDisable(true);
 				vehiclectl.setSelected(false);
-			} else {
-				vehiclectl.setDisable(false);
+				video.setSelected(false);
 			}
 		});
 
@@ -105,6 +103,7 @@ public class ControlWidget extends WidgetPane  {
 
 		});
 
+		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
 		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
 
 	}
