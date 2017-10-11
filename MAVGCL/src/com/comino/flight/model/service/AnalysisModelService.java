@@ -119,11 +119,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-				if(!control.isSimulation()) {
-					model.grid.clear();
-					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				}
+				model.grid.clear();
+				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
 		});
 
@@ -304,7 +302,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 					mode = STOPPED; old_mode = STOPPED;
 					ulogger.enableLogging(false);
-				//	LockSupport.parkNanos(2000000000);
+					//	LockSupport.parkNanos(2000000000);
 				}
 
 				if(!control.isSimulation())
