@@ -86,6 +86,12 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_circle;
 
 	@FXML
+	private StateButton debug_mode1;
+
+	@FXML
+	private StateButton debug_mode2;
+
+	@FXML
 	private Button   execute_waypoints;
 
 	@FXML
@@ -157,6 +163,32 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		debug_mode1.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.DEBUG_MODE1;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE1))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		debug_mode2.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.DEBUG_MODE2;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		enable_offboard.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -216,6 +248,14 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.CIRCLE_MODE,(o,n) -> {
 			enable_circle.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.DEBUG_MODE1,(o,n) -> {
+			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE1));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.DEBUG_MODE2,(o,n) -> {
+			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
