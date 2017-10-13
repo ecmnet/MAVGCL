@@ -83,6 +83,10 @@ public class PositionAnnotation  implements XYAnnotation {
 		this.ypos = ypos;
 	}
 
+	public void setVisible(boolean v) {
+		this.pane.setVisible(v);
+	}
+
 	@Override
 	public Node getNode() {
 		return pane;

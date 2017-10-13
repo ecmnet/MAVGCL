@@ -267,7 +267,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private void initialize() {
 
 		this.grid = new XYGridAnnotation();
-		this.slam = new XYSlamAnnotation();
+		this.slam = new XYSlamAnnotation(Color.DARKSLATEBLUE);
 
 		this.sigma1 = new XYSigmaAnnotation(Color.AZURE);
 		this.sigma2 = new XYSigmaAnnotation(Color.LINEN);
@@ -592,8 +592,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
-			} else
+				endPosition1.setVisible(false);
+				sigma1.setVisible(false);
+
+			} else {
 				xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+				endPosition1.setVisible(true);
+				sigma1.setVisible(true);
+			}
 
 			rotation.setDisable(nv.booleanValue());
 

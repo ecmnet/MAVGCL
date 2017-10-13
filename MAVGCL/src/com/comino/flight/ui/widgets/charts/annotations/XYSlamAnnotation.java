@@ -49,15 +49,18 @@ import javafx.scene.transform.Rotate;
 public class XYSlamAnnotation  implements XYAnnotation {
 
 
-	private  Pane   	  			  pane 		= null;
-	private  Polygon        		act_dir     = null;
-	private  Polygon        		plan_dir    = null;
+	private  Pane   	  			    pane 		= null;
+	private  Polygon        		    act_dir     = null;
+	private  Polygon        		    plan_dir    = null;
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
-	private  AnalysisDataModel      model       = null;
+	private  Polygon  				vhc         = null;
+	private  Rotate  				vhc_rotate  = null;
+
+	private  AnalysisDataModel      model        = null;
 	private float scale;
 
-	public XYSlamAnnotation() {
+	public XYSlamAnnotation(Color color) {
 		this.scale = 1f;
 
 		this.pane = new Pane();
@@ -65,20 +68,26 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 
 		plan_rotate = Rotate.rotate(0, 0, 0);
-		plan_dir = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
-		plan_dir.setFill(Color.YELLOW);
+		plan_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
+		plan_dir.setFill(Color.IVORY.darker());
 		plan_dir.getTransforms().add(plan_rotate);
 		plan_dir.setStrokeType(StrokeType.INSIDE);
 		plan_dir.setVisible(false);
 
 		act_rotate = Rotate.rotate(0, 0, 0);
-		act_dir = new Polygon( -7,30, -1,30, -1,0, 1,0, 1,30, 7,30, 0,40);
+		act_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
 		act_dir.setFill(Color.DARKRED);
 		act_dir.getTransforms().add(act_rotate);
 		act_dir.setStrokeType(StrokeType.INSIDE);
 		act_dir.setVisible(false);
 
-		pane.getChildren().addAll(act_dir,plan_dir);
+		vhc_rotate = Rotate.rotate(0, 0, 0);
+		vhc = new Polygon( -7,0, -1,3, 1,3, 7,0, 0,14);
+		vhc.getTransforms().add(vhc_rotate);
+		vhc.setFill(color.brighter().brighter().brighter());
+		vhc.setStrokeType(StrokeType.INSIDE);
+
+		pane.getChildren().addAll(act_dir,plan_dir, vhc);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -98,14 +107,23 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		if(model==null)
 			return;
 
+		vhc.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+		vhc.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+		vhc_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
+
+
 		if(model.getValue("SLAMSPD") != 0) {
 			setArrowLength(plan_dir,model.getValue("SLAMSPD")/scale);
 			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
 			plan_dir.setVisible(true);
-		} else
+
+
+		} else {
 			plan_dir.setVisible(false);
+
+		}
 
 //		setArrowLength(act_dir,model.getValue("GNDV"));
 //		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));

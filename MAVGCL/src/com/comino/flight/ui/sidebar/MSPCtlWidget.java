@@ -255,7 +255,7 @@ public class MSPCtlWidget extends WidgetPane   {
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.DEBUG_MODE2,(o,n) -> {
-			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2));
+			debug_mode2.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {

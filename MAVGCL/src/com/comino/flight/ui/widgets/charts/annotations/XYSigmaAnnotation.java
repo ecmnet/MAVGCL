@@ -73,6 +73,10 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 		this.sigma = sigma;
 	}
 
+	public void setVisible(boolean v) {
+		this.pane.setVisible(v);
+	}
+
 	@Override
 	public Node getNode() {
 		return pane;
@@ -88,9 +92,9 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 			circle.setCenterX(size/2);
 			circle.setCenterY(size/2);
 			circle.setRadius(size/2);
-			pane.setVisible(true);
+			circle.setVisible(true);
 		} else
-			pane.setVisible(false);
+			circle.setVisible(false);
 
 	}
 
