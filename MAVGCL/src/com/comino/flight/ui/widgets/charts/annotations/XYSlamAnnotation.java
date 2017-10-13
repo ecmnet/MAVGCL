@@ -82,7 +82,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		act_dir.setVisible(false);
 
 		vhc_rotate = Rotate.rotate(0, 0, 0);
-		vhc = new Polygon( -7,0, -1,3, 1,3, 7,0, 0,14);
+		vhc = new Polygon( -7,-2, -1,1, 1,1, 7,-2, 0,12);
 		vhc.getTransforms().add(vhc_rotate);
 		vhc.setFill(color.brighter().brighter().brighter());
 		vhc.setStrokeType(StrokeType.INSIDE);
