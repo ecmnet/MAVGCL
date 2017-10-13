@@ -35,6 +35,7 @@ package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
 
+import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
@@ -81,6 +82,9 @@ public class MSPCtlWidget extends WidgetPane   {
 
 	@FXML
 	private StateButton enable_jumpback;
+
+	@FXML
+	private StateButton enable_avoidance;
 
 	@FXML
 	private StateButton enable_circle;
@@ -150,12 +154,25 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		enable_avoidance.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		enable_circle.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.CIRCLE_MODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.CIRCLE_MODE;
 
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE))
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.CIRCLE_MODE))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -166,9 +183,9 @@ public class MSPCtlWidget extends WidgetPane   {
 		debug_mode1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.DEBUG_MODE1;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.DEBUG_MODE1;
 
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE1))
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE1))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -179,9 +196,9 @@ public class MSPCtlWidget extends WidgetPane   {
 		debug_mode2.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.DEBUG_MODE2;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.DEBUG_MODE2;
 
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2))
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE2))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -192,9 +209,9 @@ public class MSPCtlWidget extends WidgetPane   {
 		enable_offboard.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER;
 
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER))
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -205,7 +222,7 @@ public class MSPCtlWidget extends WidgetPane   {
 		execute_waypoints.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.WAYPOINT_MODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE;
 		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
@@ -213,7 +230,7 @@ public class MSPCtlWidget extends WidgetPane   {
 		execute_mission.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.AUTO_MISSION;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.AUTO_MISSION;
 		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
@@ -246,24 +263,28 @@ public class MSPCtlWidget extends WidgetPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.CIRCLE_MODE,(o,n) -> {
-			enable_circle.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.CIRCLE_MODE));
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.CIRCLE_MODE,(o,n) -> {
+			enable_circle.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.CIRCLE_MODE));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.DEBUG_MODE1,(o,n) -> {
-			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE1));
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.DEBUG_MODE1,(o,n) -> {
+			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE1));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.DEBUG_MODE2,(o,n) -> {
-			debug_mode2.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.DEBUG_MODE2));
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.DEBUG_MODE2,(o,n) -> {
+			debug_mode2.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE2));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
 			enable_jumpback.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER,(o,n) -> {
-			enable_offboard.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OFFBOARD_UPDATER));
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE,(o,n) -> {
+			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(o,n) -> {
+			enable_offboard.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER));
 		});
 
 		Platform.runLater(() -> {
