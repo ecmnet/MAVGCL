@@ -25,7 +25,6 @@
 					<StateButton fx:id="enable_jumpback" text="JumpBack"  prefWidth="165.0"/>
 					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"  prefWidth="165.0"/>
 					<Button fx:id="abort" prefWidth="165.0" text="Abort autopilot" styleClass="emergency" />
-					<Button fx:id="execute_mission" prefWidth="165.0" text="Trigger JB" />
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193" VBox.vgrow="ALWAYS">

@@ -98,9 +98,6 @@ public class MSPCtlWidget extends WidgetPane   {
 	@FXML
 	private Button   execute_waypoints;
 
-	@FXML
-	private Button   execute_mission;
-
 
 	@FXML
 	private Button   abort;
@@ -223,14 +220,6 @@ public class MSPCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE;
-		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			control.sendMAVLinkMessage(msp);
-		});
-
-		execute_mission.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.AUTO_MISSION;
 		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
