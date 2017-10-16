@@ -24,7 +24,7 @@
 			     	<StateButton fx:id="enable_offboard" text="Autopilot"  prefWidth="165.0"/>
 					<StateButton fx:id="enable_jumpback" text="JumpBack"  prefWidth="165.0"/>
 					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"  prefWidth="165.0"/>
-					<Button fx:id="abort" prefWidth="165.0" text="Abort autopilot" styleClass="emergency" />
+				    <StateButton fx:id="enable_step" text="SingleStep mode"  prefWidth="165.0"/>
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193" VBox.vgrow="ALWAYS">
@@ -34,6 +34,10 @@
 					<StateButton fx:id="debug_mode1" text="Testing Mode1"  prefWidth="165.0"/>
 					<StateButton fx:id="debug_mode2" text="Testing Mode2"  prefWidth="165.0"/>
 					<Button fx:id="execute_waypoints" prefWidth="165.0" text="Return along the path" />
+					<Button fx:id="step" prefWidth="165.0" text="Execute single step"/>
+					<Button fx:id="abort" prefWidth="165.0" text="Abort autopilot" styleClass="emergency">
+					   <VBox.margin><Insets><top>20</top></Insets></VBox.margin>
+					</Button>
 				</children>
 			</VBox>
 		</children>

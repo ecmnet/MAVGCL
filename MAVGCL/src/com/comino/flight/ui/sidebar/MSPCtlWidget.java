@@ -87,6 +87,9 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_avoidance;
 
 	@FXML
+	private StateButton enable_step;
+
+	@FXML
 	private StateButton enable_circle;
 
 	@FXML
@@ -97,6 +100,9 @@ public class MSPCtlWidget extends WidgetPane   {
 
 	@FXML
 	private Button   execute_waypoints;
+
+	@FXML
+	private Button  step;
 
 
 	@FXML
@@ -164,6 +170,19 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		enable_step.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.STEP_MODE;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.STEP_MODE))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		enable_circle.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -224,6 +243,14 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
+		step.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.STEP;
+		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			control.sendMAVLinkMessage(msp);
+		});
+
 		abort.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -270,6 +297,10 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE,(o,n) -> {
 			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.STEP_MODE,(o,n) -> {
+			enable_step.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.STEP_MODE));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(o,n) -> {
