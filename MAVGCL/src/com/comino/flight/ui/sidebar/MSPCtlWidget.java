@@ -130,7 +130,7 @@ public class MSPCtlWidget extends WidgetPane   {
 		box.prefHeightProperty().bind(this.heightProperty());
 
 		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty()
-				     .or(StateProperties.getInstance().getOffboardProperty().not()));
+				.or(StateProperties.getInstance().getOffboardProperty().not()));
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
@@ -223,6 +223,10 @@ public class MSPCtlWidget extends WidgetPane   {
 		});
 
 		enable_offboard.setOnAction((event) ->{
+
+			if(control.getCurrentModel().sys.isStatus(Status.MSP_LANDED))
+				return;
+
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER;
@@ -239,7 +243,7 @@ public class MSPCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE;
-		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
 
@@ -247,7 +251,7 @@ public class MSPCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.STEP;
-		    msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
 
