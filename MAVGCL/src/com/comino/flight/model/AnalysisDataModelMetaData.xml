@@ -567,7 +567,6 @@
 
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
-		<ULogSource field="vehicle_global_position_0.yaw"/>
 		<Groups>
 			<Group>Global Position</Group>
 			<Group>Local Position</Group>
@@ -1454,7 +1453,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Heading" uom="°" mask="#0.0" key="VISIONH">
+  <KeyFigure desc="Vis.Yaw" uom="°" mask="#0.0" key="VISIONH">
 		<MSPSource class="vision" field="h"/>
 		<Groups>
 			<Group>Vision</Group>
