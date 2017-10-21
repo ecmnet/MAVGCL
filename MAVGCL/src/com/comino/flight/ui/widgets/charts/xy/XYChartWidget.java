@@ -87,6 +87,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.RotateEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -296,60 +297,40 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
-		//		linechart.setOnMousePressed(mouseEvent -> {
-		//			if(dataService.isCollecting())
-		//				return;
-		//			zoom_beg_x = mouseEvent.getX();
-		//			zoom_beg_y = mouseEvent.getY();
-		//			zoom.setX(zoom_beg_x-chartArea.getLayoutX()-7);
-		//			zoom.setY(zoom_beg_y-chartArea.getLayoutY()-7);
-		//
-		//			mouseEvent.consume();
-		//		});
-		//
-		//		linechart.setOnMouseDragged(mouseEvent -> {
-		//			if(dataService.isCollecting())
-		//				return;
-		//			zoom.setVisible(true);
-		//			linechart.setCursor(Cursor.CROSSHAIR);
-		//			zoom.setWidth(mouseEvent.getX()-zoom_beg_x);
-		//			zoom.setHeight(mouseEvent.getY()-zoom_beg_y);
-		//			mouseEvent.consume();
-		//		});
-		//
-		//		linechart.setOnMouseReleased(mouseEvent -> {
-		//			if(dataService.isCollecting())
-		//				return;
-		//
-		//			linechart.setCursor(Cursor.DEFAULT);
-		//			zoom.setVisible(false);
-		//
-		//			double dx = Math.abs(xAxis.getValueForDisplay(mouseEvent.getX()).doubleValue()-xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
-		//			double dy = Math.abs(yAxis.getValueForDisplay(mouseEvent.getY()).doubleValue()-yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
-		//
-		//			if(dx > yAxis.getTickUnit() && dy > yAxis.getTickUnit()) {
-		//
-		//				scale = (float)((dx > dy) ? dx / 2.0 : dy / 2.0);
-		//				//
-		//				center_x = (float)(xAxis.getValueForDisplay(zoom_beg_x).doubleValue());
-		//				center_y = (float)(yAxis.getValueForDisplay(zoom_beg_y).doubleValue());
-		//
-		//				System.out.println(center_x+":"+center_y);
-		//
-		//			//	setScaling(scale);
-		//			}
-		//
-		//			mouseEvent.consume();
-		//		});
 
 		xychart.setOnScroll(event -> {
 			force_zero.setSelected(false);
-			center_x += (Math.round(event.getDeltaY() * scale / 100.0 * scale_rounding ) / (scale_rounding * 5 ));
-			center_y -= (Math.round(event.getDeltaX() * scale / 100.0 * scale_rounding ) / (scale_rounding * 5 ));
+			center_x += event.getDeltaY() * scale / 600.0 ;
+			center_y -= event.getDeltaX() * scale / 600.0 ;
 			event.consume();
 			setScaling(scale);
-			updateGraph(true);
+			updateGraph(false);
 		});
+
+//		xychart.setOnRotate(new EventHandler<RotateEvent>() {
+//			@Override public void handle(RotateEvent event) {
+//				System.err.println("Rectangle: Rotate event" +
+//						", inertia: " + event.isInertia() +
+//						", direct: " + event.isDirect() +
+//						", Angle: " + event.getAngle()
+//						);
+//				event.consume();
+//			}
+//		});
+//
+//		xychart.setOnRotationStarted(new EventHandler<RotateEvent>() {
+//			@Override public void handle(RotateEvent event) {
+//				System.err.println("Rectangle: Rotate event started");
+//				event.consume();
+//			}
+//		});
+//
+//		xychart.setOnRotationFinished(new EventHandler<RotateEvent>() {
+//			@Override public void handle(RotateEvent event) {
+//				System.err.println("Rectangle: Rotate event finished");
+//				event.consume();
+//			}
+//		});
 
 
 		xAxis.setAutoRanging(true);
@@ -362,8 +343,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		cseries2.getItems().addAll(PRESET_NAMES);
 
 		xychart.setLegendVisible(false);
-//		xychart.prefWidthProperty().bind(widthProperty().subtract(20));
-//		xychart.prefHeightProperty().bind(heightProperty().subtract(20));
+		//		xychart.prefWidthProperty().bind(widthProperty().subtract(20));
+		//		xychart.prefHeightProperty().bind(heightProperty().subtract(20));
 
 		initKeyFigureSelection(meta.getKeyFigures());
 
