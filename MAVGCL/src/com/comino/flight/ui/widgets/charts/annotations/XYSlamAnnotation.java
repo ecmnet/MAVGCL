@@ -42,20 +42,24 @@ import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
 
 public class XYSlamAnnotation  implements XYAnnotation {
 
+	private static final int SIZE = 4;
 
-	private  Pane   	  			    pane 		= null;
+
+	private  Pane   	  			    pane 	   = null;
 	private  Polygon        		    act_dir     = null;
 	private  Polygon        		    plan_dir    = null;
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
 	private  Polygon  				vhc         = null;
 	private  Rotate  				vhc_rotate  = null;
+	private  Circle                  projected   = null;
 
 	private  AnalysisDataModel      model        = null;
 	private float scale;
@@ -87,7 +91,15 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		vhc.setFill(color.brighter().brighter().brighter());
 		vhc.setStrokeType(StrokeType.INSIDE);
 
-		pane.getChildren().addAll(act_dir,plan_dir, vhc);
+		this.projected = new Circle();
+		this.projected.setCenterX(SIZE/2);
+		this.projected.setCenterY(SIZE/2);
+		this.projected.setRadius(SIZE/2);
+		this.projected.setFill(Color.CORAL);
+
+		this.projected.setVisible(false);
+
+		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -119,9 +131,14 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
 			plan_dir.setVisible(true);
 
+			projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
+			projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
+			projected.setVisible(true);
+
 
 		} else {
 			plan_dir.setVisible(false);
+			projected.setVisible(false);
 
 		}
 

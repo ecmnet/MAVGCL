@@ -44,13 +44,13 @@ import javafx.scene.shape.Circle;
 
 public class PositionAnnotation  implements XYAnnotation {
 
-	private final int SIZE = 14;
+	private static final int SIZE = 14;
 
 	private  Pane    pane 		= null;
 	private  Label   label 		= null;
-	private float    xpos   	= 0;
+	private float    xpos   		= 0;
 	private float    ypos  	    = 0;
-	private Circle circle       = null;
+	private Circle circle       	= null;
 
 	public PositionAnnotation(float xpos, float ypos, String text, Color color) {
 		this.xpos = xpos;
