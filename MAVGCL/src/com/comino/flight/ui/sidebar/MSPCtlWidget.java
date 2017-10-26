@@ -87,6 +87,9 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_avoidance;
 
 	@FXML
+	private StateButton enable_interactive;
+
+	@FXML
 	private StateButton enable_step;
 
 	@FXML
@@ -169,6 +172,21 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
+
+		enable_interactive.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.INTERACTIVE;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+
 
 		enable_step.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -301,6 +319,10 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE,(o,n) -> {
 			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(o,n) -> {
+			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.STEP_MODE,(o,n) -> {

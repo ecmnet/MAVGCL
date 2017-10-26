@@ -40,6 +40,12 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
+import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
+import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.lquac.msg_msp_command;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
@@ -75,6 +81,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
@@ -287,13 +294,30 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		zoom.setVisible(false);
 		zoom.setY(0);
 
-		xychart.lookup(".chart-plot-background").setOnMouseClicked(click -> {
+		xychart.getChildrenUnmodifiable().forEach((n) -> {
+			System.out.println(n.idProperty());
+		});
+
+		xychart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
 				force_zero.setSelected(true);
 				try {
 					setScaling(Float.parseFloat(scale_select.getValue()));
 				} catch(Exception e) { setScaling(0); };
 				updateGraph(true);
+			} else {
+				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+					Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
+					float x = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
+					float y = yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue();
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+					msp.param1 =  x;
+					msp.param2 =  y;
+					control.sendMAVLinkMessage(msp);
+
+				}
+
 			}
 		});
 
@@ -307,30 +331,30 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			updateGraph(false);
 		});
 
-//		xychart.setOnRotate(new EventHandler<RotateEvent>() {
-//			@Override public void handle(RotateEvent event) {
-//				System.err.println("Rectangle: Rotate event" +
-//						", inertia: " + event.isInertia() +
-//						", direct: " + event.isDirect() +
-//						", Angle: " + event.getAngle()
-//						);
-//				event.consume();
-//			}
-//		});
-//
-//		xychart.setOnRotationStarted(new EventHandler<RotateEvent>() {
-//			@Override public void handle(RotateEvent event) {
-//				System.err.println("Rectangle: Rotate event started");
-//				event.consume();
-//			}
-//		});
-//
-//		xychart.setOnRotationFinished(new EventHandler<RotateEvent>() {
-//			@Override public void handle(RotateEvent event) {
-//				System.err.println("Rectangle: Rotate event finished");
-//				event.consume();
-//			}
-//		});
+		//		xychart.setOnRotate(new EventHandler<RotateEvent>() {
+		//			@Override public void handle(RotateEvent event) {
+		//				System.err.println("Rectangle: Rotate event" +
+		//						", inertia: " + event.isInertia() +
+		//						", direct: " + event.isDirect() +
+		//						", Angle: " + event.getAngle()
+		//						);
+		//				event.consume();
+		//			}
+		//		});
+		//
+		//		xychart.setOnRotationStarted(new EventHandler<RotateEvent>() {
+		//			@Override public void handle(RotateEvent event) {
+		//				System.err.println("Rectangle: Rotate event started");
+		//				event.consume();
+		//			}
+		//		});
+		//
+		//		xychart.setOnRotationFinished(new EventHandler<RotateEvent>() {
+		//			@Override public void handle(RotateEvent event) {
+		//				System.err.println("Rectangle: Rotate event finished");
+		//				event.consume();
+		//			}
+		//		});
 
 
 		xAxis.setAutoRanging(true);
