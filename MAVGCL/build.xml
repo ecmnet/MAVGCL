@@ -16,6 +16,7 @@
 	<target name="clean">
 		<delete dir="dist" />
 		<mkdir dir="dist"  />
+		<mkdir dir="dist/deploy"  />
 		<delete dir="bin"  />
 		<mkdir dir="bin"   />
 	</target>
