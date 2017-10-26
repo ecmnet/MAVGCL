@@ -1628,6 +1628,13 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
+	<KeyFigure desc="Obst.Distance" uom="m" mask="#0.00" key="SLAMDIS">
+		<MSPSource class="slam" field="di"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
 	<KeyFigure desc="Path.Speed" uom="m/s" mask="#0.0" key="SLAMSPD">
 		<MSPSource class="slam" field="pv"></MSPSource>
 		<Groups>
