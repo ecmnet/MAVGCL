@@ -294,10 +294,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		zoom.setVisible(false);
 		zoom.setY(0);
 
-		xychart.getChildrenUnmodifiable().forEach((n) -> {
-			System.out.println(n.idProperty());
-		});
-
 		xychart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
 				force_zero.setSelected(true);

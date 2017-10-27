@@ -99,7 +99,7 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton debug_mode1;
 
 	@FXML
-	private StateButton debug_mode2;
+	private Button debug_mode2;
 
 	@FXML
 	private Button   execute_waypoints;
@@ -231,11 +231,6 @@ public class MSPCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.DEBUG_MODE2;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE2))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
 		});
@@ -307,10 +302,6 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.DEBUG_MODE1,(o,n) -> {
 			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE1));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.DEBUG_MODE2,(o,n) -> {
-			debug_mode2.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE2));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
