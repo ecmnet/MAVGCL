@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.msp.model.DataModel;
-import com.comino.msp.slam.BlockPoint2D;
+import com.comino.msp.model.utils.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;
@@ -124,6 +124,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		indicator.setVisible(false);
 		blocks.clear();
 	}
+
 
 	private Pane getBlockPane(int block, BlockPoint2D b) {
 
