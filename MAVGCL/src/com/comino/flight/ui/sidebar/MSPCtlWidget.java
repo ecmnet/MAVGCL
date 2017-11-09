@@ -102,10 +102,13 @@ public class MSPCtlWidget extends WidgetPane   {
 	private Button debug_mode2;
 
 	@FXML
-	private Button   execute_waypoints;
+	private Button execute_waypoints;
 
 	@FXML
 	private Button  step;
+
+	@FXML
+	private Button save_map;
 
 
 	@FXML
@@ -132,8 +135,8 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		box.prefHeightProperty().bind(this.heightProperty());
 
-		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty()
-				.or(StateProperties.getInstance().getOffboardProperty().not()));
+//		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty()
+//				.or(StateProperties.getInstance().getOffboardProperty().not()));
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
@@ -185,8 +188,6 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-
-
 
 		enable_step.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -256,6 +257,14 @@ public class MSPCtlWidget extends WidgetPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE;
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			control.sendMAVLinkMessage(msp);
+		});
+
+		save_map.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.SAVE_MAP2D;
 			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
