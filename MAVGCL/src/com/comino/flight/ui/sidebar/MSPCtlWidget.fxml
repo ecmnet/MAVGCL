@@ -15,9 +15,11 @@
 				</padding>
 				<children>
 					<Button fx:id="reset_odometry" prefWidth="165.0" text="Reset odometry" />
+					<CheckBox fx:id="enable_vision" text="Publish odometry" />
 					<Button fx:id="reset_microslam" prefWidth="165.0"
 						text="Reset local map (microSLAM)" />
-					<CheckBox fx:id="enable_vision" text="Publish odometry" />
+					<Button fx:id="save_map" prefWidth="165.0"
+						text="Save current map to store" />
 				</children>
 			</VBox>
 			<VBox fx:id="settings" spacing="10" styleClass="widget"
@@ -42,6 +44,15 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
+				    <StateButton fx:id="enable_rtl" text="Return To Land (local)"
+						prefWidth="165.0" >
+						<VBox.margin>
+							<Insets>
+								<bottom>10</bottom>
+							</Insets>
+						</VBox.margin>
+					</StateButton>
+
 					<Button fx:id="abort" prefWidth="165.0" text="Abort autopilot"
 						styleClass="emergency">
 						<VBox.margin>
@@ -50,8 +61,6 @@
 							</Insets>
 						</VBox.margin>
 					</Button>
-					<StateButton fx:id="enable_circle" text="CircleMode"
-						prefWidth="165.0" />
 					<StateButton fx:id="debug_mode1" text="Testing Mode1"
 						prefWidth="165.0" />
 					<Button fx:id="debug_mode2" text="Testing Mode2" prefWidth="165.0" />
@@ -66,9 +75,6 @@
 						</VBox.margin>
 					</StateButton>
 					<Button fx:id="step" prefWidth="165.0" text="Execute single step" />
-
-					<Button fx:id="save_map" prefWidth="165.0"
-						text="Save current map to store" />
 				</children>
 			</VBox>
 		</children>
