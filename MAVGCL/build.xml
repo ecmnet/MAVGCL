@@ -113,7 +113,7 @@
 			</fx:application>
 			<fx:resources>
 				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
-				<fx:fileset requiredFor="preloader" dir="dist" includes="MAVGPreloader.jar"/>
+			<!--	<fx:fileset requiredFor="preloader" dir="dist" includes="MAVGPreloader.jar"/> -->
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis.icns" />
