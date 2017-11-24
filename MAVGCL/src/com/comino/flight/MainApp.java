@@ -379,6 +379,7 @@ public class MainApp extends Application  {
 		}
 	}
 
+
 	private void showAboutDialog() {
 		VBox box = new VBox();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));

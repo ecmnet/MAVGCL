@@ -33,6 +33,9 @@
 
 package com.comino.jfx.extensions;
 
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -62,7 +65,6 @@ public class DashLabelLED extends GridPane {
 	private Timeline timeline;
 
 	@SuppressWarnings("restriction")
-
 	public DashLabelLED() {
 		super();
 		this.color = Color.WHITE;
@@ -76,6 +78,7 @@ public class DashLabelLED extends GridPane {
 
 		this.addColumn(0, label);
 		this.addColumn(1, line);
+		this.setPrefWidth(999);
 
 		this.circle = new Circle(4);
 		this.circle.setFill(Color.TRANSPARENT);
@@ -83,18 +86,19 @@ public class DashLabelLED extends GridPane {
 		this.circle.setStroke(Color.ANTIQUEWHITE);
 		this.addColumn(2, circle);
 
-		label.widthProperty().addListener((v, ov, nv) -> {
+		final FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
+
+		this.widthProperty().addListener((v, ov, nv) -> {
 			line.setStartX(0.0f);
 			line.setStartY(this.prefHeightProperty().floatValue() / 2);
-			line.setEndX(this.getWidth() - label.getLayoutBounds().getWidth()-25);
+			line.setEndX(this.getWidth() - fontLoader.computeStringWidth(label.getText(), label.getFont()) - 25);
 			line.setEndY(this.prefHeightProperty().floatValue() / 2);
 		});
-
 	}
 
 	public DashLabelLED(String text) {
 		this();
-		setText(text);
+		label.setText(text);
 	}
 
 	public String getText() {

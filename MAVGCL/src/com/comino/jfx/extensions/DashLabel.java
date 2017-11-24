@@ -33,6 +33,9 @@
 
 package com.comino.jfx.extensions;
 
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
+
 import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
@@ -64,12 +67,15 @@ public class DashLabel extends GridPane {
 
 		this.addColumn(0, label);
 		this.addColumn(1, line);
+		this.setPrefWidth(999);
 
-		label.widthProperty().addListener((v, ov, nv) -> {
+		final FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
+
+		this.widthProperty().addListener((v,ov,nv) -> {
 			line.setStartX(0.0f);
-			line.setStartY(this.prefHeightProperty().floatValue() / 2);
-			line.setEndX(this.getWidth() - label.getLayoutBounds().getWidth()-10);
-			line.setEndY(this.prefHeightProperty().floatValue() / 2);
+			line.setStartY(this.prefHeightProperty().floatValue()/2);
+			line.setEndX(this.getWidth()-fontLoader.computeStringWidth(label.getText(), label.getFont())-10);
+			line.setEndY(this.prefHeightProperty().floatValue()/2);
 		});
 	}
 
