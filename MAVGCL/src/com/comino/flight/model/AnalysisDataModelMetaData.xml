@@ -1497,29 +1497,22 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug V1" uom="-" mask="#0.00" key="DEBUGV1">
-		<MSPSource class="debug" field="v1"/>
+  <KeyFigure desc="Debug X" uom="-" mask="#0.00" key="DEBUGX">
+		<MSPSource class="debug" field="x"/>
 		<Groups>
 			<Group>Debug</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug V2" uom="-" mask="#0.00" key="DEBUGV2">
-		<MSPSource class="debug" field="v2"/>
+  <KeyFigure desc="Debug Y" uom="-" mask="#0.00" key="DEBUGY">
+		<MSPSource class="debug" field="y"/>
 		<Groups>
 			<Group>Debug</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug V3" uom="-" mask="#0.00" key="DEBUGV3">
-		<MSPSource class="debug" field="v3"/>
-		<Groups>
-			<Group>Debug</Group>
-		</Groups>
-  </KeyFigure>
-
-  <KeyFigure desc="Debug V4" uom="-" mask="#0.00" key="DEBUGV4">
-		<MSPSource class="debug" field="v4"/>
+  <KeyFigure desc="Debug Z" uom="-" mask="#0.00" key="DEBUGZ">
+		<MSPSource class="debug" field="z"/>
 		<Groups>
 			<Group>Debug</Group>
 		</Groups>
