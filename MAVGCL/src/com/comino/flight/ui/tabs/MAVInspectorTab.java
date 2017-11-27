@@ -281,7 +281,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			  rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 			if((System.currentTimeMillis() - last_update) > 333) {
-				this.name_set.setStr(String.format("%s (%dHz)",name,(int)rate));
+				this.name_set.setStr(String.format("%s (%dHz)",name,(int)(rate+0.5f)));
 				last_update = System.currentTimeMillis();
 				return true;
 			}
