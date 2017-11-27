@@ -76,7 +76,7 @@ public class DetailsWidget extends WidgetPane {
 			null, "HEAD", "RGPSNO", "GPHACCUR", "GPVACCUR", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "FLOWQL", "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "VISIONFPS", "VISIONQUAL", null, "BATC", "BATH",
-			"BATP", null, "TEMP", "CPUPX4", "RSSI", "SWIFI", null, "TARM", "TBOOT",
+			"BATP", null, "IMUTEMP", "MSPTEMP","CPUPX4", "RSSI", "SWIFI", null, "TARM", "TBOOT",
 
 	};
 

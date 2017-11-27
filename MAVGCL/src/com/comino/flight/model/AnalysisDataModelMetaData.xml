@@ -1366,7 +1366,7 @@
 		<Validity min="0" max="0.85"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Temperature" uom="°C" mask="#0" key="TEMP">
+	<KeyFigure desc="IMU Temperature" uom="°C" mask="#0" key="IMUTEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>
 		<PX4Source field="SENS.BaroTemp"></PX4Source>
 		<ULogSource field="sensor_baro_0.temperature"></ULogSource>
@@ -1374,6 +1374,14 @@
 			<Group>System</Group>
 		</Groups>
 		<Validity min="10" max="70"/>
+	</KeyFigure>
+
+	<KeyFigure desc="MSP Temperature" uom="°C" mask="#0" key="MSPTEMP">
+		<MSPSource class="sys" field="msp_temp"/>
+		<Validity min="0" max="80"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
