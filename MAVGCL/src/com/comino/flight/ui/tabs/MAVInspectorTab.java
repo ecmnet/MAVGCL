@@ -102,7 +102,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
 		});
 
-
 		message_col.setCellFactory(column -> {
 			return new TreeTableCell<DataSet, String>() {
 
@@ -215,7 +214,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			Data data = new Data(_msg,variables);
 			allData.put(_msg,data);
 
-			TreeItem<DataSet> ti = new TreeItem<>(new DataSet(data.getName(), null));
+			TreeItem<DataSet> ti = new TreeItem<>(data.getNameSet());
 			ti.setExpanded(false);
 			treetableview.getRoot().getChildren().add(ti);
 
@@ -245,6 +244,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	class Data {
 
+		private DataSet name_set;
 		private String name;
 		private Map<String,DataSet> data = new HashMap<String,DataSet>();
 
@@ -254,9 +254,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		private long  last_update;
 
 		public Data(String name, ObservableMap<String,DataSet> data) {
-			this.name = name;
+			this.name = name.substring(15);
+			this.name_set = new DataSet(name.substring(15),null);
 			this.data = data;
-			this.data.put("rate",new DataSet("rate", "0"));
 			this.tms = 0;
 		}
 
@@ -265,11 +265,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public String getName() {
-			return name.substring(15);
+			return name;
 		}
 
 		public void setName(String name) {
-			this.name = name;
+			this.name = name.substring(15);
+		}
+
+		public DataSet getNameSet() {
+			return name_set;
 		}
 
 		public boolean updateRate() {
@@ -277,7 +281,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			  rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 			if((System.currentTimeMillis() - last_update) > 333) {
-				data.get("rate").setValue(String.format("%3.1f",rate));
+				this.name_set.setStr(String.format("%s (%dHz)",name,(int)rate));
 				last_update = System.currentTimeMillis();
 				return true;
 			}
