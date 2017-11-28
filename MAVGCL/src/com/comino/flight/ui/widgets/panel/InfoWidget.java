@@ -93,7 +93,7 @@ public class InfoWidget extends WidgetPane  {
 						setStyle("-fx-text-fill:tomato;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ERROR:
-						setStyle("-fx-text-fill:darkyellow;");
+						setStyle("-fx-text-fill:yellow;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
 						setStyle("-fx-text-fill:steelblue;");
