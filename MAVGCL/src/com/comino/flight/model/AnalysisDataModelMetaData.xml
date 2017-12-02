@@ -1002,14 +1002,14 @@
 		<Validity min="6" max="30"/>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Alt." uom="m" mask="#0" key="RGPSALT">
+	<KeyFigure desc="GPS Alt." uom="m" mask="#0" key="RGPSALT">
 	    <MSPSource class="gps" field="altitude"></MSPSource>
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
+	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
 		<MSPSource class="gps" field="hdop"></MSPSource>
 		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
 		<Groups>
@@ -1017,7 +1017,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Speed" uom="m/s" mask="#0.0" key="RGPSV">
+	<KeyFigure desc="GPS Speed" uom="m/s" mask="#0.0" key="RGPSV">
 		<MSPSource class="gps" field="speed"></MSPSource>
 		<ULogSource field="vehicle_gps_position_0.vel_m_s"></ULogSource>
 		<Groups>
@@ -1025,7 +1025,8 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Eph" uom="m" mask="#0.00" key="RGPSEPH">
+	<KeyFigure desc="GPS Eph" uom="m" mask="#0.00" key="RGPSEPH">
+	    <MSPSource class="gps" field="eph"></MSPSource>
 	    <PX4Source field="LPOS.EPH"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.eph"></ULogSource>
 		<Groups>
@@ -1033,7 +1034,8 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Epv" uom="m" mask="#0.00" key="RGPSEPV">
+	<KeyFigure desc="GPS Epv" uom="m" mask="#0.00" key="RGPSEPV">
+	    <MSPSource class="gps" field="epv"></MSPSource>
 	    <PX4Source field="LPOS.EPV"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.epv"></ULogSource>
 		<Groups>
@@ -1041,7 +1043,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS.Noise" uom="pms" mask="#0" key="RGPSNOISE">
+	<KeyFigure desc="GPS Noise" uom="pms" mask="#0" key="RGPSNOISE">
 		<ULogSource field="vehicle_gps_position_0.noise_per_ms"></ULogSource>
 		<Groups>
 			<Group>GPS</Group>
