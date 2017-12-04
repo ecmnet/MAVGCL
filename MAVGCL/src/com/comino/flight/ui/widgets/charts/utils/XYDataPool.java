@@ -50,7 +50,7 @@ public class XYDataPool {
 		unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
 	}
 
-	public synchronized XYChart.Data<Number,Number> checkOut(float x, float y)
+	public synchronized XYChart.Data<Number,Number> checkOut(double x, double y)
 	{
 		XYChart.Data<Number,Number> o;
 		if( unlocked.size() > 0 )

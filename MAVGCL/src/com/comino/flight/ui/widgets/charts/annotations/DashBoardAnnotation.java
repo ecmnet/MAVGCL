@@ -91,12 +91,12 @@ public class DashBoardAnnotation  implements XYAnnotation {
 		  header.setText(kf.desc1+":");
 	}
 
-	public void setMinMax(float min, float max) {
+	public void setMinMax(double min, double max) {
 	  min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
 	  delta_v.setValue(kf.getValueString(max-min));
 	}
 
-	public void setAvg(float avg, float std) {
+	public void setAvg(double avg, double std) {
 		avg_v.setValue(kf.getValueString(avg)); std_v.setValue(kf.getValueString(std));
 	}
 

@@ -216,8 +216,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private float rotation_rad = 0;
 
-	private float[] p1 = new float[2];
-	private float[] p2 = new float[2];
+	private double[] p1 = new double[2];
+	private double[] p2 = new double[2];
 
 	private XYStatistics s1 = new XYStatistics();
 	private XYStatistics s2 = new XYStatistics();
@@ -240,7 +240,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	//	private double  zoom_beg_x, zoom_beg_y;
 
-	private float center_x, center_y;
+	private double center_x, center_y;
 	private double scale_rounding;
 	private double scale_factor;
 
@@ -766,7 +766,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(force_zero.isSelected() && scale > 0 ) {
 
-			float x = 0; float y = 0;
+			double x = 0; double y = 0;
 
 			scale_factor = Math.round(scale * xychart.getWidth()/xychart.getHeight()*scale_rounding ) /scale_rounding;
 
@@ -973,12 +973,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	}
 
-	private  void rotateRad(float[] rotated, float posx, float posy, float heading_rad) {
+	private  void rotateRad(double[] rotated, double posx, double posy, double heading_rad) {
 		if(heading_rad!=0) {
-			rotated[1] =  ( posx - center_x ) * (float)Math.cos(heading_rad) +
-					( posy - center_y ) * (float)Math.sin(heading_rad) + center_x;
-			rotated[0] = -( posx - center_x ) * (float)Math.sin(heading_rad) +
-					( posy - center_y ) * (float)Math.cos(heading_rad) + center_y;
+			rotated[1] =  ( posx - center_x ) * Math.cos(heading_rad) +
+					( posy - center_y ) * Math.sin(heading_rad) + center_x;
+			rotated[0] = -( posx - center_x ) * Math.sin(heading_rad) +
+					( posy - center_y ) * Math.cos(heading_rad) + center_y;
 		} else {
 			rotated[1] = posx;
 			rotated[0] = posy;

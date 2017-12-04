@@ -48,11 +48,11 @@ public class PositionAnnotation  implements XYAnnotation {
 
 	private  Pane    pane 		= null;
 	private  Label   label 		= null;
-	private float    xpos   		= 0;
-	private float    ypos  	    = 0;
+	private double    xpos   		= 0;
+	private double    ypos  	    = 0;
 	private Circle circle       	= null;
 
-	public PositionAnnotation(float xpos, float ypos, String text, Color color) {
+	public PositionAnnotation(double xpos, double ypos, String text, Color color) {
 		this.xpos = xpos;
 		this.ypos = ypos;
 
@@ -78,7 +78,7 @@ public class PositionAnnotation  implements XYAnnotation {
 		this(0,0,text,color.brighter());
 	}
 
-	public void setPosition(float xpos, float ypos) {
+	public void setPosition(double xpos, double ypos) {
 		this.xpos = xpos;
 		this.ypos = ypos;
 	}

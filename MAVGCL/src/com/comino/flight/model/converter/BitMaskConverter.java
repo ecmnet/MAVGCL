@@ -44,7 +44,7 @@ public class BitMaskConverter extends SourceConverter {
 
 
 	@Override
-	public float convert(float val) {
+	public double convert(double val) {
 		if(((int)val >> mask & 1) ==1 )
 			return 1;
 		return 0;

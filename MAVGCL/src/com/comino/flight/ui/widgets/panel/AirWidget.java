@@ -60,7 +60,7 @@ public class AirWidget extends WidgetPane  {
 
 	private AnalysisDataModel model;
 
-	private float pitch,roll,bearing;
+	private double pitch,roll,bearing;
 
 	private long tms = 0;
 

@@ -48,14 +48,14 @@ public class AnalysisDataModel {
 
 	public float    dt_sec = 0;
 
-	private Map<Integer,Float> data = null;
+	private Map<Integer,Double> data = null;
 
 	public AnalysisDataModel() {
-		this.data = new HashMap<Integer,Float>();
+		this.data = new HashMap<Integer,Double>();
 	}
 
-	private AnalysisDataModel(Map<Integer,Float> d) {
-		this.data = new HashMap<Integer,Float>();
+	private AnalysisDataModel(Map<Integer,Double> d) {
+		this.data = new HashMap<Integer,Double>();
 		this.data.putAll(d);
 	}
 
@@ -83,7 +83,7 @@ public class AnalysisDataModel {
 	}
 
 
-	public float getValue(String kf) {
+	public double getValue(String kf) {
 		int hash = kf.toLowerCase().hashCode();
 		if(data.containsKey(hash))
 			return data.get(hash);
@@ -91,21 +91,21 @@ public class AnalysisDataModel {
 			return 0;
 	}
 
-	public float getValue(KeyFigureMetaData m) {
+	public double getValue(KeyFigureMetaData m) {
 		if(data.containsKey(m.hash))
 			return data.get(m.hash);
 		else
 			return Float.NaN;
 	}
 
-	public void setValue(String kf,float value) {
+	public void setValue(String kf,double value) {
 		data.put(kf.toLowerCase().hashCode(), value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
-			Float val = null;
+			Double val = null;
 			try {
 				if(!e.isVirtual) {
 
@@ -122,7 +122,7 @@ public class AnalysisDataModel {
 						data.put(e.hash,val);
 				}
 			} catch (Exception e1) {
-				data.put(e.hash, Float.NaN);
+				data.put(e.hash, Double.NaN);
 			}
 		});
 	}
@@ -134,7 +134,7 @@ public class AnalysisDataModel {
 					data.put(e.hash,e.calculateVirtualValue(this));
 				}
 			} catch (Exception e1) {
-				data.put(e.hash, Float.NaN);
+				data.put(e.hash, Double.NaN);
 			}
 		});
 	}

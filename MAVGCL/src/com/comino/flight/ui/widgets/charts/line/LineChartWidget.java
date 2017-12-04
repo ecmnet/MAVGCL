@@ -714,7 +714,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private  void updateGraph(boolean refresh) {
-		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; float v1 ; float v2; float v3;
+		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 
 		if(isDisabled()) {
 			return;
@@ -810,18 +810,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 					if(type1.hash!=0)  {
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,averaging.isSelected());
-						if(!Float.isNaN(v1))
+						if(!Double.isNaN(v1))
 							series1.getData().add(pool.checkOut(dt_sec,v1));
 
 					}
 					if(type2.hash!=0)  {
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,averaging.isSelected());
-						if(!Float.isNaN(v2))
+						if(!Double.isNaN(v2))
 							series2.getData().add(pool.checkOut(dt_sec,v2));
 					}
 					if(type3.hash!=0)  {
 						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,averaging.isSelected());
-						if(!Float.isNaN(v3))
+						if(!Double.isNaN(v3))
 							series3.getData().add(pool.checkOut(dt_sec,v3));
 					}
 				}
@@ -845,9 +845,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf, int x0, int x1) {
-		int count=0; float val=0;
-		float _min = Float.NaN; float _max = Float.NaN;
-		float _avg = 0; float mean = 0; float std=0;
+		int count=0; double val=0;
+		double _min = Double.NaN; double _max = Double.NaN;
+		double _avg = 0; double mean = 0; double std=0;
 
 		if(kf== null || kf.hash==0)
 			return;
@@ -855,8 +855,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		d.setKeyFigure(kf);
 		for(int i =x0; i < x1 && i< dataService.getModelList().size();i++) {
 			val = dataService.getModelList().get(i).getValue(kf);
-			if(val<_min || Float.isNaN(_min)) _min = val;
-			if(val>_max || Float.isNaN(_max)) _max = val;
+			if(val<_min || Double.isNaN(_min)) _min = val;
+			if(val>_max || Double.isNaN(_max)) _max = val;
 			_avg = _avg + val; count++;
 		}
 
@@ -943,17 +943,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	/*
 	 * Determines spikes or average, if not all datapoints are reported.
 	 */
-	private float determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
+	private double determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 
-		float v_current_x = dataService.getModelList().get(current_x).getValue(m);
+		double v_current_x = dataService.getModelList().get(current_x).getValue(m);
 
-		if(dataService.getModelList().size() < length || Float.isNaN(v_current_x))
+		if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
 			return 0;
 
 		if(length==1)
 			return v_current_x;
 
-		float a = 0; float v;
+		double a = 0; double v;
 
 		if(average) {
 			a = v_current_x;
@@ -964,7 +964,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		} else {
 
 			int peak_index=current_x;
-			float max = Math.abs(v_current_x);
+			double max = Math.abs(v_current_x);
 
 			for(int i=current_x-length+1;i<current_x;i++) {
 				v = Math.abs(dataService.getModelList().get(i).getValue(m));

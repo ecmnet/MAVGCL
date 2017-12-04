@@ -160,7 +160,7 @@ public class DetailsWidget extends WidgetPane {
 		DashLabel label = null;
 		Tooltip tip = null;
 
-		float val = 0, old_val = Float.NaN;
+		double val = 0, old_val = Float.NaN;
 
 		public KeyFigure(GridPane grid, String k, int row) {
 			p = new GridPane();
@@ -203,7 +203,7 @@ public class DetailsWidget extends WidgetPane {
 			if (kf != null) {
 				val = model.getValue(kf);
 
-				if (Float.isNaN(val)) {
+				if (Double.isNaN(val)) {
 					label.setDashColor(Color.GRAY);
 					if (value instanceof ProgressBar)
 						((ProgressBar) value).setProgress(0);

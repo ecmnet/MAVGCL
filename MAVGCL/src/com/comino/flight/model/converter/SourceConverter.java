@@ -43,15 +43,15 @@ public abstract class SourceConverter {
 
 	public abstract void setParameter(String kfname,String[] params);
 
-	public  float convert(float val) {
+	public  double convert(double val) {
 		return 0;
 	}
 
-	public float convert(AnalysisDataModel data) {
+	public double convert(AnalysisDataModel data) {
 		return 0;
 	}
 
-	public float convert(Map<String,Object> ulogdata, float val) {
+	public double convert(Map<String,Object> ulogdata, double val) {
 		return convert(val);
 	}
 

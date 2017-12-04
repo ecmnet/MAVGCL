@@ -64,8 +64,8 @@ public class BatteryWidget extends WidgetPane  {
 	private AnimationTimer   task;
 	private AnalysisDataModel model;
 
-	private float voltage = 0;
-	private float capacity = 0;
+	private double voltage = 0;
+	private double capacity = 0;
 
 	public BatteryWidget() {
 		super(300,true);

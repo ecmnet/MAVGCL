@@ -68,12 +68,12 @@ public class VirtualConverter extends SourceConverter {
 	}
 
 	@Override
-	public float convert(AnalysisDataModel data) {
+	public double convert(AnalysisDataModel data) {
 		if(params.length>1) {
 			for(int i=1;i<params.length;i++)
         		calc.setVariable(params[i], data.getValue(params[i]));
 		}
-		return (float)calc.evaluate();
+		return calc.evaluate();
 	}
 
 }

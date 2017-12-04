@@ -106,7 +106,7 @@ public class PositionLayer extends Parent implements MapLayer {
         refreshLayer();
     }
 
-    public void updatePosition(double lat, double lon, float rotation) {
+    public void updatePosition(double lat, double lon, double rotation) {
         this.lat = lat;
         this.lon = lon;
         this.rotation = rotation;

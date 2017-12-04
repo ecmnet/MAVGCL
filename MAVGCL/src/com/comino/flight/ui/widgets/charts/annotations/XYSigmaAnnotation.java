@@ -43,10 +43,10 @@ import javafx.scene.shape.Circle;
 
 public class XYSigmaAnnotation  implements XYAnnotation {
 
-	private float    sigma      = 0;
+	private double    sigma      = 0;
 	private  Pane    pane 		= null;
-	private float    xpos   	= 0;
-	private float    ypos  	    = 0;
+	private double    xpos   	= 0;
+	private double    ypos  	    = 0;
 	private Circle circle       = null;
 
 	public XYSigmaAnnotation(Color color) {
@@ -67,7 +67,7 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 		this.pane.getChildren().addAll(circle);
 	}
 
-	public void setPosition(float xpos, float ypos, float sigma) {
+	public void setPosition(double xpos, double ypos, double sigma) {
 		this.xpos  = xpos;
 		this.ypos  = ypos;
 		this.sigma = sigma;

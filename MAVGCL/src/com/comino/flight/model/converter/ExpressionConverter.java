@@ -55,7 +55,7 @@ public class ExpressionConverter extends SourceConverter {
 	}
 
 	@Override
-	public float convert(float val) {
+	public double convert(double val) {
 		calc.setVariable(kfname, val);
 		return (float)calc.evaluate();
 	}

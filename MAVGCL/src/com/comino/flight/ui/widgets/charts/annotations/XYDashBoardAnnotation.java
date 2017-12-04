@@ -115,7 +115,7 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:3;");
 		}
 
-		public void setValue(float val) {
+		public void setValue(double val) {
 			String s = f.format(val);
 			if(!s.equals(old_text))  {
 			   setText(s);

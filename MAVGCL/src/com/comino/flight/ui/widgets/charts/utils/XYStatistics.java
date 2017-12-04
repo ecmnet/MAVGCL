@@ -40,16 +40,16 @@ import com.comino.flight.model.KeyFigureMetaData;
 
 public class XYStatistics {
 
-	public float center_x;
-	public float center_y;
+	public double center_x;
+	public double center_y;
 
-	public float stddev_x;
-	public float stddev_y;
+	public double stddev_x;
+	public double stddev_y;
 
-	public float stddev_xy;
-	public float radius;
+	public double stddev_xy;
+	public double radius;
 
-	public float distance;
+	public double distance;
 
 	private KeyFigureMetaData fy;
 	private KeyFigureMetaData fx;
@@ -60,7 +60,7 @@ public class XYStatistics {
 	}
 
 	public void getStatistics(int x0, int x1, List<AnalysisDataModel> list) {
-		float vx=0; float vy=0; int i=0; float radius=0;
+		float vx=0; float vy=0; int i=0; double radius=0;
 
 		x1 =  list.size() < x1 ? list.size()-1 : x1-1;
 
@@ -88,16 +88,16 @@ public class XYStatistics {
 		}
 
 		this.radius = radius;
-		stddev_x =(float)Math.sqrt( vx / (i - x0));
-		stddev_y =(float)Math.sqrt( vy / (i - x0));
+		stddev_x =Math.sqrt( vx / (i - x0));
+		stddev_y =Math.sqrt( vy / (i - x0));
 
-		distance =  (float)Math.sqrt(
+		distance =  Math.sqrt(
 				(list.get(0).getValue(fx) - list.get(x1).getValue(fx)) *
 				(list.get(0).getValue(fx) - list.get(x1).getValue(fx)) +
 				(list.get(0).getValue(fy) - list.get(x1).getValue(fy)) *
 				(list.get(0).getValue(fy) - list.get(x1).getValue(fy)));
 
-		stddev_xy = (float)Math.sqrt(stddev_x*stddev_x+stddev_y*stddev_y);
+		stddev_xy = Math.sqrt(stddev_x*stddev_x+stddev_y*stddev_y);
 	}
 
 	public String getHeader() {
