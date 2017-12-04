@@ -143,8 +143,8 @@ public class MapArea extends Pane implements BaseMap {
         double mex = (double) id * 256;
         double mey = (double) jd * 256;
 
-        double ttx = mex - (this.getScene().getWidth()-230) / 2;
-        double tty = mey - (this.getScene().getHeight()-120) / 2;
+       double ttx = mex - this.getParent().getLayoutBounds().getWidth() / 2;
+       double tty = mey - this.getParent().getLayoutBounds().getHeight() / 2;
         setTranslateX(-1 * ttx);
         setTranslateY(-1 * tty);
         if (debug) {

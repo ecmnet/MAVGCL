@@ -55,7 +55,6 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.openmapfx.ext.CanvasLayer;
-import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -71,9 +70,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -83,6 +80,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -155,6 +153,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private  StateProperties state;
 
+	private double x_offset=0;
+
 
 	protected int centermode;
 
@@ -172,11 +172,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
-		this.boundsInParentProperty().addListener((e,o,n) -> {
-
-		});
-
-
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
 
@@ -192,13 +187,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		map = new LayeredMap(provider);
 
+
 		mapviewpane.setCenter(map);
 
-		Rectangle clip = new Rectangle();
+        final Rectangle clip = new Rectangle();
+
 		mapviewpane.setClip(clip);
 		clip.heightProperty().bind(map.heightProperty());
-		clip.widthProperty().bind(mapviewpane.widthProperty());
-		//		//		map.setCenter(49.142899,11.577723);
+		clip.widthProperty().bind(map.widthProperty());
+
 		map.setZoom(19.5);
 
 		canvasLayer = new CanvasLayer();
@@ -218,7 +215,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(positionLayer);
 		positionLayer.setVisible(true);
 
-		positionLayer.updatePosition(49.142899,11.577723);
+		positionLayer.updatePosition(47.142899,11.577723);
 
 		licenceLayer = new LicenceLayer(provider);
 		map.getLayers().add(licenceLayer);
