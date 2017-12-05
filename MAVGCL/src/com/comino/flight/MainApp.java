@@ -224,6 +224,7 @@ public class MainApp extends Application  {
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
 			//			ScenicView.show(scene);
 
 			Preferences userPrefs = MAVPreferences.getInstance();
@@ -239,7 +240,7 @@ public class MainApp extends Application  {
 			primaryStage.show();
 
 			scene.setOnKeyPressed((event) -> {
-				if(event.getCode()==KeyCode.ESCAPE) {
+				if(event.getCode()==KeyCode.TAB) {
 					event.consume();
 					if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
 						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
