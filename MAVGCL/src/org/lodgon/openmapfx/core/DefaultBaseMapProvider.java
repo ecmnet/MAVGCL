@@ -42,47 +42,47 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author johan
  */
 public class DefaultBaseMapProvider implements BaseMapProvider {
-    
+
     private static final String mapName = "OpenMapFX Tiled Map";
-    
+
     private MapArea baseMap;
-    
+
     private static final List<TileProvider> tileProviders = new LinkedList<>();
     static {
-        tileProviders.add(new OSMTileProvider());
-        tileProviders.add(new MapQuestTileProvider());
-	tileProviders.add(new StamenTileProvider());
+//        tileProviders.add(new OSMTileProvider());
+//        tileProviders.add(new MapQuestTileProvider());
+//	    tileProviders.add(new StamenTileProvider());
         if (System.getProperty("fileProvider")!= null) {
             FileProvider fp = new FileProvider("OSM local", System.getProperty("fileProvider"));
-            tileProviders.add(fp);           
+            tileProviders.add(fp);
         }
     }
-    
+
     private final ObjectProperty<TileProvider> tileProvider = new SimpleObjectProperty<>();
     private final ObjectProperty<MapTileType> selectedTileType = new SimpleObjectProperty<>();
-    
+
     public DefaultBaseMapProvider() {
         tileProvider.set(tileProviders.get(0));
         selectedTileType.set(tileProvider.get().getDefaultType());
     }
-    
+
     public DefaultBaseMapProvider (TileProvider tp) {
         tileProvider.set(tp);
         selectedTileType.set(tp.getDefaultType());
     }
-    
+
     @Override
     public String getMapName() {
         return mapName;
     }
-    
-    
+
+
     @Override
     public BaseMap getBaseMap() {
         if (baseMap == null) {
             baseMap = new MapArea(selectedTileType);
         }
-        
+
         return baseMap;
     }
 
@@ -90,12 +90,12 @@ public class DefaultBaseMapProvider implements BaseMapProvider {
 //    public List<TileType> getSupportedMapStyles() {
 //        return tileProvider.get().getTileTypes();
 //    }
-    
+
 	@Override
     public List<TileProvider> getTileProviders() {
         return tileProviders;
     }
-    
+
     @Override
     public ObjectProperty<MapTileType> tileTypeProperty() {
         return selectedTileType;
@@ -105,7 +105,7 @@ public class DefaultBaseMapProvider implements BaseMapProvider {
     public List<TileType> getTileTypes() {
         return tileProvider.get().getTileTypes();
     }
-    
+
     @Override
     public String toString() {
         return getMapName();
@@ -115,5 +115,5 @@ public class DefaultBaseMapProvider implements BaseMapProvider {
     public ObjectProperty<TileProvider> tileProviderProperty() {
         return tileProvider;
     }
-    
+
 }

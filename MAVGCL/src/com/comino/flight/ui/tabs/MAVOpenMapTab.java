@@ -38,11 +38,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.lodgon.openmapfx.core.BaseMapProvider;
 import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
+import org.lodgon.openmapfx.core.TileProvider;
 import org.lodgon.openmapfx.providers.BingTileProvider;
+import org.lodgon.openmapfx.providers.OSMTileProvider;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -95,6 +98,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base", "Takeoff" };
 
+	private final static String[] PROVIDER_OPTIONS = { "Satellite", "StreetMap" };
+
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON"   },
@@ -115,6 +120,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	@FXML
 	private ChoiceBox<String> center;
+
+	@FXML
+	private ChoiceBox<String> provider;
 
 	@FXML
 	private GPSDetailsWidget gpsdetails;
@@ -138,9 +146,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private double takeoff_lon = 0;
 	private double takeoff_lat = 0;
 
-
-	private int index=0;
-
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 
 	private FloatProperty  scroll       = new SimpleFloatProperty(0);
@@ -153,8 +158,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private  StateProperties state;
 
-	private double x_offset=0;
-
+	private  BaseMapProvider satellite_provider = null;
+	private  BaseMapProvider street_provider = null;
 
 	protected int centermode;
 
@@ -178,15 +183,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		center.getItems().addAll(CENTER_OPTIONS);
 		center.getSelectionModel().select(0);
 
+		provider.getItems().addAll(PROVIDER_OPTIONS);
+		provider.getSelectionModel().select(0);
+
 		String mapFileName = FileHandler.getInstance().getBasePath()+"/MapCache";
-		DefaultBaseMapProvider provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
+		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
+		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapFileName+"2"));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
 		type = 0;
 
-		map = new LayeredMap(provider);
-
+		map = new LayeredMap(satellite_provider);
 
 		mapviewpane.setCenter(map);
 
@@ -216,9 +224,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		positionLayer.setVisible(true);
 
 		positionLayer.updatePosition(47.142899,11.577723);
-
-		licenceLayer = new LicenceLayer(provider);
-		map.getLayers().add(licenceLayer);
+//
+//		licenceLayer = new LicenceLayer(satellite_provider);
+//		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
 		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
@@ -319,6 +327,22 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				Platform.runLater(() -> {
 					updateMap(true);
 				});
+			}
+
+		});
+
+		provider.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+               switch(newValue.intValue()) {
+               case 0:
+            	     map.setBaseMapProvider(satellite_provider);
+            	     break;
+               case 1:
+            	     map.setBaseMapProvider(street_provider);
+            	     break;
+               }
 			}
 
 		});

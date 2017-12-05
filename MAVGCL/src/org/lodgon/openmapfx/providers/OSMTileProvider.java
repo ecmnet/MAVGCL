@@ -37,17 +37,23 @@ import org.lodgon.openmapfx.core.TileType;
  * @author Geoff Capper
  */
 public class OSMTileProvider implements TileProvider {
-    
+
     private static final String providerName = "OpenStreetMap";
-    
+
     private static final List<TileType> tileTypes = new LinkedList<>();
-    static {
-        tileTypes.add(new TileType("Map", "http://tile.openstreetmap.org/", "© OpenStreetMap contributors"));
+
+    public OSMTileProvider(String fileStorage) {
+
+    	TileType tileType = new TileType("OSMMap", "http://tile.openstreetmap.org/", "© OpenStreetMap contributors");
+
+    	 if (fileStorage != null) {
+             tileType.setFileStorageBase(fileStorage);
+         }
+
+    	 tileTypes.add(tileType);
+
     }
-    
-    public OSMTileProvider() {
-    }
-    
+
     @Override
     public String getProviderName() {
         return providerName;
@@ -57,7 +63,7 @@ public class OSMTileProvider implements TileProvider {
     public List<TileType> getTileTypes() {
         return tileTypes;
     }
-    
+
     @Override
     public TileType getDefaultType() {
         return tileTypes.get(0);
@@ -67,10 +73,10 @@ public class OSMTileProvider implements TileProvider {
     public String getAttributionNotice() {
         return "© OpenStreetMap contributors";
     }
-    
+
     @Override
     public String toString() {
         return getProviderName();
     }
-    
+
 }
