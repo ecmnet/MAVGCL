@@ -97,10 +97,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
 	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap" };
 
-	private final static String TYPES[][] =
-		{ { "GLOBLAT",  "GLOBLON"   },
-				{ "RGPSLAT",  "RGPSLON"   }
-		};
+	private final static String TYPES[][] 			= { { "GLOBLAT",  "GLOBLON"   }, { "RGPSLAT",  "RGPSLON"   } };
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -143,8 +140,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private double takeoff_lat = 0;
 
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-
-	private FloatProperty  scroll       = new SimpleFloatProperty(0);
+	private FloatProperty   scroll        = new SimpleFloatProperty(0);
 
 	private Image plane_valid, plane_invalid;
 
@@ -272,6 +268,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		//			}
 		//
 		//		});
+
+
+		mapviewpane.widthProperty().addListener((v,o,n) -> {
+			Platform.runLater(() -> {
+				setCenter(centermode);
+				updateMap(true);
+			});
+		});
 
 		map.setOnScroll(event -> {
 			if(centermode!=0) {
