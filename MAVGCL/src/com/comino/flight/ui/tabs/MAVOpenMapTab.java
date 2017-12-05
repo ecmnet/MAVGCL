@@ -279,8 +279,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		map.setOnScroll(event -> {
 			if(centermode!=0) {
-				map.getMapArea().moveX(-event.getDeltaX()/4);
-				map.getMapArea().moveY(-event.getDeltaY()/4);
+				map.getMapArea().moveX(-event.getDeltaX()/3);
+				map.getMapArea().moveY(-event.getDeltaY()/3);
 			}
 		});
 
