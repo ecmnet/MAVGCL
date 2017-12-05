@@ -43,7 +43,6 @@ import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
-import org.lodgon.openmapfx.core.TileProvider;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
 
@@ -83,27 +82,24 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-// TODO: Base MAP drawing on local position instead of global
+
 
 public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
-	private final static int MAP_UPDATE_MS = 100;
+	private final static float MINEPH = 5.0f;
 
-	private final static String[] GPS_SOURCES    = { "Global Position", "Raw GPS data" };
 
-	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base", "Takeoff" };
-
-	private final static String[] PROVIDER_OPTIONS = { "Satellite", "StreetMap" };
-
+	private final static String[] GPS_SOURCES    	= { "Global Position", "Raw GPS data" };
+	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
+	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap" };
 
 	private final static String TYPES[][] =
 		{ { "GLOBLAT",  "GLOBLON"   },
-		  { "RGPSLAT",  "RGPSLON"   }
+				{ "RGPSLAT",  "RGPSLON"   }
 		};
 
 	@FXML
@@ -135,7 +131,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private PositionLayer 		positionLayer;
 	private PositionLayer 		homeLayer;
 	private PositionLayer 		baseLayer;
-	private LicenceLayer  		licenceLayer;
+	//	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
 	private Timeline task = null;
@@ -150,11 +146,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private FloatProperty  scroll       = new SimpleFloatProperty(0);
 
-	private Image plane_valid, plane_invalid, plane_lpe;
+	private Image plane_valid, plane_invalid;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
-
-	private IMAVController control;
 
 	private  StateProperties state;
 
@@ -198,7 +192,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		mapviewpane.setCenter(map);
 
-        final Rectangle clip = new Rectangle();
+		final Rectangle clip = new Rectangle();
 
 		mapviewpane.setClip(clip);
 		clip.heightProperty().bind(map.heightProperty());
@@ -216,7 +210,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(baseLayer);
 
 		plane_valid   = new Image(getClass().getResource("resources/airplane_g.png").toString());
-		plane_lpe     = new Image(getClass().getResource("resources/airplane_b.png").toString());
+		//		plane_lpe     = new Image(getClass().getResource("resources/airplane_b.png").toString());
 		plane_invalid = new Image(getClass().getResource("resources/airplane_r.png").toString());
 
 		positionLayer = new PositionLayer(plane_valid);
@@ -224,9 +218,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		positionLayer.setVisible(true);
 
 		positionLayer.updatePosition(47.142899,11.577723);
-//
-//		licenceLayer = new LicenceLayer(satellite_provider);
-//		map.getLayers().add(licenceLayer);
+		//
+		//		licenceLayer = new LicenceLayer(satellite_provider);
+		//		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
 		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
@@ -279,16 +273,25 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		//
 		//		});
 
+		map.setOnScroll(event -> {
+			if(centermode!=0) {
+				map.getMapArea().moveX(-event.getDeltaX()/4);
+				map.getMapArea().moveY(-event.getDeltaY()/4);
+			}
+		});
+
+		map.setOnMouseClicked(click -> {
+			if (click.getClickCount() == 2)
+				setCenter(centermode);
+		});
+
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-				//				if((System.currentTimeMillis()-tms)>100) {
-				//					tms = System.currentTimeMillis();
 				Platform.runLater(() -> {
 					map.setZoom(zoom.getValue());
 					updateMap(true);
 				});
-				//				}
 			}
 		});
 
@@ -325,6 +328,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				centermode = newValue.intValue();
 				Platform.runLater(() -> {
+					setCenter(centermode);
 					updateMap(true);
 				});
 			}
@@ -335,14 +339,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-               switch(newValue.intValue()) {
-               case 0:
-            	     map.setBaseMapProvider(satellite_provider);
-            	     break;
-               case 1:
-            	     map.setBaseMapProvider(street_provider);
-            	     break;
-               }
+				switch(newValue.intValue()) {
+				case 0:
+					map.setBaseMapProvider(satellite_provider);
+					break;
+				case 1:
+					map.setBaseMapProvider(street_provider);
+					break;
+				}
 			}
 
 		});
@@ -384,7 +388,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.model=dataService.getCurrent();
-		this.control = control;
 
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
@@ -400,11 +403,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-//				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
-//				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
-//					model = dataService.getModelList().get(current_x1_pt);
-//				else
-					model = dataService.getCurrent();
+				//				int current_x1_pt = dataService.calculateX0IndexByFactor(scroll.get());
+				//				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+				//					model = dataService.getModelList().get(current_x1_pt);
+				//				else
+				model = dataService.getCurrent();
 			}
 		});
 
@@ -439,7 +442,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	public void refreshChart() {
 
 		Platform.runLater(() -> {
-		//	this.model=dataService.getLast(1);
+			//	this.model=dataService.getLast(1);
 			updateMap(true);
 		});
 	}
@@ -450,25 +453,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			canvasLayer.redraw(refreshCanvas);
 		}
 
-		switch(centermode) {
-		case 0:
-			if(model.getValue(TYPES[type][0])!=0)
-				map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
-			break;
-		case 1:
-			if(model.getValue("HOMLAT")!=0)
-				map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-			break;
-		case 2:
-			if(model.getValue("BASELAT")!=0)
-				map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
-			break;
-		case 3:
-			if(takeoff_lat!=0)
-				map.setCenter(takeoff_lat, takeoff_lon);
-			break;
-
-		}
+		if(centermode==0 && model.getValue(TYPES[type][0])!=0)
+			map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
 
 		try {
 			if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
@@ -484,7 +470,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			} else
 				baseLayer.setVisible(false);
 
-			if(model.getValue("RGPSHDOP") > 2.5)
+			if(model.getValue("RGPSEPH") > MINEPH)
 				positionLayer.getIcon().setImage(plane_invalid);
 			else
 				positionLayer.getIcon().setImage(plane_valid);
@@ -504,4 +490,20 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		return null;
 	}
 
+	private void setCenter(int mode) {
+		switch(mode) {
+		case 1:
+			if(model.getValue("HOMLAT")!=0)
+				map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			break;
+		case 2:
+			if(model.getValue("BASELAT")!=0)
+				map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
+			break;
+		case 3:
+			if(takeoff_lat!=0)
+				map.setCenter(takeoff_lat, takeoff_lon);
+			break;
+		}
+	}
 }
