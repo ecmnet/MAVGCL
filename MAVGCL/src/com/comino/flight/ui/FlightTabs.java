@@ -50,6 +50,7 @@ import com.comino.flight.ui.widgets.camera.CameraWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
@@ -171,6 +172,7 @@ public class FlightTabs extends Pane {
 		tabpane.getSelectionModel().selectedIndexProperty().addListener((obs,ov,nv)->{
 			for(int i =0; i<tabs.size();i++)
 				tabs.get(i).setDisable(i!=nv.intValue());
+			tabs.get(nv.intValue()).requestFocus();
 		});
 
 		xtanalysistab.setDisable(false);

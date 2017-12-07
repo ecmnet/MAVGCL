@@ -153,6 +153,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				reloadShell();
 			console.setDisable(!nv.booleanValue());
 		});
+
 	}
 
 
@@ -179,6 +180,14 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		});
 
 		return this;
+	}
+
+
+
+	@Override
+	public void requestFocus() {
+		Platform.runLater(() -> {
+		console.requestFocus(); });
 	}
 
 	@Override
