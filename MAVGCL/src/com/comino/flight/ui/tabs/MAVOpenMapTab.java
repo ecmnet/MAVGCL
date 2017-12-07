@@ -322,6 +322,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				type = newValue.intValue();
 				Platform.runLater(() -> {
+					setCenter(centermode);
 					canvasLayer.redraw(true);
 				});
 			}
@@ -356,6 +357,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						map.setBaseMapProvider(terrain_provider);
 						break;
 					}
+					setCenter(centermode);
 			}
 
 		});
