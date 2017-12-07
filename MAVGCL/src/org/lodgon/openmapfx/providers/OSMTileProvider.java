@@ -47,7 +47,7 @@ public class OSMTileProvider implements TileProvider {
     	TileType tileType = new TileType("OSMMap", "http://tile.openstreetmap.org/", "© OpenStreetMap contributors");
 
     	 if (fileStorage != null) {
-             tileType.setFileStorageBase(fileStorage);
+             tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
          }
 
     	 tileTypes.add(tileType);

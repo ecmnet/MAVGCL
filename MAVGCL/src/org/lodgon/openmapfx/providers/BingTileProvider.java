@@ -41,17 +41,16 @@ public class BingTileProvider implements TileProvider {
     private static final List<TileType> tileTypes = new LinkedList<>();
     final String server;
 
-    public BingTileProvider(String server, String fileStorage) {
-        this.server = server;
-        TileType tileType = new TileType("BingMap", null) {
+    public BingTileProvider(String fileStorage) {
+        this.server = "http://t0.tiles.virtualearth.net/tiles/a";
+        TileType tileType = new TileType("BingMap", null," Microsoft") {
             @Override
             protected String calculateURL(int zoom, long i, long j) {
                 return server + getQuadKey(zoom, i, j)+"?g=1";
             }
-
         };
         if (fileStorage != null) {
-            tileType.setFileStorageBase(fileStorage);
+            tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
         }
         tileTypes.add(tileType);
     }

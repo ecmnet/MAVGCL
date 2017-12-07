@@ -41,10 +41,10 @@ import javax.imageio.ImageIO;
 import org.lodgon.openmapfx.core.BaseMapProvider;
 import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
-import org.lodgon.openmapfx.core.LicenceLayer;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
+import org.lodgon.openmapfx.providers.StamenTileProvider;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -95,7 +95,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String[] GPS_SOURCES    	= { "Global Position", "Raw GPS data" };
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
-	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap" };
+	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap","Terrain" };
 
 	private final static String TYPES[][] 			= { { "GLOBLAT",  "GLOBLON"   }, { "RGPSLAT",  "RGPSLON"   } };
 
@@ -150,6 +150,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private  BaseMapProvider satellite_provider = null;
 	private  BaseMapProvider street_provider = null;
+	private  BaseMapProvider terrain_provider = null;
+
 
 	protected int centermode;
 
@@ -176,9 +178,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		provider.getItems().addAll(PROVIDER_OPTIONS);
 		provider.getSelectionModel().select(0);
 
-		String mapFileName = FileHandler.getInstance().getBasePath()+"/MapCache";
-		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider("http://t0.tiles.virtualearth.net/tiles/a",mapFileName));
-		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapFileName+"2"));
+		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
+		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
+		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
+		terrain_provider = new DefaultBaseMapProvider(new StamenTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
@@ -273,7 +276,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		mapviewpane.widthProperty().addListener((v,o,n) -> {
 			Platform.runLater(() -> {
 				setCenter(centermode);
-				updateMap(true);
 			});
 		});
 
@@ -343,14 +345,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				switch(newValue.intValue()) {
-				case 0:
-					map.setBaseMapProvider(satellite_provider);
-					break;
-				case 1:
-					map.setBaseMapProvider(street_provider);
-					break;
-				}
+					switch(newValue.intValue()) {
+					case 0:
+						map.setBaseMapProvider(satellite_provider);
+						break;
+					case 1:
+						map.setBaseMapProvider(street_provider);
+						break;
+					case 2:
+						map.setBaseMapProvider(terrain_provider);
+						break;
+					}
 			}
 
 		});

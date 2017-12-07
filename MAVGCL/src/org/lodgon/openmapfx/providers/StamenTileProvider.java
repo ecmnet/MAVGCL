@@ -37,19 +37,22 @@ import org.lodgon.openmapfx.core.TileType;
  * @author Geoff Capper
  */
 public class StamenTileProvider implements TileProvider {
-    
+
     private static final String providerName = "Stamen";
-    
+
     private static final List<TileType> tileTypes = new LinkedList<>();;
-    static {
-        tileTypes.add(new TileType("Watercolor", "http://tile.stamen.com/watercolor/", "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA."));
-        tileTypes.add(new TileType("Toner", "http://tile.stamen.com/toner/", "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA."));
-        tileTypes.add(new TileType("Terrain", "http://tile.stamen.com/terrain/", "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA."));
+
+    public StamenTileProvider(String fileStorage) {
+
+    	TileType tileType = new TileType("StamenMap", "http://a.tile.stamen.com/terrain/", "© Stamen Design");
+
+   	 if (fileStorage != null) {
+            tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
+        }
+
+   	 tileTypes.add(tileType);
     }
-    
-    public StamenTileProvider() {
-    }
-    
+
     @Override
     public String getProviderName() {
         return providerName;
@@ -59,21 +62,21 @@ public class StamenTileProvider implements TileProvider {
     public List<TileType> getTileTypes() {
         return tileTypes;
     }
-    
+
     @Override
     public TileType getDefaultType() {
         return tileTypes.get(0);
     }
-    
+
     @Override
     public String getAttributionNotice() {
         //return "Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"http://creativecommons.org/licenses/by-sa/3.0\">CC BY SA</a>.";
         return "Map tiles by Stamen Design (http://stamen.com/), under CC BY 3.0. Data by OpenStreetMap (http://openstreetmap.org/), under CC BY SA.";
     }
-    
+
     @Override
     public String toString() {
         return getProviderName();
     }
-    
+
 }
