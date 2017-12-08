@@ -38,51 +38,45 @@ import org.lodgon.openmapfx.core.TileType;
  */
 public class OpenTopoMapTileProvider implements TileProvider {
 
-    private static final String providerName = "OpenTopoMap";
+	private static final String providerName = "OpenTopoMap";
 
-    private static final List<TileType> tileTypes = new LinkedList<>();;
+	private static final List<TileType> tileTypes = new LinkedList<>();;
 
-    public OpenTopoMapTileProvider(String fileStorage) {
+	public OpenTopoMapTileProvider(String fileStorage) {
 
-    	TileType tileType = new TileType("OpenTopoMap", "https://a.tile.opentopomap.org/", "© OpenTopoMap") {
+		TileType tileType = new TileType("OpenTopoMap", "https://a.tile.opentopomap.org/", "© OpenTopoMap");
 
-    		 protected String calculateURL(int zoom, long i, long j) {
-    		        return getBaseURL() + zoom + "/" + i + "/" + j+".png";
-    		    }
+		if (fileStorage != null) {
+			tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
+		}
 
-    	};
+		tileTypes.add(tileType);
+	}
 
-   	 if (fileStorage != null) {
-            tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
-        }
+	@Override
+	public String getProviderName() {
+		return providerName;
+	}
 
-   	 tileTypes.add(tileType);
-    }
+	@Override
+	public List<TileType> getTileTypes() {
+		return tileTypes;
+	}
 
-    @Override
-    public String getProviderName() {
-        return providerName;
-    }
+	@Override
+	public TileType getDefaultType() {
+		return tileTypes.get(0);
+	}
 
-    @Override
-    public List<TileType> getTileTypes() {
-        return tileTypes;
-    }
+	@Override
+	public String getAttributionNotice() {
+		//return "Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"http://creativecommons.org/licenses/by-sa/3.0\">CC BY SA</a>.";
+		return "Map tiles by HikeAndBike";
+	}
 
-    @Override
-    public TileType getDefaultType() {
-        return tileTypes.get(0);
-    }
-
-    @Override
-    public String getAttributionNotice() {
-        //return "Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"http://creativecommons.org/licenses/by-sa/3.0\">CC BY SA</a>.";
-        return "Map tiles by HikeAndBike";
-    }
-
-    @Override
-    public String toString() {
-        return getProviderName();
-    }
+	@Override
+	public String toString() {
+		return getProviderName();
+	}
 
 }

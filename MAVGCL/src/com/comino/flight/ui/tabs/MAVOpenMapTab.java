@@ -359,15 +359,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						break;
 					case 2:
 						// TODO: Limit zoom should be in tile provider
-						if(zoom.getValue()>17)
-							map.setZoom(17);
-						zoom.setMax(17);
+						if(zoom.getValue()>17.5)
+							map.setZoom(17.5);
+						zoom.setMax(17.5);
 						map.setBaseMapProvider(terrain_provider);
 						break;
 					}
 					setCenter(centermode);
 			}
-
 		});
 
 		scroll.addListener((v, ov, nv) -> {
