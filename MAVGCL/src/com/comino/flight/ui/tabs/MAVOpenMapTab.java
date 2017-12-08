@@ -481,7 +481,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			} else
 				baseLayer.setVisible(false);
 
-			if(model.getValue("RGPSEPH") > MINEPH && model.getValue("RGPSNO")<4)
+			if(model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO")<4)
 				positionLayer.getIcon().setImage(plane_invalid);
 			else
 				positionLayer.getIcon().setImage(plane_valid);
