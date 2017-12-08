@@ -57,6 +57,7 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.openmapfx.ext.CanvasLayer;
+import com.comino.openmapfx.ext.OpenTopoMapTileProvider;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -181,7 +182,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
 		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
-		terrain_provider = new DefaultBaseMapProvider(new StamenTileProvider(mapDirName));
+//		terrain_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
+		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
@@ -348,12 +350,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 					switch(newValue.intValue()) {
 					case 0:
+						zoom.setMax(20);
 						map.setBaseMapProvider(satellite_provider);
 						break;
 					case 1:
+						zoom.setMax(20);
 						map.setBaseMapProvider(street_provider);
 						break;
 					case 2:
+						// TODO: Limit zoom should be in tile provider
+						if(zoom.getValue()>17)
+							map.setZoom(17);
+						zoom.setMax(17);
 						map.setBaseMapProvider(terrain_provider);
 						break;
 					}
