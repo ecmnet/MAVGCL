@@ -153,6 +153,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private  BaseMapProvider street_provider = null;
 	private  BaseMapProvider terrain_provider = null;
 
+    private  double zoom_start=0;
 
 	protected int centermode;
 
@@ -286,6 +287,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				map.getMapArea().moveX(-event.getDeltaX()/3);
 				map.getMapArea().moveY(-event.getDeltaY()/3);
 			}
+		});
+
+		map.setOnZoom(event -> {
+			double z = zoom.getValue() * ((( event.getZoomFactor() - 1 ) / 10) + 1.0);
+			zoom.setValue(z);
 		});
 
 		map.setOnMouseClicked(click -> {
