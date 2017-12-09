@@ -69,7 +69,7 @@ public class DetailsWidget extends WidgetPane {
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 19;
 
-	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#004040;";
+	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#005050;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
 
 	private final static String[] key_figures_details = { "ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
