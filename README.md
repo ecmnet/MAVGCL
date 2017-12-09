@@ -13,10 +13,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 04/12/2017
+**Development Status:** Last updated 09/12/2017
 
 - MAVLink messages parsing fixed - Messages with extensions are handled correct now
 - Various map fixes
+- Gesture zooming for XYChart and MAP added
 
 V0.6xx notes:
 
