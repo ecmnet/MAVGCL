@@ -518,7 +518,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 
 		xychart.setOnZoom(event -> {
-			 scale = (float)(scale * event.getZoomFactor());
+			 scale = (float)(scale / event.getZoomFactor());
 			 setScaling(scale);
 		});
 
