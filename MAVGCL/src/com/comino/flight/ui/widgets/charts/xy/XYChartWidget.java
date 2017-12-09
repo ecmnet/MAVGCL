@@ -517,6 +517,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		});
 
+		xychart.setOnZoom(event -> {
+			 scale = (float)(scale * event.getZoomFactor());
+			 setScaling(scale);
+		});
+
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
