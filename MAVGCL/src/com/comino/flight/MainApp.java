@@ -65,10 +65,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -384,15 +388,19 @@ public class MainApp extends Application  {
 	private void showAboutDialog() {
 		VBox box = new VBox();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));
-		box.getChildren().addAll(splash);
+		Label text = new Label("2017 by ecmnet; View source at https://github.com/ecmnet/MAVGCL");
+		text.setStyle("-fx-text-fill: #B0B0B0;");
+		text.setPadding(new Insets(10,0,0,0));
+		box.getChildren().addAll(splash, text);
+		box.autosize();
 		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.getDialogPane().setStyle("-fx-background-color: #202020;");
 		alert.setTitle("About MAVGAnalysis");
-		alert.getDialogPane().getChildren().add(box);
-		alert.getDialogPane().setPrefHeight(291); alert.getDialogPane().setPrefWidth(600);
+		alert.getDialogPane().getChildren().addAll(box);
+		alert.getDialogPane().setPrefHeight(220); alert.getDialogPane().setPrefWidth(600);
 		Platform.runLater(() -> {
 			alert.showAndWait();
 		});
-
 	}
 
 
