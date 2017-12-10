@@ -1380,7 +1380,7 @@
 
 	<KeyFigure desc="MSP Temperature" uom="°C" mask="#0" key="MSPTEMP">
 		<MSPSource class="sys" field="msp_temp"/>
-		<Validity min="0" max="80"/>
+		<Validity min="10" max="70"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
