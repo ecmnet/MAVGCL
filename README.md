@@ -60,13 +60,11 @@ Binaries for Linux, OS X and Windows (64bit) can be found [here](https://github.
 
 **Screenshots**:
 
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot9.png)
-
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot5.png)
 
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot6.png)
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot9.png)
 
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot8.png)
+
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
