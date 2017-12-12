@@ -140,12 +140,12 @@ public class StateProperties {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_GPOS_AVAILABILITY, (o,n) -> {
-			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_AVAILABILITY));
+		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (o,n) -> {
+			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_LPOS_AVAILABILITY, (o,n) -> {
-			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_AVAILABILITY));
+		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (o,n) -> {
+			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
 		});
 	}
 
