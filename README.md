@@ -26,7 +26,7 @@ V0.6xx notes:
 - Recording based on [ULOG](https://dev.px4.io/en/log/ulog_file_format.html) over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
 - Mapping between ULog data and MAVGCL key-figures is still ongoing 
 - Serial connection no longer available as it is currently used for RTK base stations
-- AutoPilot only with MAVCOMM proxy
+- AutoPilot features only with companion running MAVSlam and MAVComm
 
 
 **Features:**
