@@ -44,7 +44,13 @@ public class OpenTopoMapTileProvider implements TileProvider {
 
 	public OpenTopoMapTileProvider(String fileStorage) {
 
-		TileType tileType = new TileType("OpenTopoMap", "https://a.tile.opentopomap.org/", "© OpenTopoMap");
+	TileType tileType = new TileType("OpenTopoMap", "https://a.tile.opentopomap.org/", "© OpenTopoMap");
+//		TileType tileType = new TileType("OpenTopoMap", "http://map.eniro.com/geowebcache/service/tms1.0.0/map/","") {
+//			@Override
+//            protected String calculateURL(int zoom, long i, long j) {
+//                return getBaseURL() + zoom+"/"+i+"/"+((1<<zoom)-1-j)+".png";
+//            }
+//		};
 
 		if (fileStorage != null) {
 			tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
