@@ -206,8 +206,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if((System.currentTimeMillis()-last_update_ms)> 25 || resolution_ms <= 100) {
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest);
+				last_update_ms = System.currentTimeMillis();
 			});
-			last_update_ms = System.currentTimeMillis();
+		//	last_update_ms = System.currentTimeMillis();
 		}
 	}
 
