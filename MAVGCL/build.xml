@@ -118,7 +118,7 @@
 				<fx:icon href="MAVGAnalysis.icns" />
 			</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms500m"/>
+				<fx:jvmarg value="-Xms1000m"/>
 				<fx:jvmarg value="-XX:+UseG1GC"/>
 			</fx:platform>
 		</fx:deploy>
@@ -136,7 +136,7 @@
 						<fx:info title="MAVGAnalysis" vendor="ecmnet">
 						</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms500m"/>
+				<fx:jvmarg value="-Xms1000m"/>
 				<fx:jvmarg value="-XX:+UseG1GC"/>
 			</fx:platform>
 		</fx:deploy>
@@ -155,7 +155,7 @@
 							<fx:icon href="MAVGAnalysis.icns" />
 						</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms500m"/>
+				<fx:jvmarg value="-Xms1000m"/>
 				<fx:jvmarg value="-XX:+UseG1GC"/>
 			</fx:platform>
 		</fx:deploy>
