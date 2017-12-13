@@ -72,6 +72,9 @@ public class KeyFigureMetaData {
 
 	private DecimalFormat formatting = null;
 
+	private double value = 0;
+	private DataSource source = null;
+
 	public boolean isVirtual = false;
 
 	private String key;
@@ -142,13 +145,13 @@ public class KeyFigureMetaData {
 	}
 
 	public Double getValueFromMSPModel(DataModel m) throws Exception {
-		double value = Double.NaN;
-		DataSource source = sources.get(MSP_SOURCE);
+		value = Double.NaN;
+		source = sources.get(MSP_SOURCE);
 		if(source.field!=null) {
 			Field mclass_field = m.getClass().getField(source.class_n);
 			Object mclass = mclass_field.get(m);
 			Field mfield_field = mclass.getClass().getField(source.field);
-			value = new Double(mfield_field.getDouble(mclass)).doubleValue();
+			value = mfield_field.getDouble(mclass);
 		}
 		if(source.converter != null)
 			return source.converter.convert(value);
@@ -157,8 +160,8 @@ public class KeyFigureMetaData {
 
 
 	public Double getValueFromPX4Model(Map<String,Object> data) {
-		double value = Double.NaN;
-		DataSource source = sources.get(PX4_SOURCE);
+		value = Double.NaN;
+		source = sources.get(PX4_SOURCE);
 		if(source.field!=null) {
 			Object o = data.get(source.field);
 			if(o instanceof Integer)
@@ -174,8 +177,8 @@ public class KeyFigureMetaData {
 	}
 
 	public Double getValueFromULogModel(Map<String,Object> data) {
-		double value = Double.NaN;
-		DataSource source = sources.get(ULG_SOURCE);
+		value = Double.NaN;
+		source = sources.get(ULG_SOURCE);
 		if(source.field!=null) {
 			Object o = data.get(source.field);
 			if(o instanceof Integer)
@@ -191,12 +194,12 @@ public class KeyFigureMetaData {
 	}
 
 	public Double getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
-		double value = Double.NaN;
-		DataSource source = sources.get(MAV_SOURCE);
+		value = Double.NaN;
+		source = sources.get(MAV_SOURCE);
 		if(source.field!=null) {
 			if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
 				Field mfield_field = mavlink_message.getClass().getField(source.field);
-				value = new Double(mfield_field.getDouble(mavlink_message)).doubleValue();
+				value = mfield_field.getDouble(mavlink_message);
 			}
 			if(source.converter != null)
 				return source.converter.convert(value);
@@ -206,7 +209,7 @@ public class KeyFigureMetaData {
 	}
 
 	public double calculateVirtualValue(AnalysisDataModel data) {
-		DataSource source = sources.get(VIR_SOURCE);
+		source = sources.get(VIR_SOURCE);
 		if(source.converter != null)
 			return source.converter.convert(data);
 		return 0;

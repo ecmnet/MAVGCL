@@ -159,9 +159,14 @@ public class FlightTabs extends Pane {
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
 			this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue() || control.isSimulation());
-			flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
 
+			// Workaround: Enable Tab but disable tab content if not selected
+			if(tabpane.getSelectionModel().selectedIndexProperty().intValue()!=3)
+				mavinspectortab.setDisable(true);
+
+			flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
 		});
+
 
 		HBox.setHgrow(tabpane, Priority.ALWAYS);
 

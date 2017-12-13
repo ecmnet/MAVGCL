@@ -102,10 +102,11 @@ public class AnalysisDataModel {
 		data.put(kf.toLowerCase().hashCode(), value);
 	}
 
+	private Double val = null;
+
 	@SuppressWarnings("unchecked")
 	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
-			Double val = null;
 			try {
 				if(!e.isVirtual) {
 
