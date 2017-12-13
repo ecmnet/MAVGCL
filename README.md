@@ -19,6 +19,7 @@ Any feedback, comments and contributions are very welcome.
 - Various map fixes
 - Gesture zooming for XYChart and MAP added
 - Fixes a UDP connection bug
+- Performance improvements
 
 V0.6xx notes:
 
@@ -56,7 +57,7 @@ V0.6xx notes:
 
 **Binaries:**
 
-Binaries for Linux, OS X and Windows (64bit) can be found [here](https://github.com/ecmnet/MAVGCL/releases).
+Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
 **Screenshots**:
 
