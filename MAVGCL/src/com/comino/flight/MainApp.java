@@ -285,6 +285,9 @@ public class MainApp extends Application  {
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+			}
 			Platform.runLater(() -> {
 				r_px4log.setDisable(!n.booleanValue());
 			});
