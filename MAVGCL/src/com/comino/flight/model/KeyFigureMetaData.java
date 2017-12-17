@@ -65,7 +65,7 @@ public class KeyFigureMetaData {
 	public String desc1;
 	public String desc2;
 	public String uom;
-//	public String mask;
+	//	public String mask;
 	public int    hash;
 	public float  min=0;
 	public float  max=0;
@@ -179,17 +179,24 @@ public class KeyFigureMetaData {
 	public Double getValueFromULogModel(Map<String,Object> data) {
 		value = Double.NaN;
 		source = sources.get(ULG_SOURCE);
-		if(source.field!=null) {
+
+		if(source.field!=null) {  // source field specified
 			Object o = data.get(source.field);
+
 			if(o instanceof Integer)
 				value = (float)(Integer)o;
 			else if(o instanceof Double)
 				value = ((Double)o).doubleValue();
 			else
-				value = ((Float)o).floatValue();
+				value = (float)o;
+			if(source.converter != null)
+				return source.converter.convert(value);
+
+		} else { // source field via converter
+
+			if(source.converter != null)
+				return source.converter.convert(data,0);
 		}
-		if(source.converter != null)
-			return source.converter.convert(value);
 		return value;
 	}
 

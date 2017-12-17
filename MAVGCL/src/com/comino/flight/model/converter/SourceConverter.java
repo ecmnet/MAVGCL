@@ -55,5 +55,7 @@ public abstract class SourceConverter {
 		return convert(val);
 	}
 
+	public abstract String toString();
+
 
 }

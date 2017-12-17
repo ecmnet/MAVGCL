@@ -76,4 +76,10 @@ public class VirtualConverter extends SourceConverter {
 		return calc.evaluate();
 	}
 
+
+	@Override
+	public String toString() {
+		return calc.toString();
+	}
+
 }

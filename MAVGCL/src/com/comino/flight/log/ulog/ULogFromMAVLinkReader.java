@@ -55,7 +55,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	private final int STATE_HEADER_IDLE				= 0;
 	private final int STATE_HEADER_WAIT				= 1;
-	private final int STATE_DATA            		= 2;
+	private final int STATE_DATA            			= 2;
 
 	private IMAVController control   = null;
 	private int state = STATE_HEADER_IDLE;

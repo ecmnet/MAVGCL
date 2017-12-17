@@ -41,6 +41,8 @@ public class QuaternionConverter extends SourceConverter {
 
 	private String ulogKeyFigure = null;
 	private int    index;
+	private float euler[] = new float[3];
+	private float q[]     = new float[4];
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
@@ -52,14 +54,19 @@ public class QuaternionConverter extends SourceConverter {
 		super();
 	}
 
-	public float convert(Map<String,Object> ulogdata, float val) {
-       float euler[] = new float[3]; float q[] = new float[4];
-       q[0] = (float)(Float)ulogdata.get(ulogKeyFigure+"[0]");
-       q[1] = (float)(Float)ulogdata.get(ulogKeyFigure+"[1]");
-       q[2] = (float)(Float)ulogdata.get(ulogKeyFigure+"[2]");
-       q[3] = (float)(Float)ulogdata.get(ulogKeyFigure+"[3]");
-        MSPMathUtils.eulerAnglesByQuaternion(euler, q);
+	@Override
+	public double convert(Map<String,Object> ulogdata, double val) {
+		q[0] = (float)(Float)ulogdata.get(ulogKeyFigure+"[0]");
+		q[1] = (float)(Float)ulogdata.get(ulogKeyFigure+"[1]");
+		q[2] = (float)(Float)ulogdata.get(ulogKeyFigure+"[2]");
+		q[3] = (float)(Float)ulogdata.get(ulogKeyFigure+"[3]");
+		MSPMathUtils.eulerAnglesByQuaternion(euler, q);
 		return euler[index];
+	}
+
+	@Override
+	public String toString() {
+		return ulogKeyFigure+"("+index+")";
 	}
 
 }

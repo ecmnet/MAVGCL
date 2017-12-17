@@ -54,4 +54,12 @@ public class BitMaskConverter extends SourceConverter {
 		super();
 	}
 
+
+	@Override
+	public String toString() {
+		return "Mask: "+mask;
+	}
+
+
+
 }

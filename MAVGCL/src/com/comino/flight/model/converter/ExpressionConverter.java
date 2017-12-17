@@ -64,4 +64,11 @@ public class ExpressionConverter extends SourceConverter {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return calc.toString();
+	}
+
+
+
 }
