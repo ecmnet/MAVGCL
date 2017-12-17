@@ -195,7 +195,7 @@ public class KeyFigureMetaData {
 		} else { // source field via converter
 
 			if(source.converter != null)
-				return source.converter.convert(data,0);
+				return source.converter.convert(data);
 		}
 		return value;
 	}

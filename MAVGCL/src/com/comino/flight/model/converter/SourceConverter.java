@@ -55,6 +55,10 @@ public abstract class SourceConverter {
 		return convert(val);
 	}
 
+	public double convert(Map<String,Object> ulogdata) {
+		return 0;
+	}
+
 	public abstract String toString();
 
 
