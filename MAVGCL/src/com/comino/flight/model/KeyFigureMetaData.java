@@ -186,7 +186,7 @@ public class KeyFigureMetaData {
 			else if(o instanceof Double)
 				value = ((Double)o).doubleValue();
 			else
-				value = (float)(Float)o;
+				value = ((Float)o).floatValue();
 		}
 		if(source.converter != null)
 			return source.converter.convert(value);

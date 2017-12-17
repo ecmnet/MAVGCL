@@ -105,8 +105,9 @@ public class AnalysisDataModel {
 	private Double val = null;
 
 	@SuppressWarnings("unchecked")
-	public  void setValues(int type, Object source, AnalysisDataModelMetaData md ) {
+	public synchronized void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
+			val = Double.NaN;
 			try {
 				if(!e.isVirtual) {
 
@@ -119,7 +120,7 @@ public class AnalysisDataModel {
 					if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
 						val = e.getValueFromMAVLinkMessage(source);
 
-					if(val!=null)
+					if(val!=null && !Double.isNaN(val))
 						data.put(e.hash,val);
 				}
 			} catch (Exception e1) {
