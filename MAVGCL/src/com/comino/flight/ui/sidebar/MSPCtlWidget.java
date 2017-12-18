@@ -334,8 +334,9 @@ public class MSPCtlWidget extends WidgetPane   {
 		});
 
 		Platform.runLater(() -> {
-			enable_vision.setSelected(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+			enable_vision.setSelected(true);
 		});
+
 	}
 
 }
