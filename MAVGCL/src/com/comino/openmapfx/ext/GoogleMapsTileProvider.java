@@ -44,13 +44,12 @@ public class GoogleMapsTileProvider implements TileProvider {
 
 	public GoogleMapsTileProvider(String fileStorage) {
 
-		TileType tileType = new TileType("GoogleMaps", "http://mt1.google.com/vt/lyrs=s&", "©GoogleMaps") {
+		TileType tileType = new TileType("GoogleMaps", "http://mt1.google.com/vt/lyrs=p&", "©GoogleMaps") {
 
 			@Override
 			protected String calculateURL(int zoom, long i, long j) {
-			return 	this.getBaseURL() + "x=" + i + "&y=" + j + "&z=" + zoom;
+			return 	this.getBaseURL() + "x=" + i + "&y=" + j + "&z=" + zoom + "&client=google";
 			}
-
 		};
 
 		if (fileStorage != null) {

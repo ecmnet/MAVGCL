@@ -57,6 +57,8 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.openmapfx.ext.CanvasLayer;
+import com.comino.openmapfx.ext.CanvasLayerPaintListener;
+import com.comino.openmapfx.ext.GoogleMapsTileProvider;
 import com.comino.openmapfx.ext.OpenTopoMapTileProvider;
 
 import javafx.animation.KeyFrame;
@@ -73,7 +75,9 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -153,7 +157,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private  BaseMapProvider street_provider = null;
 	private  BaseMapProvider terrain_provider = null;
 
-    private  double zoom_start=0;
+	private  double zoom_start=0;
 
 	protected int centermode;
 
@@ -163,7 +167,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		this.state = StateProperties.getInstance();
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			Platform.runLater(() -> {
-			updateMap(true);
+				updateMap(true);
 			});
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
@@ -185,8 +189,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
 		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
-//		terrain_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
-		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
+		terrain_provider = new DefaultBaseMapProvider(new GoogleMapsTileProvider(mapDirName));
+		//		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
@@ -222,60 +226,61 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		positionLayer.setVisible(true);
 
 		positionLayer.updatePosition(47.142899,11.577723);
+
 		//
 		//		licenceLayer = new LicenceLayer(satellite_provider);
 		//		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
-		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
-		//
-		//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
-		//
-		//
-		//			@Override
-		//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
-		//
-		//
-		//				if(refresh) {
-		//					index = dataService.calculateX0IndexByFactor(1);
-		//					first = true;
-		//				}
-		//
-		//				// TODO MAVOpenMapTab: Draw path also in replay
-		//
-		//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
-		//						(dataService.getModelList().size()-index)>2*MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-		//
-		//
-		//					gc.setStroke(Color.DARKKHAKI); gc.setFill(Color.DARKKHAKI);
-		//					gc.setLineWidth(1.5);
-		//					for(int i=index; i<dataService.getModelList().size();
-		//							i += MAP_UPDATE_MS/dataService.getCollectorInterval_ms()) {
-		//
-		//						m = dataService.getModelList().get(i);
-		//
-		//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
-		//							continue;
-		//
-		//						if(first) {
-		//							p0 = map.getMapArea().getMapPoint(
-		//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-		//
-		//							gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
-		//							first = false; continue;
-		//						}
-		//						p1 = map.getMapArea().getMapPoint(
-		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-		//
-		//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-		//						p0 = map.getMapArea().getMapPoint(
-		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-		//					}
-		//					index = dataService.getModelList().size();
-		//				}
-		//			}
-		//
-		//		});
+//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+//
+//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
+//
+//
+//			@Override
+//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+//
+//				int index=0;
+//				if(refresh) {
+//					index = dataService.calculateX0IndexByFactor(1);
+//					first = true;
+//				}
+//
+//				// TODO MAVOpenMapTab: Draw path also in replay
+//
+//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
+//						(dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms()) {
+//
+//
+//					gc.setStroke(Color.LIGHTSKYBLUE); gc.setFill(Color.LIGHTSKYBLUE);
+//					gc.setLineWidth(1.5);
+//					for(int i=index; i<dataService.getModelList().size();
+//							i += 50/dataService.getCollectorInterval_ms()) {
+//
+//						m = dataService.getModelList().get(i);
+//
+//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
+//							continue;
+//
+//						if(first) {
+//							p0 = map.getMapArea().getMapPoint(
+//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//
+//							//		gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
+//							first = false; continue;
+//						}
+//						p1 = map.getMapArea().getMapPoint(
+//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//
+//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+//						p0 = map.getMapArea().getMapPoint(
+//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+//					}
+//					index = dataService.getModelList().size();
+//				}
+//			}
+//
+//		});
 
 
 		mapviewpane.widthProperty().addListener((v,o,n) -> {
@@ -356,24 +361,24 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-					switch(newValue.intValue()) {
-					case 0:
-						zoom.setMax(20);
-						map.setBaseMapProvider(satellite_provider);
-						break;
-					case 1:
-						zoom.setMax(20);
-						map.setBaseMapProvider(street_provider);
-						break;
-					case 2:
-						// TODO: Limit zoom should be in tile provider
-						if(zoom.getValue()>17.5)
-							map.setZoom(17.5);
-						zoom.setMax(17.5);
-						map.setBaseMapProvider(terrain_provider);
-						break;
-					}
-					setCenter(centermode);
+				switch(newValue.intValue()) {
+				case 0:
+					zoom.setMax(20);
+					map.setBaseMapProvider(satellite_provider);
+					break;
+				case 1:
+					zoom.setMax(20);
+					map.setBaseMapProvider(street_provider);
+					break;
+				case 2:
+					// TODO: Limit zoom should be in tile provider
+					//						if(zoom.getValue()>17.5)
+					//							map.setZoom(17.5);
+					zoom.setMax(21);
+					map.setBaseMapProvider(terrain_provider);
+					break;
+				}
+				setCenter(centermode);
 			}
 		});
 
@@ -475,9 +480,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private void updateMap(boolean refreshCanvas) {
 
-		if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  && dataService.isCollecting()) {
-			canvasLayer.redraw(refreshCanvas);
-		}
+		//	canvasLayer.redraw(refreshCanvas);
 
 		if(centermode==0 && model.getValue(TYPES[type][0])!=0)
 			map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
