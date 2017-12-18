@@ -13,6 +13,7 @@
 				<Label fx:id="version" prefHeight="16.0" prefWidth="205.0" text="" />
 				<Badge fx:id="driver" prefHeight="16.0" prefWidth="250.0" color="DARKCYAN" text="" />
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="RC" color="DARKCYAN" />
+				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="50.0" text="GPOS" color="DARKCYAN" />
 				<Badge fx:id="messages" prefHeight="16.0" prefWidth="300" text="" color="GRAY"/>
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />

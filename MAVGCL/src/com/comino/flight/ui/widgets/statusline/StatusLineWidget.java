@@ -89,6 +89,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	@FXML
 	private Badge gps;
 
+	@FXML
+	private Badge gpos;
+
 	private IMAVController control;
 
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
@@ -236,6 +239,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				rc.setMode(Badge.MODE_ON);
 			else
 				rc.setMode(Badge.MODE_OFF);
+		});
+
+		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (o,n) -> {
+			if((n.isStatus(Status.MSP_GPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
+				gpos.setMode(Badge.MODE_ON);
+			else
+				gpos.setMode(Badge.MODE_OFF);
 		});
 
 		out = new Timeline(new KeyFrame(
