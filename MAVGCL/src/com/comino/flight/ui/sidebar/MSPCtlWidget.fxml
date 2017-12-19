@@ -44,7 +44,7 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
-				    <StateButton fx:id="enable_rtl" text="Return To Land (local)"
+				    <StateButton fx:id="enable_rtl" text="Return To Launch (local)"
 						prefWidth="165.0" >
 						<VBox.margin>
 							<Insets>
