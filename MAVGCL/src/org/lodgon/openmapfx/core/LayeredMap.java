@@ -70,23 +70,6 @@ final int MAXZOOM=16;
                }
             }
         });
-
-        // TODO: Fix path drawing issue first, then enable mouse again
-//        setOnMousePressed(t -> {
-//            x0 = t.getSceneX();
-//            y0 = t.getSceneY();
-//        });
-//        setOnMouseDragged(t -> {
-//            mapArea.moveX(x0-t.getSceneX());
-//            mapArea.moveY(y0-t.getSceneY());
-//            x0 = t.getSceneX();
-//            y0 = t.getSceneY();
-//        });
-//        setOnZoom(t -> mapArea.zoom(t.getZoomFactor() > 1 ? .1 : -.1, (x0 + t.getSceneX()) / 2.0, (y0 + t.getSceneY()) / 2.0));
-//        boolean zoomGestureEnabled = Boolean.valueOf(System.getProperty("com.sun.javafx.gestures.zoom", "false"));
-//        if (!zoomGestureEnabled) {
-//            setOnScroll(t -> mapArea.zoom(t.getDeltaY() > 1? .1: -.1, t.getSceneX(), t.getSceneY()));
-//        }
     }
 
     public void setBaseMapProvider(BaseMapProvider provider) {
