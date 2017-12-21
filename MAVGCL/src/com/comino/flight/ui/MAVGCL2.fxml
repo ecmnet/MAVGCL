@@ -33,6 +33,11 @@
 										<FlightXYAnalysisTab fx:id="xyanalysistab" />
 									</content>
 								</Tab>
+								<Tab text="3D View">
+									<content>
+										<MAV3DViewTab fx:id="mav3dviewtab" />
+									</content>
+								</Tab>
 								<Tab text="Map">
 									<content>
 										<MAVOpenMapTab fx:id="mavmaptab" />

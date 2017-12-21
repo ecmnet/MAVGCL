@@ -43,6 +43,7 @@ import com.comino.flight.ui.sidebar.MSPCtlWidget;
 import com.comino.flight.ui.sidebar.TuningWidget;
 import com.comino.flight.ui.tabs.FlightXYAnalysisTab;
 import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
+import com.comino.flight.ui.tabs.MAV3DViewTab;
 import com.comino.flight.ui.tabs.MAVInspectorTab;
 import com.comino.flight.ui.tabs.MAVOpenMapTab;
 import com.comino.flight.ui.tabs.MavLinkShellTab;
@@ -74,6 +75,9 @@ public class FlightTabs extends Pane {
 	private MAVOpenMapTab mavmaptab;
 
 	@FXML
+	private MAV3DViewTab mav3dviewtab;
+
+	@FXML
 	private HBox sidebar;
 
 	@FXML
@@ -102,6 +106,7 @@ public class FlightTabs extends Pane {
 	private void initialize() {
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
+		tabs.add(mav3dviewtab);
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavlinkshelltab);
@@ -124,6 +129,7 @@ public class FlightTabs extends Pane {
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
 		mavmaptab.setDisable(true);
+		mav3dviewtab.setDisable(true);
 		mavlinkshelltab.setDisable(true);
 
 
@@ -145,6 +151,7 @@ public class FlightTabs extends Pane {
 //		experimental.setup(control);
 
 		mavmaptab.setup(flightControl.getChartControl(),control);
+		mav3dviewtab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);
 		xtanalysistab.setup(flightControl.getChartControl(),control);
 		xyanalysistab.setup(flightControl.getChartControl(),control);
