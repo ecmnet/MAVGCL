@@ -39,25 +39,36 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav3d.Xform;
+import com.comino.msp.model.DataModel;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Sphere;
+import javafx.util.Duration;
 
 
 
 public class MAV3DViewTab extends BorderPane implements IChartControl {
 
+	private Timeline task = null;
 
 	private final Group root = new Group();
     private final Xform world = new Xform();
@@ -66,7 +77,11 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
     private final Xform cameraXform2 = new Xform();
     private final Xform cameraXform3 = new Xform();
     private final Xform axisGroup = new Xform();
+    private final Xform mapGroup = new Xform();
 	private SubScene subScene;
+
+	private Sphere vehicle = null;
+
     private static final double CAMERA_INITIAL_DISTANCE = -450;
     private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
     private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
@@ -74,10 +89,38 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
     private static final double CAMERA_FAR_CLIP = 10000.0;
     private static final double AXIS_LENGTH = 250.0;
 
+    private static final double CONTROL_MULTIPLIER = 0.1;
+    private static final double SHIFT_MULTIPLIER = 10.0;
+    private static final double MOUSE_SPEED = 0.1;
+    private static final double ROTATION_SPEED = 2.0;
+    private static final double TRACK_SPEED = 0.3;
+
+    double mousePosX;
+    double mousePosY;
+    double mouseOldX;
+    double mouseOldY;
+    double mouseDeltaX;
+    double mouseDeltaY;
+
+	private DataModel model;
+
 	public MAV3DViewTab() {
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
+		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
+			Platform.runLater(() -> {
+				updateMap(true);
+			});
+		} ) );
+		task.setCycleCount(Timeline.INDEFINITE);
+		task.play();
+
+	}
 
 
+	private void updateMap(boolean b) {
+         vehicle.setTranslateX(model.state.l_y*40);
+         vehicle.setTranslateY(-model.state.l_z*40);
+         vehicle.setTranslateZ(model.state.l_x*40);
 	}
 
 
@@ -89,17 +132,21 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
         root.getChildren().add(world);
         root.setDepthTest(DepthTest.ENABLE);
         subScene = new SubScene(root,this.getPrefWidth(),this.getPrefHeight(),true,javafx.scene.SceneAntialiasing.BALANCED);
-
         this.setCenter(subScene);
         subScene.setCamera(camera);
         this.setBottom(new Label("Test"));
+        handleMouse(subScene, this);
+
+        buildMap();
+
+        vehicle = buildVehicle();
 
 
 	}
 
 
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
-
+        this.model = control.getCurrentModel();
 
 		return this;
 	}
@@ -159,6 +206,36 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
         camera.setVisible(true);
     }
 
+	private Sphere buildVehicle() {
+		final PhongMaterial greenMaterial = new PhongMaterial();
+		greenMaterial.setDiffuseColor(Color.DARKORANGE);
+		greenMaterial.setSpecularColor(Color.ORANGE);
+
+		final Sphere box = new Sphere(2);
+		box.setMaterial(greenMaterial);
+		mapGroup.getChildren().addAll(box);
+		world.getChildren().addAll(box);
+		return box;
+	}
+
+
+	private void buildMap() {
+		final PhongMaterial grayMaterial = new PhongMaterial();
+		grayMaterial.setDiffuseColor(Color.DARKGRAY);
+		grayMaterial.setSpecularColor(Color.GRAY);
+
+
+        for(int i=0;i<250;i=i+5) {
+		final Box box = new Box(5, 5, 5);
+		box.setTranslateX(10+i);
+		box.setTranslateY(10+i);
+		box.setTranslateZ(Math.random()*50);
+		box.setMaterial(grayMaterial);
+		mapGroup.getChildren().addAll(box);
+        }
+		world.getChildren().addAll(mapGroup);
+	}
+
 	private void buildAxes() {
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
@@ -184,6 +261,54 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
         axisGroup.setVisible(true);
         world.getChildren().addAll(axisGroup);
     }
+
+	private void handleMouse(SubScene subScene2, final Node root) {
+
+        root.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent me) {
+                mousePosX = me.getSceneX();
+                mousePosY = me.getSceneY();
+                mouseOldX = me.getSceneX();
+                mouseOldY = me.getSceneY();
+            }
+        });
+        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent me) {
+                mouseOldX = mousePosX;
+                mouseOldY = mousePosY;
+                mousePosX = me.getSceneX();
+                mousePosY = me.getSceneY();
+                mouseDeltaX = (mousePosX - mouseOldX);
+                mouseDeltaY = (mousePosY - mouseOldY);
+
+               double modifier = 1.0;
+
+               if (me.isControlDown()) {
+                    modifier = CONTROL_MULTIPLIER;
+                }
+                if (me.isShiftDown()) {
+                    modifier = SHIFT_MULTIPLIER;
+                }
+                if (me.isPrimaryButtonDown()) {
+                    cameraXform.ry.setAngle(cameraXform.ry.getAngle() -
+                       mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
+                   cameraXform.rx.setAngle(cameraXform.rx.getAngle() +
+                       mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+                }
+                else if (me.isSecondaryButtonDown()) {
+                    double z = camera.getTranslateZ();
+                    double newZ = z + mouseDeltaX*MOUSE_SPEED*modifier;
+                    camera.setTranslateZ(newZ);
+                }
+                else if (me.isMiddleButtonDown()) {
+                   cameraXform2.t.setX(cameraXform2.t.getX() +
+                      mouseDeltaX*MOUSE_SPEED*modifier*TRACK_SPEED);  // -
+                   cameraXform2.t.setY(cameraXform2.t.getY() +
+                      mouseDeltaY*MOUSE_SPEED*modifier*TRACK_SPEED);  // -
+                }
+           }
+       }); // setOnMouseDragged
+   } //handleMouse
 
 
 
