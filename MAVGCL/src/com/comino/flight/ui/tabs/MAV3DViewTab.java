@@ -53,11 +53,9 @@ import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -66,7 +64,7 @@ import javafx.util.Duration;
 
 
 
-public class MAV3DViewTab extends BorderPane implements IChartControl {
+public class MAV3DViewTab extends Pane implements IChartControl {
 
 	private Timeline task = null;
 
@@ -131,10 +129,14 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
         buildAxes();
         root.getChildren().add(world);
         root.setDepthTest(DepthTest.ENABLE);
-        subScene = new SubScene(root,this.getPrefWidth(),this.getPrefHeight(),true,javafx.scene.SceneAntialiasing.BALANCED);
-        this.setCenter(subScene);
+
+        subScene = new SubScene(root,0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-        this.setBottom(new Label("Test"));
+        subScene.widthProperty().bind(this.widthProperty().subtract(20));
+        subScene.heightProperty().bind(this.heightProperty().subtract(20));
+        subScene.setLayoutX(10);  subScene.setLayoutY(10);
+        this.getChildren().add(subScene);
+
         handleMouse(subScene, this);
 
         buildMap();
@@ -309,6 +311,8 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
            }
        }); // setOnMouseDragged
    } //handleMouse
+
+
 
 
 
