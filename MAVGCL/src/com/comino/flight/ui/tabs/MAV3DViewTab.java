@@ -38,6 +38,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
+import com.comino.mav3d.VehicleModel;
 import com.comino.mav3d.Xform;
 import com.comino.msp.model.DataModel;
 
@@ -78,7 +79,7 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 	private final Xform mapGroup = new Xform();
 	private SubScene subScene;
 
-	private Sphere vehicle = null;
+	private Xform vehicle = null;
 
 	private static final double CAMERA_INITIAL_DISTANCE = -450;
 	private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
@@ -115,9 +116,10 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 
 
 	private void updatePosition() {
-		vehicle.setTranslateX(model.state.l_y*40);
+		vehicle.setTranslateX(model.state.l_x*40);
 		vehicle.setTranslateY(-model.state.l_z*40);
-		vehicle.setTranslateZ(model.state.l_x*40);
+		vehicle.setTranslateZ(model.state.l_y*40);
+		vehicle.setRotateY(model.hud.h);
 	}
 
 
@@ -131,6 +133,7 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 		root.setDepthTest(DepthTest.ENABLE);
 
 		subScene = new SubScene(root,0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
+	//	subScene.fillProperty().set(Color.DIMGRAY);
 		subScene.setCamera(camera);
 		subScene.widthProperty().bind(this.widthProperty().subtract(20));
 		subScene.heightProperty().bind(this.heightProperty().subtract(20));
@@ -140,7 +143,8 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 
 		buildMap();
 		buildAxes();
-		vehicle = buildVehicle();
+		vehicle = new VehicleModel();
+		world.getChildren().add(vehicle);
 
 
 	}
@@ -207,26 +211,14 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 		camera.setVisible(true);
 	}
 
-	private Sphere buildVehicle() {
-		final PhongMaterial greenMaterial = new PhongMaterial();
-		greenMaterial.setDiffuseColor(Color.DARKORANGE);
-		greenMaterial.setSpecularColor(Color.ORANGE);
-
-		final Sphere box = new Sphere(2);
-		box.setMaterial(greenMaterial);
-		mapGroup.getChildren().addAll(box);
-		world.getChildren().addAll(box);
-		return box;
-	}
-
 
 	private void buildMap() {
 		final PhongMaterial grayMaterial = new PhongMaterial();
-		grayMaterial.setDiffuseColor(Color.DARKGRAY);
-		grayMaterial.setSpecularColor(Color.GRAY);
+		grayMaterial.setDiffuseColor(Color.GRAY);
+		grayMaterial.setSpecularColor(Color.LIGHTGRAY);
 
 
-		for(int i=0;i<5000;i++) {
+		for(int i=0;i<100;i++) {
 			final Box box = new Box(2, 2, 2);
 			box.setTranslateX(Math.random()*200-100);
 			box.setTranslateY(Math.random()*200-100);
