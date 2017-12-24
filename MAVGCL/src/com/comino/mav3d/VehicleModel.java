@@ -34,18 +34,28 @@
 
 package com.comino.mav3d;
 
+import com.comino.msp.model.DataModel;
+import com.comino.msp.utils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 public class VehicleModel extends Xform{
 
-	ObjModelImporter obj = null;
+	private ObjModelImporter obj = null;
+	private float           scale = 0;
 
-	public VehicleModel() {
+	public VehicleModel(float scale) {
 		super();
+		this.scale = scale;
 		obj = new ObjModelImporter();
 		obj.read(this.getClass().getResource("res/quad_x.obj"));
 		this.getChildren().addAll(obj.getImport());
-		this.setScale(30);
+		this.setScale(scale);
 		this.setRotateX(-90);
+	}
+
+	public void updateState(DataModel model) {
+          this.setTranslate(model.state.l_y*scale, -model.state.l_z*scale, model.state.l_x*scale);
+          this.setPivot(model.state.l_y*scale, -model.state.l_z*scale, model.state.l_x*scale);
+          this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
 	}
 }

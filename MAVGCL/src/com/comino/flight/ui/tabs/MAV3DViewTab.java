@@ -42,6 +42,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav3d.VehicleModel;
 import com.comino.mav3d.Xform;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -60,6 +61,7 @@ import javafx.scene.PointLight;
 import javafx.scene.SubScene;
 import javafx.scene.effect.Light;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -69,7 +71,7 @@ import javafx.util.Duration;
 
 
 
-public class MAV3DViewTab extends StackPane implements IChartControl {
+public class MAV3DViewTab extends Pane implements IChartControl {
 
 	private Timeline task = null;
 
@@ -83,14 +85,14 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 	private final Xform mapGroup = new Xform();
 	private SubScene subScene;
 
-	private Xform vehicle = null;
+	private VehicleModel vehicle = null;
 
-	private static final double CAMERA_INITIAL_DISTANCE = -450;
+	private static final double CAMERA_INITIAL_DISTANCE = -650;
 	private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
-	private static final double CAMERA_INITIAL_Y_ANGLE = 320.0;
+	private static final double CAMERA_INITIAL_Y_ANGLE = -350.0;
 	private static final double CAMERA_NEAR_CLIP = 0.1;
 	private static final double CAMERA_FAR_CLIP = 10000.0;
-	private static final double AXIS_LENGTH = 250.0;
+	private static final double AXIS_LENGTH = 500.0;
 
 	private static final double CONTROL_MULTIPLIER = 0.1;
 	private static final double SHIFT_MULTIPLIER = 10.0;
@@ -111,21 +113,12 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			Platform.runLater(() -> {
-				updatePosition();
+				vehicle.updateState(model);
 			});
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 		task.play();
 	}
-
-
-	private void updatePosition() {
-		vehicle.setTranslateX(model.state.l_x*40);
-		vehicle.setTranslateY(-model.state.l_z*40);
-		vehicle.setTranslateZ(model.state.l_y*40);
-		vehicle.setRotateY(model.hud.h);
-	}
-
 
 	@FXML
 	private void initialize() {
@@ -137,7 +130,7 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 		root.setDepthTest(DepthTest.ENABLE);
 
 		subScene = new SubScene(root,0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
-	//	subScene.fillProperty().set(Color.DIMGRAY);
+		subScene.fillProperty().set(Color.ALICEBLUE);
 		subScene.setCamera(camera);
 		subScene.widthProperty().bind(this.widthProperty().subtract(20));
 		subScene.heightProperty().bind(this.heightProperty().subtract(20));
@@ -147,7 +140,7 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 
 		buildMap();
 		buildAxes();
-		vehicle = new VehicleModel();
+		vehicle = new VehicleModel(30);
 		world.getChildren().addAll(vehicle);
 
 
@@ -222,7 +215,7 @@ public class MAV3DViewTab extends StackPane implements IChartControl {
 		grayMaterial.setSpecularColor(Color.LIGHTGRAY);
 
 
-		for(int i=0;i<100;i++) {
+		for(int i=0;i<10;i++) {
 			final Box box = new Box(2, 2, 2);
 			box.setTranslateX(Math.random()*200-100);
 			box.setTranslateY(Math.random()*200-100);
