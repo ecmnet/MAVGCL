@@ -54,7 +54,8 @@ public class VehicleModel extends Xform{
 	}
 
 	public void updateState(DataModel model) {
-		this.setTranslate(model.state.l_y*scale, -model.state.l_z*scale, model.state.l_x*scale);
-		this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
+		this.setTranslate(-model.state.l_y*20, -model.state.l_z*20, model.state.l_x*20);
+	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
+		this.setRotate(-90, -90+MSPMathUtils.fromRad(model.attitude.y), 0);
 	}
 }

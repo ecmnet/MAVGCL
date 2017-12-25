@@ -34,6 +34,9 @@
 
 package com.comino.flight.ui.tabs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
@@ -42,6 +45,7 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav3d.VehicleModel;
 import com.comino.mav3d.Xform;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.model.utils.BlockPoint2D;
 import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.animation.KeyFrame;
@@ -74,6 +78,7 @@ import javafx.util.Duration;
 public class MAV3DViewTab extends Pane implements IChartControl {
 
 	private Timeline task = null;
+	private Timeline mapt = null;
 
 	private final Group root = new Group();
 	private final Xform world = new Xform();
@@ -100,6 +105,9 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 	private static final double ROTATION_SPEED = 2.0;
 	private static final double TRACK_SPEED = 0.3;
 
+	private Map<Integer,Box> blocks    = null;
+	private PhongMaterial grayMaterial = new PhongMaterial();
+
 	double mousePosX;
 	double mousePosY;
 	double mouseOldX;
@@ -110,6 +118,11 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 	private DataModel model;
 
 	public MAV3DViewTab() {
+
+		this.blocks = new HashMap<Integer,Box>();
+		grayMaterial.setDiffuseColor(Color.BLUE);
+		grayMaterial.setSpecularColor(Color.LIGHTBLUE);
+
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			Platform.runLater(() -> {
@@ -118,6 +131,18 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 		task.play();
+
+		mapt = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
+			Platform.runLater(() -> {
+				for(int k=0;k<mapGroup.getChildren().size();k++)
+					mapGroup.getChildren().get(k).setVisible(false);
+				model.grid.getData().forEach((i,b) -> {
+					getBlockBox(i,b).setVisible(true);;
+				});
+			});
+		} ) );
+		mapt.setCycleCount(Timeline.INDEFINITE);
+		mapt.play();
 	}
 
 	@FXML
@@ -138,12 +163,9 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 		this.getChildren().add(subScene);
 
-		buildMap();
 		buildAxes();
-		vehicle = new VehicleModel(30);
-		world.getChildren().addAll(vehicle);
-
-
+		vehicle = new VehicleModel(16);
+		world.getChildren().addAll(vehicle, mapGroup);
 	}
 
 
@@ -162,7 +184,12 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-
+		blocks.forEach((i,p) -> {
+			Platform.runLater(() -> {
+				mapGroup.getChildren().remove(p);
+			});
+		});
+		blocks.clear();
 	}
 
 
@@ -206,24 +233,6 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		cameraXform.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
 		cameraXform.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
 		camera.setVisible(true);
-	}
-
-
-	private void buildMap() {
-		final PhongMaterial grayMaterial = new PhongMaterial();
-		grayMaterial.setDiffuseColor(Color.GRAY);
-		grayMaterial.setSpecularColor(Color.LIGHTGRAY);
-
-
-		for(int i=0;i<10;i++) {
-			final Box box = new Box(2, 2, 2);
-			box.setTranslateX(Math.random()*200-100);
-			box.setTranslateY(Math.random()*200-100);
-			box.setTranslateZ(Math.random()*200-100);
-			box.setMaterial(grayMaterial);
-			mapGroup.getChildren().addAll(box);
-		}
-		world.getChildren().addAll(mapGroup);
 	}
 
 	private void buildAxes() {
@@ -292,6 +301,26 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		node.setOnZoom(event -> {
 			camera.setTranslateZ(camera.getTranslateZ() + (event.getZoomFactor()-1)*MOUSE_SPEED*3000);
 		});
+	}
+
+
+
+	private Box getBlockBox(int block, BlockPoint2D b) {
+
+		if(blocks.containsKey(block))
+			return blocks.get(block);
+
+		final Box box = new Box(1, 0, 1);
+
+		box.setTranslateX(-b.y*23);
+		box.setTranslateY(0);
+		box.setTranslateZ(b.x*23);
+		box.setMaterial(grayMaterial);
+
+		mapGroup.getChildren().addAll(box);
+        blocks.put(block,box);
+
+		return box;
 	}
 
 }
