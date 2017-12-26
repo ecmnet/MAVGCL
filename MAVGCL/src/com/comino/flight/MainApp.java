@@ -391,7 +391,7 @@ public class MainApp extends Application  {
 	private void showAboutDialog() {
 		VBox box = new VBox();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));
-		Label text = new Label("2017 by ecmnet; View source at https://github.com/ecmnet/MAVGCL");
+		Label text = new Label("Firmware Version: "+control.getCurrentModel().sys.version);
 		text.setStyle("-fx-text-fill: #B0B0B0;");
 		text.setPadding(new Insets(10,0,0,0));
 		box.getChildren().addAll(splash, text);
