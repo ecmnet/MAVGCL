@@ -61,15 +61,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class StatusLineWidget extends Pane implements IChartControl {
 
-	@FXML
-	private Label version;
 
 	@FXML
 	private Badge driver;
@@ -91,6 +88,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge gpos;
+
 
 	private IMAVController control;
 
@@ -250,7 +248,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 		out = new Timeline(new KeyFrame(
 				Duration.millis(5000),
-				ae -> messages.clear()));
+				ae -> { messages.clear();  }));
 
 		task.play();
 	}
