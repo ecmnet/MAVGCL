@@ -67,20 +67,29 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainApp extends Application  {
@@ -121,7 +130,9 @@ public class MainApp extends Application  {
 	private static FlightControlPanel controlpanel = null;
 
 	private Stage primaryStage;
+	private Scene scene;
 	private BorderPane rootLayout;
+	private AnchorPane flightPane;
 
 
 	@Override
@@ -226,7 +237,8 @@ public class MainApp extends Application  {
 			rootLayout = (BorderPane) loader.load();
 
 			// Show the scene containing the root layout.
-			Scene scene = new Scene(rootLayout);
+			scene = new Scene(rootLayout);
+			scene.setFill(Color.rgb(32,32,32));
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			//			ScenicView.show(scene);
@@ -342,7 +354,7 @@ public class MainApp extends Application  {
 		});
 
 		m_about.setOnAction(event -> {
-			showAboutDialog();
+				showAboutDialog();
 		});
 
 		m_about.setVisible(true);
@@ -360,7 +372,7 @@ public class MainApp extends Application  {
 			// Load person overview.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("ui/MAVGCL2.fxml"));
-			AnchorPane flightPane = (AnchorPane) loader.load();
+			flightPane = (AnchorPane) loader.load();
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
@@ -391,16 +403,17 @@ public class MainApp extends Application  {
 	private void showAboutDialog() {
 		VBox box = new VBox();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));
-		Label text = new Label("Firmware Version: "+control.getCurrentModel().sys.version);
-		text.setStyle("-fx-text-fill: #B0B0B0;");
+		Label text = new Label(" Firmware Version: "+control.getCurrentModel().sys.version);
 		text.setPadding(new Insets(10,0,0,0));
 		box.getChildren().addAll(splash, text);
 		box.autosize();
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.getDialogPane().setStyle("-fx-background-color: #202020;");
 		alert.setTitle("About MAVGAnalysis");
-		alert.getDialogPane().getChildren().addAll(box);
+		alert.getDialogPane().getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		alert.getDialogPane().setPrefHeight(220); alert.getDialogPane().setPrefWidth(600);
+		alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
+		alert.getDialogPane().getChildren().addAll(box);
+
 		Platform.runLater(() -> {
 			alert.showAndWait();
 		});
