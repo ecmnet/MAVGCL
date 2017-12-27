@@ -106,7 +106,8 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 	private static final double TRACK_SPEED = 0.3;
 
 	private Map<Integer,Box> blocks    = null;
-	private PhongMaterial grayMaterial = new PhongMaterial();
+	private PhongMaterial grayMaterial   = new PhongMaterial();
+	private PhongMaterial groundMaterial = new PhongMaterial();
 
 	double mousePosX;
 	double mousePosY;
@@ -122,6 +123,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		this.blocks = new HashMap<Integer,Box>();
 		grayMaterial.setDiffuseColor(Color.BLUE);
 		grayMaterial.setSpecularColor(Color.LIGHTBLUE);
+		groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
@@ -163,9 +165,15 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 		this.getChildren().add(subScene);
 
-		buildAxes();
+		Box ground = new Box(AXIS_LENGTH,0,AXIS_LENGTH);
+		ground.setMaterial(groundMaterial);
+
+	    AmbientLight ambient = new AmbientLight();
+	    ambient.setColor(Color.WHITE);
+
+	//	buildAxes();
 		vehicle = new VehicleModel(16);
-		world.getChildren().addAll(vehicle, mapGroup);
+		world.getChildren().addAll(ground, mapGroup, vehicle, ambient);
 	}
 
 
@@ -310,7 +318,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		if(blocks.containsKey(block))
 			return blocks.get(block);
 
-		final Box box = new Box(1, 0, 1);
+		final Box box = new Box(1, 1, 1);
 
 		box.setTranslateX(-b.y*23);
 		box.setTranslateY(0);
