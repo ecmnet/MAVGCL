@@ -71,10 +71,10 @@ public class DashLabel extends GridPane {
 
 		final FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 
-		this.widthProperty().addListener((v,ov,nv) -> {
+		this.label.widthProperty().addListener((v,ov,nv) -> {
 			line.setStartX(0.0f);
 			line.setStartY(this.prefHeightProperty().floatValue()/2);
-			line.setEndX(this.getWidth()-fontLoader.computeStringWidth(label.getText(), label.getFont())-10);
+			line.setEndX(this.getWidth() - 10 - nv.doubleValue());
 			line.setEndY(this.prefHeightProperty().floatValue()/2);
 		});
 	}

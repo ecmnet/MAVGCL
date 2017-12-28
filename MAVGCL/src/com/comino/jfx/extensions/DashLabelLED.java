@@ -42,6 +42,7 @@ import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -80,20 +81,21 @@ public class DashLabelLED extends GridPane {
 		this.addColumn(1, line);
 		this.setPrefWidth(999);
 
+		GridPane.setHgrow(line, Priority.ALWAYS);
+
 		this.circle = new Circle(4);
 		this.circle.setFill(Color.TRANSPARENT);
 		this.circle.setStrokeType(StrokeType.INSIDE);
 		this.circle.setStroke(Color.ANTIQUEWHITE);
 		this.addColumn(2, circle);
 
-		final FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
-
-		this.widthProperty().addListener((v, ov, nv) -> {
+		this.label.widthProperty().addListener((v,ov,nv) -> {
 			line.setStartX(0.0f);
-			line.setStartY(this.prefHeightProperty().floatValue() / 2);
-			line.setEndX(this.getWidth() - fontLoader.computeStringWidth(label.getText(), label.getFont()) - 25);
-			line.setEndY(this.prefHeightProperty().floatValue() / 2);
+			line.setStartY(this.prefHeightProperty().floatValue()/2);
+			line.setEndX(this.getWidth() - 25 - nv.doubleValue());
+			line.setEndY(this.prefHeightProperty().floatValue()/2);
 		});
+
 	}
 
 	public DashLabelLED(String text) {
