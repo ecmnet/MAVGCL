@@ -33,8 +33,6 @@
 
 package com.comino.jfx.extensions;
 
-import com.sun.javafx.tk.FontLoader;
-import com.sun.javafx.tk.Toolkit;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
