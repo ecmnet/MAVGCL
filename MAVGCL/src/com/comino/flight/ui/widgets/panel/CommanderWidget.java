@@ -37,6 +37,8 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
+import org.mavlink.messages.lquac.msg_msp_command;
+import org.mavlink.messages.lquac.msg_set_gps_global_origin;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
@@ -67,7 +69,7 @@ public class CommanderWidget extends WidgetPane  {
 	private Button rtl_command;
 
 	@FXML
-	private Button vis_reset;
+	private Button set_home;
 
 	@FXML
 	private Button emergency;
@@ -158,12 +160,10 @@ public class CommanderWidget extends WidgetPane  {
 
 		});
 
-//		vis_reset.setOnAction((ActionEvent event)-> {
-//			msg_msp_command msp = new msg_msp_command(255,1);
-//			msp.command = MSP_CMD.MSP_CMD_VISION;
-//			msp.param1 = MSP_COMPONENT_CTRL.RESET;
-//			control.sendMAVLinkMessage(msp);
-//		});
+		set_home.setOnAction((ActionEvent event)-> {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,0,0,0,0,
+					(long)(model.gps.latitude*1e7), (long)(model.gps.longitude*1e7), (long)(model.gps.altitude*1e3));
+		});
 
 		emergency.setOnAction((ActionEvent event)-> {
 			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
