@@ -6,7 +6,7 @@ matrix:
   fast_finish: true
   include:
 #    - os: linux
-#      jdk: oraclejdk8
+#      jdk: oraclejdk9
 #      sudo: required
 #      env: DEPLOY=deploy_linux
     - os: osx
