@@ -349,8 +349,8 @@ public class MainApp extends Application  {
 
 		m_about.setVisible(true);
 
-		notifyPreloader(new StateChangeNotification(
-				StateChangeNotification.Type.BEFORE_START));
+//		notifyPreloader(new StateChangeNotification(
+//				StateChangeNotification.Type.BEFORE_START));
 
 
 	}
@@ -387,6 +387,9 @@ public class MainApp extends Application  {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		notifyPreloader(new StateChangeNotification(
+				StateChangeNotification.Type.BEFORE_START));
 	}
 
 
