@@ -434,18 +434,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-		properties.getGPOSAvailableProperty().addListener((v,o,n) -> {
-			if(n.booleanValue()) {
-				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-			}
-		});
-
-		properties.getInitializedProperty().addListener((v,o,n) -> {
-			if(n.booleanValue() && properties.getGPOSAvailableProperty().getValue()) {
-				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-			}
-		});
-
 		task.play();
 
 		this.disabledProperty().addListener((l,o,n) -> {
@@ -496,12 +484,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private void updateMap(boolean refreshCanvas) {
 
+		pos[0] = 0; pos[1] = 0;
+
 		switch(type) {
 		case 0:
 			pos[0] = model.getValue("GLOBLAT");
 			pos[1] = model.getValue("GLOBLON");
 			break;
 		case 1:
+			MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
 					                              (float)model.getValue("LPOSY"),
 					                              (float)model.getValue("LPOSZ"), pos);
