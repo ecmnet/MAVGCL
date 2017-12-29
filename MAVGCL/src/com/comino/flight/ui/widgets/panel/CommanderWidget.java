@@ -160,9 +160,9 @@ public class CommanderWidget extends WidgetPane  {
 
 		});
 
+		set_home.disableProperty().bind(StateProperties.getInstance().getGPOSAvailableProperty().not());
 		set_home.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,0,0,0,0,
-					(long)(model.gps.latitude*1e7), (long)(model.gps.longitude*1e7), (long)(model.gps.altitude*1e3));
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,1);
 		});
 
 		emergency.setOnAction((ActionEvent event)-> {
