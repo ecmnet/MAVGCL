@@ -56,6 +56,7 @@ import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.utils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
@@ -98,11 +99,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private final static float MINEPH = 5.0f;
 
 
-	private final static String[] GPS_SOURCES    	= { "Global Position", "Raw GPS data" };
+	private final static String[] GPS_SOURCES    	= { "Global Position", "Local Position", "Raw GPS data" };
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
 	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap","Terrain" };
-
-	private final static String TYPES[][] 			= { { "GLOBLAT",  "GLOBLON"   }, { "RGPSLAT",  "RGPSLON"   } };
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -144,6 +143,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private double takeoff_lon = 0;
 	private double takeoff_lat = 0;
 
+	private double[] pos = new double[2];
+
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty   scroll        = new SimpleFloatProperty(0);
 
@@ -171,6 +172,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			});
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
+
+		StateProperties.getInstance().getGPOSAvailableProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			}
+		});
 	}
 
 
@@ -480,10 +487,26 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private void updateMap(boolean refreshCanvas) {
 
+		switch(type) {
+		case 0:
+			pos[0] = model.getValue("GLOBLAT");
+			pos[1] = model.getValue("GLOBLON");
+			break;
+		case 1:
+			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
+					                              (float)model.getValue("LPOSY"),
+					                              (float)model.getValue("LPOSZ"), pos);
+			break;
+		case 2:
+			pos[0] = model.getValue("RGPSLAT");
+			pos[1] = model.getValue("RGPSLON");
+			break;
+		}
+
 		//	canvasLayer.redraw(refreshCanvas);
 
-		if(centermode==0 && model.getValue(TYPES[type][0])!=0)
-			map.setCenter(model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]));
+		if(centermode==0 && pos[0]!=0)
+			map.setCenter(pos[0],pos[1]);
 
 		try {
 			if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
@@ -504,8 +527,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			else
 				positionLayer.getIcon().setImage(plane_valid);
 
-			positionLayer.updatePosition(
-					model.getValue(TYPES[type][0]),model.getValue(TYPES[type][1]),model.getValue("HEAD"));
+			positionLayer.updatePosition(pos[0],pos[1],model.getValue("HEAD"));
 
 		} catch(Exception e) { e.printStackTrace(); }
 	}
