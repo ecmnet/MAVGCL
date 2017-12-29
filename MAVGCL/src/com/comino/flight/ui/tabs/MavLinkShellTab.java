@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -35,7 +35,6 @@ package com.comino.flight.ui.tabs;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
 import org.mavlink.messages.SERIAL_CONTROL_FLAG;
@@ -45,13 +44,10 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.listener.IMAVLinkListener;
-import com.comino.msp.utils.ExecutorService;
 
-import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
