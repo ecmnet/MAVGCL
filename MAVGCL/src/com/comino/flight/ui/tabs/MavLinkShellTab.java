@@ -47,11 +47,16 @@ import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.listener.IMAVLinkListener;
 import com.comino.msp.utils.ExecutorService;
 
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 
 public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
@@ -70,6 +75,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private int lastindex = 0;
 
 	private int index = 0;
+	private Timeline out = null;
 
 
 	public MavLinkShellTab() {
@@ -82,6 +88,12 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@FXML
 	private void initialize() {
 
+		this.out = new Timeline(new KeyFrame(Duration.millis(10000), ae ->  {
+			console.appendText("\nnsh> ");
+			index = console.getText().length();
+			scrollIntoView();
+		}));
+
 
 		state = StateProperties.getInstance();
 
@@ -89,15 +101,13 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.prefWidthProperty().bind(widthProperty());
 
 		console.setOnKeyPressed(ke -> {
-
 			if (ke.getCode().equals(KeyCode.ENTER)) {
+				out.play();
 				int end = console.getText().length();
 				if(end > index) {
 					String command = console.getText(index,end).trim();
 					if(command.equalsIgnoreCase("reboot")) {
-						ExecutorService.get().schedule(()-> {
-							reloadShell();
-						},6, TimeUnit.SECONDS);
+						new Timeline(new KeyFrame(Duration.millis(6000), ae ->  reloadShell())).play();
 					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
@@ -194,6 +204,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	public void received(Object _msg) {
 		if(!this.isDisabled()) {
 			if(_msg instanceof msg_serial_control) {
+		//		out.stop();
 				msg_serial_control msg = (msg_serial_control)_msg;
 				byte[] bytes = new byte[msg.count];
 				for(int i=0;i<msg.count;i++) {
@@ -215,6 +226,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	}
 
 	private void reloadShell() {
+		    out.stop();
 			Platform.runLater(() -> {
 				console.clear();
 				if(!isDisabled())
