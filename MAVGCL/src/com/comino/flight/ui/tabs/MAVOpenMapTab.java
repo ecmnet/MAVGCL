@@ -158,6 +158,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private  BaseMapProvider street_provider = null;
 	private  BaseMapProvider terrain_provider = null;
 
+	private StateProperties properties = null;
+
 	private  double zoom_start=0;
 
 	protected int centermode;
@@ -173,11 +175,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 
-		StateProperties.getInstance().getGPOSAvailableProperty().addListener((v,o,n) -> {
-			if(n.booleanValue()) {
-				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-			}
-		});
 	}
 
 
@@ -426,14 +423,26 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.model=dataService.getCurrent();
-
+        this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
 
-		StateProperties.getInstance().getLandedProperty().addListener((e,o,n) -> {
+		properties.getLandedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				takeoff_lon = model.getValue( "GLOBLON");
 				takeoff_lat = model.getValue( "GLOBLAT");
+			}
+		});
+
+		properties.getGPOSAvailableProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			}
+		});
+
+		properties.getInitializedProperty().addListener((v,o,n) -> {
+			if(n.booleanValue() && properties.getGPOSAvailableProperty().getValue()) {
+				MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 			}
 		});
 
