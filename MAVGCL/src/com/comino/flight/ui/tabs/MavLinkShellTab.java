@@ -102,15 +102,15 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 		console.setOnKeyPressed(ke -> {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
-				out.play();
 				int end = console.getText().length();
 				if(end > index) {
 					String command = console.getText(index,end).trim();
 					if(command.equalsIgnoreCase("reboot")) {
-						new Timeline(new KeyFrame(Duration.millis(6000), ae ->  reloadShell())).play();
+				     	new Timeline(new KeyFrame(Duration.millis(6000), ae ->  { reloadShell(); })).play();
 					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
+					out.play();
 					if(!command.equals(last.peekLast())) {
 						last.add(command);
 					}
@@ -204,8 +204,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	public void received(Object _msg) {
 		if(!this.isDisabled()) {
 			if(_msg instanceof msg_serial_control) {
-		//		out.stop();
 				msg_serial_control msg = (msg_serial_control)_msg;
+					out.stop();
 				byte[] bytes = new byte[msg.count];
 				for(int i=0;i<msg.count;i++) {
 					if(msg.data[i]==0x1b)
@@ -226,7 +226,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	}
 
 	private void reloadShell() {
-		    out.stop();
 			Platform.runLater(() -> {
 				console.clear();
 				if(!isDisabled())
