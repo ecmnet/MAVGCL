@@ -162,7 +162,12 @@ public class CommanderWidget extends WidgetPane  {
 
 		set_home.disableProperty().bind(StateProperties.getInstance().getGPOSAvailableProperty().not());
 		set_home.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,1);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,(cmd,result) -> {
+				if(result==0) {
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to current global pos.",
+						MAV_SEVERITY.MAV_SEVERITY_INFO);
+				}
+			},1);
 		});
 
 		emergency.setOnAction((ActionEvent event)-> {
