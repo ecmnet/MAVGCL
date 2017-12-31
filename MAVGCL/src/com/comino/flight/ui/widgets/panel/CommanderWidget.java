@@ -150,7 +150,7 @@ public class CommanderWidget extends WidgetPane  {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_GPOS_VALID) ) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 						model.hud.at);
-		    }
+			}
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
@@ -164,16 +164,19 @@ public class CommanderWidget extends WidgetPane  {
 		set_home.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,(cmd,result) -> {
 				if(result==0) {
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to current global pos.",
-						MAV_SEVERITY.MAV_SEVERITY_INFO);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to current global pos.",
+							MAV_SEVERITY.MAV_SEVERITY_INFO);
 				}
 			},1);
 		});
 
 		emergency.setOnAction((ActionEvent event)-> {
-			if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
-				MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
-						MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
+				if(result==0) {
+					MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+							MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+				}
+			},0, 21196 );
 		});
 	}
 
