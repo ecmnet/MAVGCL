@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -35,6 +35,7 @@ package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -214,10 +215,7 @@ public class TuningWidget extends WidgetPane  {
 			if(group.contains(p.group_name)) {
 				Label unit = new Label(p.unit); unit.setPrefWidth(30);
 				Label name = new Label(p.name); name.setPrefWidth(95);
-				if(p.unit!=null && p.unit.length()>0)
-					name.setTooltip(new Tooltip(p.description+" in ["+p.unit+"]"));
-				else
-					name.setTooltip(new Tooltip(p.description));
+				name.setTooltip(createParameterToolTip(p));
 				ParamItem item = createParamItem(p, true);
 				items.add(item);
 				grid.addRow(i++, name,item.editor,unit);
@@ -231,6 +229,28 @@ public class TuningWidget extends WidgetPane  {
 	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
 		ParamItem item = new ParamItem(p,editable);
 		return item;
+	}
+
+	private Tooltip createParameterToolTip(ParameterAttributes att) {
+
+		StringBuilder sb = new StringBuilder();
+		Tooltip tooltip = new Tooltip();
+
+		tooltip.setMaxWidth(300);
+		tooltip.setWrapText(true);
+
+		sb.append(att.description);
+
+		if(att.unit!=null && att.unit.length()>0)
+			sb.append(" in ["+att.unit+"]");
+
+		if(att.min_val!=0 && att.max_val!=0) {
+			sb.append(String.format("\n\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
+			sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
+		}
+
+		tooltip.setText(sb.toString());
+		return tooltip;
 	}
 
 
