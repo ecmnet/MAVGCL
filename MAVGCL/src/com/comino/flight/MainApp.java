@@ -395,7 +395,7 @@ public class MainApp extends Application  {
 
 	private void showAboutDialog() {
 		VBox box = new VBox();
-		ImageView splash = new ImageView(new Image(getClass().getResource("splash06.png").toExternalForm()));
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash07.png").toExternalForm()));
 		Label text = new Label("  Firmware Version: "+control.getCurrentModel().sys.version +
 				              "   MAVGCL runs on Java "+System.getProperty("java.version"));
 		text.setPadding(new Insets(10,0,0,0));
