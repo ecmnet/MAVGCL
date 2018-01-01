@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -50,7 +50,6 @@ import com.comino.flight.ui.widgets.camera.CameraWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mav.control.IMAVController;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -44,7 +44,6 @@ import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
-import org.lodgon.openmapfx.providers.StamenTileProvider;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -58,9 +57,7 @@ import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.utils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
-import com.comino.openmapfx.ext.CanvasLayerPaintListener;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
-import com.comino.openmapfx.ext.OpenTopoMapTileProvider;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -76,9 +73,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;

@@ -13,7 +13,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 28/12/2017
+**Development Status:** Last updated 01/01/2018
 
 - MAVLink messages parsing fixed - Messages with extensions are handled correct now
 - Various map fixes
@@ -52,7 +52,7 @@ V0.6xx notes:
 
 **Requirements:**
 
-- requires **Java 8** JRE
+- requires **Java 8** JRE (Java 9 compatible)
 - A companion running a serial-to-udp-proxy (either MAVComm or MAVROS, not required for PIXRacer)
 - Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org)) running on companion 
 
