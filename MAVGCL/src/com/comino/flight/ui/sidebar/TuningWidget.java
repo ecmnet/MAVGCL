@@ -244,7 +244,8 @@ public class TuningWidget extends WidgetPane  {
 			sb.append(" in ["+att.unit+"]");
 
 		if(att.min_val!=0 && att.max_val!=0) {
-			sb.append(String.format("\n\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
+			if(att.valueList.size()==0)
+			 sb.append(String.format("\n\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
 			sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
 		}
 
