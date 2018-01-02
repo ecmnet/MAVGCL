@@ -52,14 +52,12 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
-import com.comino.main.MSPConfig;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
 
 import javafx.application.Application;
 import javafx.application.Platform;
