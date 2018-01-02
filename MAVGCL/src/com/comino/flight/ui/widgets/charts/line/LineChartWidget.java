@@ -117,9 +117,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private ChoiceBox<KeyFigureMetaData> cseries3;
 
 	@FXML
-	private CheckBox averaging;
-
-	@FXML
 	private Button export;
 
 	@FXML
@@ -493,10 +490,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 		});
 
-		averaging.selectedProperty().addListener((v, ov, nv) -> {
-			updateRequest();
-		});
-
 		dash.selectedProperty().addListener((v, ov, nv) -> {
 			updateRequest();
 		});
@@ -688,13 +681,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		int factor = dataService.isCollecting()  ? 2 : 1;
 		resolution_ms = resolution_ms * factor;
 
-		if(resolution_ms > dataService.getCollectorInterval_ms()) {
-			averaging.setDisable(false);
-		} else {
-			averaging.setSelected(false);
-			averaging.setDisable(true);
-		}
-
 		timeframe = frame;
 
 		if(!isDisabled()) {
@@ -810,18 +796,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					}
 
 					if(type1.hash!=0)  {
-						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,averaging.isSelected());
+						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
 						if(!Double.isNaN(v1))
 							series1.getData().add(pool.checkOut(dt_sec,v1));
 
 					}
 					if(type2.hash!=0)  {
-						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,averaging.isSelected());
+						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
 						if(!Double.isNaN(v2))
 							series2.getData().add(pool.checkOut(dt_sec,v2));
 					}
 					if(type3.hash!=0)  {
-						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,averaging.isSelected());
+						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,false);
 						if(!Double.isNaN(v3))
 							series3.getData().add(pool.checkOut(dt_sec,v3));
 					}

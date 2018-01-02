@@ -41,12 +41,10 @@
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="cseries3" layoutX="391.0" prefHeight="19.0"
 				prefWidth="100.0" />
-			<CheckBox fx:id="averaging" layoutX="510.0"  prefHeight="19.0"
-		     	text="Sample averaging"/>
-			<Button fx:id="export" layoutX="630.0"  prefHeight="19.0" mnemonicParsing="false"
+			<Button fx:id="export" layoutX="510.0"  prefHeight="19.0" mnemonicParsing="false"
 				text="PNG export" />
-			<CheckBox fx:id="annotations" layoutX="720.0" prefHeight="19.0" mnemonicParsing="false" text="Messages" />
-			<CheckBox fx:id="dash"   layoutX="800.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
+			<CheckBox fx:id="annotations" layoutX="600.0" prefHeight="19.0" mnemonicParsing="false" text="Messages" />
+			<CheckBox fx:id="dash"   layoutX="680.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
 		</Pane>
 	</bottom>
 </fx:root>
