@@ -52,11 +52,14 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
+import com.comino.main.MSPConfig;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.control.impl.MAVSerialController;
 import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.model.DataModel;
+import com.comino.msp.model.segment.Status;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -344,13 +347,13 @@ public class MainApp extends Application  {
 		});
 
 		m_about.setOnAction(event -> {
-				showAboutDialog();
+			showAboutDialog();
 		});
 
 		m_about.setVisible(true);
 
-//		notifyPreloader(new StateChangeNotification(
-//				StateChangeNotification.Type.BEFORE_START));
+		//		notifyPreloader(new StateChangeNotification(
+		//				StateChangeNotification.Type.BEFORE_START));
 
 
 	}
@@ -394,12 +397,15 @@ public class MainApp extends Application  {
 
 
 	private void showAboutDialog() {
-		VBox box = new VBox();
+		VBox box = new VBox(); DataModel model = control.getCurrentModel();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash07.png").toExternalForm()));
-		Label text = new Label("  Firmware Version: "+control.getCurrentModel().sys.version +
-				              "   MAVGCL runs on Java "+System.getProperty("java.version"));
-		text.setPadding(new Insets(10,0,0,0));
-		box.getChildren().addAll(splash, text);
+		Label version = new Label();
+		version.setText("  Firmware Version: "+model.sys.version +
+				"   MAVGCL runs on Java "+System.getProperty("java.version"));
+		version.setPadding(new Insets(10,0,0,0));
+		Label source = new Label("  Source, license and terms of use: https://github.com/ecmnet/MAVGCL");
+		Label copyright = new Label("  ecm@gmx.de");
+		box.getChildren().addAll(splash, version, source, copyright);
 		box.autosize();
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("About MAVGAnalysis");
