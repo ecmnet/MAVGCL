@@ -244,9 +244,14 @@ public class TuningWidget extends WidgetPane  {
 			sb.append(" in ["+att.unit+"]");
 
 		if(att.min_val!=0 && att.max_val!=0) {
-			if(att.valueList.size()==0)
-			 sb.append(String.format("\n\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
-			sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
+			sb.append("\n");
+			if(att.valueList.size()==0 && att.min_val > -Double.MAX_VALUE && att.max_val < Double.MAX_VALUE )
+				sb.append(String.format("\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
+
+			if(att.valueList.size()>0)
+				sb.append(String.format("\nDefault: %s",att.valueList.get((int)att.default_val)));
+			else
+				sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
 		}
 
 		tooltip.setText(sb.toString());
