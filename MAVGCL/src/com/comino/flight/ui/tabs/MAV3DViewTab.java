@@ -39,6 +39,7 @@ import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
@@ -86,24 +87,23 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 	private final Xform cameraXform = new Xform();
 	private final Xform cameraXform2 = new Xform();
 	private final Xform cameraXform3 = new Xform();
-	private final Xform axisGroup = new Xform();
 	private final Xform mapGroup = new Xform();
 	private SubScene subScene;
 
 	private VehicleModel vehicle = null;
+	private Box ground = null;
 
-	private static final double CAMERA_INITIAL_DISTANCE = -650;
-	private static final double CAMERA_INITIAL_X_ANGLE = 70.0;
+	private static final double CAMERA_INITIAL_DISTANCE = -550;
+	private static final double CAMERA_INITIAL_X_ANGLE =  2.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE = -350.0;
 	private static final double CAMERA_NEAR_CLIP = 0.1;
 	private static final double CAMERA_FAR_CLIP = 10000.0;
-	private static final double AXIS_LENGTH = 500.0;
+	private static final double AXIS_LENGTH = 400.0;
 
 	private static final double CONTROL_MULTIPLIER = 0.1;
 	private static final double SHIFT_MULTIPLIER = 10.0;
 	private static final double MOUSE_SPEED = 0.1;
 	private static final double ROTATION_SPEED = 2.0;
-	private static final double TRACK_SPEED = 0.3;
 
 	private Map<Integer,Box> blocks    = null;
 	private PhongMaterial grayMaterial   = new PhongMaterial();
@@ -126,7 +126,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
-		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
 			Platform.runLater(() -> {
 				vehicle.updateState(model);
 			});
@@ -165,7 +165,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 		this.getChildren().add(subScene);
 
-		Box ground = new Box(AXIS_LENGTH,0,AXIS_LENGTH);
+		ground = new Box(AXIS_LENGTH,0,AXIS_LENGTH);
 		ground.setMaterial(groundMaterial);
 
 	    AmbientLight ambient = new AmbientLight();
@@ -179,6 +179,11 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
 		this.model = control.getCurrentModel();
+
+		StateProperties.getInstance().getInitializedProperty().addListener((v,o,n) -> {
+			ground.setTranslateY(model.hud.al*20);
+			camera.setTranslateY(-model.hud.al*40);
+		});
 
 		return this;
 	}
@@ -243,32 +248,6 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		camera.setVisible(true);
 	}
 
-	private void buildAxes() {
-		final PhongMaterial redMaterial = new PhongMaterial();
-		redMaterial.setDiffuseColor(Color.DARKRED);
-		redMaterial.setSpecularColor(Color.RED);
-
-		final PhongMaterial greenMaterial = new PhongMaterial();
-		greenMaterial.setDiffuseColor(Color.DARKGREEN);
-		greenMaterial.setSpecularColor(Color.GREEN);
-
-		final PhongMaterial blueMaterial = new PhongMaterial();
-		blueMaterial.setDiffuseColor(Color.DARKBLUE);
-		blueMaterial.setSpecularColor(Color.BLUE);
-
-		final Box xAxis = new Box(AXIS_LENGTH, 1, 1);
-		final Box yAxis = new Box(1, AXIS_LENGTH, 1);
-		final Box zAxis = new Box(1, 1, AXIS_LENGTH);
-
-		xAxis.setMaterial(redMaterial);
-		yAxis.setMaterial(greenMaterial);
-		zAxis.setMaterial(blueMaterial);
-
-		axisGroup.getChildren().addAll(xAxis, yAxis, zAxis);
-		axisGroup.setVisible(true);
-		world.getChildren().addAll(axisGroup);
-	}
-
 	private void handleMouse(final Node node) {
 
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -298,6 +277,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 				}
 
 				if (me.isPrimaryButtonDown()) {
+					System.out.println(cameraXform.ry.getAngle());
 					cameraXform.ry.setAngle(cameraXform.ry.getAngle() -
 							mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
 							cameraXform.rx.setAngle(cameraXform.rx.getAngle() +
