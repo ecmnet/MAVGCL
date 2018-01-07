@@ -46,9 +46,9 @@ import com.comino.mav.control.IMAVController;
 import com.comino.mav3d.VehicleModel;
 import com.comino.mav3d.Xform;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.utils.BlockPoint2D;
 import com.comino.msp.utils.MSPMathUtils;
 
+import georegression.struct.point.Point3D_F32;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -293,7 +293,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 
 
-	private Box getBlockBox(int block, BlockPoint2D b) {
+	private Box getBlockBox(int block, Point3D_F32 b) {
 
 		if(blocks.containsKey(block))
 			return blocks.get(block);
