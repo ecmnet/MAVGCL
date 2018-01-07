@@ -37,9 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.msp.model.DataModel;
-import com.comino.msp.model.utils.BlockPoint2D;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import georegression.struct.point.Point3D_F32;
 import javafx.application.Platform;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
@@ -126,7 +126,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 
-	private Pane getBlockPane(int block, BlockPoint2D b) {
+	private Pane getBlockPane(int block, Point3D_F32 b) {
 
 		if(blocks.containsKey(block))
 			return blocks.get(block);
