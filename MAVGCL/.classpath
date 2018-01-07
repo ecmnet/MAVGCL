@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/medusa-7.4.jar"/>
 	<classpathentry kind="lib" path="lib/jcodec-0.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/jcodec-javase-0.1.9.jar"/>
+	<classpathentry kind="lib" path="lib/ObjImport.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
