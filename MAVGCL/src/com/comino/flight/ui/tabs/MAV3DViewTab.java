@@ -301,7 +301,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		final Box box = new Box(1, 1, 1);
 
 		box.setTranslateX(-b.y*23);
-		box.setTranslateY(0);
+		box.setTranslateY(model.hud.al*20);
 		box.setTranslateZ(b.x*23);
 		box.setMaterial(grayMaterial);
 
