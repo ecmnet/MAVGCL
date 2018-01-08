@@ -46,7 +46,6 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
-import com.comino.msp.utils.MSPMathUtils;
 
 import georegression.struct.point.Point3D_F32;
 import javafx.animation.KeyFrame;
@@ -62,16 +61,12 @@ import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
 import javafx.scene.SubScene;
-import javafx.scene.effect.Light;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 
@@ -119,6 +114,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 	private DataModel model;
 
 	public MAV3DViewTab() {
+		System.setProperty("prism.dirtyopts", "false");
 
 		this.blocks = new HashMap<Integer,Box>();
 		grayMaterial.setDiffuseColor(Color.BLUE);
@@ -168,10 +164,10 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		ground = new Box(AXIS_LENGTH,0,AXIS_LENGTH);
 		ground.setMaterial(groundMaterial);
 
-	    AmbientLight ambient = new AmbientLight();
-	    ambient.setColor(Color.WHITE);
+		AmbientLight ambient = new AmbientLight();
+		ambient.setColor(Color.WHITE);
 
-	//	buildAxes();
+		//	buildAxes();
 		vehicle = new VehicleModel(16);
 		world.getChildren().addAll(ground, mapGroup, vehicle, ambient);
 	}
@@ -280,8 +276,8 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 					System.out.println(cameraXform.ry.getAngle());
 					cameraXform.ry.setAngle(cameraXform.ry.getAngle() -
 							mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
-							cameraXform.rx.setAngle(cameraXform.rx.getAngle() +
-									mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+					cameraXform.rx.setAngle(cameraXform.rx.getAngle() +
+							mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
 				}
 			}
 		});
@@ -301,12 +297,12 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		final Box box = new Box(1, 1, 1);
 
 		box.setTranslateX(-b.y*23);
-		box.setTranslateY(model.hud.al*20);
+		box.setTranslateY(model.hud.al*20-b.z*23);
 		box.setTranslateZ(b.x*23);
 		box.setMaterial(grayMaterial);
 
 		mapGroup.getChildren().addAll(box);
-        blocks.put(block,box);
+		blocks.put(block,box);
 
 		return box;
 	}
