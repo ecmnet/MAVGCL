@@ -168,7 +168,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		ambient.setColor(Color.WHITE);
 
 		//	buildAxes();
-		vehicle = new VehicleModel(16);
+		vehicle = new VehicleModel(8);
 		world.getChildren().addAll(ground, mapGroup, vehicle, ambient);
 	}
 
