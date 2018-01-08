@@ -246,6 +246,11 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 	private void handleMouse(final Node node) {
 
+		node.setOnScroll(event -> {
+			camera.setTranslateX(camera.getTranslateX() - event.getDeltaX()*MOUSE_SPEED);
+			camera.setTranslateY(camera.getTranslateY() - event.getDeltaY()*MOUSE_SPEED);
+		});
+
 		node.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override public void handle(MouseEvent me) {
 				mousePosX = me.getSceneX();
@@ -260,8 +265,8 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 				mouseOldY = mousePosY;
 				mousePosX = me.getSceneX();
 				mousePosY = me.getSceneY();
-				mouseDeltaX = (mousePosX - mouseOldX);
-				mouseDeltaY = (mousePosY - mouseOldY);
+				mouseDeltaX = -(mousePosX - mouseOldX);
+				mouseDeltaY = -(mousePosY - mouseOldY);
 
 				double modifier = 1.0;
 
