@@ -1,4 +1,4 @@
-package com.comino.mav3d;
+package com.comino.flight.mav3D;
 
 /*
   * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.

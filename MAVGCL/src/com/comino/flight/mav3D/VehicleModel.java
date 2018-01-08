@@ -32,7 +32,7 @@
  *
  ****************************************************************************/
 
-package com.comino.mav3d;
+package com.comino.flight.mav3D;
 
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;

@@ -39,12 +39,12 @@ import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.mav3D.VehicleModel;
+import com.comino.flight.mav3D.Xform;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
-import com.comino.mav3d.VehicleModel;
-import com.comino.mav3d.Xform;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
 
