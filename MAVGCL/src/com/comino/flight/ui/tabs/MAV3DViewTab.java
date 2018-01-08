@@ -273,7 +273,6 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 				}
 
 				if (me.isPrimaryButtonDown()) {
-					System.out.println(cameraXform.ry.getAngle());
 					cameraXform.ry.setAngle(cameraXform.ry.getAngle() -
 							mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
 					cameraXform.rx.setAngle(cameraXform.rx.getAngle() +
