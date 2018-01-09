@@ -32,29 +32,28 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.mav3D;
+package com.comino.flight.ui.widgets.view3D.objects;
 
+import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
-public class VehicleModel extends Xform{
+public class VehicleModel extends Xform {
 
 	private ObjModelImporter obj = null;
-	private float           scale = 0;
 
 	public VehicleModel(float scale) {
 		super();
-		this.scale = scale;
 		obj = new ObjModelImporter();
-		obj.read(this.getClass().getResource("res/quad_x.obj"));
+		obj.read(this.getClass().getResource("resources/quad_x.obj"));
 		this.getChildren().addAll(obj.getImport());
 		this.setScale(scale);
 		this.setRotateX(-90);
 	}
 
 	public void updateState(DataModel model) {
-		this.setTranslate(-model.state.l_y*20, -model.state.l_z*20, model.state.l_x*20);
+		this.setTranslate(-model.state.l_y*100, model.state.l_z > 0 ? 0 : -model.state.l_z *100, model.state.l_x*100);
 	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
 		this.setRotate(-90, -90+MSPMathUtils.fromRad(model.attitude.y), 0);
 	}

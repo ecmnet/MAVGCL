@@ -32,7 +32,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.mav3D;
+package com.comino.flight.ui.widgets.view3D.utils;
 
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
