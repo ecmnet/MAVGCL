@@ -36,112 +36,43 @@ package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
-import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
-import com.comino.flight.ui.widgets.view3D.objects.Camera;
-import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
-import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
+import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
-import javafx.scene.AmbientLight;
-import javafx.scene.DepthTest;
-import javafx.scene.Group;
-import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.util.Duration;
-
 
 
 public class MAV3DViewTab extends Pane implements IChartControl {
 
-
-	private Timeline task = null;
-
-	private final Group root = new Group();
-	private final Xform world = new Xform();
-
-	private SubScene subScene;
-
-	private VehicleModel vehicle = null;
-	private Box ground = null;
-
-	private static final double AXIS_LENGTH = 5000.0;
-
-	private PhongMaterial groundMaterial = new PhongMaterial();
-
-	private DataModel model;
-
-	private MapGroup map;
-
-	private Camera camera;
+	private View3DWidget widget = null;
 
 	public MAV3DViewTab() {
 		System.setProperty("prism.dirtyopts", "false");
-
-		groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
-
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
-
 	}
 
 	@FXML
 	private void initialize() {
 
-		root.getChildren().add(world);
-		root.setDepthTest(DepthTest.ENABLE);
-
-		subScene = new SubScene(root,0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
-		subScene.fillProperty().set(Color.ALICEBLUE);
-		subScene.widthProperty().bind(this.widthProperty().subtract(20));
-		subScene.heightProperty().bind(this.heightProperty().subtract(20));
-		subScene.setLayoutX(10);  subScene.setLayoutY(10);
-
-		camera = new Camera(subScene);
-		this.getChildren().add(subScene);
-
-		ground = new Box(AXIS_LENGTH,0,AXIS_LENGTH);
-		ground.setMaterial(groundMaterial);
-
-		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
-				vehicle.updateState(model);
-//				camera.updateState(model);
-		} ) );
-		task.setCycleCount(Timeline.INDEFINITE);
-		task.play();
-
-
+		widget = new View3DWidget(new Xform(),0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
+		widget.fillProperty().set(Color.ALICEBLUE);
+		widget.widthProperty().bind(this.widthProperty().subtract(20));
+		widget.heightProperty().bind(this.heightProperty().subtract(20));
+		widget.setLayoutX(10);  widget.setLayoutY(10);
+		this.getChildren().add(widget);
 	}
 
 
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
-		this.model = control.getCurrentModel();
-		this.map   = new MapGroup(model);
-
-		StateProperties.getInstance().getLandedProperty().addListener((v,o,n) -> {
-			if(n.booleanValue()) {
-				ground.setTranslateY(model.hud.al*100);
-				camera.setTranslateY(model.hud.al*100);
-			}
-		});
-
-		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(Color.WHITE);
-
-		vehicle = new VehicleModel(50);
-		world.getChildren().addAll(ground, map, vehicle, ambient);
-
+		widget.setup(recordControl, control);
 		return this;
 	}
 
@@ -154,7 +85,7 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-		map.clear();
+		widget.clear();
 	}
 
 

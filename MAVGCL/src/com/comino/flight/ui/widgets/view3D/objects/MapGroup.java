@@ -62,7 +62,7 @@ public class MapGroup extends Xform {
 		final Box box = new Box(5, 5, 5);
 
 		box.setTranslateX(-b.y*100);
-		box.setTranslateY(model.hud.al*100-b.z*100+box.getHeight()/2);
+		box.setTranslateY(-b.z*100+box.getHeight()/2);
 		box.setTranslateZ(b.x*100);
 		box.setMaterial(mapMaterial);
 
