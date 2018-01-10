@@ -1,3 +1,37 @@
+/****************************************************************************
+ *
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de.
+ *   All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ ****************************************************************************/
+
 package com.comino.flight.ui.widgets.view3D;
 
 import com.comino.flight.observables.StateProperties;
@@ -23,6 +57,10 @@ import javafx.util.Duration;
 
 public class View3DWidget extends SubScene  {
 
+	public static final int	OBSERVER_PERSPECTIVE 	= 1;
+	public static final int	VEHICLE_PERSPECTIVE 		= 2;
+	public static final int	BIRDS_PERSPECTIVE 		= 3;
+
 	private static final double PLANE_LENGTH = 5000.0;
 
 	private Timeline 		task 		= null;
@@ -33,6 +71,7 @@ public class View3DWidget extends SubScene  {
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
 
+	private int				perspective = OBSERVER_PERSPECTIVE;
 
 
 	public View3DWidget(Group root, double width, double height, boolean depthBuffer, SceneAntialiasing antiAliasing) {
@@ -71,18 +110,23 @@ public class View3DWidget extends SubScene  {
 		});
 
 		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
-			vehicle.updateState(model);
-			//			camera.updateState(model);
+			switch(perspective) {
+			case OBSERVER_PERSPECTIVE:
+				vehicle.updateState(model);
+				break;
+			case VEHICLE_PERSPECTIVE:
+				camera.updateState(model);
+				break;
+			}
 		} ) );
 		task.setCycleCount(Timeline.INDEFINITE);
 		task.play();
-
 
 		return this;
 	}
 
 	public void clear() {
-	map.clear();
+		map.clear();
 	}
 
 }
