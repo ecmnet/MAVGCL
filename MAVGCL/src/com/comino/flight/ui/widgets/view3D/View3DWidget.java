@@ -58,12 +58,14 @@ import javafx.util.Duration;
 public class View3DWidget extends SubScene  {
 
 
-	private static final double PLANE_LENGTH = 5000.0;
+	private static final double PLANE_LENGTH = 2000.0;
 
 	private Timeline 		task 		= null;
 	private Xform 			world 		= new Xform();
 
 	private Box             	ground     	= null;
+	private Box             	northpole   = null;
+
 	private MapGroup 		map			= null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
@@ -83,11 +85,18 @@ public class View3DWidget extends SubScene  {
 		PhongMaterial groundMaterial = new PhongMaterial();
 		groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 
+		PhongMaterial northMaterial = new PhongMaterial();
+		northMaterial.setDiffuseColor(Color.RED);
+
+		northpole = new Box(1,100,1);
+		northpole.setMaterial(northMaterial);
+		northpole.setTranslateZ(PLANE_LENGTH/2.0f);
+
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
 		vehicle = new VehicleModel(50);
-		world.getChildren().addAll(ground, vehicle, ambient);
+		world.getChildren().addAll(ground, northpole, vehicle, ambient);
 
 		camera = new Camera(this);
 
@@ -101,8 +110,8 @@ public class View3DWidget extends SubScene  {
 
 		StateProperties.getInstance().getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				ground.setTranslateY(model.hud.al*100);
 				camera.setTranslateY(model.hud.al*100);
+				world.setTranslateY(model.hud.al*100);
 			}
 		});
 

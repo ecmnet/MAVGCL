@@ -55,6 +55,6 @@ public class VehicleModel extends Xform {
 	public void updateState(DataModel model) {
 		this.setTranslate(-model.state.l_y*100, model.state.l_z > 0 ? 0 : -model.state.l_z *100, model.state.l_x*100);
 	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
-		this.setRotate(-90, -90+MSPMathUtils.fromRad(model.attitude.y), 0);
+		this.ry.setAngle(180-MSPMathUtils.fromRad(model.attitude.y)+90);
 	}
 }

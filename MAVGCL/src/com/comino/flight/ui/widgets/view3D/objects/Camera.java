@@ -53,7 +53,7 @@ public class Camera extends Xform {
 	private static final double CAMERA_INITIAL_X_ANGLE  	= -10.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE  	=  0.0;
 	private static final double CAMERA_INITIAL_FOV_OBS  	=  40.0;
-	private static final double CAMERA_INITIAL_FOV_VCL  	=  90.0;
+	private static final double CAMERA_INITIAL_FOV_VCL  	=  60.0;
 
 	private static final double CAMERA_NEAR_CLIP 		= 	0.1;
 	private static final double CAMERA_FAR_CLIP 			= 100000.0;
@@ -108,6 +108,8 @@ public class Camera extends Xform {
 			camera.setFieldOfView(CAMERA_INITIAL_FOV_OBS);
 			break;
 		case VEHICLE_PERSPECTIVE:
+			camera.setTranslateX(0); camera.setTranslateY(0);
+			camera.setTranslateZ(0);
 			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
 			camera.setFieldOfView(CAMERA_INITIAL_FOV_VCL);
 			break;
@@ -115,9 +117,7 @@ public class Camera extends Xform {
 	}
 
 	public void updateState(DataModel model) {
-		camera.setTranslateX(model.state.l_y*100);
-		camera.setTranslateY(model.state.l_z > 0 ? 0 : model.state.l_z *100);
-		camera.setTranslateZ(model.state.l_x*100);
+		this.setTranslate(-model.state.l_y*100, model.state.l_z > -0.05 ? 5 : -model.state.l_z *100, model.state.l_x*100);
 		this.ry.setAngle(MSPMathUtils.fromRad(model.attitude.y));
 	}
 
