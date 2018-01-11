@@ -10,8 +10,9 @@
 	<top>
 		<Pane prefHeight="34">
 			<children>
-				<HBox layoutY="10.0" layoutX="10.0" spacing="7.0">
+				<HBox layoutY="10.0" layoutX="10.0" spacing="7.0" alignment="CENTER_LEFT">
 					<children>
+					    <Label text="Perspective:" />
 						<ChoiceBox fx:id="perspective" prefWidth="100.0" />
 					</children>
 				</HBox>

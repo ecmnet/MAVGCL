@@ -52,6 +52,9 @@ public class Camera extends Xform {
 	private static final double CAMERA_INITIAL_DISTANCE 	= -1500;
 	private static final double CAMERA_INITIAL_X_ANGLE  	= -10.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE  	=  0.0;
+	private static final double CAMERA_INITIAL_FOV_OBS  	=  40.0;
+	private static final double CAMERA_INITIAL_FOV_VCL  	=  90.0;
+
 	private static final double CAMERA_NEAR_CLIP 		= 	0.1;
 	private static final double CAMERA_FAR_CLIP 			= 100000.0;
 
@@ -103,10 +106,11 @@ public class Camera extends Xform {
 			this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
 			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
 			this.setRotateZ(180.0);
-			camera.setFieldOfView(40);
+			camera.setFieldOfView(CAMERA_INITIAL_FOV_OBS);
 			break;
 		case VEHICLE_PERSPECTIVE:
-			camera.setFieldOfView(90);
+			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+			camera.setFieldOfView(CAMERA_INITIAL_FOV_VCL);
 			break;
 		}
 	}
