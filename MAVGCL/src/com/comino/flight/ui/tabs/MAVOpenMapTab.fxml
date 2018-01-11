@@ -10,16 +10,16 @@
 	<top>
 		<Pane prefHeight="34">
 			<children>
-				<HBox layoutY="10.0" layoutX="10.0" spacing="10.0" alignment="CENTER_LEFT">
+				<HBox layoutY="7.0" layoutX="10.0" spacing="10.0" alignment="CENTER_LEFT">
 					<children>
 						<Slider fx:id="zoom" blockIncrement="5.0" majorTickUnit="1.0"
 							max="20.0" min="15.0" prefHeight="15.0" prefWidth="161.0"
 							showTickMarks="true" value="19.5" />
-						<ChoiceBox fx:id="gpssource" prefWidth="100.0" />
+						<ChoiceBox fx:id="gpssource" prefWidth="100.0" maxHeight="17.0"  />
 						<CheckBox fx:id="viewdetails" text="GPS Details" />
 						<Label text="Center on" prefHeight="19.0" />
 						<ChoiceBox fx:id="center" maxHeight="17.0" prefWidth="60.0" />
-						<ChoiceBox fx:id="provider" prefWidth="100.0" />
+						<ChoiceBox fx:id="provider" prefWidth="100.0" maxHeight="17.0" />
 						<Button fx:id="export" prefHeight="19.0" prefWidth="110.0"
 							text="PNG export" />
 					</children>
