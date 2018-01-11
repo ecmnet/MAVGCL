@@ -41,8 +41,13 @@ import com.comino.msp.utils.MSPMathUtils;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.transform.Rotate;
 
 public class Camera extends Xform {
+
+	public static final int	OBSERVER_PERSPECTIVE 	= 0;
+	public static final int	VEHICLE_PERSPECTIVE 		= 1;
+	public static final int	BIRDS_PERSPECTIVE 		= 2;
 
 	private static final double CAMERA_INITIAL_DISTANCE 	= -1500;
 	private static final double CAMERA_INITIAL_X_ANGLE  	= -10.0;
@@ -66,6 +71,8 @@ public class Camera extends Xform {
 	private double mouseDeltaX;
 	private double mouseDeltaY;
 
+	private int perspective;
+
 	public Camera(final SubScene scene) {
 
 		super();
@@ -74,13 +81,10 @@ public class Camera extends Xform {
 		cameraXform2.getChildren().add(cameraXform3);
 		cameraXform3.getChildren().add(camera);
 
-		this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
-		this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
-		this.setRotateZ(180.0);
 
 		camera.setNearClip(CAMERA_NEAR_CLIP);
 		camera.setFarClip(CAMERA_FAR_CLIP);
-		camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
+		setPerspective(OBSERVER_PERSPECTIVE);
 
 		scene.setCamera(camera);
 
@@ -90,18 +94,35 @@ public class Camera extends Xform {
 
 	}
 
+	public void setPerspective(int perspective) {
+		this.perspective = perspective;
+		switch(perspective) {
+		case OBSERVER_PERSPECTIVE:
+			camera.setTranslateX(0); camera.setTranslateY(0);
+			camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
+			this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
+			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+			this.setRotateZ(180.0);
+			camera.setFieldOfView(40);
+			break;
+		case VEHICLE_PERSPECTIVE:
+			camera.setFieldOfView(90);
+			break;
+		}
+	}
+
 	public void updateState(DataModel model) {
-		camera.setTranslateX(-model.state.l_y*100);
+		camera.setTranslateX(model.state.l_y*100);
 		camera.setTranslateY(model.state.l_z > 0 ? 0 : model.state.l_z *100);
-		camera.setTranslateZ( model.state.l_x*100);
-		this.setRy(MSPMathUtils.fromRad(model.attitude.y));
+		camera.setTranslateZ(model.state.l_x*100);
+		this.ry.setAngle(MSPMathUtils.fromRad(model.attitude.y));
 	}
 
 	private void registerHandlers(final Node node) {
 
 		node.setOnScroll(event -> {
-			camera.setTranslateX(camera.getTranslateX() + event.getDeltaX()*MOUSE_SPEED);
-			camera.setTranslateY(camera.getTranslateY() + event.getDeltaY()*MOUSE_SPEED);
+			camera.setTranslateX(camera.getTranslateX() - event.getDeltaX()*MOUSE_SPEED);
+			camera.setTranslateY(camera.getTranslateY() - event.getDeltaY()*MOUSE_SPEED);
 		});
 
 		node.setOnMousePressed((me) -> {
@@ -129,10 +150,9 @@ public class Camera extends Xform {
 			}
 
 			if (me.isPrimaryButtonDown()) {
-				this.ry.setAngle(this.ry.getAngle() -
-						mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
-						this.rx.setAngle(this.rx.getAngle() +
-								mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+				if(perspective!=VEHICLE_PERSPECTIVE)
+				   this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
+				this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
 			}
 		});
 

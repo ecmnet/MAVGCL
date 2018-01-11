@@ -57,9 +57,6 @@ import javafx.util.Duration;
 
 public class View3DWidget extends SubScene  {
 
-	public static final int	OBSERVER_PERSPECTIVE 	= 1;
-	public static final int	VEHICLE_PERSPECTIVE 		= 2;
-	public static final int	BIRDS_PERSPECTIVE 		= 3;
 
 	private static final double PLANE_LENGTH = 5000.0;
 
@@ -71,7 +68,7 @@ public class View3DWidget extends SubScene  {
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
 
-	private int				perspective = OBSERVER_PERSPECTIVE;
+	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
 
 	public View3DWidget(Group root, double width, double height, boolean depthBuffer, SceneAntialiasing antiAliasing) {
@@ -111,10 +108,10 @@ public class View3DWidget extends SubScene  {
 
 		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
 			switch(perspective) {
-			case OBSERVER_PERSPECTIVE:
+			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.updateState(model);
 				break;
-			case VEHICLE_PERSPECTIVE:
+			case Camera.VEHICLE_PERSPECTIVE:
 				camera.updateState(model);
 				break;
 			}
@@ -124,6 +121,20 @@ public class View3DWidget extends SubScene  {
 
 		return this;
 	}
+
+	public void setPerspective(int perspective) {
+		this.perspective = perspective;
+		camera.setPerspective(perspective);
+		switch(perspective) {
+		case Camera.OBSERVER_PERSPECTIVE:
+			vehicle.setVisible(true);
+			break;
+		case Camera.VEHICLE_PERSPECTIVE:
+			vehicle.setVisible(false);
+			break;
+		}
+	}
+
 
 	public void clear() {
 		map.clear();

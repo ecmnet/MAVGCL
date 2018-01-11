@@ -42,17 +42,27 @@ import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mav.control.IMAVController;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
-public class MAV3DViewTab extends Pane implements IChartControl {
+public class MAV3DViewTab extends BorderPane implements IChartControl {
+
+	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
 
 	private View3DWidget widget = null;
+
+	@FXML
+	private ChoiceBox<String> perspective;
 
 	public MAV3DViewTab() {
 		System.setProperty("prism.dirtyopts", "false");
@@ -65,9 +75,16 @@ public class MAV3DViewTab extends Pane implements IChartControl {
 		widget = new View3DWidget(new Xform(),0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
 		widget.fillProperty().set(Color.ALICEBLUE);
 		widget.widthProperty().bind(this.widthProperty().subtract(20));
-		widget.heightProperty().bind(this.heightProperty().subtract(20));
+		widget.heightProperty().bind(this.heightProperty().subtract(54));
 		widget.setLayoutX(10);  widget.setLayoutY(10);
-		this.getChildren().add(widget);
+		this.setCenter(widget);
+
+		perspective.getItems().addAll(PERSPECTIVES);
+		perspective.getSelectionModel().selectFirst();
+
+		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
+			widget.setPerspective(n.intValue());
+		});
 	}
 
 
