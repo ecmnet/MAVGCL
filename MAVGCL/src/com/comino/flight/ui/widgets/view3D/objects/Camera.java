@@ -124,8 +124,10 @@ public class Camera extends Xform {
 	private void registerHandlers(final Node node) {
 
 		node.setOnScroll(event -> {
-			camera.setTranslateX(camera.getTranslateX() - event.getDeltaX()*MOUSE_SPEED);
-			camera.setTranslateY(camera.getTranslateY() - event.getDeltaY()*MOUSE_SPEED);
+			if(perspective!=VEHICLE_PERSPECTIVE) {
+				camera.setTranslateX(camera.getTranslateX() - event.getDeltaX()*MOUSE_SPEED);
+				camera.setTranslateY(camera.getTranslateY() - event.getDeltaY()*MOUSE_SPEED);
+			}
 		});
 
 		node.setOnMousePressed((me) -> {
@@ -154,7 +156,7 @@ public class Camera extends Xform {
 
 			if (me.isPrimaryButtonDown()) {
 				if(perspective!=VEHICLE_PERSPECTIVE)
-				   this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
+					this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
 				this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
 			}
 		});
