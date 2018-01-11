@@ -49,7 +49,7 @@ public class Camera extends Xform {
 	public static final int	VEHICLE_PERSPECTIVE 		= 1;
 	public static final int	BIRDS_PERSPECTIVE 		= 2;
 
-	private static final double CAMERA_INITIAL_DISTANCE 	= -1500;
+	private static final double CAMERA_INITIAL_DISTANCE 	= -1000;
 	private static final double CAMERA_INITIAL_X_ANGLE  	= -10.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE  	=  0.0;
 	private static final double CAMERA_INITIAL_FOV_OBS  	=  40.0;
@@ -83,7 +83,6 @@ public class Camera extends Xform {
 		this.getChildren().add(cameraXform2);
 		cameraXform2.getChildren().add(cameraXform3);
 		cameraXform3.getChildren().add(camera);
-
 
 		camera.setNearClip(CAMERA_NEAR_CLIP);
 		camera.setFarClip(CAMERA_FAR_CLIP);
