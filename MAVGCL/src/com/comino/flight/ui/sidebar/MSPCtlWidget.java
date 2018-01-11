@@ -47,13 +47,17 @@ import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.StatusManager;
 import com.comino.msp.model.segment.Status;
+import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends WidgetPane   {
@@ -109,6 +113,9 @@ public class MSPCtlWidget extends WidgetPane   {
 
 	@FXML
 	private Button save_map;
+
+	@FXML
+	private Slider yaw;
 
 
 	@FXML
@@ -307,6 +314,17 @@ public class MSPCtlWidget extends WidgetPane   {
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
+		});
+
+		yaw.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+				msp.param4  = MSPMathUtils.toRad(new_val.doubleValue());
+		        control.sendMAVLinkMessage(msp);
+
+			}
 		});
 	}
 
