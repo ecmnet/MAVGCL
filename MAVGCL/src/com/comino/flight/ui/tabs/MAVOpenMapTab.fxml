@@ -12,6 +12,7 @@
 			<children>
 				<HBox layoutY="7.0" layoutX="10.0" spacing="10.0" alignment="CENTER_LEFT">
 					<children>
+					    <Label text="View:" />
 						<Slider fx:id="zoom" blockIncrement="5.0" majorTickUnit="1.0"
 							max="20.0" min="15.0" prefHeight="15.0" prefWidth="161.0"
 							showTickMarks="true" value="19.5" />
