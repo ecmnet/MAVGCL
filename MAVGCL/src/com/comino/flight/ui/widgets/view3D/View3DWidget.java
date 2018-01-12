@@ -53,6 +53,7 @@ import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class View3DWidget extends SubScene  {
@@ -95,8 +96,14 @@ public class View3DWidget extends SubScene  {
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
+		Text north = new Text("N");
+		north.setTranslateZ(PLANE_LENGTH/2.0f);
+		north.setTranslateY(60);
+		north.setTranslateX(-4);
+		north.setRotate(180);
+
 		vehicle = new VehicleModel(50);
-		world.getChildren().addAll(ground, northpole, vehicle, ambient);
+		world.getChildren().addAll(ground, northpole, vehicle, ambient, north);
 
 		camera = new Camera(this);
 
@@ -142,6 +149,10 @@ public class View3DWidget extends SubScene  {
 			vehicle.setVisible(false);
 			break;
 		}
+	}
+
+	public void scale(float scale) {
+		world.setScale(scale);
 	}
 
 

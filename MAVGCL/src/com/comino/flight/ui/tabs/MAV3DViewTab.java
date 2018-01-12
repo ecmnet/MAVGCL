@@ -39,19 +39,21 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
+import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mav.control.IMAVController;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
@@ -63,6 +65,9 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 
 	@FXML
 	private ChoiceBox<String> perspective;
+
+	@FXML
+	private Slider zoom;
 
 	public MAV3DViewTab() {
 		System.setProperty("prism.dirtyopts", "false");
@@ -84,7 +89,35 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 
 		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			widget.setPerspective(n.intValue());
+			switch(n.intValue()) {
+			case Camera.OBSERVER_PERSPECTIVE:
+				zoom.setDisable(false);
+				break;
+			case Camera.VEHICLE_PERSPECTIVE:
+				zoom.setDisable(true);
+				zoom.setValue(100f);
+				break;
+			}
 		});
+
+		zoom.setValue(100f);
+		zoom.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov,
+					Number old_val, Number new_val) {
+              widget.scale(new_val.floatValue()/100);
+			}
+		});
+
+		zoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					zoom.setValue(100f);
+				}
+			}
+		});
+
 	}
 
 
