@@ -160,11 +160,6 @@ public class Camera extends Xform {
 				this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
 			}
 		});
-
-		node.setOnZoom(event -> {
-			camera.setTranslateZ(camera.getTranslateZ() + (event.getZoomFactor()-1)*MOUSE_SPEED*3000);
-		});
-
 	}
 
 }
