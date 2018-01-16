@@ -38,6 +38,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
+import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mav.control.IMAVController;
@@ -70,6 +71,7 @@ public class View3DWidget extends SubScene  {
 	private MapGroup 		map			= null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
+	private Target			target      = null;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
@@ -89,6 +91,8 @@ public class View3DWidget extends SubScene  {
 		PhongMaterial northMaterial = new PhongMaterial();
 		northMaterial.setDiffuseColor(Color.RED);
 
+		target    = new Target();
+
 		northpole = new Box(1,100,1);
 		northpole.setMaterial(northMaterial);
 		northpole.setTranslateZ(PLANE_LENGTH/2.0f);
@@ -103,7 +107,7 @@ public class View3DWidget extends SubScene  {
 		north.setRotate(180);
 
 		vehicle = new VehicleModel(50);
-		world.getChildren().addAll(ground, northpole, vehicle, ambient, north);
+		world.getChildren().addAll(ground, northpole, vehicle, ambient, north, target);
 
 		camera = new Camera(this);
 
@@ -122,7 +126,8 @@ public class View3DWidget extends SubScene  {
 			}
 		});
 
-		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
+			target.updateState(model);
 			switch(perspective) {
 			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.updateState(model);
