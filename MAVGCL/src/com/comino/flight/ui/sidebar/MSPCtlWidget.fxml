@@ -61,7 +61,7 @@
 							</Insets>
 						</VBox.margin>
 					</Button>
-					<StateButton fx:id="debug_mode1" text="Testing Mode1"
+					<Button fx:id="debug_mode1" text="Testing Mode1"
 						prefWidth="165.0" />
 					<Button fx:id="debug_mode2" text="Testing Mode2" prefWidth="165.0" />
 					<Button fx:id="execute_waypoints" prefWidth="165.0"

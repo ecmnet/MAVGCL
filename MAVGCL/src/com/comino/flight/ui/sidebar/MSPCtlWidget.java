@@ -100,7 +100,7 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_rtl;
 
 	@FXML
-	private StateButton debug_mode1;
+	private Button debug_mode1;
 
 	@FXML
 	private Button debug_mode2;
@@ -336,10 +336,6 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(o,n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.DEBUG_MODE1,(o,n) -> {
-			debug_mode1.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE1));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
