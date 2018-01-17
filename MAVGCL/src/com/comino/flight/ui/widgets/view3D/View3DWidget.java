@@ -46,6 +46,7 @@ import com.comino.msp.model.DataModel;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
@@ -55,6 +56,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class View3DWidget extends SubScene  {
@@ -66,7 +68,6 @@ public class View3DWidget extends SubScene  {
 	private Xform 			world 		= new Xform();
 
 	private Box             	ground     	= null;
-	private Box             	northpole   = null;
 
 	private MapGroup 		map			= null;
 	private Camera 			camera		= null;
@@ -93,21 +94,14 @@ public class View3DWidget extends SubScene  {
 
 		target    = new Target();
 
-		northpole = new Box(1,100,1);
-		northpole.setMaterial(northMaterial);
-		northpole.setTranslateZ(PLANE_LENGTH/2.0f);
+
 
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
-		Text north = new Text("N");
-		north.setTranslateZ(PLANE_LENGTH/2.0f);
-		north.setTranslateY(60);
-		north.setTranslateX(-4);
-		north.setRotate(180);
-
 		vehicle = new VehicleModel(50);
-		world.getChildren().addAll(ground, northpole, vehicle, ambient, north, target);
+		world.getChildren().addAll(ground, vehicle, ambient, target,
+				        addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
 
@@ -163,6 +157,44 @@ public class View3DWidget extends SubScene  {
 
 	public void clear() {
 		map.clear();
+	}
+
+	private Group addPole(char orientation) {
+
+		PhongMaterial material = new PhongMaterial();
+		material.setDiffuseColor(Color.RED);
+
+		Xform pole = new Xform();
+		Box pile = new Box(1,100,1);
+		pile.setMaterial(material);
+		Text text = new Text(String.valueOf(orientation));
+		text.setRotate(180);
+		text.setTranslateY(60);
+
+		switch(orientation) {
+		case 'N':
+			text.setTranslateX(-4);
+			pole.setTranslateZ(PLANE_LENGTH/2.0f);
+			break;
+		case 'S':
+			text.setTranslateX(-3);
+			pole.setRotateY(180);
+			pole.setTranslateZ(-PLANE_LENGTH/2.0f);
+			break;
+		case 'E':
+			text.setTranslateX(-3);
+			pole.setRotateY(270);
+			pole.setTranslateX(-PLANE_LENGTH/2.0f);
+			break;
+		case 'W':
+			text.setTranslateX(-5);
+			pole.setRotateY(90);
+			pole.setTranslateX(PLANE_LENGTH/2.0f);
+			break;
+		}
+
+		pole.getChildren().addAll(pile,text);
+		return pole;
 	}
 
 }
