@@ -55,14 +55,11 @@ public class MapGroup extends Xform {
 
 	private final PhongMaterial mapMaterial	= new PhongMaterial();
 
-	private DataModel 		model		= null;
 	private Timeline 		maptimer 	= null;
 
 	public MapGroup(DataModel model) {
 
 		super();
-
-		this.model = model;
 
 		mapMaterial.setDiffuseColor(Color.INDIANRED);
 

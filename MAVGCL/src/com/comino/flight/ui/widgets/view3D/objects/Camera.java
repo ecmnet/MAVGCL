@@ -41,7 +41,6 @@ import com.comino.msp.utils.MSPMathUtils;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.transform.Rotate;
 
 public class Camera extends Xform {
 
