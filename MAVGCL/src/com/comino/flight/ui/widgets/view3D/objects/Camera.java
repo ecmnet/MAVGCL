@@ -119,6 +119,11 @@ public class Camera extends Xform {
 	public void updateState(DataModel model) {
 		this.setTranslate(-model.state.l_y*100, model.state.l_z > -0.05 ? 5 : -model.state.l_z *100, model.state.l_x*100);
 		this.ry.setAngle(MSPMathUtils.fromRad(model.attitude.y));
+
+		if(perspective==VEHICLE_PERSPECTIVE) {
+			this.rz.setAngle(-MSPMathUtils.fromRad(model.attitude.r)+180);
+			this.rx.setAngle(MSPMathUtils.fromRad(model.attitude.p)+CAMERA_INITIAL_X_ANGLE);
+		}
 	}
 
 	private void registerHandlers(final Node node) {

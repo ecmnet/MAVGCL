@@ -52,6 +52,8 @@ import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -94,8 +96,6 @@ public class View3DWidget extends SubScene  {
 
 		target    = new Target();
 
-
-
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
@@ -118,6 +118,10 @@ public class View3DWidget extends SubScene  {
 				camera.setTranslateY(model.hud.al*100);
 				world.setTranslateY(model.hud.al*100);
 			}
+		});
+
+		StateProperties.getInstance().getConnectedProperty().addListener((v,o,n) -> {
+			vehicle.setVisible(n.booleanValue());
 		});
 
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
