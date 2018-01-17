@@ -74,6 +74,8 @@ public class Camera extends Xform {
 	private double mouseDeltaX;
 	private double mouseDeltaY;
 
+	private double vv_angle = 0;
+
 	private int perspective;
 
 	public Camera(final SubScene scene) {
@@ -98,6 +100,7 @@ public class Camera extends Xform {
 
 	public void setPerspective(int perspective) {
 		this.perspective = perspective;
+		this.vv_angle = 0;
 		switch(perspective) {
 		case OBSERVER_PERSPECTIVE:
 			camera.setTranslateX(0); camera.setTranslateY(0);
@@ -122,7 +125,7 @@ public class Camera extends Xform {
 
 		if(perspective==VEHICLE_PERSPECTIVE) {
 			this.rz.setAngle(-MSPMathUtils.fromRad(model.attitude.r)+180);
-			this.rx.setAngle(MSPMathUtils.fromRad(model.attitude.p)+CAMERA_INITIAL_X_ANGLE);
+			this.rx.setAngle(MSPMathUtils.fromRad(model.attitude.p)+CAMERA_INITIAL_X_ANGLE+vv_angle);
 		}
 	}
 
@@ -160,9 +163,15 @@ public class Camera extends Xform {
 			}
 
 			if (me.isPrimaryButtonDown()) {
-				if(perspective!=VEHICLE_PERSPECTIVE)
+				switch(perspective) {
+				case OBSERVER_PERSPECTIVE:
 					this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
-				this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+				    this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+				    break;
+				case VEHICLE_PERSPECTIVE:
+				  vv_angle +=  mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED;
+
+				}
 			}
 		});
 	}
