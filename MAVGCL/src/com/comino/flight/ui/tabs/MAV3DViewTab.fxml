@@ -16,7 +16,7 @@
 					    <Slider fx:id="zoom" blockIncrement="10.0" majorTickUnit="20.0"
 							max="180.0" min="20" prefHeight="15.0" prefWidth="161.0"
 							showTickMarks="true" value="19.5" />
-					    <Label text="View:" />
+					    <Label text="Perspective:" />
 						<ChoiceBox fx:id="perspective" prefWidth="100.0" maxHeight="17.0"   />
 					</children>
 				</HBox>
