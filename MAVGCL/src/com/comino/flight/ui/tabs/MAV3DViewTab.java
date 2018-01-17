@@ -70,7 +70,6 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 	private Slider zoom;
 
 	public MAV3DViewTab() {
-		System.setProperty("prism.dirtyopts", "false");
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
 	}
 
