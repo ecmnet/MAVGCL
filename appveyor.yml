@@ -16,7 +16,7 @@ build_script:
   - ant deploy_windows
 
 artifacts:
-  - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.msi
+  - path: MAVGCL/dist/deploy/bundles/MAVGAnalysis*.exe
     name: mavgclinstaller
 
 cache:
