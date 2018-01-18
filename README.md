@@ -13,7 +13,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 17/01/2018
+**Development Status:** Last updated 18/01/2018
 
 - 3DView added with observer and vehicle perspective
 - Java 9 compatibility
