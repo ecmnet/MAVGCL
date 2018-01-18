@@ -146,7 +146,7 @@
 
 
 	<target name="deploy_windows" depends="build">
-		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="msi">
+		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="exe">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7"
 							preloaderClass="com.comino.flight.FirstPreloader">
 						</fx:application>
