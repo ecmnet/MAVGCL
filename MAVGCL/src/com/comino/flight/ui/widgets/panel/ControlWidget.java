@@ -88,6 +88,7 @@ public class ControlWidget extends WidgetPane  {
 			if(!n.booleanValue()) {
 				vehiclectl.setSelected(false);
 				video.setSelected(false);
+				tuning.setSelected(false);
 			}
 		});
 
