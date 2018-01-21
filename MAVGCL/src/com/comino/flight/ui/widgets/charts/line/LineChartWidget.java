@@ -205,7 +205,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				updateGraph(refreshRequest);
 				last_update_ms = System.currentTimeMillis();
 			});
-		//	last_update_ms = System.currentTimeMillis();
+			//	last_update_ms = System.currentTimeMillis();
 		}
 	}
 
@@ -513,7 +513,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public KeyFigurePreset getKeyFigureSelection() {
 		KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
-				    type1.hash,type2.hash,type3.hash);
+				type1.hash,type2.hash,type3.hash);
 		return preset;
 	}
 
@@ -842,9 +842,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		d.setKeyFigure(kf);
 		for(int i =x0; i < x1 && i< dataService.getModelList().size();i++) {
 			val = dataService.getModelList().get(i).getValue(kf);
-			if(val<_min || Double.isNaN(_min)) _min = val;
-			if(val>_max || Double.isNaN(_max)) _max = val;
-			_avg = _avg + val; count++;
+			if(!Double.isNaN(val) && !Double.isInfinite(val)) {
+				if(val<_min || Double.isNaN(_min)) _min = val;
+				if(val>_max || Double.isNaN(_max)) _max = val;
+				_avg = _avg + val; count++;
+			}
 		}
 
 		d.setMinMax(_min, _max);
