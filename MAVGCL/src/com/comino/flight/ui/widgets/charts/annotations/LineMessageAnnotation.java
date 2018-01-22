@@ -42,6 +42,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -95,9 +96,13 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			triangle.setFill(Color.LIGHTGREY);
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
+
+		Tooltip tooltip = new Tooltip(message.msg);
+		Tooltip.install(pane, tooltip);
+
+
 		if(displayLabel) {
 			label = new Label(message.msg);
-
 			label.setOnScroll(event -> {
 				chart.fireEvent(event);
 			});
@@ -105,8 +110,9 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			label.setLayoutX(7);
 			label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
 			this.pane.getChildren().addAll(triangle, label);
-		} else
+		} else {
 			this.pane.getChildren().addAll(triangle);
+		}
 
 	}
 
