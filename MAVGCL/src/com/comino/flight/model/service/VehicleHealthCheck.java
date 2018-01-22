@@ -132,6 +132,11 @@ public class VehicleHealthCheck {
 				checkFailed("LIDAR not available");
 			}
 
+			// Is GPOS available
+
+			if(!model.sys.isStatus(Status.MSP_GPOS_VALID))
+			    checkFailed("GPOS not available");
+
 			// check pitch and roll
 
 			if(healthOk) healthOk = model.attitude.r != Float.NaN;
