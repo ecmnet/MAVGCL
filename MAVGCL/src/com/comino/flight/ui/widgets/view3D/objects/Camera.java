@@ -129,7 +129,7 @@ public class Camera extends Xform {
 	}
 
 	public void setFieldOfView(double fov) {
-		camera.setFieldOfView(fov/2+10);
+		camera.setFieldOfView(100-fov/2+10);
 	}
 
 	private void registerHandlers(final Node node) {
