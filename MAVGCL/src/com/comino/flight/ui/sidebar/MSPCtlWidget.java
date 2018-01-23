@@ -115,10 +115,6 @@ public class MSPCtlWidget extends WidgetPane   {
 	private Button save_map;
 
 	@FXML
-	private Slider yaw;
-
-
-	@FXML
 	private Button   abort;
 
 
@@ -207,6 +203,7 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		enable_step.setDisable(true);
 		enable_step.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -271,6 +268,7 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		execute_waypoints.setDisable(true);
 		execute_waypoints.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -287,6 +285,7 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
+		step.setDisable(true);
 		step.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -316,16 +315,6 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
-		yaw.valueProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> ov,
-					Number old_val, Number new_val) {
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
-				msp.param4  = MSPMathUtils.toRad(new_val.doubleValue());
-		        control.sendMAVLinkMessage(msp);
-
-			}
-		});
 	}
 
 

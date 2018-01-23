@@ -75,9 +75,6 @@
 						</VBox.margin>
 					</StateButton>
 					<Button fx:id="step" prefWidth="165.0" text="Execute single step" />
-					<Slider fx:id="yaw" blockIncrement="5.0" majorTickUnit="30.0"
-							max="180.0" min="-180" prefHeight="15.0" maxWidth="165.0"
-							showTickMarks="true" value="0"  />
 				</children>
 			</VBox>
 		</children>
