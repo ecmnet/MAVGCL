@@ -45,7 +45,12 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -55,6 +60,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 public class ChartControlWidget extends WidgetPane  {
 
@@ -79,6 +85,7 @@ public class ChartControlWidget extends WidgetPane  {
 	private AnalysisModelService modelService;
 
 	private long scroll_tms = 0;
+	private FloatProperty animation = new SimpleFloatProperty();
 
 	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
@@ -86,6 +93,13 @@ public class ChartControlWidget extends WidgetPane  {
 		super(300,true);
 		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
 		charts = new HashMap<Integer,IChartControl>();
+
+		animation.addListener((a) -> {
+			charts.entrySet().forEach((chart) -> {
+				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
+					chart.getValue().getScrollProperty().set(1f-animation.floatValue()/1000000f);
+			});
+		});
 	}
 
 	@FXML
@@ -117,17 +131,21 @@ public class ChartControlWidget extends WidgetPane  {
 		scroll.setSnapToTicks(false); scroll.setSnapToPixel(false);
 		scroll.setDisable(true);
 
-//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
-//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
-//		});
+		//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
+		//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
+		//		});
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if((System.currentTimeMillis() - scroll_tms)>50) {
-				charts.entrySet().forEach((chart) -> {
-					if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
-						chart.getValue().getScrollProperty().set(1f-newvalue.floatValue()/1000000);
-				});
+
+			// TODO: Cleanup but is better than old solution
+
+			if((System.currentTimeMillis() - scroll_tms)>100) {
+				animation.setValue(oldvalue);
+				Timeline task = new Timeline(new KeyFrame(Duration.millis(100),
+						   new KeyValue(animation,newvalue)));
+				task.setCycleCount(1);
+				task.play();
 				scroll_tms = System.currentTimeMillis();
 			}
 		});
