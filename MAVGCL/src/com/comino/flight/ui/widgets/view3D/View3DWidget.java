@@ -97,7 +97,7 @@ public class View3DWidget extends SubScene  {
 
 		vehicle = new VehicleModel(50);
 		world.getChildren().addAll(ground, vehicle, ambient, target,
-				        addPole('N'), addPole('S'),addPole('W'),addPole('E'));
+				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
 
@@ -151,7 +151,14 @@ public class View3DWidget extends SubScene  {
 	}
 
 	public void scale(float scale) {
-		world.setScale(scale);
+		switch(perspective) {
+		case Camera.OBSERVER_PERSPECTIVE:
+			world.setScale(scale/100);
+			break;
+		case Camera.VEHICLE_PERSPECTIVE:
+			camera.setFieldOfView(scale);
+			break;
+		}
 	}
 
 

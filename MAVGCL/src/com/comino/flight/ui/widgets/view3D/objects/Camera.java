@@ -112,7 +112,7 @@ public class Camera extends Xform {
 		case VEHICLE_PERSPECTIVE:
 			camera.setTranslateX(0); camera.setTranslateY(0);
 			camera.setTranslateZ(0);
-			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
+			this.rx.setAngle(0);
 			camera.setFieldOfView(CAMERA_INITIAL_FOV_VCL);
 			break;
 		}
@@ -126,6 +126,10 @@ public class Camera extends Xform {
 			this.rz.setAngle(-MSPMathUtils.fromRad(model.attitude.r)+180);
 			this.rx.setAngle(MSPMathUtils.fromRad(model.attitude.p)+CAMERA_INITIAL_X_ANGLE+vv_angle);
 		}
+	}
+
+	public void setFieldOfView(double fov) {
+		camera.setFieldOfView(fov/2+10);
 	}
 
 	private void registerHandlers(final Node node) {
@@ -165,10 +169,10 @@ public class Camera extends Xform {
 				switch(perspective) {
 				case OBSERVER_PERSPECTIVE:
 					this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
-				    this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
-				    break;
+					this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -
+					break;
 				case VEHICLE_PERSPECTIVE:
-				  vv_angle +=  mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED;
+					vv_angle +=  mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED;
 
 				}
 			}

@@ -88,33 +88,26 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 
 		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			widget.setPerspective(n.intValue());
-			switch(n.intValue()) {
-			case Camera.OBSERVER_PERSPECTIVE:
-				zoom.setDisable(false);
-				break;
-			case Camera.VEHICLE_PERSPECTIVE:
-				zoom.setDisable(true);
-				zoom.setValue(100f);
-				break;
-			}
 		});
 
 		zoom.setValue(100f);
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> ov,
 					Number old_val, Number new_val) {
-              widget.scale(new_val.floatValue()/100);
+				widget.scale(new_val.floatValue());
 			}
 		});
 
-		zoom.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-			@Override
-			public void handle(MouseEvent click) {
-				if (click.getClickCount() == 2) {
-					zoom.setValue(100f);
-				}
+		this.setOnMouseClicked((me) -> {
+			if(me.getClickCount()==2) {
+				zoom.setValue(100f);
 			}
+		});
+
+		this.setOnZoom(event -> {
+			double z = zoom.getValue() * ((( event.getZoomFactor() - 1 ) / 2) + 1.0);
+			zoom.setValue(z);
 		});
 
 	}
