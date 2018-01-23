@@ -13,7 +13,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 18/01/2018
+**Development Status:** Last updated 23/01/2018
 
 - 3DView added with observer and vehicle perspective
 - Java 9 compatibility
@@ -32,6 +32,7 @@ V0.6xx notes:
 - Realtime data acquisition (50ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
 - Timechart annotated by messages (MAVLink and ULog) and parameter changes (MAVLink only)
 - XY Analysis for selected key-figures
+- 3D View (vehicle and observer perspective)
 - MAVLink inspector (reporting raw MAVlink messages)
 - Zooming (Click&Drag), pause / continue rolling update while continue recording in the background
 - MAVLinkShell provides NutShell over MAVLink (Console)
