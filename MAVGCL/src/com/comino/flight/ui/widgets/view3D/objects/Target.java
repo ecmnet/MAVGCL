@@ -34,6 +34,7 @@
 
 package com.comino.flight.ui.widgets.view3D.objects;
 
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.msp.model.DataModel;
 
@@ -80,10 +81,10 @@ public class Target extends Xform {
 		this.getChildren().addAll(pyramid);
 	}
 
-	public void updateState(DataModel model) {
-		if(model.slam.pd != 0) {
+	public void updateState(AnalysisDataModel model) {
+		if(model.getValue("SLAMDIR") != 0) {
 			this.setVisible(true);
-			this.setTranslate(-model.slam.px*100f, model.state.l_z > 0 ? 0 : -model.state.l_z *100f, model.slam.py*100f);
+			this.setTranslate(-model.getValue("SLAMPX")*100f, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ"), model.getValue("SLAMPY")*100f);
 		} else
 			this.setVisible(false);
 	}

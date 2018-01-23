@@ -34,18 +34,24 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
+import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.ui.widgets.panel.ChartControlWidget;
+import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
@@ -57,7 +63,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class View3DWidget extends SubScene  {
+public class View3DWidget extends SubScene implements IChartControl {
 
 
 	private static final double PLANE_LENGTH = 2000.0;
@@ -72,7 +78,13 @@ public class View3DWidget extends SubScene  {
 	private VehicleModel   	vehicle    	= null;
 	private Target			target      = null;
 
+	private FloatProperty   scroll        = new SimpleFloatProperty(0);
+
+	private AnalysisDataModel model      = null;
+
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
+
+	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 
 	public View3DWidget(Group root, double width, double height, boolean depthBuffer, SceneAntialiasing antiAliasing) {
@@ -103,16 +115,17 @@ public class View3DWidget extends SubScene  {
 
 	}
 
-	public View3DWidget setup(ChartControlWidget recordControl, IMAVController control) {
-		DataModel model = control.getCurrentModel();
+	public View3DWidget setup(IMAVController control) {
 
-		this.map   = new MapGroup(model);
+		this.model = dataService.getCurrent();
+
+		this.map   = new MapGroup(control.getCurrentModel());
 		world.getChildren().addAll(map);
 
 		StateProperties.getInstance().getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				camera.setTranslateY(model.hud.al*100);
-				world.setTranslateY(model.hud.al*100);
+				camera.setTranslateY(model.getValue("ALTGL")*100);
+				world.setTranslateY(model.getValue("ALTGL")*100);
 			}
 		});
 
@@ -131,6 +144,20 @@ public class View3DWidget extends SubScene  {
 				break;
 			}
 		} ) );
+
+		scroll.addListener((v, ov, nv) -> {
+			if(StateProperties.getInstance().getRecordingProperty().get()==AnalysisModelService.STOPPED) {
+				int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
+
+				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+					model = dataService.getModelList().get(current_x1_pt);
+				else
+					model = dataService.getCurrent();
+
+			}
+		});
+
+
 		task.setCycleCount(Timeline.INDEFINITE);
 		task.play();
 
@@ -202,6 +229,41 @@ public class View3DWidget extends SubScene  {
 
 		pole.getChildren().addAll(pile,text);
 		return pole;
+	}
+
+	@Override
+	public IntegerProperty getTimeFrameProperty() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FloatProperty getScrollProperty() {
+		return scroll;
+	}
+
+	@Override
+	public BooleanProperty getIsScrollingProperty() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refreshChart() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public KeyFigurePreset getKeyFigureSelection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

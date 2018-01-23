@@ -36,6 +36,7 @@ package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
@@ -46,6 +47,7 @@ import com.comino.mav.control.IMAVController;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -57,7 +59,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 
-public class MAV3DViewTab extends BorderPane implements IChartControl {
+public class MAV3DViewTab extends BorderPane  {
 
 	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
 
@@ -98,7 +100,6 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 			}
 		});
 
-
 		this.setOnMouseClicked((me) -> {
 			if(me.getClickCount()==2) {
 				zoom.setValue(100f);
@@ -112,49 +113,9 @@ public class MAV3DViewTab extends BorderPane implements IChartControl {
 
 	}
 
-
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
-		widget.setup(recordControl, control);
+		recordControl.addChart(3,widget.setup(control));
 		return this;
 	}
 
-
-	@Override
-	public FloatProperty getScrollProperty() {
-		return null;
-	}
-
-
-	@Override
-	public void refreshChart() {
-		widget.clear();
-	}
-
-
-	@Override
-	public IntegerProperty getTimeFrameProperty() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public BooleanProperty getIsScrollingProperty() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
-		// TODO Auto-generated method stub
-
-	}
 }

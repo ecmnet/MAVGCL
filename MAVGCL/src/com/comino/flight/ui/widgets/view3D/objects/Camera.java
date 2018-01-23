@@ -34,6 +34,7 @@
 
 package com.comino.flight.ui.widgets.view3D.objects;
 
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
@@ -118,13 +119,13 @@ public class Camera extends Xform {
 		}
 	}
 
-	public void updateState(DataModel model) {
-		this.setTranslate(-model.state.l_y*100, model.state.l_z > -0.05 ? 5 : -model.state.l_z *100, model.state.l_x*100);
-		this.ry.setAngle(MSPMathUtils.fromRad(model.attitude.y));
+	public void updateState(AnalysisDataModel model) {
+		this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
+		this.ry.setAngle(MSPMathUtils.fromRad(model.getValue("YAW")));
 
 		if(perspective==VEHICLE_PERSPECTIVE) {
-			this.rz.setAngle(-MSPMathUtils.fromRad(model.attitude.r)+180);
-			this.rx.setAngle(MSPMathUtils.fromRad(model.attitude.p)+CAMERA_INITIAL_X_ANGLE+vv_angle);
+			this.rz.setAngle(-MSPMathUtils.fromRad(model.getValue("ROLL"))+180);
+			this.rx.setAngle(MSPMathUtils.fromRad(model.getValue("PITCH"))+CAMERA_INITIAL_X_ANGLE+vv_angle);
 		}
 	}
 

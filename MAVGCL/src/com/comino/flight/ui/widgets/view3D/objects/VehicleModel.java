@@ -34,8 +34,8 @@
 
 package com.comino.flight.ui.widgets.view3D.objects;
 
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.msp.model.DataModel;
 import com.comino.msp.utils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
@@ -52,9 +52,9 @@ public class VehicleModel extends Xform {
 		this.setRotateX(-90);
 	}
 
-	public void updateState(DataModel model) {
-		this.setTranslate(-model.state.l_y*100, model.state.l_z > 0 ? 0 : -model.state.l_z *100, model.state.l_x*100);
+	public void updateState(AnalysisDataModel model) {
+		this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
 	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
-		this.ry.setAngle(180-MSPMathUtils.fromRad(model.attitude.y)+90);
+		this.ry.setAngle(180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
 	}
 }
