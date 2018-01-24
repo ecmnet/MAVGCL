@@ -70,9 +70,9 @@ public class AnalysisDataModelMetaData extends Observable {
 	}
 
 	private AnalysisDataModelMetaData() {
-		this.meta    = new HashMap<Integer,KeyFigureMetaData>();
-		this.virt    = new HashMap<Integer,KeyFigureMetaData>();
-		this.groups  = new HashMap<String,List<KeyFigureMetaData>>();
+		this.meta    = new HashMap<Integer,KeyFigureMetaData>(500);
+		this.virt    = new HashMap<Integer,KeyFigureMetaData>(500);
+		this.groups  = new HashMap<String,List<KeyFigureMetaData>>(500);
 
 		loadModelMetaData(null);
 	}
