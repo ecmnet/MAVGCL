@@ -132,10 +132,17 @@ public class VehicleHealthCheck {
 				checkFailed("LIDAR not available");
 			}
 
+			// Is GPS with Fix available ?
+
+
+			if(model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY) && model.gps.fixtype < 3) {
+				checkFailed("No GPS fix available ");
+			}
+
 			// Is GPOS available
 
 			if(!model.sys.isStatus(Status.MSP_GPOS_VALID))
-			    checkFailed("GPOS not available");
+				checkFailed("GPOS not available");
 
 			// check pitch and roll
 
