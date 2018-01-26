@@ -84,7 +84,7 @@ public class Target extends Xform {
 	public void updateState(AnalysisDataModel model) {
 		if(model.getValue("SLAMDIR") != 0) {
 			this.setVisible(true);
-			this.setTranslate(-model.getValue("SLAMPX")*100f, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ"), model.getValue("SLAMPY")*100f);
+			this.setTranslate(-model.getValue("SLAMPX")*100f, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ")*100f, model.getValue("SLAMPY")*100f);
 		} else
 			this.setVisible(false);
 	}
