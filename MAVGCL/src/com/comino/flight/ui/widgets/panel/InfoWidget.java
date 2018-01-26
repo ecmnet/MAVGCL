@@ -96,7 +96,7 @@ public class InfoWidget extends WidgetPane  {
 						setStyle("-fx-text-fill:yellow;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
-						setStyle("-fx-text-fill:steelblue;");
+						setStyle("-fx-text-fill:yellowgreen;");
 						break;
 					default:
 						setStyle("-fx-text-fill:white;");
