@@ -47,7 +47,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
@@ -96,7 +96,7 @@ public class TuningWidget extends WidgetPane  {
 	@FXML
 	private ChoiceBox<String> groups;
 
-	private PX4Parameters  params;
+	private MAVGCLPX4Parameters  params;
 
 	private ScheduledFuture<?> timeout;
 	private int timeout_count=0;
@@ -120,7 +120,7 @@ public class TuningWidget extends WidgetPane  {
 	@FXML
 	public void initialize() {
 
-		params = PX4Parameters.getInstance();
+		params = MAVGCLPX4Parameters.getInstance();
 
 		params.addRefreshListener(() -> {
 			Platform.runLater(() -> {

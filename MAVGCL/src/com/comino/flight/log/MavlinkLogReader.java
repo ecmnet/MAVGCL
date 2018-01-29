@@ -53,7 +53,7 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.listener.IMAVLinkListener;
@@ -236,7 +236,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			long speed = data.ofs * 1000 / (1024 * (System.currentTimeMillis() - start));
 			sendEndNotice();
 			try {
-				ParameterAttributes pa = PX4Parameters.getInstance().get("SYS_LOGGER");
+				ParameterAttributes pa = MAVGCLPX4Parameters.getInstance().get("SYS_LOGGER");
 				if (pa == null || pa.value != 0) {
 					ULogReader reader = new ULogReader(path);
 					UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
@@ -244,7 +244,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					reader.close();
 				} else {
 					PX4LogReader reader = new PX4LogReader(path);
-					PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+					MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 					PX4toModelConverter converter = new PX4toModelConverter(reader, modelService.getModelList());
 					converter.doConversion();
 				}

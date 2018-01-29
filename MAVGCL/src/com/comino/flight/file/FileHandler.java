@@ -64,7 +64,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -188,7 +188,7 @@ public class FileHandler {
 
 					if(file.getName().endsWith("ulg")) {
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
-						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());
 						converter.doConversion();
 						ulogFields = reader.getFieldList();
@@ -214,7 +214,7 @@ public class FileHandler {
 
 					if(file.getName().endsWith("px4log")) {
 						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
-						PX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
 						converter.doConversion();
 					}

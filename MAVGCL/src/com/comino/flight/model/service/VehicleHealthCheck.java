@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -67,7 +67,7 @@ public class VehicleHealthCheck {
 
 	private BooleanProperty healthProperty = new SimpleBooleanProperty();
 
-	private PX4Parameters parameters = null;
+	private MAVGCLPX4Parameters parameters = null;
 	private String reason = null;
 
 	private DecimalFormat f = new DecimalFormat("#0.000");
@@ -79,7 +79,7 @@ public class VehicleHealthCheck {
 
 		state.getParamLoadedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue()) {
-				this.parameters = PX4Parameters.getInstance();
+				this.parameters = MAVGCLPX4Parameters.getInstance();
 				System.out.println("Performing health check");
 				do_check = true; healthOk = true;
 				checkParameters();

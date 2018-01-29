@@ -58,9 +58,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 
-public class PX4Parameters implements IMAVLinkListener {
+public class MAVGCLPX4Parameters implements IMAVLinkListener {
 
-	private static PX4Parameters px4params = null;
+	private static MAVGCLPX4Parameters px4params = null;
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
 
@@ -78,18 +78,18 @@ public class PX4Parameters implements IMAVLinkListener {
 
 	private ScheduledFuture<?> timeout = null;
 
-	public static PX4Parameters getInstance(IMAVController control) {
+	public static MAVGCLPX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
-			px4params = new PX4Parameters(control);
+			px4params = new MAVGCLPX4Parameters(control);
 		return px4params;
 	}
 
-	public static PX4Parameters getInstance() {
+	public static MAVGCLPX4Parameters getInstance() {
 		return px4params;
 	}
 
 
-	private PX4Parameters(IMAVController control) {
+	private MAVGCLPX4Parameters(IMAVController control) {
 		this.control  = control;
 		this.control.addMAVLinkListener(this);
 		this.stateProperties = StateProperties.getInstance();

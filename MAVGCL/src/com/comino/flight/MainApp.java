@@ -46,7 +46,7 @@ import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.PX4Parameters;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
@@ -181,7 +181,7 @@ public class MainApp extends Application  {
 			StateProperties.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			UBXRTCM3Base.getInstance(control, analysisModelService);
-			PX4Parameters.getInstance(control);
+			MAVGCLPX4Parameters.getInstance(control);
 
 
 		} catch(Exception e) {
