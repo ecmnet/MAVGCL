@@ -57,6 +57,7 @@ import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -97,7 +98,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ambient.setColor(Color.WHITE);
 
 		PhongMaterial groundMaterial = new PhongMaterial();
-		groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
+	//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
+		groundMaterial.setDiffuseMap(new Image
+		         (getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
+
 
 		PhongMaterial northMaterial = new PhongMaterial();
 		northMaterial.setDiffuseColor(Color.RED);
