@@ -89,6 +89,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	@FXML
 	private Badge gpos;
 
+	@FXML
+	private Badge lpos;
+
 
 	private IMAVController control;
 
@@ -244,6 +247,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				gpos.setMode(Badge.MODE_ON);
 			else
 				gpos.setMode(Badge.MODE_OFF);
+		});
+
+		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (o,n) -> {
+			if((n.isStatus(Status.MSP_LPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
+				lpos.setMode(Badge.MODE_ON);
+			else
+				lpos.setMode(Badge.MODE_OFF);
 		});
 
 		out = new Timeline(new KeyFrame(
