@@ -163,7 +163,18 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		task.setCycleCount(Timeline.INDEFINITE);
-		task.play();
+
+		this.disabledProperty().addListener((l,o,n) -> {
+			if(!n.booleanValue()) {
+				task.play();
+				System.out.println("Start");
+				model = dataService.getCurrent();
+			} else {
+				System.out.println("Stop");
+				task.stop();
+			}
+		});
+
 
 		return this;
 	}
