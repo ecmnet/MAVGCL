@@ -71,7 +71,14 @@ public class MapGroup extends Xform {
 				});
 		} ) );
 		maptimer.setCycleCount(Timeline.INDEFINITE);
-		maptimer.play();
+
+		this.disabledProperty().addListener((l,o,n) -> {
+			if(!n.booleanValue()) {
+				maptimer.play();
+			} else {
+				maptimer.stop();
+			}
+		});
 
 	}
 
