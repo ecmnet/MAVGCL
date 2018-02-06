@@ -53,12 +53,14 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartSyncControl;
 import com.comino.flight.ui.widgets.charts.annotations.DashBoardAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.LineMessageAnnotation;
+import com.comino.flight.ui.widgets.charts.annotations.ModeAnnotation;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.model.segment.Status;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -73,6 +75,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.geometry.Side;
 import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
@@ -88,6 +91,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
@@ -166,6 +170,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private DashBoardAnnotation dashboard1 = null;
 	private DashBoardAnnotation dashboard2 = null;
 	private DashBoardAnnotation dashboard3 = null;
+	private ModeAnnotation            mode = null;
 
 	private List<IChartSyncControl> syncCharts = null;
 
@@ -234,6 +239,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		dashboard2 = new DashBoardAnnotation(90);
 		dashboard3 = new DashBoardAnnotation(170);
 
+		mode       = new ModeAnnotation();
+		mode.setModes("YELLOW","RED","BLUE");
+
+		linechart.getAnnotations().add(mode, Layer.BACKGROUND);
+
 		current_x1_pt = timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		xAxis.setAutoRanging(false);
@@ -260,7 +270,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-		final Group chartArea = (Group)linechart.getAnnotationArea();
+		Group chartArea = (Group)linechart.getAnnotationArea();
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
@@ -356,34 +366,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dataService.setCurrent(x1);
 
 			mouseEvent.consume();
-		});
-
-		linechart.setOnScrollStarted(event -> {
-			resolution_ms = resolution_ms * 2;
-		});
-
-
-		linechart.setOnScrollFinished(event -> {
-			setXResolution(timeframe);
-		});
-
-
-		linechart.setOnScroll(event -> {
-
-			if(dataService.isCollecting() && !isPaused)
-				return;
-
-			int delta = (int)(timeframe * 1000f / linechart.getWidth() * -event.getDeltaX() * 0.3f
-					/ dataService.getCollectorInterval_ms() + 0.5f);
-			event.consume();
-
-			current_x0_pt = current_x0_pt + delta;
-			if(current_x0_pt<0)
-				current_x0_pt=0;
-
-			Platform.runLater(() -> {
-				updateGraph(true);
-			});
 		});
 
 		readRecentList();
@@ -727,6 +709,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / dataService.getCollectorInterval_ms());
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 
+			mode.clear();
+
 			if(dash.isSelected() && dataService.getModelList().size()> 0) {
 
 				if(type1.hash!=0)
@@ -735,6 +719,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				if(type3.hash!=0)
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+
 
 				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
@@ -793,6 +778,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 							pool.invalidate(series3.getData().get(0));
 							series3.getData().remove(0);
 						}
+					}
+
+					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+
+						if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)
+							mode.addAreaData(dt_sec,1 );
+						else if(m.getValue("LPOSZ")<-0.6 && m.getValue("LPOSZ") > -0.9)
+							mode.addAreaData(dt_sec,2 );
+						else if(m.getValue("LPOSZ") <=-0.9)
+							mode.addAreaData(dt_sec,3);
+						else
+							mode.addAreaData(dt_sec,0);
 					}
 
 					if(type1.hash!=0)  {
@@ -865,8 +862,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		double tick = timeframe/6;
 		if(tick < 1) tick = 1;
 		xAxis.setTickUnit(tick);
-		xAxis.setLowerBound(lower_pt * dataService.getCollectorInterval_ms() / 1000F);
-		xAxis.setUpperBound(upper_pt * dataService.getCollectorInterval_ms() / 1000f);
+		double lb = lower_pt * dataService.getCollectorInterval_ms() / 1000F;
+		double hb = upper_pt * dataService.getCollectorInterval_ms() / 1000f;
+		mode.setBounds(lb, hb);
+		xAxis.setLowerBound(lb);
+		xAxis.setUpperBound(hb);
 	}
 
 
