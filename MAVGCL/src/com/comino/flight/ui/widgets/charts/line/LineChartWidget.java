@@ -88,6 +88,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -130,6 +132,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@FXML
 	private ChoiceBox<String> bckgmode;
+
+	@FXML
+	private HBox bckglegend;
 
 	private int id = 0;
 	private int refresh_step = 0;
@@ -219,8 +224,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@FXML
 	private void initialize() {
 
-		mode       = new ModeAnnotation();
-		mode.setModes("YELLOW","RED","BLUE");
+		mode       = new ModeAnnotation(bckglegend);
 
 		bckgmode.getItems().addAll(BCKGMODES);
 		bckgmode.getSelectionModel().select(0);

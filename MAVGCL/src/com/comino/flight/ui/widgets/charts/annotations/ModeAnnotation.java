@@ -41,6 +41,9 @@ import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -48,26 +51,39 @@ import javafx.scene.shape.Rectangle;
 
 public class ModeAnnotation implements XYAnnotation {
 
+	public final static int		MODE_ANNOTATION_VERTICAL		= 0;
+	public final static int		MODE_ANNOTATION_HORIZONTAL 	= 1;
+
 	public final static int		MODE_ANNOTATION_NONE 		= 0;
 	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_TEST		 	= 3;
 
+	private final static String[]  EKF2STATUS_TEXTS = { "", "?", "OK", "VOK", "ERR" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "AltHold", "PosHold", "Mission", "Offboard" };
+	private final static String[]  TEST_TEXTS =       { "", "<0.6m", "<0.9m", ">0.9m" };
+
+
 	private Pane         		node         = null;
-	private Map<Integer,Paint>	colors       = null;
+	private HBox					legend		=  null;
+	private Map<Integer,Color>	colors       = null;
 
 	private double 				lowBound		 = 0;
 	private double 				highBound	 = 0;
+
+	//private int 					orientation  = MODE_ANNOTATION_VERTICAL;
 
 	private int					modeType  	 = MODE_ANNOTATION_NONE;
 
 	private Area last = null;
 
-	public ModeAnnotation() {
+	public ModeAnnotation(HBox legend) {
 		this.node   = new Pane();
-		this.colors = new HashMap<Integer,Paint>();
+		this.legend = legend;
+		this.colors = new HashMap<Integer,Color>();
 		colors.put(0, Color.TRANSPARENT);
 		node.setVisible(false);
+		setModeColors("YELLOW","DODGERBLUE","LIME","ORANGERED");
 	}
 
 
@@ -76,10 +92,10 @@ public class ModeAnnotation implements XYAnnotation {
 		return node;
 	}
 
-	public void setModes(String... color) {
+	private void setModeColors(String... color) {
 		colors.clear();
 		for(int i=0;i<color.length;i++)
-			colors.put(i+1, Color.web(color[i], 0.04f));
+			colors.put(i+1, Color.web(color[i], 0.1f));
 	}
 
 	public void clear() {
@@ -88,10 +104,24 @@ public class ModeAnnotation implements XYAnnotation {
 
 	public void setModeType(int modeType) {
 		this.modeType = modeType;
-		if(modeType != MODE_ANNOTATION_NONE)
-			node.setVisible(true);
-		else
+		switch(modeType) {
+		case MODE_ANNOTATION_NONE:
 			node.setVisible(false);
+			legend.setVisible(false);
+			break;
+		case MODE_ANNOTATION_FLIGHTMODE:
+			node.setVisible(true);
+			buildLegend(FLIGHTMODE_TEXTS);
+			break;
+		case MODE_ANNOTATION_EKF2STATUS:
+			node.setVisible(true);
+			buildLegend(EKF2STATUS_TEXTS);
+			break;
+		case MODE_ANNOTATION_TEST:
+			node.setVisible(true);
+			buildLegend(TEST_TEXTS);
+			break;
+		}
 	}
 
 
@@ -114,13 +144,37 @@ public class ModeAnnotation implements XYAnnotation {
 		}
 	}
 
-	private void updateModeDataEKF2Status(double time, AnalysisDataModel m) {
+	private void buildLegend(String[] texts) {
+		legend.getChildren().clear();
+		for(int i=0; i<texts.length;i++) {
+			Rectangle r = new Rectangle(10,15);
+			r.setFill(colors.get(i));
+			legend.getChildren().add(r);
+			legend.getChildren().add(new Label(texts[i]));
+		}
+		legend.setVisible(true);
+	}
 
+	private void updateModeDataEKF2Status(double time, AnalysisDataModel m) {
+		int flags = (int)m.getValue("EKFFLG");
+		switch(flags) {
+		case 0:
+			addAreaData(time,0); break;
+		case 65:
+			addAreaData(time,2); break;
+		case 831:
+			addAreaData(time,2); break;
+		case 895:
+			addAreaData(time,3); break;
+		default:
+			addAreaData(time,4); break;
+		}
 	}
 
 	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
 
 	}
+
 
 	private void updateModeDataTest(double time, AnalysisDataModel m) {
 		if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)

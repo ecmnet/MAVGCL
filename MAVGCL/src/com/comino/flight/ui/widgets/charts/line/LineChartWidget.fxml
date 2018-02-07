@@ -5,22 +5,19 @@
 <?import com.comino.jfx.extensions.*?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Label?>
 
-<fx:root  minHeight="250.0" styleClass="widget"
-	type="BorderPane" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="250.0" styleClass="widget" type="BorderPane"
+	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<center>
-		<SectionLineChart fx:id="linechart" animated="false" createSymbols="false"
-			AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-			horizontalZeroLineVisible="false" layoutX="24.0" layoutY="16.0"
-			legendSide="TOP" maxHeight="358.0" maxWidth="1400.0" minHeight="220.0"
-			verticalZeroLineVisible="false">
+		<SectionLineChart fx:id="linechart" animated="false"
+			createSymbols="false" AnchorPane.topAnchor="0.0"
+			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+			AnchorPane.rightAnchor="0.0" horizontalZeroLineVisible="false"
+			layoutX="24.0" layoutY="16.0" legendSide="TOP" maxHeight="358.0"
+			maxWidth="1400.0" minHeight="220.0" verticalZeroLineVisible="false">
 			<xAxis>
 				<MovingAxis animated="true" lowerBound="0"
 					minorTickCount="5" tickLabelFill="#0f0580" tickLabelGap="5.0"
@@ -33,7 +30,7 @@
 	</center>
 	<bottom>
 		<Pane prefHeight="35">
-		    <ChoiceBox fx:id="group" layoutX="30.0" prefHeight="19.0"
+			<ChoiceBox fx:id="group" layoutX="30.0" prefHeight="19.0"
 				prefWidth="120.0" />
 			<ChoiceBox fx:id="cseries1" layoutX="175.0" prefHeight="19.0"
 				prefWidth="100.0" />
@@ -41,12 +38,16 @@
 				prefWidth="100.0" />
 			<ChoiceBox fx:id="cseries3" layoutX="391.0" prefHeight="19.0"
 				prefWidth="100.0" />
-			<Button fx:id="export" layoutX="510.0"  prefHeight="19.0" mnemonicParsing="false"
-				text="PNG export" />
-			<CheckBox fx:id="annotations" layoutX="600.0" prefHeight="19.0" mnemonicParsing="false" text="Messages" />
-			<CheckBox fx:id="dash"   layoutX="670.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
-			<ChoiceBox fx:id="bckgmode" layoutX="750.0" prefHeight="19.0"
+			<CheckBox fx:id="annotations" layoutX="510.0" prefHeight="19.0"
+				mnemonicParsing="false" text="Messages" />
+			<CheckBox fx:id="dash" layoutX="580.0" prefHeight="19.0"
+				mnemonicParsing="false" text="Dashboard" selected="true" />
+			<ChoiceBox fx:id="bckgmode" layoutX="665.0" prefHeight="19.0"
 				prefWidth="125.0" />
+			<HBox fx:id="bckglegend" layoutX="785.0" prefHeight="19"
+				prefWidth="300" layoutY="2.0" spacing="10" />
+			<Button fx:id="export" layoutX="1350.0" prefHeight="19.0"
+				mnemonicParsing="false" text="PNG export" />
 		</Pane>
 	</bottom>
 </fx:root>
