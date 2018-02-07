@@ -1346,10 +1346,6 @@
 		<Validity min="10.5" max="15.0"/>
 	</KeyFigure>
 
-	 <KeyFigure desc="MSP Status" uom="" mask="#" key="MSPSTATUS">
-		<MSPSource class="sys" field="status"></MSPSource>
-	</KeyFigure>
-
 	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">
 		<MSPSource class="battery" field="c0"></MSPSource>
 		<PX4Source field="BATT.C"></PX4Source>
@@ -1417,6 +1413,17 @@
 	<KeyFigure desc="MSP Temperature" uom="°C" mask="#0" key="MSPTEMP">
 		<MSPSource class="sys" field="msp_temp"/>
 		<Validity min="10" max="70"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="PX4 Modes" uom="" mask="#" key="PX4MODE">
+		<MSPSource class="sys" field="px4_mode"></MSPSource>
+	</KeyFigure>
+
+    <KeyFigure desc="MSP Status" uom="" mask="#" key="MSPSTATUS">
+		<MSPSource class="sys" field="status"></MSPSource>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
