@@ -50,8 +50,10 @@ public class ModeAnnotation implements XYAnnotation {
 	private Pane         		node         = null;
 	private Map<Integer,Paint>	colors       = null;
 
-	private double lowBound;
-	private double highBound;
+	private double 				lowBound		 = 0;
+	private double 				highBound	 = 0;
+
+	private int		modeType  				 = 0;
 
 	private Area last = null;
 
@@ -59,6 +61,7 @@ public class ModeAnnotation implements XYAnnotation {
 		this.node   = new Pane();
 		this.colors = new HashMap<Integer,Paint>();
 		colors.put(0, Color.TRANSPARENT);
+		node.setVisible(false);
 	}
 
 
@@ -77,9 +80,14 @@ public class ModeAnnotation implements XYAnnotation {
 			node.getChildren().clear();
 	}
 
-	public void setVisible(boolean visible) {
-		this.node.setVisible(visible);
+	public void setModeType(int modeType) {
+		this.modeType = modeType;
+		if(modeType != 0)
+			node.setVisible(true);
+		else
+			node.setVisible(false);
 	}
+
 
 	public void setBounds(double lowBound, double highBound) {
 		this.lowBound  = lowBound;
@@ -118,6 +126,10 @@ public class ModeAnnotation implements XYAnnotation {
 		node.getChildren().forEach((n) -> {
 			((Area)n).layout(xAxis, yAxis);
 		});
+	}
+
+	public boolean isVisible() {
+		return node.isVisible();
 	}
 
 	private class Area extends Rectangle implements Comparable<Area> {

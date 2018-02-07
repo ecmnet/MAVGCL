@@ -44,7 +44,9 @@
 			<Button fx:id="export" layoutX="510.0"  prefHeight="19.0" mnemonicParsing="false"
 				text="PNG export" />
 			<CheckBox fx:id="annotations" layoutX="600.0" prefHeight="19.0" mnemonicParsing="false" text="Messages" />
-			<CheckBox fx:id="dash"   layoutX="680.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
+			<CheckBox fx:id="dash"   layoutX="670.0" prefHeight="19.0" mnemonicParsing="false" text="Dashboard" selected="true" />
+			<ChoiceBox fx:id="bckgmode" layoutX="750.0" prefHeight="19.0"
+				prefWidth="125.0" />
 		</Pane>
 	</bottom>
 </fx:root>

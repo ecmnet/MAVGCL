@@ -96,8 +96,10 @@ import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
-	private final static int MAXRECENT 	    = 20;
+	private final static int MAXRECENT 	   = 20;
 	private final static int REFRESH_RATE   = 50;
+
+	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -128,6 +130,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@FXML
 	private CheckBox dash;
+
+	@FXML
+	private ChoiceBox<String> bckgmode;
 
 	private int id = 0;
 	private int refresh_step = 0;
@@ -217,6 +222,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@FXML
 	private void initialize() {
 
+		mode       = new ModeAnnotation();
+		mode.setModes("YELLOW","RED","BLUE");
+
+		bckgmode.getItems().addAll(BCKGMODES);
+		bckgmode.getSelectionModel().select(0);
+
 		linechart.setAxisSortingPolicy(SortingPolicy.NONE);
 		linechart.setBackground(null);
 		linechart.setCreateSymbols(false);
@@ -238,9 +249,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		dashboard1 = new DashBoardAnnotation(10);
 		dashboard2 = new DashBoardAnnotation(90);
 		dashboard3 = new DashBoardAnnotation(170);
-
-		mode       = new ModeAnnotation();
-		mode.setModes("YELLOW","RED","BLUE");
 
 		linechart.getAnnotations().add(mode, Layer.BACKGROUND);
 
@@ -477,6 +485,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		annotations.setSelected(false);
+
+		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
+			mode.setModeType(nv.intValue());
+			Platform.runLater(() -> {
+				updateGraph(true);
+			});
+		});
 	}
 
 
@@ -780,7 +795,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						}
 					}
 
-					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0 && mode.isVisible()) {
 
 						if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)
 							mode.addAreaData(dt_sec,1 );
