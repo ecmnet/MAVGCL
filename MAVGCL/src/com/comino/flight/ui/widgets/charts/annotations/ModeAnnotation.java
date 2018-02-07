@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.comino.flight.model.AnalysisDataModel;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -47,13 +48,18 @@ import javafx.scene.shape.Rectangle;
 
 public class ModeAnnotation implements XYAnnotation {
 
+	public final static int		MODE_ANNOTATION_NONE 		= 0;
+	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
+	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
+	public final static int		MODE_ANNOTATION_TEST		 	= 3;
+
 	private Pane         		node         = null;
 	private Map<Integer,Paint>	colors       = null;
 
 	private double 				lowBound		 = 0;
 	private double 				highBound	 = 0;
 
-	private int		modeType  				 = 0;
+	private int					modeType  	 = MODE_ANNOTATION_NONE;
 
 	private Area last = null;
 
@@ -77,12 +83,12 @@ public class ModeAnnotation implements XYAnnotation {
 	}
 
 	public void clear() {
-			node.getChildren().clear();
+		node.getChildren().clear();
 	}
 
 	public void setModeType(int modeType) {
 		this.modeType = modeType;
-		if(modeType != 0)
+		if(modeType != MODE_ANNOTATION_NONE)
 			node.setVisible(true);
 		else
 			node.setVisible(false);
@@ -94,8 +100,40 @@ public class ModeAnnotation implements XYAnnotation {
 		this.highBound = highBound;
 	}
 
-	public void addAreaData(double time, int mode) {
+	public void updateModeData(double time, AnalysisDataModel m) {
+		switch(modeType) {
+		case MODE_ANNOTATION_FLIGHTMODE:
+			updateModeDataFlightMode(time,m);
+			break;
+		case MODE_ANNOTATION_EKF2STATUS:
+			updateModeDataEKF2Status(time,m);
+			break;
+		case MODE_ANNOTATION_TEST:
+			updateModeDataTest(time,m);
+			break;
+		}
+	}
 
+	private void updateModeDataEKF2Status(double time, AnalysisDataModel m) {
+
+	}
+
+	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
+
+	}
+
+	private void updateModeDataTest(double time, AnalysisDataModel m) {
+		if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)
+			addAreaData(time,1 );
+		else if(m.getValue("LPOSZ")<-0.6 && m.getValue("LPOSZ") > -0.9)
+			addAreaData(time,2 );
+		else if(m.getValue("LPOSZ") <=-0.9)
+			addAreaData(time,3);
+		else
+			addAreaData(time,0);
+	}
+
+	private void addAreaData(double time, int mode) {
 
 		if(!this.node.isVisible())
 			return;

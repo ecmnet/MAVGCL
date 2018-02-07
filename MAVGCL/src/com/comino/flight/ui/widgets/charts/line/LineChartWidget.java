@@ -60,7 +60,6 @@ import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.segment.Status;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -75,7 +74,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
 import javafx.geometry.Side;
 import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
@@ -91,7 +89,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
@@ -99,7 +96,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int MAXRECENT 	   = 20;
 	private final static int REFRESH_RATE   = 50;
 
-	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status" };
+	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Testing" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -795,16 +792,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						}
 					}
 
-					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0 && mode.isVisible()) {
-
-						if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)
-							mode.addAreaData(dt_sec,1 );
-						else if(m.getValue("LPOSZ")<-0.6 && m.getValue("LPOSZ") > -0.9)
-							mode.addAreaData(dt_sec,2 );
-						else if(m.getValue("LPOSZ") <=-0.9)
-							mode.addAreaData(dt_sec,3);
-						else
-							mode.addAreaData(dt_sec,0);
+					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+						mode.updateModeData(dt_sec, m);
 					}
 
 					if(type1.hash!=0)  {
