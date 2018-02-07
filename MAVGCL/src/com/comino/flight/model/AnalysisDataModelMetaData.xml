@@ -1427,10 +1427,6 @@
 		</Groups>
 	</KeyFigure>
 
-    <KeyFigure desc="MSP Status" uom="" mask="#" key="MSPSTATUS">
-		<MSPSource class="sys" field="status"></MSPSource>
-	</KeyFigure>
-
 	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
 		<MSPSource class="sys" field="t_armed_ms">
 		    <Converter class="ExpressionConverter" expression="TARM/1000" />
@@ -1691,5 +1687,20 @@
 		</Groups>
 	</KeyFigure>
 
+	<!-- Status Flags  -->
+
+	<KeyFigure desc="LPOS valid" uom="" mask="#" key="LPOSVALID">
+		<MSPSource class="sys" field="status">
+             <Converter class="BitMaskConverter" p1="21"/>
+		</MSPSource>
+		<ULogSource field="vehicle_status_flags_0.condition_local_position_valid"/>
+	</KeyFigure>
+
+	<KeyFigure desc="GPOS valid" uom="" mask="#" key="GPOSVALID">
+		<MSPSource class="sys" field="status">
+             <Converter class="BitMaskConverter" p1="20"/>
+		</MSPSource>
+		<ULogSource field="vehicle_status_flags_0.condition_global_position_valid"/>
+	</KeyFigure>
 
 </AnalysisDataModel>

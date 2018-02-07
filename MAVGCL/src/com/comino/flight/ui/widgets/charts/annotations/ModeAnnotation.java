@@ -176,15 +176,14 @@ public class ModeAnnotation implements XYAnnotation {
 	}
 
 	private void updateModeDataPosEstimate(double time, AnalysisDataModel m) {
-		int flags = (int)m.getValue("MSPSTATUS");
 
-		if(!((flags & (1<<Status.MSP_LPOS_VALID))==0) && !((flags & (1<<Status.MSP_GPOS_VALID))==0)) {
+		if((int)m.getValue("LPOSVALID")==1 && (int)m.getValue("GPOSVALID")==1) {
 			addAreaData(time,3); return;
 		}
-		if(!((flags & (1<<Status.MSP_GPOS_VALID))==0)) {
+		if((int)m.getValue("GPOSVALID")==1) {
 			addAreaData(time,2); return;
 		}
-		if(!((flags & (1<<Status.MSP_LPOS_VALID))==0)) {
+		if((int)m.getValue("LPOSVALID")==1) {
 			addAreaData(time,1); return;
 		}
 		addAreaData(time,0);
@@ -203,17 +202,6 @@ public class ModeAnnotation implements XYAnnotation {
 		addAreaData(time,0);
 	}
 
-
-	private void updateModeDataTest(double time, AnalysisDataModel m) {
-		if(m.getValue("LPOSZ")<-0.2 && m.getValue("LPOSZ") > -0.6)
-			addAreaData(time,1 );
-		else if(m.getValue("LPOSZ")<-0.6 && m.getValue("LPOSZ") > -0.9)
-			addAreaData(time,2 );
-		else if(m.getValue("LPOSZ") <=-0.9)
-			addAreaData(time,3);
-		else
-			addAreaData(time,0);
-	}
 
 	private void addAreaData(double time, int mode) {
 
