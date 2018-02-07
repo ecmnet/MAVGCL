@@ -44,7 +44,6 @@ import com.emxsys.chart.extension.XYAnnotation;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -74,8 +73,6 @@ public class ModeAnnotation implements XYAnnotation {
 	private double 				lowBound		 = 0;
 	private double 				highBound	 = 0;
 
-	//private int 					orientation  = MODE_ANNOTATION_VERTICAL;
-
 	private int					modeType  	 = MODE_ANNOTATION_NONE;
 
 	private Area last = null;
@@ -100,7 +97,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.clear();
 		for(int i=0;i<color.length;i++) {
 			colors.put(i+1, Color.web(color[i], 0.07f));
-			legend_colors.put(i+1, Color.web(color[i], 0.2f));
+			legend_colors.put(i+1, Color.web(color[i], 0.15f));
 		}
 	}
 
@@ -167,7 +164,7 @@ public class ModeAnnotation implements XYAnnotation {
 		switch(flags) {
 		case 0:
 			addAreaData(time,0); break;
-		case 65:
+		case 651:
 			addAreaData(time,1); break;
 		case 831:
 			addAreaData(time,2); break;
