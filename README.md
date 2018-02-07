@@ -13,8 +13,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 23/01/2018
+**Development Status:** Last updated 07/02/2018
 
+- Mode annotations in background for FlightMode/EKFStatus/Positioning 
 - 3DView added with observer and vehicle perspective
 - Java 9 compatibility
 
