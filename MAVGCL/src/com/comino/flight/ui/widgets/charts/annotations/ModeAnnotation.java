@@ -61,7 +61,7 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
 
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos" };
-	private final static String[]  FLIGHTMODE_TEXTS = { "", "Stabilized","AltHold","PosHold","Offboard" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "Auto","AltHold","PosHold","Offboard" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 
 
@@ -84,7 +84,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","LIME","ORANGERED");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED");
 	}
 
 
@@ -192,14 +192,14 @@ public class ModeAnnotation implements XYAnnotation {
 
 	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
 		int flags = (int)m.getValue("PX4MODE");
-		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_STABILIZED)) {
-			addAreaData(time,1); return; }
 		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL)) {
 			addAreaData(time,2); return; }
 		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL)) {
 			addAreaData(time,3); return; }
 		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD)) {
 			addAreaData(time,4); return; }
+		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO)) {
+			addAreaData(time,1); return; }
 		addAreaData(time,0);
 	}
 
