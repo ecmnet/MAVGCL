@@ -66,9 +66,10 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 
 
-	private Pane         		node         = null;
-	private HBox					legend		=  null;
-	private Map<Integer,Color>	colors       = null;
+	private Pane         		node         	= null;
+	private HBox					legend			=  null;
+	private Map<Integer,Color>	colors       	= null;
+	private Map<Integer,Color>	legend_colors   = null;
 
 	private double 				lowBound		 = 0;
 	private double 				highBound	 = 0;
@@ -84,6 +85,7 @@ public class ModeAnnotation implements XYAnnotation {
 		this.legend = legend;
 		this.colors = new HashMap<Integer,Color>();
 		colors.put(0, Color.TRANSPARENT);
+		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
 		setModeColors("YELLOW","DODGERBLUE","LIME","ORANGERED");
 	}
@@ -96,8 +98,10 @@ public class ModeAnnotation implements XYAnnotation {
 
 	private void setModeColors(String... color) {
 		colors.clear();
-		for(int i=0;i<color.length;i++)
+		for(int i=0;i<color.length;i++) {
 			colors.put(i+1, Color.web(color[i], 0.07f));
+			legend_colors.put(i+1, Color.web(color[i], 0.2f));
+		}
 	}
 
 	public void clear() {
@@ -147,10 +151,11 @@ public class ModeAnnotation implements XYAnnotation {
 	}
 
 	private void buildLegend(String[] texts) {
+		Rectangle r = null;
 		legend.getChildren().clear();
 		for(int i=0; i<texts.length;i++) {
-			Rectangle r = new Rectangle(10,15);
-			r.setFill(colors.get(i));
+			r = new Rectangle(10,15);
+			r.setFill(legend_colors.get(i));
 			legend.getChildren().add(r);
 			legend.getChildren().add(new Label(texts[i]));
 		}
