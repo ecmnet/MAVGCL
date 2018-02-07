@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.model.segment.Status;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -57,11 +59,11 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_NONE 		= 0;
 	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
-	public final static int		MODE_ANNOTATION_TEST		 	= 3;
+	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "?", "OK", "VOK", "ERR" };
-	private final static String[]  FLIGHTMODE_TEXTS = { "", "AltHold", "PosHold", "Mission", "Offboard" };
-	private final static String[]  TEST_TEXTS =       { "", "<0.6m", "<0.9m", ">0.9m" };
+	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "Stabilized","AltHold","PosHold","Offboard" };
+	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 
 
 	private Pane         		node         = null;
@@ -95,7 +97,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private void setModeColors(String... color) {
 		colors.clear();
 		for(int i=0;i<color.length;i++)
-			colors.put(i+1, Color.web(color[i], 0.1f));
+			colors.put(i+1, Color.web(color[i], 0.07f));
 	}
 
 	public void clear() {
@@ -117,9 +119,9 @@ public class ModeAnnotation implements XYAnnotation {
 			node.setVisible(true);
 			buildLegend(EKF2STATUS_TEXTS);
 			break;
-		case MODE_ANNOTATION_TEST:
+		case MODE_ANNOTATION_POSESTIMAT:
 			node.setVisible(true);
-			buildLegend(TEST_TEXTS);
+			buildLegend(POSESTIMAT_TEXTS);
 			break;
 		}
 	}
@@ -138,8 +140,8 @@ public class ModeAnnotation implements XYAnnotation {
 		case MODE_ANNOTATION_EKF2STATUS:
 			updateModeDataEKF2Status(time,m);
 			break;
-		case MODE_ANNOTATION_TEST:
-			updateModeDataTest(time,m);
+		case MODE_ANNOTATION_POSESTIMAT:
+			updateModeDataPosEstimate(time,m);
 			break;
 		}
 	}
@@ -161,7 +163,7 @@ public class ModeAnnotation implements XYAnnotation {
 		case 0:
 			addAreaData(time,0); break;
 		case 65:
-			addAreaData(time,2); break;
+			addAreaData(time,1); break;
 		case 831:
 			addAreaData(time,2); break;
 		case 895:
@@ -171,8 +173,32 @@ public class ModeAnnotation implements XYAnnotation {
 		}
 	}
 
-	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
+	private void updateModeDataPosEstimate(double time, AnalysisDataModel m) {
+		int flags = (int)m.getValue("MSPSTATUS");
 
+		if(!((flags & (1<<Status.MSP_LPOS_VALID))==0) && !((flags & (1<<Status.MSP_GPOS_VALID))==0)) {
+			addAreaData(time,3); return;
+		}
+		if(!((flags & (1<<Status.MSP_GPOS_VALID))==0)) {
+			addAreaData(time,2); return;
+		}
+		if(!((flags & (1<<Status.MSP_LPOS_VALID))==0)) {
+			addAreaData(time,1); return;
+		}
+		addAreaData(time,0);
+	}
+
+	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
+		int flags = (int)m.getValue("PX4MODE");
+		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_STABILIZED)) {
+			addAreaData(time,1); return; }
+		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL)) {
+			addAreaData(time,2); return; }
+		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL)) {
+			addAreaData(time,3); return; }
+		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD)) {
+			addAreaData(time,4); return; }
+		addAreaData(time,0);
 	}
 
 
