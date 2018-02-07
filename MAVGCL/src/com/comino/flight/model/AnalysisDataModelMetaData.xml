@@ -43,6 +43,7 @@
 
 	<KeyFigure desc="Est.Flags" uom="" mask="#" key="EKFFLG">
 	    <MSPSource class="est" field="flags"></MSPSource>
+	    <ULogSource field="estimator_status_0.solution_status_flags"/>
 		<Groups>
 			<Group>EKF2 Status</Group>
 		</Groups>
@@ -1420,13 +1421,14 @@
 
 	 <KeyFigure desc="PX4 Modes" uom="" mask="#" key="PX4MODE">
 		<MSPSource class="sys" field="px4_mode"></MSPSource>
+		<ULogSource field="commander_state_0.main_state"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
 	</KeyFigure>
 
     <KeyFigure desc="MSP Status" uom="" mask="#" key="MSPSTATUS">
 		<MSPSource class="sys" field="status"></MSPSource>
-		<Groups>
-			<Group>System</Group>
-		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
