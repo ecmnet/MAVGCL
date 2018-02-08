@@ -1419,14 +1419,6 @@
 		</Groups>
 	</KeyFigure>
 
-	 <KeyFigure desc="PX4 Modes" uom="" mask="#" key="PX4MODE">
-		<MSPSource class="sys" field="px4_mode"></MSPSource>
-		<ULogSource field="commander_state_0.main_state"/>
-		<Groups>
-			<Group>System</Group>
-		</Groups>
-	</KeyFigure>
-
 	<KeyFigure desc="Time armed" uom="sec" mask="#0" key="TARM">
 		<MSPSource class="sys" field="t_armed_ms">
 		    <Converter class="ExpressionConverter" expression="TARM/1000" />
@@ -1689,18 +1681,30 @@
 
 	<!-- Status Flags  -->
 
-	<KeyFigure desc="LPOS valid" uom="" mask="#" key="LPOSVALID">
+	<KeyFigure desc="LPOS valid" uom="" mask="#" key="FLAGLPOS">
 		<MSPSource class="sys" field="status">
              <Converter class="BitMaskConverter" p1="21"/>
 		</MSPSource>
 		<ULogSource field="vehicle_status_flags_0.condition_local_position_valid"/>
 	</KeyFigure>
 
-	<KeyFigure desc="GPOS valid" uom="" mask="#" key="GPOSVALID">
+	<KeyFigure desc="GPOS valid" uom="" mask="#" key="FLAGGPOS">
 		<MSPSource class="sys" field="status">
              <Converter class="BitMaskConverter" p1="20"/>
 		</MSPSource>
 		<ULogSource field="vehicle_status_flags_0.condition_global_position_valid"/>
 	</KeyFigure>
+
+	<KeyFigure desc="Nav.State" uom="" mask="#" key="NAVSTATE">
+		<MSPSource class="sys" field="nav_state"/>
+		<ULogSource field="vehicle_status_0.nav_state"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+	</KeyFigure>
+
+
+
+
 
 </AnalysisDataModel>

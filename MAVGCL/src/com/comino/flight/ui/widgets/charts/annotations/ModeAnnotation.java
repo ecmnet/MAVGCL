@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.model.segment.Status;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -60,8 +59,8 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos" };
-	private final static String[]  FLIGHTMODE_TEXTS = { "", "Auto","AltHold","PosHold","Offboard" };
+	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos", "Other" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 
 
@@ -84,7 +83,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET");
 	}
 
 
@@ -177,29 +176,34 @@ public class ModeAnnotation implements XYAnnotation {
 
 	private void updateModeDataPosEstimate(double time, AnalysisDataModel m) {
 
-		if((int)m.getValue("LPOSVALID")==1 && (int)m.getValue("GPOSVALID")==1) {
+		if((int)m.getValue("FLAGLPOS")==1 && (int)m.getValue("FLAGGPOS")==1) {
 			addAreaData(time,3); return;
 		}
-		if((int)m.getValue("GPOSVALID")==1) {
+		if((int)m.getValue("FLAGGPOS")==1) {
 			addAreaData(time,2); return;
 		}
-		if((int)m.getValue("LPOSVALID")==1) {
+		if((int)m.getValue("FLAGLPOS")==1) {
 			addAreaData(time,1); return;
 		}
 		addAreaData(time,0);
 	}
 
 	private void updateModeDataFlightMode(double time, AnalysisDataModel m) {
-		int flags = (int)m.getValue("PX4MODE");
-		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL)) {
-			addAreaData(time,2); return; }
-		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL)) {
-			addAreaData(time,3); return; }
-		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD)) {
-			addAreaData(time,4); return; }
-		if(MAV_CUST_MODE.is(flags, MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO)) {
-			addAreaData(time,1); return; }
-		addAreaData(time,0);
+		int state = (int)m.getValue("NAVSTATE");
+		switch(state) {
+		case Status.NAVIGATION_STATE_MANUAL:
+			addAreaData(time,0); break;
+		case Status.NAVIGATION_STATE_AUTO_TAKEOFF:
+			addAreaData(time,1); break;
+		case Status.NAVIGATION_STATE_ALTCTL:
+			addAreaData(time,2); break;
+		case Status.NAVIGATION_STATE_POSCTL:
+			addAreaData(time,3); break;
+		case Status.NAVIGATION_STATE_OFFBOARD:
+			addAreaData(time,4); break;
+		default:
+			addAreaData(time,5);
+		}
 	}
 
 
