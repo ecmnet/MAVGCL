@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.execution.control.StatusManager;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.segment.LogMessage;
 import com.comino.msp.model.segment.Status;
@@ -112,6 +113,7 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
 			armedProperty.set(n.isStatus(Status.MSP_ARMED));
+
 		});
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
@@ -124,16 +126,16 @@ public class StateProperties {
 			landedProperty.set(n.isStatus(Status.MSP_LANDED));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_ALTITUDE, (o,n) -> {
-			altholdProperty.set(n.isStatus(Status.MSP_MODE_ALTITUDE));
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL,  (o,n) -> {
+			altholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_POSITION, (o,n) -> {
-			posholdProperty.set(n.isStatus(Status.MSP_MODE_POSITION));
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, (o,n) -> {
+			posholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_OFFBOARD, (o,n) -> {
-			offboardProperty.set(n.isStatus(Status.MSP_MODE_OFFBOARD));
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_OFFBOARD, (o,n) -> {
+			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 		});
 
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {

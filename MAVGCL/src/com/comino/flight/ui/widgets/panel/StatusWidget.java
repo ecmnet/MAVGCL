@@ -37,6 +37,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.execution.control.StatusManager;
 import com.comino.msp.model.segment.Status;
 
 import javafx.application.Platform;
@@ -87,33 +88,35 @@ public class StatusWidget extends WidgetPane  {
 		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
 			Platform.runLater(() -> {
 				armed.set(n.isStatus(Status.MSP_ARMED));
+				if(!n.isStatus(Status.MSP_ARMED))
+					mission.set(false);
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_ALTITUDE, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_ALTCTL, (o,n) -> {
 			Platform.runLater(() -> {
-				althold.set(n.isStatus(Status.MSP_MODE_ALTITUDE));
+				althold.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_POSITION, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_POSCTL,  (o,n) -> {
 			Platform.runLater(() -> {
-				poshold.set(n.isStatus(Status.MSP_MODE_POSITION));
+				poshold.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_TAKEOFF, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_TAKEOFF, (o,n) -> {
 			Platform.runLater(() -> {
-				if(n.isStatus(Status.MSP_MODE_TAKEOFF) && !n.isStatus(Status.MSP_LANDED))
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF && !n.isStatus(Status.MSP_LANDED))
 					landed.setMode(DashLabelLED.MODE_BLINK);
 				else
 				    landed.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_LANDING, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (o,n) -> {
 			Platform.runLater(() -> {
-				if(n.isStatus(Status.MSP_MODE_LANDING) && !n.isStatus(Status.MSP_LANDED))
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
 					landed.setMode(DashLabelLED.MODE_BLINK);
 				else
 				    landed.set(n.isStatus(Status.MSP_LANDED));
@@ -122,23 +125,23 @@ public class StatusWidget extends WidgetPane  {
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
 			Platform.runLater(() -> {
-				if(!n.isStatus(Status.MSP_MODE_TAKEOFF))
+				if(n.nav_state != Status.NAVIGATION_STATE_AUTO_TAKEOFF)
 				    landed.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_OFFBOARD, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_OFFBOARD, (o,n) -> {
 			Platform.runLater(() -> {
-				offboard.set(n.isStatus(Status.MSP_MODE_OFFBOARD));
+				offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_MODE_RTL, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_RTL, (o,n) -> {
 			Platform.runLater(() -> {
-				if(n.isStatus(Status.MSP_MODE_RTL) && !n.isStatus(Status.MSP_LANDED))
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
-					mission.set(n.isStatus(Status.MSP_MODE_MISSION));
+					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
