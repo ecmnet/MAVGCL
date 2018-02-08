@@ -1683,16 +1683,22 @@
 
 	<KeyFigure desc="LPOS valid" uom="" mask="#" key="FLAGLPOS">
 		<MSPSource class="sys" field="status">
-             <Converter class="BitMaskConverter" p1="21"/>
+             <Converter class="BitMaskConverter" p1="12"/>
 		</MSPSource>
 		<ULogSource field="vehicle_status_flags_0.condition_local_position_valid"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="GPOS valid" uom="" mask="#" key="FLAGGPOS">
 		<MSPSource class="sys" field="status">
-             <Converter class="BitMaskConverter" p1="20"/>
+             <Converter class="BitMaskConverter" p1="11"/>
 		</MSPSource>
 		<ULogSource field="vehicle_status_flags_0.condition_global_position_valid"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Nav.State" uom="" mask="#" key="NAVSTATE">
