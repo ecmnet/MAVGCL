@@ -51,13 +51,16 @@ import javafx.scene.shape.Rectangle;
 
 public class ModeAnnotation implements XYAnnotation {
 
-	public final static int		MODE_ANNOTATION_VERTICAL		= 0;
-	public final static int		MODE_ANNOTATION_HORIZONTAL 	= 1;
-
 	public final static int		MODE_ANNOTATION_NONE 		= 0;
 	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
+
+//	private final static int     EKF2_SOLUTION_UNKNOWN		= 677;
+	private final static int     EKF2_SOLUTION_ATT_VEL		= 741;
+	private final static int     EKF2_SOLUTION_REL_POS		= 895;
+	private final static int     EKF2_SOLUTION_ABS_POS		= 831;
+
 
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos", "Other" };
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
@@ -163,11 +166,11 @@ public class ModeAnnotation implements XYAnnotation {
 		switch(flags) {
 		case 0:
 			addAreaData(time,0); break;
-		case 651:
+		case EKF2_SOLUTION_ATT_VEL:
 			addAreaData(time,1); break;
-		case 831:
+		case EKF2_SOLUTION_REL_POS:
 			addAreaData(time,2); break;
-		case 895:
+		case EKF2_SOLUTION_ABS_POS:
 			addAreaData(time,3); break;
 		default:
 			addAreaData(time,4); break;
