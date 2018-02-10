@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
@@ -65,12 +66,12 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	public DashBoardAnnotation(int posy) {
 
-        this.posy = posy;
+		this.posy = posy;
 		this.pane = new GridPane();
 		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
 		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
-        this.pane.setHgap(5);
-        this.pane.setMinWidth(150);
+		this.pane.setHgap(5);
+		this.pane.setMinWidth(150);
 		this.pane.add(header,0,0);
 		GridPane.setColumnSpan(header,4);
 		this.pane.addRow(1,min,min_v,max,max_v);
@@ -86,14 +87,14 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	public void setKeyFigure(KeyFigureMetaData kf) {
 		this.kf = kf;
 		if(kf.uom!=null && kf.uom.length()>0)
-		  header.setText(kf.desc1+" ["+kf.uom+"]:");
+			header.setText(kf.desc1+" ["+kf.uom+"]:");
 		else
-		  header.setText(kf.desc1+":");
+			header.setText(kf.desc1+":");
 	}
 
 	public void setMinMax(double min, double max) {
-	  min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
-	  delta_v.setValue(kf.getValueString(max-min));
+		min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
+		delta_v.setValue(kf.getValueString(max-min));
 	}
 
 	public void setAvg(double avg, double std) {
@@ -128,8 +129,10 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 		public void setValue(String s) {
 			if(!s.equals(old_text))  {
-			   setText(s);
-			   old_text = s;
+				Platform.runLater(() -> {
+					setText(s);
+				});
+				old_text = s;
 			}
 		}
 	}

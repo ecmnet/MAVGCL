@@ -60,6 +60,7 @@ import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.utils.ExecutorService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -737,10 +738,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
 
 
-				dashboard_update_tms = System.currentTimeMillis();
-				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
-				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
-				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
+				ExecutorService.get().execute(() -> {
+					dashboard_update_tms = System.currentTimeMillis();
+					setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
+					setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
+					setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
+				});
 
 			}
 		}
@@ -753,10 +756,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(dash.isSelected() && dataService.getModelList().size()>0
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
-				dashboard_update_tms = System.currentTimeMillis();
-				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
-				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
-				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
+				ExecutorService.get().execute(() -> {
+					dashboard_update_tms = System.currentTimeMillis();
+					setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
+					setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
+					setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
+				});
 			}
 
 			while(current_x_pt<max_x && dataService.getModelList().size()>0 ) {
