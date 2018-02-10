@@ -101,7 +101,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(1000), ae -> {
 			for(KeyFigure figure : figures)
 				figure.setValue(model);
 		} ) );

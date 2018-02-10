@@ -380,7 +380,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		readRecentList();
 
-
 		type1 = type2 = type3 = new KeyFigureMetaData();
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {

@@ -105,7 +105,7 @@ public class AnalysisDataModel {
 	private Double val = null;
 
 	@SuppressWarnings("unchecked")
-	public synchronized void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
+	public  void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 		md.getKeyFigureMap().forEach((i,e) -> {
 			val = Double.NaN;
 			try {
