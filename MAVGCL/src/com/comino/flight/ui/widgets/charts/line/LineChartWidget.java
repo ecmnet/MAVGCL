@@ -512,7 +512,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	public KeyFigurePreset getKeyFigureSelection() {
-		KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
+		final KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
 				type1.hash,type2.hash,type3.hash);
 		return preset;
 	}
@@ -643,7 +643,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	public void saveAsPng(String path) {
-		SnapshotParameters param = new SnapshotParameters();
+		final SnapshotParameters param = new SnapshotParameters();
 		param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/chart_"+id+".png");
@@ -678,7 +678,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
 
-		int factor = dataService.isCollecting()  ? 2 : 1;
+		final int factor = dataService.isCollecting()  ? 2 : 1;
 		resolution_ms = resolution_ms * factor;
 
 		timeframe = frame;
@@ -885,7 +885,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 	private KeyFigureMetaData setKeyFigure(ChoiceBox<KeyFigureMetaData> series,int keyFigureHash) {
-		KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
+		final KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
 		if(v!=null) {
 			if(!series.getItems().contains(v))
 				series.getItems().add(v);
@@ -899,7 +899,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 
-		KeyFigureMetaData none = new KeyFigureMetaData();
+		final KeyFigureMetaData none = new KeyFigureMetaData();
 
 		Platform.runLater(() -> {
 
@@ -926,14 +926,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private void storeRecentList() {
 		try {
-			String rc = gson.toJson(recent);
+			final String rc = gson.toJson(recent);
 			prefs.put(MAVPreferences.RECENT_FIGS, rc);
 		} catch(Exception w) { }
 	}
 
 	private void readRecentList() {
 
-		String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
+		final String rc = prefs.get(MAVPreferences.RECENT_FIGS, null);
 		try {
 			if(rc!=null)
 				recent = gson.fromJson(rc, new TypeToken<ArrayList<KeyFigureMetaData>>() {}.getType());
@@ -948,7 +948,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	 */
 	private double determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 
-		double v_current_x = dataService.getModelList().get(current_x).getValue(m);
+		final double v_current_x = dataService.getModelList().get(current_x).getValue(m);
 
 		if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
 			return 0;
