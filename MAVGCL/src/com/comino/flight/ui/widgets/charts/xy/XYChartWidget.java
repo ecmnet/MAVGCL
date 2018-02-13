@@ -64,6 +64,7 @@ import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.utils.ExecutorService;
 import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.application.Platform;
@@ -242,6 +243,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private double scale_factor;
 
 	private int id = 0;
+
+	private long dashboard_update_tms = 0;
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
@@ -515,8 +518,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 
 		xychart.setOnZoom(event -> {
-			 scale = (float)(scale / event.getZoomFactor());
-			 setScaling(scale);
+			scale = (float)(scale / event.getZoomFactor());
+			setScaling(scale);
 		});
 
 		rotation.valueProperty().addListener(new ChangeListener<Number>() {
@@ -761,9 +764,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		if(mList.size()<1)
 			return;
 
-		if(force_zero.isSelected() || annotation.isSelected()) {
-			s1.getStatistics(current_x0_pt,current_x1_pt,mList);
-			s2.getStatistics(current_x0_pt,current_x1_pt,mList);
+		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
+			ExecutorService.get().execute(() -> {
+				dashboard_update_tms = System.currentTimeMillis();
+				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
+				s2.getStatistics(current_x0_pt,current_x1_pt,mList);
+			});
 		}
 
 		if(force_zero.isSelected() && scale > 0 ) {
