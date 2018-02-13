@@ -162,6 +162,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				if(control.isConnected()) {
 					messages.setMode(Badge.MODE_ON);
 					driver.setText(control.getCurrentModel().sys.getSensorString());
+					if(!control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
+						driver.setBackgroundColor(Color.DARKRED);
+					else
+						driver.setBackgroundColor(Color.DARKCYAN);
 					driver.setMode(Badge.MODE_ON);
 				} else {
 					messages.setMode(Badge.MODE_OFF);
