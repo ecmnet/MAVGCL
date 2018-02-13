@@ -86,19 +86,25 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	public void setKeyFigure(KeyFigureMetaData kf) {
 		this.kf = kf;
+		Platform.runLater(() -> {
 		if(kf.uom!=null && kf.uom.length()>0)
 			header.setText(kf.desc1+" ["+kf.uom+"]:");
 		else
 			header.setText(kf.desc1+":");
+		});
 	}
 
 	public void setMinMax(double min, double max) {
+		Platform.runLater(() -> {
 		min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
 		delta_v.setValue(kf.getValueString(max-min));
+		});
 	}
 
 	public void setAvg(double avg, double std) {
+		Platform.runLater(() -> {
 		avg_v.setValue(kf.getValueString(avg)); std_v.setValue(kf.getValueString(std));
+		});
 	}
 
 	@Override
@@ -129,9 +135,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 		public void setValue(String s) {
 			if(!s.equals(old_text))  {
-				Platform.runLater(() -> {
-					setText(s);
-				});
+				Platform.runLater(() -> 	setText(s));
 				old_text = s;
 			}
 		}
