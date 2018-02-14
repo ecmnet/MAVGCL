@@ -311,10 +311,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					msp.param1 =  x;
 					msp.param2 =  y;
 					control.sendMAVLinkMessage(msp);
-
 				}
-
 			}
+			click.consume();
 		});
 
 
