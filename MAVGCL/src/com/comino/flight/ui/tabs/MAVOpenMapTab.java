@@ -41,9 +41,13 @@ import javax.imageio.ImageIO;
 import org.lodgon.openmapfx.core.BaseMapProvider;
 import org.lodgon.openmapfx.core.DefaultBaseMapProvider;
 import org.lodgon.openmapfx.core.LayeredMap;
+import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
+import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -73,6 +77,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -159,6 +164,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	protected int centermode;
 
+	private IMAVController control;
+
 	public MAVOpenMapTab() {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
@@ -231,55 +238,55 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		//		map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
-//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
-//
-//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
-//
-//
-//			@Override
-//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
-//
-//				int index=0;
-//				if(refresh) {
-//					index = dataService.calculateX0IndexByFactor(1);
-//					first = true;
-//				}
-//
-//				// TODO MAVOpenMapTab: Draw path also in replay
-//
-//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
-//						(dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms()) {
-//
-//
-//					gc.setStroke(Color.LIGHTSKYBLUE); gc.setFill(Color.LIGHTSKYBLUE);
-//					gc.setLineWidth(1.5);
-//					for(int i=index; i<dataService.getModelList().size();
-//							i += 50/dataService.getCollectorInterval_ms()) {
-//
-//						m = dataService.getModelList().get(i);
-//
-//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
-//							continue;
-//
-//						if(first) {
-//							p0 = map.getMapArea().getMapPoint(
-//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//
-//							//		gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
-//							first = false; continue;
-//						}
-//						p1 = map.getMapArea().getMapPoint(
-//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//
-//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-//						p0 = map.getMapArea().getMapPoint(
-//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-//					}
-//					index = dataService.getModelList().size();
-//				}
-//			}
-//
-//		});
+		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+		//
+		//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
+		//
+		//
+		//			@Override
+		//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
+		//
+		//				int index=0;
+		//				if(refresh) {
+		//					index = dataService.calculateX0IndexByFactor(1);
+		//					first = true;
+		//				}
+		//
+		//				// TODO MAVOpenMapTab: Draw path also in replay
+		//
+		//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
+		//						(dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms()) {
+		//
+		//
+		//					gc.setStroke(Color.LIGHTSKYBLUE); gc.setFill(Color.LIGHTSKYBLUE);
+		//					gc.setLineWidth(1.5);
+		//					for(int i=index; i<dataService.getModelList().size();
+		//							i += 50/dataService.getCollectorInterval_ms()) {
+		//
+		//						m = dataService.getModelList().get(i);
+		//
+		//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
+		//							continue;
+		//
+		//						if(first) {
+		//							p0 = map.getMapArea().getMapPoint(
+		//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//
+		//							//		gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
+		//							first = false; continue;
+		//						}
+		//						p1 = map.getMapArea().getMapPoint(
+		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//
+		//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+		//						p0 = map.getMapArea().getMapPoint(
+		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//					}
+		//					index = dataService.getModelList().size();
+		//				}
+		//			}
+		//
+		//		});
 
 
 		mapviewpane.widthProperty().addListener((v,o,n) -> {
@@ -303,6 +310,21 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2)
 				setCenter(centermode);
+			else {
+				float[] xy = new float[2];
+				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+					Position p = map.getMapPosition(click.getX(), click.getY());
+					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
+						msg_msp_command msp = new msg_msp_command(255,1);
+						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+						msp.param1 =  xy[0];
+						msp.param2 =  xy[1];
+						control.sendMAVLinkMessage(msp);
+						System.out.println(msp);
+					}
+				}
+			}
+			click.consume();
 		});
 
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
@@ -417,8 +439,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 
 	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
+		this.control = control;
 		this.model=dataService.getCurrent();
-        this.properties = StateProperties.getInstance();
+		this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
 
@@ -487,8 +510,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		case 1:
 			MSPMathUtils.map_projection_init(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
-					                              (float)model.getValue("LPOSY"),
-					                              (float)model.getValue("LPOSZ"), pos);
+					(float)model.getValue("LPOSY"),
+					(float)model.getValue("LPOSZ"), pos);
 			break;
 		case 2:
 			pos[0] = model.getValue("RGPSLAT");
