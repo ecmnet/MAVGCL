@@ -131,8 +131,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
 			plan_dir.setVisible(true);
 
-			projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
-			projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
+			projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
+			projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
 			projected.setVisible(true);
 
 
