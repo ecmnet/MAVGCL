@@ -132,6 +132,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private PositionLayer 		positionLayer;
 	private PositionLayer 		homeLayer;
 	private PositionLayer 		baseLayer;
+	private PositionLayer 		targetLayer;
 	//	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
@@ -144,6 +145,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private double takeoff_lat = 0;
 
 	private double[] pos = new double[2];
+	private double[] tar = new double[2];
 
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty   scroll        = new SimpleFloatProperty(0);
@@ -219,6 +221,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		homeLayer = new PositionLayer(new Image(getClass().getResource("resources/home.png").toString()));
 		map.getLayers().add(homeLayer);
+
+		targetLayer = new PositionLayer(new Image(getClass().getResource("resources/target.png").toString()));
+		map.getLayers().add(targetLayer);
 
 		baseLayer = new PositionLayer(new Image(getClass().getResource("resources/base.png").toString()));
 		map.getLayers().add(baseLayer);
@@ -320,7 +325,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						msp.param1 =  xy[0];
 						msp.param2 =  xy[1];
 						control.sendMAVLinkMessage(msp);
-						System.out.println(msp);
 					}
 				}
 			}
@@ -518,6 +522,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			pos[1] = model.getValue("RGPSLON");
 			break;
 		}
+
+		if(model.getValue("SLAMDIR") !=0) {
+			targetLayer.setVisible(true);
+			MSPMathUtils.map_projection_reproject((float)model.getValue("SLAMPX"),
+					(float)model.getValue("SLAMPY"),
+					(float)model.getValue("SLAMPZ"), tar);
+			targetLayer.updatePosition(tar[0], tar[1]);
+		} else
+			targetLayer.setVisible(false);
 
 		//	canvasLayer.redraw(refreshCanvas);
 
