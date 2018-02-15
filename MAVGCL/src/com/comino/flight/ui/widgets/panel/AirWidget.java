@@ -74,8 +74,9 @@ public class AirWidget extends WidgetPane  {
 				if(!isDisabled() && (System.currentTimeMillis()-tms)>200) {
 					tms = System.currentTimeMillis();
 
-					if(Math.abs(bearing - model.getValue("HEAD"))>2) {
+					if(Math.abs(bearing - model.getValue("HEAD"))>1) {
 						bearing = model.getValue("HEAD");
+						System.out.println(bearing);
 						g_compass.setBearing(bearing);
 					}
 					if(Math.abs(pitch - model.getValue("PITCH"))>0.1) {
@@ -94,6 +95,7 @@ public class AirWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
+		this.model = dataService.getCurrent();
 		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue())
@@ -105,7 +107,6 @@ public class AirWidget extends WidgetPane  {
 
 
 	public void setup(IMAVController control) {
-		this.model = dataService.getCurrent();
 		//task.start();
 	}
 
