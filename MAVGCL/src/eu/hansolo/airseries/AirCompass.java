@@ -81,9 +81,9 @@ public class AirCompass extends Region {
         getStyleClass().add("air-compass");
         bearing          = new SimpleDoubleProperty(this, "bearing", 0);
         bearingAngle     = new SimpleDoubleProperty(this, "bearingAngle", 0);
-        animated         = new SimpleBooleanProperty(this, "animated", true);
-        planeColor       = new SimpleObjectProperty<>(this, "planeColor", Color.web("#fd7e24"));
-        orientationColor = new SimpleObjectProperty<>(this, "orientationColor", Color.web("#ffa100"));
+        animated         = new SimpleBooleanProperty(this, "animated", false);
+        planeColor       = new SimpleObjectProperty<>(this, "planeColor", Color.CYAN);
+        orientationColor = new SimpleObjectProperty<>(this, "orientationColor", Color.CYAN);
         timeline         = new Timeline();
         init();
         initGraphics();
@@ -108,29 +108,29 @@ public class AirCompass extends Region {
 
         if (Double.compare(getMaxWidth(), 0.0) <= 0 || Double.compare(getMaxHeight(), 0.0) <= 0) {
             setMaxSize(MAXIMUM_WIDTH, MAXIMUM_HEIGHT);
-        }        
+        }
     }
 
     private void initGraphics() {
         fontName      = Font.loadFont(AirCompass.class.getResourceAsStream("Verdana.ttf"), 10).getName();
-        
+
         background    = new Region();
         background.getStyleClass().add("background");
         background.setPrefSize(PREFERRED_WIDTH, PREFERRED_HEIGHT);
-        
+
         bearingCanvas = new Canvas(PREFERRED_WIDTH, PREFERRED_HEIGHT);
         bearingCtx    = bearingCanvas.getGraphicsContext2D();
-        
+
         centerKnob    = new Region();
         centerKnob.getStyleClass().add("center-knob");
         centerKnob.setPrefSize(32, 32);
-        
+
         airplaneCanvas = new Canvas(PREFERRED_WIDTH, PREFERRED_HEIGHT);
         airplaneCtx    = airplaneCanvas.getGraphicsContext2D();
-        
+
         pane = new Pane(background, bearingCanvas, centerKnob, airplaneCanvas);
         pane.getStyleClass().add("frame");
-        
+
         getChildren().setAll(pane);
         resize();
     }
@@ -138,7 +138,7 @@ public class AirCompass extends Region {
     private void registerListeners() {
         widthProperty().addListener(observable -> handleControlPropertyChanged("RESIZE"));
         heightProperty().addListener(observable -> handleControlPropertyChanged("RESIZE"));
-        bearingProperty().addListener(observable -> handleControlPropertyChanged("ROTATE")); 
+        bearingProperty().addListener(observable -> handleControlPropertyChanged("ROTATE"));
     }
 
 
@@ -149,7 +149,7 @@ public class AirCompass extends Region {
         } else if ("ROTATE".equals(PROPERTY)) {
             // calculate shortest bearingAngle from current position
             double target  = getBearing();
-            double current = bearingCanvas.getRotate();
+            double current = airplaneCanvas.getRotate();
             double alpha   = target - current;
             double beta    = target - current + 360.0;
             double gamma   = target - current - 360.0;
@@ -160,24 +160,24 @@ public class AirCompass extends Region {
                 rotationAngle = beta < 0 ? beta : -beta;
             } else if (Math.abs(gamma) < Math.abs(alpha) && Math.abs(gamma) < Math.abs(beta)) {
                 rotationAngle = gamma < 0 ? gamma : -gamma;
-            }            
+            }
             if (isAnimated()) {
-                KeyValue kvBearingAngleBegin = new KeyValue(bearingAngle, bearingCanvas.getRotate(), Interpolator.EASE_IN);
-                KeyValue kvBearingCanvasRotateBegin = new KeyValue(bearingCanvas.rotateProperty(), bearingCanvas.getRotate(), Interpolator.EASE_IN);
+                KeyValue kvBearingAngleBegin = new KeyValue(bearingAngle, airplaneCanvas.getRotate(), Interpolator.EASE_IN);
+                KeyValue kvBearingCanvasRotateBegin = new KeyValue(airplaneCanvas.rotateProperty(), airplaneCanvas.getRotate(), Interpolator.EASE_IN);
 
                 KeyValue kvBearingAngleEnd = new KeyValue(bearingAngle, rotationAngle, Interpolator.EASE_OUT);
-                KeyValue kvBearingCanvasRotateEnd = new KeyValue(bearingCanvas.rotateProperty(), rotationAngle, Interpolator.EASE_OUT);
+                KeyValue kvBearingCanvasRotateEnd = new KeyValue(airplaneCanvas.rotateProperty(), rotationAngle, Interpolator.EASE_OUT);
 
                 KeyFrame kfBegin = new KeyFrame(Duration.ZERO, kvBearingAngleBegin, kvBearingCanvasRotateBegin);
                 KeyFrame kfEnd = new KeyFrame(Duration.millis(800), kvBearingAngleEnd, kvBearingCanvasRotateEnd);
                 timeline.getKeyFrames().setAll(kfBegin, kfEnd);
                 timeline.play();
             } else {
-                bearingCanvas.setRotate(rotationAngle);
+                airplaneCanvas.setRotate(rotationAngle);
             }
         }
     }
-    
+
     public final double getBearing() { return bearing.get(); }
     public final void setBearing(final double BEARING) { bearing.set(BEARING); }
     public final DoubleProperty bearingProperty() { return bearing; }
@@ -185,21 +185,21 @@ public class AirCompass extends Region {
     public final boolean isAnimated() { return animated.get(); }
     public final void setAnimated(final boolean ANIMATED) { animated.set(ANIMATED); }
     public final BooleanProperty animatedProperty() { return animated; }
-    
+
     public final Color getPlaneColor() { return planeColor.get(); }
-    public final void setPlaneColor(final Color PLANE_COLOR) { 
-        planeColor.set(PLANE_COLOR); 
+    public final void setPlaneColor(final Color PLANE_COLOR) {
+        planeColor.set(PLANE_COLOR);
         resize();
     }
     public final ObjectProperty<Color> planeColorProperty() { return planeColor; }
-    
+
     public final Color getOrientationColor() { return orientationColor.get(); }
     public final void setOrientationColor(final Color ORIENTATION_COLOR) {
         orientationColor.set(ORIENTATION_COLOR);
         resize();
     }
     public final ObjectProperty<Color> orientationColorProperty() { return orientationColor; }
-    
+
     private Font getRegularFontAt(final double SIZE) { return Font.font(fontName, FontWeight.NORMAL, SIZE); }
     private Font getBoldFontAt(final double SIZE) { return Font.font(fontName, FontWeight.BOLD, SIZE); }
 
@@ -207,7 +207,7 @@ public class AirCompass extends Region {
     // ******************** Resizing ******************************************
     private void drawCompassCanvas() {
         bearingCtx.clearRect(0, 0, bearingCanvas.getWidth(), bearingCanvas.getHeight());
-         
+
         // Draw the direction bearingCanvas
         String[] directions       = { "N", "E", "S", "W" };
         int      directionCounter = 0;
@@ -216,18 +216,18 @@ public class AirCompass extends Region {
         double   offset = 180;
         boolean  toggle = true;
         Point2D  center = new Point2D(size * 0.5, size * 0.5);
-        
+
         for (double angle = 0, counter = 0 ; Double.compare(counter, 360) < 0 ; angle -= 1, counter++) {
             sinValue = Math.sin(Math.toRadians(angle + offset));
             cosValue = Math.cos(Math.toRadians(angle + offset));
-            
+
             Point2D innerMinorPoint = new Point2D(center.getX() + size * 0.36 * sinValue, center.getY() + size * 0.36 * cosValue);
             Point2D outerMainPoint  = new Point2D(center.getX() + size * 0.41 * sinValue, center.getY() + size * 0.41 * cosValue);
             Point2D outerPoint      = new Point2D(center.getX() + size * 0.36 * sinValue, center.getY() + size * 0.36 * cosValue);
             Point2D textPoint       = new Point2D(center.getX() + size * 0.30 * sinValue, center.getY() + size * 0.30 * cosValue);
 
             bearingCtx.setStroke(Color.WHITE);
-            if (counter % 90 == 0) {                
+            if (counter % 90 == 0) {
                 // Draw direction text
                 bearingCtx.save();
                 bearingCtx.setFont(getBoldFontAt(0.075 * size));
@@ -242,7 +242,7 @@ public class AirCompass extends Region {
                 bearingCtx.translate(-textPoint.getX(), -textPoint.getY());
                 bearingCtx.restore();
                 bearingCtx.restore();
-            } else if (counter % 30 == 0) {                
+            } else if (counter % 30 == 0) {
                 // Draw bearing text
                 bearingCtx.save();
                 bearingCtx.setFont(getRegularFontAt(0.073 * size));
@@ -256,17 +256,17 @@ public class AirCompass extends Region {
                 bearingCtx.translate(-textPoint.getX(), -textPoint.getY());
                 bearingCtx.restore();
                 bearingCtx.restore();
-            } 
+            }
             if (counter % 5 == 0) {
                 // Draw tickmarks
                 toggle ^= true;
                 bearingCtx.setLineWidth(size * 0.01);
-                bearingCtx.setLineCap(StrokeLineCap.ROUND);                
+                bearingCtx.setLineCap(StrokeLineCap.ROUND);
                 bearingCtx.strokeLine(innerMinorPoint.getX(), innerMinorPoint.getY(), toggle ? outerPoint.getX() : outerMainPoint.getX(), toggle ? outerPoint.getY() : outerMainPoint.getY());
-            }            
+            }
         }
     }
-    
+
     private void drawAirplaneCanvas() {
         airplaneCtx.clearRect(0, 0, airplaneCanvas.getWidth(), airplaneCanvas.getHeight());
 
@@ -275,7 +275,7 @@ public class AirCompass extends Region {
         airplaneCtx.setEffect(dropShadow);
         // Draw the airplain
         airplaneCtx.setFillRule(FillRule.EVEN_ODD);
-        airplaneCtx.beginPath();        
+        airplaneCtx.beginPath();
         airplaneCtx.moveTo(size * 0.4953271028037383, size * 0.2523364485981308);
         airplaneCtx.bezierCurveTo(size * 0.4953271028037383, size * 0.2523364485981308, size * 0.4766355140186916, size * 0.2850467289719626, size * 0.4719626168224299, size * 0.3130841121495327);
         airplaneCtx.bezierCurveTo(size * 0.4672897196261682, size * 0.32710280373831774, size * 0.4672897196261682, size * 0.38317757009345793, size * 0.4672897196261682, size * 0.38317757009345793);
@@ -302,36 +302,36 @@ public class AirCompass extends Region {
         airplaneCtx.lineTo(size * 0.5, size * 0.16822429906542055);
         airplaneCtx.lineTo(size * 0.4953271028037383, size * 0.2336448598130841);
         airplaneCtx.bezierCurveTo(size * 0.4953271028037383, size * 0.2336448598130841, size * 0.4953271028037383, size * 0.2523364485981308, size * 0.4953271028037383, size * 0.2523364485981308);
-        airplaneCtx.closePath();                
+        airplaneCtx.closePath();
         airplaneCtx.setLineCap(StrokeLineCap.ROUND);
         airplaneCtx.setLineJoin(StrokeLineJoin.MITER);
         airplaneCtx.setLineWidth(0.01 * size);
-        airplaneCtx.setStroke(getPlaneColor());        
+        airplaneCtx.setStroke(getPlaneColor());
         airplaneCtx.stroke();
         airplaneCtx.restore();
     }
-    
+
     private void resize() {
         size   = getWidth() < getHeight() ? getWidth() : getHeight();
         width  = getWidth();
         height = getHeight();
-        
+
         if (width > 0 && height > 0) {
             pane.setMaxSize(size, size);
             pane.relocate((width - size) * 0.5, (height - size) * 0.5);
-            
+
             background.setPrefSize(size * 0.9, size * 0.9);
             background.relocate((size - background.getPrefWidth()) * 0.5, (size - background.getPrefHeight()) * 0.5);
-            
+
             bearingCanvas.setWidth(size);
             bearingCanvas.setHeight(size);
-            
+
             centerKnob.setPrefSize(size * 0.1, size * 0.1);
             centerKnob.relocate((size - centerKnob.getPrefWidth()) * 0.5, (size - centerKnob.getPrefHeight()) * 0.5);
-            
+
             airplaneCanvas.setWidth(size);
-            airplaneCanvas.setHeight(size);                        
-            
+            airplaneCanvas.setHeight(size);
+
             drawCompassCanvas();
             drawAirplaneCanvas();
         }
