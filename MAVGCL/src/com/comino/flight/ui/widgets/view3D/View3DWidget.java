@@ -111,7 +111,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
-		vehicle = new VehicleModel(50);
+		vehicle = new VehicleModel(100);
 		world.getChildren().addAll(ground, vehicle, ambient, target,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
