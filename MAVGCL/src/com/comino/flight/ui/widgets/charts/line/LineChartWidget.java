@@ -99,7 +99,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int MAXRECENT 	   = 20;
 	private final static int REFRESH_RATE   = 50;
 
-	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation" };
+	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;

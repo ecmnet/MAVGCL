@@ -55,6 +55,7 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
+	public final static int		MODE_ANNOTATION_GPSMODE 		= 4;
 
 //	private final static int     EKF2_SOLUTION_UNKNOWN		= 677;
 	private final static int     EKF2_SOLUTION_ATT_VEL		= 741;
@@ -65,6 +66,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos", "Other" };
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
+	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 
 
 	private Pane         		node         	= null;
@@ -126,6 +128,10 @@ public class ModeAnnotation implements XYAnnotation {
 			node.setVisible(true);
 			buildLegend(POSESTIMAT_TEXTS);
 			break;
+		case MODE_ANNOTATION_GPSMODE:
+			node.setVisible(true);
+			buildLegend(GPSMODE_TEXTS);
+			break;
 		}
 	}
 
@@ -145,6 +151,9 @@ public class ModeAnnotation implements XYAnnotation {
 			break;
 		case MODE_ANNOTATION_POSESTIMAT:
 			updateModeDataPosEstimate(time,m);
+			break;
+		case MODE_ANNOTATION_GPSMODE:
+			updateModeDataGPSMode(time,m);
 			break;
 		}
 	}
@@ -173,6 +182,22 @@ public class ModeAnnotation implements XYAnnotation {
 		case EKF2_SOLUTION_ABS_POS:
 			addAreaData(time,3); break;
 		default:
+			addAreaData(time,4); break;
+		}
+	}
+
+	private void updateModeDataGPSMode(double time, AnalysisDataModel m) {
+		int flags = (int)m.getValue("RGPSFIX");
+		switch(flags) {
+		case 0:
+			addAreaData(time,0); break;
+		case 3:
+			addAreaData(time,1); break;
+		case 4:
+			addAreaData(time,2); break;
+		case 5:
+			addAreaData(time,3); break;
+		case 6:
 			addAreaData(time,4); break;
 		}
 	}
