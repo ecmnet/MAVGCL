@@ -6,7 +6,7 @@
         <MSPSource class="est" field="haglRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.hgt_test_ratio"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -14,7 +14,7 @@
 	    <MSPSource class="est" field="velRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.vel_test_ratio"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -22,14 +22,14 @@
 	 <MSPSource class="est" field="horiRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.pos_test_ratio"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Tst.Ratio GPS" uom="" mask="#0.00" key="EKFGTR">
 		<ULogSource field="estimator_status_0.gps_test_ratio"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -37,7 +37,7 @@
 	    <MSPSource class="est" field="magRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.mag_test_ratio"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -45,7 +45,7 @@
 	    <MSPSource class="est" field="flags"></MSPSource>
 	    <ULogSource field="estimator_status_0.solution_status_flags"/>
 		<Groups>
-			<Group>EKF2 Status</Group>
+			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
 
