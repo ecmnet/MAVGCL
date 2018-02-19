@@ -67,7 +67,7 @@ public class ParameterFactMetaData {
 				buildParameterList(doc.getElementsByTagName("group"));
 			}
 		} catch (Exception e) {
-			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -132,7 +132,7 @@ public class ParameterFactMetaData {
 				for(int j=0; j<node.getChildNodes().getLength();j++) {
 					Node value = node.getChildNodes().item(j);
 					if(value.getNodeName().equals("value")) {
-						int code = Integer.parseInt(value.getAttributes().getNamedItem("code").getNodeValue());
+						int code = (int)Float.parseFloat(value.getAttributes().getNamedItem("code").getNodeValue());
 						attributes.valueList.put(code, value.getTextContent());
 					}
 				}
