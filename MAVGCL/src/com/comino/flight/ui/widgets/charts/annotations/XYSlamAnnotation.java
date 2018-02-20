@@ -62,10 +62,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private  Circle                  projected   = null;
 
 	private  AnalysisDataModel      model        = null;
-	private float scale;
 
 	public XYSlamAnnotation(Color color) {
-		this.scale = 1f;
 
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
@@ -73,7 +71,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 		plan_rotate = Rotate.rotate(0, 0, 0);
 		plan_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
-		plan_dir.setFill(Color.IVORY.darker());
+		plan_dir.setFill(Color.rgb(230, 230, 20, 0.6));
 		plan_dir.getTransforms().add(plan_rotate);
 		plan_dir.setStrokeType(StrokeType.INSIDE);
 		plan_dir.setVisible(false);
@@ -125,7 +123,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 
 		if(model.getValue("SLAMSPD") != 0) {
-			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")*100);
+			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")*50);
 			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
@@ -149,10 +147,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 //		act_dir.setVisible(true);
 
 
-	}
-
-	public void setScale(float scale) {
-		this.scale = scale;
 	}
 
 	public void clear() {
