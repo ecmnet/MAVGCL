@@ -68,6 +68,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 			"BASELAT",
 			"BASELON",
 			"BASENO",
+			"SLAMDIS",
 	};
 
 	@FXML
@@ -128,7 +129,7 @@ public class GPSDetailsWidget extends WidgetPane  {
 				grid.add(new Label(),0,row);
 			} else {
 				DashLabel l1 = new DashLabel(kf.desc1);
-				l1.setPrefWidth(100); l1.setPrefHeight(19);
+				l1.setPrefWidth(140); l1.setPrefHeight(19);
 				grid.add(l1, 0, row);
 				value = new Label("-"); value.setPrefWidth(100); value.setAlignment(Pos.CENTER_RIGHT);
 				grid.add(value, 1, row);

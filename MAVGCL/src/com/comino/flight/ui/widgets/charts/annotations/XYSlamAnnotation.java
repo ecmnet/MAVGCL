@@ -125,7 +125,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 
 		if(model.getValue("SLAMSPD") != 0) {
-			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")/scale);
+			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")*100);
 			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
@@ -162,8 +162,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		});
 	}
 
-	private void setArrowLength(Polygon p, float length) {
-		Double k = (double)(length * 90);
+	private void setArrowLength(Polygon p, double k) {
 		p.getPoints().set(1,k);
 		p.getPoints().set(3,k);
 		p.getPoints().set(9,k);
