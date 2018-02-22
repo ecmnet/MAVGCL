@@ -71,7 +71,7 @@ public class AirWidget extends WidgetPane  {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if(!isDisabled() && !isVisible() && (System.currentTimeMillis()-tms)>50) {
+				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50) {
 					tms = System.currentTimeMillis();
 						bearing = model.getValue("HEAD");
 						g_compass.setBearing(bearing);
