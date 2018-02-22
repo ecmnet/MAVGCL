@@ -149,7 +149,7 @@ public class ChartControlWidget extends WidgetPane  {
 				scroll_tms = System.currentTimeMillis();
 			}
 		});
-
+		
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)

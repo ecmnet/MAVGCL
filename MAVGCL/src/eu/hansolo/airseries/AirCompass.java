@@ -16,14 +16,9 @@
 
 package eu.hansolo.airseries;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -41,7 +36,6 @@ import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 
 /**
@@ -68,7 +62,6 @@ public class AirCompass extends Region {
     private Pane                  pane;
     private DoubleProperty        bearing;
     private DoubleProperty        bearingAngle;
-    private BooleanProperty       animated;
     private ObjectProperty<Color> planeColor;
     private ObjectProperty<Color> orientationColor;
     private Timeline              timeline;
@@ -81,7 +74,6 @@ public class AirCompass extends Region {
         getStyleClass().add("air-compass");
         bearing          = new SimpleDoubleProperty(this, "bearing", 0);
         bearingAngle     = new SimpleDoubleProperty(this, "bearingAngle", 0);
-        animated         = new SimpleBooleanProperty(this, "animated", false);
         planeColor       = new SimpleObjectProperty<>(this, "planeColor", Color.CYAN);
         orientationColor = new SimpleObjectProperty<>(this, "orientationColor", Color.CYAN);
         timeline         = new Timeline();
@@ -147,44 +139,13 @@ public class AirCompass extends Region {
         if ("RESIZE".equals(PROPERTY)) {
             resize();
         } else if ("ROTATE".equals(PROPERTY)) {
-            // calculate shortest bearingAngle from current position
-            double target  = getBearing();
-            double current = airplaneCanvas.getRotate();
-            double alpha   = target - current;
-            double beta    = target - current + 360.0;
-            double gamma   = target - current - 360.0;
-            double rotationAngle   = 0;
-            if (Math.abs(alpha) < Math.abs(beta) && Math.abs(alpha) < Math.abs(gamma)) {
-                rotationAngle = alpha < 0 ? alpha : -alpha;
-            } else if (Math.abs(beta) < Math.abs(alpha) && Math.abs(beta) < Math.abs(gamma)) {
-                rotationAngle = beta < 0 ? beta : -beta;
-            } else if (Math.abs(gamma) < Math.abs(alpha) && Math.abs(gamma) < Math.abs(beta)) {
-                rotationAngle = gamma < 0 ? gamma : -gamma;
-            }
-            if (isAnimated()) {
-                KeyValue kvBearingAngleBegin = new KeyValue(bearingAngle, airplaneCanvas.getRotate(), Interpolator.EASE_IN);
-                KeyValue kvBearingCanvasRotateBegin = new KeyValue(airplaneCanvas.rotateProperty(), airplaneCanvas.getRotate(), Interpolator.EASE_IN);
-
-                KeyValue kvBearingAngleEnd = new KeyValue(bearingAngle, rotationAngle, Interpolator.EASE_OUT);
-                KeyValue kvBearingCanvasRotateEnd = new KeyValue(airplaneCanvas.rotateProperty(), rotationAngle, Interpolator.EASE_OUT);
-
-                KeyFrame kfBegin = new KeyFrame(Duration.ZERO, kvBearingAngleBegin, kvBearingCanvasRotateBegin);
-                KeyFrame kfEnd = new KeyFrame(Duration.millis(800), kvBearingAngleEnd, kvBearingCanvasRotateEnd);
-                timeline.getKeyFrames().setAll(kfBegin, kfEnd);
-                timeline.play();
-            } else {
-                airplaneCanvas.setRotate(rotationAngle);
-            }
+                airplaneCanvas.setRotate(getBearing());
         }
     }
 
     public final double getBearing() { return bearing.get(); }
     public final void setBearing(final double BEARING) { bearing.set(BEARING); }
     public final DoubleProperty bearingProperty() { return bearing; }
-
-    public final boolean isAnimated() { return animated.get(); }
-    public final void setAnimated(final boolean ANIMATED) { animated.set(ANIMATED); }
-    public final BooleanProperty animatedProperty() { return animated; }
 
     public final Color getPlaneColor() { return planeColor.get(); }
     public final void setPlaneColor(final Color PLANE_COLOR) {

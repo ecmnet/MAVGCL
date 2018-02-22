@@ -37,6 +37,7 @@ package com.comino.flight.ui.tabs;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
@@ -52,10 +53,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
@@ -64,6 +67,15 @@ public class MAV3DViewTab extends BorderPane  {
 	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
 
 	private View3DWidget widget = null;
+
+	@FXML
+	private Pane main;
+
+	@FXML
+	private AirWidget air;
+
+	@FXML
+	private CheckBox aircontrol;
 
 	@FXML
 	private ChoiceBox<String> perspective;
@@ -83,7 +95,9 @@ public class MAV3DViewTab extends BorderPane  {
 		widget.widthProperty().bind(this.widthProperty().subtract(20));
 		widget.heightProperty().bind(this.heightProperty().subtract(54));
 		widget.setLayoutX(10);  widget.setLayoutY(10);
-		this.setCenter(widget);
+		main.getChildren().add(widget);
+
+		air.visibleProperty().bind(aircontrol.selectedProperty());
 
 		perspective.getItems().addAll(PERSPECTIVES);
 		perspective.getSelectionModel().selectFirst();
@@ -115,6 +129,7 @@ public class MAV3DViewTab extends BorderPane  {
 
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
 		recordControl.addChart(3,widget.setup(control));
+		air.setup(control);
 		return this;
 	}
 

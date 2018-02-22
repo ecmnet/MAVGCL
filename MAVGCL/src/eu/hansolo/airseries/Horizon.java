@@ -16,15 +16,10 @@
 
 package eu.hansolo.airseries;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -51,7 +46,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 
 /**
@@ -86,12 +80,10 @@ public class Horizon extends Region {
     private DoubleProperty        roll;
     private DoubleProperty        pitch;
     private double                pitchPixel;
-    private BooleanProperty       upsidedown;
+//    private BooleanProperty       upsidedown;
     private ObjectProperty<Color> skyColor;
     private ObjectProperty<Color> earthColor;
     private ObjectProperty<Color> indicatorColor;
-
-    private BooleanProperty       animated;
 
     private Timeline              timelineRoll;
     private Timeline              timelinePitch;
@@ -107,31 +99,23 @@ public class Horizon extends Region {
         getStylesheets().add(getClass().getResource("horizon.css").toExternalForm());
         getStyleClass().add("horizon");
         roll = new DoublePropertyBase(0) {
-            @Override public void set(final double ROLL) { super.set(ROLL % 360); }
+            @Override public void set(final double ROLL) { super.set(360 - ROLL % 360); }
             @Override public Object getBean() { return Horizon.this; }
             @Override public String getName() { return "roll"; }
         };
         pitch = new DoublePropertyBase(0) {
             @Override public void set(final double PITCH) {
-                double pitch = PITCH % 180;
-                if (pitch > 90) {
-                    pitch = 90 - (get() - 90);
-                    if (!upsidedown.get()) { setRoll(roll.get() - 180); }
-                    setUpsideDown(true);
-                } else if (pitch < -90) {
-                    pitch = -90 + (-90 - pitch);
-                    if (!isUpsideDown()) { setRoll(roll.get() + 180); }
-                    setUpsideDown(true);
-                } else {
-                    setUpsideDown(false);
-                }
+                double pitch = 0;
+                if(PITCH>180)
+                  pitch = ( PITCH - 360) % 180;
+                else
+                	 pitch = PITCH % 180;
                 super.set(pitch);
             }
             @Override public Object getBean() { return Horizon.this; }
             @Override public String getName() { return "pitch"; }
         };
-        upsidedown       = new SimpleBooleanProperty(this, "upsidedown", false);
-        animated         = new SimpleBooleanProperty(this, "animated", true);    
+
         skyColor         = new SimpleObjectProperty<>(this, "skyColor", Color.rgb(127, 213, 240));
         earthColor       = new SimpleObjectProperty<>(this, "earthColor", Color.rgb(60, 68, 57));
         indicatorColor   = new SimpleObjectProperty<>(this, "indicatorcolor", Color.web("#fd7e24"));
@@ -176,19 +160,19 @@ public class Horizon extends Region {
         horizonCanvas = new Canvas(PREFERRED_WIDTH, PREFERRED_HEIGHT);
         horizonCtx    = horizonCanvas.getGraphicsContext2D();
         horizonCanvas.getTransforms().addAll(horizonRotate);
-        
+
         indicatorCanvas = new Canvas(PREFERRED_WIDTH, PREFERRED_HEIGHT);
         indicatorCtx    = indicatorCanvas.getGraphicsContext2D();
-                
+
         moveTo  = new MoveTo(0.5 * PREFERRED_WIDTH, 0.1037850467 * PREFERRED_WIDTH);
         lineTo  = new LineTo(0.5 * PREFERRED_WIDTH + 0.0175 * PREFERRED_WIDTH, 0.1037850467 * size + 0.055 * PREFERRED_WIDTH);
         hLineTo = new HLineTo(0.5 * PREFERRED_WIDTH - 0.0175 * PREFERRED_WIDTH);
         arrow   = new Path();
-        arrow.getElements().addAll(moveTo, lineTo, hLineTo, new ClosePath());        
+        arrow.getElements().addAll(moveTo, lineTo, hLineTo, new ClosePath());
         arrow.setFill(getIndicatorColor());
         arrow.setStroke(getIndicatorColor().darker());
         arrow.getTransforms().add(horizonRotate);
-        
+
         pane = new Pane(background, horizonCanvas, indicatorCanvas, arrow);
         pane.getStyleClass().add("frame");
 
@@ -208,31 +192,11 @@ public class Horizon extends Region {
     private void handleControlPropertyChanged(final String PROPERTY) {
         if ("RESIZE".equals(PROPERTY)) {
             resize();
-        } else if ("ROLL".equals(PROPERTY)) {                                                            
-            if (isAnimated()) {
-                pitchPixel = Math.PI * size / 360;
-                KeyValue kvRollBegin = new KeyValue(horizonRotate.angleProperty(), horizonRotate.getAngle(), Interpolator.EASE_IN);                
-                KeyValue kvRollEnd   = new KeyValue(horizonRotate.angleProperty(), getRoll(), Interpolator.EASE_OUT);
-                KeyFrame kfBegin     = new KeyFrame(Duration.ZERO, kvRollBegin);
-                KeyFrame kfEnd       = new KeyFrame(Duration.millis(ANIMATION_DURATION), kvRollEnd);
-                timelineRoll.getKeyFrames().setAll(kfBegin, kfEnd);                
-                timelineRoll.play();
-            } else {
-                horizonRotate.setAngle(getRoll());                
-            }            
+        } else if ("ROLL".equals(PROPERTY)) {
+                horizonRotate.setAngle(getRoll());
         } else if ("PITCH".equals(PROPERTY)) {
-            if (isAnimated()) {
-                KeyValue kvPitchBegin = new KeyValue(currentPitch, currentPitch.get(), Interpolator.EASE_IN);               
-                KeyValue kvPitchEnd   = new KeyValue(currentPitch, getPitch(), Interpolator.EASE_OUT);
-                KeyFrame kfBegin      = new KeyFrame(Duration.ZERO, kvPitchBegin);
-                KeyFrame kfEnd        = new KeyFrame(Duration.millis(ANIMATION_DURATION), kvPitchEnd);
-                timelinePitch.getKeyFrames().setAll(kfBegin, kfEnd);
-                timelinePitch.currentTimeProperty().addListener(observable -> drawHorizonCanvas());
-                timelinePitch.play();
-            } else {
                 currentPitch.set(getPitch());
                 resize();
-            }
         }
     }
 
@@ -243,14 +207,6 @@ public class Horizon extends Region {
     public final double getPitch() { return pitch.get(); }
     public final void setPitch(final double PITCH) { pitch.set(PITCH); }
     public final DoubleProperty pitchProperty() { return pitch; }
-
-    public final boolean isUpsideDown() { return upsidedown.get(); }
-    public final void setUpsideDown(final boolean UPSIDE_DOWN) { upsidedown.set(UPSIDE_DOWN); }
-    public final BooleanProperty upsideDownProperty() { return upsidedown; }
-    
-    public final boolean isAnimated() { return animated.get(); }
-    public final void setAnimated(final boolean ANIMATED) { animated.set(ANIMATED); }
-    public final BooleanProperty animatedProperty() { return animated; }
 
     public final Color getSkyColor() { return skyColor.get(); }
     public final void setSkyColor(final Color SKY_COLOR) {
@@ -265,14 +221,14 @@ public class Horizon extends Region {
         resize();
     }
     public final ObjectProperty<Color> earthColorProperty() { return earthColor; }
-    
+
     public final Color getIndicatorColor() { return indicatorColor.get(); }
     public final void setIndicatorColor(final Color INDICATOR_COLOR) {
         indicatorColor.set(INDICATOR_COLOR);
         resize();
     }
     public final ObjectProperty<Color> indicatorColorProperty() { return indicatorColor; }
-    
+
     private Font getRegularFontAt(final double SIZE) { return Font.font(fontName, FontWeight.NORMAL, SIZE); }
     private Font getBoldFontAt(final double SIZE) { return Font.font(fontName, FontWeight.BOLD, SIZE); }
 
@@ -284,16 +240,16 @@ public class Horizon extends Region {
         pitchPixel = Math.PI * size / 360;
         horizonAffine.setTy(pitchPixel * currentPitch.get());
         horizonCtx.setTransform(horizonAffine);
-        
+
         // Draw background with sky and earth
-        horizonCtx.save();        
+        horizonCtx.save();
         horizonCtx.setFill(new LinearGradient(0, 0, 0, horizonCanvas.getHeight(), false, CycleMethod.NO_CYCLE,
                                               new Stop(0.0, getSkyColor()),
                                               new Stop(0.5, getSkyColor()),
                                               new Stop(0.5, getEarthColor()),
                                               new Stop(1.0, getEarthColor())));
         horizonCtx.translate(0, -0.5 * (horizonCanvas.getHeight() - size));
-        horizonCtx.fillRect(0, 0, size, horizonCanvas.getHeight());                              
+        horizonCtx.fillRect(0, 0, size, horizonCanvas.getHeight());
         // Draw horizontal lines
         horizonCtx.setFill(getSkyColor().deriveColor(0, 1, 0.5, 1));
         horizonCtx.setStroke(getSkyColor().deriveColor(0, 1, 0.5, 1));
@@ -306,22 +262,22 @@ public class Horizon extends Region {
         for (double y = 0.5 * horizonCanvas.getHeight() - stepSizeY ; y > 0 ; y -= stepSizeY) {
             if (step <= 80) {
                 if (stepTen) {
-                    horizonCtx.strokeLine(size * 0.4, y, size * 0.6, y);                    
+                    horizonCtx.strokeLine(size * 0.4, y, size * 0.6, y);
                     step += 10;
                     horizonCtx.fillText(Integer.toString(step), size * 0.35, y);
                     horizonCtx.fillText(Integer.toString(step), size * 0.7, y);
                 } else {
-                    horizonCtx.strokeLine(size * 0.45, y, size * 0.55, y);                    
+                    horizonCtx.strokeLine(size * 0.45, y, size * 0.55, y);
                 }
             }
-            stepTen ^= true;    
-        }        
-        
+            stepTen ^= true;
+        }
+
         horizonCtx.setFill(Color.WHITE);
         horizonCtx.setStroke(Color.WHITE);
-        
+
         horizonCtx.strokeLine(0, 0.5 * horizonCanvas.getHeight(), size, 0.5 * horizonCanvas.getHeight());
-        
+
         stepTen = false;
         step = 0;
         for (double y = 0.5 * horizonCanvas.getHeight() + stepSizeY ; y <= horizonCanvas.getHeight() ; y += stepSizeY) {
@@ -343,48 +299,48 @@ public class Horizon extends Region {
 
     private void drawIndicatorCanvas() {
         indicatorCtx.clearRect(0, 0, indicatorCanvas.getWidth(), indicatorCanvas.getHeight());
-               
+
         final Point2D OUTER_POINT         = new Point2D(0.5 * size, 0.08878504672897196 * size);
         final Point2D INNER_POINT_SMALL   = new Point2D(0.5 * size, 0.0937850467 * size);
         final Point2D INNER_POINT_MEDIUM  = new Point2D(0.5 * size, 0.1037850467 * size);
-        final Point2D INNER_POINT_BIG     = new Point2D(0.5 * size, 0.113 * size);        
+        final Point2D INNER_POINT_BIG     = new Point2D(0.5 * size, 0.113 * size);
         final double  SMALL_STROKE_WIDTH  = 0.0025 * size;
         final double  MEDIUM_STROKE_WIDTH = 0.005 * size;
         final double  BIG_STROKE_WIDTH    = 0.01 * size;
-        final int     STEP                = 5; 
-        
+        final int     STEP                = 5;
+
         indicatorCtx.setLineJoin(StrokeLineJoin.ROUND);
         indicatorCtx.setLineCap(StrokeLineCap.ROUND);
-        
+
         indicatorCtx.save();
         // PreRotate the GraphicsContext
         indicatorCtx.translate(0.5 * size, 0.5 * size);
         indicatorCtx.rotate(-90);
         indicatorCtx.translate(-0.5 * size, -0.5 * size);
-        
+
         for (int angle = 0; angle < 185; angle += STEP) {
-            if (angle % 45 == 0 || angle == 0) {                
+            if (angle % 45 == 0 || angle == 0) {
                 indicatorCtx.setStroke(getIndicatorColor());
                 indicatorCtx.setLineWidth(BIG_STROKE_WIDTH);
-                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_BIG.getX(), INNER_POINT_BIG.getY());                
+                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_BIG.getX(), INNER_POINT_BIG.getY());
             } else if (angle % 15 == 0) {
                 indicatorCtx.setStroke(Color.WHITE);
                 indicatorCtx.setLineWidth(MEDIUM_STROKE_WIDTH);
-                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_MEDIUM.getX(), INNER_POINT_MEDIUM.getY());                                    
+                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_MEDIUM.getX(), INNER_POINT_MEDIUM.getY());
             } else {
                 indicatorCtx.setStroke(Color.WHITE);
                 indicatorCtx.setLineWidth(SMALL_STROKE_WIDTH);
-                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_SMALL.getX(), INNER_POINT_SMALL.getY());                
+                indicatorCtx.strokeLine(OUTER_POINT.getX(), OUTER_POINT.getY(), INNER_POINT_SMALL.getX(), INNER_POINT_SMALL.getY());
             }
             indicatorCtx.translate(0.5 * size, 0.5 * size);
             indicatorCtx.rotate(STEP);
             indicatorCtx.translate(-0.5 * size, -0.5 * size);
         }
         indicatorCtx.restore();
-        
+
         indicatorCtx.setFillRule(FillRule.EVEN_ODD);
         indicatorCtx.beginPath();
-        
+
         indicatorCtx.moveTo(size * 0.4766355140186916, size * 0.5);
         indicatorCtx.bezierCurveTo(size * 0.4766355140186916, size * 0.514018691588785, size * 0.48598130841121495, size * 0.5233644859813084, size * 0.5, size * 0.5233644859813084);
         indicatorCtx.bezierCurveTo(size * 0.514018691588785, size * 0.5233644859813084, size * 0.5233644859813084, size * 0.514018691588785, size * 0.5233644859813084, size * 0.5);
@@ -415,32 +371,32 @@ public class Horizon extends Region {
         width  = getWidth();
         height = getHeight();
 
-        if (width > 0 && height > 0) {                        
+        if (width > 0 && height > 0) {
             pane.setMaxSize(size, size);
             pane.relocate((width - size) * 0.5, (height - size) * 0.5);
-            
+
             background.setPrefSize(size, size);
             background.relocate((size - background.getPrefWidth()) * 0.5, (size - background.getPrefHeight()) * 0.5);
             background.setClip(new Circle(0.5 * size, 0.5 * size, size * 0.45));
 
             horizonRotate.setPivotX(size * 0.5);
             horizonRotate.setPivotY(size * 0.5);
-                        
+
             horizonCanvas.setWidth(size);
             horizonCanvas.setHeight(Math.PI * size);
-            horizonCanvas.setClip(new Circle(0.5 * size, 0.5 * size, size * 0.45));            
-            
+            horizonCanvas.setClip(new Circle(0.5 * size, 0.5 * size, size * 0.45));
+
             indicatorCanvas.setWidth(size);
             indicatorCanvas.setHeight(size);
-                                                
+
             drawHorizonCanvas();
             drawIndicatorCanvas();
-                        
-            moveTo.setX(0.5 * size); 
+
+            moveTo.setX(0.5 * size);
             moveTo.setY(0.1037850467 * size);
             lineTo.setX(0.5 * size + 0.0175 * size);
             lineTo.setY(0.1037850467 * size + 0.055 * size);
             hLineTo.setX(0.5 * size - 0.0175 * size);
-        }        
+        }
     }
 }

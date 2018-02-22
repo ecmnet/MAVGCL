@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.HBox?>
+<?import com.comino.flight.ui.widgets.panel.AirWidget?>
 
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
 	xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
@@ -12,15 +13,25 @@
 			<children>
 				<HBox layoutY="10.0" layoutX="10.0" spacing="7.0" alignment="CENTER_LEFT">
 					<children>
-					    <Label text="Zoom:" />
-					    <Slider fx:id="zoom" blockIncrement="10.0" majorTickUnit="20.0"
+						<Label text="Zoom:" />
+						<Slider fx:id="zoom" blockIncrement="10.0" majorTickUnit="20.0"
 							max="180.0" min="20" prefHeight="15.0" prefWidth="161.0"
 							showTickMarks="true" value="19.5" />
-					    <Label text="Perspective:" />
-						<ChoiceBox fx:id="perspective" prefWidth="100.0" maxHeight="17.0"   />
+						<Label text="Perspective:" />
+						<ChoiceBox fx:id="perspective" prefWidth="100.0"
+							maxHeight="17.0" />
+							<CheckBox fx:id="aircontrol" text="Instruments" />
 					</children>
 				</HBox>
 			</children>
 		</Pane>
 	</top>
+	<center>
+		<StackPane alignment="BOTTOM_LEFT">
+			<children>
+			  <Pane fx:id="main"/>
+			  <AirWidget fx:id="air" maxWidth="300" maxHeight="160"/>
+			</children>
+		</StackPane>
+	</center>
 </fx:root>

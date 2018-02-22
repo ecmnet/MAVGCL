@@ -71,19 +71,15 @@ public class AirWidget extends WidgetPane  {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if(!isDisabled() && (System.currentTimeMillis()-tms)>200) {
+				if(!isDisabled() && (System.currentTimeMillis()-tms)>50) {
 					tms = System.currentTimeMillis();
-
-					if(Math.abs(bearing - model.getValue("HEAD"))>1) {
 						bearing = model.getValue("HEAD");
-						System.out.println(bearing);
 						g_compass.setBearing(bearing);
-					}
-					if(Math.abs(pitch - model.getValue("PITCH"))>0.1) {
+					if(Math.abs(pitch - MSPMathUtils.fromRad(model.getValue("PITCH")))>0.1) {
 						pitch = model.getValue("PITCH");
 						g_horizon.setPitch(MSPMathUtils.fromRad(pitch));
 					}
-					if(Math.abs(roll - model.getValue("ROLL"))>0.1) {
+					if(Math.abs(roll - MSPMathUtils.fromRad(model.getValue("ROLL")))>0.1) {
 						roll = model.getValue("ROLL");
 						g_horizon.setRoll(MSPMathUtils.fromRad(roll));
 					}
