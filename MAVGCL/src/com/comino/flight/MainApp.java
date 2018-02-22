@@ -398,8 +398,13 @@ public class MainApp extends Application  {
 		VBox box = new VBox(); DataModel model = control.getCurrentModel();
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash07.png").toExternalForm()));
 		Label version = new Label();
-		version.setText("  PX4 Firmware Version: "+model.sys.version +
-				"   MAVGCL runs on Java "+System.getProperty("java.version"));
+		if(model.sys.build.isEmpty())
+			version.setText("  PX4 Firmware Version: "+model.sys.version +
+					"   MAVGCL runs on Java "+System.getProperty("java.version"));
+		else
+			version.setText("  PX4 Firmware Version: "+model.sys.version +
+					"   MSP build: " + model.sys.build +
+					"   MAVGCL runs on Java "+System.getProperty("java.version"));
 		version.setPadding(new Insets(10,0,0,0));
 		Label source = new Label("  Source, license and terms of use: https://github.com/ecmnet/MAVGCL");
 		Label copyright = new Label("  ecm@gmx.de");
