@@ -1504,6 +1504,7 @@
 		<MSPSource class="vision" field="h"/>
 		<Groups>
 			<Group>Vision</Group>
+			<Group>Attitude</Group>
 		</Groups>
   </KeyFigure>
 
@@ -1514,6 +1515,7 @@
 		</ULogSource>
 		<Groups>
 			<Group>Vision</Group>
+			<Group>Attitude</Group>
 		</Groups>
   </KeyFigure>
 
@@ -1524,6 +1526,7 @@
 		</ULogSource>
 		<Groups>
 			<Group>Vision</Group>
+			<Group>Attitude</Group>
 		</Groups>
   </KeyFigure>
 
