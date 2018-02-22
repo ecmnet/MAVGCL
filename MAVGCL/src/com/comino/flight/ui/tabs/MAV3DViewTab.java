@@ -100,7 +100,7 @@ public class MAV3DViewTab extends BorderPane  {
 		air.visibleProperty().bind(aircontrol.selectedProperty());
 
 		perspective.getItems().addAll(PERSPECTIVES);
-		perspective.getSelectionModel().selectFirst();
+		perspective.getSelectionModel().selectLast();
 
 		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			widget.setPerspective(n.intValue());

@@ -88,7 +88,6 @@ public class Camera extends Xform {
 
 		camera.setNearClip(CAMERA_NEAR_CLIP);
 		camera.setFarClip(CAMERA_FAR_CLIP);
-		setPerspective(OBSERVER_PERSPECTIVE);
 
 		scene.setCamera(camera);
 
@@ -98,7 +97,7 @@ public class Camera extends Xform {
 
 	}
 
-	public void setPerspective(int perspective) {
+	public void setPerspective(int perspective,AnalysisDataModel model) {
 		this.perspective = perspective;
 		this.vv_angle = 0;
 		switch(perspective) {
@@ -111,12 +110,11 @@ public class Camera extends Xform {
 			camera.setFieldOfView(CAMERA_INITIAL_FOV_OBS);
 			break;
 		case VEHICLE_PERSPECTIVE:
-			camera.setTranslateX(0); camera.setTranslateY(0);
-			camera.setTranslateZ(0);
-			this.rx.setAngle(0);
+			camera.setTranslateX(0); camera.setTranslateY(0); camera.setTranslateZ(0);
 			camera.setFieldOfView(CAMERA_INITIAL_FOV_VCL);
 			break;
 		}
+		updateState(model);
 	}
 
 	public void updateState(AnalysisDataModel model) {
@@ -125,7 +123,7 @@ public class Camera extends Xform {
 
 		if(perspective==VEHICLE_PERSPECTIVE) {
 			this.rz.setAngle(-MSPMathUtils.fromRad(model.getValue("ROLL"))+180);
-			this.rx.setAngle(MSPMathUtils.fromRad(model.getValue("PITCH"))+CAMERA_INITIAL_X_ANGLE+vv_angle);
+			this.rx.setAngle(MSPMathUtils.fromRad(model.getValue("PITCH"))+vv_angle);
 		}
 	}
 

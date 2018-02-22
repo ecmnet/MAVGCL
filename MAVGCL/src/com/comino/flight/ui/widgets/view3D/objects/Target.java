@@ -47,6 +47,7 @@ import javafx.scene.shape.TriangleMesh;
 public class Target extends Xform {
 
 	private TriangleMesh pyramidMesh = new TriangleMesh();
+	private MeshView pyramid = null;
 
 	public Target() {
 		super();
@@ -72,7 +73,7 @@ public class Target extends Xform {
 				4,0,  3,0,  1,0           // Bottom front face
 				);
 
-		MeshView pyramid = new MeshView(pyramidMesh);
+		pyramid = new MeshView(pyramidMesh);
 
 		PhongMaterial material = new PhongMaterial();
 		material.setDiffuseColor(Color.DARKORCHID);
@@ -83,10 +84,10 @@ public class Target extends Xform {
 
 	public void updateState(AnalysisDataModel model) {
 		if(model.getValue("SLAMDIR") != 0) {
-			this.setVisible(true);
+			this.getChildren().addAll(pyramid);
 			this.setTranslate(-model.getValue("SLAMPY")*100f, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ")*100f, model.getValue("SLAMPX")*100f);
 		} else
-			this.setVisible(false);
+			this.getChildren().clear();
 	}
 
 }

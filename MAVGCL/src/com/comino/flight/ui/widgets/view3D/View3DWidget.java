@@ -140,10 +140,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
 			target.updateState(model);
+			vehicle.updateState(model);
 			switch(perspective) {
-			case Camera.OBSERVER_PERSPECTIVE:
-				vehicle.updateState(model);
-				break;
+//			case Camera.OBSERVER_PERSPECTIVE:
+//				vehicle.updateState(model);
+//				break;
 			case Camera.VEHICLE_PERSPECTIVE:
 				camera.updateState(model);
 				break;
@@ -174,19 +175,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
+		setPerspective(Camera.VEHICLE_PERSPECTIVE);
 
 		return this;
 	}
 
 	public void setPerspective(int perspective) {
 		this.perspective = perspective;
-		camera.setPerspective(perspective);
+		camera.setPerspective(perspective,model);
 		switch(perspective) {
 		case Camera.OBSERVER_PERSPECTIVE:
-			vehicle.setVisible(true);
+			vehicle.show(true);
 			break;
 		case Camera.VEHICLE_PERSPECTIVE:
-			vehicle.setVisible(false);
+			vehicle.show(false);
 			break;
 		}
 	}

@@ -39,17 +39,21 @@ import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.msp.utils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import javafx.scene.shape.MeshView;
+
 public class VehicleModel extends Xform {
 
 	private ObjModelImporter obj = null;
+	private MeshView[]      mesh = null;
 
 	public VehicleModel(float scale) {
 		super();
 		obj = new ObjModelImporter();
 		obj.read(this.getClass().getResource("resources/quad_x.obj"));
-		this.getChildren().addAll(obj.getImport());
+		mesh = obj.getImport();
 		this.setScale(scale);
 		this.setRotateX(-90);
+
 	}
 
 	public void updateState(AnalysisDataModel model) {
@@ -57,4 +61,12 @@ public class VehicleModel extends Xform {
 	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
 		this.ry.setAngle(180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
 	}
+
+	public void show(boolean show) {
+		if(show)
+			this.getChildren().addAll(mesh);
+		else
+			this.getChildren().clear();
+	}
+
 }
