@@ -51,16 +51,13 @@ public class AirWidget extends WidgetPane  {
 	@FXML
 	private AirCompass g_compass;
 
-	@FXML
-	private Horizon g_horizon;
-
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
 	private AnimationTimer task;
 
 	private AnalysisDataModel model;
 
-	private double pitch,roll,bearing;
+	private double bearing;
 
 	private long tms = 0;
 
@@ -75,14 +72,6 @@ public class AirWidget extends WidgetPane  {
 					tms = System.currentTimeMillis();
 						bearing = model.getValue("HEAD");
 						g_compass.setBearing(bearing);
-					if(Math.abs(pitch - MSPMathUtils.fromRad(model.getValue("PITCH")))>0.05) {
-						pitch = model.getValue("PITCH");
-						g_horizon.setPitch(MSPMathUtils.fromRad(pitch));
-					}
-					if(Math.abs(roll - MSPMathUtils.fromRad(model.getValue("ROLL")))>0.05) {
-						roll = model.getValue("ROLL");
-						g_horizon.setRoll(MSPMathUtils.fromRad(roll));
-					}
 				}
 			}
 		};

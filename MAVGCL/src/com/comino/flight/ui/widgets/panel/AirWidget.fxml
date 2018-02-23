@@ -4,23 +4,13 @@
 <?import javafx.scene.layout.*?>
 <?import eu.hansolo.airseries.*?>
 
-<fx:root  prefWidth="183.0"  type="javafx.scene.layout.Pane"
+<fx:root  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane layoutX="7.0" layoutY="0.0" maxHeight="150" prefWidth="300.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES"  />
-          <ColumnConstraints hgrow="SOMETIMES"  />
-        </columnConstraints>
-        <rowConstraints>
-           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <AirCompass fx:id="g_compass"
-                 GridPane.columnIndex="1" GridPane.rowIndex="2" />
-             <Horizon fx:id="g_horizon"
-                 GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <HBox layoutX="20" spacing="7.0" alignment="CENTER_LEFT">
+       <children>
+            <AirCompass fx:id="g_compass" maxWidth="150" maxHeight="150" />
          </children>
-      </GridPane>
+      </HBox>
    </children>
 </fx:root>

@@ -62,7 +62,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 
-public class MAV3DViewTab extends BorderPane  {
+public class MAV3DViewTab extends Pane  {
 
 	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
 
