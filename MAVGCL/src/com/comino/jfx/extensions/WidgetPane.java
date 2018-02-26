@@ -154,6 +154,10 @@ public class WidgetPane extends Pane {
 
 	public void setMoveable(boolean val) {
 		setManaged(!val); moveable.set(val);
+		if(moveable.get()) {
+			setLayoutX(MAVPreferences.getInstance().getDouble(prefKey+"X", 10));
+			setLayoutY(MAVPreferences.getInstance().getDouble(prefKey+"Y", 10));
+		}
 	}
 
 	public boolean getMoveable() {
