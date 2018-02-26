@@ -97,7 +97,7 @@ public class MAV3DViewTab extends Pane  {
 		widget.setLayoutX(10);  widget.setLayoutY(10);
 		main.getChildren().add(widget);
 
-		air.visibleProperty().bind(aircontrol.selectedProperty());
+		air.fadeProperty().bind(aircontrol.selectedProperty());
 
 		perspective.getItems().addAll(PERSPECTIVES);
 		perspective.getSelectionModel().selectLast();

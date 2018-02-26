@@ -7,7 +7,7 @@
 <fx:root  type="javafx.scene.layout.Pane"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox layoutX="20" spacing="7.0" alignment="CENTER_LEFT">
+      <HBox spacing="7.0" alignment="CENTER_LEFT">
        <children>
             <AirCompass fx:id="g_compass" maxWidth="150" maxHeight="150" />
          </children>

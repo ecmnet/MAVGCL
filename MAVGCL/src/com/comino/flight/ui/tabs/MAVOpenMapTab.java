@@ -56,6 +56,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget;
+import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.mav.control.IMAVController;
@@ -125,6 +126,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private GPSDetailsWidget gpsdetails;
 
 	@FXML
+	private CheckBox aircontrol;
+
+	@FXML
+	private AirWidget air;
+
+	@FXML
 	private Button export;
 
 	private LayeredMap map;
@@ -187,6 +194,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
+
+		air.setVisible(false);
+		air.fadeProperty().bind(aircontrol.selectedProperty());
 
 		center.getItems().addAll(CENTER_OPTIONS);
 		center.getSelectionModel().select(0);
