@@ -13,10 +13,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 16/02/2018
+**Development Status:** Last updated 26/02/2018
 
 - Mode annotations in background for FlightMode/EKFStatus/Positioning/GPS fix type
-- 3DView added with observer and vehicle perspective
+- 3DView added with observer and vehicle perspectiv
+- Compass widget added to map and 3D view
 - Java 9 compatibility
 
 V0.6xx notes:
