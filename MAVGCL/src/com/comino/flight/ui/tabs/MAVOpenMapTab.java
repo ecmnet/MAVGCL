@@ -327,7 +327,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				setCenter(centermode);
 			else {
 				float[] xy = new float[2];
-				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)
+						    && MSPMathUtils.is_projection_initialized()) {
 					Position p = map.getMapPosition(click.getX(), click.getY());
 					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
 						msg_msp_command msp = new msg_msp_command(255,1);
