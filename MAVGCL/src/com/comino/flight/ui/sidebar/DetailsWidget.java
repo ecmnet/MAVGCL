@@ -178,7 +178,7 @@ public class DetailsWidget extends WidgetPane {
 					ProgressBar l2 = new ProgressBar();
 					l2.setPrefWidth(105);
 					value = l2;
-					l2.setTooltip(tip);
+					label.setTooltip(tip);
 					p.addRow(row, label, l2);
 				} else {
 					Label l2 = new Label("-");

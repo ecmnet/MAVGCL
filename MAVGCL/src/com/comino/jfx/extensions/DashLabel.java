@@ -36,6 +36,7 @@ package com.comino.jfx.extensions;
 import javafx.geometry.Insets;
 import javafx.scene.CacheHint;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -100,6 +101,10 @@ public class DashLabel extends GridPane {
 			line.setStroke(color.darker());
 		else
 			line.setStroke(Color.DARKCYAN.darker());
+	}
+
+	public void setTooltip(Tooltip tip) {
+		label.setTooltip(tip);
 	}
 
 }
