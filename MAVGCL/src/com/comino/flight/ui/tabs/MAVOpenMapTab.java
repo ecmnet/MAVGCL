@@ -531,6 +531,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
 					(float)model.getValue("LPOSY"),
 					(float)model.getValue("LPOSZ"), pos);
+
 			break;
 		case 2:
 			pos[0] = model.getValue("RGPSLAT");
@@ -566,7 +567,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			} else
 				baseLayer.setVisible(false);
 
-			if(model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO")<4)
+			if((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") < 4) && type!=1)
 				positionLayer.getIcon().setImage(plane_invalid);
 			else
 				positionLayer.getIcon().setImage(plane_valid);
