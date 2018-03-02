@@ -64,6 +64,8 @@ public class MAVPreferences {
 	public final static String HEALTHCHECK      = "HEALTHCHECK";
 	public final static String RTKSVINACC       = "RTKSVINACC";
 	public static final String VIDREC           = "VIDREC";
+	public static final String REFLAT           = "REFLAT";
+	public static final String REFLON           = "REFLON";
 
 	private static Preferences prefs = null;
 

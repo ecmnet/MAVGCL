@@ -46,9 +46,25 @@
 	        GridPane.columnSpan="4" text="Perform vehicle healh check" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="11" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy [m]:"
+		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:"
 			GridPane.rowIndex="12" GridPane.columnIndex="0" />
 		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"
 			GridPane.rowIndex="12" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="20.0" text="[m]"
+			GridPane.rowIndex="12" GridPane.columnIndex="2" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference latitude"
+			GridPane.rowIndex="13" GridPane.columnIndex="0" />
+		<TextField fx:id="reflat" prefHeight="19.0" prefWidth="80.0"
+			GridPane.rowIndex="13" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"
+			GridPane.rowIndex="13" GridPane.columnIndex="2" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference longitude"
+			GridPane.rowIndex="14" GridPane.columnIndex="0" />
+		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"
+			GridPane.rowIndex="14" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"
+			GridPane.rowIndex="14" GridPane.columnIndex="2" />
+		<Separator maxWidth="-Infinity" prefHeight="14.0"
+					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="15" />
 	</children>
 </GridPane>

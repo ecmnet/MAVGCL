@@ -35,6 +35,7 @@ package com.comino.flight.ui.tabs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
@@ -55,6 +56,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
@@ -160,6 +162,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private Image plane_valid, plane_invalid;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
+	private Preferences preferences = MAVPreferences.getInstance();
 
 	private  StateProperties state;
 
@@ -523,6 +526,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			pos[1] = model.getValue("GLOBLON");
 			break;
 		case 1:
+			MSPMathUtils.map_projection_init(preferences.getDouble(MAVPreferences.REFLAT, 0),
+					                         preferences.getDouble(MAVPreferences.REFLON, 0));
 			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
 					(float)model.getValue("LPOSY"),
 					(float)model.getValue("LPOSZ"), pos);

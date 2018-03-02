@@ -106,6 +106,12 @@ public class PreferencesDialog  {
 	@FXML
 	private TextField svinacc;
 
+	@FXML
+	private TextField reflat;
+
+	@FXML
+	private TextField reflon;
+
 	private IMAVController control;
 	private Preferences userPrefs;
 
@@ -192,6 +198,8 @@ public class PreferencesDialog  {
 		sitl.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.PREFS_SITL, true));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
 		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
+		reflat.setText(userPrefs.get(MAVPreferences.REFLAT, "47.3977420"));
+		reflon.setText(userPrefs.get(MAVPreferences.REFLON, "8.5455940"));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -207,6 +215,8 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.PREFS_SITL,sitl.isSelected());
 			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
+			userPrefs.put(MAVPreferences.REFLAT, reflat.getText());
+			userPrefs.put(MAVPreferences.REFLON, reflon.getText());
 
 			try {
 				userPrefs.flush();
