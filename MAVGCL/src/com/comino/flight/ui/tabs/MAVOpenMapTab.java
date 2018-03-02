@@ -331,7 +331,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			else {
 				float[] xy = new float[2];
 				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)
-						    && MSPMathUtils.is_projection_initialized()) {
+						&& MSPMathUtils.is_projection_initialized()) {
 					Position p = map.getMapPosition(click.getX(), click.getY());
 					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
 						msg_msp_command msp = new msg_msp_command(255,1);
@@ -527,7 +527,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			break;
 		case 1:
 			MSPMathUtils.map_projection_init(preferences.getDouble(MAVPreferences.REFLAT, 0),
-					                         preferences.getDouble(MAVPreferences.REFLON, 0));
+					preferences.getDouble(MAVPreferences.REFLON, 0));
 			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
 					(float)model.getValue("LPOSY"),
 					(float)model.getValue("LPOSZ"), pos);
@@ -554,12 +554,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			map.setCenter(pos[0],pos[1]);
 
 		try {
-			if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
-				//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+			if(type!=1) {
+				if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
+					//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+					homeLayer.setVisible(true);
+					homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+				} else
+					homeLayer.setVisible(false);
+			} else {
 				homeLayer.setVisible(true);
-				homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
-			} else
-				homeLayer.setVisible(false);
+				homeLayer.updatePosition(preferences.getDouble(MAVPreferences.REFLAT,0),
+						preferences.getDouble(MAVPreferences.REFLON,0));
+			}
 
 			if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
 				baseLayer.setVisible(true);
@@ -589,8 +595,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private void setCenter(int mode) {
 		switch(mode) {
 		case 1:
-			if(model.getValue("HOMLAT")!=0)
+			if(model.getValue("HOMLAT")!=0 && type!=1)
 				map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
+			else
+				map.setCenter(preferences.getDouble(MAVPreferences.REFLAT,0),
+						preferences.getDouble(MAVPreferences.REFLON,0));
 			break;
 		case 2:
 			if(model.getValue("BASELAT")!=0)
