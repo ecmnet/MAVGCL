@@ -56,19 +56,19 @@ public class MapGroup extends Xform {
 	private final PhongMaterial mapMaterial	= new PhongMaterial();
 
 	private Timeline 		maptimer 	= null;
+	private boolean			mode2D		= false;
+	private DataModel		model	    = null;
 
 	public MapGroup(DataModel model) {
-
-		super();
-
+		this.model = model;
 		mapMaterial.setDiffuseColor(Color.INDIANRED);
 
 		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
-				for(int k=0;k<this.getChildren().size();k++)
-					this.getChildren().get(k).setVisible(false);
-				model.grid.getData().forEach((i,b) -> {
-					getBlockBox(i,b).setVisible(true);;
-				});
+			for(int k=0;k<this.getChildren().size();k++)
+				this.getChildren().get(k).setVisible(false);
+			model.grid.getData().forEach((i,b) -> {
+				getBlockBox(i,b).setVisible(true);;
+			});
 		} ) );
 		maptimer.setCycleCount(Timeline.INDEFINITE);
 
@@ -91,6 +91,11 @@ public class MapGroup extends Xform {
 		blocks.clear();
 	}
 
+	public void setMode2D(boolean mode2d) {
+		this.mode2D = mode2d;
+		clear();
+	}
+
 	private Box getBlockBox(int block, Point3D_F32 b) {
 
 		if(blocks.containsKey(block))
@@ -99,11 +104,14 @@ public class MapGroup extends Xform {
 		final Box box = new Box(5, 5, 5);
 
 		box.setTranslateX(-b.y*100);
-		box.setTranslateY(-b.z*100+box.getHeight()/2);
+		if(mode2D)
+			box.setTranslateY(-model.state.l_z*100+box.getHeight()/2);
+		else
+			box.setTranslateY(-b.z*100+box.getHeight()/2);
 		box.setTranslateZ(b.x*100);
 		box.setMaterial(mapMaterial);
 
-	    this.getChildren().addAll(box);
+		this.getChildren().addAll(box);
 		blocks.put(block,box);
 
 		return box;

@@ -186,9 +186,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 		switch(perspective) {
 		case Camera.OBSERVER_PERSPECTIVE:
 			vehicle.show(true);
+			map.setMode2D(false);
 			break;
 		case Camera.VEHICLE_PERSPECTIVE:
 			vehicle.show(false);
+			map.setMode2D(true);
 			break;
 		}
 	}
