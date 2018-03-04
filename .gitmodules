@@ -1,0 +1,9 @@
+[submodule "lib"]
+	path = lib
+	url = https://github.com/ecmnet/MAVComm
+[submodule "lib/MAVComm"]
+	path = lib/MAVComm
+	url = https://github.com/ecmnet/MAVComm
+[submodule "MAVGCL/sub"]
+	path = MAVGCL/sub
+	url = https://github.com/ecmnet/MAVComm
