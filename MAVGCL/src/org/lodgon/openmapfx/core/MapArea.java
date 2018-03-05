@@ -65,7 +65,7 @@ public class MapArea extends Pane implements BaseMap {
     /**
      * The maximum zoom level this map supports.
      */
-    public static final int MAX_ZOOM = 20;
+    public static final int MAX_ZOOM = 22;
     private final Map<Long, SoftReference<MapTile>>[] tiles = new HashMap[MAX_ZOOM];
 
     private int nearestZoom;

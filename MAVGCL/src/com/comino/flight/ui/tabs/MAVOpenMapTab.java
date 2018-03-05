@@ -402,18 +402,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				switch(newValue.intValue()) {
 				case 0:
-					zoom.setMax(20);
+					zoom.setMax(20.76);
 					map.setBaseMapProvider(satellite_provider);
 					break;
 				case 1:
-					zoom.setMax(20);
+					zoom.setMax(19.5);
 					map.setBaseMapProvider(street_provider);
 					break;
 				case 2:
 					// TODO: Limit zoom should be in tile provider
 					//						if(zoom.getValue()>17.5)
 					//							map.setZoom(17.5);
-					zoom.setMax(21);
+					zoom.setMax(20.5);
 					map.setBaseMapProvider(terrain_provider);
 					break;
 				}
