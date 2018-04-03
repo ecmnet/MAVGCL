@@ -275,7 +275,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
 		linechart.setCache(true);
-		linechart.setCacheHint(CacheHint.SPEED);
+		//		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -713,12 +713,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				refreshRequest = true; return;
 			}
 			last_message = null;
-
 			refreshRequest = false;
 			pool.invalidateAll();
-			series1.getData().clear();
-			series2.getData().clear();
-			series3.getData().clear();
+
+			if(dataService.getModelList().size()==0) {
+				series1.getData().remove(0,series1.getData().size()-1);
+				series2.getData().remove(0,series2.getData().size()-1);
+				series3.getData().remove(0,series3.getData().size()-1);
+			} else {
+				series1.getData().clear();
+				series2.getData().clear();
+				series3.getData().clear();
+			}
+
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
 			yoffset = 0;

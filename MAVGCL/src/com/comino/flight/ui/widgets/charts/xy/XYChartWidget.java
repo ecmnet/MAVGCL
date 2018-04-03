@@ -707,7 +707,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				refreshRequest = true; return;
 			}
 
-			series1.getData().clear(); series2.getData().clear();
+			if(dataService.getModelList().size()==0) {
+				series1.getData().remove(0,series1.getData().size()-1);
+				series2.getData().remove(0,series2.getData().size()-1);
+			} else {
+				series1.getData().clear();
+				series2.getData().clear();
+			}
 			pool.invalidateAll();
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
