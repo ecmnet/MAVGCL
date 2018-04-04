@@ -21,7 +21,6 @@ public class MessageData {
         Object t = get("timestamp");
         if (t == null)
             throw new FormatErrorException("Message " + format.name + " has no timestamp field");
-
         timestamp = ((Number) t).longValue();
     }
 

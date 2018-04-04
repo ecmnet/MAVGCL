@@ -122,7 +122,7 @@ public class UlogMAVLinkParser  {
 					buffer.put((byte)(msg.data[i] & 0x00FF));
 			}
 		} catch(Exception o) {
-			//           o.printStackTrace();
+			        //  o.printStackTrace();
 		}
 	}
 
@@ -374,7 +374,7 @@ public class UlogMAVLinkParser  {
 				try {
 					return new MessageData(subscription.format, buffer, subscription.multiID);
 				} catch (FormatErrorException e) {
-					//System.err.println(e.getMessage()+": " + msgID);
+				//	System.err.println(e.getMessage()+": " + msgID);
 					buffer.position(buffer.position()+msgSize-5);
 					return null;
 				}
