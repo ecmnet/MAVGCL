@@ -52,7 +52,7 @@ V0.6xx notes:
 
 **Requirements:**
 
-- requires **Java 8** JRE (Java 9 compatible)
+- requires minimum  **Java 8** JRE (Java 9/10 compatible)
 - A companion running a serial-to-udp-proxy (either MAVComm or MAVROS, not required for PIXRacer)
 - Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org)) running on companion 
 
