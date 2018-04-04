@@ -124,7 +124,8 @@ public class AnalysisDataModel {
 						data.put(e.hash,val);
 				}
 			} catch (Exception e1) {
-				data.put(e.hash, Double.NaN);
+				e1.printStackTrace();
+//				data.put(e.hash, Double.NaN);
 			}
 		});
 	}

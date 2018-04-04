@@ -150,8 +150,12 @@ public class KeyFigureMetaData {
 		if(source.field!=null) {
 			Field mclass_field = m.getClass().getField(source.class_n);
 			Object mclass = mclass_field.get(m);
-			Field mfield_field = mclass.getClass().getField(source.field);
-			value = mfield_field.getDouble(mclass);
+			try {
+				Field mfield_field = mclass.getClass().getField(source.field);
+				value = mfield_field.getDouble(mclass);
+			} catch(NoSuchFieldException e) {
+				return value;
+			}
 		}
 		if(source.converter != null)
 			return source.converter.convert(value);
@@ -180,17 +184,18 @@ public class KeyFigureMetaData {
 		value = Double.NaN;
 		source = sources.get(ULG_SOURCE);
 
-		if(source.field!=null) {  // source field specified
+		if(source!=null && source.field!=null) {  // source field specified
 			Object o = data.get(source.field);
-
-			if(o instanceof Integer)
-				value = (float)(Integer)o;
-			else if(o instanceof Double)
-				value = ((Double)o).doubleValue();
-			else
-				value = (float)o;
-			if(source.converter != null)
-				return source.converter.convert(value);
+			if(o!=null) {
+				if(o instanceof Integer)
+					value = (float)(Integer)o;
+				else if(o instanceof Double)
+					value = ((Double)o).doubleValue();
+				else
+					value = (float)o;
+				if(source.converter != null)
+					return source.converter.convert(value);
+			}
 
 		} else { // source field via converter
 

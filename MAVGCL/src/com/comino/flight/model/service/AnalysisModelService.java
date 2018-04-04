@@ -335,6 +335,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+
 				}
 
 				if(model.msg != null && model.msg.msg!=null && model.msg.msg.hashCode()!=old_msg_hash) {

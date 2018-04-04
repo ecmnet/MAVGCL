@@ -56,10 +56,14 @@ public class QuaternionConverter extends SourceConverter {
 
 	@Override
 	public double convert(Map<String,Object> ulogdata) {
-		q[0] = (float)(Float)ulogdata.get(ulogKeyFigure+"[0]");
-		q[1] = (float)(Float)ulogdata.get(ulogKeyFigure+"[1]");
-		q[2] = (float)(Float)ulogdata.get(ulogKeyFigure+"[2]");
-		q[3] = (float)(Float)ulogdata.get(ulogKeyFigure+"[3]");
+		try {
+			q[0] = (float)(Float)ulogdata.get(ulogKeyFigure+"[0]");
+			q[1] = (float)(Float)ulogdata.get(ulogKeyFigure+"[1]");
+			q[2] = (float)(Float)ulogdata.get(ulogKeyFigure+"[2]");
+			q[3] = (float)(Float)ulogdata.get(ulogKeyFigure+"[3]");
+		} catch(Exception e) {
+			return euler[index];
+		}
 		MSPMathUtils.eulerAnglesByQuaternion(euler, q);
 		return euler[index];
 	}
