@@ -217,8 +217,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 		list.forEach((e) -> {
 			e.calculateVirtualKeyFigures(meta);
 			modelList.add(e);
-
 		});
+		setCurrent(0);
 	}
 
 	public void clearModelList() {
@@ -303,10 +303,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 					if(ulogger.isLogging())
 					  ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
-					if(!state.getLogLoadedProperty().get()) {
+				//	if(!state.getLogLoadedProperty().get()) {
 					  LockSupport.parkNanos(2000000000);
 					  continue;
-					}
+			//		}
 				}
 
 				if(!control.isSimulation())
