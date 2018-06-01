@@ -60,8 +60,9 @@ public class UBXRTCM3Base implements Runnable {
 
 	private AnalysisModelService analysisModelService = null;
 
-	private BooleanProperty svin  = new SimpleBooleanProperty();
-	private BooleanProperty valid = new SimpleBooleanProperty();
+	private BooleanProperty svin  	= new SimpleBooleanProperty(false);
+	private BooleanProperty valid 	= new SimpleBooleanProperty(false);
+	private BooleanProperty current = new SimpleBooleanProperty(false);
 
 	private GPS base = null;
 	private Status status = null;
@@ -119,6 +120,10 @@ public class UBXRTCM3Base implements Runnable {
 		return valid;
 	}
 
+	public BooleanProperty getCurrentLocationProperty() {
+		return current;
+	}
+
 	public float getBaseAccuracy() {
 		return mean_acc;
 	}
@@ -148,7 +153,7 @@ public class UBXRTCM3Base implements Runnable {
 					if(svin.get())
 						logger.writeLocalMsg("[mgc] Survey-In timeout", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 					connected = false;
-					valid.set(false); svin.set(false);
+					valid.set(false); svin.set(false); current.set(false);
 					ubx.release(false, 100);
 				} catch (Exception e) {
 					return;
@@ -159,9 +164,11 @@ public class UBXRTCM3Base implements Runnable {
 			public void getSurveyIn(float time_svin, boolean is_svin, boolean is_valid, float meanacc) {
 				svin.set(is_svin);
 				mean_acc = meanacc;
-				if((time_svin % 30) == 0 && is_svin)
+				if((time_svin % 30) == 0 && is_svin) {
+					current.set(mean_acc < 20.0f);
 					logger.writeLocalMsg("[mgc] Survey-In: "+format.format(meanacc)+"m ["+(int)base.numsat+"]", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			    analysisModelService.getCurrent().setValue("SVINACC", meanacc);
+				}
+				analysisModelService.getCurrent().setValue("SVINACC", meanacc);
 			}
 
 
@@ -171,7 +178,12 @@ public class UBXRTCM3Base implements Runnable {
 				base.longitude  = (float)lon;
 				base.altitude   = (short)altitude;
 				base.numsat     = sats;
-				//        System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats);
+				if(!control.isConnected()) {
+					analysisModelService.getCurrent().setValue("BASENO", sats);
+					analysisModelService.getCurrent().setValue("BASELAT", lat);
+					analysisModelService.getCurrent().setValue("BASELON", lon);
+				}
+		//		System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats+" Acc: "+mean_acc);
 			}
 
 			@Override
@@ -180,7 +192,7 @@ public class UBXRTCM3Base implements Runnable {
 				if(!control.isConnected() || !status.isSensorAvailable(Status.MSP_GPS_AVAILABILITY) || svin.get())
 					return;
 
-				valid.set(true);
+				valid.set(true); current.set(true);
 
 				msg_gps_rtcm_data msg = new msg_gps_rtcm_data(2,1);
 				if(len < msg.data.length) {
