@@ -155,6 +155,9 @@ public class UBXRTCM3Base implements Runnable {
 						logger.writeLocalMsg("[mgc] Survey-In timeout", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 					connected = false;
 					valid.set(false); svin.set(false); current.set(false);
+					analysisModelService.getCurrent().setValue("BASENO",  Double.NaN);
+					analysisModelService.getCurrent().setValue("BASELAT", Double.NaN);
+					analysisModelService.getCurrent().setValue("BASELON", Double.NaN);
 					ubx.release(false, 100);
 				} catch (Exception e) {
 					return;
