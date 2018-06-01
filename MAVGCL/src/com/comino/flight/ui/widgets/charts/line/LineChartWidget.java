@@ -261,21 +261,21 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		xAxis.setUpperBound(timeFrame.intValue());
 		xAxis.setLabel("Seconds");
 		xAxis.setAnimated(false);
-		xAxis.setCache(true);
-		xAxis.setCacheHint(CacheHint.SPEED);
+//		xAxis.setCache(true);
+//		xAxis.setCacheHint(CacheHint.SPEED);
 
 		yAxis.setForceZeroInRange(false);
 		yAxis.setAutoRanging(true);
 		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
-		yAxis.setCache(true);
-		yAxis.setCacheHint(CacheHint.SPEED);
+//		yAxis.setCache(true);
+//		yAxis.setCacheHint(CacheHint.SPEED);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
-		linechart.setCache(true);
-		//		linechart.setCacheHint(CacheHint.SPEED);
+//		linechart.setCache(true);
+//		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -714,17 +714,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			last_message = null;
 			refreshRequest = false;
-			pool.invalidateAll();
 
-			if(dataService.getModelList().size()==0) {
-				series1.getData().remove(0,series1.getData().size()-1);
-				series2.getData().remove(0,series2.getData().size()-1);
-				series3.getData().remove(0,series3.getData().size()-1);
-			} else {
-				series1.getData().clear();
-				series2.getData().clear();
-				series3.getData().clear();
-			}
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
@@ -735,6 +725,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 
 			mode.clear();
+
 
 			if(dash.isSelected() && dataService.getModelList().size()> 0) {
 
@@ -754,6 +745,24 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				});
 
 			}
+
+			pool.invalidateAll();
+
+			if(dataService.getModelList().size()==0) {
+				series1.getData().remove(0,series1.getData().size()-1);
+				series2.getData().remove(0,series2.getData().size()-1);
+				series3.getData().remove(0,series3.getData().size()-1);
+			} else {
+				series1.getData().clear();
+				series2.getData().clear();
+				series3.getData().clear();
+			}
+
+			// Workaround to force chart refresh
+			series2.getData().add(new XYChart.Data<Number,Number>(-1,0));
+			series2.getData().add(new XYChart.Data<Number,Number>(-1,0));
+			series3.getData().add(new XYChart.Data<Number,Number>(-1,0));
+
 		}
 
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
