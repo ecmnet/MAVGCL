@@ -41,6 +41,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
@@ -178,7 +179,7 @@ public class UBXRTCM3Base implements Runnable {
 				base.longitude  = (float)lon;
 				base.altitude   = (short)altitude;
 				base.numsat     = sats;
-				if(!control.isConnected()) {
+				if(!control.isConnected() && !StateProperties.getInstance().getLogLoadedProperty().get()) {
 					analysisModelService.getCurrent().setValue("BASENO", sats);
 					analysisModelService.getCurrent().setValue("BASELAT", lat);
 					analysisModelService.getCurrent().setValue("BASELON", lon);

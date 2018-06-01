@@ -300,9 +300,13 @@ public class AnalysisModelService implements IMAVLinkListener {
 			while(true) {
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+					if(ulogger.isLogging())
+					  ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
-					ulogger.enableLogging(false);
-					//	LockSupport.parkNanos(2000000000);
+					if(!state.getLogLoadedProperty().get()) {
+					  LockSupport.parkNanos(2000000000);
+					  continue;
+					}
 				}
 
 				if(!control.isSimulation())

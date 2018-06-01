@@ -475,7 +475,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
 					center.getSelectionModel().select(2);
-					updateMap(true);
+					map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
 				});
 			}
 		});
