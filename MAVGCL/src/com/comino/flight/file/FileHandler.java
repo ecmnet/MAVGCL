@@ -171,9 +171,7 @@ public class FileHandler {
 	public void fileImport() {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
 				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
-				new ExtensionFilter("MAVGCL model files", "*.mgc"),
-				new ExtensionFilter("ULog files", "*.ulg"),
-				new ExtensionFilter("PX4Log files", "*.px4log"));
+				new ExtensionFilter("Log files", "*.mgc","*.ulg","*.px4log"));
 
 		final StateProperties state = StateProperties.getInstance();
 
