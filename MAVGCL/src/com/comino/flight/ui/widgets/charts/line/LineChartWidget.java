@@ -746,7 +746,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			}
 
-			pool.invalidateAll();
 
 			if(dataService.getModelList().size()==0) {
 				series1.getData().remove(0,series1.getData().size()-1);
@@ -758,10 +757,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				series3.getData().clear();
 			}
 
+			pool.invalidateAll();
+
 			// Workaround to force chart refresh
-			series1.getData().add(new XYChart.Data<Number,Number>(-1,0));
-			series2.getData().add(new XYChart.Data<Number,Number>(-1,0));
-			series3.getData().add(new XYChart.Data<Number,Number>(-1,0));
+
+			linechart.getData().clear();
+			linechart.getData().add(series1);
+			linechart.getData().add(series2);
+			linechart.getData().add(series3);
 
 		}
 
