@@ -759,7 +759,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			// Workaround to force chart refresh
-			series2.getData().add(new XYChart.Data<Number,Number>(-1,0));
+			series1.getData().add(new XYChart.Data<Number,Number>(-1,0));
 			series2.getData().add(new XYChart.Data<Number,Number>(-1,0));
 			series3.getData().add(new XYChart.Data<Number,Number>(-1,0));
 
