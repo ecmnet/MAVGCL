@@ -114,20 +114,20 @@ public class UlogMAVLinkParser  {
 	public void addToBuffer(msg_logging_data msg, boolean ok) {
 		try {
 			if(ok) {
-				for (int i = 0; i < msg.length; i++)
+				for (int i = 0; i < msg.data.length; i++)
 					buffer.put((byte)(msg.data[i] & 0x00FF));
 			} else {
 				buffer.clear();
-				for (int i = msg.first_message_offset; i < msg.length; i++)
+				for (int i = msg.first_message_offset; i < msg.data.length; i++)
 					buffer.put((byte)(msg.data[i] & 0x00FF));
 			}
 		} catch(Exception o) {
-			        //  o.printStackTrace();
+			          o.printStackTrace();
 		}
 	}
 
 	public void addToBuffer(msg_logging_data_acked msg) {
-		for (int i = 0; i < msg.length; i++)
+		for (int i = 0; i < msg.data.length; i++)
 			buffer.put((byte)(msg.data[i] & 0x00FF));
 	}
 
@@ -149,7 +149,7 @@ public class UlogMAVLinkParser  {
 		parameterUpdates.clear();
 		messageSubscriptions.clear();
 		fieldsList.clear();
-		data.clear();
+	//	data.clear();
 		nestedParsingDone = false;
 		buffer.clear();
 	}
