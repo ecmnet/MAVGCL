@@ -13,9 +13,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 22/05/2018
+**Development Status:** Last updated 05/06/2018
 
-- Note: ULOG parsing via MAVLink currently broken
+- ULOG parsing via MAVLink fixed
+- Enhanced responsiveness and stability due to threaded MAVLink parsing
+- Minor fixes and enhancements (time chart)
 
 V0.6xx notes:
 
