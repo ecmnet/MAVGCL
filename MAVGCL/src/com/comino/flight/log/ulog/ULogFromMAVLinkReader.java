@@ -93,50 +93,53 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	public void enableLogging(boolean enable) {
 
-		state=STATE_HEADER_IDLE;
+		new Thread(() -> {
 
-		if(!control.isConnected())
-			return;
+			state=STATE_HEADER_IDLE;
 
-		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
-			if(enable)
-				logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			return;
-		}
+			if(!control.isConnected())
+				return;
 
-		if(enable)  {
-			long tms = System.currentTimeMillis();
-			parser.reset(); header_processed = 0; package_lost = 0;
-			logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
-
-			while(state!=STATE_DATA ) {
-				// TODO: This is blocking the UI Thread -> resolve
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {	}
-
-				if((System.currentTimeMillis()-tms)>12000) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+			if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
+				if(enable)
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				return;
+			}
+
+			if(enable)  {
+				long tms = System.currentTimeMillis();
+				parser.reset(); header_processed = 0; package_lost = 0;
+				logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
+
+				while(state!=STATE_DATA ) {
+					// TODO: This is blocking the UI Thread -> resolve
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {	}
+
+					if((System.currentTimeMillis()-tms)>12000) {
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+						logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						state=STATE_HEADER_IDLE;
+						return;
+					}
+				}
+
+				ExecutorService.get().schedule(() -> {
+					if(state==STATE_DATA && lostPackageRatio() > 0.02f)
+						logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
+								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}, 5, TimeUnit.SECONDS);
+
+				logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			} else {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+				if(state==STATE_DATA) {
 					state=STATE_HEADER_IDLE;
-					return;
 				}
 			}
-
-			ExecutorService.get().schedule(() -> {
-				if(state==STATE_DATA && lostPackageRatio() > 0.02f)
-					logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
-							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			}, 5, TimeUnit.SECONDS);
-
-			logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-		} else {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-			if(state==STATE_DATA) {
-				state=STATE_HEADER_IDLE;
-			}
-		}
+		}).start();
 	}
 
 	public boolean isReadingHeader() {
