@@ -334,14 +334,17 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				current.msg = null; wait = System.nanoTime();
 
-				if(state.getCurrentUpToDate().getValue())
+				if(state.getCurrentUpToDate().getValue()) {
 					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				}
 
 
 				if(ulogger.isLogging()) {
 					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+
 
 				}
 
@@ -353,8 +356,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 					current.msg = null; record.msg = null;
 				}
 
-				current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-
 
 				if(mode!=STOPPED) {
 
@@ -365,6 +366,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 							m = record.clone();
 						else
 							m = current.clone();
+
 						m.tms = System.nanoTime() / 1000 - tms_start;
 						m.dt_sec = m.tms / 1e6f;
 						modelList.add(m);

@@ -48,7 +48,7 @@ public class AnalysisDataModel {
 
 	public float    dt_sec = 0;
 
-	private Map<Integer,Double> data = null;
+	private volatile Map<Integer,Double> data = null;
 
 	public AnalysisDataModel() {
 		this.data = new HashMap<Integer,Double>();
@@ -59,7 +59,7 @@ public class AnalysisDataModel {
 		this.data.putAll(d);
 	}
 
-	public  AnalysisDataModel clone() {
+	public  synchronized AnalysisDataModel clone() {
 		AnalysisDataModel d = new AnalysisDataModel(data);
 
 		d.tms = tms;
@@ -106,28 +106,35 @@ public class AnalysisDataModel {
 
 	@SuppressWarnings("unchecked")
 	public  void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
-		md.getKeyFigureMap().forEach((i,e) -> {
-			val = Double.NaN;
-			try {
-				if(!e.isVirtual) {
 
-					if( type == KeyFigureMetaData.MSP_SOURCE && e.hasSource(KeyFigureMetaData.MSP_SOURCE))
-						val = e.getValueFromMSPModel((DataModel)source);
-					if( type == KeyFigureMetaData.PX4_SOURCE && e.hasSource(KeyFigureMetaData.PX4_SOURCE))
-						val = e.getValueFromPX4Model((Map<String,Object>)source);
-					if( type == KeyFigureMetaData.ULG_SOURCE && e.hasSource(KeyFigureMetaData.ULG_SOURCE))
-						val = e.getValueFromULogModel((Map<String,Object>)source);
-					if( type == KeyFigureMetaData.MAV_SOURCE && e.hasSource(KeyFigureMetaData.MAV_SOURCE))
-						val = e.getValueFromMAVLinkMessage(source);
+		synchronized(this) {
+			md.getKeyFigureMap().forEach((i,e) -> {
+				val = Double.NaN;
+				try {
+					if(!e.isVirtual) {
 
-					if(val!=null && !Double.isNaN(val))
-						data.put(e.hash,val);
+						if(!e.hasSource(type))
+							return;
+
+
+						if( type == KeyFigureMetaData.MSP_SOURCE)
+							val = e.getValueFromMSPModel((DataModel)source);
+						if( type == KeyFigureMetaData.PX4_SOURCE)
+							val = e.getValueFromPX4Model((Map<String,Object>)source);
+						if( type == KeyFigureMetaData.ULG_SOURCE)
+							val = e.getValueFromULogModel((Map<String,Object>)source);
+						if( type == KeyFigureMetaData.MAV_SOURCE)
+							val = e.getValueFromMAVLinkMessage(source);
+
+						if(val!=null && !Double.isNaN(val))
+							data.put(e.hash,val);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					//				data.put(e.hash, Double.NaN);
 				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-//				data.put(e.hash, Double.NaN);
-			}
-		});
+			});
+		}
 	}
 
 	public void calculateVirtualKeyFigures(AnalysisDataModelMetaData md) {

@@ -188,17 +188,18 @@ public class KeyFigureMetaData {
 			Object o = data.get(source.field);
 			if(o!=null) {
 				if(o instanceof Integer)
-					value = (float)(Integer)o;
+					value = (double)(Integer)o;
 				else if(o instanceof Double)
 					value = ((Double)o).doubleValue();
-				else
-					value = (float)o;
+				else if(o instanceof Float)
+					value = ((Float)o).doubleValue();
+
 				if(source.converter != null)
 					return source.converter.convert(value);
+
 			}
 
 		} else { // source field via converter
-
 			if(source.converter != null)
 				return source.converter.convert(data);
 		}
