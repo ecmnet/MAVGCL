@@ -251,7 +251,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -262,26 +261,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	@Override
 	public BooleanProperty getIsScrollingProperty() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void refreshChart() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
