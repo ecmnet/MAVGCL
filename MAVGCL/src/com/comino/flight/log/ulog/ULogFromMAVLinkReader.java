@@ -93,7 +93,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 	public void enableLogging(boolean enable) {
 
-		new Thread(() -> {
+	//	new Thread(() -> {
 
 			state=STATE_HEADER_IDLE;
 
@@ -139,7 +139,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					state=STATE_HEADER_IDLE;
 				}
 			}
-		}).start();
+//		}).start();
 	}
 
 	public boolean isReadingHeader() {
