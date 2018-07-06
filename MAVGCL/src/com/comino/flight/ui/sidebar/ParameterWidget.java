@@ -82,7 +82,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 
-public class TuningWidget extends WidgetPane  {
+public class ParameterWidget extends WidgetPane  {
 
 	@FXML
 	private Button reload;
@@ -103,9 +103,9 @@ public class TuningWidget extends WidgetPane  {
 
 	private List<ParamItem> items = new ArrayList<ParamItem>();
 
-	public TuningWidget() {
+	public ParameterWidget() {
 
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TuningWidget.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterWidget.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -212,7 +212,7 @@ public class TuningWidget extends WidgetPane  {
 		int i = 0;
 		for(ParameterAttributes p : params.getList()) {
 			if(group.contains(p.group_name)) {
-				Label unit = new Label(p.unit); unit.setPrefWidth(30);
+				Label unit = new Label(p.unit); unit.setPrefWidth(40);
 				Label name = new Label(p.name); name.setPrefWidth(95);
 				name.setTooltip(createParameterToolTip(p));
 				ParamItem item = createParamItem(p, true);

@@ -6,14 +6,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<fx:root prefWidth="283.0" type="javafx.scene.layout.Pane"
+<fx:root prefWidth="390.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<Label prefHeight="19.0" prefWidth="158.0" text="Parameter group:"
 		layoutX="10" layoutY="10" />
 	<ChoiceBox fx:id="groups" prefHeight="19.0" prefWidth="170.0"
 		layoutX="10" layoutY="30" />
-	<Button fx:id="reload" layoutX="185" layoutY="30" prefHeight="20" prefWidth="50.0" text="Reload"/>
+	<Button fx:id="reload" layoutX="185" layoutY="30" prefHeight="20" prefWidth="60.0" text="Reload"/>
 	<ScrollPane fx:id="scroll" layoutX="15.0" layoutY="70.0">
-		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="222.0" />
+		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="280.0" />
 	</ScrollPane>
 </fx:root>

@@ -55,10 +55,10 @@
 								</content>
 							</Tab>
 						</TabPane>
-						<TuningWidget fx:id="tuning" maxWidth="245"
+						<ParameterWidget fx:id="tuning" maxWidth="265"
 						    visible="false" styleClass="widget">
 						   <HBox.margin><Insets top="3"/></HBox.margin>
-						</TuningWidget>
+						</ParameterWidget>
 						<MSPCtlWidget fx:id="mspctl" maxWidth="195"
 					        visible="false">
 					       <HBox.margin><Insets top="3"/></HBox.margin>

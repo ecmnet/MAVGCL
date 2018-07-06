@@ -40,7 +40,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.sidebar.DetailsWidget;
 import com.comino.flight.ui.sidebar.MSPCtlWidget;
-import com.comino.flight.ui.sidebar.TuningWidget;
+import com.comino.flight.ui.sidebar.ParameterWidget;
 import com.comino.flight.ui.tabs.FlightXYAnalysisTab;
 import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
 import com.comino.flight.ui.tabs.MAV3DViewTab;
@@ -84,7 +84,7 @@ public class FlightTabs extends Pane {
 	private DetailsWidget details;
 
 	@FXML
-	private TuningWidget tuning;
+	private ParameterWidget tuning;
 
 	@FXML
 	private MSPCtlWidget mspctl;
