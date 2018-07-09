@@ -129,31 +129,35 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					gps.setMode(Badge.MODE_ON);
 					gps.setText("SVIN");
 				} else {
-					switch(model.gps.fixtype) {
-
-					case 2:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("GPS");
-					case 3:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("GPS Fix");
-						break;
-					case 4:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("DGPS");
-						break;
-					case 5:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("RTK float");
-						break;
-					case 6:
-						gps.setMode(Badge.MODE_ON);
-						gps.setText("RTK fixed");
-						break;
-
-					default:
-						gps.setText("No GPS");
+					if(!control.isConnected())
 						gps.setMode(Badge.MODE_OFF);
+					else {
+						switch(model.gps.fixtype) {
+
+						case 2:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("GPS");
+						case 3:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("GPS Fix");
+							break;
+						case 4:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("DGPS");
+							break;
+						case 5:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("RTK float");
+							break;
+						case 6:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("RTK fixed");
+							break;
+
+						default:
+							gps.setText("No GPS");
+							gps.setMode(Badge.MODE_OFF);
+						}
 					}
 				}
 
