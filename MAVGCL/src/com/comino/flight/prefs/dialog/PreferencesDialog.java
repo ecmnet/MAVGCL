@@ -220,6 +220,7 @@ public class PreferencesDialog  {
 
 			try {
 				userPrefs.flush();
+				userPrefs.sync();
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}

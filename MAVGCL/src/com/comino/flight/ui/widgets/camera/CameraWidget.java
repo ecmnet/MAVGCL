@@ -69,7 +69,6 @@ public class CameraWidget extends WidgetPane  {
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
 	private MP4Recorder     recorder = null;
-	private boolean         mp4Enabled = true;
 	private boolean         isConnected = false;
 
 	private MSPLogger       logger = null;
@@ -122,7 +121,7 @@ public class CameraWidget extends WidgetPane  {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!mp4Enabled)
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false))
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
@@ -170,7 +169,6 @@ public class CameraWidget extends WidgetPane  {
 	public void setup(IMAVController control) {
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
-		mp4Enabled = userPrefs.getBoolean(MAVPreferences.VIDREC, false);
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 	}
 

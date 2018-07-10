@@ -425,7 +425,7 @@ Set to 2 to use heading from motion capture</short_desc>
     </parameter>
     <parameter default="56" name="TRIG_PINS" type="INT32">
       <short_desc>Camera trigger pin</short_desc>
-      <long_desc>Selects which pin is used, ranges from 1 to 6 (AUX1-AUX6 on px4fmu-v2 and the rail pins on px4fmu-v4). The PWM interface takes two pins per camera, while relay triggers on every pin individually. Example: Value 56 would trigger on pins 5 and 6.</long_desc>
+      <long_desc>Selects which pin is used, ranges from 1 to 6 (AUX1-AUX6 on px4fmu-v2 and the rail pins on px4fmu-v4). The PWM interface takes two pins per camera, while relay triggers on every pin individually. Example: Value 56 would trigger on pins 5 and 6. For GPIO mode Pin 6 will be triggered followed by 5. With a value of 65 pin 5 will be triggered followed by 6. Pins may be non contiguous. I.E. 16 or 61. In GPIO mode the delay pin to pin is &lt; .2 uS.</long_desc>
       <min>1</min>
       <max>123456</max>
       <decimal>0</decimal>
@@ -451,7 +451,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>162128</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_BUZZER" type="INT32">
       <short_desc>Circuit breaker for disabling buzzer</short_desc>
@@ -459,7 +459,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>782097</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="284953" name="CBRK_ENGINEFAIL" type="INT32">
       <short_desc>Circuit breaker for engine failure detection</short_desc>
@@ -467,7 +467,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>284953</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="121212" name="CBRK_FLIGHTTERM" type="INT32">
       <short_desc>Circuit breaker for flight termination</short_desc>
@@ -475,7 +475,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>121212</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_GPSFAIL" type="INT32">
       <short_desc>Circuit breaker for GPS failure detection</short_desc>
@@ -483,7 +483,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>240024</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_IO_SAFETY" type="INT32">
       <short_desc>Circuit breaker for IO safety</short_desc>
@@ -491,7 +491,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>22027</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_RATE_CTRL" type="INT32">
       <short_desc>Circuit breaker for rate controller output</short_desc>
@@ -499,7 +499,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>140253</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_SUPPLY_CHK" type="INT32">
       <short_desc>Circuit breaker for power supply check</short_desc>
@@ -507,7 +507,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>894281</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_USB_CHK" type="INT32">
       <short_desc>Circuit breaker for USB link check</short_desc>
@@ -515,7 +515,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>197848</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
     <parameter category="Developer" default="0" name="CBRK_VELPOSERR" type="INT32">
       <short_desc>Circuit breaker for position error check</short_desc>
@@ -523,7 +523,7 @@ Set to 2 to use heading from motion capture</short_desc>
       <min>0</min>
       <max>201607</max>
       <reboot_required>true</reboot_required>
-      <scope>modules/systemlib</scope>
+      <scope>lib/circuit_breaker</scope>
     </parameter>
   </group>
   <group name="Commander">
@@ -1924,6 +1924,22 @@ This is the ratio of static pressure error to dynamic pressure generated by a wi
       <scope>modules/ekf2</scope>
     </parameter>
   </group>
+  <group name="Events">
+    <parameter default="0" name="EV_TSK_RC_LOSS" type="INT32">
+      <short_desc>RC Loss Alarm</short_desc>
+      <long_desc>Enable/disable event task for RC Loss. When enabled, an alarm tune will be played via buzzer or ESCs, if supported. The alarm will sound after a disarm, if the vehicle was previously armed and only if the vehicle had RC signal at some point. Particularly useful for locating crashed drones without a GPS sensor.</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>modules/events</scope>
+    </parameter>
+    <parameter default="0" name="EV_TSK_STAT_DIS" type="INT32">
+      <short_desc>Status Display</short_desc>
+      <long_desc>Enable/disable event task for displaying the vehicle status using arm-mounted LEDs. When enabled and if the vehicle supports it, LEDs will flash indicating various vehicle status changes. Currently PX4 has not implemented any specific status events. -</long_desc>
+      <boolean />
+      <reboot_required>true</reboot_required>
+      <scope>modules/events</scope>
+    </parameter>
+  </group>
   <group name="FW Attitude Control">
     <parameter default="90" name="FW_ACRO_X_MAX" type="FLOAT">
       <short_desc>Acro body x max rate</short_desc>
@@ -2420,7 +2436,7 @@ This is the ratio of static pressure error to dynamic pressure generated by a wi
       <increment>0.5</increment>
       <scope>modules/fw_pos_control_l1</scope>
     </parameter>
-    <parameter default="8.0" name="FW_LND_FLALT" type="FLOAT">
+    <parameter default="3.0" name="FW_LND_FLALT" type="FLOAT">
       <short_desc>Landing flare altitude (relative to landing altitude)</short_desc>
       <min>0.0</min>
       <max>25.0</max>
@@ -2695,7 +2711,7 @@ Set to 0 to disable heading hold</short_desc>
     </parameter>
     <parameter default="0.1" name="FW_T_INTEG_GAIN" type="FLOAT">
       <short_desc>Integrator gain</short_desc>
-      <long_desc>This is the integrator gain on the control loop. Increasing this gain increases the speed at which speed and height offsets are trimmed out, but reduces damping and increases overshoot.</long_desc>
+      <long_desc>This is the integrator gain on the control loop. Increasing this gain increases the speed at which speed and height offsets are trimmed out, but reduces damping and increases overshoot. Set this value to zero to completely disable all integrator action.</long_desc>
       <min>0.0</min>
       <max>2.0</max>
       <decimal>2</decimal>
@@ -2723,7 +2739,7 @@ Set to 0 to disable heading hold</short_desc>
     <parameter default="5.0" name="FW_T_SINK_MAX" type="FLOAT">
       <short_desc>Maximum descent rate</short_desc>
       <long_desc>This sets the maximum descent rate that the controller will use. If this value is too large, the aircraft can over-speed on descent. This should be set to a value that can be achieved without exceeding the lower pitch angle limit and without over-speeding the aircraft.</long_desc>
-      <min>2.0</min>
+      <min>1.0</min>
       <max>15.0</max>
       <unit>m/s</unit>
       <decimal>1</decimal>
@@ -3253,15 +3269,6 @@ Value 0 turns the functionality off</short_desc>
       <decimal>1</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
-    <parameter default="8.0" name="LNDFW_VELI_MAX" type="FLOAT">
-      <short_desc>Fixedwing max short-term velocity</short_desc>
-      <long_desc>Maximum velocity integral in flight direction allowed in the landed state (m/s)</long_desc>
-      <min>2</min>
-      <max>10</max>
-      <unit>m/s</unit>
-      <decimal>1</decimal>
-      <scope>modules/land_detector</scope>
-    </parameter>
     <parameter default="5.0" name="LNDFW_VEL_XY_MAX" type="FLOAT">
       <short_desc>Fixedwing max horizontal velocity</short_desc>
       <long_desc>Maximum horizontal velocity allowed in the landed state (m/s)</long_desc>
@@ -3271,12 +3278,21 @@ Value 0 turns the functionality off</short_desc>
       <decimal>1</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
-    <parameter default="10.0" name="LNDFW_VEL_Z_MAX" type="FLOAT">
+    <parameter default="3.0" name="LNDFW_VEL_Z_MAX" type="FLOAT">
       <short_desc>Fixedwing max climb rate</short_desc>
       <long_desc>Maximum vertical velocity allowed in the landed state (m/s up and down)</long_desc>
-      <min>5</min>
+      <min>0.1</min>
       <max>20</max>
       <unit>m/s</unit>
+      <decimal>1</decimal>
+      <scope>modules/land_detector</scope>
+    </parameter>
+    <parameter default="8.0" name="LNDFW_XYACC_MAX" type="FLOAT">
+      <short_desc>Fixedwing max horizontal acceleration</short_desc>
+      <long_desc>Maximum horizontal (x,y body axes) acceleration allowed in the landed state (m/s^2)</long_desc>
+      <min>2</min>
+      <max>15</max>
+      <unit>m/s^2</unit>
       <decimal>1</decimal>
       <scope>modules/land_detector</scope>
     </parameter>
@@ -7040,6 +7056,7 @@ the setpoint will be capped to MPC_XY_VEL_MAX</short_desc>
     </parameter>
     <parameter default="0" name="RC_MAP_ARM_SW" type="INT32">
       <short_desc>Arm switch channel</short_desc>
+      <long_desc>Use it to arm/disarm via switch instead of default throttle stick. If this is assigned, arming and disarming via stick is disabled.</long_desc>
       <min>0</min>
       <max>18</max>
       <scope>modules/sensors</scope>
@@ -8604,7 +8621,7 @@ is less than 50% of this value</short_desc>
       <short_desc>TELEM2 as companion computer link</short_desc>
       <long_desc>CHANGING THIS VALUE REQUIRES A RESTART. Configures the baud rate of the TELEM2 connector as companion computer interface.</long_desc>
       <min>0</min>
-      <max>1921600</max>
+      <max>6460800</max>
       <reboot_required>true</reboot_required>
       <scope>modules/systemlib</scope>
       <values>
