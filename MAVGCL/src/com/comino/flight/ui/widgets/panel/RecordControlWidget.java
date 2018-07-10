@@ -184,8 +184,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			trigstop.setDisable(oldvalue);
 			trigstart.setDisable(oldvalue);
 
-			if(modelService!=null && newvalue.booleanValue() && modelService.isCollecting())
-				recording(false,0);
+//			if(modelService!=null && newvalue.booleanValue() && modelService.isCollecting())
+//				recording(false,0);
 
 		});
 
@@ -286,7 +286,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
 						&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
-					recording(false,0);
+					recording(false,30);
 					try {
 						FileHandler.getInstance().autoSave();
 					} catch (IOException e) {
