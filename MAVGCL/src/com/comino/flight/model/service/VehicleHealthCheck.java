@@ -128,8 +128,8 @@ public class VehicleHealthCheck {
 
 			// Is LIDAR available ?
 
-			if(!model.sys.isSensorAvailable(Status.MSP_LIDAR_AVAILABILITY)) {
-				checkFailed("LIDAR not available");
+			if(!model.sys.isSensorAvailable(Status.MSP_LIDAR_AVAILABILITY) && !model.sys.isSensorAvailable(Status.MSP_SONAR_AVAILABILITY)) {
+				checkFailed("LIDAR or SONAR not available");
 			}
 
 			// Is GPS with Fix available ?
