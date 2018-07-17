@@ -375,14 +375,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Thrust" uom="%" mask="#0.0" key="THRUST">
-		<MSPSource class="attitude" field="t"></MSPSource>
-		<Groups>
-			<Group>Telemetry</Group>
-			<Group>Attitude</Group>
-		</Groups>
-	</KeyFigure>
-
 	<!-- Attitude rates -->
 
 	<KeyFigure desc="RollRate" uom="rad/s" mask="#0.00" key="ROLLR">
@@ -442,12 +434,13 @@
 	</KeyFigure>
 
 
-	<KeyFigure desc="SP.Thrust" uom="%" mask="#0.00" key="SPTHRUST">
+	<KeyFigure desc="Thrust" uom="%" mask="#0.00" key="THRUST">
 	    <MSPSource class="attitude" field="st"></MSPSource>
 		<PX4Source field="ATSP.ThrustSP"></PX4Source>
 		<ULogSource field="vehicle_attitude_setpoint_0.thrust"/>
 		<Groups>
 			<Group>Attitude</Group>
+			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -482,7 +475,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.ThrustRate" uom="" mask="#0.00" key="SPTHRUSTR">
+	<KeyFigure desc="ThrustRate" uom="" mask="#0.00" key="THRUSTR">
 		<ULogSource field="vehicle_rates_setpoint_0.thrust"/>
 		<Groups>
 			<Group>Attitude</Group>
