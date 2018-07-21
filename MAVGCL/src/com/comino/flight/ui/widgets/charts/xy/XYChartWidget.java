@@ -716,6 +716,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 			pool.invalidateAll();
 
+			xychart.getData().clear();
+			xychart.getData().add(series1);
+			xychart.getData().add(series2);
+
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
