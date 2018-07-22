@@ -261,21 +261,21 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		xAxis.setUpperBound(timeFrame.intValue());
 		xAxis.setLabel("Seconds");
 		xAxis.setAnimated(false);
-//		xAxis.setCache(true);
-//		xAxis.setCacheHint(CacheHint.SPEED);
+		//		xAxis.setCache(true);
+		//		xAxis.setCacheHint(CacheHint.SPEED);
 
 		yAxis.setForceZeroInRange(false);
 		yAxis.setAutoRanging(true);
 		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
-//		yAxis.setCache(true);
-//		yAxis.setCacheHint(CacheHint.SPEED);
+		//		yAxis.setCache(true);
+		//		yAxis.setCacheHint(CacheHint.SPEED);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
-//		linechart.setCache(true);
-//		linechart.setCacheHint(CacheHint.SPEED);
+		//		linechart.setCache(true);
+		//		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
@@ -543,13 +543,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public void setZoom(double x0, double x1) {
 		if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
-
 			current_x0_pt = (int)(x0 * 1000f / dataService.getCollectorInterval_ms());
 			setXResolution((int)(x1-x0));
 		}
-		Platform.runLater(() -> {
-			updateGraph(true);
-		});
+		updateRequest();
 	}
 
 	public void registerSyncChart(IChartSyncControl syncChart) {
@@ -719,33 +716,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
 			yoffset = 0;
+			dashboard_update_tms = 0;
 
 			current_x_pt  = current_x0_pt;
 			current_x1_pt = current_x0_pt + (int)(timeframe * 1000f / dataService.getCollectorInterval_ms());
 			setXAxisBounds(current_x0_pt,current_x1_pt);
 
 			mode.clear();
-
-
-			if(dash.isSelected() && dataService.getModelList().size()> 0) {
-
-				if(type1.hash!=0)
-					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
-				if(type2.hash!=0)
-					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
-				if(type3.hash!=0)
-					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
-
-
-				ExecutorService.get().execute(() -> {
-					dashboard_update_tms = System.currentTimeMillis();
-					setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
-					setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
-					setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
-				});
-
-			}
-
 
 			if(dataService.getModelList().size()==0) {
 				series1.getData().remove(0,series1.getData().size()-1);
@@ -758,6 +735,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			pool.invalidateAll();
+
+
+			if(dash.isSelected() && dataService.getModelList().size()> 0) {
+
+				if(type1.hash!=0)
+					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+				if(type2.hash!=0)
+					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+				if(type3.hash!=0)
+					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+
+			}
 
 			// Workaround to force chart refresh
 
@@ -776,12 +765,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(dash.isSelected() && dataService.getModelList().size()>0
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
-				ExecutorService.get().execute(() -> {
-					dashboard_update_tms = System.currentTimeMillis();
-					setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
-					setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
-					setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
-				});
+				dashboard_update_tms = System.currentTimeMillis();
+				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
+				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 			}
 
 			while(current_x_pt<max_x && dataService.getModelList().size()>0 ) {
@@ -967,33 +954,41 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	 */
 	private double determineValueFromRange(int current_x, int length, KeyFigureMetaData m, boolean average) {
 
-		final double v_current_x = dataService.getModelList().get(current_x).getValue(m);
+		try {
 
-		if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
-			return 0;
+			final double v_current_x = dataService.getModelList().get(current_x).getValue(m);
 
-		if(length==1)
-			return v_current_x;
 
-		double a = 0; double v;
+			if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
+				return 0;
 
-		if(average) {
-			a = v_current_x;
-			for(int i=current_x-length+1;i<current_x;i++)
-				a = a + dataService.getModelList().get(i).getValue(m);
-			return a / length;
+			if(length==1)
+				return v_current_x;
 
-		} else {
+			double a = 0; double v;
 
-			int peak_index=current_x;
-			double max = Math.abs(v_current_x);
+			if(average) {
+				a = v_current_x;
+				for(int i=current_x-length+1;i<current_x;i++)
+					a = a + dataService.getModelList().get(i).getValue(m);
+				return a / length;
 
-			for(int i=current_x-length+1;i<current_x;i++) {
-				v = Math.abs(dataService.getModelList().get(i).getValue(m));
-				if(v>max && v != Float.NaN)
-					max = v; peak_index = i;
+			} else {
+
+				int peak_index=current_x;
+				double max = Math.abs(v_current_x);
+
+				for(int i=current_x-length+1;i<current_x;i++) {
+					v = Math.abs(dataService.getModelList().get(i).getValue(m));
+					if(v>max && v != Float.NaN)
+						max = v; peak_index = i;
+				}
+				return dataService.getModelList().get(peak_index).getValue(m);
 			}
-			return dataService.getModelList().get(peak_index).getValue(m);
+
+		} catch(IndexOutOfBoundsException o) {
+			System.err.println(o.getMessage()+":"+dataService.getModelList()+" vs "+current_x);
+			return 0;
 		}
 	}
 
