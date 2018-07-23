@@ -36,6 +36,8 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
+
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.msp.model.segment.Status;
 import com.emxsys.chart.extension.XYAnnotation;
@@ -55,22 +57,18 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_FLIGHTMODE 	= 1;
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
-	public final static int		MODE_ANNOTATION_GPSMODE 		= 4;
-
-//	private final static int     EKF2_SOLUTION_UNKNOWN		= 677;
-	private final static int     EKF2_SOLUTION_ATT_VEL		= 741;
-	private final static int     EKF2_SOLUTION_REL_POS		= 895;
-	private final static int     EKF2_SOLUTION_ABS_POS		= 831;
+	public final static int		MODE_ANNOTATION_GPSMODE 	= 4;
 
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.+Vel.", "Rel.Pos", "Abs.+Rel.Pos", "Other" };
+
+	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "ACC/GPS Glitch", "Other"  };
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 
 
 	private Pane         		node         	= null;
-	private HBox					legend			=  null;
+	private HBox				legend			=  null;
 	private Map<Integer,Color>	colors       	= null;
 	private Map<Integer,Color>	legend_colors   = null;
 
@@ -88,7 +86,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","DARKCYAN");
 	}
 
 
@@ -172,18 +170,24 @@ public class ModeAnnotation implements XYAnnotation {
 
 	private void updateModeDataEKF2Status(double time, AnalysisDataModel m) {
 		int flags = (int)m.getValue("EKFFLG");
-		switch(flags) {
-		case 0:
-			addAreaData(time,0); break;
-		case EKF2_SOLUTION_ATT_VEL:
-			addAreaData(time,1); break;
-		case EKF2_SOLUTION_REL_POS:
-			addAreaData(time,2); break;
-		case EKF2_SOLUTION_ABS_POS:
-			addAreaData(time,3); break;
-		default:
-			addAreaData(time,4); break;
+
+
+		if(flags == 0
+		   || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR
+	       || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) {
+					addAreaData(time,4);
+					return;
 		}
+
+		if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS )
+            addAreaData(time,3);
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL )
+			addAreaData(time,2);
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE )
+			addAreaData(time,1);
+		else
+			addAreaData(time,5);
+
 	}
 
 	private void updateModeDataGPSMode(double time, AnalysisDataModel m) {
