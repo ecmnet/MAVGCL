@@ -54,6 +54,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	private  HLabel      avg     	= new HLabel("\u00F8:");
 	private  HLabel      std     	= new HLabel("\u03C3:");
 
+	private  VLabel      val_v       = new VLabel();
 	private  VLabel      min_v       = new VLabel();
 	private  VLabel      max_v 	     = new VLabel();
 	private  VLabel      delta_v     = new VLabel();
@@ -73,7 +74,8 @@ public class DashBoardAnnotation  implements XYAnnotation {
 		this.pane.setHgap(5);
 		this.pane.setMinWidth(150);
 		this.pane.add(header,0,0);
-		GridPane.setColumnSpan(header,4);
+		GridPane.setColumnSpan(header,3);
+		this.pane.add(val_v,3,0);
 		this.pane.addRow(1,min,min_v,max,max_v);
 		this.pane.addRow(2,delta,delta_v);
 		this.pane.addRow(3,avg,avg_v,std,std_v);
@@ -86,25 +88,26 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	public void setKeyFigure(KeyFigureMetaData kf) {
 		this.kf = kf;
-		Platform.runLater(() -> {
 		if(kf.uom!=null && kf.uom.length()>0)
 			header.setText(kf.desc1+" ["+kf.uom+"]:");
 		else
 			header.setText(kf.desc1+":");
-		});
 	}
 
 	public void setMinMax(double min, double max) {
-		Platform.runLater(() -> {
 		min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
 		delta_v.setValue(kf.getValueString(max-min));
-		});
+	}
+
+	public void setVal(double val, KeyFigureMetaData kfv, boolean show) {
+		if(show) {
+			val_v.setValue(kfv.getValueString(val));
+		}
+		val_v.setVisible(show);
 	}
 
 	public void setAvg(double avg, double std) {
-		Platform.runLater(() -> {
 		avg_v.setValue(kf.getValueString(avg)); std_v.setValue(kf.getValueString(std));
-		});
 	}
 
 	@Override
