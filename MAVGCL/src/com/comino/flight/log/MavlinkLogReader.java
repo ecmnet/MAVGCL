@@ -123,6 +123,13 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			return;
 		}
 
+		ParameterAttributes pp = MAVGCLPX4Parameters.getInstance().get("SDLOG_PROFILE");
+		if(pp.value != 1 ) {
+			logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1'.");
+			return;
+		}
+
+
 		isCollecting.set(true);
 		state = ENTRY;
 		retry = 0;
@@ -148,7 +155,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					requestLogList(GET_LAST_LOG_ID);
 					break;
 				case DATA:
-					if (++retry > 10) {
+					if (++retry > 50) {
 						abortReadingLog();
 						return;
 					}
@@ -172,6 +179,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	public void abortReadingLog() {
 		stop();
+		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		logger.writeLocalMsg("[mgc] Abort reading log");
 	}
@@ -226,6 +234,9 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			return;
 		}
 
+		props.getLogLoadedProperty().set(true);
+		fh.setName("in progress");
+
 		unread_packages.set(p, (long) -1);
 		// System.out.println("Package: "+p +" -> "+unread_packages.get(p));
 
@@ -238,10 +249,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			try {
 				ParameterAttributes pa = MAVGCLPX4Parameters.getInstance().get("SYS_LOGGER");
 				if (pa == null || pa.value != 0) {
-					ULogReader reader = new ULogReader(path);
-					UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
-					converter.doConversion();
-					reader.close();
+
+						ULogReader reader = new ULogReader(path);
+						UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
+						converter.doConversion();
+						reader.close();
 				} else {
 					PX4LogReader reader = new PX4LogReader(path);
 					MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());

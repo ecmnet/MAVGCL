@@ -119,7 +119,7 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
 			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 			if(!n.isStatus(Status.MSP_CONNECTED))
-				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost",MAV_SEVERITY.MAV_SEVERITY_ALERT));
+				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_ALERT));
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
