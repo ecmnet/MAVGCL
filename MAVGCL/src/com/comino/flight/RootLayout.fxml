@@ -59,6 +59,10 @@
 						<MenuItem fx:id="m_dump" mnemonicParsing="false"
 							text="Dump key figures to console">
 						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
+							text="Show PX4 parameter reference...">
+						</MenuItem>
 					</items>
 				</Menu>
 			</menus>

@@ -105,6 +105,9 @@ public class MainApp extends Application  {
 	private MenuItem m_dump;
 
 	@FXML
+	private MenuItem m_pdoc;
+
+	@FXML
 	private MenuItem m_about;
 
 	@FXML
@@ -192,7 +195,6 @@ public class MainApp extends Application  {
 				ref.time_usec = System.currentTimeMillis() *1000;
 				control.sendMAVLinkMessage(ref);
 			});
-
 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -294,6 +296,10 @@ public class MainApp extends Application  {
 
 		m_def.setOnAction(event -> {
 			FileHandler.getInstance().openKeyFigureMetaDataDefinition();
+		});
+
+		m_pdoc.setOnAction(event -> {
+			this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
 		});
 
 
