@@ -54,11 +54,11 @@ public class FirstPreloader extends Preloader {
 	private Scene createPreloaderScene() {
 		VBox splashLayout = new VBox();
 		splashLayout.getStylesheets().add(getClass().getResource("splash.css").toExternalForm());
-		ImageView splash = new ImageView(new Image(getClass().getResource("splash07.png").toExternalForm()));
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash08.png").toExternalForm()));
 		bar = new ProgressBar(0);
 		bar.setPrefHeight(5); bar.setPrefWidth(600);
 		splashLayout.getChildren().addAll(splash,bar);
-		Scene scene =  new Scene(splashLayout, 600,151);
+		Scene scene =  new Scene(splashLayout, 600,149);
 		scene.setFill(Color.rgb(32,32,32));
 		return scene;
 	}
