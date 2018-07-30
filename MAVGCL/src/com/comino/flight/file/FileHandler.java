@@ -102,6 +102,8 @@ public class FileHandler {
 	private Map<String,String> ulogFields = null;
 	private List<String> presetfiles = null;
 
+	private String lastDir = null;
+
 
 	public static FileHandler getInstance() {
 		return handler;
@@ -169,8 +171,12 @@ public class FileHandler {
 	}
 
 	public void fileImport() {
-		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",
-				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
+		String dir = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
+
+		if(lastDir != null)
+			dir = lastDir;
+
+		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",dir,
 				new ExtensionFilter("Log files", "*.mgc","*.ulg","*.px4log"));
 
 		final StateProperties state = StateProperties.getInstance();
@@ -218,6 +224,7 @@ public class FileHandler {
 					}
 					name = file.getName();
 					state.getLogLoadedProperty().set(true);
+					lastDir = file.getParent();
 					return null;
 				}
 			}).start();
