@@ -288,7 +288,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class CombinedConverter implements Runnable {
 
-		int old_msg_hash = 0; long tms_start =0; long wait = 0; int old_mode=STOPPED;
+		long tms_start =0; long wait = 0; int old_mode=STOPPED;
 		float perf = 0; AnalysisDataModel m = null;
 
 		@Override
@@ -352,10 +352,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				}
 
-				if(model.msg != null && model.msg.msg!=null && model.msg.msg.hashCode()!=old_msg_hash) {
+				if(model.msg != null && model.msg.msg!=null) {
 					current.msg = model.msg;
 					record.msg  = model.msg;
-					old_msg_hash = model.msg.msg.hashCode();
 				} else {
 					current.msg = null; record.msg = null;
 				}
@@ -374,6 +373,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 						m.tms = System.nanoTime() / 1000 - tms_start;
 						m.dt_sec = m.tms / 1e6f;
 						modelList.add(m);
+
 
 						state.getRecordingAvailableProperty().set(modelList.size()>0);
 
