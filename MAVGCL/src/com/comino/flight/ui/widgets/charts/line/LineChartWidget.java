@@ -585,6 +585,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		setXResolution(20);
 
+		switch(id) {
+		case 1:
+			bckgmode.getSelectionModel().select(2);
+			break;
+		case 2:
+			bckgmode.getSelectionModel().select(1);
+			break;
+		}
+
 		series1.setName(type1.desc1);
 		series2.setName(type2.desc1);
 		series3.setName(type3.desc1);
