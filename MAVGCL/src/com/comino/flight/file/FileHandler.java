@@ -179,9 +179,14 @@ public class FileHandler {
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",dir,
 				new ExtensionFilter("Log files", "*.mgc","*.ulg","*.px4log"));
 
-		final StateProperties state = StateProperties.getInstance();
-
 		File file = fileChooser.showOpenDialog(stage);
+
+		fileImport(file);
+	}
+
+	public void fileImport(File file) {
+
+		final StateProperties state = StateProperties.getInstance();
 
 		if(file!=null) {
 
@@ -229,6 +234,7 @@ public class FileHandler {
 				}
 			}).start();
 		}
+
 	}
 
 
