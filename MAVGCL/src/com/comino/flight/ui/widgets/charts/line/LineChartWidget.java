@@ -307,14 +307,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue());
-			dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
-			dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
-			dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+			if(x1 > 0) {
+				dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
+				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
+				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+			}
 
 			if(!dataService.isCollecting()) {
-				  dataService.setCurrent(x1);
-				  state.getCurrentUpToDate().set(false);
-				}
+				dataService.setCurrent(x1);
+				state.getCurrentUpToDate().set(false);
+			}
 
 			linechart.getPlotArea().requestLayout();
 			mouseEvent.consume();
@@ -336,8 +338,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 
 			if((x1-x0) > 0.2f)
-			  for(IChartSyncControl sync : syncCharts)
-				sync.setZoom(x0, x1);
+				for(IChartSyncControl sync : syncCharts)
+					sync.setZoom(x0, x1);
 
 			mouseEvent.consume();
 		});
@@ -370,9 +372,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
 
 				if(!dataService.isCollecting()) {
-					  dataService.setCurrent(x1);
-					  state.getCurrentUpToDate().set(false);
-					}
+					dataService.setCurrent(x1);
+					state.getCurrentUpToDate().set(false);
+				}
 
 				if((mouseEvent.getX()-x)>0) {
 					linechart.setCursor(Cursor.H_RESIZE);
