@@ -118,6 +118,7 @@
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis.icns" />
+				<fx:association extension="mgc" description="*.mgc files"/>
 			</fx:info>
 			<fx:platform>
 				<fx:jvmarg value="-Xms2000m"/>
