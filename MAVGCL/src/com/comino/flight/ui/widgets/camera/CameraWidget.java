@@ -140,12 +140,12 @@ public class CameraWidget extends WidgetPane  {
 
 		});
 
-//		CloseButton close = new CloseButton();
-//		close.setOnMouseClicked(e -> {
-//			this.visibleProperty().set(false);
-//		});
-//
-//		this.getChildren().add(close);
+		//		CloseButton close = new CloseButton();
+		//		close.setOnMouseClicked(e -> {
+		//			this.visibleProperty().set(false);
+		//		});
+		//
+		//		this.getChildren().add(close);
 
 	}
 
@@ -167,6 +167,7 @@ public class CameraWidget extends WidgetPane  {
 	}
 
 	public void setup(IMAVController control) {
+		this.control = control;
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
@@ -174,13 +175,23 @@ public class CameraWidget extends WidgetPane  {
 
 
 	private boolean connect() {
+		String url_string = null;
+
 		if(isConnected)
 			return true;
 
 		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-		String url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
+
+		if(control.isSimulation())
+			url_string = "http://127.0.0.1:8080/mjpeg";
+		else
+			url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
+
+		System.out.println(url_string);
+
 		if(url_string.isEmpty())
 			url_string = "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
+
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
