@@ -13,9 +13,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 23/07/2018
+**Development Status:** Last updated 10/08/2018
 
 - Status annotation in line chart: EKF2 status fixed
+- MAVLink definition updated
 
 V0.6xx notes:
 
