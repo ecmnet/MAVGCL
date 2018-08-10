@@ -138,7 +138,7 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 		public void setValue(String s) {
 			if(!s.equals(old_text))  {
-				Platform.runLater(() -> 	setText(s));
+				Platform.runLater(() -> setText(s));
 				old_text = s;
 			}
 		}

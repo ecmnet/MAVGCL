@@ -105,11 +105,13 @@ public class ControlWidget extends WidgetPane  {
 		});
 
 		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
-		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
+
 
 	}
 
 	public void setup(IMAVController control) {
+		if(!control.isSimulation())
+			video.disableProperty().bind(stateProperties.getConnectedProperty().not());
 		this.details.selectedProperty().set(false);
 	}
 
