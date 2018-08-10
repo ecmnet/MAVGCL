@@ -94,9 +94,6 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_interactive;
 
 	@FXML
-	private StateButton enable_step;
-
-	@FXML
 	private StateButton enable_rtl;
 
 	@FXML
@@ -109,7 +106,7 @@ public class MSPCtlWidget extends WidgetPane   {
 	private Button execute_waypoints;
 
 	@FXML
-	private Button  step;
+	private Button  filter;
 
 	@FXML
 	private Button save_map;
@@ -130,7 +127,6 @@ public class MSPCtlWidget extends WidgetPane   {
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
-
 	}
 
 	@FXML
@@ -203,19 +199,6 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
-		enable_step.setDisable(true);
-		enable_step.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.STEP_MODE;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.STEP_MODE))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
 
 		enable_rtl.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -285,11 +268,10 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
-		step.setDisable(true);
-		step.setOnAction((event) ->{
+		filter.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.STEP;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.APPLY_MAP_FILTER;
 			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			control.sendMAVLinkMessage(msp);
 		});
@@ -337,10 +319,6 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(o,n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.STEP_MODE,(o,n) -> {
-			enable_step.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.STEP_MODE));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(o,n) -> {

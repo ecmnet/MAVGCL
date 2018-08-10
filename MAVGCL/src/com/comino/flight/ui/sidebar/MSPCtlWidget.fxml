@@ -20,6 +20,7 @@
 						text="Reset local map (microSLAM)" />
 					<Button fx:id="save_map" prefWidth="165.0"
 						text="Save current map to store" />
+					<Button fx:id="filter" prefWidth="165.0" text="Apply map filter" />
 				</children>
 			</VBox>
 			<VBox fx:id="settings" spacing="10" styleClass="widget"
@@ -66,15 +67,6 @@
 					<Button fx:id="debug_mode2" text="Testing Mode2" prefWidth="165.0" />
 					<Button fx:id="execute_waypoints" prefWidth="165.0"
 						text="Return along the path" />
-					<StateButton fx:id="enable_step" text="SingleStep mode"
-						prefWidth="165.0">
-						<VBox.margin>
-							<Insets>
-								<top>20</top>
-							</Insets>
-						</VBox.margin>
-					</StateButton>
-					<Button fx:id="step" prefWidth="165.0" text="Execute single step" />
 				</children>
 			</VBox>
 		</children>
