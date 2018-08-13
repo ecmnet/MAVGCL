@@ -20,6 +20,8 @@
 						text="Reset local map (microSLAM)" />
 					<Button fx:id="save_map" prefWidth="165.0"
 						text="Save current map to store" />
+					<Button fx:id="load_map" prefWidth="165.0"
+						text="Load current map to from store" />
 					<Button fx:id="filter" prefWidth="165.0" text="Apply map filter" />
 				</children>
 			</VBox>
