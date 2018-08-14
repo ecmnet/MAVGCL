@@ -91,19 +91,19 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(model == null || model.grid==null || !model.grid.hasBlocked())
 			return;
 
-		model.grid.getData().forEach((i,b) -> {
+			model.grid.getData().forEach((i,b) -> {
 
-			// TODO: 3D Extension: Let user select z-plane to display in XY View
-			if(b.z!=0)
-				return;
+				// TODO: 3D Extension: Let user select z-plane to display in XY View
+				if(b.z!=0)
+					return;
 
-			Pane bp = getBlockPane(i,b);
-			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
-			bp.setLayoutY(yAxis.getDisplayPosition(b.x+model.grid.getResolution()));
-			bp.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
-					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
-			bp.setVisible( true);
-		});
+				Pane bp = getBlockPane(i,b);
+				bp.setLayoutX(xAxis.getDisplayPosition(b.y));
+				bp.setLayoutY(yAxis.getDisplayPosition(b.x+model.grid.getResolution()));
+				bp.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
+						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
+				bp.setVisible( true);
+			});
 
 
 		indicator.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),

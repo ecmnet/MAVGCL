@@ -696,8 +696,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		}
 
 		List<AnalysisDataModel> mList = dataService.getModelList();
-		if(mList==null)
+		if(mList==null) {
 			return;
+		}
 
 		if(refresh) {
 
@@ -769,8 +770,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			refreshRequest = false;
 		}
 
-		if(mList.size()<1)
+		if(mList.size()<1) {
 			return;
+		}
 
 		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 			ExecutorService.get().execute(() -> {

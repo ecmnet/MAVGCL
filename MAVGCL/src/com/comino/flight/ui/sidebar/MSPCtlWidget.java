@@ -34,6 +34,8 @@
 package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
@@ -42,6 +44,7 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -116,7 +119,6 @@ public class MSPCtlWidget extends WidgetPane   {
 
 	@FXML
 	private Button   abort;
-
 
 	private IMAVController control=null;
 
