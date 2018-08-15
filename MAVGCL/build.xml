@@ -122,6 +122,7 @@
 			</fx:info>
 			<fx:platform>
 				<fx:jvmarg value="-Xms2000m"/>
+				<fx:jvmarg value="-XX:GCTimeRatio=20"/>
 			</fx:platform>
 		</fx:deploy>
 	</target>
