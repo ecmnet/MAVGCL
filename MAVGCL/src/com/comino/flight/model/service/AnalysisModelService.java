@@ -352,7 +352,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				}
 
-				if(model.msg != null && model.msg.msg!=null) {
+				if(model.msg != null && model.msg.text!=null) {
 					current.msg = model.msg;
 					record.msg  = model.msg;
 				} else {

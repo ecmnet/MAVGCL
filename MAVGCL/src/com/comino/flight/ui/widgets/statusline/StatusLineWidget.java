@@ -237,7 +237,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			Platform.runLater(() -> {
 				if(filename!=null && filename.isEmpty())  {
 					out.stop();
-					messages.setText(msg.msg);
+					messages.setText(msg.text);
 					out.play();
 				}
 			});

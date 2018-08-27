@@ -812,7 +812,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
 
-				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.msg!=null
+				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.text!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
 						&& display_annotations) {
 

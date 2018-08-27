@@ -101,7 +101,7 @@ public class InfoWidget extends WidgetPane  {
 					default:
 						setStyle("-fx-text-fill:white;");
 					}
-					setText(m.msg);
+					setText(m.text);
 				} else
 					setText(null);
 			}

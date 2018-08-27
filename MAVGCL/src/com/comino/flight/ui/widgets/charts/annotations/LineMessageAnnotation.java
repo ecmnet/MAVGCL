@@ -97,12 +97,12 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
 
-		Tooltip tooltip = new Tooltip(message.msg);
+		Tooltip tooltip = new Tooltip(message.text);
 		Tooltip.install(pane, tooltip);
 
 
 		if(displayLabel) {
-			label = new Label(message.msg);
+			label = new Label(message.text);
 			label.setOnScroll(event -> {
 				chart.fireEvent(event);
 			});
