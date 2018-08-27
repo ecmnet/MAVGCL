@@ -36,6 +36,10 @@ package com.comino.flight.ui.widgets.panel;
 
 import java.io.IOException;
 
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.lquac.msg_msp_command;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -171,8 +175,15 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
 			state.getLogLoadedProperty().set(false);
+
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
+			msp.param1  = MSP_COMPONENT_CTRL.RESET;
+			control.sendMAVLinkMessage(msp);
+
 			charts.refreshCharts();
 			info.clear();
+
 		});
 
 
