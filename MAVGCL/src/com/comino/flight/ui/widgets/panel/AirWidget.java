@@ -39,10 +39,8 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
-import com.comino.msp.utils.MSPMathUtils;
 
 import eu.hansolo.airseries.AirCompass;
-import eu.hansolo.airseries.Horizon;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 

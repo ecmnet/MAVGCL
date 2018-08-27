@@ -36,7 +36,6 @@ package com.comino.flight.ui.widgets.view3D.objects;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.msp.model.DataModel;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;

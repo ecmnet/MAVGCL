@@ -2,7 +2,6 @@ package com.comino.jfx.extensions;
 
 import com.comino.flight.prefs.MAVPreferences;
 
-import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
 public class StoredCheckBox extends CheckBox {

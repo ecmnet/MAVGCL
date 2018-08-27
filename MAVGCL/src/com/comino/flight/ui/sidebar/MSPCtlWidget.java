@@ -34,8 +34,6 @@
 package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
@@ -44,23 +42,18 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.StatusManager;
 import com.comino.msp.model.segment.Status;
-import com.comino.msp.utils.MSPMathUtils;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends WidgetPane   {
