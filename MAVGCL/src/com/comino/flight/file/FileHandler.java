@@ -51,6 +51,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -65,6 +66,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
+import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
@@ -96,7 +98,9 @@ public class FileHandler {
 
 	private UlogtoModelConverter converter = null;
 
-	private AnalysisModelService modelService = AnalysisModelService.getInstance();
+	private AnalysisModelService modelService = null;
+	private MAVGCLPX4Parameters  paramService = null;
+
 	private IMAVController control;
 
 	private Map<String,String> ulogFields = null;
@@ -121,6 +125,8 @@ public class FileHandler {
 		this.presetfiles = new ArrayList<String>();
 		this.userPrefs = MAVPreferences.getInstance();
 		this.control = control;
+		this.modelService = AnalysisModelService.getInstance();
+		this.paramService = MAVGCLPX4Parameters.getInstance();
 
 		readPresetFiles();
 
@@ -177,7 +183,7 @@ public class FileHandler {
 			dir = lastDir;
 
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",dir,
-				new ExtensionFilter("Log files", "*.mgc","*.ulg","*.px4log"));
+				new ExtensionFilter("Log files", "*.mgc", "*.mgp","*.ulg", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
 
@@ -215,10 +221,31 @@ public class FileHandler {
 						});
 						Reader reader = new BufferedReader(new InputStreamReader(raw));
 						Gson gson = new GsonBuilder().create();
-						ArrayList<AnalysisDataModel>modelList = gson.fromJson(reader,listType);
+						try {
+							modelService.setModelList(gson.fromJson(reader,listType));
+						} catch(Exception e) { e.printStackTrace(); }
 						reader.close();
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-						modelService.setModelList(modelList);
+					}
+
+					if(file.getName().endsWith("mgp")) {
+						Type listType = new TypeToken<FileData>() {}.getType();
+
+						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
+						raw.addListener(new ProgressInputStream.Listener() {
+							@Override
+							public void onProgressChanged(int percentage) {
+								state.getProgressProperty().set(percentage);
+							}
+						});
+						Reader reader = new BufferedReader(new InputStreamReader(raw));
+						Gson gson = new GsonBuilder().create();
+						try {
+							FileData data = gson.fromJson(reader,listType);
+							data.update(modelService,paramService);
+						} catch(Exception e) { e.printStackTrace(); }
+						reader.close();
+						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
 
 					if(file.getName().endsWith("px4log")) {
@@ -242,25 +269,30 @@ public class FileHandler {
 
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
 				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
-				new ExtensionFilter("MAVGCL model files", "*.mgc"));
+				new ExtensionFilter("MAVGCL model files", "*.mgp"));
 
 		if(name.length()<2)
-			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgp'").format(new Date());
 
 		fileChooser.setInitialFileName(name);
 		File file = fileChooser.showSaveDialog(stage);
 		if(file!=null) {
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
-					Writer writer = new FileWriter(file);
-					Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-					stage.getScene().setCursor(Cursor.WAIT);
-					gson.toJson(modelService.getModelList(), writer);
-					writer.close();
-					stage.getScene().setCursor(Cursor.DEFAULT);
-					StateProperties.getInstance().getLogLoadedProperty().set(true);
-					name = file.getName();
+					if(file.getName().endsWith("mgp")) {
+						Writer writer = new FileWriter(file);
+						FileData data = new FileData(); data.prepareData();
+						Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+						stage.getScene().setCursor(Cursor.WAIT);
+						gson.toJson(data, writer);
+						writer.close();
+						stage.getScene().setCursor(Cursor.DEFAULT);
+						StateProperties.getInstance().getLogLoadedProperty().set(true);
+						name = file.getName();
+					}
+
 					return null;
+
 				}
 			}).start();
 
@@ -275,7 +307,7 @@ public class FileHandler {
 				if(control.isSimulation())
 					return null;
 				stage.getScene().setCursor(Cursor.WAIT);
-				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgp'").format(new Date());
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				File f = new File(path+"/"+name);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
@@ -283,8 +315,10 @@ public class FileHandler {
 					f.delete();
 				f.createNewFile();
 				Writer writer = new FileWriter(f);
+				FileData data = new FileData(); data.prepareData();
 				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-				gson.toJson(modelService.getModelList(), writer);
+				stage.getScene().setCursor(Cursor.WAIT);
+				gson.toJson(data, writer);
 				writer.close();
 				stage.getScene().setCursor(Cursor.DEFAULT);
 				return null;
@@ -384,8 +418,6 @@ public class FileHandler {
 
 	}
 
-
-
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
@@ -393,6 +425,22 @@ public class FileHandler {
 		fileChooser.setInitialDirectory(
 				new File(initDir));
 		return fileChooser;
+	}
+
+	private class FileData {
+
+		private List<AnalysisDataModel> 			data   = null;
+		private Map<String,ParameterAttributes>		params = null;
+
+		public void prepareData() {
+			data   = modelService.getModelList();
+			params = paramService.get();
+		}
+
+		public void update(AnalysisModelService model, MAVGCLPX4Parameters param ) {
+			model.setModelList(data);
+			param.set(params);
+		}
 	}
 
 }

@@ -230,6 +230,24 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 		return this.metadata;
 	}
 
+	public Map<String,ParameterAttributes> get() {
+		return this.parameterList;
+	}
+
+	public void set(Map<String,ParameterAttributes> list) {
+		StateProperties.getInstance().getParamLoadedProperty().set(false);
+		parameterList.clear();
+		list.forEach((s,o) -> {
+			parameterList.put(o.name,o);
+			property.setValue(o);
+		});
+		Platform.runLater(() -> {
+			stateProperties.getParamLoadedProperty().set(true);
+			for(IPX4ParameterRefresh l : refreshListeners)
+				l.refresh();
+		});
+	}
+
 	public List<ParameterAttributes> getList() {
 		return asSortedList(this.parameterList);
 	}
