@@ -183,7 +183,7 @@ public class FileHandler {
 			dir = lastDir;
 
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",dir,
-				new ExtensionFilter("Log files", "*.mgc", "*.mgp","*.ulg", "*.px4log"));
+				new ExtensionFilter("Log files", "*.mgc", "*.ulg", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
 
