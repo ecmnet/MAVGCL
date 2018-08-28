@@ -210,25 +210,6 @@ public class FileHandler {
 					}
 
 					if(file.getName().endsWith("mgc")) {
-						Type listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
-
-						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
-						raw.addListener(new ProgressInputStream.Listener() {
-							@Override
-							public void onProgressChanged(int percentage) {
-								state.getProgressProperty().set(percentage);
-							}
-						});
-						Reader reader = new BufferedReader(new InputStreamReader(raw));
-						Gson gson = new GsonBuilder().create();
-						try {
-							modelService.setModelList(gson.fromJson(reader,listType));
-						} catch(Exception e) { e.printStackTrace(); }
-						reader.close();
-						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-					}
-
-					if(file.getName().endsWith("mgp")) {
 						Type listType = new TypeToken<FileData>() {}.getType();
 
 						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
@@ -243,7 +224,17 @@ public class FileHandler {
 						try {
 							FileData data = gson.fromJson(reader,listType);
 							data.update(modelService,paramService);
-						} catch(Exception e) { e.printStackTrace(); }
+						} catch(Exception e) {
+							reader.close();
+							raw = new ProgressInputStream(new FileInputStream(file));
+							reader = new BufferedReader(new InputStreamReader(raw));
+							listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
+							try {
+							   modelService.setModelList(gson.fromJson(reader,listType));
+							} catch(Exception e1) {
+								MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
+							}
+						}
 						reader.close();
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
@@ -269,19 +260,19 @@ public class FileHandler {
 
 		FileChooser fileChooser = getFileDialog("Save to MAVGCL model file...",
 				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
-				new ExtensionFilter("MAVGCL model files", "*.mgp"));
+				new ExtensionFilter("MAVGCL model files", "*.mgc"));
 
 		if(name.length()<2)
-			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgp'").format(new Date());
+			name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 
 		fileChooser.setInitialFileName(name);
 		File file = fileChooser.showSaveDialog(stage);
 		if(file!=null) {
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
-					if(file.getName().endsWith("mgp")) {
+					if(file.getName().endsWith("mgc")) {
 						Writer writer = new FileWriter(file);
-						FileData data = new FileData(); data.prepareData();
+						FileData data = new FileData(); data.prepareData(modelService,paramService);
 						Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 						stage.getScene().setCursor(Cursor.WAIT);
 						gson.toJson(data, writer);
@@ -307,7 +298,7 @@ public class FileHandler {
 				if(control.isSimulation())
 					return null;
 				stage.getScene().setCursor(Cursor.WAIT);
-				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgp'").format(new Date());
+				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				File f = new File(path+"/"+name);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
@@ -315,7 +306,7 @@ public class FileHandler {
 					f.delete();
 				f.createNewFile();
 				Writer writer = new FileWriter(f);
-				FileData data = new FileData(); data.prepareData();
+				FileData data = new FileData(); data.prepareData(modelService,paramService);
 				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 				stage.getScene().setCursor(Cursor.WAIT);
 				gson.toJson(data, writer);
@@ -432,9 +423,9 @@ public class FileHandler {
 		private List<AnalysisDataModel> 			data   = null;
 		private Map<String,ParameterAttributes>		params = null;
 
-		public void prepareData() {
-			data   = modelService.getModelList();
-			params = paramService.get();
+		public void prepareData(AnalysisModelService model, MAVGCLPX4Parameters param) {
+			data   = model.getModelList();
+			params = param.get();
 		}
 
 		public void update(AnalysisModelService model, MAVGCLPX4Parameters param ) {
