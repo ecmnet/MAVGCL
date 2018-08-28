@@ -420,8 +420,8 @@ public class FileHandler {
 
 	private class FileData {
 
-		private List<AnalysisDataModel> 			data   = null;
 		private Map<String,ParameterAttributes>		params = null;
+		private List<AnalysisDataModel> 			data   = null;
 
 		public void prepareData(AnalysisModelService model, MAVGCLPX4Parameters param) {
 			data   = model.getModelList();
