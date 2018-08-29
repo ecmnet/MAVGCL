@@ -228,6 +228,12 @@ public class FileHandler {
 							reader.close();
 							MAVGCLPX4Parameters.getInstance().clear();
 							raw = new ProgressInputStream(new FileInputStream(file));
+							raw.addListener(new ProgressInputStream.Listener() {
+								@Override
+								public void onProgressChanged(int percentage) {
+									state.getProgressProperty().set(percentage);
+								}
+							});
 							reader = new BufferedReader(new InputStreamReader(raw));
 							listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 							try {
