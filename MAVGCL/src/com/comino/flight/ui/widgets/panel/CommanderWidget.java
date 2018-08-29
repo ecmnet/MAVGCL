@@ -152,7 +152,7 @@ public class CommanderWidget extends WidgetPane  {
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-				MSPLogger.getInstance().writeLocalMsg("REJECTED: Global position or GPS not available",
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Takoff rejected: LPOS not available",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 			}
 
