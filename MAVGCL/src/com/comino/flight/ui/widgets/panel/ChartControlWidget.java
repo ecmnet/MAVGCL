@@ -79,6 +79,9 @@ public class ChartControlWidget extends WidgetPane  {
 	@FXML
 	private Button save;
 
+	@FXML
+	private Button replay;
+
 	private Map<Integer,IChartControl> charts = null;
 
 	protected int totalTime_sec = 30;
@@ -149,7 +152,7 @@ public class ChartControlWidget extends WidgetPane  {
 				scroll_tms = System.currentTimeMillis();
 			}
 		});
-		
+
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
@@ -198,6 +201,15 @@ public class ChartControlWidget extends WidgetPane  {
 
 		save.setOnAction((ActionEvent event)-> {
 			saveKeyFigureSelection();
+			event.consume();
+		});
+
+		replay.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
+				.or(state.getRecordingAvailableProperty().not()
+						.and(state.getLogLoadedProperty().not())));
+
+		replay.setOnAction((ActionEvent event)-> {
+
 			event.consume();
 		});
 
