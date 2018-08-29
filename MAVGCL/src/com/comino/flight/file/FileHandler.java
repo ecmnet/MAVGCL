@@ -226,6 +226,7 @@ public class FileHandler {
 							data.update(modelService,paramService);
 						} catch(Exception e) {
 							reader.close();
+							MAVGCLPX4Parameters.getInstance().clear();
 							raw = new ProgressInputStream(new FileInputStream(file));
 							reader = new BufferedReader(new InputStreamReader(raw));
 							listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();

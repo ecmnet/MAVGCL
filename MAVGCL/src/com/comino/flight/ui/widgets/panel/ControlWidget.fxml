@@ -24,7 +24,7 @@
 			<children>
 				<CheckBox fx:id="details" GridPane.rowIndex="0"
 					GridPane.columnIndex="0" text="Dashboard" />
-				<CheckBox fx:id="tuning" GridPane.rowIndex="1"
+				<CheckBox fx:id="parameters" GridPane.rowIndex="1"
 					GridPane.columnIndex="0" text="Parameters" />
 				<CheckBox fx:id="video" GridPane.rowIndex="1"
 					GridPane.columnIndex="1" text="Video" />

@@ -12,7 +12,7 @@
 	fx:controller="com.comino.flight.MainApp">
 	<top>
 		<MenuBar fx:id="menubar" maxHeight="29.0"
-			BorderPane.alignment="TOP_LEFT">
+			BorderPane.alignment="TOP_LEFT" useSystemMenuBar="true">
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>

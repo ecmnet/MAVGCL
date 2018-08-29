@@ -44,6 +44,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
@@ -172,9 +173,13 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				.or(state.getRecordingAvailableProperty().not()
 						.and(state.getLogLoadedProperty().not())));
 		clear.setOnAction((ActionEvent event)-> {
+
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
 			state.getLogLoadedProperty().set(false);
+
+			if(!state.getConnectedProperty().get())
+				MAVGCLPX4Parameters.getInstance().clear();
 
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;

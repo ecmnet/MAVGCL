@@ -127,6 +127,12 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 
 	}
 
+	public void clear() {
+		stateProperties.getParamLoadedProperty().set(false);
+		parameterList.clear();
+		property.setValue(null);
+	}
+
 	public void refreshParameterList(boolean loaded) {
 		if(!is_reading) {
 			property.setValue(null);

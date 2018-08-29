@@ -48,7 +48,7 @@ public class ControlWidget extends WidgetPane  {
 	private CheckBox details;
 
 	@FXML
-	private CheckBox tuning;
+	private CheckBox parameters;
 
 	@FXML
 	private CheckBox video;
@@ -77,7 +77,7 @@ public class ControlWidget extends WidgetPane  {
 	}
 
 	public BooleanProperty getTuningVisibility() {
-		return tuning.selectedProperty();
+		return parameters.selectedProperty();
 	}
 
 	@FXML
@@ -88,14 +88,23 @@ public class ControlWidget extends WidgetPane  {
 			if(!n.booleanValue()) {
 				vehiclectl.setSelected(false);
 				video.setSelected(false);
-				tuning.setSelected(false);
+				parameters.setSelected(false);
 			}
+		});
+
+		parameters.setDisable(true);
+
+		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
+
+		stateProperties.getParamLoadedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue())
+				parameters.setSelected(false);
+			parameters.setDisable(!n.booleanValue());
 		});
 
 		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				vehiclectl.setSelected(false);
-				tuning.setSelected(false);
 			} else {
 				if(stateProperties.getConnectedProperty().get()) {
 					details.setSelected(true);
