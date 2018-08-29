@@ -158,6 +158,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty   scroll        = new SimpleFloatProperty(0);
+	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
 	private Image plane_valid, plane_invalid;
 
@@ -509,6 +510,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	@Override
 	public FloatProperty getScrollProperty() {
 		return scroll;
+	}
+
+	@Override
+	public FloatProperty getReplayProperty() {
+		return replay;
 	}
 
 	public BooleanProperty getIsScrollingProperty() {

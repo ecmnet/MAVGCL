@@ -250,6 +250,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
 
 	private BooleanProperty isScrolling = new SimpleBooleanProperty();
+	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
 	public XYChartWidget() {
 
@@ -266,7 +267,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	public void update(long now) {
 		if(isVisible() && !isDisabled()) {
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
+				updateGraph(refreshRequest,0);
 			});
 		}
 	}
@@ -300,7 +301,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				try {
 					setScaling(Float.parseFloat(scale_select.getValue()));
 				} catch(Exception e) { setScaling(0); };
-				updateGraph(true);
+				updateGraph(true,0);
 			} else {
 				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
 					Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
@@ -323,7 +324,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			center_y -= event.getDeltaX() * scale / 600.0 ;
 			event.consume();
 			setScaling(scale);
-			updateGraph(false);
+			updateGraph(false,0);
 		});
 
 		//		xychart.setOnRotate(new EventHandler<RotateEvent>() {
@@ -377,14 +378,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		xychart.heightProperty().addListener((e,o,n) -> {
 			setScaling(scale);
 			Platform.runLater(() -> {
-				updateGraph(true);
+				updateGraph(true,0);
 			});
 		});
 
 		xychart.widthProperty().addListener((e,o,n) -> {
 			setScaling(scale);
 			Platform.runLater(() -> {
-				updateGraph(true);
+				updateGraph(true,0);
 			});
 		});
 
@@ -585,6 +586,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			updateRequest();
 		});
 
+		replay.addListener((v, ov, nv) -> {
+			Platform.runLater(() -> {
+				if(nv.intValue()<=1) {
+					current_x0_pt =  0;
+					updateGraph(true,1);
+				} else
+					updateGraph(false,nv.intValue());
+			});
+		});
+
 		annotation.selectedProperty().addListener((v, ov, nv) -> {
 			updateRequest();
 		});
@@ -670,7 +681,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				setKeyFigure(cseries2_x,preset.getKeyFigure(2));
 				setKeyFigure(cseries2_y,preset.getKeyFigure(3));
 
-				updateGraph(true);
+				updateGraph(true,0);
 			}
 		});
 	}
@@ -680,10 +691,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		return preset;
 	}
 
+	@Override
+	public FloatProperty getReplayProperty() {
+		return replay;
+	}
 
-	private void updateGraph(boolean refresh) {
 
-		AnalysisDataModel m =null;
+	private void updateGraph(boolean refresh, int max_x0) {
+
+		AnalysisDataModel m =null; int max_x  = 0;
 
 
 		if(disabledProperty().get()) {
@@ -784,6 +800,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(force_zero.isSelected() && scale > 0 ) {
 
+
 			double x = 0; double y = 0;
 
 			scale_factor = Math.round(scale * xychart.getWidth()/xychart.getHeight()*scale_rounding ) /scale_rounding;
@@ -819,9 +836,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
-			int max_x = mList.size();
-			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED && current_x1_pt < max_x)
-				max_x = current_x1_pt;
+			max_x = mList.size();
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED && current_x1_pt < max_x) {
+				if(max_x0 > 0)
+					max_x = max_x0;
+				else
+					max_x = current_x1_pt;
+			}
 
 
 			while(current_x_pt<max_x) {
@@ -941,12 +962,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		updateRequest();
 	}
 
+
 	private void updateRequest() {
 		if(!isDisabled() && !refreshRequest) {
 			center_x = 0; center_y = 0;
 			refreshRequest = true;
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
+				updateGraph(refreshRequest,0);
 			});
 		}
 	}

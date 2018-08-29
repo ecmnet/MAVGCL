@@ -44,6 +44,7 @@ public interface IChartControl {
 
 	public IntegerProperty getTimeFrameProperty();
 	public FloatProperty   getScrollProperty();
+	public FloatProperty   getReplayProperty();
 	public BooleanProperty getIsScrollingProperty();
 
 	public boolean isVisible();

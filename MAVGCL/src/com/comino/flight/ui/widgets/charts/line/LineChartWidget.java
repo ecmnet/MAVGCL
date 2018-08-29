@@ -149,6 +149,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
+	private FloatProperty   replay       = new SimpleFloatProperty(0);
 	private BooleanProperty isScrolling  = new SimpleBooleanProperty(false);
 
 	private int resolution_ms 	  = 100;
@@ -211,7 +212,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			return;
 		if((System.currentTimeMillis()-last_update_ms)> 25 || resolution_ms <= 100) {
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
+				updateGraph(refreshRequest,0);
 				last_update_ms = System.currentTimeMillis();
 			});
 			//	last_update_ms = System.currentTimeMillis();
@@ -240,7 +241,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		annotations.setSelected(true);
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			Platform.runLater(() -> {
-				updateGraph(true);
+				updateGraph(true,0);
 			});
 		});
 
@@ -490,6 +491,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			updateRequest();
 		});
 
+		replay.addListener((v, ov, nv) -> {
+			Platform.runLater(() -> {
+				if(nv.intValue()<=1) {
+					current_x0_pt =  0;
+					updateGraph(true,1);
+				} else
+					updateGraph(false,nv.intValue());
+			});
+		});
+
 		isScrolling.addListener((v, ov, nv) -> {
 			if(nv.booleanValue())
 				resolution_ms = resolution_ms * 2 ;
@@ -503,7 +514,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				current_x0_pt = dataService.calculateX0IndexByFactor(1);
 				setXResolution(timeFrame.get());
 				Platform.runLater(() -> {
-					updateGraph(true);
+					updateGraph(true,0);
 				});
 			}
 		});
@@ -517,7 +528,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
 			mode.setModeType(nv.intValue());
 			Platform.runLater(() -> {
-				updateGraph(true);
+				updateGraph(true,0);
 			});
 		});
 	}
@@ -531,7 +542,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
 				type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
 				group.getSelectionModel().select(preset.getGroup());
-				updateGraph(true);
+				updateGraph(true,0);
 			}
 		});
 	}
@@ -548,7 +559,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				Platform.runLater(() -> {
 					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 					setXResolution(timeFrame.get());
-					updateGraph(true);
+					updateGraph(true,0);
 				});
 				isRunning = true;
 			}
@@ -561,7 +572,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 			Platform.runLater(() -> {
 				setXResolution(timeFrame.get());
-				updateGraph(true);
+				updateGraph(true,0);
 			});
 		}
 	}
@@ -661,6 +672,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		return scroll;
 	}
 
+	@Override
+	public FloatProperty getReplayProperty() {
+		return replay;
+	}
+
 	public BooleanProperty getIsScrollingProperty() {
 		return isScrolling;
 	}
@@ -726,13 +742,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(!isDisabled() && !refreshRequest) {
 			refreshRequest = true;
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest);
+				updateGraph(refreshRequest,0);
 			});
 		}
 	}
 
-	private  void updateGraph(boolean refresh) {
+	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
+		int max_x = 0;
 
 		if(isDisabled()) {
 			return;
@@ -744,7 +761,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				refreshRequest = true; return;
 			}
 			refreshRequest = false;
-
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
@@ -788,13 +804,21 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			linechart.getData().add(series2);
 			linechart.getData().add(series3);
 
+			yAxis.setUpperBound(1); yAxis.setLowerBound(0);
 		}
 
 		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
-			int max_x = dataService.getModelList().size();
-			if((state.getRecordingProperty().get()==AnalysisModelService.STOPPED || isPaused) && current_x1_pt < max_x)
-				max_x = current_x1_pt;
+
+			max_x = dataService.getModelList().size();
+
+			if((state.getRecordingProperty().get()==AnalysisModelService.STOPPED || isPaused) && current_x1_pt < max_x) {
+				if(max_x0 > 0)
+					max_x = max_x0;
+				else
+					max_x = current_x1_pt;
+			}
+
 
 			if(dash.isSelected() && dataService.getModelList().size()>0
 					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {

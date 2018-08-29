@@ -212,9 +212,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				} else {
 					time.setMode(Badge.MODE_ON);
 					messages.clear();
-					mode.setBackgroundColor(Color.LIGHTSKYBLUE);
-					mode.setText(filename);
-					mode.setMode(Badge.MODE_ON);
+					if(state.getReplayingProperty().get()) {
+						mode.setBackgroundColor(Color.MEDIUMSEAGREEN);
+						mode.setText("Replay");
+						mode.setMode(Badge.MODE_ON);
+					} else {
+						mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+						mode.setText(filename);
+						mode.setMode(Badge.MODE_ON);
+					}
 				}
 
 			}
@@ -282,6 +288,11 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	}
 
 	public BooleanProperty getIsScrollingProperty() {
+		return null;
+	}
+
+	@Override
+	public FloatProperty getReplayProperty() {
 		return null;
 	}
 

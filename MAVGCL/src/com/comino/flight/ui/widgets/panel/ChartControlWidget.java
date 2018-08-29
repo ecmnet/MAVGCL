@@ -42,6 +42,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -86,6 +87,8 @@ public class ChartControlWidget extends WidgetPane  {
 
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
+
+	private StateProperties state = StateProperties.getInstance();
 
 	private long scroll_tms = 0;
 	private FloatProperty animation = new SimpleFloatProperty();
@@ -146,7 +149,7 @@ public class ChartControlWidget extends WidgetPane  {
 			if((System.currentTimeMillis() - scroll_tms)>100) {
 				animation.setValue(oldvalue);
 				Timeline task = new Timeline(new KeyFrame(Duration.millis(100),
-						   new KeyValue(animation,newvalue)));
+						new KeyValue(animation,newvalue)));
 				task.setCycleCount(1);
 				task.play();
 				scroll_tms = System.currentTimeMillis();
@@ -209,8 +212,32 @@ public class ChartControlWidget extends WidgetPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		replay.setOnAction((ActionEvent event)-> {
+			if(!state.getReplayingProperty().get()) {
+				state.getReplayingProperty().set(true);
+				new Thread(() -> {
+					int index = 0;
+					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
+						AnalysisModelService.getInstance().setCurrent(index);
+						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+							if(chart.getValue().getReplayProperty()!=null)
+								chart.getValue().getReplayProperty().set(index);
+						}
+						try { Thread.sleep(50); } catch (InterruptedException e) {	}
+						index++;
+					}
 
+				}).start();
+			} else
+				state.getReplayingProperty().set(false);
 			event.consume();
+		});
+
+		state.getReplayingProperty().addListener((e,o,n) -> {
+			if(n.booleanValue())
+				replay.setText("\u25A0");
+			else
+				replay.setText("\u25B6");
+
 		});
 
 	}

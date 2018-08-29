@@ -79,7 +79,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private VehicleModel   	vehicle    	= null;
 	private Target			target      = null;
 
-	private FloatProperty   scroll        = new SimpleFloatProperty(0);
+	private FloatProperty   scroll       = new SimpleFloatProperty(0);
+	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
 	private AnalysisDataModel model      = null;
 
@@ -256,6 +257,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 	@Override
 	public FloatProperty getScrollProperty() {
 		return scroll;
+	}
+
+	@Override
+	public FloatProperty getReplayProperty() {
+		return replay;
 	}
 
 	@Override

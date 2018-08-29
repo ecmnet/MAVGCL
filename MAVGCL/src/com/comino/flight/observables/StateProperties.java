@@ -72,7 +72,8 @@ public class StateProperties {
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
-	private BooleanProperty isRecordingAvailableProperty	    = new SimpleBooleanProperty();
+	private BooleanProperty isRecordingAvailableProperty	   = new SimpleBooleanProperty();
+	private BooleanProperty isReplayingProperty	              = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -209,6 +210,10 @@ public class StateProperties {
 
 	public BooleanProperty getParamLoadedProperty() {
 		return isParamLoadedProperty;
+	}
+
+	public BooleanProperty getReplayingProperty() {
+		return isReplayingProperty;
 	}
 
 	public BooleanProperty getCurrentUpToDate() {
