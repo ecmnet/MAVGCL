@@ -240,9 +240,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		annotations.setSelected(true);
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-			Platform.runLater(() -> {
-				updateGraph(true,0);
-			});
+			updateRequest();
 		});
 
 		dashboard1 = new DashBoardAnnotation(10);
@@ -516,9 +514,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
 			mode.setModeType(nv.intValue());
-			Platform.runLater(() -> {
-				updateGraph(true,0);
-			});
+			updateRequest();
 		});
 	}
 
@@ -531,7 +527,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
 				type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
 				group.getSelectionModel().select(preset.getGroup());
-				updateGraph(true,0);
+				updateRequest();
 			}
 		});
 	}
@@ -559,10 +555,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}
 		else {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-			Platform.runLater(() -> {
-				setXResolution(timeFrame.get());
-				updateGraph(true,0);
-			});
+			updateRequest();
 		}
 	}
 
@@ -735,7 +728,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(!isDisabled() && !refreshRequest) {
 			refreshRequest = true;
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
+				if(!state.getReplayingProperty().get()) {
+					updateGraph(refreshRequest,0);
+				} else {
+					updateGraph(refreshRequest,replay.intValue());
+				}
 			});
 		}
 	}

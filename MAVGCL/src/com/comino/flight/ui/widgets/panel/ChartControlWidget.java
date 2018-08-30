@@ -235,11 +235,12 @@ public class ChartControlWidget extends WidgetPane  {
 		});
 
 		state.getReplayingProperty().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
 			if(n.booleanValue())
 				replay.setText("\u25A0");
 			else
 				replay.setText("\u25B6");
-
+			});
 		});
 
 	}

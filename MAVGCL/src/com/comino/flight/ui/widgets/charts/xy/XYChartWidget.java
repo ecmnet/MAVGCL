@@ -973,7 +973,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			center_x = 0; center_y = 0;
 			refreshRequest = true;
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
+				if(!state.getReplayingProperty().get()) {
+					updateGraph(refreshRequest,0);
+				} else {
+					updateGraph(refreshRequest,replay.intValue());
+				}
 			});
 		}
 	}

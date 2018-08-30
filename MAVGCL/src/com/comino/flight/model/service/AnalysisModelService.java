@@ -251,6 +251,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 		if(current_x1_pt>modelList.size()-1)
 			current_x1_pt = modelList.size()-1;
 
+		if(current_x1_pt<0)
+			current_x1_pt = 0;
+
 		return (int)(current_x1_pt);
 	}
 
