@@ -86,6 +86,7 @@ public class AirWidget extends WidgetPane implements IChartControl {
 
 	@FXML
 	private void initialize() {
+		this.state = StateProperties.getInstance();
 		this.model = dataService.getCurrent();
 		this.disableProperty().bind(state.getConnectedProperty().not().and(state.getReplayingProperty().not()));
 		this.disabledProperty().addListener((v,ov,nv) -> {
@@ -109,7 +110,6 @@ public class AirWidget extends WidgetPane implements IChartControl {
 			});
 		});
 
-		state        = StateProperties.getInstance();
 	}
 
 
