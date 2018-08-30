@@ -34,17 +34,22 @@
 package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
 
 import eu.hansolo.airseries.AirCompass;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 
-public class AirWidget extends WidgetPane  {
+public class AirWidget extends WidgetPane implements IChartControl {
 
 	@FXML
 	private AirCompass g_compass;
@@ -58,6 +63,9 @@ public class AirWidget extends WidgetPane  {
 	private double bearing;
 
 	private long tms = 0;
+
+	private FloatProperty   replay       = new SimpleFloatProperty(0);
+	private StateProperties state        = null;
 
 	public AirWidget() {
 		super(300,true);
@@ -79,7 +87,7 @@ public class AirWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 		this.model = dataService.getCurrent();
-		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		this.disableProperty().bind(state.getConnectedProperty().not().and(state.getReplayingProperty().not()));
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue())
 				task.start();
@@ -89,8 +97,62 @@ public class AirWidget extends WidgetPane  {
 	}
 
 
-	public void setup(IMAVController control) {
-		//task.start();
+	public void setup(ChartControlWidget recordControl) {
+		recordControl.addChart(5,this);
+
+		replay.addListener((v, ov, nv) -> {
+			Platform.runLater(() -> {
+				if(nv.intValue()<=1) {
+					model = dataService.getModelList().get(1);
+				} else
+					model = dataService.getModelList().get(nv.intValue());
+			});
+		});
+
+		state        = StateProperties.getInstance();
+	}
+
+
+	@Override
+	public IntegerProperty getTimeFrameProperty() {
+		return null;
+	}
+
+
+	@Override
+	public FloatProperty getScrollProperty() {
+		return null;
+	}
+
+
+	@Override
+	public FloatProperty getReplayProperty() {
+		return replay;
+	}
+
+
+	@Override
+	public BooleanProperty getIsScrollingProperty() {
+		return null;
+	}
+
+
+	@Override
+	public void refreshChart() {
+
+	}
+
+
+	@Override
+	public KeyFigurePreset getKeyFigureSelection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+
 	}
 
 }

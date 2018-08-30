@@ -48,6 +48,7 @@ import com.comino.mav.control.IMAVController;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -161,6 +162,16 @@ public class View3DWidget extends SubScene implements IChartControl {
 					model = dataService.getCurrent();
 
 			}
+		});
+
+
+		replay.addListener((v, ov, nv) -> {
+			Platform.runLater(() -> {
+				if(nv.intValue()<=1) {
+					model = dataService.getModelList().get(1);
+				} else
+					model = dataService.getModelList().get(nv.intValue());
+			});
 		});
 
 

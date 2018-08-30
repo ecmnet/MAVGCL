@@ -117,8 +117,8 @@ public class MAV3DViewTab extends Pane  {
 	}
 
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
-		recordControl.addChart(3,widget.setup(control));
-		air.setup(control);
+		recordControl.addChart(4,widget.setup(control));
+		air.setup(recordControl);
 		return this;
 	}
 

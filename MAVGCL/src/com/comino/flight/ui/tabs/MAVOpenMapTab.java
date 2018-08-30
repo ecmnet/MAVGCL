@@ -463,6 +463,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
 		recordControl.addChart(3,this);
+		air.setup(recordControl);
 
 		properties.getLandedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
@@ -496,6 +497,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					updateMap(true);
 				});
 			}
+		});
+
+		replay.addListener((v, ov, nv) -> {
+			Platform.runLater(() -> {
+				if(nv.intValue()<=1) {
+					updateMap(true);
+				} else
+					updateMap(false);
+			});
 		});
 
 		return this;
