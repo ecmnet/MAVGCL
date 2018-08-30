@@ -625,16 +625,17 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
+
 		//
-		this.disabledProperty().addListener((l,o,n) -> {
-			if(!n.booleanValue()) {
-				Platform.runLater(() -> {
-					grid.clear(); slam.clear();
-					grid.setModel(control.getCurrentModel());
-					updateRequest();
-				});
-			}
-		});
+		//		this.disabledProperty().addListener((l,o,n) -> {
+		//			if(!n.booleanValue() && !state.getReplayingProperty().get()) {
+		//				Platform.runLater(() -> {
+		//					grid.clear(); slam.clear();
+		//					grid.setModel(control.getCurrentModel());
+		//					updateRequest();
+		//				});
+		//			}
+		//		});
 	}
 
 	private void setXResolution(int frame) {
@@ -929,9 +930,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-				current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
-				updateRequest();
+				if(!state.getReplayingProperty().get()) {
+					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+					current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+					updateRequest();
+				} else {
+					updateGraph(true,replay.intValue());
+				}
 			}
 		});
 

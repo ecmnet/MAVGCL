@@ -508,17 +508,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				setXResolution(timeFrame.get());
 		});
 
-
-		this.disabledProperty().addListener((v, ov, nv) -> {
-			if(ov.booleanValue() && !nv.booleanValue()) {
-				current_x0_pt = dataService.calculateX0IndexByFactor(1);
-				setXResolution(timeFrame.get());
-				Platform.runLater(() -> {
-					updateGraph(true,0);
-				});
-			}
-		});
-
 		dash.selectedProperty().addListener((v, ov, nv) -> {
 			updateRequest();
 		});
@@ -654,7 +643,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
-			if(!n.booleanValue()) {
+			if(!n.booleanValue() && !state.getReplayingProperty().get()) {
 				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 				updateRequest();
 			}
