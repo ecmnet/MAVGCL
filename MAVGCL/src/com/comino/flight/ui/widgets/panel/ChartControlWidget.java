@@ -194,13 +194,11 @@ public class ChartControlWidget extends WidgetPane  {
 
 			@Override
 			public void handle(MouseEvent click) {
-				if (click.getClickCount() == 2) {
+				state.getReplayingProperty().set(false);
+				if (click.getClickCount() == 2)
 					scroll.setValue(scroll.getValue() == 1000000 ? 0 : 1000000);
-					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-						if(chart.getValue().getScrollProperty()!=null)
-							chart.getValue().getScrollProperty().set((float)(1f-scroll.getValue()/1000000));
-					}
-				}
+				else
+					scroll.setValue(scroll.getValue()-1);
 			}
 		});
 
