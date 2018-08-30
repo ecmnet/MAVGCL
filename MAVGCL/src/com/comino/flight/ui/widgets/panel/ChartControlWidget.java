@@ -43,6 +43,7 @@ import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 
@@ -157,6 +158,7 @@ public class ChartControlWidget extends WidgetPane  {
 		});
 
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
+			state.getReplayingProperty().set(false);
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
@@ -217,14 +219,16 @@ public class ChartControlWidget extends WidgetPane  {
 				new Thread(() -> {
 					int index = 0;
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
-						AnalysisModelService.getInstance().setCurrent(index);
+						modelService.setCurrent(index);
 						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 							if(chart.getValue().getReplayProperty()!=null)
 								chart.getValue().getReplayProperty().set(index);
+
 						}
 						try { Thread.sleep(50); } catch (InterruptedException e) {	}
 						index++;
 					}
+					state.getReplayingProperty().set(false);
 
 				}).start();
 			} else

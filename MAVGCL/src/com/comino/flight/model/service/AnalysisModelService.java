@@ -254,6 +254,16 @@ public class AnalysisModelService implements IMAVLinkListener {
 		return (int)(current_x1_pt);
 	}
 
+	public int calculateX0Index(int index_x1) {
+
+		int current_x0_pt = index_x1 - (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
+
+		if(current_x0_pt<0)
+			current_x0_pt = 0;
+
+		return current_x0_pt;
+	}
+
 	public int calculateXIndexByTime(double time) {
 		int x = (int)(1000f / getCollectorInterval_ms() * time);
 		if(x < 0)

@@ -38,7 +38,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.ui.widgets.panel.IChartControl;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;

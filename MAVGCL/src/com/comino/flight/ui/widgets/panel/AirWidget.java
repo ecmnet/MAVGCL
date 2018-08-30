@@ -38,6 +38,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.WidgetPane;
 
 import eu.hansolo.airseries.AirCompass;

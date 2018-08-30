@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.widgets.panel;
+package com.comino.flight.ui.widgets.charts;
 
 
 import com.comino.flight.file.KeyFigurePreset;

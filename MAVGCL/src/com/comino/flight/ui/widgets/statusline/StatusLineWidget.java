@@ -42,8 +42,8 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
-import com.comino.flight.ui.widgets.panel.IChartControl;
 import com.comino.jfx.extensions.Badge;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.model.DataModel;
@@ -96,6 +96,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private IMAVController control;
 
 	private FloatProperty scroll       = new SimpleFloatProperty(0);
+	private FloatProperty replay       = new SimpleFloatProperty(0);
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 	private StateProperties state = null;
@@ -104,6 +105,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private Timeline task = null;
 	private Timeline out = null;
+
+	int current_x0_pt = 0; int current_x1_pt = 0;
 
 	private DataModel model;
 
@@ -181,8 +184,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 				if(list.size()>0) {
 
-					int current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
-					int current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
 					time.setText(
 							String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
 									list.get(current_x0_pt).tms/1000,
@@ -270,6 +271,17 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				lpos.setMode(Badge.MODE_OFF);
 		});
 
+		scroll.addListener((e,o,n) -> {
+			current_x0_pt = collector.calculateX0IndexByFactor(n.floatValue());
+		    current_x1_pt = collector.calculateX1IndexByFactor(n.floatValue());
+		});
+
+
+		replay.addListener((e,o,n) -> {
+			current_x1_pt = n.intValue();
+			current_x0_pt = collector.calculateX0Index(n.intValue());
+		});
+
 		out = new Timeline(new KeyFrame(
 				Duration.millis(5000),
 				ae -> { messages.clear();  }));
@@ -293,7 +305,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@Override
 	public FloatProperty getReplayProperty() {
-		return null;
+		return replay;
 	}
 
 	@Override
