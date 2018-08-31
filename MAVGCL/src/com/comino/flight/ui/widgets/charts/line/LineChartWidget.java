@@ -94,7 +94,7 @@ import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
-	private final static int MAXRECENT 	   = 20;
+	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 50;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype" };
@@ -740,7 +740,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0;
+		int max_x = 0; int size = dataService.getModelList().size();
 
 		if(isDisabled()) {
 			return;
@@ -748,7 +748,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		if(refresh) {
 
-			if(dataService.getModelList().size()==0 && dataService.isCollecting()) {
+			if(size==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
 			refreshRequest = false;
@@ -765,7 +765,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			mode.clear();
 
-			if(dataService.getModelList().size()==0) {
+			if(size==0) {
 				series1.getData().remove(0,series1.getData().size()-1);
 				series2.getData().remove(0,series2.getData().size()-1);
 				series3.getData().remove(0,series3.getData().size()-1);
@@ -778,7 +778,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			pool.invalidateAll();
 
 
-			if(dash.isSelected() && dataService.getModelList().size()> 0) {
+			if(dash.isSelected() && size> 0) {
 
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
@@ -800,28 +800,30 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		}
 
-		if(current_x_pt<dataService.getModelList().size() && dataService.getModelList().size()>0 ) {
 
+		if(current_x_pt<size && size>0 ) {
 
-			max_x = dataService.getModelList().size();
-
-			if(!dataService.isCollecting() || isPaused) {
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  || isPaused) {
 				if(max_x0 > 0)
 					max_x = max_x0;
 				else
-					max_x = current_x1_pt < dataService.getModelList().size() ?  current_x1_pt : dataService.getModelList().size() ;
+					max_x = current_x1_pt < size ?  current_x1_pt : size ;
+			} else {
+				max_x = size;
+				System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
 			}
 
+			//System.out.println(id+": "+max_x+ " ==> "+max_x);
 
-			if(dash.isSelected() && dataService.getModelList().size()>0
-					&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
+
+			if(dash.isSelected() && size>0 	&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
 				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
 				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 			}
 
-			while(current_x_pt<max_x && dataService.getModelList().size()>0 ) {
+			while(current_x_pt<max_x && size>0 ) {
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;

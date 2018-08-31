@@ -224,24 +224,27 @@ public class ChartControlWidget extends WidgetPane  {
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
 						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f+100);
-						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-							if(chart.getValue().getReplayProperty()!=null)
-								chart.getValue().getReplayProperty().set(index);
+							for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+								if(chart.getValue().getReplayProperty()!=null)
+									chart.getValue().getReplayProperty().set(index);
 
-						}
-						try { Thread.sleep(modelService.getCollectorInterval_ms()); } catch (InterruptedException e) {	}
-						index++;
+							}
+							index++;
+						try { Thread.sleep(50); } catch (InterruptedException e) {	}
 					}
 					state.getReplayingProperty().set(false);
 					state.getCurrentUpToDate().set(true);
 
 				}).start();
-			} else
+			} else {
 				state.getReplayingProperty().set(false);
+				state.getCurrentUpToDate().set(true);
+			}
 			event.consume();
 		});
 
 		state.getReplayingProperty().addListener((e,o,n) -> {
+
 			Platform.runLater(() -> {
 				if(n.booleanValue()) {
 					replay.setText("\u25A0");
