@@ -144,7 +144,8 @@ public class ChartControlWidget extends WidgetPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-
+			if(state.getReplayingProperty().get())
+				return;
 			// TODO: Cleanup but is better than old solution
 
 			if((System.currentTimeMillis() - scroll_tms)>100) {
@@ -158,7 +159,8 @@ public class ChartControlWidget extends WidgetPane  {
 		});
 
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
-			state.getReplayingProperty().set(false);
+			if(state.getReplayingProperty().get())
+				return;
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
@@ -189,12 +191,12 @@ public class ChartControlWidget extends WidgetPane  {
 				scroll.setDisable(false);
 		});
 
-		//	scroll.disableProperty().bind(StateProperties.getInstance().getRecordingProperty());
 		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent click) {
-				state.getReplayingProperty().set(false);
+				if(state.getReplayingProperty().get())
+					return;
 				if (click.getClickCount() == 2)
 					scroll.setValue(scroll.getValue() == 1000000 ? 0 : 1000000);
 				else
@@ -218,12 +220,13 @@ public class ChartControlWidget extends WidgetPane  {
 					int index = 0;
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
+						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f+100);
 						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 							if(chart.getValue().getReplayProperty()!=null)
 								chart.getValue().getReplayProperty().set(index);
 
 						}
-						try { Thread.sleep(50); } catch (InterruptedException e) {	}
+						try { Thread.sleep(modelService.getCollectorInterval_ms()); } catch (InterruptedException e) {	}
 						index++;
 					}
 					state.getReplayingProperty().set(false);
@@ -236,10 +239,14 @@ public class ChartControlWidget extends WidgetPane  {
 
 		state.getReplayingProperty().addListener((e,o,n) -> {
 			Platform.runLater(() -> {
-			if(n.booleanValue())
-				replay.setText("\u25A0");
-			else
-				replay.setText("\u25B6");
+				if(n.booleanValue()) {
+					replay.setText("\u25A0");
+					scroll.setDisable(true);
+				}
+				else {
+					replay.setText("\u25B6");
+					scroll.setDisable(false);
+				}
 			});
 		});
 

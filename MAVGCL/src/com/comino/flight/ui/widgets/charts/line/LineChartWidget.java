@@ -75,6 +75,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
+import javafx.scene.CacheHint;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
@@ -256,15 +257,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		xAxis.setUpperBound(timeFrame.intValue());
 		xAxis.setLabel("Seconds");
 		xAxis.setAnimated(false);
-		//		xAxis.setCache(true);
-		//		xAxis.setCacheHint(CacheHint.SPEED);
+		xAxis.setCache(true);
+		xAxis.setCacheHint(CacheHint.SPEED);
 
 		yAxis.setForceZeroInRange(false);
 		yAxis.setAutoRanging(true);
 		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
-		//		yAxis.setCache(true);
-		//		yAxis.setCacheHint(CacheHint.SPEED);
+		yAxis.setCache(true);
+		yAxis.setCacheHint(CacheHint.SPEED);
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
@@ -1034,7 +1035,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 		} catch(IndexOutOfBoundsException o) {
-			System.err.println(o.getMessage()+":"+dataService.getModelList()+" vs "+current_x);
 			return 0;
 		}
 	}
