@@ -838,11 +838,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			max_x = mList.size();
-			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED && current_x1_pt < max_x) {
+
+			if(!dataService.isCollecting()) {
 				if(max_x0 > 0)
 					max_x = max_x0;
 				else
-					max_x = current_x1_pt;
+					max_x = current_x1_pt < dataService.getModelList().size() ?  current_x1_pt : dataService.getModelList().size() ;
 			}
 
 

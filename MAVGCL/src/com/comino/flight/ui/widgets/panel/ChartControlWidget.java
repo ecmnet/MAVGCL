@@ -170,6 +170,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 		state.getLogLoadedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
+				state.getReplayingProperty().set(false);
 				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
 					scroll.setDisable(true);
 				else
@@ -180,6 +181,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.intValue()!=AnalysisModelService.STOPPED) {
+				state.getReplayingProperty().set(false);
 				scroll.setDisable(true);
 				scroll.setValue(0);
 				return;
