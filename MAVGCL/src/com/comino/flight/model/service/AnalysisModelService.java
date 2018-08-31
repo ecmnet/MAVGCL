@@ -351,6 +351,12 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 				current.msg = null; wait = System.nanoTime();
 
+				if(state.getReplayingProperty().get()) {
+					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
+					continue;
+				}
+
+
 				if(state.getCurrentUpToDate().getValue()) {
 					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());

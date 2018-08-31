@@ -219,6 +219,7 @@ public class ChartControlWidget extends WidgetPane  {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
 				new Thread(() -> {
+					state.getCurrentUpToDate().set(false);
 					int index = 0;
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
@@ -232,6 +233,7 @@ public class ChartControlWidget extends WidgetPane  {
 						index++;
 					}
 					state.getReplayingProperty().set(false);
+					state.getCurrentUpToDate().set(true);
 
 				}).start();
 			} else
