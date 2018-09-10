@@ -1642,6 +1642,36 @@
 	</KeyFigure>
 
 
+	<KeyFigure desc="LPosX RMSE10" uom="m" mask="#0.00" key="LPOSXRMSE">
+		<VirtualSource>
+		    <Converter class="RMSEConverter2" var0="LPOSX" var1="SPLPOSX" var2="200"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="LPosY RMSE10" uom="m" mask="#0.00" key="LPOSYRMSE">
+		<VirtualSource>
+		    <Converter class="RMSEConverter2" var0="LPOSY" var1="SPLPOSY" var2="200"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="LPosZ RMSE10" uom="m" mask="#0.00" key="LPOSZRMSE">
+		<VirtualSource>
+		    <Converter class="RMSEConverter2" var0="LPOSZ" var1="SPLPOSZ" var2="200"/>
+		</VirtualSource>
+		<Validity min="0" max="0.3"/>
+		<Groups>
+			<Group>Virtual keyfigures</Group>
+		</Groups>
+	</KeyFigure>
+
 	<!-- SLAM data -->
 
 	<KeyFigure desc="Path.X" uom="m" mask="#0.00" key="SLAMPX">
