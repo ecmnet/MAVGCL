@@ -38,14 +38,16 @@ import java.util.List;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 
-public class RMSEConverter extends SourceConverter {
+public class RMSEConverter2 extends SourceConverter {
 
-	String kf_val = "";
-	String kf_sp  = "";
+	String kf_val = null;
+	String kf_sp  = null;
 	int    frame  = 0;
+	String kf_name = null;
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
+		this.kf_name = kfname;
 		this.kf_val = params[0];
 		this.kf_sp  = params[1];
 		this.frame  = Integer.parseInt(params[2]);
@@ -63,15 +65,28 @@ public class RMSEConverter extends SourceConverter {
 			return 0;
 		}
 
+		if(list.get(list.size()-1).getValue(kf_name)!=0) {
+			kf = data.getValue(kf_val);
+			sp = data.getValue(kf_sp);
+			rmse = list.get(list.size()-1).getValue(kf_name);
+			rmse = rmse + Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
+			kf = list.get(list.size()-frame).getValue(kf_val);
+			sp = list.get(list.size()-frame).getValue(kf_sp);
+			rmse = rmse - Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
+
+			return rmse;
+		} else {
+
 		for(int i=list.size()-frame;i<list.size();i++) {
 			kf = list.get(i).getValue(kf_val);
 			sp = list.get(i).getValue(kf_sp);
 			rmse = rmse + Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
 		}
 		return rmse;
+		}
 	}
 
-	public RMSEConverter() {
+	public RMSEConverter2() {
 		super();
 	}
 

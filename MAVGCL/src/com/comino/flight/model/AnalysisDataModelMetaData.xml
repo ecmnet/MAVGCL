@@ -1641,9 +1641,9 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LPos.X RMSE30" uom="m" mask="#0.00" key="LPOSXRMSE">
+	<KeyFigure desc="LPosX RMSE10" uom="m" mask="#0.00" key="LPOSXRMSE">
 		<VirtualSource>
-		    <Converter class="RMSEConverter" var0="LPOSX" var1="SPLPOSX" var2="600"/>
+		    <Converter class="RMSEConverter2" var0="LPOSX" var1="SPLPOSX" var2="200"/>
 		</VirtualSource>
 		<Validity min="0" max="0.3"/>
 		<Groups>
@@ -1651,9 +1651,9 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LPos.Y RMSE30" uom="m" mask="#0.00" key="LPOSYRMSE">
+	<KeyFigure desc="LPosY RMSE10" uom="m" mask="#0.00" key="LPOSYRMSE">
 		<VirtualSource>
-		    <Converter class="RMSEConverter" var0="LPOSY" var1="SPLPOSY" var2="600"/>
+		    <Converter class="RMSEConverter2" var0="LPOSY" var1="SPLPOSY" var2="200"/>
 		</VirtualSource>
 		<Validity min="0" max="0.3"/>
 		<Groups>
@@ -1661,9 +1661,9 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LPos.Z RMSE30" uom="m" mask="#0.00" key="LPOSZRMSE">
+	<KeyFigure desc="LPosZ RMSE10" uom="m" mask="#0.00" key="LPOSZRMSE">
 		<VirtualSource>
-		    <Converter class="RMSEConverter" var0="LPOSZ" var1="SPLPOSZ" var2="600"/>
+		    <Converter class="RMSEConverter2" var0="LPOSZ" var1="SPLPOSZ" var2="200"/>
 		</VirtualSource>
 		<Validity min="0" max="0.3"/>
 		<Groups>
