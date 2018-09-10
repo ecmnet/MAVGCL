@@ -810,7 +810,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
 			} else {
 				max_x = size;
-				System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
+			//	System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
 			}
 
 			//System.out.println(id+": "+max_x+ " ==> "+max_x);
