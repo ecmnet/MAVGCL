@@ -84,6 +84,9 @@ public class ChartControlWidget extends WidgetPane  {
 	@FXML
 	private Button replay;
 
+	@FXML
+	private Button play;
+
 	private Map<Integer,IChartControl> charts = null;
 
 	protected int totalTime_sec = 30;
@@ -200,7 +203,7 @@ public class ChartControlWidget extends WidgetPane  {
 				if(state.getReplayingProperty().get())
 					return;
 				if (click.getClickCount() == 2)
-					scroll.setValue(scroll.getValue() == 1000000 ? 0 : 1000000);
+					scroll.setValue(scroll.getValue() == 1000000d ? 0 : 1000000d);
 				else
 					scroll.setValue(scroll.getValue()-1);
 			}
@@ -211,19 +214,23 @@ public class ChartControlWidget extends WidgetPane  {
 			event.consume();
 		});
 
-		replay.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
+		play.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
 				.or(state.getRecordingAvailableProperty().not()
 						.and(state.getLogLoadedProperty().not())));
 
-		replay.setOnAction((ActionEvent event)-> {
+		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
 				new Thread(() -> {
 					state.getCurrentUpToDate().set(false);
-					int index = 0;
+					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue()) / 1000000f));
+					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+						if(chart.getValue().getReplayProperty()!=null)
+							chart.getValue().getReplayProperty().set(-1);
+					}
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
-						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f+100);
+						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f);
 							for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 								if(chart.getValue().getReplayProperty()!=null)
 									chart.getValue().getReplayProperty().set(index);
@@ -247,11 +254,12 @@ public class ChartControlWidget extends WidgetPane  {
 
 			Platform.runLater(() -> {
 				if(n.booleanValue()) {
-					replay.setText("\u25A0");
+				//	play.setText("\u25A0");
+					play.setText("||");
 					scroll.setDisable(true);
 				}
 				else {
-					replay.setText("\u25B6");
+					play.setText("\u25B6");
 					scroll.setDisable(false);
 				}
 			});

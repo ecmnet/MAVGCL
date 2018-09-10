@@ -204,14 +204,14 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							mode.setMode(Badge.MODE_ON);
 						} 	else
 
-						if(model.sys.isStatus(Status.MSP_SITL)) {
-							mode.setBackgroundColor(Color.BEIGE);
-							mode.setText("SITL");
-						}
+							if(model.sys.isStatus(Status.MSP_SITL)) {
+								mode.setBackgroundColor(Color.BEIGE);
+								mode.setText("SITL");
+							}
 							else {
-							mode.setBackgroundColor(Color.DARKCYAN);
-							mode.setText("Connected");
-						}
+								mode.setBackgroundColor(Color.DARKCYAN);
+								mode.setText("Connected");
+							}
 						mode.setMode(Badge.MODE_ON);
 					} else {
 						mode.setMode(Badge.MODE_OFF); mode.setText("offline");
@@ -280,13 +280,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 		scroll.addListener((e,o,n) -> {
 			current_x0_pt = collector.calculateX0IndexByFactor(n.floatValue());
-		    current_x1_pt = collector.calculateX1IndexByFactor(n.floatValue());
+			current_x1_pt = collector.calculateX1IndexByFactor(n.floatValue());
 		});
 
 
 		replay.addListener((e,o,n) -> {
-			current_x1_pt = n.intValue();
-			current_x0_pt = collector.calculateX0Index(n.intValue());
+			if(n.intValue()>0) {
+				current_x1_pt = n.intValue();
+				current_x0_pt = collector.calculateX0Index(n.intValue());
+			}
 		});
 
 		out = new Timeline(new KeyFrame(
