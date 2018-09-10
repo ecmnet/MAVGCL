@@ -178,7 +178,7 @@ public class ChartControlWidget extends WidgetPane  {
 					scroll.setDisable(true);
 				else
 					scroll.setDisable(false);
-				scroll.setValue(1);
+				scroll.setValue(1000000);
 			}
 		});
 
