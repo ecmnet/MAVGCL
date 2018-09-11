@@ -142,6 +142,12 @@ public class InfoWidget extends WidgetPane  {
 				}
 			}
 		});
+
+		state.getLogLoadedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue.booleanValue()) {
+				clear();
+			}
+		});
 	}
 
 	public void clear() {
