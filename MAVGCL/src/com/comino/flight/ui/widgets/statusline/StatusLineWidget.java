@@ -183,15 +183,28 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				list = collector.getModelList();
 
 				if(list.size()>0) {
+					if(!state.getReplayingProperty().get()) {
+						current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
+						current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
+					}
 
-					time.setText(
-							String.format("TimeFrame: [ %1$tM:%1$tS - %2$tM:%2$tS ]",
-									list.get(current_x0_pt).tms/1000,
-									list.get(current_x1_pt).tms/1000)
-							);
+					if(current_x1_pt < list.size()-1)
+						time.setText(
+								String.format("%1$tM:%1$tS - %2$tM:%2$tS / %3$tM:%3$tS",
+										list.get(current_x0_pt).tms/1000,
+										list.get(current_x1_pt).tms/1000,
+										list.get(list.size()-1).tms/1000)
+								);
+					else
+						time.setText(
+								String.format("%1$tM:%1$tS - %2$tM:%2$tS",
+										list.get(current_x0_pt).tms/1000,
+										list.get(current_x1_pt).tms/1000)
+								);
+
 					time.setBackgroundColor(Color.DARKCYAN);
 				} else {
-					time.setText("TimeFrame: [ 00:00 - 00:00 ]");
+					time.setText("00:00 - 00:00");
 					time.setBackgroundColor(Color.GRAY);
 				}
 
