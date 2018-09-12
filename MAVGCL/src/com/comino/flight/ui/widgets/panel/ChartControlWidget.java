@@ -135,7 +135,6 @@ public class ChartControlWidget extends WidgetPane  {
 				scroll.setDisable(true);
 			else
 				scroll.setDisable(false);
-			scroll.setValue(1);
 		});
 
 		scroll.setSnapToTicks(false); scroll.setSnapToPixel(false);

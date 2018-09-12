@@ -481,7 +481,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
-			current_x0_pt =  dataService.calculateX0IndexByFactor(1);
 		});
 
 
