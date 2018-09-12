@@ -413,7 +413,7 @@ public class MainApp extends Application  {
 	private void showAboutDialog() {
 		StringBuilder version_txt = new StringBuilder();
 		VBox box = new VBox(); DataModel model = control.getCurrentModel();
-		ImageView splash = new ImageView(new Image(getClass().getResource("splash08.png").toExternalForm()));
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash081.png").toExternalForm()));
 		Label version = new Label();
 
 		if(!model.sys.version.isEmpty())

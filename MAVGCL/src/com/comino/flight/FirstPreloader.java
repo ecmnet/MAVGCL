@@ -54,7 +54,7 @@ public class FirstPreloader extends Preloader {
 	private Scene createPreloaderScene() {
 		VBox splashLayout = new VBox();
 		splashLayout.getStylesheets().add(getClass().getResource("splash.css").toExternalForm());
-		ImageView splash = new ImageView(new Image(getClass().getResource("splash08.png").toExternalForm()));
+		ImageView splash = new ImageView(new Image(getClass().getResource("splash081.png").toExternalForm()));
 		bar = new ProgressBar(0);
 		bar.setPrefHeight(5); bar.setPrefWidth(600);
 		splashLayout.getChildren().addAll(splash,bar);
