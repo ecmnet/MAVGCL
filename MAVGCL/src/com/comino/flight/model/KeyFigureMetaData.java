@@ -233,7 +233,7 @@ public class KeyFigureMetaData {
 	public double calculateVirtualValue(AnalysisDataModel data) {
 		source = sources.get(VIR_SOURCE);
 		if(source.converter != null)
-			return source.converter.convert(data);
+			return checkClipping(source.converter.convert(data));
 		return 0;
 	}
 

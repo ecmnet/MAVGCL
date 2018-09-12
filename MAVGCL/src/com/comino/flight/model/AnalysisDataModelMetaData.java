@@ -211,26 +211,26 @@ public class AnalysisDataModelMetaData extends Observable {
 
 		for(int i=0;i<kf_node.getChildNodes().getLength();i++) {
 			Node node = kf_node.getChildNodes().item(i);
-			if(node.getNodeName().equals("MSPSource")) {
+			if(node.getNodeName().equalsIgnoreCase("MSPSource")) {
 				buildDataSource(KeyFigureMetaData.MSP_SOURCE, keyfigure,node);
 			}
-			if(node.getNodeName().equals("PX4Source")) {
+			if(node.getNodeName().equalsIgnoreCase("PX4Source")) {
 				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
 			}
 
-			if(node.getNodeName().equals("ULogSource")) {
+			if(node.getNodeName().equalsIgnoreCase("ULogSource")) {
 				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
 			}
 
-			if(node.getNodeName().equals("MAVLinkSource")) {
+			if(node.getNodeName().equalsIgnoreCase("MAVLinkSource")) {
 				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
 			}
 
-			if(node.getNodeName().equals("VirtualSource")) {
+			if(node.getNodeName().equalsIgnoreCase("VirtualSource")) {
 				buildDataSource(KeyFigureMetaData.VIR_SOURCE, keyfigure,node);
 			}
 
-			if(node.getNodeName().equals("Validity")) {
+			if(node.getNodeName().equalsIgnoreCase("Validity")) {
 				keyfigure.setBounds(
 						Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
 						Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
@@ -239,7 +239,7 @@ public class AnalysisDataModelMetaData extends Observable {
 			}
 
 
-			if(node.getNodeName().equals("Clip")) {
+			if(node.getNodeName().equalsIgnoreCase("Clip")) {
 				keyfigure.setClipping(
 						Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
 						Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
@@ -247,10 +247,10 @@ public class AnalysisDataModelMetaData extends Observable {
 
 			}
 
-			if(node.getNodeName().equals("Groups")) {
+			if(node.getNodeName().equalsIgnoreCase("Groups")) {
 				for(int j=0;j<node.getChildNodes().getLength();j++) {
 					Node gr_node = node.getChildNodes().item(j);
-					if(gr_node.getNodeName().equals("Group")) {
+					if(gr_node.getNodeName().equalsIgnoreCase("Group")) {
 						String groupname = gr_node.getTextContent();
 						List<KeyFigureMetaData> group = groups.get(groupname);
 						if(group==null) {
@@ -270,7 +270,7 @@ public class AnalysisDataModelMetaData extends Observable {
 
 		for(int j=0;j<node.getChildNodes().getLength();j++) {
 			Node cnode = node.getChildNodes().item(j);
-			if(cnode.getNodeName().equals("Converter")) {
+			if(cnode.getNodeName().equalsIgnoreCase("Converter")) {
 				NamedNodeMap att = cnode.getAttributes();
 				if(att.getLength()>1) {
 					params = new String[att.getLength()-1];
