@@ -63,6 +63,7 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
@@ -395,13 +396,13 @@ public class FileHandler {
 		Collections.sort(sortedKeys);
 		sortedKeys.forEach((e) -> {
 			System.out.print(e);
-			//			AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
-			//				if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
-			//					if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
-			//						System.out.print("\t\t\t\t=> mapped to "+k.desc1);
-			//					}
-			//				}
-			//			});
+//						AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
+//							if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
+//								if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
+//									System.out.print("\t\t\t\t=> mapped to "+k.desc1);
+//								}
+//							}
+//						});
 			System.out.println();
 		});
 	}
