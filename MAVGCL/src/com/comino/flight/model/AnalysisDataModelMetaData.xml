@@ -1,5 +1,102 @@
 <AnalysisDataModel version="0.7" description ="Built-In model definition">
 
+   <!-- EKF2 Innovations -->
+
+    <KeyFigure desc="EKF.Inn.Flow.X" uom="" mask="#0.00" key="EKFINFLOWX">
+		<ULogSource field="ekf2_innovations_0.flow_innov[0]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="EKF.Inn.Flow.Y" uom="" mask="#0.00" key="EKFINFLOWY">
+		<ULogSource field="ekf2_innovations_0.flow_innov[1]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="EKF.Inn.HAGL" uom="" mask="#0.00" key="EKFINHAGL">
+		<ULogSource field="ekf2_innovations_0.hagl_innov"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="EKF.Inn.Head" uom="" mask="#0.00" key="EKFINHEAD">
+		<ULogSource field="ekf2_innovations_0.heading_innov"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP0" uom="" mask="#0.00" key="EKFINVELP0">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[0]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP1" uom="" mask="#0.00" key="EKFINVELP1">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[1]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP2" uom="" mask="#0.00" key="EKFINVELP2">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[2]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP3" uom="" mask="#0.00" key="EKFINVELP3">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[3]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP4" uom="" mask="#0.00" key="EKFINVELP4">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[4]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.Inn.VelP5" uom="" mask="#0.00" key="EKFINVELP5">
+		<ULogSource field="ekf2_innovations_0.vel_pos_innov[5]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.TMS.FLOW" uom="" mask="#0.00" key="EKFTMSFLOW">
+		<ULogSource field="ekf2_timestamps_0.optical_flow_timestamp_rel"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+		<Clip min="-9999" max="9999"/>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.TMS.VIS" uom="" mask="#0.00" key="EKFTMSVIS">
+		<ULogSource field="ekf2_timestamps_0.vision_position_timestamp_rel"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+		<Clip min="-9999" max="9999"/>
+	</KeyFigure>
+
+	<KeyFigure desc="EKF.TMS.MAG" uom="" mask="#0.00" key="EKFTMSMAG">
+		<ULogSource field="ekf2_timestamps_0.vehicle_magnetometer_timestamp_rel"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+		<Clip min="-9999" max="9999"/>
+	</KeyFigure>
+
+
     <!-- EKF2 Innovation Status -->
 
     <KeyFigure desc="Tst.Ratio Hgt." uom="" mask="#0.00" key="EKFHTR">
