@@ -69,6 +69,8 @@ public class KeyFigureMetaData {
 	public int    hash;
 	public float  min=0;
 	public float  max=0;
+	public double  clip_min = -Double.MAX_VALUE;
+	public double  clip_max =  Double.MAX_VALUE;
 
 	private DecimalFormat formatting = null;
 
@@ -117,6 +119,13 @@ public class KeyFigureMetaData {
 		}
 	}
 
+	public void setClipping(float min, float max) {
+		if(Float.isFinite(min) && Float.isFinite(max)) {
+			this.clip_min = (double)min;
+			this.clip_max = (double)max;
+		}
+	}
+
 	public void setSource(int type,String field, String class_c, String[] params) {
 		setSource(type,null,field,class_c,params);
 
@@ -158,8 +167,8 @@ public class KeyFigureMetaData {
 			}
 		}
 		if(source.converter != null)
-			return source.converter.convert(value);
-		return value;
+			return checkClipping(source.converter.convert(value));
+		return checkClipping(value);
 	}
 
 
@@ -176,8 +185,8 @@ public class KeyFigureMetaData {
 				value = (float)(Float)o;
 		}
 		if(source.converter != null)
-			return source.converter.convert(value);
-		return value;
+			return checkClipping(source.converter.convert(value));
+		return checkClipping(value);
 	}
 
 	public Double getValueFromULogModel(Map<String,Object> data) {
@@ -195,15 +204,15 @@ public class KeyFigureMetaData {
 					value = ((Float)o).doubleValue();
 
 				if(source.converter != null)
-					return source.converter.convert(value);
+					return checkClipping(source.converter.convert(value));
 
 			}
 
 		} else { // source field via converter
 			if(source.converter != null)
-				return source.converter.convert(data);
+				return checkClipping(source.converter.convert(data));
 		}
-		return value;
+		return checkClipping(value);
 	}
 
 	public Double getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
@@ -215,8 +224,8 @@ public class KeyFigureMetaData {
 				value = mfield_field.getDouble(mavlink_message);
 			}
 			if(source.converter != null)
-				return source.converter.convert(value);
-			return value;
+				return checkClipping(source.converter.convert(value));
+			return checkClipping(value);
 		}
 		return null;
 	}
@@ -234,6 +243,12 @@ public class KeyFigureMetaData {
 
 	public String toStringAll() {
 		return desc1+": "+key+"("+hash+")";
+	}
+
+	private Double checkClipping(double v) {
+		if(v > clip_max) v = Double.NaN;
+		if(v < clip_min) v = Double.NaN;
+		return v;
 	}
 
 	public class DataSource {
