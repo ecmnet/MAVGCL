@@ -1583,6 +1583,48 @@
 		</Groups>
   </KeyFigure>
 
+  <KeyFigure desc="Vis.Cov.X" uom="m" mask="#0.00" key="VISIONCOVX">
+		<MSPSource class="vision" field="cov_px"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+   <KeyFigure desc="Vis.Cov.Y" uom="m" mask="#0.00" key="VISIONCOVY">
+		<MSPSource class="vision" field="cov_py"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+   <KeyFigure desc="Vis.Cov.Z" uom="m" mask="#0.00" key="VISIONCOVZ">
+		<MSPSource class="vision" field="cov_pz"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.Cov.VX" uom="m" mask="#0.00" key="VISIONCOVVX">
+		<MSPSource class="vision" field="cov_vx"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+   <KeyFigure desc="Vis.Cov.VY" uom="m" mask="#0.00" key="VISIONCOVVY">
+		<MSPSource class="vision" field="cov_vy"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+   <KeyFigure desc="Vis.Cov.VZ" uom="m" mask="#0.00" key="VISIONCOVVZ">
+		<MSPSource class="vision" field="cov_vz"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
   <KeyFigure desc="Vis.Pos.Error" uom="m" mask="#0.00" key="VISIONPOSE">
 		<ULogSource field="vehicle_vision_position_0.epv"/>
 		<Groups>
