@@ -93,6 +93,9 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_rtl;
 
 	@FXML
+	private Button land;
+
+	@FXML
 	private Button debug_mode1;
 
 	@FXML
@@ -207,6 +210,14 @@ public class MSPCtlWidget extends WidgetPane   {
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		land.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.LAND_LOCAL;
 			control.sendMAVLinkMessage(msp);
 
 		});

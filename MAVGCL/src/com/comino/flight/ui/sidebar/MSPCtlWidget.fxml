@@ -47,6 +47,7 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
+				    <Button fx:id="land" text="Land vehicle (MSP)" prefWidth="165.0" />
 				    <StateButton fx:id="enable_rtl" text="Return To Launch (local)"
 						prefWidth="165.0" >
 						<VBox.margin>
