@@ -63,6 +63,7 @@ public class MAVPreferences {
 	public final static String CTRLPOS          = "CTRLPOS";
 	public final static String HEALTHCHECK      = "HEALTHCHECK";
 	public final static String RTKSVINACC       = "RTKSVINACC";
+	public final static String RTKSVINTIM       = "RTKSVINTIM";
 	public static final String VIDREC           = "VIDREC";
 	public static final String REFLAT           = "REFLAT";
 	public static final String REFLON           = "REFLON";

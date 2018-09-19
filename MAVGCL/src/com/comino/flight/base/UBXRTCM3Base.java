@@ -140,7 +140,8 @@ public class UBXRTCM3Base implements Runnable {
 
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
-			this.ubx.init(60,accuracy);
+			int time = Integer.parseInt(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINTIM, "60"));
+			this.ubx.init(time,accuracy);
 			connected = true;
 		} catch (Exception e) {
 			return;
