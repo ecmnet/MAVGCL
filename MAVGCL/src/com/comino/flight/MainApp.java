@@ -152,7 +152,7 @@ public class MainApp extends Application  {
 
 			if(args.size()>0) {
 				if(args.get("SITL")!=null) {
-					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+					control = new MAVUdpController("127.0.0.1",14580,14540, true);
 					new SITLController(control);
 				}
 				else  if(args.get("PROXY")!=null) {
