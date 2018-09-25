@@ -219,6 +219,8 @@ public class ChartControlWidget extends WidgetPane  {
 
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
+				if(scroll.getValue()==0)
+					scroll.setValue(1000000d);
 				state.getReplayingProperty().set(true);
 				new Thread(() -> {
 					state.getCurrentUpToDate().set(false);
