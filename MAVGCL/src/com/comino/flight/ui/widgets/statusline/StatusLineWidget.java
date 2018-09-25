@@ -208,7 +208,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					time.setBackgroundColor(Color.GRAY);
 				}
 
-				if(!state.getLogLoadedProperty().get()) {
+				if(list.size()==0) {
 					if(control.isConnected()) {
 						time.setMode(Badge.MODE_ON);
 						if(state.getReplayingProperty().get()) {
@@ -238,9 +238,11 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						mode.setText("Replay");
 						mode.setMode(Badge.MODE_ON);
 					} else {
-						mode.setBackgroundColor(Color.LIGHTSKYBLUE);
-						mode.setText(filename);
-						mode.setMode(Badge.MODE_ON);
+						if(!filename.isEmpty()) {
+							mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+							mode.setText(filename);
+							mode.setMode(Badge.MODE_ON);
+						}
 					}
 				}
 
