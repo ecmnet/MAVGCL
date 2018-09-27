@@ -110,8 +110,7 @@
 
 	<target name="deploy_osx" depends="build">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
-			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7"
-				preloaderClass="com.comino.flight.FirstPreloader">
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7">
 			</fx:application>
 			<fx:resources>
 				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
@@ -130,8 +129,7 @@
 
 	<target name="deploy_linux" depends="build">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="deb">
-			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7"
-							preloaderClass="com.comino.flight.FirstPreloader">
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7">
 						</fx:application>
 						<fx:resources>
 							<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
@@ -148,8 +146,8 @@
 
 	<target name="deploy_windows" depends="build">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="msi">
-			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7"
-							preloaderClass="com.comino.flight.FirstPreloader">
+			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.7">
+
 						</fx:application>
 						<fx:resources>
 							<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
