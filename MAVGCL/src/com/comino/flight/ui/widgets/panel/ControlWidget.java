@@ -102,16 +102,7 @@ public class ControlWidget extends WidgetPane  {
 			parameters.setDisable(!n.booleanValue());
 		});
 
-		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
-				vehiclectl.setSelected(false);
-			} else {
-				if(stateProperties.getConnectedProperty().get()) {
-					details.setSelected(true);
-				}
-			}
 
-		});
 
 		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
 

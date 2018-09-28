@@ -47,6 +47,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.flight.parameter.ParameterAttributes;
@@ -202,7 +203,7 @@ public class ParameterWidget extends WidgetPane  {
 			}
 		});
 
-		this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
+		grid.disableProperty().bind(state.getLogLoadedProperty().or(state.getConnectedProperty().not()));
 
 	}
 
@@ -212,7 +213,7 @@ public class ParameterWidget extends WidgetPane  {
 		int i = 0;
 		for(ParameterAttributes p : params.getList()) {
 			if(group.contains(p.group_name)) {
-				Label unit = new Label(p.unit); unit.setPrefWidth(40);
+				Label unit = new Label(p.unit); unit.setPrefWidth(38);
 				Label name = new Label(p.name); name.setPrefWidth(95);
 				name.setTooltip(createParameterToolTip(p));
 				ParamItem item = createParamItem(p, true);
