@@ -24,6 +24,15 @@
 	<target name="metadata" depends="clean">
 		<get src="https://s3.amazonaws.com/px4-travis/Firmware/master/parameters.xml" dest="src/com/comino/flight/parameter/PX4ParameterFactMetaData.xml"
 		     ignoreerrors="true" maxtime="30" skipexisting="true"/>
+		<tstamp>
+		  <format property="current.time" pattern="dd.MM.yyyy" />
+		</tstamp>
+		<buildnumber />
+	    <echo>Current build number:${build.number}</echo>
+		<propertyfile file="src/com/comino/flight/build.info">
+			<entry key="build" value="${build.number}" />
+			<entry key="build_date" value="${current.time}" />
+		</propertyfile>
 	</target>
 
 	<target name="compile" depends="metadata">

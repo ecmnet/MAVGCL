@@ -35,6 +35,7 @@ package com.comino.flight;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
@@ -422,11 +423,13 @@ public class MainApp extends Application  {
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash082.png").toExternalForm()));
 		Label version = new Label();
 
+
 		if(!model.sys.version.isEmpty())
 			version_txt.append("  PX4 Firmware Version: "+model.sys.version);
 		if(!model.sys.build.isEmpty() && !model.sys.build.contains("tmp"))
 			version_txt.append("  MSP build: " + model.sys.build);
-		version_txt.append("  MAVGCL runs on Java "+System.getProperty("java.version"));
+		version_txt.append("  MAVGCL ("+getBuildInfo().getProperty("build")+")");
+		version_txt.append(" runs on Java "+System.getProperty("java.version"));
 
 		version.setText(version_txt.toString());
 
@@ -445,6 +448,15 @@ public class MainApp extends Application  {
 		Platform.runLater(() -> {
 			alert.showAndWait();
 		});
+	}
+
+	private Properties getBuildInfo() {
+		Properties appProps = new Properties();
+		try {
+			appProps.load(getClass().getResourceAsStream("build.info"));
+		} catch(IOException io ) {
+		}
+		return appProps;
 	}
 
 

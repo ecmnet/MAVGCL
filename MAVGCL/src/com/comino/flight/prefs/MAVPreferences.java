@@ -33,8 +33,14 @@
 
 package com.comino.flight.prefs;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
+import com.comino.main.MSPConfig;
 
 
 public class MAVPreferences {
