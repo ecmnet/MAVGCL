@@ -60,8 +60,10 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 					encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
 				}
 				else {
-					System.out.println("MP4 recording stopped");
-					encoder.finish();
+					if(encoder!=null) {
+						System.out.println("MP4 recording stopped");
+						encoder.finish();
+					}
 				}
 			}  catch (Exception e1) { e1.printStackTrace(); }
 		});
