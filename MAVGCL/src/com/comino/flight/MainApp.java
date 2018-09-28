@@ -196,6 +196,12 @@ public class MainApp extends Application  {
 				control.sendMAVLinkMessage(ref);
 			});
 
+			StateProperties.getInstance().getInitializedProperty().addListener((v,o,n) -> {
+				if(n.booleanValue()) {
+					analysisModelService.startConverter();
+				}
+			});
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
