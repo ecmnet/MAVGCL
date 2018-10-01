@@ -45,6 +45,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.model.segment.Status;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
@@ -121,7 +122,8 @@ public class CameraWidget extends WidgetPane  {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false))
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false)
+					|| !control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
