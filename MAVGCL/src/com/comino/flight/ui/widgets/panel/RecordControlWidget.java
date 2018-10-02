@@ -159,20 +159,19 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				.or(state.getInitializedProperty().not())
 				);
 
-		recording.setOnMousePressed(event -> {
-			enablemodetrig.selectedProperty().set(false);
-		});
-
 		recording.selectedProperty().set(false);
 
 		recording.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			recording(newvalue, 0);
+			if(newvalue.booleanValue()) {
+				enablemodetrig.selectedProperty().set(false);
+			}
 		});
 
 		clear.disableProperty().bind(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED)
 				.or(state.getRecordingAvailableProperty().not()
 						.and(state.getLogLoadedProperty().not())));
-		
+
 		clear.setOnAction((ActionEvent event)-> {
 
 			AnalysisModelService.getInstance().clearModelList();
