@@ -1103,7 +1103,9 @@
     <KeyFigure desc="GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
 		<PX4Source field="GPS.Lat"></PX4Source>
-		<ULogSource field="vehicle_gps_position_0.lat"/>
+		<ULogSource field="vehicle_gps_position_0.lat">
+		  <Converter class="ExpressionConverter" expression="RGPSLAT/10000000" />
+		</ULogSource>
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
@@ -1112,7 +1114,9 @@
 	<KeyFigure desc="GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
 		<PX4Source field="GPS.Lon"></PX4Source>
-		<ULogSource field="vehicle_gps_position_0.lon"/>
+		<ULogSource field="vehicle_gps_position_0.lon">
+		 <Converter class="ExpressionConverter" expression="RGPSLON/10000000" />
+		</ULogSource>
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
