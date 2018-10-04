@@ -16,17 +16,11 @@ Any feedback, comments and contributions are very welcome.
 **Development Status:** Last updated 02/10/2018
 
 - *.mgc files now store parameter settings in addition
+
 - 'Replay' recorded or saved data in realtime
+
 - EKF2 innovations key figures added (ULOG source)
 
-
-V0.6xx notes:
-
-- V0.6 requires MAVLink 2.0 protocol without signing (switch to 'Use MAVLink 2.0 always') - MAVLink 1.0 no longer supported (for MAVLink 1.0 use V0.536 )
-- Recording based on [ULOG](https://dev.px4.io/en/log/ulog_file_format.html) over MAVLink needs to be enabled in preferences (if ULog over MAVLink is not available, MAVGCL switches back to message based logging)
-- Mapping between ULog data and MAVGCL key-figures is still ongoing 
-- Serial connection no longer available as it is currently used for RTK base stations
-- AutoPilot features only with companion running MAVSlam and MAVComm
 
 
 **Features:**
