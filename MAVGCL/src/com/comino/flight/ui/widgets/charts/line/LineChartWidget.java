@@ -291,7 +291,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		chartArea.getChildren().add(zoom_label);
 
 		linechart.setOnMousePressed(mouseEvent -> {
-			if(dataService.isCollecting() && !isPaused) {
+			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
 				mouseEvent.consume();
 				return;
 			}
@@ -310,7 +310,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
 			}
 
-			if(!dataService.isCollecting()) {
+			if(!dataService.isCollecting() && !dataService.isReplaying()) {
 				dataService.setCurrent(x1);
 				state.getCurrentUpToDate().set(false);
 			}
@@ -320,7 +320,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
-			if(dataService.isCollecting() && !isPaused) {
+			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
 				mouseEvent.consume();
 				return;
 			}
@@ -352,7 +352,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-			if(dataService.isCollecting() && !isPaused) {
+			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
 				mouseEvent.consume();
 				return;
 			}
@@ -368,7 +368,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
 				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
 
-				if(!dataService.isCollecting()) {
+				if(!dataService.isCollecting() && !dataService.isReplaying()) {
 					dataService.setCurrent(x1);
 					state.getCurrentUpToDate().set(false);
 				}

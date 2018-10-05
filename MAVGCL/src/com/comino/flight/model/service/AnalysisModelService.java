@@ -81,7 +81,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private int mode = 0;
 
-	private boolean isFirst = false;
+	private boolean isFirst     = false;
+	private boolean isReplaying = false;
 
 	private int totalTime_sec = 30;
 	private int collector_interval_us = 50000;
@@ -169,6 +170,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 				return;
 			current.set(modelList.get(index));
 		}
+	}
+
+	public void setReplaying(boolean replay) {
+		this.isReplaying = replay;
 	}
 
 	public void setCurrent(double time) {
@@ -286,6 +291,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public boolean isCollecting() {
 		return mode != STOPPED ;
+	}
+
+	public boolean isReplaying() {
+		return isReplaying;
 	}
 
 
