@@ -233,7 +233,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				} else {
 					time.setMode(Badge.MODE_ON);
 					messages.clear();
-					if(control.isConnected()) {
+					if(control.isConnected()) {}
 						if(state.getReplayingProperty().get()) {
 							mode.setBackgroundColor(Color.MEDIUMSEAGREEN);
 							mode.setText("Replay");
@@ -256,10 +256,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							}
 						}
 						mode.setMode(Badge.MODE_ON);
-					} else {
-						mode.setMode(Badge.MODE_OFF); mode.setText("offline");
-						time.setMode(Badge.MODE_OFF);
-					}
+//					 else {
+//						mode.setMode(Badge.MODE_OFF); mode.setText("offline");
+//						time.setMode(Badge.MODE_OFF);
+//					}
 				}
 			}
 		} ) );
