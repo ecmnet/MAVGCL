@@ -219,9 +219,10 @@ public class ChartControlWidget extends WidgetPane  {
 
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
-				if(scroll.getValue()==0)
+				if(scroll.getValue()<10000)
 					scroll.setValue(1000000d);
 				state.getReplayingProperty().set(true);
+				modelService.setReplaying(true);
 				new Thread(() -> {
 					state.getCurrentUpToDate().set(false);
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue()) / 1000000f));
@@ -240,11 +241,13 @@ public class ChartControlWidget extends WidgetPane  {
 							index++;
 						try { Thread.sleep(50); } catch (InterruptedException e) {	}
 					}
+					modelService.setReplaying(false);
 					state.getReplayingProperty().set(false);
 					state.getCurrentUpToDate().set(true);
 
 				}).start();
 			} else {
+				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
 				state.getCurrentUpToDate().set(true);
 			}
