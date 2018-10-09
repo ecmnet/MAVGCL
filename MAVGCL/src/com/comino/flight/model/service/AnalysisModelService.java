@@ -44,6 +44,7 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 
+import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -320,13 +321,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 			mode = STOPPED;
 
 			while(true) {
-
-
-				if(state.getLogLoadedProperty().get()) {
-					mode = STOPPED; old_mode = STOPPED;
-					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
-					continue;
-				}
 
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
