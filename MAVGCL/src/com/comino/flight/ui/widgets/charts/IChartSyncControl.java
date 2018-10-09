@@ -36,6 +36,6 @@ package com.comino.flight.ui.widgets.charts;
 public interface IChartSyncControl {
 
 	public void setZoom(double x0, double x1);
-	public void returnToOriginalZoom();
+	public void returnToOriginalTimeScale();
 
 }

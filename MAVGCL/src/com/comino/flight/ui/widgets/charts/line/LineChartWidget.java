@@ -345,7 +345,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if (click.getClickCount() == 2) {
 				for(IChartSyncControl sync : syncCharts)
-					sync.returnToOriginalZoom();
+					sync.returnToOriginalTimeScale();
 				click.consume();
 			}
 
@@ -538,7 +538,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		return preset;
 	}
 
-	public void returnToOriginalZoom() {
+	public void returnToOriginalTimeScale() {
 		if(dataService.isCollecting()) {
 			if(isPaused) {
 				Platform.runLater(() -> {
