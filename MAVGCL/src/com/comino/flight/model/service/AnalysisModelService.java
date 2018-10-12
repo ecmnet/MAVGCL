@@ -327,6 +327,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					if(ulogger.isLogging())
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
+					state.getRecordingProperty().set(STOPPED);
 					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
 					continue;
 					//		}
