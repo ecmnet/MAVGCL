@@ -1443,7 +1443,8 @@
 		<PX4Source field="BATT.V"></PX4Source>
 		<ULogSource field="battery_status_0.voltage_filtered_v"/>
 		<Groups>
-			<Group>Power</Group>
+			<Group>Battery</Group>
+			<Group>System</Group>
 		</Groups>
 		<Validity min="10.5" max="15.0"/>
 	</KeyFigure>
@@ -1453,7 +1454,7 @@
 		<PX4Source field="BATT.C"></PX4Source>
 		<ULogSource field="battery_status_0.current_filtered_a"/>
 		<Groups>
-			<Group>Power</Group>
+			<Group>Battery</Group>
 		</Groups>
 		<Validity min="0.2" max="15.0"/>
 	</KeyFigure>
@@ -1462,7 +1463,7 @@
 		<MSPSource class="battery" field="a0"></MSPSource>
 		<ULogSource field="battery_status_0.discharged_mah"/>
 		<Groups>
-			<Group>Power</Group>
+			<Group>Battery</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1471,7 +1472,7 @@
 		   <Converter class="ExpressionConverter" expression="BATP/100" />
 		</MSPSource>
 		<Groups>
-			<Group>Power</Group>
+			<Group>Battery</Group>
 		</Groups>
 		<Validity min="0.2" max="1.0"/>
 	</KeyFigure>
