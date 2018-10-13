@@ -70,6 +70,7 @@ public class StateProperties {
 	private BooleanProperty offboardProperty 			    = new SimpleBooleanProperty();
 
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
+	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
 	private BooleanProperty isRecordingAvailableProperty	   = new SimpleBooleanProperty();
@@ -214,6 +215,10 @@ public class StateProperties {
 
 	public BooleanProperty getReplayingProperty() {
 		return isReplayingProperty;
+	}
+
+	public BooleanProperty isAutoRecording() {
+		return isAutoRecordingProperty;
 	}
 
 	public BooleanProperty getCurrentUpToDate() {

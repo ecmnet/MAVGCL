@@ -196,6 +196,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
+		state.isAutoRecording().bind(enablemodetrig.selectedProperty());
+
 		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			modetrigger = newvalue;
 			trigdelay.setDisable(oldvalue);

@@ -123,6 +123,7 @@ public class CameraWidget extends WidgetPane  {
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false)
+					|| !state.isAutoRecording().get()
 					|| !control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
 				return;
 
