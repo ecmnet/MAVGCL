@@ -279,6 +279,7 @@ public class FileHandler {
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
 					if(file.getName().endsWith("mgc")) {
+						try {
 						Writer writer = new FileWriter(file);
 						FileData data = new FileData(); data.prepareData(modelService,paramService);
 						Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -288,6 +289,9 @@ public class FileHandler {
 						stage.getScene().setCursor(Cursor.DEFAULT);
 						StateProperties.getInstance().getLogLoadedProperty().set(true);
 						name = file.getName();
+						} catch(Exception e) {
+							stage.getScene().setCursor(Cursor.DEFAULT);
+						}
 					}
 
 					return null;
