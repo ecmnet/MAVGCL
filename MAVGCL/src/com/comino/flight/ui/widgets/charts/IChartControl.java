@@ -53,4 +53,5 @@ public interface IChartControl {
 	public KeyFigurePreset getKeyFigureSelection();
 	public void setKeyFigureSeletcion(KeyFigurePreset preset);
 
+
 }

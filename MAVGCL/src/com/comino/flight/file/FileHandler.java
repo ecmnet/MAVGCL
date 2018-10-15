@@ -309,7 +309,6 @@ public class FileHandler {
 			@Override protected Void call() throws Exception {
 				if(control.isSimulation())
 					return null;
-				stage.getScene().setCursor(Cursor.WAIT);
 				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				File f = new File(path+"/"+name);
@@ -320,10 +319,8 @@ public class FileHandler {
 				Writer writer = new FileWriter(f);
 				FileData data = new FileData(); data.prepareData(modelService,paramService);
 				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-				stage.getScene().setCursor(Cursor.WAIT);
 				gson.toJson(data, writer);
 				writer.close();
-				stage.getScene().setCursor(Cursor.DEFAULT);
 				return null;
 			}
 		}).start();
