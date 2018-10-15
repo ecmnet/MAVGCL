@@ -198,7 +198,7 @@ public class CameraWidget extends WidgetPane  {
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-			source.addProcessListener((im,buf) -> {
+			source.addProcessListener((im,buf, fps) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
 						image.setImage(im);

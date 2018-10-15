@@ -225,7 +225,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 									Image raw_img = getfromjpeg(img);
 									listener.forEach((l) -> {
 										try {
-										l.process(raw_img, img);
+										l.process(raw_img, img, fps);
 										} catch (Exception e) {
 											System.err.println(e.getMessage());
 										}

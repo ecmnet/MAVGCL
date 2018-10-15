@@ -66,7 +66,7 @@ public class MSPSequenceEncoder {
 
     }
 
-    public void encodeNativeFrame(Picture pic) throws IOException {
+    public void encodeNativeFrame(Picture pic, int fps) throws IOException {
         if (toEncode == null) {
             toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
         }
@@ -85,7 +85,7 @@ public class MSPSequenceEncoder {
         H264Utils.encodeMOVPacket(result);
 
         // Add packet to video track
-        outTrack.addFrame(new MP4Packet(result, frameNo, 25, 1, frameNo, true, null, frameNo, 0));
+        outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
 
         frameNo++;
     }
@@ -99,7 +99,7 @@ public class MSPSequenceEncoder {
         NIOUtils.closeQuietly(ch);
     }
 
-    public void encodeImage(BufferedImage bi) throws IOException {
-        encodeNativeFrame(AWTUtil.fromBufferedImage(bi));
+    public void encodeImage(BufferedImage bi, int fps) throws IOException {
+        encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps);
     }
 }
