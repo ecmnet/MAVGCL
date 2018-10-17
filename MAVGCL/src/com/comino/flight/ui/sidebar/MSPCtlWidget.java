@@ -130,6 +130,8 @@ public class MSPCtlWidget extends WidgetPane   {
 	@FXML
 	private void initialize() {
 
+		this.disableProperty().bind(state.getConnectedProperty().not());
+
 		box.prefHeightProperty().bind(this.heightProperty());
 
 		modes.disableProperty().bind(StateProperties.getInstance().getLandedProperty()

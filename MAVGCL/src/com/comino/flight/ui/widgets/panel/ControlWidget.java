@@ -83,12 +83,13 @@ public class ControlWidget extends WidgetPane  {
 	@FXML
 	private void initialize() {
 
+		details.setSelected(true);
 		vehiclectl.setDisable(true);
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
-				vehiclectl.setSelected(false);
+			//	vehiclectl.setSelected(false);
 				video.setSelected(false);
-				parameters.setSelected(false);
+			//	parameters.setSelected(false);
 			}
 		});
 

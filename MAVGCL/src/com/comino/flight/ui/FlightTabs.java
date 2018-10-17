@@ -171,7 +171,7 @@ public class FlightTabs extends Pane {
 			if(tabpane.getSelectionModel().selectedIndexProperty().intValue()!=4)
 				mavinspectortab.setDisable(true);
 
-			flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
+		//	flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
 		});
 
 
