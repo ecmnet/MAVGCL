@@ -84,7 +84,7 @@ public class ControlWidget extends WidgetPane  {
 	private void initialize() {
 
 		details.setSelected(true);
-		vehiclectl.setDisable(true);
+
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 			//	vehiclectl.setSelected(false);
@@ -102,10 +102,6 @@ public class ControlWidget extends WidgetPane  {
 				parameters.setSelected(false);
 			parameters.setDisable(!n.booleanValue());
 		});
-
-
-
-		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
 
 
 	}
