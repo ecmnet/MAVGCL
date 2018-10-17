@@ -40,12 +40,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_request_list;
 import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.execution.control.listener.IMAVLinkListener;
 import com.comino.msp.log.MSPLogger;
@@ -70,6 +72,8 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 
 	private ParameterFactMetaData metadata = null;
 
+	private Preferences preferences = null;
+
 	private StateProperties stateProperties =  null;
 
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
@@ -93,6 +97,7 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 		this.control  = control;
 		this.control.addMAVLinkListener(this);
 		this.stateProperties = StateProperties.getInstance();
+		this.preferences = MAVPreferences.getInstance();
 
 		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
 		this.parameterList = new HashMap<String,ParameterAttributes>();
@@ -121,7 +126,10 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			if(!n.booleanValue()) {
 				is_reading = false;
 				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
-				parameterList.clear();
+				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
+					parameterList.clear();
+					stateProperties.getParamLoadedProperty().set(false);
+				}
 			}
 		});
 

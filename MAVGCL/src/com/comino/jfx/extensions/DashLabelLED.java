@@ -94,6 +94,24 @@ public class DashLabelLED extends GridPane {
 			line.setEndY(this.prefHeightProperty().floatValue()/2);
 		});
 
+		this.disabledProperty().addListener((v,ov,nv) -> {
+			if(nv.booleanValue())
+			   circle.setFill(Color.TRANSPARENT);
+			else {
+				switch (mode) {
+				case MODE_OFF:
+					circle.setFill(Color.TRANSPARENT);
+					break;
+				case MODE_ON:
+					circle.setFill(color);
+					break;
+				case MODE_BLINK:
+					if (timeline != null)
+						timeline.play();
+					break;
+				}
+			}
+		});
 	}
 
 	public DashLabelLED(String text) {

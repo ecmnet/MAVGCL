@@ -107,7 +107,9 @@ public class StateProperties {
 		this.control = control;
         this.logger = MSPLogger.getInstance();
 		simulationProperty.set(control.isSimulation());
-		ExecutorService.get().schedule(() -> { isInitializedProperty.set(true); }, 5, TimeUnit.SECONDS);
+		ExecutorService.get().schedule(() -> {
+			isInitializedProperty.set(true);
+		}, 5, TimeUnit.SECONDS);
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (o,n) -> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
@@ -120,8 +122,10 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
 			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
-			if(!n.isStatus(Status.MSP_CONNECTED))
+			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_ALERT));
+				control.getCurrentModel().clear();
+			}
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {

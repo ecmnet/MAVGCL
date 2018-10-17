@@ -40,6 +40,7 @@ import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
@@ -83,6 +84,8 @@ public class CommanderWidget extends WidgetPane  {
 
 	@FXML
 	private void initialize() {
+
+		this.disableProperty().bind(state.getConnectedProperty().not());
 
 		//fadeProperty().bind(state.getConnectedProperty());
 
@@ -158,14 +161,15 @@ public class CommanderWidget extends WidgetPane  {
 
 		});
 
-		set_home.disableProperty().bind(StateProperties.getInstance().getGPOSAvailableProperty().not());
+		set_home.disableProperty().bind(StateProperties.getInstance().getLPOSAvailableProperty().not());
 		set_home.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,(cmd,result) -> {
 				if(result==0) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to current global pos.",
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to preferred global pos.",
 							MAV_SEVERITY.MAV_SEVERITY_INFO);
 				}
-			},1);
+			},0,0,0,0,MAVPreferences.getInstance().getFloat(MAVPreferences.REFLAT, 0),
+					  MAVPreferences.getInstance().getFloat(MAVPreferences.REFLON, 0),500 );
 		});
 
 		emergency.setOnAction((ActionEvent event)-> {

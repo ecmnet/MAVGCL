@@ -103,7 +103,7 @@ public class KeyFigureMetaData {
 	}
 
 	public String getValueString(double val) {
-		if(uom.contains("%"))
+		if(uom!=null && uom.contains("%"))
 			return Integer.toString((int)(val*100f));
 		if(formatting!=null)
 			return formatting.format(val);

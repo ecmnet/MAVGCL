@@ -72,6 +72,8 @@ public class StatusWidget extends WidgetPane  {
 	public void setup(IMAVController control) {
 		super.setup(control);
 
+		this.disableProperty().bind(state.getConnectedProperty().not());
+
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				Platform.runLater(() -> {

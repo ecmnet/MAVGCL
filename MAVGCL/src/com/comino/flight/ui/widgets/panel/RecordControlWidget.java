@@ -295,6 +295,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
+		this.disableProperty().bind(state.getConnectedProperty().not());
+
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
 				//			AnalysisModelService.getInstance().clearModelList();
