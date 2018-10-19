@@ -124,6 +124,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 				model.grid.clear();
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			} else {
+
 			}
 		});
 

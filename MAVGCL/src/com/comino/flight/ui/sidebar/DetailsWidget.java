@@ -149,7 +149,7 @@ public class DetailsWidget extends WidgetPane {
 
 		task.play();
 
-		// this.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty());
+        this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
 
 	}
 

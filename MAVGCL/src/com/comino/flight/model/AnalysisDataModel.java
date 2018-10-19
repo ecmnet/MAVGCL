@@ -102,6 +102,12 @@ public class AnalysisDataModel {
 		data.put(kf.toLowerCase().hashCode(), value);
 	}
 
+	public void reset(AnalysisDataModelMetaData md) {
+		md.getKeyFigureMap().forEach((i,e) -> {
+			data.put(e.hash,Double.valueOf(0));
+		});
+	}
+
 	private Double val = null;
 
 	@SuppressWarnings("unchecked")
