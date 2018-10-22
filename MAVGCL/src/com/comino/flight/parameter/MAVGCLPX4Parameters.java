@@ -74,7 +74,7 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 
 	private Preferences preferences = null;
 
-	private StateProperties stateProperties =  null;
+	private StateProperties state =  null;
 
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
@@ -96,23 +96,14 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 	private MAVGCLPX4Parameters(IMAVController control) {
 		this.control  = control;
 		this.control.addMAVLinkListener(this);
-		this.stateProperties = StateProperties.getInstance();
+		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
 
 		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
 		this.parameterList = new HashMap<String,ParameterAttributes>();
 
-		StateProperties.getInstance().getConnectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				if(newValue && control.isConnected()) {
-					refreshParameterList(true);
-				}
-			}
-		});
 
-
-		StateProperties.getInstance().getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
+		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue && control.isConnected()) {
@@ -122,21 +113,23 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			}
 		});
 
-		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 				is_reading = false;
-				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
+				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
 					parameterList.clear();
-					stateProperties.getParamLoadedProperty().set(false);
+					state.getParamLoadedProperty().set(false);
 				}
+			} else {
+				refreshParameterList(true);
 			}
 		});
 
 	}
 
 	public void clear() {
-		stateProperties.getParamLoadedProperty().set(false);
+		state.getParamLoadedProperty().set(false);
 		parameterList.clear();
 		property.setValue(null);
 	}
@@ -149,13 +142,13 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			msg.target_component = 1;
 			msg.target_system = 1;
 			control.sendMAVLinkMessage(msg);
-			stateProperties.getParamLoadedProperty().set(!loaded);
+			state.getParamLoadedProperty().set(!loaded);
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 			is_reading = true;
 			timeout = ExecutorService.get().schedule(() -> {
-				stateProperties.getParamLoadedProperty().set(false);
-				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
+				state.getParamLoadedProperty().set(false);
+				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				MSPLogger.getInstance().writeLocalMsg("Timeout reading parameters",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
@@ -193,12 +186,12 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			property.setValue(attributes);
 
 			if(is_reading)
-				stateProperties.getProgressProperty().set((float)msg.param_index/msg.param_count);
+				state.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
 				timeout.cancel(true);
-				stateProperties.getParamLoadedProperty().set(true);
-				stateProperties.getProgressProperty().set(StateProperties.NO_PROGRESS);
+				state.getParamLoadedProperty().set(true);
+				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
 				is_reading = false;
@@ -229,7 +222,7 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			property.setValue(attributes);
 		});
 		Platform.runLater(() -> {
-			stateProperties.getParamLoadedProperty().set(true);
+			state.getParamLoadedProperty().set(true);
 			for(IPX4ParameterRefresh l : refreshListeners)
 				l.refresh();
 		});
@@ -256,7 +249,7 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			property.setValue(o);
 		});
 		Platform.runLater(() -> {
-			stateProperties.getParamLoadedProperty().set(true);
+			state.getParamLoadedProperty().set(true);
 			for(IPX4ParameterRefresh l : refreshListeners)
 				l.refresh();
 		});
