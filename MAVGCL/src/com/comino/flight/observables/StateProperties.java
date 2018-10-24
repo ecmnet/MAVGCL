@@ -107,6 +107,7 @@ public class StateProperties {
 		this.control = control;
         this.logger = MSPLogger.getInstance();
 		simulationProperty.set(control.isSimulation());
+
 		ExecutorService.get().schedule(() -> {
 			isInitializedProperty.set(true);
 		}, 5, TimeUnit.SECONDS);
