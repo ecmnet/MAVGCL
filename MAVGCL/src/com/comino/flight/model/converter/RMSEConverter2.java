@@ -69,20 +69,20 @@ public class RMSEConverter2 extends SourceConverter {
 			kf = data.getValue(kf_val);
 			sp = data.getValue(kf_sp);
 			rmse = list.get(list.size()-1).getValue(kf_name);
-			rmse = rmse + Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
+			rmse = rmse * rmse * frame;
+			rmse = rmse + ((kf - sp ) * (kf - sp ));
 			kf = list.get(list.size()-frame).getValue(kf_val);
 			sp = list.get(list.size()-frame).getValue(kf_sp);
-			rmse = rmse - Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
-
-			return rmse;
+			rmse = rmse - ((kf - sp ) * (kf - sp ));
+			return Math.sqrt(rmse/frame);
 		} else {
 
 		for(int i=list.size()-frame;i<list.size();i++) {
 			kf = list.get(i).getValue(kf_val);
 			sp = list.get(i).getValue(kf_sp);
-			rmse = rmse + Math.sqrt(((kf - sp ) * (kf - sp ))/frame);
+			rmse = rmse + ((kf - sp ) * (kf - sp ));
 		}
-		return rmse;
+		return Math.sqrt(rmse/frame);
 		}
 	}
 
