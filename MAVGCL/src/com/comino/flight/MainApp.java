@@ -142,6 +142,7 @@ public class MainApp extends Application  {
 			int bindport = 14550;
 
 
+
 			Map<String,String> args = getParameters().getNamed();
 
 
@@ -181,9 +182,11 @@ public class MainApp extends Application  {
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
 
+			StateProperties.getInstance(control);
+
+			control.getStatusManager().start();
 
 			MSPLogger.getInstance(control);
-			StateProperties.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			UBXRTCM3Base.getInstance(control, analysisModelService);
 			MAVGCLPX4Parameters.getInstance(control);

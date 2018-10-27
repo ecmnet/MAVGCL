@@ -106,11 +106,13 @@ public class StateProperties {
 	private StateProperties(IMAVController control) {
 		this.control = control;
         this.logger = MSPLogger.getInstance();
-		simulationProperty.set(control.isSimulation());
+
+        simulationProperty.set(control.isSimulation());
 
 		ExecutorService.get().schedule(() -> {
 			isInitializedProperty.set(true);
-		}, 5, TimeUnit.SECONDS);
+			control.getStatusManager().start();
+		}, 4, TimeUnit.SECONDS);
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (o,n) -> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
@@ -125,8 +127,13 @@ public class StateProperties {
 			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_ALERT));
-				control.getCurrentModel().clear();
+
+			} else {
+				control.getStatusManager().reset();
+				System.out.println(control.getCurrentModel().sys.isStatus(Status.MSP_LPOS_VALID)+" "+isLPOSAvailable.get());
 			}
+
+
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
