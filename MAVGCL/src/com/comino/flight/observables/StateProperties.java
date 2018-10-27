@@ -111,7 +111,6 @@ public class StateProperties {
 
 		ExecutorService.get().schedule(() -> {
 			isInitializedProperty.set(true);
-			control.getStatusManager().start();
 		}, 4, TimeUnit.SECONDS);
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (o,n) -> {
@@ -130,7 +129,6 @@ public class StateProperties {
 
 			} else {
 				control.getStatusManager().reset();
-				System.out.println(control.getCurrentModel().sys.isStatus(Status.MSP_LPOS_VALID)+" "+isLPOSAvailable.get());
 			}
 
 
