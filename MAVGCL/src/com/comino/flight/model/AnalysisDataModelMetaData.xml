@@ -1854,6 +1854,13 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Obstacle.X" uom="m" mask="#0.00" key="SLAMOBX">
+		<MSPSource class="slam" field="ox"></MSPSource>
+	</KeyFigure>
+	<KeyFigure desc="Obstacle.Y" uom="m" mask="#0.00" key="SLAMOBY">
+		<MSPSource class="slam" field="oy"></MSPSource>
+	</KeyFigure>
+
 	<!-- Status Flags  -->
 
 	<KeyFigure desc="LPOS valid" uom="" mask="#" key="FLAGLPOS">

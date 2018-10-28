@@ -52,14 +52,15 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private static final int SIZE = 4;
 
 
-	private  Pane   	  			    pane 	   = null;
-	private  Polygon        		    act_dir     = null;
-	private  Polygon        		    plan_dir    = null;
+	private  Pane   	  			pane 	   = null;
+	private  Polygon        		act_dir     = null;
+	private  Polygon        		plan_dir    = null;
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
 	private  Polygon  				vhc         = null;
 	private  Rotate  				vhc_rotate  = null;
-	private  Circle                  projected   = null;
+	private  Circle                 projected   = null;
+	private  Circle                 obstacle    = null;
 
 	private  AnalysisDataModel      model        = null;
 
@@ -94,10 +95,17 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.projected.setCenterY(SIZE/2);
 		this.projected.setRadius(SIZE/2);
 		this.projected.setFill(Color.CORAL);
-
 		this.projected.setVisible(false);
 
-		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected);
+		this.obstacle = new Circle();
+		this.obstacle.setCenterX(SIZE/2);
+		this.obstacle.setCenterY(SIZE/2);
+		this.obstacle.setRadius(SIZE);
+		this.obstacle.setFill(Color.TRANSPARENT);
+		this.obstacle.setStroke(Color.RED);
+		this.obstacle.setVisible(true);
+
+		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected, obstacle);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -140,10 +148,18 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 		}
 
-//		setArrowLength(act_dir,model.getValue("GNDV"));
-//		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
-//		act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
-//		act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
+		if(model.getValue("SLAMOBX") != 0 && model.getValue("SLAMOBY") != 0 ) {
+
+			obstacle.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE/2);
+			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE/2);
+			obstacle.setVisible(true);
+		} else
+			obstacle.setVisible(false);
+
+		//		setArrowLength(act_dir,model.getValue("GNDV"));
+		//		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
+		//		act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
+		//		act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
 //		act_dir.setVisible(true);
 
 
