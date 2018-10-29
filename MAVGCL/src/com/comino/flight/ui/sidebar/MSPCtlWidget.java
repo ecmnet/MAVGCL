@@ -81,7 +81,7 @@ public class MSPCtlWidget extends WidgetPane   {
 	private StateButton enable_offboard;
 
 	@FXML
-	private StateButton enable_jumpback;
+	private StateButton enable_stop;
 
 	@FXML
 	private StateButton enable_avoidance;
@@ -149,12 +149,12 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
-		enable_jumpback.setOnAction((event) ->{
+		enable_stop.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
 
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK))
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -180,7 +180,7 @@ public class MSPCtlWidget extends WidgetPane   {
 			control.sendMAVLinkMessage(msp);
 
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.JUMPBACK;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
 			msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
@@ -317,8 +317,8 @@ public class MSPCtlWidget extends WidgetPane   {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.JUMPBACK,(o,n) -> {
-			enable_jumpback.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.JUMPBACK));
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_STOP,(o,n) -> {
+			enable_stop.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE,(o,n) -> {

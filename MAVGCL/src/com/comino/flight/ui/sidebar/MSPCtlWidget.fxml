@@ -33,7 +33,7 @@
 				<children>
 					<StateButton fx:id="enable_offboard" text="Autopilot"
 						prefWidth="165.0" />
-					<StateButton fx:id="enable_jumpback" text="JumpBack"
+					<StateButton fx:id="enable_stop" text="Stop immediately"
 						prefWidth="165.0" />
 					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"
 						prefWidth="165.0" />
