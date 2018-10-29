@@ -151,7 +151,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		if(model.getValue("SLAMOBX") != 0 && model.getValue("SLAMOBY") != 0 ) {
 
 			obstacle.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE/2);
-			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE/2);
+			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBX"))-SIZE/2);
 			obstacle.setVisible(true);
 		} else
 			obstacle.setVisible(false);
