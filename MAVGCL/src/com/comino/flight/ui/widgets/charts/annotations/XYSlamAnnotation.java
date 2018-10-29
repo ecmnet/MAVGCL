@@ -49,7 +49,8 @@ import javafx.scene.transform.Rotate;
 
 public class XYSlamAnnotation  implements XYAnnotation {
 
-	private static final int SIZE = 4;
+	private static final int SIZE 		= 4;
+	private static final int SIZE_OBS 	= 6;
 
 
 	private  Pane   	  			pane 	   = null;
@@ -98,9 +99,9 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.projected.setVisible(false);
 
 		this.obstacle = new Circle();
-		this.obstacle.setCenterX(SIZE/2);
-		this.obstacle.setCenterY(SIZE/2);
-		this.obstacle.setRadius(SIZE);
+		this.obstacle.setCenterX(SIZE_OBS/2);
+		this.obstacle.setCenterY(SIZE_OBS/2);
+		this.obstacle.setRadius(SIZE_OBS);
 		this.obstacle.setFill(Color.TRANSPARENT);
 		this.obstacle.setStroke(Color.RED);
 		this.obstacle.setVisible(true);
@@ -150,8 +151,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 		if(model.getValue("SLAMOBX") != 0 && model.getValue("SLAMOBY") != 0 ) {
 
-			obstacle.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE/2);
-			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBX"))-SIZE/2);
+			obstacle.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE_OBS/2f);
+			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBX"))-SIZE_OBS/2f);
 			obstacle.setVisible(true);
 		} else
 			obstacle.setVisible(false);
