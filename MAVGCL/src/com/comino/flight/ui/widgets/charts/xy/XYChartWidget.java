@@ -846,7 +846,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				max_x = mList.size();
 
 			slot_tms = System.currentTimeMillis();
-			while(current_x_pt<max_x && (System.currentTimeMillis()-slot_tms)<20) {
+			while(current_x_pt<max_x && (System.currentTimeMillis()-slot_tms)<50) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 

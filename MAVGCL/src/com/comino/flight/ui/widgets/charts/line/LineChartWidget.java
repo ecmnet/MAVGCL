@@ -477,7 +477,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		timeFrame.addListener((v, ov, nv) -> {
-			// TODO: If datasize exceeds current time frame, calculate max - timeframe as x0
+
 			current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 			this.current_x_pt = 0;
 			setXResolution(timeFrame.get());
@@ -488,7 +488,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
-			updateRequest();
+			if(!isDisabled() && !refreshRequest) {
+				refreshRequest = true;
+				Platform.runLater(() -> {
+					updateGraph(refreshRequest,0);
+				});
+			}
 		});
 
 		replay.addListener((v, ov, nv) -> {
@@ -672,7 +677,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@Override
 	public void refreshChart() {
-	//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
+		//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
 		if(!isDisabled())
 			updateRequest();
@@ -730,8 +735,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private void updateRequest() {
 		if(!isDisabled() && !refreshRequest) {
 			refreshRequest = true;
+
 			Platform.runLater(() -> {
 				if(!state.getReplayingProperty().get()) {
+					current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 					updateGraph(refreshRequest,0);
 				} else {
 					updateGraph(refreshRequest,replay.intValue());
@@ -777,7 +784,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				series3.getData().clear();
 			}
 
-	//		pool.invalidateAll();
+			//		pool.invalidateAll();
 
 
 			if(dash.isSelected() && size> 0) {
@@ -793,7 +800,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			// Workaround to force chart refresh
 
-            linechart.getData().clear();
+			linechart.getData().clear();
 			linechart.getData().add(series1);
 			linechart.getData().add(series2);
 			linechart.getData().add(series3);
@@ -812,7 +819,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
 			} else {
 				max_x = size;
-			//	System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
+				//	System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
 			}
 
 			//System.out.println(id+": "+max_x+ " ==> "+max_x);
@@ -828,7 +835,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			slot_tms = System.currentTimeMillis();
 
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
-					(System.currentTimeMillis()-slot_tms) < 20) {
+					(System.currentTimeMillis()-slot_tms) < 50) {
 
 
 				m = dataService.getModelList().get(current_x_pt);
