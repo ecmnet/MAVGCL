@@ -477,6 +477,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		timeFrame.addListener((v, ov, nv) -> {
+			// TODO: If datasize exceeds current time frame, calculate max - timeframe as x0
+			current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 			this.current_x_pt = 0;
 			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
@@ -670,7 +672,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@Override
 	public void refreshChart() {
-		current_x0_pt = dataService.calculateX0IndexByFactor(1);
+	//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
 		if(!isDisabled())
 			updateRequest();
@@ -740,7 +742,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0; int size = dataService.getModelList().size();
+		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0;
 
 		if(isDisabled()) {
 			return;
@@ -775,7 +777,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				series3.getData().clear();
 			}
 
-			pool.invalidateAll();
+	//		pool.invalidateAll();
 
 
 			if(dash.isSelected() && size> 0) {
@@ -791,7 +793,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			// Workaround to force chart refresh
 
-			linechart.getData().clear();
+            linechart.getData().clear();
 			linechart.getData().add(series1);
 			linechart.getData().add(series2);
 			linechart.getData().add(series3);
@@ -823,7 +825,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				setDashboardData(dashboard3,type3, current_x0_pt,current_x1_pt);
 			}
 
-			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size()) {
+			slot_tms = System.currentTimeMillis();
+
+			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
+					(System.currentTimeMillis()-slot_tms) < 20) {
+
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;

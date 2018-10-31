@@ -700,7 +700,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private void updateGraph(boolean refresh, int max_x0) {
 
-		AnalysisDataModel m =null; int max_x  = 0;
+		AnalysisDataModel m =null; int max_x  = 0; long slot_tms;
 
 
 		if(disabledProperty().get()) {
@@ -845,8 +845,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			} else
 				max_x = mList.size();
 
-
-			while(current_x_pt<max_x) {
+			slot_tms = System.currentTimeMillis();
+			while(current_x_pt<max_x && (System.currentTimeMillis()-slot_tms)<20) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
