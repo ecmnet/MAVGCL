@@ -245,7 +245,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 					blink.stop();
 
 					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
-							modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+							modelService.getTotalRecordingTimeMS() / 1000 > 30 ) {
 						try {
 							FileHandler.getInstance().autoSave();
 						} catch (IOException e) {
@@ -307,7 +307,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			} else {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
-						&& modelService.getTotalRecordingTimeMS() / 1000 > 5) {
+						&& modelService.getTotalRecordingTimeMS() / 1000 > 30 ) {
 					recording(false,30);
 					try {
 						FileHandler.getInstance().autoSave();
