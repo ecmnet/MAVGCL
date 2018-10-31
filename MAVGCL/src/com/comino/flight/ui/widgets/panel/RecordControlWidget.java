@@ -73,8 +73,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	private static final int TRIG_ALTHOLD		= 2;
 	private static final int TRIG_POSHOLD 		= 3;
 
-	private static final String[]  TRIG_START_OPTIONS = { "armed", "started", "altHold entered", "posHold entered" };
-	private static final String[]  TRIG_STOP_OPTIONS = { "unarmed", "landed", "altHold left", "posHold left" };
+	private static final String[]  TRIG_START_OPTIONS = { "Armed", "Takeoff", "AltHold entered", "PosHold entered" };
+	private static final String[]  TRIG_STOP_OPTIONS = { "Disarmed", "Landed", "AltHold left", "PosHold left" };
 
 	private static final Integer[] TRIG_DELAY_OPTIONS = { 0, 2, 5, 10, 30 };
 
