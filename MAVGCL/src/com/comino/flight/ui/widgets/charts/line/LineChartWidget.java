@@ -331,7 +331,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
 			zoom_label.setVisible(false);
-			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
+			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue() ;
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 
 			if((x1-x0) > 0.2f)
@@ -738,7 +738,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			Platform.runLater(() -> {
 				if(!state.getReplayingProperty().get()) {
-					current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
+				//	current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 					updateGraph(refreshRequest,0);
 				} else {
 					updateGraph(refreshRequest,replay.intValue());
