@@ -760,7 +760,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(size==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
-			refreshRequest = false;
 
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
@@ -835,7 +834,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			slot_tms = System.currentTimeMillis();
 
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
-					(System.currentTimeMillis()-slot_tms) < 50) {
+					((System.currentTimeMillis()-slot_tms) < 50 || refreshRequest)) {
 
 
 				m = dataService.getModelList().get(current_x_pt);
@@ -910,6 +909,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				set_bounds=false;
 			}
 		}
+	   refreshRequest = false;
 	}
 
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf, int x0, int x1) {
