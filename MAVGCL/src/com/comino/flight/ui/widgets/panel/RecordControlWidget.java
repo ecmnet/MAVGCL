@@ -85,6 +85,9 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	private CheckBox enablemodetrig;
 
 	@FXML
+	private CheckBox enabletestset;
+
+	@FXML
 	private ChoiceBox<String> trigstart;
 
 	@FXML
@@ -92,9 +95,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 	@FXML
 	private ChoiceBox<Integer> trigdelay;
-
-	@FXML
-	private ChoiceBox<Integer> predelay;
 
 	@FXML
 	private Circle isrecording;
@@ -111,8 +111,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
-
-	private long service_up_tms = 0;
 
 	private Timeline blink = null;
 	private boolean toggle = false;
@@ -150,9 +148,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
 		trigdelay.getSelectionModel().select(0);
 		trigdelay.setDisable(true);
-		predelay.getItems().addAll(TRIG_DELAY_OPTIONS);
-		predelay.getSelectionModel().select(0);
-		predelay.setDisable(true);
 
 		recording.disableProperty().bind(
 				state.getConnectedProperty().not()
@@ -193,6 +188,12 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 		});
 
+		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE,false))
+          enabletestset.setDisable(true);
+
+		enabletestset.selectedProperty().addListener((v,o,n) -> {
+			FileHandler.getInstance().setCreateTestResultSet(n.booleanValue());
+		});
 
 		recording.setTooltip(new Tooltip("start/stop recording"));
 
@@ -318,7 +319,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			}
 		});
 
-		this.service_up_tms = System.currentTimeMillis();
 		state.getInitializedProperty().addListener((e,o,n) -> {
 		   update(null,control.getCurrentModel().sys);
 		});

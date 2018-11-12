@@ -42,6 +42,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -109,6 +110,8 @@ public class FileHandler {
 
 	private String lastDir = null;
 
+	private boolean createResultSet = false;
+
 
 	public static FileHandler getInstance() {
 		return handler;
@@ -155,6 +158,10 @@ public class FileHandler {
 			Collections.sort(presetfiles);
 		}
 
+	}
+
+	public void setCreateTestResultSet(boolean flag) {
+		this.createResultSet = flag;
 	}
 
 	public String getName() {
@@ -307,20 +314,31 @@ public class FileHandler {
 
 		new Thread(new Task<Void>() {
 			@Override protected Void call() throws Exception {
-				if(control.isSimulation())
-					return null;
-				name = new SimpleDateFormat("ddMMyy-HHmmss'.mgc'").format(new Date());
+
+//				if(control.isSimulation())
+//					return null;
+
+				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
+				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
-				File f = new File(path+"/"+name);
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+f.getName(),MAV_SEVERITY.MAV_SEVERITY_WARNING);
-				if(f.exists())
-					f.delete();
-				f.createNewFile();
-				Writer writer = new FileWriter(f);
-				FileData data = new FileData(); data.prepareData(modelService,paramService);
-				Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-				gson.toJson(data, writer);
-				writer.close();
+				if(!createResultSet)
+					saveLog(path,name+".mgc");
+				else {
+					String path_result = path+"/"+name;
+					File directory = new File(path_result);
+					if(!directory.exists())
+						directory.mkdir();
+					saveLog(path_result,name+".mgc");
+					File video = new File(path+"/video.mp4");
+					if(video.exists()) {
+						video.renameTo(new File(path_result+"/"+name+".mp4"));
+					}
+					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
+					writer.println("Notes for flight: "+name);
+					writer.close();
+
+				}
 				return null;
 			}
 		}).start();
@@ -417,6 +435,19 @@ public class FileHandler {
 		return f;
 
 	}
+
+	private void saveLog(String path, String name) throws Exception {
+		File f = new File(path+"/"+name+".mgc");
+		if(f.exists())
+			f.delete();
+		f.createNewFile();
+		Writer writer = new FileWriter(f);
+		FileData data = new FileData(); data.prepareData(modelService,paramService);
+		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+		gson.toJson(data, writer);
+		writer.close();
+	}
+
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
