@@ -50,7 +50,7 @@ import javafx.scene.transform.Rotate;
 public class XYSlamAnnotation  implements XYAnnotation {
 
 	private static final int SIZE 		= 4;
-	private static final int SIZE_OBS 	= 6;
+	private static final int SIZE_OBS 	= 3;
 
 
 	private  Pane   	  			pane 	   = null;
