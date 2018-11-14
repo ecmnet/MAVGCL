@@ -100,6 +100,8 @@ import javafx.scene.shape.Rectangle;
 // TODO: Add planned path
 
 public class XYChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
+	
+	private static final int REFRESH_SLOT = 20;
 
 	private static String[][] PRESETS = {
 			{  null		, null      },
@@ -846,7 +848,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				max_x = mList.size();
 
 			slot_tms = System.currentTimeMillis();
-			while(current_x_pt<max_x && (System.currentTimeMillis()-slot_tms)<50) {
+
+			while(current_x_pt<max_x && ((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 

@@ -96,6 +96,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 50;
+	private final static int REFRESH_SLOT   = 20;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype" };
 
@@ -834,7 +835,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			slot_tms = System.currentTimeMillis();
 
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
-					((System.currentTimeMillis()-slot_tms) < 50 || refreshRequest)) {
+					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 
 
 				m = dataService.getModelList().get(current_x_pt);
