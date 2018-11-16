@@ -152,7 +152,7 @@ public class AirWidget extends WidgetPane implements IChartControl {
 
 
 	@Override
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
 	}
 

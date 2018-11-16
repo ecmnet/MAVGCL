@@ -51,7 +51,7 @@ public interface IChartControl {
 	public void refreshChart();
 
 	public KeyFigurePreset getKeyFigureSelection();
-	public void setKeyFigureSeletcion(KeyFigurePreset preset);
+	public void setKeyFigureSelection(KeyFigurePreset preset);
 
 
 }

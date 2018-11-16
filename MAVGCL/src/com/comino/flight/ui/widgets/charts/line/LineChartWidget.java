@@ -522,12 +522,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
 			mode.setModeType(nv.intValue());
-			updateRequest();
 		});
 	}
 
 
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
 		Platform.runLater(() -> {
 			if(preset!=null) {
@@ -535,7 +534,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
 				type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
 				group.getSelectionModel().select(preset.getGroup());
-				updateRequest();
+				replay.set(0); updateRequest();
 			}
 		});
 	}

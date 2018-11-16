@@ -100,7 +100,7 @@ import javafx.scene.shape.Rectangle;
 // TODO: Add planned path
 
 public class XYChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
-	
+
 	private static final int REFRESH_SLOT = 20;
 
 	private static String[][] PRESETS = {
@@ -672,7 +672,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		}
 	}
 
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
 		Platform.runLater(() -> {
 			if(preset!=null) {

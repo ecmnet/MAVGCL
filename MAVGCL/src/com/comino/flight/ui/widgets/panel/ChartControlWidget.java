@@ -342,7 +342,7 @@ public class ChartControlWidget extends WidgetPane  {
 				if(pr != null) {
 					this.presets.clear(); this.presets.putAll(pr);
 					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
-						charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+						charts.get(preset.getKey()).setKeyFigureSelection(preset.getValue());
 					}
 				}
 				break;
@@ -351,7 +351,7 @@ public class ChartControlWidget extends WidgetPane  {
 				if(pr != null) {
 					this.presets.clear(); this.presets.putAll(pr);
 					for(Entry<Integer, KeyFigurePreset> preset : presets.entrySet()) {
-						charts.get(preset.getKey()).setKeyFigureSeletcion(preset.getValue());
+						charts.get(preset.getKey()).setKeyFigureSelection(preset.getValue());
 					}
 				}
 				break;
