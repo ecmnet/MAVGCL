@@ -323,13 +323,13 @@ public class FileHandler {
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				if(!createResultSet)
-					saveLog(path,name+".mgc");
+					saveLog(path,name);
 				else {
 					String path_result = path+"/"+name;
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
-					saveLog(path_result,name+".mgc");
+					saveLog(path_result,name);
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {
 						video.renameTo(new File(path_result+"/"+name+".mp4"));
