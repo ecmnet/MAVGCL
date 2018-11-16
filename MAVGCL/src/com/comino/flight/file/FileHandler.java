@@ -90,7 +90,7 @@ public class FileHandler {
 
 	private static final String BASEPATH = "/.MAVGCL";
 	private static final String TMPFILE  =  "/logtmp.tmp";
-	private static final int MAX_PRESETS = 10;
+	private static final int MAX_PRESETS = 15;
 
 	private static FileHandler handler = null;
 
