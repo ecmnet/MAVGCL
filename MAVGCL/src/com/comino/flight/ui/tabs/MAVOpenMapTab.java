@@ -609,7 +609,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	}
 
 
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
 	}
 

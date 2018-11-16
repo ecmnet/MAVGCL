@@ -330,7 +330,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	}
 
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
 	}
 

@@ -290,7 +290,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	}
 
 	@Override
-	public void setKeyFigureSeletcion(KeyFigurePreset preset) {
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
 	}
 
 }
