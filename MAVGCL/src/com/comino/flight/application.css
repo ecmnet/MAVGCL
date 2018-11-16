@@ -368,6 +368,30 @@
 	-fx-progress-color: white;
 }
 
+.label:disabled, .label:disabled > * {
+  -fx-opacity: 0.8 ;
+}
+
+.button:disabled, .button:disabled > * {
+  -fx-opacity: 0.8 ;
+}
+
+.combo-box:disabled, .combo-box:disabled > * {
+  -fx-opacity: 0.9 ;
+}
+
+.choice-box:disabled, .choice-box:disabled > * {
+  -fx-opacity: 0.9 ;
+}
+
+.spinner:disabled, .spinner:disabled > * {
+  -fx-opacity: 0.9 ;
+}
+
+.text-field:disabled, .text-field:disabled > * {
+  -fx-opacity: 0.9 ;
+}
+
 .spinner {
     -fx-border-insets: 0.0px;
     -fx-control-inner-background: #606060;
