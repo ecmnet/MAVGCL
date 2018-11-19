@@ -166,6 +166,8 @@ public class KeyFigureMetaData {
 				value = mfield_field.getDouble(mclass);
 			} catch(NoSuchFieldException e) {
 				return value;
+			} catch(NullPointerException e) {
+				return value;
 			}
 		}
 		if(source.converter != null)
