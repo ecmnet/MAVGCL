@@ -65,7 +65,7 @@ public class ProgressWidget extends Pane   {
 		}
 
 		out = new Timeline(new KeyFrame(
-				Duration.millis(750),
+				Duration.millis(250),
 				ae -> progress.setVisible(false)));
 
 	}
@@ -82,9 +82,9 @@ public class ProgressWidget extends Pane   {
 				if(nv.floatValue() > -1) {
 					progress.setVisible(true);
 					progress.setProgress(nv.floatValue());
-				} else {
-					if(progress.getProgress()>0.9)
+					if(progress.getProgress()>0.95f)
 						progress.setProgress(1);
+				} else {
 					out.play();
 				}
 			});
