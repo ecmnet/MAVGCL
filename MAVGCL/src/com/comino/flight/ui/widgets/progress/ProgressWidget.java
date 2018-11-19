@@ -76,7 +76,7 @@ public class ProgressWidget extends Pane   {
 	private void initialize() {
 		progress.prefWidthProperty().bind(this.widthProperty());
 		progress.setVisible(false);
-		progress.setStyle("-fx-accent: LIGHTSKYBLUE;");
+		progress.setStyle("-fx-accent: white;");
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
 			Platform.runLater(() -> {
 				if(nv.floatValue() > -1) {
