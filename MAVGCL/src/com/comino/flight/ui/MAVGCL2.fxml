@@ -76,7 +76,7 @@
 
 				<ProgressWidget maxHeight="15">
 					<StackPane.margin>
-						<Insets right="0.0" left="5.0" top="1.0" />
+						<Insets right="0.0" left="5.0" top="-2" />
 					</StackPane.margin>
 				</ProgressWidget>
 
