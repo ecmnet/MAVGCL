@@ -500,7 +500,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
 				if(nv.intValue()<=1) {
-					current_x0_pt =  0; current_x1_pt = 0;
 					updateGraph(true,1);
 				} else
 					updateGraph(false,nv.intValue());
@@ -738,7 +737,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			Platform.runLater(() -> {
 				if(!state.getReplayingProperty().get()) {
-				//	current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
+					//	current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 					updateGraph(refreshRequest,0);
 				} else {
 					updateGraph(refreshRequest,replay.intValue());
@@ -812,8 +811,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(current_x_pt<size && size>0 ) {
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  || isPaused) {
-				if(max_x0 > 0)
+				if(max_x0 > 0) {
 					max_x = max_x0;
+				}
 				else
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
 			} else {
@@ -909,7 +909,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				set_bounds=false;
 			}
 		}
-	   refreshRequest = false;
+		refreshRequest = false;
 	}
 
 	private void setDashboardData(DashBoardAnnotation d, KeyFigureMetaData kf, int x0, int x1) {
