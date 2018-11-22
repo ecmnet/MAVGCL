@@ -82,7 +82,7 @@ public class ProgressWidget extends Pane   {
 				if(nv.floatValue() > -1) {
 					progress.setVisible(true);
 					progress.setProgress(nv.floatValue());
-					if(progress.getProgress()>0.95f)
+					if(progress.getProgress()>0.99f)
 						progress.setProgress(1);
 				} else {
 					out.play();

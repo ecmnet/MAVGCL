@@ -224,6 +224,7 @@ public class ChartControlWidget extends WidgetPane  {
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
 				new Thread(() -> {
+					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue()) / 1000000f));
 					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
@@ -232,6 +233,7 @@ public class ChartControlWidget extends WidgetPane  {
 					}
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
+						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );
 						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f);
 							for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 								if(chart.getValue().getReplayProperty()!=null)
@@ -242,6 +244,7 @@ public class ChartControlWidget extends WidgetPane  {
 						try { Thread.sleep(50); } catch (InterruptedException e) {	}
 					}
 					modelService.setReplaying(false);
+					state.getProgressProperty().set(-1);
 					state.getReplayingProperty().set(false);
 					state.getCurrentUpToDate().set(true);
 
