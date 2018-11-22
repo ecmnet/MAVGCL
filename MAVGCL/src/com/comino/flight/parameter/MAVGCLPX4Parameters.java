@@ -132,6 +132,8 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 		state.getParamLoadedProperty().set(false);
 		parameterList.clear();
 		property.setValue(null);
+		if(timeout!=null)
+			timeout.cancel(true);
 	}
 
 	public void refreshParameterList(boolean loaded) {
@@ -146,13 +148,15 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 			is_reading = true;
+			if(timeout!=null)
+				timeout.cancel(true);
 			timeout = ExecutorService.get().schedule(() -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				MSPLogger.getInstance().writeLocalMsg("Timeout reading parameters",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
-			}, 20, TimeUnit.SECONDS);
+			}, 10, TimeUnit.SECONDS);
 		}
 	}
 

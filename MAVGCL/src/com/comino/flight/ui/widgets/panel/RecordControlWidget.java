@@ -177,6 +177,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 
 			if(!state.getConnectedProperty().get())
 				MAVGCLPX4Parameters.getInstance().clear();
+			else
+				MAVGCLPX4Parameters.getInstance().refreshParameterList(true);
 
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
