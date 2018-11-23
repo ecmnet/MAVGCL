@@ -104,6 +104,8 @@ public class ParameterWidget extends WidgetPane  {
 
 	private List<ParamItem> items = new ArrayList<ParamItem>();
 
+	private StateProperties state = null;
+
 	public ParameterWidget() {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterWidget.fxml"));
@@ -120,6 +122,8 @@ public class ParameterWidget extends WidgetPane  {
 
 	@FXML
 	public void initialize() {
+
+		state = StateProperties.getInstance();
 
 		params = MAVGCLPX4Parameters.getInstance();
 
@@ -347,6 +351,12 @@ public class ParameterWidget extends WidgetPane  {
 						});
 					}
 				}
+
+				state.getLandedProperty().addListener((v,ov,nv) -> {
+					if(att.reboot_required) {
+						editor.setDisable(!nv.booleanValue());
+					}
+				});
 			}
 
 			this.editor.setPrefWidth(85);
