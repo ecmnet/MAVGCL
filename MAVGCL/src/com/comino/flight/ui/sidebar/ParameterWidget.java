@@ -357,6 +357,7 @@ public class ParameterWidget extends WidgetPane  {
 						editor.setDisable(!nv.booleanValue());
 					}
 				});
+				editor.setDisable(!state.getLandedProperty().get());
 			}
 
 			this.editor.setPrefWidth(85);
