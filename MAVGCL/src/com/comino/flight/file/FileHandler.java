@@ -72,6 +72,7 @@ import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mav.control.IMAVController;
 import com.comino.msp.log.MSPLogger;
+import com.comino.msp.model.DataModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -315,6 +316,8 @@ public class FileHandler {
 		new Thread(new Task<Void>() {
 			@Override protected Void call() throws Exception {
 
+				DataModel model = control.getCurrentModel();
+
 //				if(control.isSimulation())
 //					return null;
 
@@ -336,6 +339,11 @@ public class FileHandler {
 					}
 					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
 					writer.println("Notes for flight: "+name);
+					if(model.sys.build!=null)
+					  writer.println("MSP Build: "+model.sys.build);
+					if(model.sys.version!=null)
+						  writer.println("Version: "+model.sys.version);
+					writer.println("============================================================================================");
 					writer.close();
 
 				}
