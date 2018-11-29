@@ -12,12 +12,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	19/11/2018
+**Development Status:** Last updated 	29/11/2018
 
 - *.mgc files now store parameter settings in addition
 - 'Replay' recorded or saved data in realtime
 - EKF2 innovations key figures added (ULOG source)
 - Marker for nearest ObstaclePoint in XY view
+- UI enhancements
 
 **Features:**
 
