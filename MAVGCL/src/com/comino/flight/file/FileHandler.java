@@ -318,8 +318,8 @@ public class FileHandler {
 
 				DataModel model = control.getCurrentModel();
 
-//				if(control.isSimulation())
-//					return null;
+				if(control.isSimulation())
+					return null;
 
 				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
