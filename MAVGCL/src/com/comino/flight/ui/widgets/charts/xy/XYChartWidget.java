@@ -606,7 +606,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
-				grid.invalidate();
+				grid.invalidate(true);
 				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
@@ -617,6 +617,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 				endPosition1.setVisible(true);
 				sigma1.setVisible(true);
+				grid.invalidate(false);
 			}
 
 			rotation.setDisable(nv.booleanValue());
@@ -721,7 +722,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if(refresh) {
 
-			grid.invalidate();
+			grid.invalidate(isLocalPositionSelected(type1_x.hash,type1_y.hash));
 
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;

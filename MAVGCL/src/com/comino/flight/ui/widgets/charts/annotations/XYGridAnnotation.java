@@ -55,6 +55,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 	private Map<Integer,Pane> blocks    = null;
 	private DataModel         model     = null;
 
+	private boolean        enabled = false;
+
 
 	public XYGridAnnotation() {
 		this.pane = new Pane();
@@ -88,22 +90,22 @@ public class XYGridAnnotation  implements XYAnnotation {
 		for(int i=0;i<pane.getChildren().size();i++)
 			pane.getChildren().get(i).setVisible(false);
 
-		if(model == null || model.grid==null || !model.grid.hasBlocked())
+		if(model == null || model.grid==null || !model.grid.hasBlocked() || !enabled)
 			return;
 
-			model.grid.getData().forEach((i,b) -> {
+		model.grid.getData().forEach((i,b) -> {
 
-				// TODO: 3D Extension: Let user select z-plane to display in XY View
-				if(b.z!=0)
-					return;
+			// TODO: 3D Extension: Let user select z-plane to display in XY View
+			if(b.z!=0)
+				return;
 
-				Pane bp = getBlockPane(i,b);
-				bp.setLayoutX(xAxis.getDisplayPosition(b.y));
-				bp.setLayoutY(yAxis.getDisplayPosition(b.x+model.grid.getResolution()));
-				bp.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
-						yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
-				bp.setVisible( true);
-			});
+			Pane bp = getBlockPane(i,b);
+			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
+			bp.setLayoutY(yAxis.getDisplayPosition(b.x+model.grid.getResolution()));
+			bp.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
+					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
+			bp.setVisible( true);
+		});
 
 
 		indicator.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
@@ -113,11 +115,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 		indicator.setVisible(true);
 	}
 
-	public void invalidate() {
+	public void invalidate(boolean enable) {
 		blocks.forEach((i,p) -> {
 			p.setVisible(false);
 		});
 		indicator.setVisible(false);
+		enabled = enable;
 	}
 
 	public void clear() {
