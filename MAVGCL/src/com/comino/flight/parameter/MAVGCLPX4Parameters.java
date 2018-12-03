@@ -263,6 +263,21 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 		return asSortedList(this.parameterList);
 	}
 
+	public List<ParameterAttributes> getChanged() {
+		List<ParameterAttributes> list = new ArrayList<ParameterAttributes>();
+		parameterList.forEach((s,o) -> {
+			if(o.value != o.default_val && o.default_val!=0 && o.value!=2143289344)
+				list.add(o);
+		});
+		java.util.Collections.sort(list, new Comparator<ParameterAttributes>() {
+			@Override
+			public int compare(ParameterAttributes o1, ParameterAttributes o2) {
+				return o1.name.compareTo(o2.name);
+			}
+		});
+		return list;
+	}
+
 	public ParameterAttributes get(String name) {
 		return parameterList.get(name);
 	}

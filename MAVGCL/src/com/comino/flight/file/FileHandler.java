@@ -328,6 +328,7 @@ public class FileHandler {
 				if(!createResultSet)
 					saveLog(path,name);
 				else {
+					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
 					String path_result = path+"/"+name;
 					File directory = new File(path_result);
 					if(!directory.exists())
@@ -343,7 +344,15 @@ public class FileHandler {
 					  writer.println("MSP Build: "+model.sys.build);
 					if(model.sys.version!=null)
 						  writer.println("Version: "+model.sys.version);
-					writer.println("============================================================================================");
+					writer.println("==========================================================================================");
+					writer.format("%s\t\t %-20s\t\t\t%-20s\n", "Changed Params","Value:","Default:");
+					writer.println("==========================================================================================");
+					params_changed.forEach((o) -> {
+						// TODO: Better formatting
+						writer.format("%s\t\t %-20."+o.decimals+"f\t\t\t%-20."+o.decimals+"f\n", o.name, o.value, o.default_val);
+
+					});
+					writer.println("==========================================================================================");
 					writer.close();
 
 				}

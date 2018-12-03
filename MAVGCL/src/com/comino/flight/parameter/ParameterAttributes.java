@@ -45,7 +45,7 @@ public class ParameterAttributes  implements Comparable<ParameterAttributes> {
 	public double  value     = 0;
 	public double  increment = 0;
 	public int     vtype     = 0;
-	public int     decimals  = 3;
+	public int     decimals  = 0;
 	public String  name = null;
 	public String  type = null;
 	public String  description = null;

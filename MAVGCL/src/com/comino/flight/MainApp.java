@@ -368,6 +368,12 @@ public class MainApp extends Application  {
 		//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
 		m_dump.setOnAction(event -> {
 			FileHandler.getInstance().dumpUlogFields();
+//			try {
+//				FileHandler.getInstance().autoSave();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 		});
 
 		m_about.setOnAction(event -> {
