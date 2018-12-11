@@ -407,7 +407,8 @@ public class ParameterWidget extends WidgetPane  {
 									sendParameter(att,val);
 									checkDefaultOf(editor,val);
 								} else {
-									logger.writeLocalMsg(att.name+" = "+val+" is out of bounds ("+att.min_val+","+att.max_val+"). Not saved",
+									logger.writeLocalMsg(att.name+" = "+val+" is out of bounds ("+format(att.min_val,att.decimals)+
+											","+format(att.max_val,att.decimals)+"). Not saved",
 											MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 									setValueOf(editor,att.value);
 								}
