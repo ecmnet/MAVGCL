@@ -46,6 +46,7 @@ import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
+import com.comino.flight.MainApp;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
@@ -66,10 +67,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -81,6 +86,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 
 public class ParameterWidget extends WidgetPane  {
@@ -384,8 +391,24 @@ public class ParameterWidget extends WidgetPane  {
 								checkDefaultOf(editor,val);
 							}
 							else {
-								logger.writeLocalMsg(att.name+" is out of bounds ("+att.min_val+","+att.max_val+")",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+
+								Alert alert = new Alert(AlertType.CONFIRMATION,
+										"Setting "+att.name+" to "+val+" is out of bounds (Min: "+att.min_val+", Max: "+att.max_val+").\nForce saving?",
+										ButtonType.YES, ButtonType.NO);
+
+								alert.getDialogPane().getStylesheets().add(MainApp.class.getResource("application.css").toExternalForm());
+								alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
+
+								setDefaultButton(alert, ButtonType.NO).showAndWait();
+
+								if (alert.getResult() == ButtonType.YES) {
+									sendParameter(att,val);
+									checkDefaultOf(editor,val);
+								} else {
+									logger.writeLocalMsg(att.name+" = "+val+" is out of bounds ("+att.min_val+","+att.max_val+"). Not saved",
+											MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 								setValueOf(editor,att.value);
+								}
 							}
 						}
 					} catch(NumberFormatException e) {
@@ -511,4 +534,11 @@ public class ParameterWidget extends WidgetPane  {
 			});
 		}
 	}
+
+	private static Alert setDefaultButton ( Alert alert, ButtonType defBtn ) {
+		   DialogPane pane = alert.getDialogPane();
+		   for ( ButtonType t : alert.getButtonTypes() )
+		      ( (Button) pane.lookupButton(t) ).setDefaultButton( t == defBtn );
+		   return alert;
+		}
 }

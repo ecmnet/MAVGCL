@@ -34,6 +34,7 @@
 package com.comino.flight;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.prefs.Preferences;
@@ -60,6 +61,7 @@ import com.comino.mav.control.impl.MAVSimController;
 import com.comino.mav.control.impl.MAVUdpController;
 import com.comino.msp.log.MSPLogger;
 import com.comino.msp.model.DataModel;
+import com.comino.msp.utils.ExecutorService;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -135,13 +137,13 @@ public class MainApp extends Application  {
 	public void init() throws Exception {
 		try {
 
+			ExecutorService.create();
+
 			FXMLLoadHelper.setApplication(this);
 
 			String peerAddress = null;
 			int peerport = 14555;
 			int bindport = 14550;
-
-
 
 			Map<String,String> args = getParameters().getNamed();
 
@@ -215,6 +217,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void start(Stage primaryStage) {
+		Locale.setDefault(Locale.ENGLISH);
 		try {
 			this.primaryStage = primaryStage;
 			this.primaryStage.setTitle("MAVGCL Analysis");

@@ -203,6 +203,16 @@
 	 -fx-text-fill: #F0F0F0;
 }
 
+.button:default {
+	 -fx-background-color: #906060;
+	 -fx-text-fill: #F0F0F0;
+}
+
+.button:default:hover {
+	 -fx-background-color: #A06060;
+	 -fx-text-fill: #F0F0F0;
+}
+
 .button:hover {
 	-fx-background-color: #505058;
 }
