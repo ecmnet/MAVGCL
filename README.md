@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	03/12/2018
+**Development Status:** Last updated 	11/12/2018
 
 - *.mgc files now store parameter settings in addition
 - 'Replay' recorded or saved data in realtime
