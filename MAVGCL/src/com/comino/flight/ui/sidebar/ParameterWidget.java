@@ -366,7 +366,7 @@ public class ParameterWidget extends WidgetPane  {
 				});
 
 				if(att.reboot_required)
-				 editor.setDisable(!state.getLandedProperty().get());
+					editor.setDisable(!state.getLandedProperty().get());
 			}
 
 			this.editor.setPrefWidth(85);
@@ -393,7 +393,9 @@ public class ParameterWidget extends WidgetPane  {
 							else {
 
 								Alert alert = new Alert(AlertType.CONFIRMATION,
-										"Setting "+att.name+" to "+val+" is out of bounds (Min: "+att.min_val+", Max: "+att.max_val+").\nForce saving?",
+										att.name+" is out of bounds "+
+								        "(Min: "+format(att.min_val,att.decimals)+", Max: "+format(att.max_val,att.decimals)+").\n"+
+										"Force saving ?",
 										ButtonType.YES, ButtonType.NO);
 
 								alert.getDialogPane().getStylesheets().add(MainApp.class.getResource("application.css").toExternalForm());
@@ -407,7 +409,7 @@ public class ParameterWidget extends WidgetPane  {
 								} else {
 									logger.writeLocalMsg(att.name+" = "+val+" is out of bounds ("+att.min_val+","+att.max_val+"). Not saved",
 											MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-								setValueOf(editor,att.value);
+									setValueOf(editor,att.value);
 								}
 							}
 						}
@@ -416,6 +418,14 @@ public class ParameterWidget extends WidgetPane  {
 					}
 				}
 			});
+		}
+
+		private String format(double value, int decimals) {
+			if(value!=Double.MAX_VALUE && value!= -Double.MAX_VALUE) {
+				BigDecimal bd = new BigDecimal(value).setScale(decimals,BigDecimal.ROUND_HALF_UP);
+				return bd.toPlainString();
+			}
+			return "NaN";
 		}
 
 		private void sendParameter(ParameterAttributes att, float val) {
@@ -536,9 +546,9 @@ public class ParameterWidget extends WidgetPane  {
 	}
 
 	private static Alert setDefaultButton ( Alert alert, ButtonType defBtn ) {
-		   DialogPane pane = alert.getDialogPane();
-		   for ( ButtonType t : alert.getButtonTypes() )
-		      ( (Button) pane.lookupButton(t) ).setDefaultButton( t == defBtn );
-		   return alert;
-		}
+		DialogPane pane = alert.getDialogPane();
+		for ( ButtonType t : alert.getButtonTypes() )
+			( (Button) pane.lookupButton(t) ).setDefaultButton( t == defBtn );
+		return alert;
+	}
 }
