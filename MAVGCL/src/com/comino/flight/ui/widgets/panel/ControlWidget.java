@@ -103,6 +103,8 @@ public class ControlWidget extends WidgetPane  {
 			parameters.setDisable(!n.booleanValue());
 		});
 
+		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
+
 
 	}
 
