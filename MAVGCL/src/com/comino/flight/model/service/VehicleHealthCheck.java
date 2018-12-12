@@ -210,6 +210,10 @@ public class VehicleHealthCheck {
 			checkFailed("IO SafetyBreaker set");
 		}
 
+		if(parameters.get("RTL_RETURN_ALT")!=null && parameters.get("RTL_RETURN_ALT").value != 1.0) {
+			checkFailed("Return altitude not set to 1.0m");
+		}
+
 		// TODO:...add more checks here
 
 

@@ -336,7 +336,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					//		}
 				}
 
-				if(!control.isSimulation())
+				if(model.sys.isStatus(Status.MSP_PROXY))
 					health.check(model);
 
 				current.setValue("MAVGCLPERF", perf);
