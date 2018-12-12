@@ -140,9 +140,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public void startConverter() {
-		Thread c = new Thread(new CombinedConverter());
-		c.setName("Combined model converter");
-		c.start();
+//		Thread c = new Thread(new CombinedConverter());
+//		c.setName("Combined model converter");
+//		c.start();
+		ExecutorService.submit(new CombinedConverter());
 	}
 
 	public void registerListener(ICollectorRecordingListener l) {
