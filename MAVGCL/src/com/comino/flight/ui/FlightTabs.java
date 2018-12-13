@@ -188,7 +188,7 @@ public class FlightTabs extends Pane {
 		});
 
 		xtanalysistab.setDisable(false);
-		control.getCollector().clearModelList();
+
 	}
 
 }

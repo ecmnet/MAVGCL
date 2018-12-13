@@ -965,7 +965,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		if(frame_secs > 60)
 			frame_secs = 60;
 
-		current_x0_pt = control.getCollector().calculateX0Index(1);
+		current_x0_pt = dataService.calculateX0Index(1);
 		setScaling(scale);
 
 		updateRequest();
