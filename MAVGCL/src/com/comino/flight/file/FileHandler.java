@@ -328,16 +328,14 @@ public class FileHandler {
 				if(!createResultSet)
 					saveLog(path,name);
 				else {
-					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
+
 					String path_result = path+"/"+name;
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
 					saveLog(path_result,name);
-					File video = new File(path+"/video.mp4");
-					if(video.exists()) {
-						video.renameTo(new File(path_result+"/"+name+".mp4"));
-					}
+
+					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
 					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
 					writer.println("Notes for flight: "+name);
 					if(model.sys.build!=null)
@@ -345,15 +343,19 @@ public class FileHandler {
 					if(model.sys.version!=null)
 						  writer.println("Version: "+model.sys.version);
 					writer.println("==========================================================================================");
-					writer.format("%s\t\t %-20s\t\t\t%-20s\n", "Changed Params","Value:","Default:");
+					writer.format("%-30s %-20s%-20s\n", "Changed Params","Current:","Default:");
 					writer.println("==========================================================================================");
 					params_changed.forEach((o) -> {
-						// TODO: Better formatting
-						writer.format("%s\t\t %-20."+o.decimals+"f\t\t\t%-20."+o.decimals+"f\n", o.name, o.value, o.default_val);
+						writer.format("%-30s %-20."+o.decimals+"f%-20."+o.decimals+"f\n", o.name, o.value, o.default_val);
 
 					});
 					writer.println("==========================================================================================");
 					writer.close();
+
+					File video = new File(path+"/video.mp4");
+					if(video.exists()) {
+						video.renameTo(new File(path_result+"/"+name+".mp4"));
+					}
 
 				}
 				return null;
