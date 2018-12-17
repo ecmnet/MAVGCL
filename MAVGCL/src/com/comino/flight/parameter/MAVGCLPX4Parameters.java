@@ -33,6 +33,8 @@
 
 package com.comino.flight.parameter;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -266,7 +268,8 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 	public List<ParameterAttributes> getChanged() {
 		List<ParameterAttributes> list = new ArrayList<ParameterAttributes>();
 		parameterList.forEach((s,o) -> {
-			if(o.value != o.default_val && o.default_val!=0 && o.value!=2143289344)
+			double diff = BigDecimal.valueOf(o.value - o.default_val).setScale(o.decimals, RoundingMode.HALF_UP).doubleValue();
+			if(diff != 0 && o.default_val!=0 && o.value!=2143289344)
 				list.add(o);
 		});
 		java.util.Collections.sort(list, new Comparator<ParameterAttributes>() {
