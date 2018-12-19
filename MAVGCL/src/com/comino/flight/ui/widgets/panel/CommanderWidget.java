@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.panel;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_hil_gps;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.FXMLLoadHelper;
@@ -66,9 +67,6 @@ public class CommanderWidget extends WidgetPane  {
 
 	@FXML
 	private Button rtl_command;
-
-	@FXML
-	private Button set_home;
 
 	@FXML
 	private Button emergency;
@@ -161,17 +159,6 @@ public class CommanderWidget extends WidgetPane  {
 
 		});
 
-		set_home.disableProperty().bind(StateProperties.getInstance().getLPOSAvailableProperty().not());
-		set_home.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_HOME,(cmd,result) -> {
-				if(result==0) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] Home set to preferred global pos.",
-							MAV_SEVERITY.MAV_SEVERITY_INFO);
-				}
-			},0,0,0,0,MAVPreferences.getInstance().getFloat(MAVPreferences.REFLAT, 0),
-					  MAVPreferences.getInstance().getFloat(MAVPreferences.REFLON, 0),500 );
-		});
-
 		emergency.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
 				if(result==0) {
@@ -180,11 +167,11 @@ public class CommanderWidget extends WidgetPane  {
 				}
 			},0, 21196 );
 		});
-	}
+}
 
-	public void setup(IMAVController control) {
-		this.model = control.getCurrentModel();
-		this.control = control;
-	}
+public void setup(IMAVController control) {
+	this.model = control.getCurrentModel();
+	this.control = control;
+}
 
 }
