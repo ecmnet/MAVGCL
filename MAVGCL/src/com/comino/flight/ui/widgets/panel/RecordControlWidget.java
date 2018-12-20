@@ -155,8 +155,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				);
 
 		recording.setOnMousePressed(event -> {
-			if(!recording.selectedProperty().get())
-			  enablemodetrig.selectedProperty().set(false);
+			enablemodetrig.selectedProperty().set(false);
 		});
 
 		recording.selectedProperty().set(false);
@@ -191,7 +190,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		});
 
 		if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE,false))
-          enabletestset.setDisable(true);
+			enabletestset.setDisable(true);
 
 		enabletestset.selectedProperty().addListener((v,o,n) -> {
 			FileHandler.getInstance().setCreateTestResultSet(n.booleanValue());
@@ -207,8 +206,8 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 			trigstop.setDisable(oldvalue);
 			trigstart.setDisable(oldvalue);
 
-//			if(modelService!=null && newvalue.booleanValue() && modelService.isCollecting())
-//				recording(false,0);
+			//			if(modelService!=null && newvalue.booleanValue() && modelService.isCollecting())
+			//				recording(false,0);
 
 		});
 
@@ -298,7 +297,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
-	//	this.disableProperty().bind(state.getConnectedProperty().not());
+		//	this.disableProperty().bind(state.getConnectedProperty().not());
 
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
@@ -322,7 +321,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		});
 
 		state.getInitializedProperty().addListener((e,o,n) -> {
-		   update(null,control.getCurrentModel().sys);
+			update(null,control.getCurrentModel().sys);
 		});
 
 	}
