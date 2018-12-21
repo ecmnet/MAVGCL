@@ -246,9 +246,15 @@ public class FileHandler {
 							reader = new BufferedReader(new InputStreamReader(raw));
 							listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 							try {
-							   modelService.setModelList(gson.fromJson(reader,listType));
+								modelService.clearModelList();
+								modelService.setModelList(gson.fromJson(reader,listType));
+
 							} catch(Exception e1) {
 								MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
+								reader.close();
+								name = "";
+								state.getProgressProperty().set(StateProperties.NO_PROGRESS);
+								return null;
 							}
 						}
 						reader.close();
@@ -288,15 +294,15 @@ public class FileHandler {
 				@Override protected Void call() throws Exception {
 					if(file.getName().endsWith("mgc")) {
 						try {
-						Writer writer = new FileWriter(file);
-						FileData data = new FileData(); data.prepareData(modelService,paramService);
-						Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
-						stage.getScene().setCursor(Cursor.WAIT);
-						gson.toJson(data, writer);
-						writer.close();
-						stage.getScene().setCursor(Cursor.DEFAULT);
-						StateProperties.getInstance().getLogLoadedProperty().set(true);
-						name = file.getName();
+							Writer writer = new FileWriter(file);
+							FileData data = new FileData(); data.prepareData(modelService,paramService);
+							Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
+							stage.getScene().setCursor(Cursor.WAIT);
+							gson.toJson(data, writer);
+							writer.close();
+							stage.getScene().setCursor(Cursor.DEFAULT);
+							StateProperties.getInstance().getLogLoadedProperty().set(true);
+							name = file.getName();
 						} catch(Exception e) {
 							stage.getScene().setCursor(Cursor.DEFAULT);
 						}
@@ -339,9 +345,9 @@ public class FileHandler {
 					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
 					writer.println("Notes for flight: "+name);
 					if(model.sys.build!=null)
-					  writer.println("MSP Build: "+model.sys.build);
+						writer.println("MSP Build: "+model.sys.build);
 					if(model.sys.version!=null)
-						  writer.println("Version: "+model.sys.version);
+						writer.println("Version: "+model.sys.version);
 					writer.println("==========================================================================================");
 					writer.format("%-30s %-20s%-20s\n", "Changed Params","Current:","Default:");
 					writer.println("==========================================================================================");
@@ -434,13 +440,13 @@ public class FileHandler {
 		Collections.sort(sortedKeys);
 		sortedKeys.forEach((e) -> {
 			System.out.print(e);
-//						AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
-//							if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
-//								if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
-//									System.out.print("\t\t\t\t=> mapped to "+k.desc1);
-//								}
-//							}
-//						});
+			//						AnalysisDataModelMetaData.getInstance().getKeyFigures().forEach((k) -> {
+			//							if(k.sources.get(KeyFigureMetaData.ULG_SOURCE)!=null) {
+			//								if(k.sources.get(KeyFigureMetaData.ULG_SOURCE).field.equals(e)) {
+			//									System.out.print("\t\t\t\t=> mapped to "+k.desc1);
+			//								}
+			//							}
+			//						});
 			System.out.println();
 		});
 	}
