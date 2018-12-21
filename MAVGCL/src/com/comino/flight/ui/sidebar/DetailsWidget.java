@@ -167,7 +167,8 @@ public class DetailsWidget extends WidgetPane {
 			p.setPadding(new Insets(0, 2, 0, 2));
 			this.kf = meta.getMetaData(k);
 			if (kf == null) {
-				grid.add(new Label(), 0, row);
+				value = new Label();
+				grid.add(value, 0, row);
 				grid.getRowConstraints().add(row, new RowConstraints(SEPHEIGHT, SEPHEIGHT, SEPHEIGHT));
 			} else {
 				label = new DashLabel(kf.desc1);
@@ -200,13 +201,15 @@ public class DetailsWidget extends WidgetPane {
 		}
 
 		public void setValue(AnalysisDataModel model, int row) {
+
 			if (kf != null) {
 				val = model.getValue(kf);
-
 				if (Double.isNaN(val)) {
 					label.setDashColor(Color.GRAY);
 					if (value instanceof ProgressBar)
 						((ProgressBar) value).setProgress(0);
+					if (value instanceof Label)
+						((Label) value).setText("-");
 					return;
 				}
 
