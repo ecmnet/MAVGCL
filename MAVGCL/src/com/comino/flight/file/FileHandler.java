@@ -356,6 +356,7 @@ public class FileHandler {
 
 					});
 					writer.println("==========================================================================================");
+					writer.flush();
 					writer.close();
 
 					File video = new File(path+"/video.mp4");
@@ -470,6 +471,7 @@ public class FileHandler {
 		FileData data = new FileData(); data.prepareData(modelService,paramService);
 		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 		gson.toJson(data, writer);
+		writer.flush();
 		writer.close();
 	}
 
