@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	12/12/2018
+**Development Status:** Last updated 	21/12/2018
 
 - *.mgc files now store parameter settings in addition
 - 'Replay' recorded or saved data in realtime
@@ -43,6 +43,8 @@ Any feedback, comments and contributions are very welcome.
 - RTCM3 base supported with automatic survey-in for UBlox M8P devices (OS X only)
 
 **Note** that some features (MSP) are only available if you run a companion on your vehicle using MAVComm/MAVSlam .
+
+See MAVGCL XY view in some action: <https://youtu.be/jOWNSIwIA9k>
 
 **Requirements:**
 
