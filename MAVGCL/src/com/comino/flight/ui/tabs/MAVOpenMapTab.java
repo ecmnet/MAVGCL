@@ -160,7 +160,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private FloatProperty   scroll        = new SimpleFloatProperty(0);
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
-	private Image plane_valid, plane_invalid;
+	private Image plane_valid, plane_invalid, plane_lpos;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 	private Preferences preferences = MAVPreferences.getInstance();
@@ -243,7 +243,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		map.getLayers().add(baseLayer);
 
 		plane_valid   = new Image(getClass().getResource("resources/airplane_g.png").toString());
-		//		plane_lpe     = new Image(getClass().getResource("resources/airplane_b.png").toString());
+		plane_lpos    = new Image(getClass().getResource("resources/airplane_y.png").toString());
 		plane_invalid = new Image(getClass().getResource("resources/airplane_r.png").toString());
 
 		positionLayer = new PositionLayer(plane_valid);
@@ -598,10 +598,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			} else
 				baseLayer.setVisible(false);
 
-			if((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") < 4) && type!=1)
-				positionLayer.getIcon().setImage(plane_invalid);
-			else
+			if((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") > 4) && type!=1)
 				positionLayer.getIcon().setImage(plane_valid);
+			else if(StateProperties.getInstance().getLPOSAvailableProperty().get())
+			    positionLayer.getIcon().setImage(plane_lpos);
+			else
+				positionLayer.getIcon().setImage(plane_invalid);
 
 			positionLayer.updatePosition(pos[0],pos[1],model.getValue("HEAD"));
 
