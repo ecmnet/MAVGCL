@@ -14,14 +14,6 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 	21/12/2018
 
-- *.mgc files now store parameter settings in addition
-- 'Replay' recorded or saved data in realtime
-- EKF2 innovations key figures added (ULOG source)
-- Marker for nearest ObstaclePoint in XY view
-- Result set shows parameter changed in *txt file
-- Direct connection to PX4 (e.g. SITL) without proxy fixed
-- UI enhancements
-
 **Features:**
 
 - Realtime data acquisition (50ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
