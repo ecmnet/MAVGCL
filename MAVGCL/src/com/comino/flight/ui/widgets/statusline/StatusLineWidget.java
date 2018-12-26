@@ -132,7 +132,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					gps.setMode(Badge.MODE_ON);
 					gps.setText("SVIN");
 				} else {
-					if(!control.isConnected())
+					if(!control.isConnected() || !model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 						gps.setMode(Badge.MODE_OFF);
 					else {
 						switch(model.gps.fixtype & 0xF) {
