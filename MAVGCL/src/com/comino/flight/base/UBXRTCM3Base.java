@@ -105,12 +105,21 @@ public class UBXRTCM3Base implements Runnable {
 		});
 
 		valid.addListener((p,o,n) -> {
-			if(n.booleanValue())
+			if(n.booleanValue()) {
 				logger.writeLocalMsg("[mgc] RTCM3 stream active", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+			}
 			else
 				logger.writeLocalMsg("[mgc] RTCM3 base lost", MAV_SEVERITY.MAV_SEVERITY_WARNING);
 		});
 
+	}
+
+	public double getLongitude() {
+		return base.longitude;
+	}
+
+	public double getLatitude() {
+		return base.latitude;
 	}
 
 	public BooleanProperty getSVINStatus() {
