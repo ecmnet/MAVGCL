@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017 - 2019 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -822,13 +822,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
 			} else {
 				max_x = size;
-				//	System.out.println(id+": "+max_x0+ " ==> "+max_x+ " Mode:"+dataService.getMode()+" paused="+isPaused);
 			}
 
-			//System.out.println(id+": "+max_x+ " ==> "+max_x);
 
-
-			if(dash.isSelected() && size>0 	&& (System.currentTimeMillis()-dashboard_update_tms) > 500) {
+			if(dash.isSelected() && size>0 	&& ( (System.currentTimeMillis()-dashboard_update_tms) > 500 )|| refresh ) {
 				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
 				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
