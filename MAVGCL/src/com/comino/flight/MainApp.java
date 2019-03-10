@@ -41,7 +41,9 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_gps_global_origin;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
@@ -194,12 +196,16 @@ public class MainApp extends Application  {
 			MAVGCLPX4Parameters.getInstance(control);
 
 			StateProperties.getInstance().getConnectedProperty().addListener((v,o,n) -> {
-				msg_gps_global_origin ref = new msg_gps_global_origin(255,1);
-				ref.latitude  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
-				ref.longitude = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
-				ref.altitude  = 500*1000;
-				ref.time_usec = System.currentTimeMillis() *1000;
-				control.sendMAVLinkMessage(ref);
+
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+
+				msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
+				msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
+				msp.param3  = 500*1000;
+
+				control.sendMAVLinkMessage(msp);
+			    System.out.println("Global Position origin set");
 			});
 
 			StateProperties.getInstance().getInitializedProperty().addListener((v,o,n) -> {
