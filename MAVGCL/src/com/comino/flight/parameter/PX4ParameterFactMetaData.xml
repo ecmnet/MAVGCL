@@ -647,15 +647,6 @@ Note: ekf2 will limit the delta velocity bias estimate magnitude to be less than
       <decimal>1</decimal>
       <increment>0.5</increment>
     </parameter>
-    <parameter default="0" name="COM_DL_REG_T" type="INT32">
-      <short_desc>Datalink regain time threshold</short_desc>
-      <long_desc>After a data link loss: after this this amount of seconds with a healthy datalink the 'datalink loss' flag is set back to false</long_desc>
-      <min>0</min>
-      <max>3</max>
-      <unit>s</unit>
-      <decimal>1</decimal>
-      <increment>0.5</increment>
-    </parameter>
     <parameter default="5.0" name="COM_EF_C2T" type="FLOAT">
       <short_desc>Engine Failure Current/Throttle Threshold</short_desc>
       <long_desc>Engine failure triggers only below this current value</long_desc>
@@ -851,6 +842,13 @@ Note: ekf2 will limit the delta velocity bias estimate magnitude to be less than
         <value code="2">Land mode</value>
         <value code="3">Return mode at critically low level, Land mode at current position if reaching dangerously low levels</value>
       </values>
+    </parameter>
+    <parameter default="100" name="COM_OA_BOOT_T" type="INT32">
+      <short_desc>Set avoidance system bootup timeout</short_desc>
+      <long_desc>The avoidance system running on the companion computer is expected to boot within this time and start providing trajectory points. If no avoidance system is detected a MAVLink warning message is sent.</long_desc>
+      <min>0</min>
+      <max>200</max>
+      <unit>s</unit>
     </parameter>
     <parameter default="0.0" name="COM_OF_LOSS_T" type="FLOAT">
       <short_desc>Time-out to wait when offboard connection is lost before triggering offboard lost action.
@@ -1259,6 +1257,22 @@ Increasing it makes the multi-rotor wind estimates adjust more slowly</short_des
       <unit>rad/sec</unit>
       <decimal>2</decimal>
       <reboot_required>true</reboot_required>
+    </parameter>
+    <parameter default="0.0" name="EKF2_GND_EFF_DZ" type="FLOAT">
+      <short_desc>Baro deadzone range for height fusion</short_desc>
+      <long_desc>Sets the value of deadzone applied to negative baro innovations. Deadzone is enabled when EKF2_GND_EFF_DZ &gt; 0.</long_desc>
+      <min>0.0</min>
+      <max>10.0</max>
+      <unit>M</unit>
+      <decimal>1</decimal>
+    </parameter>
+    <parameter default="0.5" name="EKF2_GND_MAX_HGT" type="FLOAT">
+      <short_desc>Height above ground level for ground effect zone</short_desc>
+      <long_desc>Sets the maximum distance to the ground level where negative baro innovations are expected.</long_desc>
+      <min>0.0</min>
+      <max>5.0</max>
+      <unit>M</unit>
+      <decimal>1</decimal>
     </parameter>
     <parameter default="245" name="EKF2_GPS_CHECK" type="INT32">
       <short_desc>Integer bitmask controlling GPS checks</short_desc>
@@ -3165,6 +3179,14 @@ Value 0 turns the functionality off</short_desc>
       <unit>s</unit>
       <decimal>2</decimal>
     </parameter>
+    <parameter default="0.3" name="LNDMC_LOW_T_THR" type="FLOAT">
+      <short_desc>Low throttle detection threshold</short_desc>
+      <long_desc>Defines the commanded throttle value below which the land detector considers the vehicle to have "low thrust". This is one condition that is used to detect the ground contact state. The value is calculated as val = (MPC_THR_HOVER - MPC_THR_MIN) * LNDMC_LOW_T_THR + MPC_THR_MIN Increase this value if the system takes long time to detect landing.</long_desc>
+      <min>0.1</min>
+      <max>0.9</max>
+      <unit>norm</unit>
+      <decimal>2</decimal>
+    </parameter>
     <parameter default="20.0" name="LNDMC_ROT_MAX" type="FLOAT">
       <short_desc>Multicopter max rotation</short_desc>
       <long_desc>Maximum allowed angular velocity around each axis allowed in the landed state.</long_desc>
@@ -3825,6 +3847,10 @@ Used to calculate increased terrain random walk nosie due to movement</short_des
         <value code="5">Hold mode</value>
       </values>
     </parameter>
+    <parameter default="0" name="COM_OBS_AVOID" type="INT32">
+      <short_desc>Flag to enable obstacle avoidance</short_desc>
+      <boolean />
+    </parameter>
     <parameter default="0" name="COM_POSCTL_NAVL" type="INT32">
       <short_desc>Position control navigation loss response</short_desc>
       <long_desc>This sets the flight mode that will be used if navigation accuracy is no longer adequate for position control. Navigation accuracy checks can be disabled using the CBRK_VELPOSERR parameter, but doing so will remove protection for all flight modes.</long_desc>
@@ -4041,6 +4067,7 @@ Does not affect MAVLINK_ROI input</short_desc>
         <value code="3">AUX3</value>
         <value code="4">AUX4</value>
         <value code="5">AUX5</value>
+        <value code="6">AUX6</value>
       </values>
     </parameter>
     <parameter default="0" name="MNT_MAN_ROLL" type="INT32">
@@ -4054,6 +4081,7 @@ Does not affect MAVLINK_ROI input</short_desc>
         <value code="3">AUX3</value>
         <value code="4">AUX4</value>
         <value code="5">AUX5</value>
+        <value code="6">AUX6</value>
       </values>
     </parameter>
     <parameter default="0" name="MNT_MAN_YAW" type="INT32">
@@ -4067,6 +4095,7 @@ Does not affect MAVLINK_ROI input</short_desc>
         <value code="3">AUX3</value>
         <value code="4">AUX4</value>
         <value code="5">AUX5</value>
+        <value code="6">AUX6</value>
       </values>
     </parameter>
     <parameter default="154" name="MNT_MAV_COMPID" type="INT32">
@@ -4627,11 +4656,6 @@ is 90 degrees. It should be lower than MPC_XY_CRUISE</short_desc>
       <unit>deg/s</unit>
       <decimal>1</decimal>
     </parameter>
-    <parameter default="0" name="MPC_OBS_AVOID" type="INT32">
-      <short_desc>Flag to enable obstacle avoidance
-Temporary Parameter to enable interface testing</short_desc>
-      <boolean />
-    </parameter>
     <parameter default="1" name="MPC_POS_MODE" type="INT32">
       <short_desc>Manual-Position control sub-mode</short_desc>
       <long_desc>The supported sub-modes are: 0 Default position control where sticks map to position/velocity directly. Maximum speeds is MPC_VEL_MANUAL. 1 Smooth position control where setpoints are adjusted based on acceleration limits and jerk limits. 2 Sport mode that is the same Default position control but with velocity limits set to the maximum allowed speeds (MPC_XY_VEL_MAX) 3 Smooth position control with maximum acceleration and jerk limits (different algorithm than 1).</long_desc>
@@ -4687,16 +4711,16 @@ Temporary Parameter to enable interface testing</short_desc>
     <parameter default="45.0" name="MPC_TILTMAX_AIR" type="FLOAT">
       <short_desc>Maximum tilt angle in air</short_desc>
       <long_desc>Limits maximum tilt in AUTO and POSCTRL modes during flight.</long_desc>
-      <min>0.0</min>
-      <max>90.0</max>
+      <min>20.0</min>
+      <max>180.0</max>
       <unit>deg</unit>
       <decimal>1</decimal>
     </parameter>
     <parameter default="12.0" name="MPC_TILTMAX_LND" type="FLOAT">
       <short_desc>Maximum tilt during landing</short_desc>
       <long_desc>Limits maximum tilt angle on landing.</long_desc>
-      <min>0.0</min>
-      <max>180.0</max>
+      <min>10.0</min>
+      <max>90.0</max>
       <unit>deg</unit>
       <decimal>1</decimal>
     </parameter>
@@ -6806,6 +6830,32 @@ the setpoint will be capped to MPC_XY_VEL_MAX</short_desc>
         <value code="18">Channel 18</value>
       </values>
     </parameter>
+    <parameter default="0" name="RC_MAP_AUX6" type="INT32">
+      <short_desc>AUX6 Passthrough RC channel</short_desc>
+      <min>0</min>
+      <max>18</max>
+      <values>
+        <value code="0">Unassigned</value>
+        <value code="1">Channel 1</value>
+        <value code="2">Channel 2</value>
+        <value code="3">Channel 3</value>
+        <value code="4">Channel 4</value>
+        <value code="5">Channel 5</value>
+        <value code="6">Channel 6</value>
+        <value code="7">Channel 7</value>
+        <value code="8">Channel 8</value>
+        <value code="9">Channel 9</value>
+        <value code="10">Channel 10</value>
+        <value code="11">Channel 11</value>
+        <value code="12">Channel 12</value>
+        <value code="13">Channel 13</value>
+        <value code="14">Channel 14</value>
+        <value code="15">Channel 15</value>
+        <value code="16">Channel 16</value>
+        <value code="17">Channel 17</value>
+        <value code="18">Channel 18</value>
+      </values>
+    </parameter>
     <parameter default="0" name="RC_MAP_FAILSAFE" type="INT32">
       <short_desc>Failsafe channel mapping</short_desc>
       <long_desc>The RC mapping index indicates which channel is used for failsafe If 0, whichever channel is mapped to throttle is used otherwise the value indicates the specific RC channel to use</long_desc>
@@ -7712,6 +7762,7 @@ to takeoff is reached</short_desc>
       <long_desc>Determines when to start and stop logging. By default, logging is started when arming the system, and stopped when disarming.</long_desc>
       <reboot_required>true</reboot_required>
       <values>
+        <value code="-1">disabled</value>
         <value code="0">when armed until disarm (default)</value>
         <value code="1">from boot until disarm</value>
         <value code="2">from boot until shutdown</value>
@@ -9526,6 +9577,14 @@ is less than 50% of this value</short_desc>
     </parameter>
   </group>
   <group name="VTOL Attitude Control">
+    <parameter category="System" default="1" name="V19_VT_ROLLDIR" type="INT32">
+      <short_desc>Temporary parameter for the upgrade to v1.9, this is reminder to check the direction of
+fixed-wing roll control surfaces on custom VTOLs platforms</short_desc>
+      <long_desc>This parameter is present in v1.9 to enable smooth transition, it will be removed in v1.10. In firmware versions before v1.9, the VTOL attitude controller generated reversed fixed wing roll commands. As a consequence, all VTOL mixers had to reverse roll mixing. The VTOL roll commands in fixed wing mode were fixed in v1.9! - Standard VTOL platforms should be unaffected and this parameter can be ignored. - Custom VTOL platforms may crash if no action is taken, please check the direction of deflection of roll control surfaces before flight. Fix the roll mixer if necessary. Set to 1 to disable VTOL actuator outputs and display an info message (default). Set to 0 AFTER CAREFULLY CHECKING the direction of deflection of roll control surfaces.</long_desc>
+      <min>0</min>
+      <max>1</max>
+      <decimal>0</decimal>
+    </parameter>
     <parameter default="8.0" name="VT_ARSP_BLEND" type="FLOAT">
       <short_desc>Transition blending airspeed</short_desc>
       <long_desc>Airspeed at which we can start blending both fw and mc controls. Set to 0 to disable.</long_desc>
