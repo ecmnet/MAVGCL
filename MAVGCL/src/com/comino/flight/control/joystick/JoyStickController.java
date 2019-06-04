@@ -64,7 +64,7 @@ public class JoyStickController implements Runnable {
 
 	private int ch_sign= 1;
 
-	private msg_manual_control rc = new msg_manual_control(255,1);
+	private msg_manual_control rc = new msg_manual_control(1,2);
 	private Class<?>[] adapters;
 
 	@SafeVarargs
@@ -144,27 +144,30 @@ public class JoyStickController implements Runnable {
 			try {
 				pad.poll();
 
-				rc.z = (int)(components[ch_throttle].getPollData()*500*ch_sign+500);
-				rc.r = (int)(components[ch_yaw].getPollData()*1000*ch_sign);
-				rc.x = (int)(components[ch_pitch].getPollData()*1000*ch_sign);
-				rc.y = (int)(components[ch_roll].getPollData()*1000*ch_sign);
+				rc.z = (int)(components[ch_throttle].getPollData()*300*ch_sign+850);
+				rc.r = (int)(components[ch_yaw].getPollData()*1000*ch_sign)+7;
+				rc.x = (int)(components[ch_pitch].getPollData()*1000*ch_sign+7);
+				rc.y = (int)(components[ch_roll].getPollData()*1000*ch_sign+7);
 
-				if(rc.z<20 && rc.r > 980) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-				}
 
-				if(rc.z<20 && rc.r < -980) {
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-				}
+//			System.out.println(rc);
+
+//				if(rc.z<20 && rc.r > 980) {
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+//							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+//							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
+//				}
+//
+//				if(rc.z<20 && rc.r < -980) {
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+//				}
 
 
 
 				if(control.isConnected()) {
 					control.sendMAVLinkMessage(rc);
-					control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, true);
+				//	control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, true);
 
 				}
 
@@ -199,7 +202,7 @@ public class JoyStickController implements Runnable {
 				//								 System.out.println();
 
 
-				Thread.sleep(50);
+				Thread.sleep(20);
 
 			} catch(Exception e ) {
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
