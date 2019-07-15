@@ -38,6 +38,11 @@
 										<MAV3DViewTab fx:id="mav3dviewtab" />
 									</content>
 								</Tab>
+								<Tab text="Tuning">
+									<content>
+										<MAVTuningTab fx:id="mavtunetab" />
+									</content>
+								</Tab>
 								<Tab text="Map">
 									<content>
 										<MAVOpenMapTab fx:id="mavmaptab" />
@@ -55,7 +60,7 @@
 								</content>
 							</Tab>
 						</TabPane>
-						<ParameterWidget fx:id="tuning" maxWidth="265"
+						<ParameterWidget fx:id="parameters" maxWidth="265"
 						    visible="false" styleClass="widget">
 						   <HBox.margin><Insets top="3"/></HBox.margin>
 						</ParameterWidget>

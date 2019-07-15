@@ -46,6 +46,7 @@ import com.comino.flight.ui.tabs.FlightXtAnalysisTab;
 import com.comino.flight.ui.tabs.MAV3DViewTab;
 import com.comino.flight.ui.tabs.MAVInspectorTab;
 import com.comino.flight.ui.tabs.MAVOpenMapTab;
+import com.comino.flight.ui.tabs.MAVTuningTab;
 import com.comino.flight.ui.tabs.MavLinkShellTab;
 import com.comino.flight.ui.widgets.camera.CameraWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
@@ -75,6 +76,9 @@ public class FlightTabs extends Pane {
 	private MAVOpenMapTab mavmaptab;
 
 	@FXML
+	private MAVTuningTab mavtunetab;
+
+	@FXML
 	private MAV3DViewTab mav3dviewtab;
 
 	@FXML
@@ -84,7 +88,7 @@ public class FlightTabs extends Pane {
 	private DetailsWidget details;
 
 	@FXML
-	private ParameterWidget tuning;
+	private ParameterWidget parameters;
 
 	@FXML
 	private MSPCtlWidget mspctl;
@@ -107,6 +111,7 @@ public class FlightTabs extends Pane {
 		tabs.add(xtanalysistab);
 		tabs.add(xyanalysistab);
 		tabs.add(mav3dviewtab);
+		tabs.add(mavtunetab);
 		tabs.add(mavmaptab);
 		tabs.add(mavinspectortab);
 		tabs.add(mavlinkshelltab);
@@ -128,6 +133,7 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
 		mavinspectortab.setDisable(true);
+		mavtunetab.setDisable(false);
 		mavmaptab.setDisable(true);
 		mav3dviewtab.setDisable(true);
 		mavlinkshelltab.setDisable(true);
@@ -141,8 +147,8 @@ public class FlightTabs extends Pane {
 		details.fadeProperty().bind(flightControl.getControl().getDetailVisibility());
 		details.setup(control);
 
-		tuning.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
-		tuning.setup(control);
+		parameters.fadeProperty().bind(flightControl.getControl().getTuningVisibility());
+		parameters.setup(control);
 
 		mspctl.fadeProperty().bind(flightControl.getControl().getVehicleCtlVisibility());
 		mspctl.setup(control);
@@ -153,22 +159,24 @@ public class FlightTabs extends Pane {
 		mavmaptab.setup(flightControl.getChartControl(),control);
 		mav3dviewtab.setup(flightControl.getChartControl(),control);
 		mavinspectortab.setup(control);
+		mavtunetab.setup(control);
 		xtanalysistab.setup(flightControl.getChartControl(),control);
 		xyanalysistab.setup(flightControl.getChartControl(),control);
 
 		mavlinkshelltab.setup(control);
 
-		this.tabpane.getTabs().get(4).setDisable(true);
 		this.tabpane.getTabs().get(5).setDisable(true);
+		this.tabpane.getTabs().get(6).setDisable(true);
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
 			this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
-			this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue() || control.isSimulation());
+			this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue());
+			this.tabpane.getTabs().get(6).setDisable(!newvalue.booleanValue() || control.isSimulation());
 
 			// Workaround: Enable Tab but disable tab content if not selected
-			if(tabpane.getSelectionModel().selectedIndexProperty().intValue()!=4)
+			if(tabpane.getSelectionModel().selectedIndexProperty().intValue()!=5)
 				mavinspectortab.setDisable(true);
 
 		//	flightControl.getControl().getDetailVisibility().setValue(newvalue.booleanValue());
@@ -177,7 +185,7 @@ public class FlightTabs extends Pane {
 
 		HBox.setHgrow(tabpane, Priority.ALWAYS);
 
-		tuning.managedProperty().bind(tuning.visibleProperty());
+		parameters.managedProperty().bind(parameters.visibleProperty());
 		details.managedProperty().bind(details.visibleProperty());
 		mspctl.managedProperty().bind(mspctl.visibleProperty());
 
