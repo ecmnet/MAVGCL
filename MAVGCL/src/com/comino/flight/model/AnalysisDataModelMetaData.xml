@@ -1477,7 +1477,7 @@
 		<Validity min="0.2" max="1.0"/>
 	</KeyFigure>
 
-	<KeyFigure desc="CPU Load" uom="%" mask="#0" key="CPUPX4">
+	<KeyFigure desc="PX4 CPU Load" uom="%" mask="#0" key="CPUPX4">
 		<MSPSource class="sys" field="load_p">
 		   <Converter class="ExpressionConverter" expression="CPUPX4/100" />
 		</MSPSource>
@@ -1493,7 +1493,7 @@
 		<Validity min="0" max="0.85"/>
 	</KeyFigure>
 
-	<KeyFigure desc="CPU Load (MSP)" uom="%" mask="#0" key="CPUMSP">
+	<KeyFigure desc="MSP CPU Load" uom="%" mask="#0" key="CPUMSP">
 		<MSPSource class="sys" field="load_m">
 		   <Converter class="ExpressionConverter" expression="CPUMSP/100" />
 		</MSPSource>
