@@ -84,8 +84,10 @@ public class ThrottleTune extends VBox  {
 		hover.prefWidthProperty().bind(widthProperty().subtract(200));
 		minimal.prefWidthProperty().bind(widthProperty().subtract(200));
 
-		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()));
-		//	minimal.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()));
+		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
+				.or(state.getLogLoadedProperty())));
+		//	minimal.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
+		//      .or(state.getLogLoadedProperty())));
 		minimal.setDisable(true);
 
 	}
@@ -102,7 +104,8 @@ public class ThrottleTune extends VBox  {
 
 			float val = newvalue.intValue() / 1000f;
 
-			if( Math.abs(parameters.get("MPC_THR_HOVER").value - val) > 0.005f) {
+			if( Math.abs(parameters.get("MPC_THR_HOVER").value - val) > 0.005f &&
+					state.getConnectedProperty().get()) {
 
 				parameters.get("MPC_THR_HOVER").value = val;
 
