@@ -7,12 +7,12 @@
 	xmlns="http://javafx.com/javafx/8.0.51"
 	xmlns:fx="http://javafx.com/fxml/1" >
 	<children>
-	   <Label layoutX="14.0" prefHeight="38.0" text="Tuning setup is used to adjust the flight characteristics of the vehicle:" />
+	   <Label layoutX="14.0" prefHeight="28.0" text="Throttle adjustments:" />
 		<HBox >
 			<children>
 				<Label layoutX="14.0" text="Adjust hovering throttle"
 					prefWidth="150" maxWidth="200.0" />
-				<Slider fx:id="hover" layoutX="13.0" max="1000" min="0" prefHeight="18.0" value="0" />
+				<Slider fx:id="hover" layoutX="13.0" max="800" min="200" prefHeight="18.0" value="0"  />
 			</children>
 		</HBox>
 		<HBox >

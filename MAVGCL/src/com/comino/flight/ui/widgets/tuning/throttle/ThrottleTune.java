@@ -33,6 +33,7 @@
 
 package com.comino.flight.ui.widgets.tuning.throttle;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
@@ -40,6 +41,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.parameter.ParamUtils;
 import com.comino.mav.control.IMAVController;
+import com.comino.msp.log.MSPLogger;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -63,6 +65,7 @@ public class ThrottleTune extends VBox  {
 	private Slider minimal;
 
 	private StateProperties state = null;
+	private MAVGCLPX4Parameters parameters = null;
 
 
 	public ThrottleTune() {
@@ -75,44 +78,51 @@ public class ThrottleTune extends VBox  {
 	@FXML
 	private void initialize() {
 
-	   state = StateProperties.getInstance();
+		state = StateProperties.getInstance();
+		parameters = MAVGCLPX4Parameters.getInstance();
 
 		hover.prefWidthProperty().bind(widthProperty().subtract(200));
 		minimal.prefWidthProperty().bind(widthProperty().subtract(200));
 
 		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()));
-	//	minimal.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()));
+		//	minimal.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()));
 		minimal.setDisable(true);
 
 	}
 
 	public void setup(IMAVController control) {
 
-       state.getParamLoadedProperty().addListener((a,o,n) -> {
+		state.getParamLoadedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue()) {
-				MAVGCLPX4Parameters parameters = MAVGCLPX4Parameters.getInstance();
 				hover.setValue(parameters.get("MPC_THR_HOVER").value * 1000);
 			}
-       });
+		});
 
-       hover.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+		hover.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 
-            final msg_param_set msg = new msg_param_set(255,1);
-  			msg.target_component = 1;
-  			msg.target_system = 1;
-  			msg.setParam_id("MPC_THR_HOVER");
-  			msg.param_value = newvalue.intValue() / 1000f;
-  			control.sendMAVLinkMessage(msg);
+			float val = newvalue.intValue() / 1000f;
 
-       });
+			if( Math.abs(parameters.get("MPC_THR_HOVER").value - val) > 0.005f) {
 
-       hover.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				parameters.get("MPC_THR_HOVER").value = val;
+
+				final msg_param_set msg = new msg_param_set(255,1);
+				msg.target_component = 1;
+				msg.target_system = 1;
+				msg.setParam_id("MPC_THR_HOVER");
+				msg.param_value = val;
+				control.sendMAVLinkMessage(msg);
+
+			}
+
+		});
+
+		hover.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent click) {
-				if(state.getReplayingProperty().get())
-					return;
-				if (click.getClickCount() == 2)
+				if (click.getClickCount() == 2) {
 					hover.setValue(500);
+				}
 			}
 		});
 
