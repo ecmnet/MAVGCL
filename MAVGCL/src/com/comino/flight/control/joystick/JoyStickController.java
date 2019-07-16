@@ -35,10 +35,13 @@ package com.comino.flight.control.joystick;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
+import com.comino.msp.log.MSPLogger;
+import com.comino.msp.model.DataModel;
 import com.comino.msp.model.segment.Status;
 
 import net.java.games.input.Component;
@@ -71,13 +74,16 @@ public class JoyStickController implements Runnable {
 	private int ch_sign= 1;
 
 
-	private JoyStickModel model = new JoyStickModel();
-	private Class<?>[] adapters;
+	private JoyStickModel joystick = new JoyStickModel();
+	private Class<?>[]    adapters;
+
+	private DataModel model;
 
 	@SafeVarargs
 	public JoyStickController(IMAVController control, Class<?> ...adapters) {
 		this.adapters = adapters;
 		this.control = control;
+		this.model   = control.getCurrentModel();
 	}
 
 	public boolean connect() {
@@ -108,6 +114,7 @@ public class JoyStickController implements Runnable {
 
 			boolean found = false;
 			for(Class<?> adapter : adapters) {
+
 				if(pad.getName().contains((String) adapter.getField("NAME").get(null))) {
 					this.ch_throttle   = adapter.getField("THROTTLE").getInt(null);
 					this.ch_yaw        = adapter.getField("YAW").getInt(null);
@@ -125,6 +132,7 @@ public class JoyStickController implements Runnable {
 					+" connected to adapter "+adapter.getSimpleName());
 					break;
 				}
+
 			}
 			if(!found)
 				throw new Exception("Controller "+pad.getName()+" not registered");
@@ -135,22 +143,44 @@ public class JoyStickController implements Runnable {
 		}
 
 
-		model.addButtonListener(ch_land, (state) -> {
+		joystick.addButtonListener(ch_land, (state) -> {
 			if(state == JoyStickModel.PRESSED)
-				System.out.println("Landing initiated "+state);
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0.05f );
 		});
 
-		model.addButtonListener(ch_arm, (state) -> {
-			if(state == JoyStickModel.PRESSED)
-				System.out.println("Motors armed "+state);
+		joystick.addButtonListener(ch_arm, (state) -> {
+			if(state == JoyStickModel.PRESSED) {
+
+				if(!model.sys.isStatus(Status.MSP_ARMED)) {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
+				} else {
+					if(model.sys.isStatus(Status.MSP_LANDED))
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+				}
+
+			}
 		});
 
-		model.addButtonListener(ch_takeoff, (state) -> {
-			if(state == JoyStickModel.PRESSED)
-				System.out.println("Takeoff initiated "+state);
+		joystick.addButtonListener(ch_takeoff, (state) -> {
+			if(state == JoyStickModel.PRESSED) {
+
+				if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
+							model.hud.at);
+				}
+				else {
+					if(model.sys.isStatus(Status.MSP_LANDED))
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+					MSPLogger.getInstance().writeLocalMsg("[mgc] Takoff rejected: LPOS not available",
+							MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				}
+			}
 		});
 
-		model.addControlListener((t,y,p,r) -> {
+		joystick.addControlListener((t,y,p,r) -> {
 			System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
 
 		});
@@ -174,19 +204,18 @@ public class JoyStickController implements Runnable {
 		//		}
 
 
-		System.out.println("TEST");
-
 		while(true) {
 			try {
+
 				pad.poll();
 
 
-				model.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
+				joystick.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
 						(int)(components[ch_yaw].getPollData()*500*ch_sign+1500),
 						(int)(components[ch_pitch].getPollData()*500*ch_sign+1500),
 						(int)(components[ch_roll].getPollData()*500*ch_sign+1500) );
 
-				model.scanButtons(components);
+				joystick.scanButtons(components);
 
 
 
@@ -195,7 +224,7 @@ public class JoyStickController implements Runnable {
 //				System.out.println();
 
 
-				Thread.sleep(20);
+				Thread.sleep(25);
 
 			} catch(Exception e ) {
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
