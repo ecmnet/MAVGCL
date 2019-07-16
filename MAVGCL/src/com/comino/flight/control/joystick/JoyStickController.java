@@ -53,18 +53,25 @@ public class JoyStickController implements Runnable {
 	private IMAVController control     = null;
 	private Component[]    components  = null;
 
+	// Controls
 	private int ch_throttle=0;
 	private int ch_yaw=0;
 	private int ch_pitch=0;
 	private int ch_roll=0;
-	private int ch_sw1 = 0;
-	private int ch_sw2 = 0;
 
-	private int state_sw2 = -1;
+	// Switches
+	private int ch_land     = 0;
+	private int ch_arm      = 0;
+	private int ch_takeoff  = 0;
+	private int ch_kill     = 0;
+	private int ch_sw5      = 0;
+	private int ch_sw6      = 0;
 
+	// Th
 	private int ch_sign= 1;
 
-	private msg_manual_control rc = new msg_manual_control(1,2);
+
+	private JoyStickModel model = new JoyStickModel();
 	private Class<?>[] adapters;
 
 	@SafeVarargs
@@ -74,6 +81,8 @@ public class JoyStickController implements Runnable {
 	}
 
 	public boolean connect() {
+
+		System.out.println("Searching for controllers..");
 
 		Controller[] ca = null;
 		try {
@@ -87,8 +96,10 @@ public class JoyStickController implements Runnable {
 				pad = ca[i];
 		}
 
-		if(pad==null)
+		if(pad==null) {
+			System.out.println("No controllers connected");
 			return false;
+		}
 
 		this.components = pad.getComponents();
 
@@ -98,13 +109,17 @@ public class JoyStickController implements Runnable {
 			boolean found = false;
 			for(Class<?> adapter : adapters) {
 				if(pad.getName().contains((String) adapter.getField("NAME").get(null))) {
-					this.ch_throttle = adapter.getField("THROTTLE").getInt(null);
-					this.ch_yaw = adapter.getField("YAW").getInt(null);
-					this.ch_pitch = adapter.getField("PITCH").getInt(null);
-					this.ch_roll = adapter.getField("ROLL").getInt(null);
-					this.ch_sign = adapter.getField("SIGN").getInt(null);
-					this.ch_sw1 = adapter.getField("SW1").getInt(null);
-					this.ch_sw2 = adapter.getField("SW2").getInt(null);
+					this.ch_throttle   = adapter.getField("THROTTLE").getInt(null);
+					this.ch_yaw        = adapter.getField("YAW").getInt(null);
+					this.ch_pitch      = adapter.getField("PITCH").getInt(null);
+					this.ch_roll       = adapter.getField("ROLL").getInt(null);
+					this.ch_sign       = adapter.getField("SIGN").getInt(null);
+					this.ch_land       = adapter.getField("LAND").getInt(null);
+					this.ch_arm        = adapter.getField("ARM").getInt(null);
+					this.ch_takeoff    = adapter.getField("TAKEOFF").getInt(null);
+					this.ch_kill       = adapter.getField("KILL").getInt(null);
+					this.ch_sw5        = adapter.getField("SW5").getInt(null);
+					this.ch_sw6        = adapter.getField("SW6").getInt(null);
 					found = true;
 					System.out.println("[mgc]"+pad.getName()
 					+" connected to adapter "+adapter.getSimpleName());
@@ -119,6 +134,27 @@ public class JoyStickController implements Runnable {
 			return false;
 		}
 
+
+		model.addButtonListener(ch_land, (state) -> {
+			if(state == JoyStickModel.PRESSED)
+				System.out.println("Landing initiated "+state);
+		});
+
+		model.addButtonListener(ch_arm, (state) -> {
+			if(state == JoyStickModel.PRESSED)
+				System.out.println("Motors armed "+state);
+		});
+
+		model.addButtonListener(ch_takeoff, (state) -> {
+			if(state == JoyStickModel.PRESSED)
+				System.out.println("Takeoff initiated "+state);
+		});
+
+		model.addControlListener((t,y,p,r) -> {
+			System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
+
+		});
+
 		Thread t = new Thread(this);
 		t.setName("Joystick worker");
 		t.start();
@@ -131,75 +167,32 @@ public class JoyStickController implements Runnable {
 	@Override
 	public void run() {
 
-		while(!control.isConnected()) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-			}
-		}
+		//		while(!control.isConnected()) {
+		//			try {
+		//				Thread.sleep(500);
+		//			} catch (InterruptedException e) { }
+		//		}
 
-		state_sw2 = UNDEFINED;
+
+		System.out.println("TEST");
 
 		while(true) {
 			try {
 				pad.poll();
 
-				rc.z = (int)(components[ch_throttle].getPollData()*300*ch_sign+850);
-				rc.r = (int)(components[ch_yaw].getPollData()*1000*ch_sign)+7;
-				rc.x = (int)(components[ch_pitch].getPollData()*1000*ch_sign+7);
-				rc.y = (int)(components[ch_roll].getPollData()*1000*ch_sign+7);
 
+				model.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
+						(int)(components[ch_yaw].getPollData()*500*ch_sign+1500),
+						(int)(components[ch_pitch].getPollData()*500*ch_sign+1500),
+						(int)(components[ch_roll].getPollData()*500*ch_sign+1500) );
 
-//			System.out.println(rc);
-
-//				if(rc.z<20 && rc.r > 980) {
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-//							MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-//							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-//				}
-//
-//				if(rc.z<20 && rc.r < -980) {
-//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-//				}
+				model.scanButtons(components);
 
 
 
-				if(control.isConnected()) {
-					control.sendMAVLinkMessage(rc);
-				//	control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, true);
-
-				}
-
-				// Simple switch mapping for ALT/POS-CTL
-
-				if(state_sw2 != (int)components[ch_sw2].getPollData() ) {
-					state_sw2 = (int)components[ch_sw2].getPollData();
-					if(components[ch_sw1].getPollData() > -0.5 ) {
-						if((int)components[ch_sw2].getPollData() < 0) {
-							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_ALTCTL, 0 );
-						} else if((int)components[ch_sw2].getPollData() > 0) {
-							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_OFFBOARD, 0 );
-						} else {
-							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-									MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-									MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_POSCTL, 0 );
-						}
-					} else {
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-								MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-								MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
-					}
-				}
-
-
-				//								 for(int i =14; i < components.length; i++)
-				//								    System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
-				//								 System.out.println();
+//				for(int i =1; i < components.length; i++)
+//					System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
+//				System.out.println();
 
 
 				Thread.sleep(20);
