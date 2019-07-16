@@ -36,7 +36,8 @@ package com.comino.flight.control.joystick;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.lquac.msg_manual_control;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
 
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
@@ -50,7 +51,6 @@ import net.java.games.input.ControllerEnvironment;
 
 public class JoyStickController implements Runnable {
 
-	private final static int UNDEFINED  = -99;
 
 	private Controller     pad		   = null;
 	private IMAVController control     = null;
@@ -181,8 +181,10 @@ public class JoyStickController implements Runnable {
 		});
 
 		joystick.addControlListener((t,y,p,r) -> {
-			System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
-
+			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
+			// TODO: Add deadzone
+			control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
+					(p-1500f)/1000f,(r-1500f)/-1000f,(t-1500f)/1000f,(y-1500f)/-1000f);
 		});
 
 		Thread t = new Thread(this);
@@ -211,9 +213,9 @@ public class JoyStickController implements Runnable {
 
 
 				joystick.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
-						(int)(components[ch_yaw].getPollData()*500*ch_sign+1500),
+						(int)(components[ch_yaw].getPollData()  *500*ch_sign+1500),
 						(int)(components[ch_pitch].getPollData()*500*ch_sign+1500),
-						(int)(components[ch_roll].getPollData()*500*ch_sign+1500) );
+						(int)(components[ch_roll].getPollData() *500*ch_sign+1500) );
 
 				joystick.scanButtons(components);
 
