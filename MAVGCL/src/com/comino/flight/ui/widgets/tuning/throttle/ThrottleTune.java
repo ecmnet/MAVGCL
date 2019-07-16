@@ -105,7 +105,7 @@ public class ThrottleTune extends VBox  {
 			float val = newvalue.intValue() / 1000f;
 
 			if( Math.abs(parameters.get("MPC_THR_HOVER").value - val) > 0.005f &&
-					state.getConnectedProperty().get()) {
+					state.getConnectedProperty().get() && state.getParamLoadedProperty().get()) {
 
 				parameters.get("MPC_THR_HOVER").value = val;
 
@@ -124,7 +124,7 @@ public class ThrottleTune extends VBox  {
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					hover.setValue(500);
+					hover.setValue(parameters.get("MPC_THR_HOVER").default_val * 1000);
 				}
 			}
 		});
