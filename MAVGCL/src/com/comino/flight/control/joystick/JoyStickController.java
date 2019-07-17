@@ -184,7 +184,7 @@ public class JoyStickController implements Runnable {
 			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
 			// TODO: Add deadzone
 			control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
-					(p-1500f)/1000f,(r-1500f)/-1000f,(t-1500f)/1000f,(y-1500f)/-1000f);
+					(p-1500f)/1000f,(r-1500f)/-1000f,(t-1500f)/-1000f,(y-1500f)/-1000f);
 		});
 
 		Thread t = new Thread(this);
