@@ -183,12 +183,13 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 			}
 
-			new SITLController(control);
+			StateProperties.getInstance(control);
+
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
 
-			StateProperties.getInstance(control);
+
 
 			control.getStatusManager().start();
 
@@ -213,6 +214,7 @@ public class MainApp extends Application  {
 			StateProperties.getInstance().getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 					analysisModelService.startConverter();
+					new SITLController(control);
 				}
 			});
 

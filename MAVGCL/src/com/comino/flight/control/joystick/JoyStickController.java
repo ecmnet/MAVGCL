@@ -143,8 +143,6 @@ public class JoyStickController implements Runnable {
 			return false;
 		}
 
-		StateProperties.getInstance().getControllerConnectedProperty().set(true);
-
 
 		joystick.addButtonListener(ch_land, (state) -> {
 			if(state == JoyStickModel.PRESSED)
@@ -213,11 +211,13 @@ public class JoyStickController implements Runnable {
 	@Override
 	public void run() {
 
-		//		while(!control.isConnected()) {
-		//			try {
-		//				Thread.sleep(500);
-		//			} catch (InterruptedException e) { }
-		//		}
+//		while(!control.isConnected()) {
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) { }
+//		}
+
+		StateProperties.getInstance().getControllerConnectedProperty().set(true);
 
 
 		while(pad.poll()) {
@@ -233,9 +233,9 @@ public class JoyStickController implements Runnable {
 
 
 
-//				for(int i =0; i < components.length; i++)
-//					System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
-//				System.out.println();
+				//				for(int i =0; i < components.length; i++)
+				//					System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
+				//				System.out.println();
 
 
 				Thread.sleep(25);

@@ -84,6 +84,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private Badge rc;
 
 	@FXML
+	private Badge controller;
+
+	@FXML
 	private Badge gps;
 
 	@FXML
@@ -284,6 +287,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				lpos.setMode(Badge.MODE_ON);
 			else
 				lpos.setMode(Badge.MODE_OFF);
+		});
+
+		state.getControllerConnectedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue())
+				controller.setMode(Badge.MODE_ON);
+			else
+				controller.setMode(Badge.MODE_OFF);
 		});
 
 		scroll.addListener((e,o,n) -> {
