@@ -83,6 +83,7 @@ public class StateProperties {
 
 	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty           = new SimpleBooleanProperty();
+	private BooleanProperty isControllerConnectedProperty   = new SimpleBooleanProperty();
 
 	private FloatProperty progress 						   = new SimpleFloatProperty(-1);
 
@@ -165,6 +166,10 @@ public class StateProperties {
 
 	public BooleanProperty getMSPProperty() {
 		return isMSPAvailable;
+	}
+
+	public BooleanProperty getControllerConnectedProperty() {
+		return isControllerConnectedProperty;
 	}
 
 	public BooleanProperty getArmedProperty() {

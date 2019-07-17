@@ -39,6 +39,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 import com.comino.mav.mavlink.MAV_CUST_MODE;
 import com.comino.msp.log.MSPLogger;
@@ -142,6 +143,8 @@ public class JoyStickController implements Runnable {
 			return false;
 		}
 
+		StateProperties.getInstance().getControllerConnectedProperty().set(true);
+
 
 		joystick.addButtonListener(ch_land, (state) -> {
 			if(state == JoyStickModel.PRESSED)
@@ -242,6 +245,7 @@ public class JoyStickController implements Runnable {
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
 			}
 		}
+		StateProperties.getInstance().getControllerConnectedProperty().set(false);
 		System.out.println("Disconnected");
 	}
 
