@@ -11,11 +11,14 @@ public class JoyStickModel {
 	public static  int   RELEASED  = 0;
 
 	private static int  THRESHOLD  = 5;
+	private static int  TIMEOUT    = 500;
 
 	public int throttle = 0;
 	public int yaw      = 0;
 	public int pitch    = 0;
 	public int roll     = 0;
+
+	private long tms    = 0;
 
 	private HashMap<Integer,button>     buttons  = new HashMap<Integer,button>();
 	private ArrayList<IControlListener> controls = new ArrayList<IControlListener>();
@@ -44,15 +47,18 @@ public class JoyStickModel {
 
 	public void scanControls(int t, int y, int p, int r) {
 		if(Math.abs(t-throttle)>THRESHOLD   || Math.abs(y-yaw)>THRESHOLD ||
-				Math.abs(p-pitch)>THRESHOLD || Math.abs(r-roll)>THRESHOLD) {
+				Math.abs(p-pitch)>THRESHOLD || Math.abs(r-roll)>THRESHOLD ||
+				(System.currentTimeMillis() - tms)>TIMEOUT) {
 			controls.forEach((listener) -> {
 				listener.execute(t, y, p, r);
 			});
+
+			this.throttle = t;
+			this.yaw      = y;
+			this.pitch    = p;
+			this.roll     = r;
+			this.tms      = System.currentTimeMillis();
 		}
-		this.throttle = t;
-		this.yaw      = y;
-		this.pitch    = p;
-		this.roll     = r;
 	}
 
 

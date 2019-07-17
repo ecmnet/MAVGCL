@@ -206,10 +206,8 @@ public class JoyStickController implements Runnable {
 		//		}
 
 
-		while(true) {
+		while(pad.poll()) {
 			try {
-
-				pad.poll();
 
 
 				joystick.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
@@ -229,9 +227,11 @@ public class JoyStickController implements Runnable {
 				Thread.sleep(25);
 
 			} catch(Exception e ) {
+				System.out.println("ERRIR");
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
 			}
 		}
+		System.out.println("Disconnected");
 	}
 
 }
