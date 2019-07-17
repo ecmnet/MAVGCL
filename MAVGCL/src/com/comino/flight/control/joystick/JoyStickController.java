@@ -180,6 +180,17 @@ public class JoyStickController implements Runnable {
 			}
 		});
 
+		joystick.addButtonListener(ch_kill, (state) -> {
+			if(state == JoyStickModel.PRESSED) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
+					if(result==0) {
+						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+								MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+					}
+				},0, 21196 );
+			}
+		});
+
 		joystick.addControlListener((t,y,p,r) -> {
 			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
 			// TODO: Add deadzone
@@ -219,7 +230,7 @@ public class JoyStickController implements Runnable {
 
 
 
-//				for(int i =1; i < components.length; i++)
+//				for(int i =0; i < components.length; i++)
 //					System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
 //				System.out.println();
 

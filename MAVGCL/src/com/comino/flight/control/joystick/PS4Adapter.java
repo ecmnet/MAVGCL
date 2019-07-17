@@ -45,8 +45,8 @@ public class PS4Adapter  {
 	public static final int 	LAND 	 = 1;
 	public static final int 	ARM 	 = 2;
 	public static final int 	TAKEOFF  = 3;
-	public static final int 	KILL 	 = 31;
-	public static final int 	SW5 	 = 32;
+	public static final int 	KILL 	 = 13;
+	public static final int 	SW5 	 = 0;
 	public static final int 	SW6 	 = 33;
 
 	public static final int 	SIGN = -1;
