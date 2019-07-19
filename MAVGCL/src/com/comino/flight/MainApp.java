@@ -134,6 +134,8 @@ public class MainApp extends Application  {
 	private BorderPane rootLayout;
 	private AnchorPane flightPane;
 
+	private StateProperties state = null;
+
 
 	@Override
 	public void init() throws Exception {
@@ -183,7 +185,7 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 			}
 
-			StateProperties.getInstance(control);
+			state = StateProperties.getInstance(control);
 
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
@@ -195,10 +197,30 @@ public class MainApp extends Application  {
 
 			MSPLogger.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
-			UBXRTCM3Base.getInstance(control, analysisModelService);
+			UBXRTCM3Base base = UBXRTCM3Base.getInstance(control, analysisModelService);
+			new Thread(base).start();
+
 			MAVGCLPX4Parameters.getInstance(control);
 
-			StateProperties.getInstance().getConnectedProperty().addListener((v,o,n) -> {
+
+			state.getConnectedProperty().addListener((v,o,n) -> {
+
+				if(base.isConnected()) {
+					System.out.println("Base GPS is connected");
+					if(base.getBaseAccuracy()<15) {
+						msg_msp_command msp = new msg_msp_command(255,1);
+						msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+
+						msp.param1  = (long)(base.getLatitude()  * 1e7);
+						msp.param2  = (long)(base.getLongitude() * 1e7);
+
+						msp.param3  = 500*1000;
+
+						control.sendMAVLinkMessage(msp);
+					    System.out.println("Global Position origin set to base position");
+					}
+				}
+				else {
 
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
@@ -209,9 +231,10 @@ public class MainApp extends Application  {
 
 				control.sendMAVLinkMessage(msp);
 			    System.out.println("Global Position origin set");
+				}
 			});
 
-			StateProperties.getInstance().getInitializedProperty().addListener((v,o,n) -> {
+			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 					analysisModelService.startConverter();
 					new SITLController(control);
@@ -326,7 +349,7 @@ public class MainApp extends Application  {
 		});
 
 
-		StateProperties.getInstance().getConnectedProperty().addListener((e,o,n) -> {
+		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 			}
@@ -342,7 +365,7 @@ public class MainApp extends Application  {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if(StateProperties.getInstance().getArmedProperty().get()) {
+				if(state.getArmedProperty().get()) {
 					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
 					return;
 				}
