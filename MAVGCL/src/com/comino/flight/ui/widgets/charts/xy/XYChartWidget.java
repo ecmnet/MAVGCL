@@ -52,6 +52,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.charts.annotations.PositionAnnotation;
@@ -237,6 +238,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
+	private MAVGCLPX4Parameters parameters = null;
 
 	//	private double  zoom_beg_x, zoom_beg_y;
 
@@ -263,6 +265,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		pool = new XYDataPool();
 
 		dataService.registerListener(this);
+
+		state.getParamLoadedProperty().addListener((a,o,n) -> {
+			if(n.booleanValue()) {
+				this.parameters = MAVGCLPX4Parameters.getInstance();
+			}
+		});
 	}
 
 	@Override

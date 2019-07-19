@@ -129,6 +129,9 @@ public class DashLabelLED extends GridPane {
 
 	public void set(boolean on) {
 		if(on) setMode(MODE_ON); else setMode(MODE_OFF);
+
+		if (timeline != null)
+		timeline.stop();
 	}
 
 	public void setMode(int mode) {
@@ -167,6 +170,7 @@ public class DashLabelLED extends GridPane {
 			toggle = !toggle;
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.setDelay(Duration.ZERO);
 	}
 
 	public String getRate() {
@@ -179,6 +183,10 @@ public class DashLabelLED extends GridPane {
 
 	public void setColor(String value) {
 		this.color = Color.valueOf(value);
+	}
+
+	public String toString() {
+		return "Mode="+mode;
 	}
 
 }
