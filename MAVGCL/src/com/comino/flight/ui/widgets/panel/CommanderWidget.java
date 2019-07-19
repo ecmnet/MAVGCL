@@ -143,7 +143,7 @@ public class CommanderWidget extends WidgetPane  {
 
 
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
-				.or(state.getRCProperty())
+			//	.or(state.getRCProperty())
 				.or(StateProperties.getInstance().getLandedProperty().not()));
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
