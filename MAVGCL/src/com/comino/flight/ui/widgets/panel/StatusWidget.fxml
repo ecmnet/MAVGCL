@@ -33,7 +33,7 @@
 					GridPane.rowIndex="1" />
 				<DashLabelLED fx:id="poshold"  text="Position hold"
 					GridPane.rowIndex="2" />
-				<DashLabelLED fx:id="mission"  text="Mission" rate="300"
+				<DashLabelLED fx:id="mission"  text="Auto mode" rate="300"
 					GridPane.rowIndex="3" />
 				<DashLabelLED fx:id="offboard" text="Offboard"
 					GridPane.rowIndex="4" />

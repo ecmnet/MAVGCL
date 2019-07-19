@@ -107,34 +107,9 @@ public class StatusWidget extends WidgetPane  {
 			});
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_TAKEOFF, (o,n) -> {
-			Platform.runLater(() -> {
-				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF && !n.isStatus(Status.MSP_LANDED))
-					landed.setMode(DashLabelLED.MODE_BLINK);
-				else
-				    landed.set(n.isStatus(Status.MSP_LANDED));
-			});
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (o,n) -> {
-			Platform.runLater(() -> {
-				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
-					landed.setMode(DashLabelLED.MODE_BLINK);
-				else
-				    landed.set(n.isStatus(Status.MSP_LANDED));
-			});
-		});
-
 		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
 			Platform.runLater(() -> {
-				if(n.nav_state != Status.NAVIGATION_STATE_AUTO_TAKEOFF)
-				    landed.set(n.isStatus(Status.MSP_LANDED));
-			});
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_OFFBOARD, (o,n) -> {
-			Platform.runLater(() -> {
-				offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+				landed.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
 
@@ -144,8 +119,41 @@ public class StatusWidget extends WidgetPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+				System.out.println("RTL"+mission);
 			});
 		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_TAKEOFF, (o,n) -> {
+			Platform.runLater(() -> {
+				System.out.println("Takeoff:"+(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF));
+				mission.setMode(DashLabelLED.MODE_BLINK);
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else
+					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+				System.out.println(mission);
+			});
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (o,n) -> {
+			Platform.runLater(() -> {
+				System.out.println("Landing");
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else
+					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+				System.out.println("LAND"+mission);
+			});
+		});
+
+
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_OFFBOARD, (o,n) -> {
+			Platform.runLater(() -> {
+				offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+			});
+		});
+
+
 
 	}
 
