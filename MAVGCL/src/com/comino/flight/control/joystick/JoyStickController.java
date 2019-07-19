@@ -68,7 +68,7 @@ public class JoyStickController implements Runnable {
 	private int ch_arm      = 0;
 	private int ch_takeoff  = 0;
 	private int ch_kill     = 0;
-	private int ch_sw5      = 0;
+	private int ch_rtl      = 0;
 	private int ch_sw6      = 0;
 
 	// Th
@@ -126,7 +126,7 @@ public class JoyStickController implements Runnable {
 					this.ch_arm        = adapter.getField("ARM").getInt(null);
 					this.ch_takeoff    = adapter.getField("TAKEOFF").getInt(null);
 					this.ch_kill       = adapter.getField("KILL").getInt(null);
-					this.ch_sw5        = adapter.getField("SW5").getInt(null);
+					this.ch_rtl        = adapter.getField("RTL").getInt(null);
 					this.ch_sw6        = adapter.getField("SW6").getInt(null);
 					found = true;
 					System.out.println("[mgc]"+pad.getName()
@@ -166,15 +166,14 @@ public class JoyStickController implements Runnable {
 		});
 
 		joystick.addButtonListener(ch_takeoff, (state) -> {
-			if(state == JoyStickModel.PRESSED) {
+			if(state == JoyStickModel.PRESSED && model.sys.isStatus(Status.MSP_LANDED)) {
 
 				if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 							model.hud.at);
 				}
 				else {
-					if(model.sys.isStatus(Status.MSP_LANDED))
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Takoff rejected: LPOS not available",
 							MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				}
@@ -192,11 +191,22 @@ public class JoyStickController implements Runnable {
 			}
 		});
 
+		joystick.addButtonListener(ch_rtl, (state) -> {
+			if(state == JoyStickModel.PRESSED) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL);
+			}
+		});
+
 		joystick.addControlListener((t,y,p,r) -> {
 			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
-			// TODO: Add deadzone
+
 			control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
-					(p-1500f)/1000f,(r-1500f)/-1000f,(t-1500f)/-1000f,(y-1500f)/-1000f);
+					deadzone((p-1500f)/ 1000f,0.05f),
+					deadzone((r-1500f)/-1000f,0.05f),
+					deadzone((t-1500f)/-1000f,0.1f),
+					deadzone((y-1500f)/-1000f,0.2f));
 		});
 
 		Thread t = new Thread(this);
@@ -206,16 +216,22 @@ public class JoyStickController implements Runnable {
 		return true;
 	}
 
+	private float deadzone(float val, float dz ) {
+		if( Math.abs(val) < dz )
+			return 0;
+		return val;
+	}
+
 
 
 	@Override
 	public void run() {
 
-//		while(!control.isConnected()) {
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException e) { }
-//		}
+		//		while(!control.isConnected()) {
+		//			try {
+		//				Thread.sleep(500);
+		//			} catch (InterruptedException e) { }
+		//		}
 
 		StateProperties.getInstance().getControllerConnectedProperty().set(true);
 
