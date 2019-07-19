@@ -241,6 +241,16 @@ public class MainApp extends Application  {
 				}
 			});
 
+			state.getConnectedProperty().addListener((e,o,n) -> {
+				if(n.booleanValue()) {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+				}
+				Platform.runLater(() -> {
+					if(r_px4log!=null)
+					  r_px4log.setDisable(!n.booleanValue());
+				});
+			});
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -348,15 +358,6 @@ public class MainApp extends Application  {
 			this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
 		});
 
-
-		state.getConnectedProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
-			}
-			Platform.runLater(() -> {
-				r_px4log.setDisable(!n.booleanValue());
-			});
-		});
 
 		r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 
