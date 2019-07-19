@@ -119,7 +119,6 @@ public class StatusWidget extends WidgetPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
-				System.out.println("RTL"+mission);
 			});
 		});
 
@@ -131,7 +130,6 @@ public class StatusWidget extends WidgetPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
-				System.out.println(mission);
 			});
 		});
 
@@ -142,7 +140,6 @@ public class StatusWidget extends WidgetPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
-				System.out.println("LAND"+mission);
 			});
 		});
 
