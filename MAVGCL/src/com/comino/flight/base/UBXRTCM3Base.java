@@ -138,6 +138,14 @@ public class UBXRTCM3Base implements Runnable {
 		return mean_acc;
 	}
 
+	public boolean isConnected() {
+		return connected;
+	}
+
+	public int getBaseNumSat() {
+		return (int)base.numsat;
+	}
+
 	@Override
 	public void run() {
 
