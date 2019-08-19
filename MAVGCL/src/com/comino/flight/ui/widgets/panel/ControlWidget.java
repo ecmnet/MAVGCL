@@ -93,6 +93,12 @@ public class ControlWidget extends WidgetPane  {
 			}
 		});
 
+		stateProperties.getOffboardProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				vehiclectl.setSelected(true);
+			}
+		});
+
 		parameters.setDisable(true);
 
 		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
