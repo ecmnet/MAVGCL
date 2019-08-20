@@ -131,7 +131,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		vhc_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
 
 
-		if(model.getValue("SLAMSPD") != 0) {
+		if(model.getValue("SLAMSPD") != 0 && !Double.isNaN(model.getValue("SLAMSPD"))) {
 			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")*50);
 			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
