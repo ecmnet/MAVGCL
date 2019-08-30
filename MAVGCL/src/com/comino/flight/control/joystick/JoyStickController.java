@@ -202,7 +202,8 @@ public class JoyStickController implements Runnable {
 		joystick.addControlListener((t,y,p,r) -> {
 			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
 
-			control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
+			if(control.isConnected())
+			  control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
 					deadzone((p-1500f)/ 1000f,0.05f),
 					deadzone((r-1500f)/-1000f,0.05f),
 					deadzone((t-1500f)/-1000f,0.1f),
