@@ -329,7 +329,7 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 	@Override
 	public void update(Status oldStat, Status newStat) {
 
-		if(!modetrigger || oldStat==null || newStat.isEqual(oldStat) )
+		if(!modetrigger || oldStat==null)
 			return;
 
 		//System.err.println("START recording: "+oldStat+"/"+newStat);
