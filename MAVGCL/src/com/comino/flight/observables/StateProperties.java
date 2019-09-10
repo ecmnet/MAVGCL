@@ -114,16 +114,16 @@ public class StateProperties {
 			isInitializedProperty.set(true);
 		}, 4, TimeUnit.SECONDS);
 
-		control.getStatusManager().addListener(Status.MSP_ACTIVE, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_ARMED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_ARMED, (n) -> {
 			armedProperty.set(n.isStatus(Status.MSP_ARMED));
 
 		});
 
-		control.getStatusManager().addListener(Status.MSP_CONNECTED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_ALERT));
@@ -135,31 +135,31 @@ public class StateProperties {
 
 		});
 
-		control.getStatusManager().addListener(Status.MSP_LANDED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_LANDED, (n) -> {
 			landedProperty.set(n.isStatus(Status.MSP_LANDED));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL,  (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL,  (n) -> {
 			altholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, (n) -> {
 			posholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_OFFBOARD, (o,n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_OFFBOARD, (n) -> {
 			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 		});
 
-		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
 			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
 		});
 
-		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
 			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
 		});
 	}

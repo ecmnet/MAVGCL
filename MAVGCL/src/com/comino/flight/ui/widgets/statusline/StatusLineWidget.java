@@ -268,21 +268,21 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			});
 		});
 
-		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			if((n.isStatus(Status.MSP_RC_ATTACHED)) && n.isStatus(Status.MSP_CONNECTED))
 				rc.setMode(Badge.MODE_ON);
 			else
 				rc.setMode(Badge.MODE_OFF);
 		});
 
-		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
 			if((n.isStatus(Status.MSP_GPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
 				gpos.setMode(Badge.MODE_ON);
 			else
 				gpos.setMode(Badge.MODE_OFF);
 		});
 
-		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (o,n) -> {
+		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
 			if((n.isStatus(Status.MSP_LPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
 				lpos.setMode(Badge.MODE_ON);
 			else

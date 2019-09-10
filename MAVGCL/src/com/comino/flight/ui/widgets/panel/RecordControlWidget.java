@@ -321,15 +321,15 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 		});
 
 		state.getInitializedProperty().addListener((e,o,n) -> {
-			update(null,control.getCurrentModel().sys);
+			update(control.getCurrentModel().sys);
 		});
 
 	}
 
 	@Override
-	public void update(Status oldStat, Status newStat) {
+	public void update(Status newStat) {
 
-		if(!modetrigger || oldStat==null)
+		if(!modetrigger)
 			return;
 
 		//System.err.println("START recording: "+oldStat+"/"+newStat);
