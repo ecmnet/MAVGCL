@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	15/07/2019
+**Development Status:** Last updated 	11/09/2019
 
 - Tuning Tab added (WIP)
 
@@ -84,7 +84,7 @@ Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases
 
   run [MAVSlam vision]( https://github.com/ecmnet/MAVSlam) based on Intel® RealSense™ R200 on your companion and point video to port 8080 of your companion.
 
-  ​
+  
 
 **How to deploy on OSX:**
 
