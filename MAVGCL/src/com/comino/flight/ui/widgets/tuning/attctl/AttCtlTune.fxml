@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns="http://javafx.com/javafx/8.0.51"
+	xmlns:fx="http://javafx.com/fxml/1" >
+	<children>
+	 <!--
+	   <Label layoutX="14.0" prefHeight="28.0" text="Attitude control adjustments:" />
+		<HBox >
+			<children>
+				<Label layoutX="14.0" text="Adjust hovering throttle"
+					prefWidth="150" maxWidth="200.0" />
+				<Slider fx:id="hover" layoutX="13.0" max="1000" min="0" prefHeight="18.0" value="0" />
+			</children>
+		</HBox>
+		<HBox >
+			<children>
+				<Label layoutX="14.0"  text="Adjust minimal throttle"
+					prefWidth="150" maxWidth="200.0" />
+				<Slider fx:id="minimal" layoutX="13.0" max="1000" min="0" prefHeight="18.0" value="0" />
+			</children>
+		</HBox>
+		-->
+	</children>
+</fx:root>

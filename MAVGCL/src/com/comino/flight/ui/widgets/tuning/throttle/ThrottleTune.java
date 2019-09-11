@@ -95,7 +95,7 @@ public class ThrottleTune extends VBox  {
 	public void setup(IMAVController control) {
 
 		state.getParamLoadedProperty().addListener((a,o,n) -> {
-			if(n.booleanValue()) {
+			if(n.booleanValue() && parameters!=null) {
 				hover.setValue(parameters.get("MPC_THR_HOVER").value * 1000);
 			}
 		});

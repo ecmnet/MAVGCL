@@ -2,6 +2,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import com.comino.flight.ui.widgets.tuning.throttle.ThrottleTune?>
+<?import com.comino.flight.ui.widgets.tuning.attctl.AttCtlTune?>
 
 <fx:root prefHeight="164.0" type="javafx.scene.layout.Pane" styleClass="widget"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
@@ -9,6 +10,7 @@
 		<VBox fx:id="vbox" spacing="20" layoutY="10.0" layoutX="10.0">
 			<children>
                  <ThrottleTune fx:id="throttle"/>
+                 <AttCtlTune fx:id="attctl"/>
 			</children>
 		</VBox>
 	</children>

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2019 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,45 +31,47 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.tabs;
+package com.comino.flight.ui.widgets.tuning.attctl;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.ui.widgets.tuning.attctl.AttCtlTune;
-import com.comino.flight.ui.widgets.tuning.throttle.ThrottleTune;
+import com.comino.flight.observables.StateProperties;
 import com.comino.mav.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class MAVTuningTab extends Pane {
+
+public class AttCtlTune extends VBox  {
+
 
 	@FXML
-	private VBox vbox;
-
-	@FXML
-	private ThrottleTune throttle;
-
-	@FXML
-	private AttCtlTune attctl;
+	private HBox hbox;
 
 
+	private StateProperties state = null;
 
 
-	public MAVTuningTab() {
-		FXMLLoadHelper.load(this, "MAVTuningTab.fxml");
+	public AttCtlTune() {
+
+		FXMLLoadHelper.load(this, "AttCtlTune.fxml");
+
 	}
+
 
 	@FXML
 	private void initialize() {
-          vbox.prefWidthProperty().bind(widthProperty());
+
+	   state = StateProperties.getInstance();
+
 
 	}
-
 
 	public void setup(IMAVController control) {
-		throttle.setup(control);
-		attctl.setup(control);
+
+
+
 	}
+
 
 }
