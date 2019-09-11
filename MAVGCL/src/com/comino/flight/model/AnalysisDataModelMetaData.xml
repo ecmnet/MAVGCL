@@ -1854,6 +1854,14 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="Dist.Obstacle" uom="m" mask="#0.0" key="SLAMOMD">
+		<MSPSource class="slam" field="dm"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Obstacle.X" uom="m" mask="#0.00" key="SLAMOBX">
 		<MSPSource class="slam" field="ox"></MSPSource>
 	</KeyFigure>
