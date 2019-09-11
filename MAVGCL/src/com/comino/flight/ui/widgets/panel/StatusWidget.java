@@ -135,7 +135,7 @@ public class StatusWidget extends WidgetPane  {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (n) -> {
 			Platform.runLater(() -> {
-				System.out.println("Landing");
+				System.out.println("...Landing");
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
