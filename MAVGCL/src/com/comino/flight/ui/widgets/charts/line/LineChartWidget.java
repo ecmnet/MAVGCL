@@ -90,6 +90,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
@@ -173,7 +174,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private double x;
 	private float timeframe;
 	private boolean display_annotations = true;
-	private boolean isPaused = false;
+	private boolean isPaused            = false;
 
 	private DashBoardAnnotation dashboard1 = null;
 	private DashBoardAnnotation dashboard2 = null;
@@ -278,6 +279,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		Group chartArea = (Group)linechart.getAnnotationArea();
+
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
@@ -286,16 +288,62 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		zoom.setY(0);
 		zoom.setHeight(1000);
 
-		Label zoom_label = new Label();
+		final Label zoom_label = new Label();
 		zoom_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #9090D0; -fx-padding:3;");
 		zoom_label.setVisible(false);
 		chartArea.getChildren().add(zoom_label);
 
+		final Line measure = new Line();
+		measure.setVisible(false);
+		measure.setStartY(0);
+		measure.setEndY(1000);
+		measure.setStroke(Color.color(0.9,0.6,1.0,0.5));
+		chartArea.getChildren().add(measure);
+
+
+		linechart.setOnMouseExited(mouseEvent -> {
+			measure.setVisible(false);
+			mouseEvent.consume();
+			dashboard1.setVal(0,null,false);
+			dashboard2.setVal(0,null,false);
+			dashboard3.setVal(0,null,false);
+		});
+
+		linechart.setOnMouseMoved(mouseEvent -> {
+
+			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
+				measure.setVisible(false);
+				mouseEvent.consume();
+				return;
+			}
+
+			measure.setVisible(true);
+
+			x = mouseEvent.getX();
+
+			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
+			if(x1 > 0) {
+				dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
+				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
+				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+			}
+
+			measure.setStartX(x-chartArea.getLayoutX()-7);
+			measure.setEndX(x-chartArea.getLayoutX()-7);
+			linechart.getPlotArea().requestLayout();
+
+
+		});
+
 		linechart.setOnMousePressed(mouseEvent -> {
+
+
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
 				mouseEvent.consume();
 				return;
 			}
+
+			measure.setVisible(false);
 
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
@@ -345,6 +393,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setOnMouseClicked(click -> {
 
 			if (click.getClickCount() == 2) {
+				measure.setVisible(isPaused);
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalTimeScale();
 				click.consume();
