@@ -317,22 +317,24 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				return;
 			}
 
-			measure.setVisible(true);
+			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 
-			x = mouseEvent.getX();
+				measure.setVisible(true);
 
-			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
-			if(x1 > 0) {
-				dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
-				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
-				dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+				x = mouseEvent.getX();
+
+				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
+				if(x1 > 0) {
+					dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
+					dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
+					dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+				}
+
+				measure.setStartX(x-chartArea.getLayoutX()-7);
+				measure.setEndX(x-chartArea.getLayoutX()-7);
+				linechart.getPlotArea().requestLayout();
+
 			}
-
-			measure.setStartX(x-chartArea.getLayoutX()-7);
-			measure.setEndX(x-chartArea.getLayoutX()-7);
-			linechart.getPlotArea().requestLayout();
-
-
 		});
 
 		linechart.setOnMousePressed(mouseEvent -> {
