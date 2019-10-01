@@ -277,14 +277,14 @@ public class MainApp extends Application  {
 		MSPLogger.getInstance().writeLocalMsg("[mgc] Closing...",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.close();
-		try { Thread.sleep(200); } catch(Exception e) { }
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
 		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());
 		MAVPreferences.getInstance().putDouble("stage.width", primaryStage.getWidth());
 		MAVPreferences.getInstance().putDouble("stage.height", primaryStage.getHeight());
 		MAVPreferences.getInstance().flush();
-		super.stop();
+		try { Thread.sleep(200); } catch(Exception e) { }
 		System.exit(0);
+
 	}
 
 
