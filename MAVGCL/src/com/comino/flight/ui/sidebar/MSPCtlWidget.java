@@ -99,7 +99,7 @@ public class MSPCtlWidget extends WidgetPane   {
 	private Button debug_mode2;
 
 	@FXML
-	private Button execute_waypoints;
+	private Button optical_target;
 
 	@FXML
 	private Button  filter;
@@ -251,14 +251,15 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
-		execute_waypoints.setDisable(true);
-		execute_waypoints.setOnAction((event) ->{
+
+		optical_target.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE;
-			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			msp.command = MSP_CMD.SET_OPTICAL_TARGET;
+			msp.param2 =  Float.NaN;
+			msp.param1 =  Float.NaN;
 			control.sendMAVLinkMessage(msp);
 		});
+
 
 		save_map.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
