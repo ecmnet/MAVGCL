@@ -38,6 +38,8 @@ import java.net.URL;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -58,15 +60,15 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {
 
-	private static final int X = 320;
-	private static final int Y = 240;
+	private static final int X = 640;
+	private static final int Y = 480;
 
 
 	@FXML
 	private ImageView image;
 
 	private IMWVideoSource 	source = null;
-	private boolean			big_size=false;
+	private boolean			big_size=true;
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
 	private MP4Recorder     recorder = null;
@@ -108,9 +110,20 @@ public class CameraWidget extends WidgetPane  {
 				else
 					big_size=false;
 				resize(big_size,X,Y);
+			} else {
+				if(event.isShiftDown()) {
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.SET_OPTICAL_TARGET;
+
+					msp.param1 =  (float)event.getX();
+					msp.param2 =  (float)event.getY();
+
+					control.sendMAVLinkMessage(msp);
+				}
 			}
 
 		});
+
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			image.setImage(null);
@@ -208,6 +221,7 @@ public class CameraWidget extends WidgetPane  {
 		} catch (MalformedURLException e) {
 			return false;
 		}
+		resize(big_size,X,Y);
 		isConnected = true;
 		return true;
 	}
