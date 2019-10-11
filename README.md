@@ -12,9 +12,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	11/09/2019
+**Development Status:** Last updated 	11/10/2019
 
 - Tuning Tab added (WIP)
+- Replacement of MAVCOMM by mavcom-0.0.1.jar and mavutils-0.0.1.jar
 
 **Features:**
 
