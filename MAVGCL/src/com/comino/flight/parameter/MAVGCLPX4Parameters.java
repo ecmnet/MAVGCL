@@ -50,10 +50,10 @@ import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMAVLinkListener;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;

@@ -36,7 +36,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import georegression.struct.point.Point3D_F32;

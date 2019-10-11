@@ -45,7 +45,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

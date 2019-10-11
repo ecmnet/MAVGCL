@@ -42,7 +42,6 @@ import java.util.prefs.Preferences;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
-import org.mavlink.messages.lquac.msg_gps_global_origin;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.base.UBXRTCM3Base;
@@ -57,13 +56,13 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
-import com.comino.mav.control.IMAVController;
-import com.comino.mav.control.impl.MAVSerialController;
-import com.comino.mav.control.impl.MAVSimController;
-import com.comino.mav.control.impl.MAVUdpController;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVSerialController;
+import com.comino.mavcom.control.impl.MAVSimController;
+import com.comino.mavcom.control.impl.MAVUdpController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Application;
 import javafx.application.Platform;

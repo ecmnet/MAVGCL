@@ -2,9 +2,9 @@ package com.comino.flight.log.ulog;
 
 import org.mavlink.messages.MAV_CMD;
 
-import com.comino.mav.control.IMAVController;
-import com.comino.mav.control.impl.MAVUdpController;
-import com.comino.msp.log.MSPLogger;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVUdpController;
+import com.comino.mavcom.log.MSPLogger;
 
 public class UlogFromMavLinkTest implements Runnable {
 

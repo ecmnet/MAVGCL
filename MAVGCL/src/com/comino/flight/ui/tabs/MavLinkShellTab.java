@@ -42,8 +42,8 @@ import org.mavlink.messages.lquac.msg_serial_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMAVLinkListener;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

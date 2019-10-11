@@ -35,7 +35,7 @@ package com.comino.flight.ui.widgets.tuning.attctl;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;

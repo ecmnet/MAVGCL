@@ -33,7 +33,7 @@
 
 package com.comino.flight.model;
 
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 
 public class AnalysisModelTest {
 

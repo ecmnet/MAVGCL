@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 
 import georegression.struct.point.Point3D_F32;
 import javafx.animation.KeyFrame;

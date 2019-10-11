@@ -33,22 +33,19 @@
 
 package com.comino.flight.ui.widgets.tuning.throttle;
 
-import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
-import com.comino.flight.parameter.ParamUtils;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 
 public class ThrottleTune extends VBox  {

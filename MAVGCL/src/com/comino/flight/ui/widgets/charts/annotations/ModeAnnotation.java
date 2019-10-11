@@ -39,7 +39,7 @@ import java.util.Map;
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.model.segment.Status;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;

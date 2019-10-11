@@ -36,7 +36,7 @@ package com.comino.flight.ui.tabs;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;

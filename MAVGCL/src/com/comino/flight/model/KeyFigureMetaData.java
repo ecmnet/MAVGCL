@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.model.converter.SourceConverter;
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 
 public class KeyFigureMetaData {
 

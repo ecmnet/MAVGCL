@@ -45,7 +45,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.DashLabel;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

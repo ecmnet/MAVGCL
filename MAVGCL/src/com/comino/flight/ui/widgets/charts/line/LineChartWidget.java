@@ -59,7 +59,7 @@ import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
 import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

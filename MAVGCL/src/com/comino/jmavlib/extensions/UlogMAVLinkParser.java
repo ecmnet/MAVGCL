@@ -45,7 +45,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
 
-import com.comino.msp.log.MSPLogger;
+import com.comino.mavcom.log.MSPLogger;
 
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.FieldFormat;

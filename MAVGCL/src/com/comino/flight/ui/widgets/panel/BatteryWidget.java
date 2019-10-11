@@ -37,7 +37,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.Gauge.SkinType;

@@ -43,13 +43,13 @@ import org.mavlink.messages.lquac.msg_gps_rtcm_data;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.mav.control.IMAVController;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.segment.GPS;
-import com.comino.msp.model.segment.Status;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.segment.GPS;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

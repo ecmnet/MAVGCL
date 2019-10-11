@@ -36,18 +36,16 @@ package com.comino.flight.ui.widgets.panel;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.lquac.msg_hil_gps;
 import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.mavlink.MAV_CUST_MODE;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

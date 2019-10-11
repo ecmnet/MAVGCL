@@ -36,9 +36,9 @@ package com.comino.flight.ui.widgets.panel;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.StatusManager;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.StatusManager;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

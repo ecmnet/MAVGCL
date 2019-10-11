@@ -55,9 +55,9 @@ import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.sidebar.bitselection.BitSelectionDialog;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -87,7 +87,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.util.StringConverter;
 
 public class ParameterWidget extends WidgetPane  {

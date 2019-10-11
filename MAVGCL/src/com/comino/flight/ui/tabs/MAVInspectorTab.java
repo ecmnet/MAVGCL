@@ -38,8 +38,8 @@ import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMAVLinkListener;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

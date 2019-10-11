@@ -33,10 +33,9 @@
 
 package com.comino.flight.control;
 
-import com.comino.flight.control.joystick.FrSkyAdapter;
 import com.comino.flight.control.joystick.JoyStickController;
 import com.comino.flight.control.joystick.PS4Adapter;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 public class SITLController  {
 
@@ -44,10 +43,16 @@ public class SITLController  {
 
 	public SITLController(IMAVController control) {
 
-		joystick = new JoyStickController(control,FrSkyAdapter.class, PS4Adapter.class);
+		joystick = new JoyStickController(control,PS4Adapter.class);
 		joystick.connect();
 
 
 	}
+
+	public static void main(String[] args) {
+
+		new SITLController(null);
+	}
+
 
 }

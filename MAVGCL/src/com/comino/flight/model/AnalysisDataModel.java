@@ -36,9 +36,9 @@ package com.comino.flight.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.LogMessage;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavcom.model.segment.Status;
 
 public class AnalysisDataModel {
 

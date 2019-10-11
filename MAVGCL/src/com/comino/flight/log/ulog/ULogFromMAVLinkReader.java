@@ -44,10 +44,10 @@ import org.mavlink.messages.lquac.msg_logging_data_acked;
 
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMAVLinkListener;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavutils.legacy.ExecutorService;
 
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {

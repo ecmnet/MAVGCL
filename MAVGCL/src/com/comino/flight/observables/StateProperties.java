@@ -37,12 +37,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.StatusManager;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.segment.LogMessage;
-import com.comino.msp.model.segment.Status;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.StatusManager;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;

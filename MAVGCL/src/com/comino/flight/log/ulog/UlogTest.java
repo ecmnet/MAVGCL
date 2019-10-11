@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 
 import me.drton.jmavlib.log.ulog.ULogReader;
 

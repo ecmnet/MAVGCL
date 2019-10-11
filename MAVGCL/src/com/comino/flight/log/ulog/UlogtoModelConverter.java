@@ -43,7 +43,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.msp.model.segment.LogMessage;
+import com.comino.mavcom.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.ULogReader;

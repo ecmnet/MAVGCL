@@ -39,8 +39,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

@@ -62,8 +62,8 @@ import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.utils.MSPMathUtils;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
 

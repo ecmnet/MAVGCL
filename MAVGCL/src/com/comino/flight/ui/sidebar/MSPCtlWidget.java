@@ -44,9 +44,9 @@ import org.mavlink.messages.lquac.msg_msp_command;
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.StatusManager;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.StatusManager;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

@@ -36,7 +36,7 @@ package com.comino.flight.ui.widgets.panel;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;

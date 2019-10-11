@@ -45,9 +45,9 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.Badge;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

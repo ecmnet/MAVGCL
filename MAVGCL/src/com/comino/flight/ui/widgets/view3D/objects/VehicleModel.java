@@ -36,7 +36,7 @@ package com.comino.flight.ui.widgets.view3D.objects;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.msp.utils.MSPMathUtils;
+import com.comino.mavutils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import javafx.scene.shape.MeshView;

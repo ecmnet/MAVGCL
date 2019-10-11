@@ -34,7 +34,7 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.msp.utils.MSPMathUtils;
+import com.comino.mavutils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;

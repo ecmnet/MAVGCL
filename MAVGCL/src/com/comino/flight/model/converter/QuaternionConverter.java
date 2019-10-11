@@ -35,7 +35,7 @@ package com.comino.flight.model.converter;
 
 import java.util.Map;
 
-import com.comino.msp.utils.MSPMathUtils;
+import com.comino.mavutils.MSPMathUtils;
 
 public class QuaternionConverter extends SourceConverter {
 

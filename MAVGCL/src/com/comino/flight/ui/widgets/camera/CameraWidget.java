@@ -45,9 +45,9 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
@@ -60,8 +60,8 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {
 
-	private static final int X = 640;
-	private static final int Y = 480;
+	private static final int X = 640 / 2;
+	private static final int Y = 480 / 2;
 
 
 	@FXML
@@ -104,7 +104,7 @@ public class CameraWidget extends WidgetPane  {
 
 		image.setOnMouseClicked(event -> {
 
-			if(event.getClickCount()==2) {
+			if(event.getClickCount()==2 && !event.isShiftDown()) {
 				if(!big_size)
 					big_size=true;
 				else

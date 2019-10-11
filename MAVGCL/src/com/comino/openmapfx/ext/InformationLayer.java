@@ -36,7 +36,7 @@ package com.comino.openmapfx.ext;
 import org.lodgon.openmapfx.core.LayeredMap;
 import org.lodgon.openmapfx.core.MapLayer;
 
-import com.comino.msp.model.DataModel;
+import com.comino.mavcom.model.DataModel;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

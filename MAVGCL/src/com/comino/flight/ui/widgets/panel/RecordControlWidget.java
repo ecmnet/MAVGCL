@@ -47,9 +47,9 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMSPStatusChangedListener;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.listener.IMSPStatusChangedListener;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

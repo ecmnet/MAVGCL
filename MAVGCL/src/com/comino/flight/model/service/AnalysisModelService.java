@@ -44,18 +44,17 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 
-import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.execution.control.listener.IMAVLinkListener;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
-import com.comino.msp.utils.ExecutorService;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavutils.legacy.ExecutorService;
 
 public class AnalysisModelService implements IMAVLinkListener {
 

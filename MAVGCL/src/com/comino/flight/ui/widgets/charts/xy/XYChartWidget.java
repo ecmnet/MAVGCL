@@ -64,9 +64,9 @@ import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
 import com.comino.flight.ui.widgets.charts.utils.XYStatistics;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.utils.ExecutorService;
-import com.comino.msp.utils.MSPMathUtils;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavutils.MSPMathUtils;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

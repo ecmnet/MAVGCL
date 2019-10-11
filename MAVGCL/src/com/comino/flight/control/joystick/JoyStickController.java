@@ -40,11 +40,11 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.mav.control.IMAVController;
-import com.comino.mav.mavlink.MAV_CUST_MODE;
-import com.comino.msp.log.MSPLogger;
-import com.comino.msp.model.DataModel;
-import com.comino.msp.model.segment.Status;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.mavlink.MAV_CUST_MODE;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -84,7 +84,9 @@ public class JoyStickController implements Runnable {
 	public JoyStickController(IMAVController control, Class<?> ...adapters) {
 		this.adapters = adapters;
 		this.control = control;
-		this.model   = control.getCurrentModel();
+
+		if(control!=null)
+		  this.model   = control.getCurrentModel();
 	}
 
 	public boolean connect() {
@@ -234,7 +236,7 @@ public class JoyStickController implements Runnable {
 		//			} catch (InterruptedException e) { }
 		//		}
 
-		StateProperties.getInstance().getControllerConnectedProperty().set(true);
+	//	StateProperties.getInstance().getControllerConnectedProperty().set(true);
 
 
 		while(pad.poll()) {
@@ -258,7 +260,7 @@ public class JoyStickController implements Runnable {
 				Thread.sleep(25);
 
 			} catch(Exception e ) {
-				System.out.println("ERRIR");
+				e.printStackTrace();
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
 			}
 		}

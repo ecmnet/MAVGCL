@@ -43,7 +43,7 @@ import com.comino.flight.ui.widgets.panel.ControlWidget;
 import com.comino.flight.ui.widgets.panel.InfoWidget;
 import com.comino.flight.ui.widgets.panel.RecordControlWidget;
 import com.comino.flight.ui.widgets.panel.StatusWidget;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;

@@ -39,7 +39,7 @@ import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

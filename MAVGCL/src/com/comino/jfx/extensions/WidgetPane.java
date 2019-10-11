@@ -37,8 +37,8 @@ import java.util.prefs.Preferences;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.mav.control.IMAVController;
-import com.comino.msp.log.MSPLogger;
+import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.log.MSPLogger;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;

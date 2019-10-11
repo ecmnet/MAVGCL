@@ -44,7 +44,7 @@ import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
-import com.comino.mav.control.IMAVController;
+import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
