@@ -38,6 +38,7 @@ import org.mavlink.messages.lquac.msg_param_set;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.parameter.MAVGCLPX4Parameters;
+import com.comino.flight.parameter.ParameterAttributes;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.event.EventHandler;
@@ -101,16 +102,19 @@ public class ThrottleTune extends VBox  {
 
 			float val = newvalue.intValue() / 1000f;
 
-			if( Math.abs(parameters.get("MPC_THR_HOVER").value - val) > 0.005f &&
+			ParameterAttributes param = parameters.get("MPC_THR_HOVER");
+
+			if( Math.abs(param.value - val) > 0.005f &&
 					state.getConnectedProperty().get() && state.getParamLoadedProperty().get()) {
 
-				parameters.get("MPC_THR_HOVER").value = val;
+				param.value = val;
 
 				final msg_param_set msg = new msg_param_set(255,1);
 				msg.target_component = 1;
 				msg.target_system = 1;
-				msg.setParam_id("MPC_THR_HOVER");
+				msg.setParam_id(param.name);
 				msg.param_value = val;
+				msg.param_type = param.vtype;
 				control.sendMAVLinkMessage(msg);
 
 			}
