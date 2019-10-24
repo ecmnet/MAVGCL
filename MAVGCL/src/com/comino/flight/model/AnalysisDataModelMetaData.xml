@@ -686,8 +686,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<!--- ABOVE CHECKED --> vehicle_local_position_0.yaw
-
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
 		<ULogSource field="vehicle_local_position_0.yaw">
