@@ -202,14 +202,14 @@ public class JoyStickController implements Runnable {
 		});
 
 		joystick.addControlListener((t,y,p,r) -> {
-			//System.out.println("Throttle="+t+" Yaw="+y+" Pitch="+p+" Roll="+r);
+			// System.out.println("Throttle="+deadzone((t-1500f)/-1000f,0.05f)+" Yaw="+deadzone((y-1500f)/-1000f,0.05f)+" Pitch="+deadzone((p-1500f)/ 1000f,0.02f)+" Roll="+deadzone((r-1500f)/-1000f,0.02f));
 
 			if(control.isConnected())
 			  control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
-					deadzone((p-1500f)/ 1000f,0.05f),
-					deadzone((r-1500f)/-1000f,0.05f),
-					deadzone((t-1500f)/-1000f,0.1f),
-					deadzone((y-1500f)/-1000f,0.2f));
+					deadzone((p-1500.0f)/ 1000.0f,0.02f),
+					deadzone((r-1500.0f)/-1000.0f,0.02f),
+					deadzone((t-1500.0f)/-1000.0f,0.05f),
+					deadzone((y-1500.0f)/-1000.0f,0.05f));
 		});
 
 		Thread t = new Thread(this);
@@ -257,7 +257,7 @@ public class JoyStickController implements Runnable {
 				//				System.out.println();
 
 
-				Thread.sleep(25);
+				Thread.sleep(10);
 
 			} catch(Exception e ) {
 				e.printStackTrace();

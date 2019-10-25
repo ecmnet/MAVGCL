@@ -10,7 +10,7 @@ public class JoyStickModel {
 	public static  int   PRESSED   = 1;
 	public static  int   RELEASED  = 0;
 
-	private static int  THRESHOLD  = 10;
+	private static int  THRESHOLD  = 5;
 	private static int  TIMEOUT    = 500;
 
 	public int throttle = 0;
