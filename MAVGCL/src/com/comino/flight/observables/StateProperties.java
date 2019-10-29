@@ -37,13 +37,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.speech.VoiceTTS;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -106,9 +109,9 @@ public class StateProperties {
 
 	private StateProperties(IMAVController control) {
 		this.control = control;
-        this.logger = MSPLogger.getInstance();
+		this.logger = MSPLogger.getInstance();
 
-        simulationProperty.set(control.isSimulation());
+		simulationProperty.set(control.isSimulation());
 
 		ExecutorService.get().schedule(() -> {
 			isInitializedProperty.set(true);
@@ -162,6 +165,15 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
 			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
 		});
+
+		if(MAVPreferences.getInstance().getBoolean("SPEECH", false)) {
+			control.addMAVMessageListener(msg -> {
+				if(msg.text.contains("]"))
+					VoiceTTS.getInstance().talk(msg.text.substring(5));
+				else
+					VoiceTTS.getInstance().talk(msg.text);
+			});
+		}
 	}
 
 	public BooleanProperty getMSPProperty() {

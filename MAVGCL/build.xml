@@ -69,7 +69,7 @@
 					                                JCSG.jar medusa-7.4.jar gson-2.8.5.jar jfxchartext-1.1.jar jSerialComm-1.3.11
 					                                jinput.jar MAVGPreloader.jar exp4j-0.4.7.jar core-0.29.jar  dense64-0.29.jar
 				                                    jcodec-0.1.9.jar jcodec-javase-0.1.9.jar georegression-0.10.jar
-					                                ObjImport.jar" />
+					                                ObjImport.jar jlayer-1.0.1.jar" />
 			</manifest>
 		</fx:jar>
 
@@ -113,6 +113,7 @@
 				<include name="jcodec-javase-0.1.9.jar" />
 				<include name="georegression-0.10.jar" />
 				<include name="ObjImport.jar" />
+				<include name="jlayer-1.0.1.jar" />
 			</fileset>
 		</copy>
 

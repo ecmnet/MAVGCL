@@ -104,6 +104,9 @@ public class PreferencesDialog  {
 	private CheckBox check;
 
 	@FXML
+	private CheckBox speech;
+
+	@FXML
 	private TextField svinacc;
 
 	@FXML
@@ -200,6 +203,7 @@ public class PreferencesDialog  {
 		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
 		reflat.setText(userPrefs.get(MAVPreferences.REFLAT, "47.3977420"));
 		reflon.setText(userPrefs.get(MAVPreferences.REFLON, "8.5455940"));
+		speech.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.SPEECH, true));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -217,6 +221,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 			userPrefs.put(MAVPreferences.REFLAT, reflat.getText());
 			userPrefs.put(MAVPreferences.REFLON, reflon.getText());
+			userPrefs.putBoolean(MAVPreferences.SPEECH,speech.isSelected());
 
 			try {
 				userPrefs.flush();
