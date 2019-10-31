@@ -273,7 +273,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void stop() throws Exception {
-		MSPLogger.getInstance().writeLocalMsg("[mgc] Closing...",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+		System.out.println("[mgc] Closing...");
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.close();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());

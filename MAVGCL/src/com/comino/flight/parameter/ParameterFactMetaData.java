@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2019 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -63,7 +63,7 @@ public class ParameterFactMetaData {
 			if (doc.hasChildNodes()) {
 				String v_major = doc.getElementsByTagName("parameter_version_major").item(0).getTextContent();
 				String v_minor = doc.getElementsByTagName("parameter_version_minor").item(0).getTextContent();
-				MSPLogger.getInstance().writeLocalMsg("ParameterFactMetaData Version: "+v_major+"."+v_minor,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+				System.out.println("ParameterFactMetaData Version: "+v_major+"."+v_minor);
 				buildParameterList(doc.getElementsByTagName("group"));
 			}
 		} catch (Exception e) {
