@@ -168,8 +168,10 @@ public class StateProperties {
 
 		if(MAVPreferences.getInstance().getBoolean("SPEECH", false)) {
 			control.addMAVMessageListener(msg -> {
+				if(msg.severity > MAV_SEVERITY.MAV_SEVERITY_INFO)
+					return;
 				if(msg.text.contains("]"))
-					VoiceTTS.getInstance().talk(msg.text.substring(5));
+					VoiceTTS.getInstance().talk(msg.text.substring(msg.text.indexOf(']')));
 				else
 					VoiceTTS.getInstance().talk(msg.text);
 			});
