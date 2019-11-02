@@ -1431,7 +1431,7 @@
 		<Groups>
 			<Group>Radio Control</Group>
 		</Groups>
-		<Validity min="0.4" max="10.0"/>
+		<Validity min="0.2" max="10.0"/>
 	</KeyFigure>
 
 	<!-- System & Power -->
@@ -1454,7 +1454,7 @@
 		<Groups>
 			<Group>Battery</Group>
 		</Groups>
-		<Validity min="0.2" max="15.0"/>
+		<Validity min="0.0" max="20.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Consumed.Power" uom="mAh" mask="#0" key="BATH">
