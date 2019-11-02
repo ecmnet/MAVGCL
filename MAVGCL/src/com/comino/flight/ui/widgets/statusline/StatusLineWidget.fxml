@@ -11,7 +11,7 @@
 		<HBox layoutY="6.0" layoutX="212" spacing="7.0">
 			<children>
 				<Badge fx:id="driver" prefHeight="16.0" prefWidth="250.0" color="DARKCYAN" text="" />
-				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="RC" color="DARKCYAN" />
+				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="DARKCYAN" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="50.0" text="GPOS" color="DARKCYAN" />
 				<Badge fx:id="lpos" prefHeight="16.0" prefWidth="50.0" text="LPOS" color="DARKCYAN" />
 				<Badge fx:id="messages" prefHeight="16.0" prefWidth="300" text="" color="GRAY"/>

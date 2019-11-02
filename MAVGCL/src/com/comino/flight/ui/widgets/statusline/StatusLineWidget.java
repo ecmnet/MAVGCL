@@ -178,10 +178,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					else
 						driver.setBackgroundColor(Color.DARKCYAN);
 					driver.setMode(Badge.MODE_ON);
-				} else {
-					messages.setMode(Badge.MODE_OFF);
-					driver.setText("no sensor info available");
-					driver.setMode(Badge.MODE_OFF);
 				}
 
 				list = collector.getModelList();
@@ -268,22 +264,32 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			});
 		});
 
+		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
+			rc.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			gpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			lpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			driver.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			messages.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			controller.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+
+		});
+
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
-			if((n.isStatus(Status.MSP_RC_ATTACHED)) && n.isStatus(Status.MSP_CONNECTED))
+			if((n.isStatus(Status.MSP_RC_ATTACHED)))
 				rc.setMode(Badge.MODE_ON);
 			else
 				rc.setMode(Badge.MODE_OFF);
 		});
 
 		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
-			if((n.isStatus(Status.MSP_GPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
+			if((n.isStatus(Status.MSP_GPOS_VALID)))
 				gpos.setMode(Badge.MODE_ON);
 			else
 				gpos.setMode(Badge.MODE_OFF);
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
-			if((n.isStatus(Status.MSP_LPOS_VALID)) && n.isStatus(Status.MSP_CONNECTED))
+			if((n.isStatus(Status.MSP_LPOS_VALID)))
 				lpos.setMode(Badge.MODE_ON);
 			else
 				lpos.setMode(Badge.MODE_OFF);

@@ -140,4 +140,6 @@ public class Badge extends Label {
 	public void setColor(String value) {
 		setBackgroundColor(Color.valueOf(value));
 	}
+
+
 }
