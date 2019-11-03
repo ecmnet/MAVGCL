@@ -37,12 +37,14 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
+import org.mavlink.messages.lquac.msg_ping;
 
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
@@ -249,6 +251,12 @@ public class MainApp extends Application  {
 					  r_px4log.setDisable(!n.booleanValue());
 				});
 			});
+
+			ExecutorService.get().scheduleAtFixedRate(() -> {
+				msg_ping ping = new msg_ping(255,1);
+				ping.target_system = 2;
+				control.sendMAVLinkMessage(ping);
+			}, 500, 500, TimeUnit.MILLISECONDS);
 
 		} catch(Exception e) {
 			e.printStackTrace();
