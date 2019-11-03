@@ -60,15 +60,15 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends WidgetPane  {
 
-	private static final int X = 640 / 2;
-	private static final int Y = 480 / 2;
+	private int X = 1280 / 2;
+	private int Y = 960 / 2;
 
 
 	@FXML
 	private ImageView image;
 
 	private IMWVideoSource 	source = null;
-	private boolean			big_size=true;
+	private boolean			big_size=false;
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 
 	private MP4Recorder     recorder = null;
@@ -215,6 +215,7 @@ public class CameraWidget extends WidgetPane  {
 				if(isVisible())
 					Platform.runLater(() -> {
 						image.setImage(im);
+
 					});
 			});
 			source.addProcessListener(recorder);
