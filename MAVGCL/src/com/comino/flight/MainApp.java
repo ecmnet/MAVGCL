@@ -239,6 +239,11 @@ public class MainApp extends Application  {
 				if(n.booleanValue()) {
 					analysisModelService.startConverter();
 					new SITLController(control);
+//					ExecutorService.get().scheduleAtFixedRate(() -> {
+//						msg_ping ping = new msg_ping(255,1);
+//						ping.target_system = 2;
+//						  control.sendMAVLinkMessage(ping);
+//					}, 100, 500, TimeUnit.MILLISECONDS);
 				}
 			});
 
@@ -252,11 +257,6 @@ public class MainApp extends Application  {
 				});
 			});
 
-			ExecutorService.get().scheduleAtFixedRate(() -> {
-				msg_ping ping = new msg_ping(255,1);
-				ping.target_system = 2;
-				control.sendMAVLinkMessage(ping);
-			}, 500, 500, TimeUnit.MILLISECONDS);
 
 		} catch(Exception e) {
 			e.printStackTrace();
