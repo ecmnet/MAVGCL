@@ -115,7 +115,7 @@ public class StateProperties {
 
 		ExecutorService.get().schedule(() -> {
 			isInitializedProperty.set(true);
-		}, 4, TimeUnit.SECONDS);
+		}, 5, TimeUnit.SECONDS);
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
@@ -127,15 +127,15 @@ public class StateProperties {
 		});
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-			connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+			ExecutorService.get().schedule(() -> {
+				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+			}, 2, TimeUnit.SECONDS);
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
-				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_ALERT));
+				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 
 			} else {
-				control.getStatusManager().reset();
+				  control.getStatusManager().reset();
 			}
-
-
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (n) -> {
