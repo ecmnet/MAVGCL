@@ -60,7 +60,7 @@ import javafx.scene.image.Image;
  */
 public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
-	private static final int RATE = 50;
+	private static final int RATE = 20;
 
 	public static final String BOUNDARY_MARKER_PREFIX  = "--";
 
