@@ -305,7 +305,6 @@ public class RecordControlWidget extends WidgetPane implements IMSPStatusChanged
 				FileHandler.getInstance().clear();
 				state.getLogLoadedProperty().set(false);
 				charts.refreshCharts();
-				info.clear();
 			} else {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
