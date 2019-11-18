@@ -52,7 +52,7 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.charts.annotations.PositionAnnotation;

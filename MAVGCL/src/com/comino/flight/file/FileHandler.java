@@ -65,12 +65,13 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
-import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.param.MAVGCLPX4Parameters;
+
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.param.ParameterAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

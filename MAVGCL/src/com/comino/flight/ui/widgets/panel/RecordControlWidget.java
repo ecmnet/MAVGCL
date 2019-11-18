@@ -44,7 +44,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mavcom.control.IMAVController;

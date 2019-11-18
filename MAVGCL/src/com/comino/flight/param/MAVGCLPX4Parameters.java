@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.parameter;
+package com.comino.flight.param;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,6 +53,11 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.param.IPX4ParameterRefresh;
+import com.comino.mavcom.param.PX4ParamReader;
+import com.comino.mavcom.param.ParamUtils;
+import com.comino.mavcom.param.ParameterAttributes;
+import com.comino.mavcom.param.ParameterFactMetaData;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
@@ -62,17 +67,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 
-public class MAVGCLPX4Parameters implements IMAVLinkListener {
+public class MAVGCLPX4Parameters extends PX4ParamReader implements IMAVLinkListener {
 
 	private static MAVGCLPX4Parameters px4params = null;
 
 	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
-
-	private Map<String,ParameterAttributes> parameterList = null;
-
-	private IMAVController control;
-
-	private ParameterFactMetaData metadata = null;
 
 	private Preferences preferences = null;
 
@@ -96,14 +95,10 @@ public class MAVGCLPX4Parameters implements IMAVLinkListener {
 
 
 	private MAVGCLPX4Parameters(IMAVController control) {
-		this.control  = control;
-		this.control.addMAVLinkListener(this);
+		super(control);
+
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
-
-		this.metadata = new ParameterFactMetaData("PX4ParameterFactMetaData.xml");
-		this.parameterList = new HashMap<String,ParameterAttributes>();
-
 
 		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override

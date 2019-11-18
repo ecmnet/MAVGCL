@@ -53,11 +53,11 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
-import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.param.ParameterAttributes;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.beans.property.BooleanProperty;

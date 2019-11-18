@@ -37,9 +37,9 @@ import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
-import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.param.ParameterAttributes;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

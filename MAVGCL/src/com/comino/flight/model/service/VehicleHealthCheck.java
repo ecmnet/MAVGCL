@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;

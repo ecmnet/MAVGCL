@@ -49,14 +49,14 @@ import org.mavlink.messages.lquac.msg_param_set;
 import com.comino.flight.MainApp;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.parameter.MAVGCLPX4Parameters;
-import com.comino.flight.parameter.ParamUtils;
-import com.comino.flight.parameter.ParameterAttributes;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.sidebar.bitselection.BitSelectionDialog;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.param.ParamUtils;
+import com.comino.mavcom.param.ParameterAttributes;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
