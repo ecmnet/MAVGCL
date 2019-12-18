@@ -72,9 +72,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private Badge driver;
 
 	@FXML
-	private Badge messages;
-
-	@FXML
 	private Badge time;
 
 	@FXML
@@ -107,7 +104,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private String filename;
 
 	private Timeline task = null;
-	private Timeline out = null;
 
 	int current_x0_pt = 0; int current_x1_pt = 0;
 
@@ -171,7 +167,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				filename = FileHandler.getInstance().getName();
 
 				if(control.isConnected()) {
-					messages.setMode(Badge.MODE_ON);
 					driver.setText(control.getCurrentModel().sys.getSensorString());
 					if(!control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.DARKRED);
@@ -236,7 +231,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					time.setMode(Badge.MODE_OFF);
 				} else {
 					time.setMode(Badge.MODE_ON);
-					messages.clear();
 				}
 			}
 		} ) );
@@ -251,25 +245,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.model = control.getCurrentModel();
 		this.state = StateProperties.getInstance();
 
-		messages.setText(control.getClass().getSimpleName()+ " loaded");
-		messages.setBackgroundColor(Color.GRAY);
-
-		control.addMAVMessageListener(msg -> {
-			Platform.runLater(() -> {
-				if(filename!=null && filename.isEmpty())  {
-					out.stop();
-					messages.setText(msg.text);
-					out.play();
-				}
-			});
-		});
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			rc.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			gpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			lpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			driver.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			messages.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			controller.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 
 		});
@@ -315,9 +296,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			}
 		});
 
-		out = new Timeline(new KeyFrame(
-				Duration.millis(5000),
-				ae -> { messages.clear();  }));
 
 		task.play();
 	}

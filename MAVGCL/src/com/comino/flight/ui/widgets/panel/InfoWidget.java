@@ -132,11 +132,14 @@ public class InfoWidget extends WidgetPane  {
 					Platform.runLater(new Runnable() {
 						@Override
 						public void run() {
+							if(listview.getItems().size() == 0 ||
+									!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text)) {
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
 							listview.scrollTo(listview.getItems().size()-1);
 							listview.getSelectionModel().select(-1);
+							}
 						}
 					});
 				}
