@@ -1565,6 +1565,27 @@
 		</Groups>
   </KeyFigure>
 
+  <KeyFigure desc="GrndTruth.X" uom="m" mask="#0.00" key="GNDTRUTHX">
+		<MSPSource class="vision" field="gx"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="GrndTruth.Y" uom="m" mask="#0.00" key="GNDTRUTHY">
+		<MSPSource class="vision" field="gy"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="GrndTruth.Z" uom="m" mask="#0.00" key="GNDTRUTHZ">
+		<MSPSource class="vision" field="gz"/>
+		<Groups>
+		  <Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
   <KeyFigure desc="Vis.VX" uom="m/s" mask="#0.00" key="VISIONVX">
 		<MSPSource class="vision" field="vx"/>
 		<ULogSource field="vehicle_vision_position_0.vx"/>
