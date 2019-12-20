@@ -105,14 +105,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private static final int REFRESH_SLOT = 20;
 
 	private static String[][] PRESETS = {
-			{  null		, null      },
-			{ "LPOSX"	, "LPOSY" 	},
-			{ "LPOSVX"	, "LPOSVY" 	},
-			{ "VISIONX"	, "VISIONY" },
-			{ "SLAMPX"  , "SLAMPY"  },
-			{ "SPLPOSX"	, "SPLPOSY" },
-			{ "PITCH"   , "ROLL"    },
-			{ "ACCX"    , "ACCY"    },
+			{  null		 , null        },
+			{ "LPOSX"	 , "LPOSY"     },
+			{ "LPOSVX"	 , "LPOSVY"    },
+			{ "VISIONX"	 , "VISIONY"   },
+			{ "SLAMPX"   , "SLAMPY"    },
+			{ "SPLPOSX"	 , "SPLPOSY"   },
+			{ "GNDTRUTHX", "GNDTRUTHY" },
+
 	};
 
 	private final static String[] PRESET_NAMES = {
@@ -122,8 +122,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			"Vision Position",
 			"Planned path",
 			"SP Loc.Position",
-			"Attitude",
-			"Acceleration"
+			"Ground.Truth",
 	};
 
 	private final static String[] SCALES = {
