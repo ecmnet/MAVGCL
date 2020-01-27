@@ -264,7 +264,7 @@ public class MAVGCLPX4Parameters extends PX4ParamReader implements IMAVLinkListe
 		List<ParameterAttributes> list = new ArrayList<ParameterAttributes>();
 		parameterList.forEach((s,o) -> {
 			double diff = BigDecimal.valueOf(o.value - o.default_val).setScale(o.decimals, RoundingMode.HALF_UP).doubleValue();
-			if(diff != 0 && o.default_val!=0 && o.value!=2143289344)
+			if(( diff != 0 && o.default_val!=0 ) || ( o.default_val==0 && o.value != 0 ) && o.value!=2143289344)
 				list.add(o);
 		});
 		java.util.Collections.sort(list, new Comparator<ParameterAttributes>() {
