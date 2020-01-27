@@ -7,19 +7,21 @@
 	xmlns="http://javafx.com/javafx/8.0.51"
 	xmlns:fx="http://javafx.com/fxml/1" >
 	<children>
-	   <Label layoutX="14.0" prefHeight="28.0" text="Throttle adjustments:" />
+	   <Label layoutX="14.0" prefHeight="28.0" text="Throttle adjustments" />
 		<HBox >
 			<children>
 				<Label layoutX="14.0" text="Adjust hovering throttle"
 					prefWidth="150" maxWidth="200.0" />
+				<Label text="MPC_THR_HOVER" prefWidth="150"/>
 				<Slider fx:id="hover" layoutX="13.0" max="800" min="200" prefHeight="18.0" value="0"  />
 			</children>
 		</HBox>
 		<HBox >
 			<children>
-				<Label layoutX="14.0"  text="Adjust minimal throttle"
+				<Label layoutX="14.0"  text="Thrust to motor control"
 					prefWidth="150" maxWidth="200.0" />
-				<Slider fx:id="minimal" layoutX="13.0" max="1000" min="0" prefHeight="18.0" value="0" />
+				<Label text="THR_MDL_FAC" prefWidth="150"/>
+				<Slider fx:id="mdl" layoutX="13.0" max="50" min="0" prefHeight="18.0" value="0" />
 			</children>
 		</HBox>
 	</children>

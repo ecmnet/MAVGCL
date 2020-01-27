@@ -59,11 +59,15 @@ public class ThrottleTune extends VBox  {
 	@FXML
 	private Slider hover;
 
+
 	@FXML
-	private Slider minimal;
+	private Slider mdl;
 
 	private StateProperties state = null;
 	private MAVGCLPX4Parameters parameters = null;
+
+
+	private IMAVController control;
 
 
 	public ThrottleTune() {
@@ -79,46 +83,29 @@ public class ThrottleTune extends VBox  {
 		state = StateProperties.getInstance();
 		parameters = MAVGCLPX4Parameters.getInstance();
 
-		hover.prefWidthProperty().bind(widthProperty().subtract(200));
-		minimal.prefWidthProperty().bind(widthProperty().subtract(200));
+		hover.prefWidthProperty().bind(widthProperty().subtract(450));
+		mdl.prefWidthProperty().bind(widthProperty().subtract(450));
 
 		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
 				.or(state.getLogLoadedProperty())));
-		//	minimal.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
-		//      .or(state.getLogLoadedProperty())));
-		minimal.setDisable(true);
+		mdl.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
+				.or(state.getLogLoadedProperty())));
 
 	}
 
 	public void setup(IMAVController control) {
 
+		this.control = control;
+
 		state.getParamLoadedProperty().addListener((a,o,n) -> {
 			if(n.booleanValue() && parameters!=null) {
-				hover.setValue(parameters.get("MPC_THR_HOVER").value * 1000);
+				hover.setValue(parameters.get("MPC_THR_HOVER").value * 1000f);
+				mdl.setValue(parameters.get("THR_MDL_FAC").value * 100f);
 			}
 		});
 
 		hover.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-
-			float val = newvalue.intValue() / 1000f;
-
-			ParameterAttributes param = parameters.get("MPC_THR_HOVER");
-
-			if( Math.abs(param.value - val) > 0.005f &&
-					state.getConnectedProperty().get() && state.getParamLoadedProperty().get()) {
-
-				param.value = val;
-
-				final msg_param_set msg = new msg_param_set(255,1);
-				msg.target_component = 1;
-				msg.target_system = 1;
-				msg.setParam_id(param.name);
-				msg.param_value = val;
-				msg.param_type = param.vtype;
-				control.sendMAVLinkMessage(msg);
-
-			}
-
+			setParameter("MPC_THR_HOVER",newvalue.intValue() / 100f );
 		});
 
 		hover.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -129,6 +116,41 @@ public class ThrottleTune extends VBox  {
 				}
 			}
 		});
+
+		mdl.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			setParameter("THR_MDL_FAC",newvalue.intValue() / 100f );
+		});
+
+		mdl.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent click) {
+				if (click.getClickCount() == 2) {
+					hover.setValue(parameters.get("THR_MDL_FAC").default_val * 1000);
+				}
+			}
+		});
+
+
+	}
+
+	private void setParameter(String name, float val) {
+
+		ParameterAttributes param = parameters.get(name);
+
+		if( Math.abs(param.value - val) > 0.05f &&
+				state.getConnectedProperty().get() && state.getParamLoadedProperty().get()) {
+
+			param.value = val;
+
+			final msg_param_set msg = new msg_param_set(255,1);
+			msg.target_component = 1;
+			msg.target_system = 1;
+			msg.setParam_id(param.name);
+			msg.param_value = val;
+			msg.param_type = param.vtype;
+			control.sendMAVLinkMessage(msg);
+
+		}
 
 	}
 
