@@ -86,10 +86,14 @@ public class ThrottleTune extends VBox  {
 		hover.prefWidthProperty().bind(widthProperty().subtract(450));
 		mdl.prefWidthProperty().bind(widthProperty().subtract(450));
 
-		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
-				.or(state.getLogLoadedProperty())));
-		mdl.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
-				.or(state.getLogLoadedProperty())));
+//		hover.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
+//				.or(state.getLogLoadedProperty())));
+//		mdl.disableProperty().bind(state.getParamLoadedProperty().not().or(state.getConnectedProperty().not()
+//				.or(state.getLogLoadedProperty())));
+
+		hover.setDisable(true);
+		mdl.setDisable(true);
+
 
 	}
 
@@ -105,7 +109,7 @@ public class ThrottleTune extends VBox  {
 		});
 
 		hover.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			setParameter("MPC_THR_HOVER",newvalue.intValue() / 100f );
+			setParameter("MPC_THR_HOVER",newvalue.intValue() / 1000f );
 		});
 
 		hover.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -125,7 +129,7 @@ public class ThrottleTune extends VBox  {
 			@Override
 			public void handle(MouseEvent click) {
 				if (click.getClickCount() == 2) {
-					hover.setValue(parameters.get("THR_MDL_FAC").default_val * 1000);
+					hover.setValue(parameters.get("THR_MDL_FAC").default_val * 100);
 				}
 			}
 		});
