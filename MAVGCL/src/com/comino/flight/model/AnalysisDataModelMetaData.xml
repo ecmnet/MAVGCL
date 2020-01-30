@@ -1659,8 +1659,18 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Yaw" uom="°" mask="#0.0" key="VISIONH">
+  <KeyFigure desc="Vis.Yaw" uom="rad" mask="#0.0" key="VISIONYAW">
 		<MSPSource class="vision" field="h"/>
+		<Groups>
+			<Group>Vision</Group>
+			<Group>Attitude</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.Heading" uom="°" mask="#0.0" key="VISIONH">
+		<MSPSource class="vision" field="h">
+		   <Converter class="ExpressionConverter" expression="VISIONH * 180 / 3.14159" />
+		</MSPSource>
 		<Groups>
 			<Group>Vision</Group>
 			<Group>Attitude</Group>
