@@ -35,31 +35,61 @@
 package com.comino.flight.ui.widgets.view3D.objects;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavutils.MSPMathUtils;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 
-public class VehicleModel extends Xform {
+public class VehicleModel extends Group {
 
 	private ObjModelImporter obj = null;
 	private MeshView[]      mesh = null;
+
+	public Rotate rx = new Rotate(0, Rotate.X_AXIS);
+    public Rotate ry = new Rotate(0, Rotate.Y_AXIS);
+    public Rotate rz = new Rotate(0, Rotate.Z_AXIS);
+
 
 	public VehicleModel(float scale) {
 		super();
 		obj = new ObjModelImporter();
 		obj.read(this.getClass().getResource("resources/quad_x.obj"));
 		mesh = obj.getImport();
-		this.setScale(scale);
-		this.setRotateX(-90);
-
+		this.setScaleX(scale);
+		this.setScaleY(scale);
+		this.setScaleZ(scale);
 	}
 
 	public void updateState(AnalysisDataModel model) {
-		this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
-	//	this.setRotate(-90+MSPMathUtils.fromRad(model.attitude.r), -90+MSPMathUtils.fromRad(model.attitude.y), MSPMathUtils.fromRad(model.attitude.p));
-		this.ry.setAngle(180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
+
+
+//		model.setValue("LPOSZ", -2.0);
+//		model.setValue("LPOSX", 1.0);
+//		model.setValue("LPOSY", 1.0);
+//		model.setValue("YAW", MSPMathUtils.toRad(45));
+//		model.setValue("ROLL", MSPMathUtils.toRad(10));
+//		model.setValue("PITCH", MSPMathUtils.toRad(0));
+
+
+		this.getTransforms().clear();
+
+		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))-90);
+		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
+		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
+
+		this.setTranslateX(-model.getValue("LPOSY")*100);
+		this.setTranslateY(model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ") *100);
+		this.setTranslateZ(model.getValue("LPOSX")*100);
+
+
+	//	this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
+	//	this.ry.setAngle(180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
+
+
 	}
 
 	public void show(boolean show) {
@@ -67,6 +97,24 @@ public class VehicleModel extends Xform {
 			this.getChildren().addAll(mesh);
 		else
 			this.getChildren().clear();
+	}
+
+	private void addRotate(Group node, Rotate rotate, double angle) {
+
+	    Affine affine = node.getTransforms().isEmpty() ? new Affine() : new Affine(node.getTransforms().get(0));
+	    double A11 = affine.getMxx(), A12 = affine.getMxy(), A13 = affine.getMxz();
+	    double A21 = affine.getMyx(), A22 = affine.getMyy(), A23 = affine.getMyz();
+	    double A31 = affine.getMzx(), A32 = affine.getMzy(), A33 = affine.getMzz();
+
+	    // rotations over local axis
+	    Rotate newRotateX = new Rotate(angle, new Point3D(A11, A21, A31));
+	    Rotate newRotateY = new Rotate(angle, new Point3D(A12, A22, A32));
+	    Rotate newRotateZ = new Rotate(angle, new Point3D(A13, A23, A33));
+
+	    // apply rotation
+	    affine.prepend(rotate.getAxis() == Rotate.X_AXIS ? newRotateX :
+	            rotate.getAxis() == Rotate.Y_AXIS ? newRotateY : newRotateZ);
+	    node.getTransforms().setAll(affine);
 	}
 
 }
