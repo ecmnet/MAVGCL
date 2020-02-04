@@ -89,7 +89,7 @@ public class MAV3DViewTab extends Pane  {
 		air.fadeProperty().bind(aircontrol.selectedProperty());
 
 		perspective.getItems().addAll(PERSPECTIVES);
-		perspective.getSelectionModel().selectLast();
+
 
 		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			widget.setPerspective(n.intValue());
@@ -119,6 +119,7 @@ public class MAV3DViewTab extends Pane  {
 	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
 		recordControl.addChart(4,widget.setup(control));
 		air.setup(recordControl);
+		perspective.getSelectionModel().selectFirst();
 		return this;
 	}
 
