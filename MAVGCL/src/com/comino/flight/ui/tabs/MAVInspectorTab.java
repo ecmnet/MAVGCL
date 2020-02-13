@@ -33,7 +33,9 @@
 
 package com.comino.flight.ui.tabs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
@@ -75,6 +77,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
+	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
 
 	public MAVInspectorTab() {
@@ -198,6 +201,18 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].replace(':', ' ').trim();
 
+		remData.clear();
+		allData.forEach((k,d) -> {
+			if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
+				remData.put(k, d);
+				treetableview.getRoot().getChildren().remove(d.ti);
+			}
+		});
+
+		remData.forEach((k,d) -> {
+			allData.remove(k);
+		});
+
 		if(!allData.containsKey(_msg)) {
 
 			ObservableMap<String,DataSet> variables =  FXCollections.observableHashMap();
@@ -213,11 +228,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				}
 
 			Data data = new Data(_msg,variables);
-			allData.put(_msg,data);
 
+			allData.put(_msg,data);
 			TreeItem<DataSet> ti = new TreeItem<>(data.getNameSet());
 			ti.setExpanded(false);
 			treetableview.getRoot().getChildren().add(ti);
+			data.ti = ti;
 
 			for (DataSet dataset : data.getData().values()) {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
@@ -254,11 +270,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		private long  count = 0;
 		private long  last_update;
 
+		public TreeItem<DataSet> ti=null;
+
 		public Data(String name, ObservableMap<String,DataSet> data) {
 			this.name = name.substring(15);
 			this.name_set = new DataSet(name.substring(15),null);
 			this.data = data;
-			this.tms = 0;
+			this.tms = System.currentTimeMillis();
 		}
 
 		public Map<String,DataSet> getData() {
@@ -277,9 +295,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			return name_set;
 		}
 
+		public long getLastUpdate() {
+			return tms;
+		}
+
 		public boolean updateRate() {
 			if(tms != 0 && (System.currentTimeMillis() - tms) > 0)
-			  rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
+				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 			if((System.currentTimeMillis() - last_update) > 333) {
 				this.name_set.setStr(String.format("%s (%dHz)",name,(int)(rate+0.5f)));
