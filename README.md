@@ -12,10 +12,10 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	03/02/2020
+**Development Status:** Last updated 	14/02/2020
 
 - Tuning Tab added (WIP)
-- 3DView: Attitude visualization
+- MAVInspector enhancements
 - MAVLINK & ParameterMetadata updates
 
 **Features:**
