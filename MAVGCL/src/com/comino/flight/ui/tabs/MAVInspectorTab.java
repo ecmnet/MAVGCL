@@ -37,11 +37,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -87,6 +89,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	@SuppressWarnings("unchecked")
 	@FXML
 	private void initialize() {
+
+		ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
 
 
 		TreeItem<DataSet> root = new TreeItem<DataSet>(new DataSet("", ""));
@@ -191,27 +195,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
-			Platform.runLater(() -> {
-				parseMessageString(_msg.toString().split("  "));
-			});
+		Platform.runLater(() -> {
+			parseMessageString(_msg.toString().split("  "));
+		});
 	}
 
 	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].replace(':', ' ').trim();
-
-		remData.clear();
-		allData.forEach((k,d) -> {
-			if(d.getLastUpdate() == 0)
-				return;
-			if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
-				remData.put(k, d);
-				treetableview.getRoot().getChildren().remove(d.ti);
-			}
-		});
-
-		remData.forEach((k,d) -> {
-			allData.remove(k);
-		});
 
 		if(!allData.containsKey(_msg)) {
 
@@ -256,6 +246,31 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		}
 
+	}
+
+	class CleanUp implements Runnable {
+
+		@Override
+		public void run() {
+			if(!isDisabled()) {
+				remData.clear();
+				Platform.runLater(() -> {
+					allData.forEach((k,d) -> {
+						if(d.getLastUpdate() == 0)
+							return;
+						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
+							remData.put(k, d);
+							treetableview.getRoot().getChildren().remove(d.ti);
+						}
+					});
+				});
+
+				remData.forEach((k,d) -> {
+					allData.remove(k);
+				});
+
+			}
+		}
 	}
 
 
