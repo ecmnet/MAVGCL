@@ -191,11 +191,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
-		if(!this.isDisabled()) {
 			Platform.runLater(() -> {
 				parseMessageString(_msg.toString().split("  "));
 			});
-		}
 	}
 
 	private void parseMessageString(String[] msg) {
@@ -203,6 +201,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		remData.clear();
 		allData.forEach((k,d) -> {
+			if(d.getLastUpdate() == 0)
+				return;
 			if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
 				remData.put(k, d);
 				treetableview.getRoot().getChildren().remove(d.ti);
