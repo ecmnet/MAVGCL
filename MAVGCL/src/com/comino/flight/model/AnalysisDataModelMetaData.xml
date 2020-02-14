@@ -689,7 +689,7 @@
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
 		<MSPSource class="hud" field="h"></MSPSource>
 		<ULogSource field="vehicle_local_position_0.yaw">
-		  <Converter class="ExpressionConverter" expression="HEAD * 180 / 3.14159" />
+		   <Converter class="Rad2DegreeConverter" expression="HEAD" />
 		</ULogSource>
 		<Groups>
 			<Group>Global Position</Group>
@@ -1669,7 +1669,7 @@
 
   <KeyFigure desc="Vis.Heading" uom="°" mask="#0.0" key="VISIONH">
 		<MSPSource class="vision" field="h">
-		   <Converter class="ExpressionConverter" expression="VISIONH * 180 / 3.14159" />
+		   <Converter class="Rad2DegreeConverter" expression="VISIONH" />
 		</MSPSource>
 		<Groups>
 			<Group>Vision</Group>
