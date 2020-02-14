@@ -23,8 +23,6 @@
 					<Button fx:id="load_map" prefWidth="165.0"
 						text="Load current map to from store" />
 					<Button fx:id="filter" prefWidth="165.0" text="Apply map filter" />
-					<Button fx:id="optical_target" prefWidth="165.0"
-						text="Set optical target" />
 				</children>
 			</VBox>
 			<VBox fx:id="settings" spacing="10" styleClass="widget"

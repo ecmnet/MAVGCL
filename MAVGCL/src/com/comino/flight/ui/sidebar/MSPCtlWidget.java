@@ -99,9 +99,6 @@ public class MSPCtlWidget extends WidgetPane   {
 	private Button debug_mode2;
 
 	@FXML
-	private Button optical_target;
-
-	@FXML
 	private Button  filter;
 
 	@FXML
@@ -249,15 +246,6 @@ public class MSPCtlWidget extends WidgetPane   {
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
-		});
-
-
-		optical_target.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.SET_OPTICAL_TARGET;
-			msp.param2 =  Float.NaN;
-			msp.param1 =  Float.NaN;
-			control.sendMAVLinkMessage(msp);
 		});
 
 
