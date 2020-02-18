@@ -263,12 +263,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 							treetableview.getRoot().getChildren().remove(d.ti);
 						}
 					});
+					remData.forEach((k,d) -> {
+						allData.remove(k);
+					});
 				});
-
-				remData.forEach((k,d) -> {
-					allData.remove(k);
-				});
-
 			}
 		}
 	}
