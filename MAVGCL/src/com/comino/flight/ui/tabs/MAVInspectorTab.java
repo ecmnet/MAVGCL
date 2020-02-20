@@ -218,16 +218,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				}
 
 			Data data = new Data(_msg,variables);
+			data.addToTree(treetableview);
 
 			allData.put(_msg,data);
-			TreeItem<DataSet> ti = new TreeItem<>(data.getNameSet());
-			ti.setExpanded(false);
-			treetableview.getRoot().getChildren().add(ti);
-			data.ti = ti;
 
 			for (DataSet dataset : data.getData().values()) {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
-				ti.getChildren().add(treeItem);
+				data.ti.getChildren().add(treeItem);
 			}
 			treetableview.sort();
 		} else {
@@ -260,7 +257,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 							return;
 						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
 							remData.put(k, d);
-							treetableview.getRoot().getChildren().remove(d.ti);
+							d.removeFromTree(treetableview);
 						}
 					});
 					remData.forEach((k,d) -> {
@@ -289,7 +286,17 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			this.name = name.substring(15);
 			this.name_set = new DataSet(name.substring(15),null);
 			this.data = data;
-			this.tms = System.currentTimeMillis();
+			this.tms = 0;
+			this.ti = new TreeItem<>(name_set);
+			this.ti.setExpanded(false);
+		}
+
+		public void addToTree(TreeTableView<DataSet> view) {
+			view.getRoot().getChildren().add(ti);
+		}
+
+		public void removeFromTree(TreeTableView<DataSet> view) {
+			view.getRoot().getChildren().remove(ti);
 		}
 
 		public Map<String,DataSet> getData() {
