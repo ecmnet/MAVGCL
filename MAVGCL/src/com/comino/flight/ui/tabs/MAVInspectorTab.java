@@ -195,9 +195,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
-		Platform.runLater(() -> {
-			parseMessageString(_msg.toString().split("  "));
-		});
+		parseMessageString(_msg.toString().split("  "));
 	}
 
 	private void parseMessageString(String[] msg) {
@@ -320,9 +318,14 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public boolean updateRate() {
+
 			if(tms != 0 && (System.currentTimeMillis() - tms) > 0)
 				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
+
+			if(isDisabled())
+				return false;
+
 			if((System.currentTimeMillis() - last_update) > 333) {
 				this.name_set.setStr(String.format("%s (%dHz)",name,(int)(rate+0.5f)));
 				last_update = System.currentTimeMillis();
