@@ -69,6 +69,9 @@ public class MSPCtlWidget extends WidgetPane   {
 	private VBox     modes;
 
 	@FXML
+	private VBox     msp_control;
+
+	@FXML
 	private Button   reset_odometry;
 
 	@FXML
@@ -97,6 +100,9 @@ public class MSPCtlWidget extends WidgetPane   {
 
 	@FXML
 	private Button debug_mode2;
+
+	@FXML
+	private Button restart;
 
 	@FXML
 	private Button  filter;
@@ -231,6 +237,13 @@ public class MSPCtlWidget extends WidgetPane   {
 
 		});
 
+		restart.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_RESTART;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		enable_offboard.setOnAction((event) ->{
 
 			if(control.getCurrentModel().sys.isStatus(Status.MSP_LANDED))
@@ -293,6 +306,8 @@ public class MSPCtlWidget extends WidgetPane   {
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
 		});
+
+		msp_control.disableProperty().bind(state.getArmedProperty());
 
 	}
 
