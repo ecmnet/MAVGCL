@@ -763,18 +763,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private void setXResolution(float frame) {
 
 		if(frame >= 200)
-			resolution_ms = 200;
+			resolution_ms = dataService.isCollecting()  ? 500 : 200;
+		else if(frame >= 100)
+			resolution_ms = dataService.isCollecting()  ? 200 : 100;
 		else if(frame >= 60)
-			resolution_ms = 100;
+			resolution_ms = dataService.isCollecting()  ? 100 : 50;
 		else if(frame >= 30)
-			resolution_ms = 50;
+			resolution_ms = dataService.isCollecting()  ? 100 : 20;
 		else if(frame >= 15)
-			resolution_ms = 50;
+			resolution_ms = 20;
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
-
-		final int factor = dataService.isCollecting()  ? 2 : 1;
-		resolution_ms = resolution_ms * factor;
 
 		timeframe = frame;
 
