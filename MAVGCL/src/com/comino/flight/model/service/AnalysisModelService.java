@@ -139,9 +139,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public void startConverter() {
-//		Thread c = new Thread(new CombinedConverter());
-//		c.setName("Combined model converter");
-//		c.start();
+		//		Thread c = new Thread(new CombinedConverter());
+		//		c.setName("Combined model converter");
+		//		c.start();
 		ExecutorService.submit(new CombinedConverter(),ExecutorService.HIGH);
 	}
 
@@ -362,17 +362,20 @@ public class AnalysisModelService implements IMAVLinkListener {
 					continue;
 				}
 
-
-				if(state.getCurrentUpToDate().getValue()) {
-					current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-					current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+				synchronized(this) {
+					if(state.getCurrentUpToDate().getValue()) {
+						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					}
 				}
 
 
 				if(ulogger.isLogging()) {
-					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-					record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					synchronized(this) {
+						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					}
 
 
 				}
