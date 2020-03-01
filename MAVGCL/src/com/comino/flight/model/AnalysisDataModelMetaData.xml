@@ -1737,20 +1737,22 @@
 		</Groups>
   </KeyFigure>
 
-
 <!--
+
   <KeyFigure desc="UI ThreadTime" uom="ms" mask="#0.00" key="MAVGCLPERF">
 		<Groups>
 			<Group>_Debug</Group>
 		</Groups>
   </KeyFigure>
+ -->
 
-  <KeyFigure desc="Converter" uom="ms" mask="#0.00" key="MAVGCLACC">
+
+  <KeyFigure desc="MAVGCL Conversion cycle" uom="ms" mask="#0.00" key="MAVGCLACC">
 		<Groups>
-			<Group>_Debug</Group>
+			<Group>System</Group>
 		</Groups>
   </KeyFigure>
--->
+
 
   <!-- virtual keyfigure definition  -->
 
