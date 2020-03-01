@@ -85,7 +85,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private boolean isReplaying = false;
 
 	private int totalTime_sec = 30;
-	private int collector_interval_us = 50000;
+	private int collector_interval_us = 20000;
 	private IMAVController control = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
@@ -313,7 +313,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class CombinedConverter implements Runnable {
 
-		long tms_start =0; long wait = 0; int old_mode=STOPPED;
+		long tms_start =0; long tms_last; long wait = 0; int old_mode=STOPPED;
 		float perf = 0; AnalysisDataModel m = null;
 
 		@Override
@@ -338,7 +338,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				if(model.sys.isStatus(Status.MSP_PROXY))
 					health.check(model);
 
-				current.setValue("MAVGCLPERF", perf);
+				current.setValue("MAVGCLACC", perf);
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					state.getRecordingProperty().set(READING_HEADER);
@@ -395,6 +395,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 						else
 							m = current.clone();
 
+
 						m.tms = System.nanoTime() / 1000 - tms_start;
 						m.dt_sec = m.tms / 1e6f;
 						modelList.add(m);
@@ -407,12 +408,14 @@ public class AnalysisModelService implements IMAVLinkListener {
 								updater.update(System.nanoTime());
 						} catch(Exception e) { }
 
-					}
+						perf = ( m.tms - tms_last ) / 1e3f;
+						tms_last = m.tms;
+
+					} else
+						tms_last = System.nanoTime() / 1000 - tms_start;
 					isFirst = false;
 				}
-
-				perf = (collector_interval_us*1000 - (System.nanoTime()-wait))/1e6f;
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2000000);
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1000000);
 			}
 		}
 	}
