@@ -3,22 +3,24 @@ package com.comino.flight.control.joystick;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.java.games.input.Component;
+import com.studiohartman.jamepad.ControllerState;
+
 
 public class JoyStickModel {
 
 	public static  int   PRESSED   = 1;
 	public static  int   RELEASED  = 0;
 
-	private static int  THRESHOLD  = 5;
-	private static int  TIMEOUT    = 500;
+	private static float  THRESHOLD  = 0.05f;
+	private static int    TIMEOUT    = 500;
 
-	public int throttle = 0;
-	public int yaw      = 0;
-	public int pitch    = 0;
-	public int roll     = 0;
+	public float throttle = 0;
+	public float yaw      = 0;
+	public float pitch    = 0;
+	public float roll     = 0;
 
-	private long tms    = 0;
+	private long    tms    = 0;
+	private boolean button_state = false;
 
 	private HashMap<Integer,button>     buttons  = new HashMap<Integer,button>();
 	private ArrayList<IControlListener> controls = new ArrayList<IControlListener>();
@@ -32,31 +34,59 @@ public class JoyStickModel {
 	}
 
 
-	public void scanButtons(Component[] co) {
+	public void scanButtons(ControllerState state) {
+
 		buttons.forEach((button_index,button) -> {
-			if(co[button_index].getPollData() > 0.5f && button.old_state == RELEASED) {
+
+			switch(button_index) {
+			case 0:
+				button_state = state.a;
+				break;
+			case 1:
+				button_state = state.b;
+				break;
+			case 2:
+				button_state = state.x;
+				break;
+			case 3:
+				button_state = state.y;
+				break;
+			default:
+				return;
+			}
+
+			if(button_state && button.old_state == RELEASED) {
 				button.listener.execute(PRESSED);
 				button.old_state = PRESSED;
 			}
-			if(co[button_index].getPollData() < 0.5f && button.old_state == PRESSED) {
+
+			if(!button_state && button.old_state == PRESSED) {
 				button.listener.execute(RELEASED);
 				button.old_state = RELEASED;
 			}
+
+
 		});
 	}
 
-	public void scanControls(int t, int y, int p, int r) {
-		if(Math.abs(t-throttle)>THRESHOLD   || Math.abs(y-yaw)>THRESHOLD ||
-				Math.abs(p-pitch)>THRESHOLD || Math.abs(r-roll)>THRESHOLD ||
-				(System.currentTimeMillis() - tms)>TIMEOUT) {
+	public void scanControls(ControllerState state) {
+
+		if(Math.abs(state.leftStickY-throttle)>THRESHOLD   ||
+		   Math.abs(state.leftStickX-yaw)>THRESHOLD ||
+		   Math.abs(state.rightStickY-pitch)>THRESHOLD ||
+		   Math.abs(state.rightStickX-roll)>THRESHOLD ||
+		   (System.currentTimeMillis() - tms)>TIMEOUT) {
 			controls.forEach((listener) -> {
-				listener.execute(t, y, p, r);
+				listener.execute((int)(state.leftStickY*  500f+1500f),
+						         (int)(state.leftStickX* -500f+1500f),
+						         (int)(state.rightStickY* 500f+1500f),
+						         (int)(state.rightStickX*-500f+1500f));
 			});
 
-			this.throttle = t;
-			this.yaw      = y;
-			this.pitch    = p;
-			this.roll     = r;
+			this.throttle = state.leftStickY;
+			this.yaw      = state.leftStickX;
+			this.pitch    = state.rightStickY;
+			this.roll     = state.rightStickX;
 			this.tms      = System.currentTimeMillis();
 		}
 	}
@@ -64,7 +94,7 @@ public class JoyStickModel {
 
 	private class button {
 
-		public int                  old_state = RELEASED;
+		public int                 old_state = RELEASED;
 		public IButtonListener     listener = null;
 
 		button(IButtonListener listener) {

@@ -45,44 +45,35 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
+import com.studiohartman.jamepad.ControllerManager;
+import com.studiohartman.jamepad.ControllerState;
 
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
+
 
 public class JoyStickController implements Runnable {
 
 
-	private Controller     pad		   = null;
-	private IMAVController control     = null;
-	private Component[]    components  = null;
+	private ControllerManager  pad		  = null;
+	private IMAVController    control     = null;
+	private ControllerState   components  = null;
 
-	// Controls
-	private int ch_throttle=0;
-	private int ch_yaw=0;
-	private int ch_pitch=0;
-	private int ch_roll=0;
 
 	// Switches
 	private int ch_land     = 0;
-	private int ch_arm      = 0;
-	private int ch_takeoff  = 0;
-	private int ch_kill     = 0;
-	private int ch_rtl      = 0;
-	private int ch_sw6      = 0;
+	private int ch_arm      = 1;
+	private int ch_takeoff  = 2;
+	private int ch_kill     = 3;
+	private int ch_rtl      = 4;
+	private int ch_sw6      = 5;
 
-	// Th
-	private int ch_sign= 1;
 
 
 	private JoyStickModel joystick = new JoyStickModel();
-	private Class<?>[]    adapters;
 
 	private DataModel model;
 
 	@SafeVarargs
 	public JoyStickController(IMAVController control, Class<?> ...adapters) {
-		this.adapters = adapters;
 		this.control = control;
 
 		if(control!=null)
@@ -93,57 +84,15 @@ public class JoyStickController implements Runnable {
 
 		System.out.println("Searching for controllers..");
 
-		Controller[] ca = null;
-		try {
-			ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
-		} catch( java.lang.UnsatisfiedLinkError u) {
-			return false;
-		}
+		this.pad = new ControllerManager();
+		this.pad.initSDLGamepad();
+		this.components = this.pad.getState(0);
 
-		for(int i=0;i<ca.length && pad==null;i++) {
-			if(ca[i].getType()==Controller.Type.GAMEPAD)
-				pad = ca[i];
-		}
-
-		if(pad==null) {
+		if(!components.isConnected) {
 			System.out.println("No controllers connected");
 			return false;
 		}
 
-		this.components = pad.getComponents();
-
-
-		try {
-
-			boolean found = false;
-			for(Class<?> adapter : adapters) {
-
-				if(pad.getName().contains((String) adapter.getField("NAME").get(null))) {
-					this.ch_throttle   = adapter.getField("THROTTLE").getInt(null);
-					this.ch_yaw        = adapter.getField("YAW").getInt(null);
-					this.ch_pitch      = adapter.getField("PITCH").getInt(null);
-					this.ch_roll       = adapter.getField("ROLL").getInt(null);
-					this.ch_sign       = adapter.getField("SIGN").getInt(null);
-					this.ch_land       = adapter.getField("LAND").getInt(null);
-					this.ch_arm        = adapter.getField("ARM").getInt(null);
-					this.ch_takeoff    = adapter.getField("TAKEOFF").getInt(null);
-					this.ch_kill       = adapter.getField("KILL").getInt(null);
-					this.ch_rtl        = adapter.getField("RTL").getInt(null);
-					this.ch_sw6        = adapter.getField("SW6").getInt(null);
-					found = true;
-					System.out.println("[mgc]"+pad.getName()
-					+" connected to adapter "+adapter.getSimpleName());
-					break;
-				}
-
-			}
-			if(!found)
-				throw new Exception("Controller "+pad.getName()+" not registered");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(this.getClass().getSimpleName()+":"+e.getMessage());
-			return false;
-		}
 
 
 		joystick.addButtonListener(ch_land, (state) -> {
@@ -230,32 +179,17 @@ public class JoyStickController implements Runnable {
 	@Override
 	public void run() {
 
-		//		while(!control.isConnected()) {
-		//			try {
-		//				Thread.sleep(500);
-		//			} catch (InterruptedException e) { }
-		//		}
-
-	//	StateProperties.getInstance().getControllerConnectedProperty().set(true);
-
-
-		while(pad.poll()) {
+		while(true) {
 			try {
 
+				components = pad.getState(0);
+				if(!components.isConnected)
+					break;
 
-				joystick.scanControls((int)(components[ch_throttle].getPollData()*500*ch_sign+1500),
-						(int)(components[ch_yaw].getPollData()  *500*ch_sign+1500),
-						(int)(components[ch_pitch].getPollData()*500*ch_sign+1500),
-						(int)(components[ch_roll].getPollData() *500*ch_sign+1500) );
+				StateProperties.getInstance().getControllerConnectedProperty().set(true);
 
+				joystick.scanControls(components);
 				joystick.scanButtons(components);
-
-
-
-				//				for(int i =0; i < components.length; i++)
-				//					System.out.print(i+":"+components[i].getIdentifier().getName()+": "+components[i].getPollData());
-				//				System.out.println();
-
 
 				Thread.sleep(10);
 
@@ -265,7 +199,7 @@ public class JoyStickController implements Runnable {
 			}
 		}
 		StateProperties.getInstance().getControllerConnectedProperty().set(false);
-		System.out.println("Disconnected");
+		System.out.println("Controller disconnected");
 	}
 
 }
