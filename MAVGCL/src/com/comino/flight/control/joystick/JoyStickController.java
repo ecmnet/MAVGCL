@@ -183,9 +183,7 @@ public class JoyStickController implements Runnable {
 				if(!components.isConnected ) {
 					StateProperties.getInstance().getControllerConnectedProperty().set(false);
 					Thread.sleep(1000);
-					this.pad.quitSDLGamepad();
-					this.pad = new ControllerManager();
-					this.pad.initSDLGamepad();
+					pad.update();
 					continue;
 				}
 
