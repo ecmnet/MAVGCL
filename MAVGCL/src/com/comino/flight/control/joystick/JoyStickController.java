@@ -59,12 +59,12 @@ public class JoyStickController implements Runnable {
 
 
 	// Switches
-	private int ch_land     = 0;
-	private int ch_arm      = 1;
-	private int ch_takeoff  = 2;
-	private int ch_kill     = 3;
-	private int ch_rtl      = 4;
-	private int ch_sw6      = 5;
+	private int ch_land     = 0; //cross
+	private int ch_arm      = 1; //circle
+	private int ch_takeoff  = 3; //triangle
+	private int ch_kill     = 4; //options
+	private int ch_rtl      = 2; //square
+	private int ch_sw6      = 5; //?(back)
 
 
 
@@ -78,22 +78,10 @@ public class JoyStickController implements Runnable {
 
 		if(control!=null)
 		  this.model   = control.getCurrentModel();
-	}
 
-	public boolean connect() {
-
-		System.out.println("Searching for controllers..");
-
-		this.pad = new ControllerManager();
-		this.pad.initSDLGamepad();
-		this.components = this.pad.getState(0);
-
-		if(!components.isConnected) {
-			System.out.println("No controllers connected");
-			return false;
-		}
-
-
+		Thread thread = new Thread(this);
+		thread.setName("Joystick worker");
+		thread.start();
 
 		joystick.addButtonListener(ch_land, (state) -> {
 			if(state == JoyStickModel.PRESSED)
@@ -157,15 +145,19 @@ public class JoyStickController implements Runnable {
 			  control.sendMSPLinkCmd(MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALVEL, MSP_COMPONENT_CTRL.ENABLE,
 					deadzone((p-1500.0f)/ 1000.0f,0.02f),
 					deadzone((r-1500.0f)/-1000.0f,0.02f),
-					deadzone((t-1500.0f)/-1000.0f,0.05f),
+					deadzone((t-1500.0f)/-1000.0f,0.10f),
 					deadzone((y-1500.0f)/-1000.0f,0.05f));
 		});
 
-		Thread t = new Thread(this);
-		t.setName("Joystick worker");
-		t.start();
 
-		return true;
+
+	}
+
+
+	public boolean isConnected() {
+		if(this.components==null)
+			return false;
+		return components.isConnected;
 	}
 
 	private float deadzone(float val, float dz ) {
@@ -179,12 +171,23 @@ public class JoyStickController implements Runnable {
 	@Override
 	public void run() {
 
+		this.pad = new ControllerManager();
+		this.pad.initSDLGamepad();
+
 		while(true) {
 			try {
 
 				components = pad.getState(0);
-				if(!components.isConnected)
-					break;
+
+				// TODO: Disconnecting while running is not detected
+				if(!components.isConnected ) {
+					StateProperties.getInstance().getControllerConnectedProperty().set(false);
+					Thread.sleep(1000);
+					this.pad.quitSDLGamepad();
+					this.pad = new ControllerManager();
+					this.pad.initSDLGamepad();
+					continue;
+				}
 
 				StateProperties.getInstance().getControllerConnectedProperty().set(true);
 
@@ -198,8 +201,6 @@ public class JoyStickController implements Runnable {
 				control.getCurrentModel().sys.setStatus(Status.MSP_RC_ATTACHED, false);
 			}
 		}
-		StateProperties.getInstance().getControllerConnectedProperty().set(false);
-		System.out.println("Controller disconnected");
 	}
 
 }

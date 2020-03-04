@@ -51,6 +51,11 @@ public class JoyStickModel {
 			case 3:
 				button_state = state.y;
 				break;
+			case 4:
+				button_state = state.start;
+				break;
+			case 5:
+				button_state = state.back;
 			default:
 				return;
 			}

@@ -44,8 +44,6 @@ public class SITLController  {
 	public SITLController(IMAVController control) {
 
 		joystick = new JoyStickController(control,PS4Adapter.class);
-		joystick.connect();
-
 
 	}
 
