@@ -106,7 +106,6 @@ public class JoyStickController implements Runnable {
 
 		joystick.addButtonListener(ch_takeoff, (state) -> {
 			if(state == JoyStickModel.PRESSED && model.sys.isStatus(Status.MSP_LANDED)) {
-
 				if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,
 							model.hud.at);
@@ -121,6 +120,7 @@ public class JoyStickController implements Runnable {
 
 		joystick.addButtonListener(ch_kill, (state) -> {
 			if(state == JoyStickModel.PRESSED) {
+				vibrate();
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
 					if(result==0) {
 						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
@@ -151,6 +151,10 @@ public class JoyStickController implements Runnable {
 
 
 
+	}
+
+	public void vibrate() {
+		pad.doVibration(0, 0.2f,0.2f, 20);
 	}
 
 
