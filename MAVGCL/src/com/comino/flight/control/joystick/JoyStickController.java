@@ -196,7 +196,7 @@ public class JoyStickController implements Runnable {
 				joystick.scanControls(components);
 				joystick.scanButtons(components);
 
-				Thread.sleep(10);
+				Thread.sleep(50);
 
 			} catch(Exception e ) {
 				e.printStackTrace();
