@@ -398,7 +398,7 @@ public class UlogMAVLinkParser  {
 			case MESSAGE_TYPE_REMOVE_LOGGED_MSG:
 			case MESSAGE_TYPE_SYNC:
 				buffer.position(buffer.position() + msgSize);
-				System.err.println("Sync: " +  (char)msgType+":"+msgSize);
+			//	System.err.println("Sync: " +  (char)msgType+":"+msgSize);
 				return null;
 			default:
 				if (msgSize == 0 && msgType == 0) {
