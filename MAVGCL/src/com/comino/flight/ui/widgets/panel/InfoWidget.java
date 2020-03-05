@@ -57,6 +57,8 @@ public class InfoWidget extends WidgetPane  {
 	@FXML
 	private ListView<LogMessage> listview;
 
+	private long tms_old = 0;
+
 
 	public InfoWidget() {
 		super(300, true);
@@ -120,7 +122,6 @@ public class InfoWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 
-
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
 			@Override
@@ -133,7 +134,9 @@ public class InfoWidget extends WidgetPane  {
 						@Override
 						public void run() {
 							if(listview.getItems().size() == 0 ||
-									!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text)) {
+								!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text) ||
+								System.currentTimeMillis() - tms_old > 1000	) {
+								tms_old = System.currentTimeMillis();
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
