@@ -362,6 +362,9 @@ public class AnalysisModelService implements IMAVLinkListener {
 					continue;
 				}
 
+				if(!state.getInitializedProperty().get())
+					continue;
+
 				synchronized(this) {
 					if(state.getCurrentUpToDate().getValue()) {
 						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
