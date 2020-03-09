@@ -61,7 +61,6 @@ public class MAVPreferences {
 	public final static String ULOGGER          = "ULOGGER";
 	public final static String TUNING_GROUP     = "TUNING_GROUP";
 	public final static String CTRLPOS          = "CTRLPOS";
-	public final static String HEALTHCHECK      = "HEALTHCHECK";
 	public final static String RTKSVINACC       = "RTKSVINACC";
 	public final static String RTKSVINTIM       = "RTKSVINTIM";
 	public static final String VIDREC           = "VIDREC";

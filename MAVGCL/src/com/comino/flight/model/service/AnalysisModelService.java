@@ -77,8 +77,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisDataModelMetaData                  meta  =  null;
 	private List<ICollectorRecordingListener>    listener  =  null;
 
-	private VehicleHealthCheck health = null;
-
 	private int mode = 0;
 
 	private boolean isFirst     = false;
@@ -102,7 +100,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisModelService(IMAVController control) {
 
 		this.control = control;
-		this.health = new VehicleHealthCheck(control);
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 		this.listener = new ArrayList<ICollectorRecordingListener>();
@@ -334,9 +331,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 					continue;
 					//		}
 				}
-
-				if(model.sys.isStatus(Status.MSP_PROXY))
-					health.check(model);
 
 				current.setValue("MAVGCLACC", perf);
 

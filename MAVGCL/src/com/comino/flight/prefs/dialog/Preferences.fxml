@@ -42,8 +42,6 @@
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
 		<CheckBox fx:id="ulog" GridPane.rowIndex="9" GridPane.columnIndex="0"
 	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for data recording" />
-	    <CheckBox fx:id="check" GridPane.rowIndex="10" GridPane.columnIndex="0"
-	        GridPane.columnSpan="4" text="Perform vehicle healh check" />
 		<Separator maxWidth="-Infinity" prefHeight="14.0"
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="11" />
 		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:"

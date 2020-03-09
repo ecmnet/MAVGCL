@@ -101,9 +101,6 @@ public class PreferencesDialog  {
 	private CheckBox ulog;
 
 	@FXML
-	private CheckBox check;
-
-	@FXML
 	private CheckBox speech;
 
 	@FXML
@@ -197,7 +194,6 @@ public class PreferencesDialog  {
 		prespath.getEditor().setText(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
-		check.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.HEALTHCHECK, true));
 		sitl.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.PREFS_SITL, true));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
 		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
@@ -215,7 +211,6 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
-			userPrefs.putBoolean(MAVPreferences.HEALTHCHECK,check.isSelected());
 			userPrefs.putBoolean(MAVPreferences.PREFS_SITL,sitl.isSelected());
 			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
