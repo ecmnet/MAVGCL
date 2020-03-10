@@ -241,7 +241,7 @@ public class ChartControlWidget extends WidgetPane  {
 
 							}
 							index++;
-						try { Thread.sleep(50); } catch (InterruptedException e) {	}
+						try { Thread.sleep(modelService.getCollectorInterval_ms()); } catch (InterruptedException e) {	}
 					}
 					modelService.setReplaying(false);
 					state.getProgressProperty().set(-1);
