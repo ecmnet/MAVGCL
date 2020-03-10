@@ -203,22 +203,23 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		if(!this.isDisabled()) {
 			if(_msg instanceof msg_serial_control) {
 				msg_serial_control msg = (msg_serial_control)_msg;
-				out.stop();
 				byte[] bytes = new byte[msg.count];
 				for(int i=0;i<msg.count;i++) {
 					if(msg.data[i]==0x1b)
 						break;
 					bytes[i] = (byte)(msg.data[i] & 0xFF);
 				}
-				Platform.runLater(() -> {
-					try {
-						console.appendText(new String(bytes,"US-ASCII"));
+				try {
+					String s = new String(bytes,"US-ASCII").substring(0, msg.count-1);
+					Platform.runLater(() -> {
+						out.stop();
+						console.appendText(s);
 						index = console.getText().length();
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-				});
-				scrollIntoView();
+					});
+					scrollIntoView();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

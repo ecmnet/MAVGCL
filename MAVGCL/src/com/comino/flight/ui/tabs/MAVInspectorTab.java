@@ -251,7 +251,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				remData.clear();
 				Platform.runLater(() -> {
 					allData.forEach((k,d) -> {
-						if(d.getLastUpdate() == 0)
+						if(d.getLastUpdate() == 0 || d.ti.isExpanded())
 							return;
 						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
 							remData.put(k, d);
