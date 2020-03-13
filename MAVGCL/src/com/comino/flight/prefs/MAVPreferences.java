@@ -67,6 +67,7 @@ public class MAVPreferences {
 	public static final String REFLAT           = "REFLAT";
 	public static final String REFLON           = "REFLON";
 	public static final String SPEECH           = "SPEECH";
+	public static final String DEBUG_MSG        = "DEBUG";
 
 	private static Preferences prefs = null;
 

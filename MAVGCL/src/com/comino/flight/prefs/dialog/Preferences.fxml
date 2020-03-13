@@ -66,7 +66,9 @@
 					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="15" />
 		<CheckBox fx:id="speech" GridPane.rowIndex="16" GridPane.columnIndex="0"
 	        GridPane.columnSpan="4" text="Speech output" />
+	    <CheckBox fx:id="debug" GridPane.rowIndex="17" GridPane.columnIndex="0"
+	        GridPane.columnSpan="4" text="Enable debug messages" />
 	     <Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="17" />
+					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="18" />
 	</children>
 </GridPane>

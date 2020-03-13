@@ -33,9 +33,12 @@
 
 package com.comino.flight.ui.widgets.panel;
 
+import java.util.prefs.Preferences;
+
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.WidgetPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.IMAVMessageListener;
@@ -58,6 +61,8 @@ public class InfoWidget extends WidgetPane  {
 	private ListView<LogMessage> listview;
 
 	private long tms_old = 0;
+
+	private boolean debug_message_enabled = false;
 
 
 	public InfoWidget() {
@@ -122,30 +127,34 @@ public class InfoWidget extends WidgetPane  {
 
 	public void setup(IMAVController control) {
 
+		Preferences userPrefs = MAVPreferences.getInstance();
+		this.debug_message_enabled = userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, false);
+
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
 			@Override
 			public void messageReceived(LogMessage message) {
 
-				if(message.severity< MAV_SEVERITY.MAV_SEVERITY_DEBUG ) {
-					final LogMessage m = message;
+				if(message.severity ==  MAV_SEVERITY.MAV_SEVERITY_DEBUG && !debug_message_enabled)
+					return;
 
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							if(listview.getItems().size() == 0 ||
+				final LogMessage m = message;
+
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						if(listview.getItems().size() == 0 ||
 								!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text) ||
 								System.currentTimeMillis() - tms_old > 1000	) {
-								tms_old = System.currentTimeMillis();
+							tms_old = System.currentTimeMillis();
 							listview.getItems().add(m);
 							if(listview.getItems().size()>MAX_ITEMS)
 								listview.getItems().remove(0);
 							listview.scrollTo(listview.getItems().size()-1);
 							listview.getSelectionModel().select(-1);
-							}
 						}
-					});
-				}
+					}
+				});
 			}
 		});
 
