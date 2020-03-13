@@ -117,10 +117,13 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				lastindex = last.size();
 			} else if (ke.getCode().equals(KeyCode.UP)) {
 				Platform.runLater(() -> {
+					int end = console.getText().length();
 					if(!last.isEmpty() && lastindex > 0 && console.getText().length() > 0) {
 						console.deleteText(index, console.getText().length());
 						console.appendText(last.get(--lastindex));
-						int end = console.getText().length();
+						end = console.getText().length();
+						console.selectRange(end,end);
+					} else {
 						console.selectRange(end,end);
 					}
 				});
