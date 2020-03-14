@@ -39,7 +39,8 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
+import com.comino.mavcom.control.IMAVController;
 
 import eu.hansolo.airseries.AirCompass;
 import javafx.animation.AnimationTimer;
@@ -50,7 +51,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 
-public class AirWidget extends WidgetPane implements IChartControl {
+public class AirWidget extends ChartControlPane implements IChartControl {
 
 	@FXML
 	private AirCompass g_compass;
@@ -99,8 +100,8 @@ public class AirWidget extends WidgetPane implements IChartControl {
 	}
 
 
-	public void setup(ChartControlWidget recordControl) {
-		recordControl.addChart(5,this);
+	public void setup(IMAVController control) {
+		ChartControlPane.addChart(5,this);
 
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {

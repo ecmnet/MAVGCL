@@ -42,7 +42,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.DashLabel;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
@@ -64,7 +64,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-public class DetailsWidget extends WidgetPane {
+public class DetailsWidget extends ChartControlPane {
 
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 19;
@@ -76,7 +76,7 @@ public class DetailsWidget extends WidgetPane {
 			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDIS", null,"VISIONFPS", "VISIONQUAL", "FLOWQL",null, "BATC", "BATH",
-			"BATP", null, "IMUTEMP", "MSPTEMP",  null, "CPUPX4","CPUMSP", "RSSI", null, "TARM", "TBOOT",
+			"BATP", null, "IMUTEMP", "MSPTEMP",  null, "CPUPX4","CPUMSP", "RSSI", null, "TARM",
 
 	};
 

@@ -46,7 +46,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.listener.IMSPStatusChangedListener;
@@ -66,7 +66,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-public class RecordControlWidget extends WidgetPane implements IMSPStatusChangedListener {
+public class RecordControlWidget extends ChartControlPane implements IMSPStatusChangedListener {
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_LANDED		= 1;

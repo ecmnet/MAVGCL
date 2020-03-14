@@ -35,14 +35,14 @@ package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 
-public class ControlWidget extends WidgetPane  {
+public class ControlWidget extends ChartControlPane  {
 
 	@FXML
 	private CheckBox details;

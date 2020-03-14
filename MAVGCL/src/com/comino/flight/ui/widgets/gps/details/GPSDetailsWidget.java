@@ -44,7 +44,7 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.DashLabel;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
@@ -56,7 +56,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
-public class GPSDetailsWidget extends WidgetPane  {
+public class GPSDetailsWidget extends ChartControlPane  {
 
 	private static String[] key_figures = {
 			"GLOBLAT",

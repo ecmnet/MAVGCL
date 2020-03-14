@@ -36,6 +36,7 @@ package com.comino.flight.ui.tabs;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
@@ -71,10 +72,10 @@ public class FlightXtAnalysisTab extends Pane {
 	}
 
 
-	public void setup(ChartControlWidget recordControl,IMAVController control) {
+	public void setup(IMAVController control) {
 
-		recordControl.addChart(0,chart1.setup(control,1));
-		recordControl.addChart(1,chart2.setup(control,2));
+		ChartControlPane.addChart(0,chart1.setup(control,1));
+		ChartControlPane.addChart(1,chart2.setup(control,2));
 
 	}
 }

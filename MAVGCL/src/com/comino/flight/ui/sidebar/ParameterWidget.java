@@ -52,7 +52,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.sidebar.bitselection.BitSelectionDialog;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.param.ParamUtils;
@@ -89,7 +89,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
-public class ParameterWidget extends WidgetPane  {
+public class ParameterWidget extends ChartControlPane  {
 
 	@FXML
 	private Button reload;

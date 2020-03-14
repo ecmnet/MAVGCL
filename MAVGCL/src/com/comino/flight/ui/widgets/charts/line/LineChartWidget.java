@@ -431,7 +431,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
 						if((mouseEvent.getX() - x)> 30) {
 							zoom_label.setVisible(true);
-							zoom_label.setText(String.format("%#.1fs", dtx));
+							zoom_label.setText(String.format("%#.2fs", dtx));
 							zoom_label.setLayoutX(x-xAxis.getLayoutX());
 						} else
 							zoom_label.setVisible(false);

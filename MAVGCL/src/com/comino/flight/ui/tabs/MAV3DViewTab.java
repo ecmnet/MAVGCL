@@ -39,6 +39,7 @@ import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.beans.value.ChangeListener;
@@ -116,9 +117,9 @@ public class MAV3DViewTab extends Pane  {
 
 	}
 
-	public MAV3DViewTab setup(ChartControlWidget recordControl, IMAVController control) {
-		recordControl.addChart(4,widget.setup(control));
-		air.setup(recordControl);
+	public MAV3DViewTab setup(IMAVController control) {
+		ChartControlPane.addChart(4,widget.setup(control));
+		air.setup(control);
 		perspective.getSelectionModel().selectFirst();
 		return this;
 	}

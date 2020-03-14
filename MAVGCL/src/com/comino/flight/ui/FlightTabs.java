@@ -156,12 +156,12 @@ public class FlightTabs extends Pane {
 //		experimental.fadeProperty().bind(flightControl.getControl().getExperimentalVisibility());
 //		experimental.setup(control);
 
-		mavmaptab.setup(flightControl.getChartControl(),control);
-		mav3dviewtab.setup(flightControl.getChartControl(),control);
+		mavmaptab.setup(control);
+		mav3dviewtab.setup(control);
 		mavinspectortab.setup(control);
 		mavtunetab.setup(control);
-		xtanalysistab.setup(flightControl.getChartControl(),control);
-		xyanalysistab.setup(flightControl.getChartControl(),control);
+		xtanalysistab.setup(control);
+		xyanalysistab.setup(control);
 
 		mavlinkshelltab.setup(control);
 

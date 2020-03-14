@@ -33,10 +33,14 @@
 
 package com.comino.jfx.extensions;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.prefs.Preferences;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 
@@ -48,7 +52,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class WidgetPane extends Pane {
+public class ChartControlPane extends Pane {
 
 	protected IMAVController control = null;
 
@@ -67,15 +71,22 @@ public class WidgetPane extends Pane {
 
 	private String prefKey = MAVPreferences.CTRLPOS+this.getClass().getSimpleName().toUpperCase();
 
-	public WidgetPane() {
+	protected static Map<Integer,IChartControl> charts = new HashMap<Integer,IChartControl>();
+
+	public static void addChart(int id,IChartControl chart) {
+		if(!charts.containsKey(id))
+		    charts.put(id,chart);
+	}
+
+	public ChartControlPane() {
 		this(150);
 	}
 
-	public WidgetPane(int duration_ms) {
+	public ChartControlPane(int duration_ms) {
 		this(duration_ms,false);
 	}
 
-	public WidgetPane(int duration_ms, boolean visible) {
+	public ChartControlPane(int duration_ms, boolean visible) {
 
 		this.state  = StateProperties.getInstance();
 		this.prefs  = MAVPreferences.getInstance();
@@ -157,6 +168,14 @@ public class WidgetPane extends Pane {
 		if(moveable.get()) {
 			setLayoutX(MAVPreferences.getInstance().getDouble(prefKey+"X", 10));
 			setLayoutY(MAVPreferences.getInstance().getDouble(prefKey+"Y", 10));
+		}
+	}
+
+	public void refreshCharts() {
+		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+			if(chart.getValue().getScrollProperty()!=null)
+				chart.getValue().getScrollProperty().set(1);
+			chart.getValue().refreshChart();
 		}
 	}
 

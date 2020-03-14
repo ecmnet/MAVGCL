@@ -36,7 +36,7 @@ package com.comino.flight.ui.widgets.panel;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import eu.hansolo.medusa.Gauge;
@@ -46,7 +46,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
 
-public class BatteryWidget extends WidgetPane  {
+public class BatteryWidget extends ChartControlPane  {
 
 //	private static final float vo_range[] = { 10.0f, 13.0f, 11.5f,  0 };
 //	private static final float cu_range[] = { 0.0f,  15.0f, 0,     12 };

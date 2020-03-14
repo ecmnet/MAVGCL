@@ -40,7 +40,7 @@ import org.mavlink.messages.lquac.msg_manual_control;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
@@ -52,7 +52,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class CommanderWidget extends WidgetPane  {
+public class CommanderWidget extends ChartControlPane  {
 
 	@FXML
 	private Button arm_command;

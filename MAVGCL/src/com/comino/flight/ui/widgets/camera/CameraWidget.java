@@ -44,7 +44,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.Status;
@@ -58,7 +58,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
-public class CameraWidget extends WidgetPane  {
+public class CameraWidget extends ChartControlPane  {
 
 	private int X = 1280 / 2;
 	private int Y = 960 / 2;

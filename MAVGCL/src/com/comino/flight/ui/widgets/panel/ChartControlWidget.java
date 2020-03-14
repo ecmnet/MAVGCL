@@ -44,7 +44,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.KeyFrame;
@@ -64,7 +64,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
-public class ChartControlWidget extends WidgetPane  {
+public class ChartControlWidget extends ChartControlPane  {
 
 	private static final Integer[] TOTAL_TIME = { 30, 60, 120, 240, 480, 1200 };
 
@@ -87,8 +87,6 @@ public class ChartControlWidget extends WidgetPane  {
 	@FXML
 	private Button play;
 
-	private Map<Integer,IChartControl> charts = null;
-
 	protected int totalTime_sec = 30;
 	private AnalysisModelService modelService;
 
@@ -102,7 +100,6 @@ public class ChartControlWidget extends WidgetPane  {
 	public ChartControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
-		charts = new HashMap<Integer,IChartControl>();
 
 		animation.addListener((a) -> {
 			charts.entrySet().forEach((chart) -> {
@@ -289,18 +286,8 @@ public class ChartControlWidget extends WidgetPane  {
 		}
 	}
 
-
-	public void addChart(int id,IChartControl chart) {
-		charts.put(id,chart);
-	}
-
 	public void refreshCharts() {
-
-		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-			if(chart.getValue().getScrollProperty()!=null)
-				chart.getValue().getScrollProperty().set(1);
-			chart.getValue().refreshChart();
-		}
+        super.refreshCharts();
 		scroll.setValue(0);
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);

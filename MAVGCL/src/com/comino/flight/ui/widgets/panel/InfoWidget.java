@@ -39,7 +39,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.IMAVMessageListener;
 import com.comino.mavcom.model.segment.LogMessage;
@@ -53,7 +53,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 
-public class InfoWidget extends WidgetPane  {
+public class InfoWidget extends ChartControlPane  {
 
 	private static final int MAX_ITEMS = 200;
 

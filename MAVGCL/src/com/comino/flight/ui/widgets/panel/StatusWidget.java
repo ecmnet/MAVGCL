@@ -35,7 +35,7 @@ package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.DashLabelLED;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
@@ -43,7 +43,7 @@ import com.comino.mavcom.status.StatusManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
-public class StatusWidget extends WidgetPane  {
+public class StatusWidget extends ChartControlPane  {
 
 	@FXML
 	private DashLabelLED armed;

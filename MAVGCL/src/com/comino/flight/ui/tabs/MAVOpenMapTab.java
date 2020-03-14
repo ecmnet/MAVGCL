@@ -62,6 +62,7 @@ import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
@@ -457,13 +458,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	}
 
 
-	public MAVOpenMapTab setup(ChartControlWidget recordControl, IMAVController control) {
+	public MAVOpenMapTab setup(IMAVController control) {
 		this.control = control;
 		this.model=dataService.getCurrent();
 		this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
-		recordControl.addChart(3,this);
-		air.setup(recordControl);
+		ChartControlPane.addChart(3,this);
+		air.setup(control);
 
 		properties.getLandedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {

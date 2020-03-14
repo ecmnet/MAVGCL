@@ -43,7 +43,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.StateButton;
-import com.comino.jfx.extensions.WidgetPane;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
@@ -56,7 +56,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.VBox;
 
-public class MSPCtlWidget extends WidgetPane   {
+public class MSPCtlWidget extends ChartControlPane   {
 
 
 	@FXML
