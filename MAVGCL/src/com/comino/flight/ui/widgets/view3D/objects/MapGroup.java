@@ -39,6 +39,7 @@ import java.util.Map;
 
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.struct.MapPoint3D_F32;
 
 import georegression.struct.point.Point3D_F32;
 import javafx.animation.KeyFrame;
@@ -96,7 +97,7 @@ public class MapGroup extends Xform {
 		clear();
 	}
 
-	private Box getBlockBox(int block, Point3D_F32 b) {
+	private Box getBlockBox(int block, MapPoint3D_F32 b) {
 
 		if(blocks.containsKey(block))
 			return blocks.get(block);

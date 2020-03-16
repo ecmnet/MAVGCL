@@ -452,7 +452,7 @@ public class MainApp extends Application  {
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
 
-			statusline.setup(controlpanel.getChartControl(),control);
+			statusline.setup(control);
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);

@@ -243,8 +243,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		driver.setAlignment(Pos.CENTER_LEFT);
 	}
 
-	public void setup(ChartControlWidget chartControlWidget, IMAVController control) {
-		chartControlWidget.addChart(99,this);
+	public void setup(IMAVController control) {
+		ChartControlWidget.addChart(99,this);
 		this.control = control;
 		this.model = control.getCurrentModel();
 		this.state = StateProperties.getInstance();
