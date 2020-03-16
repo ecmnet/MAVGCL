@@ -37,8 +37,16 @@
 						prefWidth="165.0" />
 					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"
 						prefWidth="165.0" />
-					<StateButton fx:id="enable_interactive" text="Interactive mode"
+					<StateButton fx:id="enable_planner" text="PX4 local planner"
 						prefWidth="165.0" />
+					<StateButton fx:id="enable_interactive" text="Interactive mode"
+						prefWidth="165.0">
+						<VBox.margin>
+							<Insets>
+								<bottom>10</bottom>
+							</Insets>
+						</VBox.margin>
+					</StateButton>
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"
@@ -67,6 +75,7 @@
 					<Button fx:id="debug_mode1" text="Testing Mode1"
 						prefWidth="165.0" />
 					<Button fx:id="debug_mode2" text="Rotate vehicle by 180°" prefWidth="165.0" />
+					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
 
 				</children>
 			</VBox>

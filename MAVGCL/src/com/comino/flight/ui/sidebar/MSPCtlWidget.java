@@ -93,6 +93,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_interactive;
 
 	@FXML
+	private StateButton enable_planner;
+
+	@FXML
 	private StateButton enable_rtl;
 
 	@FXML
@@ -100,6 +103,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private Button debug_mode2;
+
+	@FXML
+	private Button test_seq1;
 
 	@FXML
 	private Button restart;
@@ -237,6 +243,19 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		enable_planner.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.PX4_PLANNER;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.PX4_PLANNER))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		restart.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_RESTART;
@@ -331,6 +350,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PX4_PLANNER,(n) -> {
+			enable_planner.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PX4_PLANNER));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(n) -> {
