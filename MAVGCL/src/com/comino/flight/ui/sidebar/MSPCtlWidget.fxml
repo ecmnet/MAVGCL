@@ -37,8 +37,6 @@
 						prefWidth="165.0" />
 					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"
 						prefWidth="165.0" />
-					<StateButton fx:id="enable_planner" text="PX4 local planner"
-						prefWidth="165.0" />
 					<StateButton fx:id="enable_interactive" text="Interactive mode"
 						prefWidth="165.0">
 						<VBox.margin>
