@@ -47,6 +47,7 @@
 							</Insets>
 						</VBox.margin>
 					</StateButton>
+					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"
@@ -75,7 +76,7 @@
 					<Button fx:id="debug_mode1" text="Testing Mode1"
 						prefWidth="165.0" />
 					<Button fx:id="debug_mode2" text="Rotate vehicle by 180°" prefWidth="165.0" />
-					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
+
 
 				</children>
 			</VBox>
