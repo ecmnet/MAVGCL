@@ -54,7 +54,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.param.IPX4ParameterRefresh;
-import com.comino.mavcom.param.PX4ParamReader;
+import com.comino.mavcom.param.PX4Parameters;
 import com.comino.mavcom.param.ParamUtils;
 import com.comino.mavcom.param.ParameterAttributes;
 import com.comino.mavcom.param.ParameterFactMetaData;
@@ -67,7 +67,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 
-public class MAVGCLPX4Parameters extends PX4ParamReader implements IMAVLinkListener {
+public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListener {
 
 	private static MAVGCLPX4Parameters px4params = null;
 
