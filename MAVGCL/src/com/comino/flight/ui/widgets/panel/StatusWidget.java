@@ -133,6 +133,15 @@ public class StatusWidget extends ChartControlPane  {
 			});
 		});
 
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
+			Platform.runLater(() -> {
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
+					mission.setMode(DashLabelLED.MODE_ON);
+				else
+					mission.setMode(DashLabelLED.MODE_OFF);
+			});
+		});
+
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (n) -> {
 			Platform.runLater(() -> {
 				System.out.println("...Landing");
