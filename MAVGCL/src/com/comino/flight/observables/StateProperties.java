@@ -68,9 +68,10 @@ public class StateProperties {
 
 	private BooleanProperty armedProperty 					= new SimpleBooleanProperty();
 	private BooleanProperty landedProperty 					= new SimpleBooleanProperty();
-	private BooleanProperty altholdProperty 				    = new SimpleBooleanProperty();
-	private BooleanProperty posholdProperty 				    = new SimpleBooleanProperty();
+	private BooleanProperty altholdProperty 				= new SimpleBooleanProperty();
+	private BooleanProperty posholdProperty 				= new SimpleBooleanProperty();
 	private BooleanProperty offboardProperty 			    = new SimpleBooleanProperty();
+	private BooleanProperty holdProperty 			        = new SimpleBooleanProperty();
 
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
 	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
@@ -154,6 +155,10 @@ public class StateProperties {
 			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 		});
 
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
+			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
+		});
+
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
@@ -196,6 +201,10 @@ public class StateProperties {
 
 	public BooleanProperty getLandedProperty() {
 		return landedProperty;
+	}
+
+	public BooleanProperty getHoldProperty() {
+		return holdProperty;
 	}
 
 	public BooleanProperty getSimulationProperty() {
