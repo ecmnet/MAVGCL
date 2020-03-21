@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2020 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -65,6 +65,9 @@ public class CommanderWidget extends ChartControlPane  {
 
 	@FXML
 	private Button rtl_command;
+
+	@FXML
+	private Button hold_command;
 
 	@FXML
 	private Button emergency;
@@ -137,6 +140,14 @@ public class CommanderWidget extends ChartControlPane  {
 				.or(StateProperties.getInstance().getLandedProperty()));
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0, 0 );
+		});
+
+		hold_command.disableProperty().bind(state.getArmedProperty().not()
+				.or(StateProperties.getInstance().getLandedProperty()));
+		hold_command.setOnAction((ActionEvent event)-> {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
+					MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+					MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_LOITER );
 		});
 
 

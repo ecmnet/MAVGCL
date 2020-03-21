@@ -18,6 +18,7 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 
 
        <Button fx:id="rtl_command" layoutX="15.0" layoutY="65" prefHeight="19" prefWidth="80.0" text="RTL"/>
+       <Button fx:id="hold_command" layoutX="105.0" layoutY="65" prefHeight="19" prefWidth="85.0" text="Hold"/>
 
 
        <Separator prefHeight="0.0" layoutX="15.0"  layoutY="100" prefWidth="175.0" />
