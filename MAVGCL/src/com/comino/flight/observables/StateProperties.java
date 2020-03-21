@@ -156,7 +156,7 @@ public class StateProperties {
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
-			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
+			holdProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
 		});
 
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
