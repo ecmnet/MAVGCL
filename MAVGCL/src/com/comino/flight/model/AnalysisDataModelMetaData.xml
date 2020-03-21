@@ -1866,6 +1866,13 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
+	<KeyFigure desc="Path.Z" uom="m" mask="#0.00" key="SLAMPZ">
+		<MSPSource class="slam" field="pz"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
 	<KeyFigure desc="Path.Direction" uom="rad" mask="#0.00" key="SLAMDIR">
 		<MSPSource class="slam" field="pd"></MSPSource>
 		<Groups>
