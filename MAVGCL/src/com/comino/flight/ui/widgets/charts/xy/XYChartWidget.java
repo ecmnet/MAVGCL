@@ -320,6 +320,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
 					msp.param1 =  x;
 					msp.param2 =  y;
+					msp.param3 =  Float.NaN;
+					msp.param4 =  Float.NaN;
 					control.sendMAVLinkMessage(msp);
 				}
 			}

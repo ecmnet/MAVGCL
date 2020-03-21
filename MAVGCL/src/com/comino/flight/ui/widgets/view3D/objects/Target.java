@@ -84,7 +84,7 @@ public class Target extends Xform {
 	public void updateState(AnalysisDataModel model) {
 		if(model.getValue("SLAMDIR") != 0) {
 			pyramid.setVisible(true);
-			this.setTranslate(-model.getValue("SLAMPY")*100f, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ")*100f, model.getValue("SLAMPX")*100f);
+			this.setTranslate(-model.getValue("SLAMPY")*100f, model.getValue("SLAMPZ") > 0 ? 0 : -model.getValue("SLAMPZ")*100f, model.getValue("SLAMPX")*100f);
 		} else
 			pyramid.setVisible(false);
 	}
