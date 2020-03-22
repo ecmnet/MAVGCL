@@ -124,10 +124,12 @@ public class StatusWidget extends ChartControlPane  {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_TAKEOFF, (n) -> {
 			Platform.runLater(() -> {
-				System.out.println("Takeoff:"+(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF));
-				mission.setMode(DashLabelLED.MODE_BLINK);
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
 					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
+					mission.setMode(DashLabelLED.MODE_ON);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
@@ -135,18 +137,25 @@ public class StatusWidget extends ChartControlPane  {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
 			Platform.runLater(() -> {
-				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
 					mission.setMode(DashLabelLED.MODE_ON);
 				else
-					mission.setMode(DashLabelLED.MODE_OFF);
+					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (n) -> {
 			Platform.runLater(() -> {
-				System.out.println("...Landing");
-				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
 					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
+					mission.setMode(DashLabelLED.MODE_ON);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
