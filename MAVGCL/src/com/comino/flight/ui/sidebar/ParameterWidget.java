@@ -160,9 +160,10 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
-			groups.getSelectionModel().clearAndSelect(0);
+		//	groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
+
 		reload.disableProperty().bind(state.getArmedProperty()
 				.or(state.getRecordingProperty().isNotEqualTo(AnalysisModelService.STOPPED))
 				.or(state.getConnectedProperty().not()));
