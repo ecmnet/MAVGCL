@@ -72,6 +72,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Control;
 import javafx.scene.control.DialogPane;
@@ -101,7 +102,7 @@ public class ParameterWidget extends ChartControlPane  {
 	private ScrollPane scroll;
 
 	@FXML
-	private ChoiceBox<String> groups;
+	private ComboBox<String> groups;
 
 	private MAVGCLPX4Parameters  params;
 
@@ -113,6 +114,7 @@ public class ParameterWidget extends ChartControlPane  {
 	private StateProperties state = null;
 
 	public ParameterWidget() {
+		super();
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -142,8 +144,11 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 
-		groups.getItems().add("-None-");
+		groups.getItems().add("-none-");
+		groups.setEditable(true);
 		groups.getSelectionModel().clearAndSelect(0);
+		groups.setVisibleRowCount(50);
+		groups.getEditor().setDisable(true);
 
 		scroll.setBorder(Border.EMPTY);
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -160,7 +165,7 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
-		//	groups.getSelectionModel().clearAndSelect(0);
+			//	groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
 
@@ -207,10 +212,10 @@ public class ParameterWidget extends ChartControlPane  {
 		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(state.getParamLoadedProperty().get()) {
-					prefs.put(MAVPreferences.TUNING_GROUP, newValue);
-					populateParameterList(newValue);
-				}
+					if(state.getParamLoadedProperty().get() && newValue!=null) {
+						prefs.put(MAVPreferences.TUNING_GROUP, newValue);
+						populateParameterList(newValue);
+					}
 			}
 		});
 
@@ -394,9 +399,9 @@ public class ParameterWidget extends ChartControlPane  {
 
 								Alert alert = new Alert(AlertType.CONFIRMATION,
 										att.name+" is out of bounds "+
-								        "(Min: "+format(att.min_val,att.decimals)+", Max: "+format(att.max_val,att.decimals)+").\n"+
-										"Force saving ?",
-										ButtonType.YES, ButtonType.NO);
+												"(Min: "+format(att.min_val,att.decimals)+", Max: "+format(att.max_val,att.decimals)+").\n"+
+												"Force saving ?",
+												ButtonType.YES, ButtonType.NO);
 
 								alert.getDialogPane().getStylesheets().add(MainApp.class.getResource("application.css").toExternalForm());
 								alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
