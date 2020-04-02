@@ -39,6 +39,8 @@
 						prefWidth="165.0" />
 					<StateButton fx:id="enable_planner" text="PX4 planner"
 						prefWidth="165.0" />
+					<StateButton fx:id="enable_follow" text="Follow object"
+						prefWidth="165.0" />
 					<StateButton fx:id="enable_interactive" text="Interactive mode"
 						prefWidth="165.0">
 						<VBox.margin>

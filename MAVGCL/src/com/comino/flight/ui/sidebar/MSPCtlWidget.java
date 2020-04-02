@@ -93,6 +93,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_interactive;
 
 	@FXML
+	private StateButton enable_follow;
+
+	@FXML
 	private StateButton enable_planner;
 
 	@FXML
@@ -200,6 +203,19 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.param2 =  MSP_AUTOCONTROL_MODE.INTERACTIVE;
 
 			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_follow.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -357,6 +373,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
+			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PX4_PLANNER,(n) -> {
