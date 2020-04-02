@@ -102,7 +102,7 @@ public class ThrottleTune extends VBox  {
 		this.control = control;
 
 		state.getParamLoadedProperty().addListener((a,o,n) -> {
-			if(n.booleanValue() && parameters!=null) {
+			if(n.booleanValue() && parameters!=null && parameters.isLoaded()) {
 				hover.setValue(parameters.get("MPC_THR_HOVER").value * 1000f);
 				mdl.setValue(parameters.get("THR_MDL_FAC").value * 100f);
 			}
