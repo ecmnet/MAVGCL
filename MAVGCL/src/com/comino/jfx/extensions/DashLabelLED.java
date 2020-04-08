@@ -71,9 +71,9 @@ public class DashLabelLED extends GridPane {
 		this.setHgap(4);
 
 		label = new Label();
-		label.setTextFill(Color.DARKCYAN.brighter());
+		label.setTextFill(Color.web("#1c6478").brighter());
 		line = new Line();
-		line.setStroke(Color.DARKCYAN.darker());
+		line.setStroke(Color.web("#1c6478").darker());
 
 		this.addColumn(0, label);
 		this.addColumn(1, line);

@@ -83,7 +83,7 @@ public class BatteryWidget extends ChartControlPane  {
 						if(voltage < 10.5 && voltage > 0)
 							g_voltage.setBarColor(Color.RED);
 						if(voltage > 11.0)
-							g_voltage.setBarColor(Color.DARKCYAN);
+							g_voltage.setBarColor(Color.web("#2e9fbf"));
 					}
 					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
 						capacity = model.getValue("BATP");
@@ -91,7 +91,7 @@ public class BatteryWidget extends ChartControlPane  {
 						if(capacity < 0.15 && capacity > 0)
 							g_capacity.setBarColor(Color.RED);
 						if(capacity > 0.20)
-							g_capacity.setBarColor(Color.DARKCYAN);
+							g_capacity.setBarColor(Color.web("#2e9fbf"));
 					}
 				}
 			}

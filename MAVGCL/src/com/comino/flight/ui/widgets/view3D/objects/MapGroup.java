@@ -62,7 +62,7 @@ public class MapGroup extends Xform {
 
 	public MapGroup(DataModel model) {
 		this.model = model;
-		mapMaterial.setDiffuseColor(Color.INDIANRED);
+		mapMaterial.setDiffuseColor(Color.web("#2892b0"));
 
 		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
 			for(int k=0;k<this.getChildren().size();k++)

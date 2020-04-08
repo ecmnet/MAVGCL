@@ -233,7 +233,7 @@
 }
 
 .check-box:selected .mark {
-	-fx-background-color: DARKORANGE;
+	-fx-background-color: #32b5db;
 }
 
 .toggle-button {
@@ -280,7 +280,7 @@
 .progress-bar  {
   -fx-control-inner-background: #303030;
   -fx-text-box-border: #606060;
-  -fx-accent: darkcyan;
+  -fx-accent: #3d8fa6;
   -fx-shadow-highlight-color: #303030;
 }
 

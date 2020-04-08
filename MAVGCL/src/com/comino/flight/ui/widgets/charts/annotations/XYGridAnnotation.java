@@ -66,12 +66,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 		this.blocks = new HashMap<Integer,Pane>();
 
-		indicator = new Pane();
-		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
-		indicator.setVisible(false);
-		indicator.setCache(true);
-		indicator.setCacheHint(CacheHint.SPEED);
-		pane.getChildren().add(indicator);
+//		indicator = new Pane();
+//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
+//		indicator.setVisible(false);
+//		indicator.setCache(true);
+//		indicator.setCacheHint(CacheHint.SPEED);
+//		pane.getChildren().add(indicator);
 	}
 
 	public void setModel(DataModel model) {
@@ -97,7 +97,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		model.grid.getData().forEach((i,b) -> {
 
 			// TODO: 3D Extension: Let user select z-plane to display in XY View
-			if(b.z!=0)
+			if(b.z!=0 || (b.x==0 && b.y==0))
 				return;
 
 			Pane bp = getBlockPane(i,b);
@@ -107,20 +107,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
 			bp.setVisible( true);
 		});
-
-
-		indicator.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
-				yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
-		indicator.setLayoutX(xAxis.getDisplayPosition(model.grid.getIndicatorY()));
-		indicator.setLayoutY(yAxis.getDisplayPosition(model.grid.getIndicatorX()));
-		indicator.setVisible(true);
 	}
 
 	public void invalidate(boolean enable) {
 		blocks.forEach((i,p) -> {
 			p.setVisible(false);
 		});
-		indicator.setVisible(false);
 		enabled = enable;
 	}
 
@@ -130,7 +122,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 				pane.getChildren().remove(p);
 			});
 		});
-		indicator.setVisible(false);
 		blocks.clear();
 	}
 
@@ -141,7 +132,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 			return blocks.get(block);
 
 		Pane p = new Pane();
-		p.setStyle("-fx-background-color: rgba(160.0, 60.0, 100.0, 0.5); -fx-padding:-1px; -fx-border-color: #603030;");
+		p.setStyle("-fx-background-color: rgba(38, 136, 163, 0.5); -fx-padding:-1px; -fx-border-color: #20738a;");
 		p.setVisible(false);
 		pane.getChildren().add(p);
 		blocks.put(block, p);

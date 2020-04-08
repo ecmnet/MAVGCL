@@ -171,7 +171,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					if(!control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.DARKRED);
 					else {
-						driver.setBackgroundColor(Color.DARKCYAN);
+						driver.setBackgroundColor(Color.web("#1c6478"));
 					}
 					driver.setMode(Badge.MODE_ON);
 				}
@@ -201,29 +201,29 @@ public class StatusLineWidget extends Pane implements IChartControl {
 										list.get(current_x1_pt).tms/1000)
 								);
 
-					time.setBackgroundColor(Color.DARKCYAN);
+					time.setBackgroundColor(Color.web("#1c6478"));
 				} else {
 					time.setText("00:00 - 00:00");
 					time.setBackgroundColor(Color.GRAY);
 				}
 
 				if(state.getReplayingProperty().get()) {
-					mode.setBackgroundColor(Color.MEDIUMSEAGREEN);
+					mode.setBackgroundColor(Color.web("#2989a3"));
 					mode.setText("Replay");
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(!filename.isEmpty()) {
-					mode.setBackgroundColor(Color.LIGHTSKYBLUE);
+					mode.setBackgroundColor(Color.web("#2989a3"));
 					mode.setText(filename);
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(control.isConnected() && model.sys.isStatus(Status.MSP_SITL)) {
-					mode.setBackgroundColor(Color.BEIGE);
+					mode.setBackgroundColor(Color.web("#2989a3"));
 					mode.setText("SITL");
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(control.isConnected()) {
-					mode.setBackgroundColor(Color.DARKCYAN);
+					mode.setBackgroundColor(Color.web("#1c6478"));
 					mode.setText("Connected");
 					mode.setMode(Badge.MODE_ON);
 				} else {

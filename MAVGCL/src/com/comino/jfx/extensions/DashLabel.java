@@ -60,8 +60,8 @@ public class DashLabel extends GridPane {
 		this.setCache(true);
 		this.setCacheHint(CacheHint.SPEED);
 
-		label = new Label(); label.setTextFill(Color.DARKCYAN.brighter());
-		line = new Line(); line.setStroke(Color.DARKCYAN.darker());
+		label = new Label(); label.setTextFill(Color.web("#1c6478").brighter());
+		line = new Line(); line.setStroke(Color.web("#1c6478").darker());
 
 		this.addColumn(0, label);
 		this.addColumn(1, line);
@@ -100,7 +100,7 @@ public class DashLabel extends GridPane {
 		if(color!=null)
 			line.setStroke(color.darker());
 		else
-			line.setStroke(Color.DARKCYAN.darker());
+			line.setStroke(Color.web("#1c6478").darker());
 	}
 
 	public void setTooltip(Tooltip tip) {

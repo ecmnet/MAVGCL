@@ -1892,6 +1892,14 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="SLAM quality" uom="m/s" mask="#0.0" key="SLAMQU">
+		<MSPSource class="slam" field="quality"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Dist.Obstacle" uom="m" mask="#0.0" key="SLAMOMD">
 		<MSPSource class="slam" field="dm"></MSPSource>
 		<Groups>

@@ -22,6 +22,7 @@ public class JoyStickModel {
 	private long    tms    = 0;
 	private boolean button_state = false;
 
+
 	private HashMap<Integer,button>     buttons  = new HashMap<Integer,button>();
 	private ArrayList<IControlListener> controls = new ArrayList<IControlListener>();
 

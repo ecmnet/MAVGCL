@@ -36,8 +36,10 @@ package com.comino.flight.control.joystick;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
@@ -132,9 +134,17 @@ public class JoyStickController implements Runnable {
 
 		joystick.addButtonListener(ch_rtl, (state) -> {
 			if(state == JoyStickModel.PRESSED) {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
-						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
-						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_RTL);
+
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+				msp.param2 =  MSP_AUTOCONTROL_ACTION.RTL;
+
+				if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL))
+					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				else
+					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+				control.sendMAVLinkMessage(msp);
+
 			}
 		});
 

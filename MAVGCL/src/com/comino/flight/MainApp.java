@@ -168,6 +168,11 @@ public class MainApp extends Application  {
 					control = new MAVUdpController("127.0.0.1",14656,14650, true);
 					//new SITLController(control);
 				}
+				else  if(args.get("SERVER")!=null) {
+					System.out.println("Server");
+					control = new MAVUdpController("172.168.178.22",14656,14650, true);
+					//new SITLController(control);
+				}
 				else  if(args.get("SERIAL")!=null) {
 					control = new MAVSerialController();
 				}

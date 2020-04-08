@@ -190,7 +190,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				state.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
-				timeout.cancel(true);
+				if(timeout!=null)
+				  timeout.cancel(true);
 				state.getParamLoadedProperty().set(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
