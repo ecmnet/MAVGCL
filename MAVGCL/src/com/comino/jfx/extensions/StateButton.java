@@ -20,7 +20,7 @@ public class StateButton extends Button {
 		this.addEventHandler(ActionEvent.ACTION, event -> {
 			timeline.playFromStart();
 			Platform.runLater(() -> {
-				setStyle("-fx-background-color: #006C6CCC");
+				setStyle("-fx-background-color: #1a606e");
 			});
 		});
 	}
@@ -29,7 +29,7 @@ public class StateButton extends Button {
 		this.state = state;
 		Platform.runLater(() -> {
 			if(state)
-				setStyle("-fx-background-color: #006C6C");
+				setStyle("-fx-background-color: #2f606e");
 			else
 				setStyle("-fx-background-color: #606060");
 		});
