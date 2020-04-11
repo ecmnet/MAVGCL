@@ -198,10 +198,11 @@ public class CameraWidget extends ChartControlPane  {
 
 		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 
-		if(control.isSimulation())
-			url_string = "http://127.0.0.1:8080/mjpeg";
+		if(userPrefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").contains("%"))
+			url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").replace("%", control.getConnectedAddress());
 		else
 			url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
+
 
 		System.out.println(url_string);
 
