@@ -137,7 +137,7 @@ public class CameraWidget extends ChartControlPane  {
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false)
 					|| !state.isAutoRecording().get()
-					|| !control.getCurrentModel().sys.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
+					|| !control.getCurrentModel().sys.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY))
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
