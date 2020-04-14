@@ -1880,7 +1880,7 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Distance to target" uom="m" mask="#0.00" key="SLAMDIS">
+	<KeyFigure desc="Distance to target" uom="m" mask="#0.0" key="SLAMDTT">
 		<MSPSource class="slam" field="di"></MSPSource>
 	</KeyFigure>
 
@@ -1892,7 +1892,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SLAM quality" uom="m/s" mask="#0.0" key="SLAMQU">
+	<KeyFigure desc="Depth.Quality" uom="m/s" mask="#0.0" key="SLAMQU">
 		<MSPSource class="slam" field="quality"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
@@ -1900,7 +1900,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Dist.Obstacle" uom="m" mask="#0.0" key="SLAMOMD">
+	<KeyFigure desc="Dist.Obstacle" uom="m" mask="#0.0" key="SLAMDTO">
 		<MSPSource class="slam" field="dm"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>

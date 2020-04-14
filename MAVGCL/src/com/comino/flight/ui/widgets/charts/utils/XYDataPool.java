@@ -58,14 +58,24 @@ public class XYDataPool {
 			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
 			o = e.nextElement();
 			o.setXValue(x);
-			o.setYValue(y);
+			if(!Double.isNaN(y))
+				o.setYValue(y);
+			else
+				o.setYValue(0);
 			unlocked.remove(o);
 			locked.put(o, true);
 			return(o);
 		}
-		o = new XYChart.Data<Number,Number>(x,y);
+		if(!Double.isNaN(y)) {
+			o = new XYChart.Data<Number,Number>(x,y);
+			locked.put( o, true );
+			return o;
+		}
+
+		o = new XYChart.Data<Number,Number>(x,0);
 		locked.put( o, true );
-		return( o );
+		return o;
+
 	}
 
 	public synchronized void invalidate(XYChart.Data<Number,Number> o) {

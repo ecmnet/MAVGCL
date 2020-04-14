@@ -6,6 +6,6 @@
 <fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0"
-           pickOnBounds="true" preserveRatio="true" styleClass="glass" />
+           pickOnBounds="false" preserveRatio="true" styleClass="glass" />
    </children>
 </fx:root>

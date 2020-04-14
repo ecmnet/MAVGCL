@@ -60,8 +60,8 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends ChartControlPane  {
 
-	private int X = 1280 / 2;
-	private int Y = 960 / 2;
+	private int X = 640 / 2;
+	private int Y = 480 / 2;
 
 
 	@FXML

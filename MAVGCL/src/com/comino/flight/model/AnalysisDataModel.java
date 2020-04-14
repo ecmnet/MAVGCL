@@ -132,7 +132,7 @@ public class AnalysisDataModel {
 						if( type == KeyFigureMetaData.MAV_SOURCE)
 							val = e.getValueFromMAVLinkMessage(source);
 
-						if(val!=null && !Double.isNaN(val))
+						if(val!=null)
 							data.put(e.hash,val);
 					}
 				} catch (Exception e1) {

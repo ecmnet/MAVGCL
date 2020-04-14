@@ -564,7 +564,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		isScrolling.addListener((v, ov, nv) -> {
 			if(nv.booleanValue())
 				resolution_ms = resolution_ms * 2 ;
-			    //setXResolution(timeFrame.get() * 2);
+			//setXResolution(timeFrame.get() * 2);
 			else
 				setXResolution(timeFrame.get());
 		});
@@ -929,19 +929,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 					if(type1.hash!=0)  {
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
-						if(!Double.isNaN(v1))
-							series1.getData().add(pool.checkOut(dt_sec,v1));
+						series1.getData().add(pool.checkOut(dt_sec,v1));
 
 					}
 					if(type2.hash!=0)  {
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
-						if(!Double.isNaN(v2))
-							series2.getData().add(pool.checkOut(dt_sec,v2));
+						series2.getData().add(pool.checkOut(dt_sec,v2));
 					}
 					if(type3.hash!=0)  {
 						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,false);
-						if(!Double.isNaN(v3))
-							series3.getData().add(pool.checkOut(dt_sec,v3));
+						series3.getData().add(pool.checkOut(dt_sec,v3));
 					}
 				}
 
@@ -1077,7 +1074,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 			if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
-				return 0;
+				return Double.NaN;
 
 			if(length==1)
 				return v_current_x;
@@ -1104,7 +1101,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 		} catch(IndexOutOfBoundsException o) {
-			return 0;
+			return Double.NaN;
 		}
 	}
 
