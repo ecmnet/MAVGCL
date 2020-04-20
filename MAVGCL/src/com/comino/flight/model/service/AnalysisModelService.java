@@ -327,7 +327,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
 					state.getRecordingProperty().set(STOPPED);
-					current.setValue("SWIFI", 0);
+					if(!state.getReplayingProperty().get())
+					  current.setValue("SWIFI", 0);
 					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
 					continue;
 					//		}

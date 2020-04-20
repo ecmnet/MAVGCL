@@ -17,7 +17,7 @@
 		<Separator layoutX="13.0" layoutY="70.0" prefHeight="0.0"
 			prefWidth="176.0" />
 		<Slider fx:id="scroll" blockIncrement="100.0" layoutX="13.0"
-			prefWidth="150.0" layoutY="82.0" majorTickUnit="100.0" max="1000000"
+			prefWidth="150.0" layoutY="82.0" majorTickUnit="0.1" max="1"
 			min="0" prefHeight="13.0" value="0" />
 		<Button fx:id="play" layoutY="80.0" layoutX="167.0" text="&#x25b6;"/>
 		<Separator layoutX="13.0" layoutY="102.0" prefHeight="0.0"

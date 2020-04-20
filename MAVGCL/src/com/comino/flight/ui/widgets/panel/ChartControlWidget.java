@@ -92,21 +92,12 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	private StateProperties state = StateProperties.getInstance();
 
-	private long scroll_tms = 0;
-	private FloatProperty animation = new SimpleFloatProperty();
-
 	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
 	public ChartControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
 
-		animation.addListener((a) -> {
-			charts.entrySet().forEach((chart) -> {
-				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
-					chart.getValue().getScrollProperty().set(1f-animation.floatValue()/1000000f);
-			});
-		});
 	}
 
 	@FXML
@@ -145,16 +136,10 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get())
 				return;
-			// TODO: Cleanup but is better than old solution
-
-			if((System.currentTimeMillis() - scroll_tms)>100) {
-				animation.setValue(oldvalue);
-				Timeline task = new Timeline(new KeyFrame(Duration.millis(100),
-						new KeyValue(animation,newvalue)));
-				task.setCycleCount(1);
-				task.play();
-				scroll_tms = System.currentTimeMillis();
-			}
+			charts.entrySet().forEach((chart) -> {
+				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
+					chart.getValue().getScrollProperty().set(1f-newvalue.floatValue());
+			});
 		});
 
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -174,7 +159,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setDisable(true);
 				else
 					scroll.setDisable(false);
-				scroll.setValue(1000000);
+				scroll.setValue(1);
 			}
 		});
 
@@ -193,15 +178,13 @@ public class ChartControlWidget extends ChartControlPane  {
 		});
 
 		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
 			@Override
 			public void handle(MouseEvent click) {
 				if(state.getReplayingProperty().get())
 					return;
 				if (click.getClickCount() == 2)
-					scroll.setValue(scroll.getValue() == 1000000d ? 0 : 1000000d);
-				else
-					scroll.setValue(scroll.getValue()-1);
+					scroll.setValue(scroll.getValue() == 1 ? 0 : 1);
+
 			}
 		});
 
@@ -216,14 +199,12 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
-				if(scroll.getValue()<10000)
-					scroll.setValue(1000000d);
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
 				new Thread(() -> {
 					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
-					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue()) / 1000000f));
+					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
 					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(-1);
@@ -231,7 +212,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
 						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );
-						scroll.setValue((1f - (float)index/modelService.getModelList().size())*1000000f);
+						scroll.setValue((1f - (float)index/modelService.getModelList().size()));
 							for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 								if(chart.getValue().getReplayProperty()!=null)
 									chart.getValue().getReplayProperty().set(index);
