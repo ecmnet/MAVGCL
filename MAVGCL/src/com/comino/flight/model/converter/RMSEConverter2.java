@@ -57,7 +57,7 @@ public class RMSEConverter2 extends SourceConverter {
 	@Override
 	public double convert(AnalysisDataModel data) {
 
-		double rmse = 0; double kf = 0; double sp = 0; int count;
+		double rmse = 0; double kf = 0; double sp = 0;
 
 		List<AnalysisDataModel> list = AnalysisModelService.getInstance().getModelList();
 
@@ -79,7 +79,6 @@ public class RMSEConverter2 extends SourceConverter {
 			return Math.sqrt(rmse/frame);
 		} else {
 
-		count = 0;
 		for(int i=list.size()-frame;i<list.size();i++) {
 			kf = list.get(i).getValue(kf_val);
 			sp = list.get(i).getValue(kf_sp);
