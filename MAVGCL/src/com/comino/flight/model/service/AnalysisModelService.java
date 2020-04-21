@@ -83,7 +83,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private boolean isReplaying = false;
 
 	private int totalTime_sec = 30;
-	private int collector_interval_us = 20000;
+	private int collector_interval_us = 50000;
 	private IMAVController control = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
