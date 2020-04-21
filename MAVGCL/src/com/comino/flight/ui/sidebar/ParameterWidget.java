@@ -255,6 +255,8 @@ public class ParameterWidget extends ChartControlPane  {
 		tooltip.setMaxWidth(300);
 		tooltip.setWrapText(true);
 
+		sb.append(att.name);
+		sb.append("\n");
 		sb.append(att.description);
 
 		if(att.unit!=null && att.unit.length()>0)
