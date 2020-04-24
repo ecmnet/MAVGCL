@@ -462,6 +462,8 @@ public class ParameterWidget extends ChartControlPane  {
 
 		@SuppressWarnings("unchecked")
 		public float getValueOf(Control p) throws NumberFormatException {
+			if(p==null)
+				return 0;
 			if(p instanceof TextField) {
 				((TextField)p).commitValue();
 				return Float.parseFloat(((TextField)p).getText());
