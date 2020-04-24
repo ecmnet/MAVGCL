@@ -76,7 +76,7 @@ public class DetailsWidget extends ChartControlPane {
 			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDTT", "SLAMDTO", null,"VISIONFPS", "VISIONQUAL", "FLOWQL",null, "BATC", "BATH",
-			"BATP", null, "IMUTEMP", "MSPTEMP",  null, "CPUMSP", "CPUPX4", "SWIFI", "RSSI", null, "TARM",
+			"BATP", null, "IMUTEMP", "MSPTEMP",  null,  "CPUPX4", "CPUMSP", "SWIFI", "RSSI", null, "TARM",
 
 	};
 
