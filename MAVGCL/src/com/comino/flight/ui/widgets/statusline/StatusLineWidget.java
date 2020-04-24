@@ -92,6 +92,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	@FXML
 	private Badge lpos;
 
+	@FXML
+	private Badge wp;
+
 
 	private IMAVController control;
 
@@ -126,6 +129,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 			@Override
 			public void handle(ActionEvent event) {
+
+				if(model.slam.wpcount > 0) {
+					wp.setText(String.format("%d", model.slam.wpcount));
+				   wp.setMode(Badge.MODE_ON);
+				}
+				else {
+					wp.setText("");
+					wp.setMode(Badge.MODE_OFF);
+				}
 
 				if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
 					gps.setMode(Badge.MODE_ON);

@@ -1900,6 +1900,14 @@
 		</Groups>
 	</KeyFigure>
 
+	<KeyFigure desc="WayPoint" uom="" mask="#000" key="SLAMWP">
+		<MSPSource class="slam" field="wpcount"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+
 	<KeyFigure desc="Dist.Obstacle" uom="m" mask="#0.0" key="SLAMDTO">
 		<MSPSource class="slam" field="dm"></MSPSource>
 		<Groups>
