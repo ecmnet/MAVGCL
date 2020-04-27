@@ -34,10 +34,12 @@
 
 package com.comino.flight.ui.widgets.view3D.objects;
 
+import java.awt.image.IndexColorModel;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
+import com.comino.jfx.extensions.ColorMap;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.struct.MapPoint3D_F32;
 
@@ -45,24 +47,33 @@ import georegression.struct.point.Point3D_F32;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.CullFace;
 import javafx.util.Duration;
 
 public class MapGroup extends Xform {
 
-	private final Map<Integer,Box> blocks   	= new HashMap<Integer,Box>();
+	private final Map<Integer,Group> blocks   	= new HashMap<Integer,Group>();
 
-	private final PhongMaterial mapMaterial	= new PhongMaterial();
+	private final PhongMaterial[] mapMaterial	= new PhongMaterial[100];
 
 	private Timeline 		maptimer 	= null;
 	private boolean			mode2D		= false;
-	private DataModel		model	    = null;
+
 
 	public MapGroup(DataModel model) {
-		this.model = model;
-		mapMaterial.setDiffuseColor(Color.web("#2892b0"));
+
+		ColorMap colorMap = new ColorMap(0,100, ColorMap.HUE_BLUE_TO_RED);
+
+		for(int i=1;i<100;i++) {
+			mapMaterial[i] = new PhongMaterial();
+			mapMaterial[i].setDiffuseColor(Color.rgb(colorMap.getColor(i).getRed(), colorMap.getColor(i).getGreen(), colorMap.getColor(i).getBlue()));
+		}
+		mapMaterial[0] = new PhongMaterial();
+		mapMaterial[0].setDiffuseColor(Color.web("#2892b0"));
 
 		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
 			for(int k=0;k<this.getChildren().size();k++)
@@ -97,24 +108,42 @@ public class MapGroup extends Xform {
 		clear();
 	}
 
-	private Box getBlockBox(int block, MapPoint3D_F32 b) {
+	private Group getBlockBox(int block, MapPoint3D_F32 b) {
 
 		if(blocks.containsKey(block))
 			return blocks.get(block);
 
-		final Box box = new Box(5, 5, 5);
 
-		box.setTranslateX(-b.y*100);
-		if(mode2D)
-			box.setTranslateY(-model.state.l_z*100+box.getHeight()/2);
-		else
-			box.setTranslateY(-b.z*100+box.getHeight()/2);
-		box.setTranslateZ(b.x*100);
-		box.setMaterial(mapMaterial);
+		final Group boxGroup = new Group();
 
-		this.getChildren().addAll(box);
-		blocks.put(block,box);
+		int boxes = (int)(-b.z * 20 ) + 1;
+		if(mode2D || b.z == 0) {
 
-		return box;
+			final Box box = new Box(5, 5, 5);
+			box.setTranslateX(-b.y*100);
+			box.setTranslateY(box.getHeight()/2);
+			box.setTranslateY((boxes-1)*5+box.getHeight()/2);
+			box.setTranslateZ(b.x*100);
+			box.setMaterial(mapMaterial[0]);
+			box.setCullFace(CullFace.BACK);
+			boxGroup.getChildren().add(box);
+		} else {
+
+			for(int i=0; i< boxes && i < 100 ; i++) {
+				final Box box = new Box(5, 5, 5);
+				box.setTranslateX(-b.y*100);
+				box.setTranslateY(box.getHeight()/2);
+				box.setTranslateY(i*5+box.getHeight()/2);
+				box.setTranslateZ(b.x*100);
+				box.setMaterial(mapMaterial[i]);
+				box.setCullFace(CullFace.BACK);
+				boxGroup.getChildren().add(box);
+			}
+		}
+
+		this.getChildren().add(boxGroup);
+		blocks.put(block,boxGroup);
+
+		return boxGroup;
 	}
 }

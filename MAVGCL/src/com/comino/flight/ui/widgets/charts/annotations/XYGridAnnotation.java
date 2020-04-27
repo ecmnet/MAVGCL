@@ -96,9 +96,10 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 		model.grid.getData().forEach((i,b) -> {
 
-			// TODO: 3D Extension: Let user select z-plane to display in XY View
-			if(b.z!=0 || (b.x==0 && b.y==0))
+			if( (b.x==0 && b.y==0))
 				return;
+
+			// TODO: Z Plane filter (selectable)
 
 			Pane bp = getBlockPane(i,b);
 			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
