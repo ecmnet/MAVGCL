@@ -66,8 +66,6 @@ public class MapGroup extends Xform {
 
 	public MapGroup(DataModel model) {
 
-		ColorMap colorMap = new ColorMap(0,100, ColorMap.HUE_BLUE_TO_RED);
-
 		mapMaterial.setDiffuseColor(Color.web("#2892b0"));
 
 		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
