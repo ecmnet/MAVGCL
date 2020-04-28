@@ -58,7 +58,7 @@ public class MapGroup extends Xform {
 
 	private final Map<Integer,Group> blocks   	= new HashMap<Integer,Group>();
 
-	private final PhongMaterial[] mapMaterial	= new PhongMaterial[100];
+	private final PhongMaterial mapMaterial	= new PhongMaterial();
 
 	private Timeline 		maptimer 	= null;
 	private boolean			mode2D		= false;
@@ -68,12 +68,7 @@ public class MapGroup extends Xform {
 
 		ColorMap colorMap = new ColorMap(0,100, ColorMap.HUE_BLUE_TO_RED);
 
-		for(int i=1;i<100;i++) {
-			mapMaterial[i] = new PhongMaterial();
-			mapMaterial[i].setDiffuseColor(Color.rgb(colorMap.getColor(i).getRed(), colorMap.getColor(i).getGreen(), colorMap.getColor(i).getBlue()));
-		}
-		mapMaterial[0] = new PhongMaterial();
-		mapMaterial[0].setDiffuseColor(Color.web("#2892b0"));
+		mapMaterial.setDiffuseColor(Color.web("#2892b0"));
 
 		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
 			for(int k=0;k<this.getChildren().size();k++)
@@ -115,31 +110,23 @@ public class MapGroup extends Xform {
 
 
 		final Group boxGroup = new Group();
+		int height = (int)(-b.z * 100 ) + 10;
 
-		int boxes = (int)(-b.z * 20 ) + 1;
-		if(mode2D || b.z == 0) {
+		final Box box = new Box(5, 5, 5);
 
-			final Box box = new Box(5, 5, 5);
-			box.setTranslateX(-b.y*100);
+		if(mode2D || b.z == 0)
 			box.setTranslateY(box.getHeight()/2);
-			box.setTranslateY((boxes-1)*5+box.getHeight()/2);
-			box.setTranslateZ(b.x*100);
-			box.setMaterial(mapMaterial[0]);
-			box.setCullFace(CullFace.BACK);
-			boxGroup.getChildren().add(box);
-		} else {
-
-			for(int i=0; i< boxes && i < 100 ; i++) {
-				final Box box = new Box(5, 5, 5);
-				box.setTranslateX(-b.y*100);
-				box.setTranslateY(box.getHeight()/2);
-				box.setTranslateY(i*5+box.getHeight()/2);
-				box.setTranslateZ(b.x*100);
-				box.setMaterial(mapMaterial[i]);
-				box.setCullFace(CullFace.BACK);
-				boxGroup.getChildren().add(box);
-			}
+		else {
+			box.setTranslateY(height+box.getHeight()/2);
 		}
+
+		box.setTranslateX(-b.y*100);
+		box.setTranslateZ(b.x*100);
+		box.setMaterial(mapMaterial);
+		box.setCullFace(CullFace.BACK);
+		boxGroup.getChildren().add(box);
+
+
 
 		this.getChildren().add(boxGroup);
 		blocks.put(block,boxGroup);
