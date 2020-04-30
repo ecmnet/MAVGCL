@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	12/03/2020
+**Development Status:** Last updated 	30/04/2020
 
 
 **Features:**
@@ -128,7 +128,7 @@ Currently a direct mapping of MAVLink messages to keyfigures is not possible. In
 
 **Note for developers:**
 
-MAVGAnalysis depends heavily on https://github.com/ecmnet/MAVComm for MAVLink parsing.
+MAVGAnalysis depends heavily on https://github.com/ecmnet/mavcom for MAVLink parsing.
 
 
 Please note the [License terms](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/LICENSE.md).
