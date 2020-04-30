@@ -85,11 +85,12 @@ public class StateProperties {
 	private BooleanProperty isBaseAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isMSPAvailable                   = new SimpleBooleanProperty();
 
-	private BooleanProperty isCurrentUpToDate               = new SimpleBooleanProperty(true);
-	private BooleanProperty isInitializedProperty           = new SimpleBooleanProperty();
-	private BooleanProperty isControllerConnectedProperty   = new SimpleBooleanProperty();
+	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
+	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
+	private BooleanProperty isControllerConnectedProperty    = new SimpleBooleanProperty();
 
-	private FloatProperty progress 						   = new SimpleFloatProperty(-1);
+	private IntegerProperty countDown 						 = new SimpleIntegerProperty(-1);
+	private FloatProperty  progress 						 = new SimpleFloatProperty(-1);
 
 	private IMAVController control;
 
@@ -265,6 +266,10 @@ public class StateProperties {
 
 	public FloatProperty getProgressProperty() {
 		return progress;
+	}
+
+	public IntegerProperty getCountDownProperty() {
+		return countDown;
 	}
 
 	public BooleanProperty getRecordingAvailableProperty() {

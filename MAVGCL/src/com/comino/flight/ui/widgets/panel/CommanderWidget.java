@@ -46,13 +46,17 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 public class CommanderWidget extends ChartControlPane  {
+
+	private static final int COUNT_DOWN_SECS = 5;
 
 	@FXML
 	private Button arm_command;
@@ -125,13 +129,19 @@ public class CommanderWidget extends ChartControlPane  {
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+				state.getCountDownProperty().set(0);
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
 			} else {
-				if(model.sys.isStatus(Status.MSP_LANDED))
+				if(model.sys.isStatus(Status.MSP_LANDED)) {
+					if(state.getCountDownProperty().get()>0)
+						logger.writeLocalMsg("[mgc] Takeoff count down manually aborted",
+								MAV_SEVERITY.MAV_SEVERITY_WARNING);
+					state.getCountDownProperty().set(-1);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
+				}
 			}
 
 		});
@@ -152,16 +162,31 @@ public class CommanderWidget extends ChartControlPane  {
 
 
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
-			//	.or(state.getRCProperty())
-				.or(StateProperties.getInstance().getLandedProperty().not()));
+				//	.or(state.getRCProperty())
+				.or(state.getLandedProperty().not()
+				.or(state.getCountDownProperty().isNotEqualTo(0))));
+
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
+				ExecutorService.get().submit(() -> {
+					IntegerProperty countDown = state.getCountDownProperty();
+					if(countDown.get()>-1) {
+						logger.writeLocalMsg("[mgc] Takeoff count down initiated",
+								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						countDown.set(COUNT_DOWN_SECS+1);
+						while(countDown.get()>0) {
+							countDown.set(countDown.get()-1);
+							try { 	Thread.sleep(1000); } catch (InterruptedException e) { 	}
+						}
+						if(countDown.get()==0)
+						 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
+					}
+				});
 			}
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Takoff rejected: LPOS not available",
+				logger.writeLocalMsg("[mgc] Takoff rejected: LPOS not available",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 			}
 
@@ -170,16 +195,16 @@ public class CommanderWidget extends ChartControlPane  {
 		emergency.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
 				if(result==0) {
-					MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
+					logger.writeLocalMsg("[mgc] EMERGENCY: User requested to switch off motors",
 							MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
 				}
 			},0, 21196 );
 		});
-}
+	}
 
-public void setup(IMAVController control) {
-	this.model = control.getCurrentModel();
-	this.control = control;
-}
+	public void setup(IMAVController control) {
+		this.model = control.getCurrentModel();
+		this.control = control;
+	}
 
 }

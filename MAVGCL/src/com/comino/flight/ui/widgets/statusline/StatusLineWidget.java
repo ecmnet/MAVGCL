@@ -131,8 +131,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			public void handle(ActionEvent event) {
 
 				if(model.slam.wpcount > 0) {
-					wp.setText(String.format("%d", model.slam.wpcount));
+				   wp.setText(String.format("WP %d", model.slam.wpcount));
 				   wp.setMode(Badge.MODE_ON);
+				}
+				else if(state.getCountDownProperty().get() > 0) {
+					wp.setText(String.format("T- %d", state.getCountDownProperty().get()));
+					wp.setMode(Badge.MODE_ON);
 				}
 				else {
 					wp.setText("");
