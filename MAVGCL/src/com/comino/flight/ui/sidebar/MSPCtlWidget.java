@@ -114,6 +114,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button test_seq1;
 
 	@FXML
+	private Button takeoff;
+
+	@FXML
+	private Button land;
+
+	@FXML
 	private Button restart;
 
 	@FXML
@@ -270,13 +276,39 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		takeoff.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
+			msp.param3 = 0f;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		land.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.LAND;
+			msp.param3 = 0f;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
 		test_seq1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TEST_SEQ1))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.TEST_SEQ1;
 			control.sendMAVLinkMessage(msp);
 
 		});
+
+
 
 		enable_planner.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
