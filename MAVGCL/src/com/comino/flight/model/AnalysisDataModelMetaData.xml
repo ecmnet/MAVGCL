@@ -579,13 +579,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.MoveRate Yaw" uom="rad/s" mask="#0.00" key="SPYAW">
-		<ULogSource field="vehicle_attitude_setpoint_0.yaw_sp_move_rate"/>
-		<Groups>
-			<Group>Attitude</Group>
-		</Groups>
-	</KeyFigure>
-
 	<!-- Global position -->
 
 	<KeyFigure desc="Global.Lat." uom="°" mask="#0.0000000" key="GLOBLAT">
