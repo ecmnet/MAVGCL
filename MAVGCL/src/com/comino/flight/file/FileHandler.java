@@ -71,6 +71,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.comino.mavcom.param.ParameterAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -111,6 +112,7 @@ public class FileHandler {
 	private String lastDir = null;
 
 	private boolean createResultSet = false;
+	private DataModel currentModel = null;
 
 
 	public static FileHandler getInstance() {
@@ -131,6 +133,7 @@ public class FileHandler {
 		this.control = control;
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
+		this.currentModel  = control.getCurrentModel();
 
 		readPresetFiles();
 
@@ -207,6 +210,8 @@ public class FileHandler {
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
 
+					Type listType = null;
+
 					state.getLogLoadedProperty().set(false);
 
 					if(file.getName().endsWith("ulg")) {
@@ -218,7 +223,7 @@ public class FileHandler {
 					}
 
 					if(file.getName().endsWith("mgc")) {
-						Type listType = new TypeToken<FileData>() {}.getType();
+						listType = new TypeToken<FileData>() {}.getType();
 
 						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
 						raw.addListener(new ProgressInputStream.Listener() {
@@ -231,7 +236,7 @@ public class FileHandler {
 						Gson gson = new GsonBuilder().create();
 						try {
 							FileData data = gson.fromJson(reader,listType);
-							data.update(modelService,paramService);
+							data.update(modelService,paramService,currentModel);
 						} catch(Exception e) {
 							reader.close();
 							MAVGCLPX4Parameters.getInstance().clear();
@@ -294,7 +299,7 @@ public class FileHandler {
 					if(file.getName().endsWith("mgc")) {
 						try {
 							Writer writer = new FileWriter(file);
-							FileData data = new FileData(); data.prepareData(modelService,paramService);
+							FileData data = new FileData(); data.prepareData(modelService,paramService, currentModel);
 							Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 							stage.getScene().setCursor(Cursor.WAIT);
 							gson.toJson(data, writer);
@@ -338,6 +343,7 @@ public class FileHandler {
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
+
 					saveLog(path_result,name);
 
 					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
@@ -467,13 +473,12 @@ public class FileHandler {
 			f.delete();
 		f.createNewFile();
 		Writer writer = new FileWriter(f);
-		FileData data = new FileData(); data.prepareData(modelService,paramService);
+		FileData data = new FileData(); data.prepareData(modelService,paramService, currentModel);
 		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 		gson.toJson(data, writer);
 		writer.flush();
 		writer.close();
 	}
-
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
@@ -488,15 +493,20 @@ public class FileHandler {
 
 		private Map<String,ParameterAttributes>		params = null;
 		private List<AnalysisDataModel> 			data   = null;
+		private Map<Integer,MapPoint3D_F32>         grid   = null;
 
-		public void prepareData(AnalysisModelService model, MAVGCLPX4Parameters param) {
-			data   = model.getModelList();
+		public void prepareData(AnalysisModelService analysisModel, MAVGCLPX4Parameters param, DataModel model) {
+			data   = analysisModel.getModelList();
 			params = param.get();
+			grid  = model.grid.getData();
 		}
 
-		public void update(AnalysisModelService model, MAVGCLPX4Parameters param ) {
-			model.setModelList(data);
-			param.set(params);
+		public void update(AnalysisModelService analysisModel, MAVGCLPX4Parameters param, DataModel model ) {
+			analysisModel.setModelList(data);
+			if(params!=null)
+			  param.set(params);
+			if(grid!=null)
+			  model.grid.setData(grid);
 		}
 	}
 
