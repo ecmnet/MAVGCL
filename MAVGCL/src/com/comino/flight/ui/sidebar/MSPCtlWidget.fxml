@@ -16,6 +16,7 @@
 				<children>
 					<Button fx:id="reset_odometry" prefWidth="165.0" text="Reset odometry" />
 					<CheckBox fx:id="enable_vision" text="Publish odometry" />
+					<CheckBox fx:id="enable_takeoff_proc" text="Enable TakeOff procedure" />
 					<Button fx:id="reset_microslam" prefWidth="165.0"
 						text="Reset local map (microSLAM)" />
 					<Button fx:id="save_map" prefWidth="165.0"
@@ -50,8 +51,6 @@
 						</VBox.margin>
 					</StateButton>
 					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
-					<Button fx:id="takeoff" text="TakeOff" prefWidth="165.0" />
-					<Button fx:id="land" text="Land" prefWidth="165.0" />
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"

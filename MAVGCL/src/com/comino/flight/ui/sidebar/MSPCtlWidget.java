@@ -81,6 +81,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private CheckBox enable_vision;
 
 	@FXML
+	private CheckBox enable_takeoff_proc;
+
+	@FXML
 	private StateButton enable_offboard;
 
 	@FXML
@@ -112,12 +115,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private Button test_seq1;
-
-	@FXML
-	private Button takeoff;
-
-	@FXML
-	private Button land;
 
 	@FXML
 	private Button restart;
@@ -161,6 +158,18 @@ public class MSPCtlWidget extends ChartControlPane   {
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_VISION;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_takeoff_proc.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE;
 			if(n.booleanValue())
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
@@ -271,24 +280,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.ROTATE;
-			msp.param3 = 0f;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-		takeoff.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
-			msp.param3 = 0f;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-		land.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.LAND;
 			msp.param3 = 0f;
 			control.sendMAVLinkMessage(msp);
 
@@ -429,6 +420,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(n) -> {
 			enable_offboard.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
+			enable_takeoff_proc.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
 		});
 
 		Platform.runLater(() -> {
