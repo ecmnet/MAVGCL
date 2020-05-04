@@ -139,7 +139,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			vehicle.setVisible(n.booleanValue());
 		});
 
-		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
 			target.updateState(model);
 			vehicle.updateState(model);
 			switch(perspective) {
