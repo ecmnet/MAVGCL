@@ -164,22 +164,24 @@ public class CommanderWidget extends ChartControlPane  {
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
 				//	.or(state.getRCProperty())
 				.or(state.getLandedProperty().not()
-				.or(state.getCountDownProperty().isNotEqualTo(0))));
+						.or(state.getCountDownProperty().isNotEqualTo(0))));
 
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
 				ExecutorService.get().submit(() -> {
 					IntegerProperty countDown = state.getCountDownProperty();
 					if(countDown.get()>-1) {
-						logger.writeLocalMsg("[mgc] Takeoff count down initiated",
-								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						countDown.set(COUNT_DOWN_SECS+1);
-						while(countDown.get()>0) {
-							countDown.set(countDown.get()-1);
-							try { 	Thread.sleep(1000); } catch (InterruptedException e) { 	}
+						if(!control.isSimulation()) {
+							logger.writeLocalMsg("[mgc] Takeoff count down initiated",
+									MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							countDown.set(COUNT_DOWN_SECS+1);
+							while(countDown.get()>0) {
+								countDown.set(countDown.get()-1);
+								try { 	Thread.sleep(1000); } catch (InterruptedException e) { 	}
+							}
 						}
 						if(countDown.get()==0)
-						 control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
+							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
 					}
 				});
 			}
