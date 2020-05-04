@@ -502,7 +502,8 @@ public class FileHandler {
 		}
 
 		public void update(AnalysisModelService analysisModel, MAVGCLPX4Parameters param, DataModel model ) {
-			analysisModel.setModelList(data);
+			if(data!=null)
+			   analysisModel.setModelList(data);
 			if(params!=null)
 			  param.set(params);
 			if(grid!=null)
