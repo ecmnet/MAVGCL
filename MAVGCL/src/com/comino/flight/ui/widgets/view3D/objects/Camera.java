@@ -49,9 +49,10 @@ public class Camera extends Xform {
 	public static final int	BIRDS_PERSPECTIVE 		= 2;
 
 	private static final double CAMERA_INITIAL_DISTANCE 	= -1000;
+	private static final double CAMERA_INITIAL_HEIGHT    	=  -250;
 	private static final double CAMERA_INITIAL_X_ANGLE  	= -10.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE  	=  0.0;
-	private static final double CAMERA_INITIAL_FOV_OBS  	=  40.0;
+	private static final double CAMERA_INITIAL_FOV_OBS  	=  35.0;
 	private static final double CAMERA_INITIAL_FOV_VCL  	=  60.0;
 
 	private static final double CAMERA_NEAR_CLIP 		= 	0.1;
@@ -101,7 +102,7 @@ public class Camera extends Xform {
 		this.vv_angle = 0;
 		switch(perspective) {
 		case OBSERVER_PERSPECTIVE:
-			camera.setTranslateX(0); camera.setTranslateY(0);
+			camera.setTranslateX(0); camera.setTranslateY(CAMERA_INITIAL_HEIGHT);
 			camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
 			this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
 			this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
