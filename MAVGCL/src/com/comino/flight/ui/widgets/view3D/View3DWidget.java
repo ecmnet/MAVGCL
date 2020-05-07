@@ -100,9 +100,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ambient.setColor(Color.WHITE);
 
 		PhongMaterial groundMaterial = new PhongMaterial();
-	//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
+		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 		groundMaterial.setDiffuseMap(new Image
-		         (getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
+				(getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
 
 
 		PhongMaterial northMaterial = new PhongMaterial();
@@ -180,13 +180,16 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
+				switch(perspective) {
+				case Camera.OBSERVER_PERSPECTIVE:
+					vehicle.setVisible(true);
+					break;
+				}
 				task.play();
 			} else {
 				task.stop();
 			}
 		});
-
-		setPerspective(Camera.VEHICLE_PERSPECTIVE);
 
 		return this;
 	}
