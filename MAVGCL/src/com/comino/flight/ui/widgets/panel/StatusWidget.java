@@ -33,6 +33,8 @@
 
 package com.comino.flight.ui.widgets.panel;
 
+import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.ChartControlPane;
@@ -165,6 +167,15 @@ public class StatusWidget extends ChartControlPane  {
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_OFFBOARD, (n) -> {
 			Platform.runLater(() -> {
 				offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+			});
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT,MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE, (n) -> {
+			Platform.runLater(() -> {
+				if(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
+					offboard.setMode(DashLabelLED.MODE_BLINK);
+				else
+					offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 			});
 		});
 
