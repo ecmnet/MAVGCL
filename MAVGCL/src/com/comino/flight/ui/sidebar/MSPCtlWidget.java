@@ -288,12 +288,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		test_seq1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TEST_SEQ1))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.TEST_SEQ1;
 			control.sendMAVLinkMessage(msp);
 
