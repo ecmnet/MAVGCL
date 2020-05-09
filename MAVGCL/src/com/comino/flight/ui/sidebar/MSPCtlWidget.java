@@ -152,7 +152,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		box.prefHeightProperty().bind(this.heightProperty());
 
-		modes.disableProperty().bind(StateProperties.getInstance().getOffboardProperty().not());
+		modes.disableProperty().bind(state.getOffboardProperty().not());
+
+		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
