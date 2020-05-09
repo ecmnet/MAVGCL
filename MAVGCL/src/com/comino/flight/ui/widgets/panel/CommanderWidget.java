@@ -197,7 +197,7 @@ public class CommanderWidget extends ChartControlPane  {
 		emergency.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, (cmd,result) -> {
 				if(result==0) {
-					logger.writeLocalMsg("[mgc] EMERGENCY: User requested to switch off motors",
+					logger.writeLocalMsg("[mgc] User requested to switch off motors",
 							MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
 				}
 			},0, 21196 );
