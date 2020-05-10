@@ -46,6 +46,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -200,8 +201,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
-				modelService.setReplaying(true);
-				new Thread(() -> {
+				ExecutorService.get().submit(() -> {
 					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
@@ -226,7 +226,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					state.getReplayingProperty().set(false);
 					state.getCurrentUpToDate().set(true);
 
-				}).start();
+				});
 			} else {
 				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);

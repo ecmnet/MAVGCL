@@ -145,6 +145,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			switch(perspective) {
 			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.updateState(model);
+				vehicle.setVisible(true);
 				break;
 			case Camera.VEHICLE_PERSPECTIVE:
 				camera.updateState(model);
@@ -154,9 +155,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 			if(StateProperties.getInstance().getRecordingProperty().get()==AnalysisModelService.STOPPED) {
-				int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
+				int current_x1_pt = dataService.calculateIndexByFactor(nv.floatValue());
 
-				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+				if(dataService.getModelList().size()>0 && current_x1_pt >= 0 && current_x1_pt< dataService.getModelList().size())
 					model = dataService.getModelList().get(current_x1_pt);
 				else
 					model = dataService.getCurrent();
@@ -180,11 +181,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				switch(perspective) {
-				case Camera.OBSERVER_PERSPECTIVE:
-					vehicle.setVisible(true);
-					break;
-				}
 				task.play();
 			} else {
 				task.stop();

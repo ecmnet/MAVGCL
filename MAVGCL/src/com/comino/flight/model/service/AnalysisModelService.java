@@ -136,10 +136,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public void startConverter() {
-		//		Thread c = new Thread(new CombinedConverter());
-		//		c.setName("Combined model converter");
-		//		c.start();
-		ExecutorService.submit(new CombinedConverter(),ExecutorService.HIGH);
+				Thread c = new Thread(new CombinedConverter());
+				c.setName("Combined model converter");
+				c.setPriority(Thread.MAX_PRIORITY);
+				c.start();
+	//	ExecutorService.submit(new CombinedConverter(),ExecutorService.HIGH);
 	}
 
 	public void registerListener(ICollectorRecordingListener l) {
@@ -242,6 +243,15 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	public int calculateX0IndexByFactor(double factor) {
 		int current_x0_pt = (int)((modelList.size() - totalTime_sec *  1000f / getCollectorInterval_ms()) * factor);
+
+		if(current_x0_pt<0)
+			current_x0_pt = 0;
+
+		return current_x0_pt;
+	}
+
+	public int calculateIndexByFactor(double factor) {
+		int current_x0_pt = (int)((modelList.size()) * factor);
 
 		if(current_x0_pt<0)
 			current_x0_pt = 0;
