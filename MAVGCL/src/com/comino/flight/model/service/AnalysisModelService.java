@@ -77,7 +77,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisDataModelMetaData                  meta  =  null;
 	private List<ICollectorRecordingListener>    listener  =  null;
 
-	private int mode = 0;
+	private int mode     = STOPPED;
+	private int old_mode = STOPPED;
 
 	private boolean isFirst     = false;
 	private boolean isReplaying = false;
@@ -85,6 +86,8 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private int totalTime_sec = 30;
 	private int collector_interval_us = 50000;
 	private IMAVController control = null;
+
+	private CombinedConverter converter = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null)
@@ -100,6 +103,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	private AnalysisModelService(IMAVController control) {
 
 		this.control = control;
+		this.converter = new CombinedConverter();
 
 		this.meta = AnalysisDataModelMetaData.getInstance();
 		this.listener = new ArrayList<ICollectorRecordingListener>();
@@ -116,12 +120,20 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
+				synchronized(converter) {
+					converter.notify();
+				}
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				model.grid.clear();
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			} else {
-
+				if(ulogger.isLogging())
+					ulogger.enableLogging(false);
+				mode = STOPPED; old_mode = STOPPED;
+				state.getRecordingProperty().set(STOPPED);
+				if(!state.getReplayingProperty().get())
+					current.setValue("SWIFI", 0);
 			}
 		});
 
@@ -136,11 +148,10 @@ public class AnalysisModelService implements IMAVLinkListener {
 	}
 
 	public void startConverter() {
-				Thread c = new Thread(new CombinedConverter());
-				c.setName("Combined model converter");
-				c.setPriority(Thread.MAX_PRIORITY);
-				c.start();
-	//	ExecutorService.submit(new CombinedConverter(),ExecutorService.HIGH);
+		Thread c = new Thread(converter);
+		c.setName("Combined model converter");
+		c.setPriority(Thread.MAX_PRIORITY);
+		c.start();
 	}
 
 	public void registerListener(ICollectorRecordingListener l) {
@@ -320,7 +331,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 	private class CombinedConverter implements Runnable {
 
-		long tms_start =0; long tms_last; long wait = 0; int old_mode=STOPPED;
+		long tms_start =0; long tms_last; long wait = 0;
 		float perf = 0; AnalysisDataModel m = null;
 
 		@Override
@@ -333,15 +344,11 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
-					if(ulogger.isLogging())
-						ulogger.enableLogging(false);
-					mode = STOPPED; old_mode = STOPPED;
-					state.getRecordingProperty().set(STOPPED);
-					if(!state.getReplayingProperty().get())
-					  current.setValue("SWIFI", 0);
-					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
-					continue;
-					//		}
+					synchronized(converter) {
+						System.out.println("Combined Converter is waiting");
+						try { 	this.wait(); } catch (InterruptedException e) { }
+						System.out.println("Combined Converter continued");
+					}
 				}
 
 				current.setValue("MAVGCLACC", perf);
