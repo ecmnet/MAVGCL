@@ -128,12 +128,15 @@ public class AnalysisModelService implements IMAVLinkListener {
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			} else {
-				if(ulogger.isLogging())
-					ulogger.enableLogging(false);
-				mode = STOPPED; old_mode = STOPPED;
-				state.getRecordingProperty().set(STOPPED);
-				if(!state.getReplayingProperty().get())
-					current.setValue("SWIFI", 0);
+
+			}
+		});
+
+		state.getIMUProperty().addListener((o,ov,nv) -> {
+			if(nv.booleanValue()) {
+				synchronized(converter) {
+					converter.notify();
+				}
 			}
 		});
 
@@ -150,7 +153,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 	public void startConverter() {
 		Thread c = new Thread(converter);
 		c.setName("Combined model converter");
-		c.setPriority(Thread.MAX_PRIORITY);
+		//c.setPriority(Thread.MAX_PRIORITY);
 		c.start();
 	}
 
@@ -344,11 +347,20 @@ public class AnalysisModelService implements IMAVLinkListener {
 
 
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+
+					if(ulogger.isLogging())
+						ulogger.enableLogging(false);
+					mode = STOPPED; old_mode = STOPPED;
+					state.getRecordingProperty().set(STOPPED);
+					if(!state.getReplayingProperty().get())
+						current.setValue("SWIFI", 0);
+
 					synchronized(converter) {
 						System.out.println("Combined Converter is waiting");
 						try { 	this.wait(); } catch (InterruptedException e) { }
 						System.out.println("Combined Converter continued");
 					}
+					continue;
 				}
 
 				current.setValue("MAVGCLACC", perf);

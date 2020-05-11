@@ -1873,8 +1873,12 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Distance to target" uom="m" mask="#0.0" key="SLAMDTT">
+	<KeyFigure desc="Path distance" uom="m" mask="#0.0" key="SLAMDTT">
 		<MSPSource class="slam" field="di"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Path.Speed" uom="m/s" mask="#0.0" key="SLAMSPD">
