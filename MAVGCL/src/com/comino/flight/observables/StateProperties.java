@@ -77,13 +77,14 @@ public class StateProperties {
 	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
-	private BooleanProperty isRecordingAvailableProperty	   = new SimpleBooleanProperty();
+	private BooleanProperty isRecordingAvailableProperty	  = new SimpleBooleanProperty();
 	private BooleanProperty isReplayingProperty	              = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isBaseAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isMSPAvailable                   = new SimpleBooleanProperty();
+	private BooleanProperty isIMUAvailable                   = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
@@ -164,6 +165,10 @@ public class StateProperties {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
 
+		control.getStatusManager().addListener(Status.MSP_IMU_AVAILABILITY, (n) -> {
+			isIMUAvailable.set(n.isStatus(Status.MSP_IMU_AVAILABILITY));
+		});
+
 		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
 			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
 		});
@@ -186,6 +191,10 @@ public class StateProperties {
 
 	public BooleanProperty getMSPProperty() {
 		return isMSPAvailable;
+	}
+
+	public BooleanProperty getIMUProperty() {
+		return isIMUAvailable;
 	}
 
 	public BooleanProperty getControllerConnectedProperty() {
