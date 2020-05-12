@@ -82,8 +82,8 @@ public class ChartControlWidget extends ChartControlPane  {
 	@FXML
 	private Button save;
 
-	@FXML
-	private Button replay;
+//	@FXML
+//	private Button replay;
 
 	@FXML
 	private Button play;
@@ -203,8 +203,12 @@ public class ChartControlWidget extends ChartControlPane  {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
 				ExecutorService.get().submit(() -> {
+
+					if(scroll.getValue() <0.01)
+						scroll.setValue(1);
 					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
+					
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
 					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 						if(chart.getValue().getReplayProperty()!=null)
