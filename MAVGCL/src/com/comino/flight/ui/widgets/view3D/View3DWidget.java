@@ -84,6 +84,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
 	private AnalysisDataModel model      = null;
+	private StateProperties state        = null;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
@@ -95,6 +96,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		root.getChildren().add(world);
 		root.setDepthTest(DepthTest.ENABLE);
+
+		this.state = StateProperties.getInstance();
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.WHITE);
@@ -128,16 +131,23 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.map   = new MapGroup(control.getCurrentModel());
 		world.getChildren().addAll(map);
 
-		StateProperties.getInstance().getLandedProperty().addListener((v,o,n) -> {
+		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
 				camera.setTranslateY(model.getValue("ALTGL")*100);
 				world.setTranslateY(model.getValue("ALTGL")*100);
 			}
 		});
 
-		StateProperties.getInstance().getConnectedProperty().addListener((v,o,n) -> {
+		state.getConnectedProperty().addListener((v,o,n) -> {
 			vehicle.setVisible(n.booleanValue());
 		});
+
+		state.getArmedProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				this.model = dataService.getCurrent();
+			}
+		});
+
 
 		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
 			target.updateState(model);
@@ -178,6 +188,13 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		task.setCycleCount(Timeline.INDEFINITE);
 
+		this.visibleProperty().addListener((l,o,n) -> {
+			if(!n.booleanValue()) {
+				task.play();
+			} else {
+				task.stop();
+			}
+		});
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
