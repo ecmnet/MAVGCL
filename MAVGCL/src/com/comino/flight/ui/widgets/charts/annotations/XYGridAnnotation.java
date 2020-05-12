@@ -66,12 +66,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 		this.blocks = new HashMap<Integer,Pane>();
 
-//		indicator = new Pane();
-//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
-//		indicator.setVisible(false);
-//		indicator.setCache(true);
-//		indicator.setCacheHint(CacheHint.SPEED);
-//		pane.getChildren().add(indicator);
+		//		indicator = new Pane();
+		//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
+		//		indicator.setVisible(false);
+		//		indicator.setCache(true);
+		//		indicator.setCacheHint(CacheHint.SPEED);
+		//		pane.getChildren().add(indicator);
 	}
 
 	public void setModel(DataModel model) {
@@ -118,8 +118,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	public void clear() {
-		blocks.forEach((i,p) -> {
-			Platform.runLater(() -> {
+		Platform.runLater(() -> {
+			blocks.forEach((i,p) -> {
 				pane.getChildren().remove(p);
 			});
 		});
