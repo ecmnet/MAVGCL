@@ -33,6 +33,8 @@
 
 package com.comino.flight.ui.widgets.panel;
 
+import org.mavlink.messages.lquac.msg_statustext;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
@@ -41,6 +43,8 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.model.segment.LogMessage;
 
 import eu.hansolo.airseries.AirCompass;
 import javafx.animation.AnimationTimer;
@@ -63,6 +67,7 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 	private AnimationTimer task;
 
 	private AnalysisDataModel model;
+	private LogMessage  message;
 
 	private long tms = 0;
 
@@ -77,14 +82,14 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
 				if(!isDisabled()) {
-					if(model.msg != null && model.msg.text!=null) {
-                      g_message.setText(model.msg.text);
-                      setVisible(true);
-                      tms = System.currentTimeMillis();
+					if(message != null && message.text!=null) {
+						g_message.setText(message.toString());
+						setVisible(true);
+						tms = System.currentTimeMillis();
 					}
 
 					if((System.currentTimeMillis()-tms)>1500)
-					  setVisible(false);
+						setVisible(false);
 
 				}
 			}
@@ -112,10 +117,22 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
 				if(nv.intValue()<=1) {
-					model = dataService.getModelList().get(1);
+					message = dataService.getModelList().get(1).msg;
 				} else
-					model = dataService.getModelList().get(nv.intValue());
+					message = dataService.getModelList().get(nv.intValue()).msg;
 			});
+		});
+
+		control.addMAVLinkListener(new IMAVLinkListener() {
+			@Override
+			public void received(Object o) {
+				if(o instanceof msg_statustext && !isDisabled()) {
+					msg_statustext msg = (msg_statustext) o;
+					message = new LogMessage();
+					message.text = (new String(msg.text)).trim();
+					message.severity = msg.severity;
+				}
+			}
 		});
 
 	}
