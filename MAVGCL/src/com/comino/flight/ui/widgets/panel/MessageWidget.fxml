@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root  type="javafx.scene.layout.Pane"
+xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane styleClass="glass" prefWidth="220.0" prefHeight="25.0" >
+       <children>
+            <Label fx:id="g_message" text="No message" layoutX="10.0" layoutY="5"
+                   style="-fx-text-fill: #fff; -fx-font-size: 11px;"/>
+         </children>
+      </Pane>
+   </children>
+</fx:root>

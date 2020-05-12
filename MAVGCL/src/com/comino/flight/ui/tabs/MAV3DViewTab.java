@@ -37,6 +37,7 @@ package com.comino.flight.ui.tabs;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
+import com.comino.flight.ui.widgets.panel.MessageWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.jfx.extensions.ChartControlPane;
@@ -63,6 +64,9 @@ public class MAV3DViewTab extends Pane  {
 
 	@FXML
 	private AirWidget air;
+
+	@FXML
+	private MessageWidget msg;
 
 	@FXML
 	private CheckBox aircontrol;
@@ -120,6 +124,7 @@ public class MAV3DViewTab extends Pane  {
 	public MAV3DViewTab setup(IMAVController control) {
 		ChartControlPane.addChart(4,widget.setup(control));
 		air.setup(control);
+		msg.setup(control);
 		perspective.getSelectionModel().selectFirst();
 		return this;
 	}

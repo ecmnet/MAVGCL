@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import com.comino.flight.ui.widgets.panel.AirWidget?>
 <?import com.comino.jfx.extensions.*?>
+<?import com.comino.flight.ui.widgets.panel.MessageWidget?>
 
 
 <fx:root styleClass="widget" type="javafx.scene.layout.Pane"
@@ -31,6 +32,7 @@
 			<children>
 			  <Pane fx:id="main" />
 			  <AirWidget fx:id="air" moveable="true" maxWidth="160" maxHeight="160"/>
+			  <MessageWidget fx:id="msg" moveable="true"/>
 			</children>
 		</StackPane>
 	</VBox>

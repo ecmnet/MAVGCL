@@ -12,6 +12,7 @@
 <?import com.comino.flight.ui.widgets.progress.ProgressWidget?>
 <?import javafx.scene.layout.AnchorPane?>
 
+
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.comino.flight.ui.FlightTabs">
 	<children>
@@ -84,7 +85,6 @@
 						<Insets right="0.0" left="5.0" top="-2" />
 					</StackPane.margin>
 				</ProgressWidget>
-
 			</children>
 		</StackPane>
 	</children>
