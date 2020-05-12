@@ -67,7 +67,7 @@ import javafx.util.Duration;
 
 public class ChartControlWidget extends ChartControlPane  {
 
-	private static final Integer[] TOTAL_TIME = { 30, 60, 120, 240, 480, 1200 };
+	private static final Integer[] TOTAL_TIME = { 15, 30, 60, 120, 240, 480, 1200 };
 
 
 	@FXML
@@ -82,13 +82,13 @@ public class ChartControlWidget extends ChartControlPane  {
 	@FXML
 	private Button save;
 
-//	@FXML
-//	private Button replay;
+	//	@FXML
+	//	private Button replay;
 
 	@FXML
 	private Button play;
 
-	protected int totalTime_sec = 30;
+	protected int totalTime_sec = TOTAL_TIME[0];
 	private AnalysisModelService modelService;
 
 	private StateProperties state = StateProperties.getInstance();
@@ -106,13 +106,14 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		this.modelService =  AnalysisModelService.getInstance();
 		totaltime.getItems().addAll(TOTAL_TIME);
-		totaltime.getSelectionModel().select(0);
+		totaltime.getSelectionModel().select(1);
 
 		buildKeyfigureModelSelection();
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
 			modelService.setTotalTimeSec(totalTime_sec);
+			scroll.setValue(1.0);
 
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null)
@@ -208,7 +209,7 @@ public class ChartControlWidget extends ChartControlPane  {
 						scroll.setValue(1);
 					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
-					
+
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
 					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 						if(chart.getValue().getReplayProperty()!=null)
@@ -218,12 +219,12 @@ public class ChartControlWidget extends ChartControlPane  {
 						modelService.setCurrent(index);
 						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );
 						scroll.setValue((1f - (float)index/modelService.getModelList().size()));
-							for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-								if(chart.getValue().getReplayProperty()!=null)
-									chart.getValue().getReplayProperty().set(index);
+						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+							if(chart.getValue().getReplayProperty()!=null)
+								chart.getValue().getReplayProperty().set(index);
 
-							}
-							index++;
+						}
+						index++;
 						try { Thread.sleep(modelService.getCollectorInterval_ms()); } catch (InterruptedException e) {	}
 					}
 					modelService.setReplaying(false);
@@ -244,7 +245,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 			Platform.runLater(() -> {
 				if(n.booleanValue()) {
-				//	play.setText("\u25A0");
+					//	play.setText("\u25A0");
 					play.setText("||");
 					scroll.setDisable(true);
 				}
@@ -264,16 +265,18 @@ public class ChartControlWidget extends ChartControlPane  {
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.clearModelList();
 
-		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-			if(chart.getValue().getTimeFrameProperty()!=null)
-				chart.getValue().getTimeFrameProperty().set(totalTime_sec);
-			if(chart.getValue().getScrollProperty()!=null)
-				chart.getValue().getScrollProperty().set(1);
-		}
+		Platform.runLater(() -> {
+			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+				if(chart.getValue().getTimeFrameProperty()!=null)
+					chart.getValue().getTimeFrameProperty().set(totalTime_sec);
+				if(chart.getValue().getScrollProperty()!=null)
+					chart.getValue().getScrollProperty().set(1);
+			}
+		});
 	}
 
 	public void refreshCharts() {
-        super.refreshCharts();
+		super.refreshCharts();
 		scroll.setValue(0);
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
