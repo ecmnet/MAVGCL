@@ -12,12 +12,12 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	30/04/2020
+**Development Status:** Last updated 	12/05/2020
 
 
 **Features:**
 
-- Realtime data acquisition (20ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
+- Realtime data acquisition (50ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
 - Timechart annotated by messages (MAVLink and ULog) and parameter changes (MAVLink only)
 - XY Analysis for selected key-figures
 - 3D View (vehicle and observer perspective)
@@ -30,6 +30,7 @@ Any feedback, comments and contributions are very welcome.
 - Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
 - Key figure conversion based on expressions
 - FrSky Taranis USB supported in SITL
+- PS4Controller support in OSX
 - Low latency MJPEG based video stream display based on [uv4l](http://www.linux-projects.org) or any other source
 - Video stream recorded as H264/MP4 file while collecting data
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
