@@ -113,7 +113,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
 			modelService.setTotalTimeSec(totalTime_sec);
-			scroll.setValue(1.0);
+			//scroll.setValue(1.0);
 
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null)
@@ -207,6 +207,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 					if(scroll.getValue() <0.01)
 						scroll.setValue(1);
+
 					state.getProgressProperty().set(0);
 					state.getCurrentUpToDate().set(false);
 
