@@ -66,7 +66,7 @@ public class JoyStickController implements Runnable {
 	private int ch_takeoff  = 3; //triangle
 	private int ch_kill     = 4; //options
 	private int ch_rtl      = 2; //square
-	private int ch_sw6      = 5; //?(back)
+	private int ch_seq      = 5; //DpDown
 
 
 
@@ -147,6 +147,19 @@ public class JoyStickController implements Runnable {
 
 			}
 		});
+
+		joystick.addButtonListener(ch_seq, (state) -> {
+			if(state == JoyStickModel.PRESSED) {
+                // Execute sequence 1
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				msp.param2 =  MSP_AUTOCONTROL_ACTION.TEST_SEQ1;
+				control.sendMAVLinkMessage(msp);
+
+			}
+		});
+
 
 		joystick.addControlListener((t,y,p,r) -> {
 			// System.out.println("Throttle="+deadzone((t-1500f)/-1000f,0.05f)+" Yaw="+deadzone((y-1500f)/-1000f,0.05f)+" Pitch="+deadzone((p-1500f)/ 1000f,0.02f)+" Roll="+deadzone((r-1500f)/-1000f,0.02f));

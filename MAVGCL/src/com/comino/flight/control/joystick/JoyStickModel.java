@@ -56,7 +56,8 @@ public class JoyStickModel {
 				button_state = state.start;
 				break;
 			case 5:
-				button_state = state.back;
+				button_state = state.dpadDown;
+				break;
 			default:
 				return;
 			}
