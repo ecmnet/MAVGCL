@@ -1740,7 +1740,15 @@
  -->
 
 
+
+
   <KeyFigure desc="MAVGCL Conversion cycle" uom="ms" mask="#0.00" key="MAVGCLACC">
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="MAVGCL Network" uom="kb/s" mask="#0.00" key="MAVGCLNET">
 		<Groups>
 			<Group>System</Group>
 		</Groups>

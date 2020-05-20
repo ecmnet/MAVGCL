@@ -365,6 +365,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 				}
 
 				current.setValue("MAVGCLACC", perf);
+				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					state.getRecordingProperty().set(READING_HEADER);
