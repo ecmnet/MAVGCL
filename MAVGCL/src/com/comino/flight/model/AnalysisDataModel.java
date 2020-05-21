@@ -92,7 +92,7 @@ public class AnalysisDataModel {
 	}
 
 	public double getValue(KeyFigureMetaData m) {
-		if(data.containsKey(m.hash))
+		if(data!=null && data.containsKey(m.hash))
 			return data.get(m.hash);
 		else
 			return Float.NaN;

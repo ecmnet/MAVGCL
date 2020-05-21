@@ -56,7 +56,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 
-public class AnalysisModelService implements IMAVLinkListener {
+public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
@@ -115,8 +115,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		this.state         = StateProperties.getInstance();
 
 		this.ulogger = new ULogFromMAVLinkReader(control);
-
-		control.addMAVLinkListener(this);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
@@ -327,12 +325,6 @@ public class AnalysisModelService implements IMAVLinkListener {
 		return mode;
 	}
 
-	@Override
-	public void received(Object _msg) {
-		record.setValues(KeyFigureMetaData.MAV_SOURCE,_msg, meta);
-	}
-
-
 	private class CombinedConverter implements Runnable {
 
 		long tms_start =0; long tms_last; long wait = 0;
@@ -363,6 +355,7 @@ public class AnalysisModelService implements IMAVLinkListener {
 					}
 					continue;
 				}
+
 
 				current.setValue("MAVGCLACC", perf);
 				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
