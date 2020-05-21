@@ -122,8 +122,8 @@
 				<fx:association extension="mgc" description="*.mgc files"/>
 			</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms2000m"/>
-				<fx:jvmarg value="-XX:GCTimeRatio=20"/>
+				<fx:jvmarg value="-Xms5000m"/>
+				<fx:jvmarg value="-XX:GCTimeRatio=40"/>
 			</fx:platform>
 		</fx:deploy>
 	</target>
