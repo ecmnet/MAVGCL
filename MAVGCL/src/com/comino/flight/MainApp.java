@@ -102,6 +102,9 @@ public class MainApp extends Application  {
 	private MenuItem m_export;
 
 	@FXML
+	private MenuItem m_csv;
+
+	@FXML
 	private MenuItem r_px4log;
 
 	@FXML
@@ -407,6 +410,12 @@ public class MainApp extends Application  {
 			AnalysisModelService.getInstance().stop();
 			if(AnalysisModelService.getInstance().getModelList().size()>0)
 				FileHandler.getInstance().fileExport();
+		});
+
+		m_csv.setOnAction(event -> {
+			AnalysisModelService.getInstance().stop();
+			if(AnalysisModelService.getInstance().getModelList().size()>0)
+				FileHandler.getInstance().csvExport();
 		});
 
 		m_prefs.setDisable(false);

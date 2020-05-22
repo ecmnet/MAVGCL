@@ -71,6 +71,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.comino.mavcom.param.ParameterAttributes;
 import com.google.gson.Gson;
@@ -320,6 +321,53 @@ public class FileHandler {
 		}
 	}
 
+	public void csvExport() {
+
+		FileChooser fileChooser = getFileDialog("Export keyfigure as csv...",
+				userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")),
+				new ExtensionFilter("csv files", "*.csv"));
+
+		AnalysisModelService service = AnalysisModelService.getInstance();
+		AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+
+
+		name = "accx.csv";
+		fileChooser.setInitialFileName(name);
+		File file = fileChooser.showSaveDialog(stage);
+		if(file!=null) {
+			new Thread(new Task<Void>() {
+				@Override protected Void call() throws Exception {
+					String kf = file.getName().replaceFirst("[.][^.]+$", "").toUpperCase();
+					if(meta.getMetaData(kf)==null) {
+						control.writeLogMessage(new LogMessage("[mgc] No export: "+kf+" not a valid keyfigure.",MAV_SEVERITY.MAV_SEVERITY_WARNING));
+						return null;
+					}
+					double value = 0;
+					if(file.getName().endsWith("csv")) {
+						control.writeLogMessage(new LogMessage("[mgc] "+kf+" is exported as csv.",MAV_SEVERITY.MAV_SEVERITY_INFO));
+						try {
+							Writer writer = new FileWriter(file);
+							for(int x=0; x<service.getModelList().size();x++) {
+								value = service.getModelList().get(x).getValue(kf);
+							    writer.append(String.format("%#.3f; %#.7f",(x*service.getCollectorInterval_ms()/1000f),(float)value).trim());
+							    writer.append("\n");
+							}
+							writer.close();
+							stage.getScene().setCursor(Cursor.DEFAULT);
+							StateProperties.getInstance().getLogLoadedProperty().set(true);
+							name = file.getName();
+						} catch(Exception e) {
+							stage.getScene().setCursor(Cursor.DEFAULT);
+						}
+					}
+
+					return null;
+
+				}
+			}).start();
+
+		}
+	}
 
 	public void autoSave() throws IOException {
 

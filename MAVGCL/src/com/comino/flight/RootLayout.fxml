@@ -32,6 +32,8 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<MenuItem fx:id="m_csv" mnemonicParsing="false" text="Export as csv...">
+						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="r_px4log" mnemonicParsing="false"
 							text="Import latest log from device...">
