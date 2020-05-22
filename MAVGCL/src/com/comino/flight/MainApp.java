@@ -488,6 +488,7 @@ public class MainApp extends Application  {
 			version_txt.append("  MSP build: " + model.sys.build);
 		version_txt.append("  MAVGCL ("+getBuildInfo().getProperty("build")+")");
 		version_txt.append(" runs on Java "+System.getProperty("java.version"));
+		version_txt.append(" (Resolution: "+AnalysisModelService.getInstance().getCollectorInterval_ms()+"ms)");
 
 		version.setText(version_txt.toString());
 
