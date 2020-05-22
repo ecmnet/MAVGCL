@@ -60,6 +60,8 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
+	private static final int DEFAULT_INTERVAL_US = 50000;
+
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
 	public static  final int COLLECTING     	= 2;
@@ -84,7 +86,7 @@ public class AnalysisModelService  {
 	private boolean isReplaying = false;
 
 	private int totalTime_sec = 30;
-	private int collector_interval_us = 50000;
+	private int collector_interval_us = DEFAULT_INTERVAL_US;
 	private IMAVController control = null;
 
 	private CombinedConverter converter = null;
@@ -161,6 +163,11 @@ public class AnalysisModelService  {
 
 	public void setCollectorInterval(int interval_us) {
 		this.collector_interval_us = interval_us;
+		System.out.println("CollectorInterval set to "+interval_us+"us");
+	}
+
+	public void setDefaultCollectorInterval() {
+		setCollectorInterval(DEFAULT_INTERVAL_US);
 	}
 
 	public List<AnalysisDataModel> getModelList() {
@@ -240,6 +247,7 @@ public class AnalysisModelService  {
 	}
 
 	public void clearModelList() {
+		setDefaultCollectorInterval();
 		mode = STOPPED;
 		model.grid.getData().clear();
 		current.clear();

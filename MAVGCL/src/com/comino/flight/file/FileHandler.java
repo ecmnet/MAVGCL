@@ -494,20 +494,28 @@ public class FileHandler {
 		private Map<String,ParameterAttributes>		params = null;
 		private List<AnalysisDataModel> 			data   = null;
 		private Map<Integer,MapPoint3D_F32>         grid   = null;
+		private int conversion_rate  = 0;
 
-		public void prepareData(AnalysisModelService analysisModel, MAVGCLPX4Parameters param, DataModel model) {
-			data   = analysisModel.getModelList();
+		public void prepareData(AnalysisModelService service, MAVGCLPX4Parameters param, DataModel model) {
+			data   = service.getModelList();
 			params = param.get();
 			grid  = model.grid.getData();
+			conversion_rate = service.getCollectorInterval_ms();
 		}
 
-		public void update(AnalysisModelService analysisModel, MAVGCLPX4Parameters param, DataModel model ) {
+		public void update(AnalysisModelService service, MAVGCLPX4Parameters param, DataModel model ) {
 			if(data!=null)
-			   analysisModel.setModelList(data);
+				service.setModelList(data);
 			if(params!=null)
 			  param.set(params);
 			if(grid!=null)
 			  model.grid.setData(grid);
+			if(conversion_rate != 0)
+				service.setCollectorInterval(conversion_rate * 1000);
+			else
+				service.setCollectorInterval(50000);
+
+
 		}
 	}
 

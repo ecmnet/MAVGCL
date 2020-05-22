@@ -110,6 +110,15 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		buildKeyfigureModelSelection();
 
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
+			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+				if(chart.getValue().getTimeFrameProperty()!=null) {
+					chart.getValue().getTimeFrameProperty().set(0);
+					chart.getValue().getTimeFrameProperty().set(totaltime.valueProperty().get());
+				}
+			}
+		});
+
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			totalTime_sec  = newValue.intValue();
 			modelService.setTotalTimeSec(totalTime_sec);
