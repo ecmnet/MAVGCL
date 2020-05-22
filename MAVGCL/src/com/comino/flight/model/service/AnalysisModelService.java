@@ -60,7 +60,7 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
-	private static final int DEFAULT_INTERVAL_US = 50000;
+	private static final int DEFAULT_INTERVAL_US = 20000;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
@@ -209,6 +209,8 @@ public class AnalysisModelService  {
 		if(!control.isConnected()) {
 			return false;
 		}
+
+		setDefaultCollectorInterval();
 
 		this.isFirst=true;
 

@@ -778,6 +778,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		timeframe = frame;
 
+		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
+
 		if(!isDisabled()) {
 			updateRequest();
 			Platform.runLater(() -> {
