@@ -163,7 +163,6 @@ public class AnalysisModelService  {
 
 	public void setCollectorInterval(int interval_us) {
 		this.collector_interval_us = interval_us;
-		System.out.println("CollectorInterval set to "+interval_us+"us");
 	}
 
 	public void setDefaultCollectorInterval() {
