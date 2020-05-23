@@ -293,6 +293,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		zoom_label.setVisible(false);
 		chartArea.getChildren().add(zoom_label);
 
+		final Label time_label = new Label();
+		time_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #E0E0D0; -fx-padding:3;");
+		time_label.setVisible(false);
+		chartArea.getChildren().add(time_label);
+
 		final Line measure = new Line();
 		measure.setVisible(false);
 		measure.setStartY(0);
@@ -303,6 +308,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		linechart.setOnMouseExited(mouseEvent -> {
 			measure.setVisible(false);
+			time_label.setVisible(false);
 			mouseEvent.consume();
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
@@ -313,6 +319,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
 				measure.setVisible(false);
+				time_label.setVisible(false);
 				mouseEvent.consume();
 				return;
 			}
@@ -323,12 +330,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 				x = mouseEvent.getX();
 
-				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue());
+				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue())-3;
 				if(x1 > 0) {
 					dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
 					dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
 					dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
 				}
+
+				time_label.setVisible(true);
+				time_label.setLayoutY(xAxis.getLayoutY()-25);
+				time_label.setText(String.format("%#.2fs", (x1 * dataService.getCollectorInterval_ms()/1000f)));
+				time_label.setLayoutX(x-xAxis.getLayoutX());
+
 
 				measure.setStartX(x-chartArea.getLayoutX()-7);
 				measure.setEndX(x-chartArea.getLayoutX()-7);
@@ -346,6 +359,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			measure.setVisible(false);
+			time_label.setVisible(false);
 
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
@@ -354,7 +368,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			zoom.setWidth(1);
 
 
-			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue());
+			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue())-3;
 			if(x1 > 0) {
 				dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
 				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
@@ -382,6 +396,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
 			zoom_label.setVisible(false);
+			time_label.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue() ;
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
 
@@ -429,6 +444,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
 					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
+
 						if((mouseEvent.getX() - x)> 30) {
 							zoom_label.setVisible(true);
 							zoom_label.setText(String.format("%#.2fs", dtx));
