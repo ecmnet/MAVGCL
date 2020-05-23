@@ -105,4 +105,6 @@ public class MovingAxis extends ValueAxis<Number> {
 		tickUnitProperty.set(tickUnit);
 	}
 
+
+
 }

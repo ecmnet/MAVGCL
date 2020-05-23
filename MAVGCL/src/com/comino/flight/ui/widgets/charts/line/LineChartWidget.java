@@ -330,7 +330,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 				x = mouseEvent.getX();
 
-				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue())-3;
+				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue());
 				if(x1 > 0) {
 					dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
 					dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
@@ -368,7 +368,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			zoom.setWidth(1);
 
 
-			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue())-3;
+			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()-6).doubleValue())-3;
 			if(x1 > 0) {
 				dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
 				dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
@@ -397,8 +397,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			zoom.setVisible(false);
 			zoom_label.setVisible(false);
 			time_label.setVisible(false);
-			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue() ;
-			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()).doubleValue();
+			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue() ;
+			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()-6).doubleValue();
 
 			if((x1-x0) > 0.2f)
 				for(IChartSyncControl sync : syncCharts)
@@ -426,8 +426,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 				zoom.setVisible(true);
-				double xt0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()).doubleValue();
-				double dtx = xAxis.getValueForDisplay(mouseEvent.getX() -xAxis.getLayoutX()).doubleValue() - xt0;
+				double xt0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue();
+				double dtx = xAxis.getValueForDisplay(mouseEvent.getX() -xAxis.getLayoutX()-6).doubleValue() - xt0;
 				int x0 = dataService.calculateXIndexByTime(xt0);
 				int x1 = dataService.calculateXIndexByTime(xt0+dtx);
 
