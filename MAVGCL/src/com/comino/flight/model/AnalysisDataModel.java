@@ -85,7 +85,7 @@ public class AnalysisDataModel {
 
 	public double getValue(String kf) {
 		int hash = kf.toLowerCase().hashCode();
-		if(data.containsKey(hash))
+		if(data!=null && data.containsKey(hash))
 			return data.get(hash);
 		else
 			return 0;
