@@ -313,7 +313,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private int prepareUnreadPackageList(long size) {
 		unread_packages = new ArrayList<Long>();
-		// TODO determine count of packages and fill list with offset
 		int count = getPackageNumber(size);
 		for (long i = 0; i < count + 1; i++)
 			unread_packages.add(i * LOG_PACKAG_DATA_LENGTH);

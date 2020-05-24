@@ -147,7 +147,7 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

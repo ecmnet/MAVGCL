@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2020 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -86,7 +86,6 @@ import javafx.stage.Stage;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
-// TODO: Save Microslam or put microslam into the data collection
 
 public class FileHandler {
 

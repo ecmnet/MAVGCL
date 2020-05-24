@@ -209,13 +209,13 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public FloatProperty getScrollProperty() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -226,25 +226,23 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public BooleanProperty getIsScrollingProperty() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public void refreshChart() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -371,7 +371,6 @@ public class ULogReader extends BinaryLogReader  {
 
 
 		if (hardfaultPlainText.length() > 0) {
-			// TODO: find a better way to show this to the user?
 			System.out.println("Log contains hardfault data:");
 			System.out.println(hardfaultPlainText);
 		}

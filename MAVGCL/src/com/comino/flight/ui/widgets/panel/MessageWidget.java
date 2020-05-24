@@ -170,7 +170,7 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

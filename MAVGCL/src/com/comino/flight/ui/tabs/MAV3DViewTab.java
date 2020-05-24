@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de.
+ *   Copyright (c) 2017,2020 Eike Mansfeld ecm@gmx.de.
  *   All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,6 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
+
+// BUG: View not updated after recording stopped, replay, recording started while vehicle in air
 
 package com.comino.flight.ui.tabs;
 

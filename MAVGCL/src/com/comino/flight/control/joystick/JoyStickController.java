@@ -206,7 +206,7 @@ public class JoyStickController implements Runnable {
 
 				components = pad.getState(0);
 
-				// TODO: Disconnecting while running is not detected
+				// TODO: Disconnecting while running is not detected; Reconnect in this case
 				if(!components.isConnected ) {
 					StateProperties.getInstance().getControllerConnectedProperty().set(false);
 					Thread.sleep(1000);

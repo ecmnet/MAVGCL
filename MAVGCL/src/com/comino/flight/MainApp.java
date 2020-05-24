@@ -429,7 +429,7 @@ public class MainApp extends Application  {
 //			try {
 //				FileHandler.getInstance().autoSave();
 //			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
+//
 //				e1.printStackTrace();
 //			}
 		});
