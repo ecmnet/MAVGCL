@@ -298,6 +298,7 @@ public class FileHandler {
 				@Override protected Void call() throws Exception {
 					if(file.getName().endsWith("mgc")) {
 						try {
+							System.out.println(file.getName()+" saved..");
 							Writer writer = new FileWriter(file);
 							FileData data = new FileData(); data.prepareData(modelService,paramService, currentModel);
 							Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -308,6 +309,7 @@ public class FileHandler {
 							StateProperties.getInstance().getLogLoadedProperty().set(true);
 							name = file.getName();
 						} catch(Exception e) {
+							System.err.println(e.getMessage());
 							stage.getScene().setCursor(Cursor.DEFAULT);
 						}
 					}

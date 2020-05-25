@@ -32,14 +32,11 @@
  *
  ****************************************************************************/
 
-// BUG: View not updated after recording stopped, replay, recording started while vehicle in air
 
 package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.ui.widgets.panel.AirWidget;
-import com.comino.flight.ui.widgets.panel.ChartControlWidget;
-import com.comino.flight.ui.widgets.panel.MessageWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.jfx.extensions.ChartControlPane;

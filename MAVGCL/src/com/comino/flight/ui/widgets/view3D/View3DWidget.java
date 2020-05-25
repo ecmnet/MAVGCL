@@ -138,6 +138,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
+
+		state.getReplayingProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				camera.setTranslateY(model.getValue("ALTGL")*100);
+				world.setTranslateY(model.getValue("ALTGL")*100);
+			}
+		});
+
 		state.getConnectedProperty().addListener((v,o,n) -> {
 			vehicle.setVisible(n.booleanValue());
 		});
@@ -149,7 +157,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		});
 
 
-		task = new Timeline(new KeyFrame(Duration.millis(40), ae -> {
+		task = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
 			target.updateState(model);
 			vehicle.updateState(model);
 			switch(perspective) {
@@ -177,12 +185,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
 				if(nv.intValue()<=1) {
 					model = dataService.getModelList().get(1);
 				} else
 					model = dataService.getModelList().get(nv.intValue());
-			});
 		});
 
 
