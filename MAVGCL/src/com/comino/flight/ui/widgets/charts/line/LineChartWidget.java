@@ -576,9 +576,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
 				if(nv.intValue()<=1) {
+					setXResolution(timeFrame.get());
 					updateGraph(true,1);
-				} else
+				} else {
 					updateGraph(false,nv.intValue());
+				}
 			});
 		});
 
@@ -683,6 +685,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				isRunning = false;
 			setXResolution(timeFrame.get());
 		});
+
+//		state.getReplayingProperty().addListener((o,ov,nv) -> {
+//			if(!isDisabled() && nv.booleanValue()) {
+//				updateGraph(false,replay.intValue());
+//			}
+//		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
 		if(k1!=null) type1 = k1;
