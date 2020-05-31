@@ -221,10 +221,10 @@ public class ChartControlWidget extends ChartControlPane  {
 					state.getCurrentUpToDate().set(false);
 
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-						if(chart.getValue().getReplayProperty()!=null)
-							chart.getValue().getReplayProperty().set(-1);
-					}
+//					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+//						if(chart.getValue().getReplayProperty()!=null)
+//							chart.getValue().getReplayProperty().set(-1);
+//					}
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
 						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );
