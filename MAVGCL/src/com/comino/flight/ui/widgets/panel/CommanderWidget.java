@@ -37,17 +37,23 @@ import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_MODE_FLAG;
 import org.mavlink.messages.MAV_RESULT;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_manual_control;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.ChartControlPane;
+import com.comino.jfx.extensions.StateButton;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
@@ -58,7 +64,6 @@ import javafx.scene.control.Button;
 
 public class CommanderWidget extends ChartControlPane  {
 
-	private static final int COUNT_DOWN_SECS = 5;
 
 	@FXML
 	private Button arm_command;
@@ -67,7 +72,7 @@ public class CommanderWidget extends ChartControlPane  {
 	private Button land_command;
 
 	@FXML
-	private Button takeoff_command;
+	private StateButton takeoff_command;
 
 	@FXML
 	private Button rtl_command;
@@ -131,17 +136,12 @@ public class CommanderWidget extends ChartControlPane  {
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				state.getCountDownProperty().set(0);
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE,
 						MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
 						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_MANUAL, 0 );
 			} else {
 				if(model.sys.isStatus(Status.MSP_LANDED)) {
-					if(state.getCountDownProperty().get()>0)
-						logger.writeLocalMsg("[mgc] Takeoff count down manually aborted",
-								MAV_SEVERITY.MAV_SEVERITY_WARNING);
-					state.getCountDownProperty().set(-1);
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 				}
 			}
@@ -167,27 +167,26 @@ public class CommanderWidget extends ChartControlPane  {
 
 		takeoff_command.disableProperty().bind(state.getArmedProperty().not()
 				//	.or(state.getRCProperty())
-				.or(state.getLandedProperty().not()
-						.or(state.getCountDownProperty().isNotEqualTo(0))));
+				.or(state.getLandedProperty().not()));
 
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
-				ExecutorService.get().submit(() -> {
-					IntegerProperty countDown = state.getCountDownProperty();
-					if(countDown.get()>-1) {
-						if(!control.isSimulation()) {
-							logger.writeLocalMsg("[mgc] Takeoff count down initiated",
-									MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-							countDown.set(COUNT_DOWN_SECS+1);
-							while(countDown.get()>0) {
-								countDown.set(countDown.get()-1);
-								try { 	Thread.sleep(1000); } catch (InterruptedException e) { 	}
-							}
-						}
-						if(countDown.get()==0)
-							control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
-					}
-				});
+				if(state.getMSPProperty().get()) {
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+					msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
+
+					if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF))
+						msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+					else
+						msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+					control.sendMAVLinkMessage(msp);
+
+				}
+				else {
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
+					takeoff_command.setState(false);
+				}
 			}
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))
@@ -211,6 +210,11 @@ public class CommanderWidget extends ChartControlPane  {
 	public void setup(IMAVController control) {
 		this.model = control.getCurrentModel();
 		this.control = control;
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.TAKEOFF,(n) -> {
+			if(state.getMSPProperty().get())
+				takeoff_command.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF));
+		});
 	}
 
 }

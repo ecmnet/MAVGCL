@@ -123,7 +123,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Timeline(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+		task = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
 
 			List<AnalysisDataModel> list = null;
 
@@ -134,8 +134,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				   wp.setText(String.format("WP %d", model.slam.wpcount));
 				   wp.setMode(Badge.MODE_ON);
 				}
-				else if(state.getCountDownProperty().get() > 0) {
-					wp.setText(String.format("T- %d", state.getCountDownProperty().get()));
+				else if(model.sys.t_takeoff_ms < 0 ) {
+					wp.setText(String.format("T % d", (int)(model.sys.t_takeoff_ms/1000-0.5f)));
 					wp.setMode(Badge.MODE_ON);
 				}
 				else {
