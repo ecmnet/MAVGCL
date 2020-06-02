@@ -387,7 +387,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
-		msp_control.disableProperty().bind(state.getArmedProperty());
+		restart.disableProperty().bind(state.getArmedProperty());
 
 	}
 
