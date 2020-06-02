@@ -54,9 +54,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends ChartControlPane   {
+
+	private static final String[]  STREAMS = { "Foreward view", "Down view" };
 
 
 	@FXML
@@ -82,6 +85,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private CheckBox enable_takeoff_proc;
+
+	@FXML
+	private ChoiceBox<String> stream;
 
 	@FXML
 	private StateButton enable_offboard;
@@ -120,9 +126,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button restart;
 
 	@FXML
-	private Button  filter;
-
-	@FXML
 	private Button save_map;
 
 	@FXML
@@ -155,6 +158,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 		modes.disableProperty().bind(state.getOffboardProperty().not());
 
 		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
+
+		stream.getItems().addAll(STREAMS);
+		stream.getSelectionModel().select(0);
+
+		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
+              msg_msp_command msp = new msg_msp_command(255,1);
+              msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+              msp.param1  = newvalue.intValue();
+              control.sendMAVLinkMessage(msp);
+		});
 
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
@@ -352,13 +365,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
-		filter.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.APPLY_MAP_FILTER;
-			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			control.sendMAVLinkMessage(msp);
-		});
 
 		abort.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);

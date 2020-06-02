@@ -23,7 +23,6 @@
 						text="Save current map to store" />
 					<Button fx:id="load_map" prefWidth="165.0"
 						text="Load current map to from store" />
-					<Button fx:id="filter" prefWidth="165.0" text="Apply map filter" />
 				</children>
 			</VBox>
 			<VBox fx:id="settings" spacing="10" styleClass="widget"
@@ -90,6 +89,10 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
+				    <HBox spacing="10" alignment="CENTER_LEFT">
+					  <Label text="Videostream:"/>
+                      <ChoiceBox fx:id="stream" prefHeight="19.0" prefWidth="100.0" />
+                    </HBox>
 					<Button fx:id="restart" text="Restart flightcontrol" prefWidth="165.0" />
 				</children>
 			</VBox>
