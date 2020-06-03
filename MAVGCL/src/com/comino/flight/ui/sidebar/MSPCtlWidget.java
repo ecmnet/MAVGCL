@@ -41,7 +41,6 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
@@ -59,7 +58,7 @@ import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends ChartControlPane   {
 
-	private static final String[]  STREAMS = { "Foreward view", "Down view" };
+	private static final String[]  STREAMS = { "Depth view", "Pose view" };
 
 
 	@FXML
@@ -157,10 +156,17 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		modes.disableProperty().bind(state.getOffboardProperty().not());
 
+		state.getConnectedProperty().addListener((c,o,n) -> {
+			if(n.booleanValue()) {
+				Platform.runLater(() -> {
+				stream.getSelectionModel().select(0);
+				});
+			}
+		});
+
 		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
 		stream.getItems().addAll(STREAMS);
-		stream.getSelectionModel().select(0);
 
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
               msg_msp_command msp = new msg_msp_command(255,1);
@@ -390,8 +396,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 		restart.disableProperty().bind(state.getArmedProperty());
 
 	}
-
-
 
 
 	public void setup(IMAVController control) {
