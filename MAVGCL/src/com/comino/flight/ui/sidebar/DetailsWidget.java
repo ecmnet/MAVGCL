@@ -160,7 +160,7 @@ public class DetailsWidget extends ChartControlPane {
 		DashLabel label = null;
 		Tooltip tip = null;
 
-		double val = 0, old_val = Float.NaN;
+		double val = 0;
 
 		public KeyFigure(GridPane grid, String k, int row) {
 			p = new GridPane();
@@ -212,10 +212,6 @@ public class DetailsWidget extends ChartControlPane {
 						((Label) value).setText("-");
 					return;
 				}
-
-				if (val == old_val)
-					return;
-				old_val = val;
 
 				if (kf.min != kf.max) {
 					if (val < kf.min || val > kf.max) {
