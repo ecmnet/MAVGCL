@@ -48,6 +48,7 @@ import com.comino.jfx.extensions.Badge;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.speech.VoiceTTS;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
