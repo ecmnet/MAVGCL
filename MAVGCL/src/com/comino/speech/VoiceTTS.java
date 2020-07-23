@@ -60,7 +60,7 @@ public class VoiceTTS implements Runnable {
 		}
 		thread = new Thread(this);
 		thread.start();
-		try { Thread.sleep(1);} catch (InterruptedException e) { }
+		try { Thread.sleep(100);} catch (InterruptedException e) { }
 	}
 
 
