@@ -17,6 +17,7 @@
 					<Button fx:id="reset_odometry" prefWidth="165.0" text="Reset odometry" />
 					<CheckBox fx:id="enable_vision" text="Publish odometry" />
 					<CheckBox fx:id="enable_takeoff_proc" text="Enable TakeOff procedure" />
+					<CheckBox fx:id="enable_precision_lock" text="Enable precision lock" />
 					<Button fx:id="reset_microslam" prefWidth="165.0"
 						text="Reset local map (microSLAM)" />
 					<Button fx:id="save_map" prefWidth="165.0"

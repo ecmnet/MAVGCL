@@ -86,6 +86,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private CheckBox enable_takeoff_proc;
 
 	@FXML
+	private CheckBox enable_precision_lock;
+
+	@FXML
 	private ChoiceBox<String> stream;
 
 	@FXML
@@ -191,6 +194,18 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_precision_lock.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.PRECISION_LOCK;
 			if(n.booleanValue())
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
@@ -431,6 +446,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
 			enable_takeoff_proc.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
+			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
 
 		Platform.runLater(() -> {
