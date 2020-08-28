@@ -1572,6 +1572,20 @@
 		</Groups>
   </KeyFigure>
 
+  <KeyFigure desc="PrecLock.X" uom="m" mask="#0.00" key="PRECLOCKX">
+		<MSPSource class="vision" field="px"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="PrecLock.Y" uom="m" mask="#0.00" key="PRECLOCKY">
+		<MSPSource class="vision" field="py"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
   <KeyFigure desc="GrndTruth.Z" uom="m" mask="#0.00" key="GNDTRUTHZ">
 		<MSPSource class="vision" field="gz"/>
 		<Groups>

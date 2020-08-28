@@ -107,22 +107,22 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private static String[][] PRESETS = {
 			{  null		 , null        },
 			{ "LPOSX"	 , "LPOSY"     },
-			{ "LPOSVX"	 , "LPOSVY"    },
 			{ "VISIONX"	 , "VISIONY"   },
 			{ "SLAMPX"   , "SLAMPY"    },
 			{ "SPLPOSX"	 , "SPLPOSY"   },
 			{ "GNDTRUTHX", "GNDTRUTHY" },
+			{ "PRECLOCKX", "PRECLOCKY" },
 
 	};
 
 	private final static String[] PRESET_NAMES = {
 			"None",
 			"Loc.Position",
-			"Loc.Speed",
 			"Vision Position",
 			"Planned path",
 			"SP Loc.Position",
-			"Ground.Truth",
+			"Ground truth",
+			"Percision lock"
 	};
 
 	private final static String[] SCALES = {
