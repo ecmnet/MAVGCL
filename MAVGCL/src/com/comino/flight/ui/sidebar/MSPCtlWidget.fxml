@@ -51,6 +51,8 @@
 						</VBox.margin>
 					</StateButton>
 					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
+					<Button fx:id="exec_lock" text="Execute Lock" prefWidth="165.0" />
+
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"
@@ -80,7 +82,6 @@
 						prefWidth="165.0" />
 					<Button fx:id="debug_mode2" text="Build virtual wall" prefWidth="165.0" />
 					<Button fx:id="rotate_north" text="Rotate North" prefWidth="165.0" />
-
 
 				</children>
 			</VBox>
