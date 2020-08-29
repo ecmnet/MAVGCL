@@ -10,7 +10,7 @@
 	<children>
 		<HBox layoutY="6.0" layoutX="212" spacing="7.0">
 			<children>
-				<Badge fx:id="driver" prefHeight="16.0" prefWidth="250.0" color="#1c6478" text="" />
+				<Badge fx:id="driver" prefHeight="16.0" prefWidth="350.0" color="#1c6478" text="" />
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="#1c6478" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="50.0" text="GPOS" color="#1c6478" />
 				<Badge fx:id="lpos" prefHeight="16.0" prefWidth="50.0" text="LPOS" color="#1c6478" />
