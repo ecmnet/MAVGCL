@@ -60,19 +60,26 @@ public class XYStatistics {
 	}
 
 	public void getStatistics(int x0, int x1, List<AnalysisDataModel> list) {
-		float vx=0; float vy=0; int i=0; double radius=0;
+		float vx=0; float vy=0; int i=0; double rad=0;
 
 		x1 =  list.size() < x1 ? list.size()-1 : x1-1;
 
 		if(list.size() < 20 || fx.hash==0 || fy.hash==0)
 			return;
 
-		for(i = x0; i< x1;i++) {
+		for(i = x0; i<= x1;i++) {
 			vx += list.get(i).getValue(fx);
 			vy += list.get(i).getValue(fy);
 		}
-		center_x = vx / (i - x0);
-		center_y = vy / (i - x0);
+		if(Float.isNaN(vx) || Float.isNaN(vy)) {
+			radius = Float.NaN; distance = Float.NaN; stddev_xy = Float.NaN;
+			center_x = list.get(x1).getValue(fx);
+			center_y = list.get(x1).getValue(fy);
+			return;
+		} else {
+			center_x = vx / (i - x0);
+			center_y = vy / (i - x0);
+		}
 
 		vx = 0; vy = 0;
 		for(i = x1-20; i< x1 ;i++) {
@@ -80,14 +87,14 @@ public class XYStatistics {
 				vx += (list.get(i).getValue(fx) - center_x) * (list.get(i).getValue(fx) - center_x);
 				vy += (list.get(i).getValue(fy) - center_y) * (list.get(i).getValue(fy) - center_y);
 				if(Math.abs(list.get(i).getValue(fx)-center_x) > radius)
-					radius = Math.abs(list.get(i).getValue(fx)-center_x);
+					rad = Math.abs(list.get(i).getValue(fx)-center_x);
 				if(Math.abs(list.get(i).getValue(fy)-center_y) > radius)
-					radius = Math.abs(list.get(i).getValue(fy)-center_y);
+					rad = Math.abs(list.get(i).getValue(fy)-center_y);
 			}
 
 		}
 
-		this.radius = radius;
+		this.radius = rad;
 		stddev_x =Math.sqrt( vx / (i - x0));
 		stddev_y =Math.sqrt( vy / (i - x0));
 
