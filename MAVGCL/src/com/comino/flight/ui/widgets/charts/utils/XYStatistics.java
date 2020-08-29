@@ -40,16 +40,16 @@ import com.comino.flight.model.KeyFigureMetaData;
 
 public class XYStatistics {
 
-	public double center_x;
-	public double center_y;
+	public double center_x = Double.NaN;
+	public double center_y = Double.NaN;
 
-	public double stddev_x;
-	public double stddev_y;
+	public double stddev_x = Double.NaN;
+	public double stddev_y = Double.NaN;
 
-	public double stddev_xy;
-	public double radius;
+	public double stddev_xy= Double.NaN;
+	public double radius   = Double.NaN;
 
-	public double distance;
+	public double distance = Double.NaN;
 
 	private KeyFigureMetaData fy;
 	private KeyFigureMetaData fx;
