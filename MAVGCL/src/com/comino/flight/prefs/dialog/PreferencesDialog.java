@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
@@ -189,6 +190,8 @@ public class PreferencesDialog  {
 
 	public void show() {
 
+		StateProperties.getInstance().preferencesChangedProperty().set(false);
+
 		ip_address.setText(userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, DEF_IP_ADDRESS));
 		peer_port.setText(userPrefs.get(MAVPreferences.PREFS_IP_PORT, DEF_IP_PORT));
 		bind_port.setText(userPrefs.get(MAVPreferences.PREFS_BIND_PORT, DEF_BIND_PORT));
@@ -222,6 +225,8 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.REFLON, reflon.getText());
 			userPrefs.putBoolean(MAVPreferences.SPEECH,speech.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DEBUG_MSG,debug.isSelected());
+
+			StateProperties.getInstance().preferencesChangedProperty().set(true);
 
 			try {
 				userPrefs.flush();

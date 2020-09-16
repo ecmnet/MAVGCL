@@ -195,7 +195,7 @@ public class MainApp extends Application  {
 			}
 
 			state = StateProperties.getInstance(control);
-
+			MAVPreferences.init();
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");

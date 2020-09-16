@@ -89,6 +89,7 @@ public class StateProperties {
 	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
 	private BooleanProperty isControllerConnectedProperty    = new SimpleBooleanProperty();
+	private BooleanProperty preferencesChangedProperty       = new SimpleBooleanProperty();
 
 	private FloatProperty  progress 						 = new SimpleFloatProperty(-1);
 
@@ -282,5 +283,9 @@ public class StateProperties {
 
 	public BooleanProperty getInitializedProperty() {
 		return isInitializedProperty;
+	}
+
+	public BooleanProperty preferencesChangedProperty() {
+		return preferencesChangedProperty;
 	}
 }

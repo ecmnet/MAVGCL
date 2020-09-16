@@ -36,6 +36,8 @@ package com.comino.flight.prefs;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.observables.StateProperties;
+
 
 public class MAVPreferences {
 
@@ -82,6 +84,20 @@ public class MAVPreferences {
 			e.printStackTrace();
 		}
 		return prefs;
+	}
+
+	public static void init() {
+		StateProperties.getInstance().preferencesChangedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				try {
+					prefs.flush();
+					prefs.sync();
+				} catch (BackingStoreException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
 	}
 
 }
