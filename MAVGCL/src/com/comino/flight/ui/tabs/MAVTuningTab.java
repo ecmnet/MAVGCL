@@ -60,7 +60,8 @@ public class MAVTuningTab extends Pane {
 	private MotorTest motor;
 	
 	
-
+	@FXML
+	private LineChartWidget chart1;
 
 
 
@@ -71,7 +72,9 @@ public class MAVTuningTab extends Pane {
 
 	@FXML
 	private void initialize() {
-        vbox.prefWidthProperty().bind(widthProperty());       
+        vbox.prefWidthProperty().bind(widthProperty());    
+        chart1.prefWidthProperty().bind(widthProperty());
+        chart1.prefHeightProperty().bind(heightProperty().divide(3));
         
 
 	}
@@ -81,6 +84,7 @@ public class MAVTuningTab extends Pane {
 		throttle.setup(control);
 		attctl.setup(control);
 		motor.setup(control);
+		ChartControlPane.addChart(5,chart1.setup(control,1));
 		
 		
 	}

@@ -16,6 +16,7 @@
                  <ThrottleTune fx:id="throttle"/>
                  <AttCtlTune fx:id="attctl"/>
                  <MotorTest fx:id="motor"/>
+                 <LineChartWidget fx:id="chart1" />
 			</children>
 		</VBox>
 	</children>
