@@ -7,10 +7,10 @@
 
 <?import com.comino.flight.ui.widgets.charts.line.LineChartWidget?>
 
-<fx:root prefHeight="164.0" type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root prefHeight="164.0" type="javafx.scene.layout.Pane" 
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<VBox fx:id="vbox" style="-fx-padding: 10 10 10 10;">
+		<VBox fx:id="vbox" >
 		
 			<children>
                  <ThrottleTune fx:id="throttle"/>
