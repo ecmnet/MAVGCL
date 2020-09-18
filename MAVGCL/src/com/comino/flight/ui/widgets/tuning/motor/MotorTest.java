@@ -93,7 +93,7 @@ public class MotorTest extends VBox  {
 
 		FXMLLoadHelper.load(this, "MotorTest.fxml");
 		timeline = new Timeline(new KeyFrame(Duration.millis(3000), ae -> {
-		//	m1.setValue(0); m2.setValue(0); m3.setValue(0); m4.setValue(0); 
+			m1.setValue(0); m2.setValue(0); m3.setValue(0); m4.setValue(0); 
 			all.setValue(0);
 		}));
 		timeline.setCycleCount(1);
