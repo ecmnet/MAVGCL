@@ -12,10 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	22/05/2020
+**Development Status:** Last updated 	18/09/2020
 
-* Direct conversion from MAVLink messages to key figures removed
-* Sample rate increased to 50 Hz
+* MotorTest added
 
 
 **Features:**
