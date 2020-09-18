@@ -21,6 +21,8 @@
 				<Label prefWidth="50"/>
 				<Label layoutX="14.0" prefHeight="28.0" text="All" />
 				<Slider fx:id="all" max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
+				<Label prefWidth="50"/>
+				<CheckBox fx:id="enable" text="Confirmation: All propellers are removed." />
 			</children>
 		</HBox>
      </children>

@@ -47,9 +47,11 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -80,13 +82,11 @@ public class MotorTest extends VBox  {
 	@FXML
 	private Slider all;
 	
+	@FXML
+	private CheckBox enable;
+	
 
 	private Timeline timeline;
-
-	private StateProperties state = null;
-
-
-	private IMAVController control;
 
 
 	public MotorTest() {
@@ -115,7 +115,19 @@ public class MotorTest extends VBox  {
 
 	public void setup(IMAVController control) {
 
-		this.control = control;
+		BooleanProperty armed   = StateProperties.getInstance().getArmedProperty();
+		
+		m1.disableProperty().bind (armed.or(enable.selectedProperty().not()));
+		m2.disableProperty().bind( armed.or(enable.selectedProperty().not()));
+		m3.disableProperty().bind( armed.or(enable.selectedProperty().not()));
+		m4.disableProperty().bind( armed.or(enable.selectedProperty().not()));
+		all.disableProperty().bind(armed.or(enable.selectedProperty().not()));
+		
+		armed.addListener((a,o,n) -> {
+			if(n.booleanValue())
+				enable.setSelected(false);		
+		});
+		
 
 		m1.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f);
