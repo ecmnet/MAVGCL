@@ -34,6 +34,7 @@
 package com.comino.flight.ui.widgets.tuning.motor;
 
 import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MOTOR_TEST_THROTTLE_TYPE;
 import org.mavlink.messages.lquac.msg_param_set;
 
@@ -41,6 +42,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.param.ParameterAttributes;
 
 import javafx.animation.Animation;
@@ -69,22 +71,22 @@ public class MotorTest extends VBox  {
 
 	@FXML
 	private Slider m1;
-	
+
 	@FXML
 	private Slider m2;
-	
+
 	@FXML
 	private Slider m3;
-	
+
 	@FXML
 	private Slider m4;
-	
+
 	@FXML
 	private Slider all;
-	
+
 	@FXML
 	private CheckBox enable;
-	
+
 
 	private Timeline timeline;
 
@@ -110,53 +112,79 @@ public class MotorTest extends VBox  {
 		m3.setOrientation(Orientation.VERTICAL);
 		m4.setOrientation(Orientation.VERTICAL);
 		all.setOrientation(Orientation.VERTICAL);
-		
+
 	}
 
 	public void setup(IMAVController control) {
 
 		BooleanProperty armed   = StateProperties.getInstance().getArmedProperty();
-		
+
 		m1.disableProperty().bind (armed.or(enable.selectedProperty().not()));
 		m2.disableProperty().bind( armed.or(enable.selectedProperty().not()));
 		m3.disableProperty().bind( armed.or(enable.selectedProperty().not()));
 		m4.disableProperty().bind( armed.or(enable.selectedProperty().not()));
 		all.disableProperty().bind(armed.or(enable.selectedProperty().not()));
-		
+
+		m1.setOnMouseClicked((e) -> {
+			if(e.getClickCount() == 2) m1.setValue(500);
+		});
+
+		m2.setOnMouseClicked((e) -> {
+			if(e.getClickCount() == 2) m2.setValue(500);
+		});
+
+		m3.setOnMouseClicked((e) -> {
+			if(e.getClickCount() == 2) m3.setValue(500);
+		});
+
+		m4.setOnMouseClicked((e) -> {
+			if(e.getClickCount() == 2) m4.setValue(500);
+		});
+
 		armed.addListener((a,o,n) -> {
 			if(n.booleanValue())
 				enable.setSelected(false);		
 		});
-		
+
 
 		m1.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.floatValue() > 0)
+				control.writeLogMessage(new LogMessage("[mgc] Motor 1 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
-		
+
 		m2.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.floatValue() > 0)
+				control.writeLogMessage(new LogMessage("[mgc] Motor 2 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		m3.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.floatValue() > 0)
+				control.writeLogMessage(new LogMessage("[mgc] Motor 3 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
-		
+
 		m4.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.floatValue() > 0)
+				control.writeLogMessage(new LogMessage("[mgc] Motor 4 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
-		
+
 		all.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(newvalue.floatValue() > 0)
+				control.writeLogMessage(new LogMessage("[mgc] All motors triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
-			
+
 	}
 
 
