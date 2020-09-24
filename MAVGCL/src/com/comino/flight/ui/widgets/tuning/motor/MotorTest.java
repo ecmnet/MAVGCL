@@ -130,33 +130,33 @@ public class MotorTest extends VBox  {
 		
 
 		m1.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 		
 		m2.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		m3.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 		
 		m4.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 		
 		all.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			m1.setValue(newvalue.floatValue()); m2.setValue(newvalue.floatValue()); m3.setValue(newvalue.floatValue()); m4.setValue(newvalue.floatValue());
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
+			timeline.play();
 		});
-
-
-		
-
-
+			
 	}
 
 
