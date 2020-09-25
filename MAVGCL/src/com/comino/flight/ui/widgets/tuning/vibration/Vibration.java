@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2019 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,73 +31,71 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.tabs;
+package com.comino.flight.ui.widgets.tuning.vibration;
+
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.MOTOR_TEST_THROTTLE_TYPE;
+import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
-import com.comino.flight.ui.widgets.tuning.attctl.AttCtlTune;
-import com.comino.flight.ui.widgets.tuning.motor.MotorTest;
-import com.comino.flight.ui.widgets.tuning.throttle.ThrottleTune;
-import com.comino.flight.ui.widgets.tuning.vibration.Vibration;
-import com.comino.jfx.extensions.ChartControlPane;
+import com.comino.flight.observables.StateProperties;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavcom.param.ParameterAttributes;
 
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
-public class MAVTuningTab extends Pane {
 
-	@FXML
-	private VBox vbox;
-	
+public class Vibration extends VBox  {
+
+
 	@FXML
 	private HBox hbox;
-
-
-	@FXML
-	private ThrottleTune throttle;
-
-	@FXML
-	private AttCtlTune attctl;
 	
 	@FXML
-	private MotorTest motor;
-	
-	
-	@FXML
-	private Vibration vibration;
+	private ProgressBar vx;
 	
 	@FXML
-	private LineChartWidget chart1;
+	private ProgressBar vy;
+	
+	@FXML
+	private ProgressBar vz;
 
 
 
+	public Vibration() {
 
-	public MAVTuningTab() {
-		FXMLLoadHelper.load(this, "MAVTuningTab.fxml");
+		FXMLLoadHelper.load(this, "Vibration.fxml");
+		
+
 	}
+
 
 	@FXML
 	private void initialize() {
-        vbox.prefWidthProperty().bind(widthProperty());  
-        hbox.prefWidthProperty().bind(widthProperty());    
-        chart1.prefWidthProperty().bind(widthProperty());
-        chart1.prefHeightProperty().bind(heightProperty().divide(2));
-        
-
+		
+		
 	}
 
-
 	public void setup(IMAVController control) {
-		throttle.setup(control);
-		attctl.setup(control);
-		motor.setup(control);
-		vibration.setup(control);
-		ChartControlPane.addChart(5,chart1.setup(control,1));
-		
-		
+
 	}
 
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.VBox" prefWidth="550"
+	xmlns="http://javafx.com/javafx/8.0.51"
+	xmlns:fx="http://javafx.com/fxml/1"  styleClass="widget" style="-fx-padding: 10 15 10 15;"  >
+	<children>
+	   <Label layoutX="14.0" prefHeight="28.0" text="Vibration" />
+		<VBox spacing="20" >
+			<children>
+			     <Label/>
+			     <HBox spacing="20" alignment="CENTER_LEFT" >
+			      <children>
+			        <Label text="Vib. X" minWidth="50" />
+			        <ProgressBar fx:id="vx" prefHeight="4.5" prefWidth="300"/>
+			      </children>
+			     </HBox>
+			     <HBox spacing="20" alignment="CENTER_LEFT" >
+			      <children>
+			        <Label text="Vib. Y" minWidth="50" />
+			        <ProgressBar fx:id="vy" prefHeight="4.5" prefWidth="300"/>
+			      </children>
+			     </HBox>
+			     <HBox spacing="20" alignment="CENTER_LEFT" >
+			      <children>
+			        <Label text="Vib. Z" minWidth="50"  />
+			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="300"/>
+			      </children>
+			     </HBox>
+			     
+			</children>
+		</VBox>
+     </children>
+</fx:root>
