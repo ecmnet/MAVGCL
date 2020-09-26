@@ -66,6 +66,9 @@ import javafx.util.Duration;
 public class MotorTest extends VBox  {
 
 
+	private static final int INITIAL_DELAY_MS = 5000;
+
+
 	@FXML
 	private HBox hbox;
 
@@ -106,27 +109,13 @@ public class MotorTest extends VBox  {
 		timeline = new Timeline(new KeyFrame(Duration.millis(3000), ae -> {
 			m1.setValue(0); m2.setValue(0); m3.setValue(0); m4.setValue(0); 
 			all.setValue(0);
-			if(record.isSelected())
+			if(record.isSelected() && modelService.isCollecting())
 			  modelService.stop(1);
+			motor = 0;
 		}));
 		timeline.setCycleCount(1);
 		timeline.setDelay(Duration.ZERO);
 		
-		delay = new Timeline(new KeyFrame(Duration.millis(1000), ae -> {
-			switch(motor) {
-			case 1:
-				m1.setValue(500); break;
-			case 2:
-				m2.setValue(500); break;
-			case 3:
-				m3.setValue(500); break;
-			case 4:
-				m4.setValue(500); break;
-			}
-			
-		}));
-		delay.setCycleCount(1);
-		delay.setDelay(Duration.ZERO);
 
 	}
 
@@ -145,6 +134,26 @@ public class MotorTest extends VBox  {
 	public void setup(IMAVController control) {
 		
 		this.modelService =  AnalysisModelService.getInstance();
+		
+		delay = new Timeline(new KeyFrame(Duration.millis(INITIAL_DELAY_MS), ae -> {
+			switch(motor) {
+			case 1:
+				control.writeLogMessage(new LogMessage("[mgc] Motor 1 switched on",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				m1.setValue(500); break;
+			case 2:
+				control.writeLogMessage(new LogMessage("[mgc] Motor 2 switched on",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				m2.setValue(500); break;
+			case 3:
+				control.writeLogMessage(new LogMessage("[mgc] Motor 3 switched on",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				m3.setValue(500); break;
+			case 4:
+				control.writeLogMessage(new LogMessage("[mgc] Motor 4 switched on",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				m4.setValue(500); break;
+			}
+			
+		}));
+		delay.setCycleCount(1);
+		delay.setDelay(Duration.ZERO);
 
 		BooleanProperty armed   = StateProperties.getInstance().getArmedProperty();
 
@@ -155,36 +164,32 @@ public class MotorTest extends VBox  {
 		all.disableProperty().bind(armed.or(enable.selectedProperty().not()));
 
 		m1.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) { 
+			if(e.getClickCount() == 2 && motor == 0) { 
 				motor = 1; delay.play();
-				control.writeLogMessage(new LogMessage("[mgc] Motor 1 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 				if(record.isSelected())
 					modelService.start();
 			}
 		});
 
 		m2.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) {
+			if(e.getClickCount() == 2 && motor == 0) {
 				motor = 1; delay.play();
-				control.writeLogMessage(new LogMessage("[mgc] Motor 2 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 				if(record.isSelected())
-					modelService.start();
+					 modelService.start();
 			}
 		});
 
 		m3.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) {
+			if(e.getClickCount() == 2 && motor == 0) {
 				motor = 1; delay.play();
-				control.writeLogMessage(new LogMessage("[mgc] Motor 3 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 				if(record.isSelected())
 					modelService.start();
 			}
 		});
 
 		m4.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) {
+			if(e.getClickCount() == 2 && motor == 0) {
 				motor = 1; delay.play();
-				control.writeLogMessage(new LogMessage("[mgc] Motor 4 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 				if(record.isSelected())
 					modelService.start();
 			}
