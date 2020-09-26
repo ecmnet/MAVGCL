@@ -42,6 +42,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.param.ParameterAttributes;
 
@@ -79,10 +80,21 @@ public class Vibration extends VBox  {
 	private ProgressBar vz;
 
 
+	private Timeline timeline;
+
+	private DataModel model;
+	
 
 	public Vibration() {
 
 		FXMLLoadHelper.load(this, "Vibration.fxml");
+		timeline = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
+			vx.setProgress(model.vibration.vibx * 1e3);
+			vy.setProgress(model.vibration.viby * 1e3);
+			vz.setProgress(model.vibration.vibz * 1e3);
+		}));
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.setDelay(Duration.ZERO);
 		
 
 	}
@@ -90,11 +102,21 @@ public class Vibration extends VBox  {
 
 	@FXML
 	private void initialize() {
-		
+		vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
 		
 	}
 
 	public void setup(IMAVController control) {
+		this.model = control.getCurrentModel();
+		
+		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
+			if(n.intValue()>0)
+				timeline.play();
+			else {
+				timeline.stop();
+				vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
+			}
+		});
 
 	}
 

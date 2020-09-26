@@ -87,6 +87,7 @@ public class MAVTuningTab extends Pane {
         hbox.prefWidthProperty().bind(widthProperty());    
         chart1.prefWidthProperty().bind(widthProperty());
         chart1.prefHeightProperty().bind(heightProperty().divide(2));
+        vibration.disableProperty().bind(this.disabledProperty());
         
 
 	}
