@@ -173,7 +173,7 @@ public class MotorTest extends VBox  {
 
 		m2.setOnMouseClicked((e) -> {
 			if(e.getClickCount() == 2 && motor == 0) {
-				motor = 1; delay.play();
+				motor = 2; delay.play();
 				if(record.isSelected())
 					 modelService.start();
 			}
@@ -181,7 +181,7 @@ public class MotorTest extends VBox  {
 
 		m3.setOnMouseClicked((e) -> {
 			if(e.getClickCount() == 2 && motor == 0) {
-				motor = 1; delay.play();
+				motor = 3; delay.play();
 				if(record.isSelected())
 					modelService.start();
 			}
@@ -189,7 +189,7 @@ public class MotorTest extends VBox  {
 
 		m4.setOnMouseClicked((e) -> {
 			if(e.getClickCount() == 2 && motor == 0) {
-				motor = 1; delay.play();
+				motor = 4; delay.play();
 				if(record.isSelected())
 					modelService.start();
 			}
