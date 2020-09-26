@@ -39,6 +39,7 @@ import org.mavlink.messages.MOTOR_TEST_THROTTLE_TYPE;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
@@ -86,9 +87,17 @@ public class MotorTest extends VBox  {
 
 	@FXML
 	private CheckBox enable;
+	
+	@FXML
+	private CheckBox record;
 
 
 	private Timeline timeline;
+	private Timeline delay;
+	
+	private AnalysisModelService modelService;
+	
+	private int motor;
 
 
 	public MotorTest() {
@@ -97,9 +106,27 @@ public class MotorTest extends VBox  {
 		timeline = new Timeline(new KeyFrame(Duration.millis(3000), ae -> {
 			m1.setValue(0); m2.setValue(0); m3.setValue(0); m4.setValue(0); 
 			all.setValue(0);
+			if(record.isSelected())
+			  modelService.stop(1);
 		}));
 		timeline.setCycleCount(1);
 		timeline.setDelay(Duration.ZERO);
+		
+		delay = new Timeline(new KeyFrame(Duration.millis(1000), ae -> {
+			switch(motor) {
+			case 1:
+				m1.setValue(500); break;
+			case 2:
+				m2.setValue(500); break;
+			case 3:
+				m3.setValue(500); break;
+			case 4:
+				m4.setValue(500); break;
+			}
+			
+		}));
+		delay.setCycleCount(1);
+		delay.setDelay(Duration.ZERO);
 
 	}
 
@@ -116,6 +143,8 @@ public class MotorTest extends VBox  {
 	}
 
 	public void setup(IMAVController control) {
+		
+		this.modelService =  AnalysisModelService.getInstance();
 
 		BooleanProperty armed   = StateProperties.getInstance().getArmedProperty();
 
@@ -126,19 +155,39 @@ public class MotorTest extends VBox  {
 		all.disableProperty().bind(armed.or(enable.selectedProperty().not()));
 
 		m1.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) m1.setValue(500);
+			if(e.getClickCount() == 2) { 
+				motor = 1; delay.play();
+				control.writeLogMessage(new LogMessage("[mgc] Motor 1 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				if(record.isSelected())
+					modelService.start();
+			}
 		});
 
 		m2.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) m2.setValue(500);
+			if(e.getClickCount() == 2) {
+				motor = 1; delay.play();
+				control.writeLogMessage(new LogMessage("[mgc] Motor 2 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				if(record.isSelected())
+					modelService.start();
+			}
 		});
 
 		m3.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) m3.setValue(500);
+			if(e.getClickCount() == 2) {
+				motor = 1; delay.play();
+				control.writeLogMessage(new LogMessage("[mgc] Motor 3 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				if(record.isSelected())
+					modelService.start();
+			}
 		});
 
 		m4.setOnMouseClicked((e) -> {
-			if(e.getClickCount() == 2) m4.setValue(500);
+			if(e.getClickCount() == 2) {
+				motor = 1; delay.play();
+				control.writeLogMessage(new LogMessage("[mgc] Motor 4 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
+				if(record.isSelected())
+					modelService.start();
+			}
 		});
 
 		armed.addListener((a,o,n) -> {
@@ -148,36 +197,26 @@ public class MotorTest extends VBox  {
 
 
 		m1.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.floatValue() > 0)
-				control.writeLogMessage(new LogMessage("[mgc] Motor 1 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		m2.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.floatValue() > 0)
-				control.writeLogMessage(new LogMessage("[mgc] Motor 2 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		m3.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.floatValue() > 0)
-				control.writeLogMessage(new LogMessage("[mgc] Motor 3 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		m4.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.floatValue() > 0)
-				control.writeLogMessage(new LogMessage("[mgc] Motor 4 triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST, 4, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			timeline.play();
 		});
 
 		all.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(newvalue.floatValue() > 0)
-				control.writeLogMessage(new LogMessage("[mgc] All motors triggered",MAV_SEVERITY.MAV_SEVERITY_INFO));
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,1, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,2, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_MOTOR_TEST,3, MOTOR_TEST_THROTTLE_TYPE.MOTOR_TEST_THROTTLE_PERCENT,newvalue.floatValue()/10f,3,1);

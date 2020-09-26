@@ -34,6 +34,8 @@
 package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
 import com.comino.flight.ui.widgets.tuning.attctl.AttCtlTune;
 import com.comino.flight.ui.widgets.tuning.motor.MotorTest;
@@ -72,7 +74,7 @@ public class MAVTuningTab extends Pane {
 	@FXML
 	private LineChartWidget chart1;
 
-
+	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
 
 	public MAVTuningTab() {
@@ -91,13 +93,12 @@ public class MAVTuningTab extends Pane {
 
 
 	public void setup(IMAVController control) {
+		
 		throttle.setup(control);
 		attctl.setup(control);
 		motor.setup(control);
 		vibration.setup(control);
-		ChartControlPane.addChart(5,chart1.setup(control,1));
-		
-		
+		ChartControlPane.addChart(8,chart1.setup(control,1));
 	}
 
 }

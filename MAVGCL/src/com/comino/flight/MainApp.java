@@ -137,6 +137,8 @@ public class MainApp extends Application  {
 	private Scene scene;
 	private BorderPane rootLayout;
 	private AnchorPane flightPane;
+	
+	private UBXRTCM3Base base = null;
 
 	private StateProperties state = null;
 
@@ -206,15 +208,18 @@ public class MainApp extends Application  {
 
 			MSPLogger.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
-			UBXRTCM3Base base = UBXRTCM3Base.getInstance(control, analysisModelService);
-			new Thread(base).start();
+			
+			if(args.get("SERIAL")==null) {
+			  base = UBXRTCM3Base.getInstance(control, analysisModelService);
+			  new Thread(base).start();
+			}
 
 			MAVGCLPX4Parameters.getInstance(control);
 
 
 			state.getConnectedProperty().addListener((v,o,n) -> {
 
-				if(base.isConnected()) {
+				if(base !=null && base.isConnected()) {
 					System.out.println("Base GPS is connected");
 					if(base.getBaseAccuracy()<15) {
 						msg_msp_command msp = new msg_msp_command(255,1);
@@ -267,6 +272,7 @@ public class MainApp extends Application  {
 
 
 		} catch(Exception e) {
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

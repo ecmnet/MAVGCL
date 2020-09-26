@@ -22,7 +22,12 @@
 				<Label layoutX="14.0" prefHeight="28.0" text="All" />
 				<Slider fx:id="all" max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
 				<Label prefWidth="30"/>
+				<VBox spacing = "13">
+				<children>
 				<CheckBox fx:id="enable" text="All propellers are removed" />
+				<CheckBox fx:id="record" text="Auto recording enabled" />
+				</children>
+				</VBox>
 			</children>
 		</HBox>
      </children>

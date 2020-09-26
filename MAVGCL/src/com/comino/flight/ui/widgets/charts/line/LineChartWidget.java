@@ -618,6 +618,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 	}
 
+
 	public KeyFigurePreset getKeyFigureSelection() {
 		final KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
 				type1.hash,type2.hash,type3.hash);
