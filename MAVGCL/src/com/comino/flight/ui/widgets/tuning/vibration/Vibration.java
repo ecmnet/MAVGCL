@@ -127,8 +127,10 @@ public class Vibration extends VBox implements IChartControl  {
 			vy.setProgress(model.vibration.viby * 1e3);
 			vz.setProgress(model.vibration.vibz * 1e3);
 
-			if(dataService.isCollecting())
+			if(dataService.isCollecting()) {
+				max_pt = dataService.getModelList().size() - 1;
 				updateGraph();
+			}
 
 		}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
@@ -154,23 +156,23 @@ public class Vibration extends VBox implements IChartControl  {
 		vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
 
 		series1 = new XYChart.Series<Number,Number>();
-		fft.getData().add(series1);
 		series2 = new XYChart.Series<Number,Number>();
-		fft.getData().add(series2);
-//		series3 = new XYChart.Series<Number,Number>();
-//		fft.getData().add(series3);
+		//		series3 = new XYChart.Series<Number,Number>();
 
 		xAxis.setAutoRanging(false);
-		xAxis.setLowerBound(0);
+		xAxis.setLowerBound(1);
 		xAxis.setUpperBound(sample_rate/2);
+		xAxis.setLabel("Hz");
 		
+
+		//		yAxis.setAutoRanging(false);
+		//		yAxis.setLowerBound(0);
+		//		yAxis.setUpperBound(50);
+
 		series1.setName("AccX");
-		series1.setName("AccY");
-		
+		series2.setName("AccY");
+
 		fft.setLegendVisible(false);
-
-
-
 
 	}
 
@@ -188,13 +190,17 @@ public class Vibration extends VBox implements IChartControl  {
 		ChartControlPane.addChart(9,this);
 
 		scroll.addListener((v, ov, nv) -> {
-			max_pt =  dataService.calculateX1IndexByFactor(nv.floatValue());	
-			updateGraph();
+			Platform.runLater(() -> {
+				max_pt =  dataService.calculateX1IndexByFactor(nv.floatValue());	
+				updateGraph();
+			});
 		});
 
 		replay.addListener((v, ov, nv) -> {		
-			max_pt = dataService.calculateX1Index(nv.intValue());
-			updateGraph();
+			Platform.runLater(() -> {
+				max_pt = dataService.calculateX1Index(nv.intValue());
+				updateGraph();
+			});
 
 		});
 
@@ -202,55 +208,45 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private void updateGraph() {
 
-		Platform.runLater(() -> {
 
-			AnalysisDataModel m =null;
+		AnalysisDataModel m =null;
 
-			if(isDisabled())
-				return;
+		if(isDisabled())
+			return;
 
-			if(dataService.isCollecting())
-				max_pt = dataService.calculateIndexByFactor(1);
-
-
-			series1.getData().clear();
-			series2.getData().clear();
-//			series3.getData().clear();
+		series1.getData().clear();
+		series2.getData().clear();
+		//			series3.getData().clear();
 
 
-			if(max_pt <= POINTS) {
-				
-		//		linechart.getData().add(series3);
-
-				return;
-			}
+		if(max_pt <= POINTS) {
+			return;
+		}
 
 
-			int point_pt = 0;
-			for(int i = max_pt - POINTS; i < max_pt; i++ ) {
-				m = dataService.getModelList().get(i);
-				data1[point_pt] = (float)m.getValue("ACCX");	
-				data2[point_pt] = (float)m.getValue("ACCY");	
-//				data3[point_pt] = (float)m.getValue("ACCZ");	
-				point_pt++;
-			}
+		for(int i = 0; i < POINTS; i++ ) {
+			m = dataService.getModelList().get(max_pt - POINTS + i);
+			data1[i] = (float)m.getValue("ACCX");	
+			data2[i] = (float)m.getValue("ACCY");	
+			//				data3[i] = (float)Math.sqrt(m.getValue("ACCX") * m.getValue("ACCX") + m.getValue("ACCY") * m.getValue("ACCY") );	
+		}
 
-			fft1.forward(data1); 
-			fft2.forward(data2); 
-//			fft3.forward(data3);
+		fft1.forward(data1); 
+		fft2.forward(data2); 
+		//			fft3.forward(data3);
 
-			for(int i = 0; i < fft1.specSize(); i++ ) {
-				series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
-			}
+		for(int i = 0; i < fft1.specSize(); i++ ) {
+			series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
+		}
 
-			for(int i = 0; i < fft2.specSize(); i++ ) {
-				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
-			}
-//
-//			for(int i = 0; i < fft3.specSize(); i++ ) {
-//				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
-//			}
-		});
+		for(int i = 0; i < fft2.specSize(); i++ ) {
+			series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
+		}
+		//
+		//			for(int i = 0; i < fft3.specSize(); i++ ) {
+		//				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
+		//			}
+
 	}
 
 
@@ -282,11 +278,14 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void refreshChart() {
-		max_pt = dataService.calculateIndexByFactor(1);
-		fft.getData().clear();
-		fft.getData().add(series1);
-		fft.getData().add(series2);
-		updateGraph();
+		Platform.runLater(() -> {
+			max_pt = dataService.getModelList().size() - 1;
+			fft.getData().clear();
+			fft.getData().add(series1);
+			fft.getData().add(series2);
+//			fft.getData().add(series3);
+			updateGraph();
+		});
 	}
 
 
