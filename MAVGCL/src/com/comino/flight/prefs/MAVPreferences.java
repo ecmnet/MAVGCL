@@ -70,6 +70,7 @@ public class MAVPreferences {
 	public static final String REFLON           = "REFLON";
 	public static final String SPEECH           = "SPEECH";
 	public static final String DEBUG_MSG        = "DEBUG";
+	public static final String LAST_FILE        = "LAST_FILE";
 
 	private static Preferences prefs = null;
 

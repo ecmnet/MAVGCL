@@ -110,6 +110,7 @@ public class FileHandler {
 	private List<String> presetfiles = null;
 
 	private String lastDir = null;
+	private String lastFile = null;
 
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
@@ -198,7 +199,16 @@ public class FileHandler {
 
 		File file = fileChooser.showOpenDialog(stage);
 
+		userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
 		fileImport(file);
+	}
+
+	public void fileImportLast() {
+		String name = userPrefs.get(MAVPreferences.LAST_FILE,null);
+		if(name!=null) {
+			File file = new File(name);
+			fileImport(file);
+		}
 	}
 
 	public void fileImport(File file) {
@@ -350,8 +360,8 @@ public class FileHandler {
 							Writer writer = new FileWriter(file);
 							for(int x=0; x<service.getModelList().size();x++) {
 								value = service.getModelList().get(x).getValue(kf);
-							    writer.append(String.format("%#.3f; %#.7f",(x*service.getCollectorInterval_ms()/1000f),(float)value).trim());
-							    writer.append("\n");
+								writer.append(String.format("%#.3f; %#.7f",(x*service.getCollectorInterval_ms()/1000f),(float)value).trim());
+								writer.append("\n");
 							}
 							writer.close();
 							stage.getScene().setCursor(Cursor.DEFAULT);
@@ -556,9 +566,9 @@ public class FileHandler {
 			if(data!=null)
 				service.setModelList(data);
 			if(params!=null)
-			  param.set(params);
+				param.set(params);
 			if(grid!=null)
-			  model.grid.setData(grid);
+				model.grid.setData(grid);
 			if(conversion_rate != 0)
 				service.setCollectorInterval(conversion_rate * 1000);
 			else

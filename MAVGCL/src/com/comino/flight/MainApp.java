@@ -97,6 +97,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_import;
+	
+	@FXML
+	private MenuItem m_import_last;
 
 	@FXML
 	private MenuItem m_export;
@@ -353,12 +356,26 @@ public class MainApp extends Application  {
 	private void initialize() {
 
 		menubar.setUseSystemMenuBar(true);
+		
+		String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+		if(name!=null) {
+			m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
+		}
 
 		m_import.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				AnalysisModelService.getInstance().stop();
 				FileHandler.getInstance().fileImport();
+				controlpanel.getChartControl().refreshCharts();
+			}
+		});
+		
+		m_import_last.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				AnalysisModelService.getInstance().stop();
+				FileHandler.getInstance().fileImportLast();
 				controlpanel.getChartControl().refreshCharts();
 			}
 		});

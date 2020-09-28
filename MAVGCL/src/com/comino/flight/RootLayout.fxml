@@ -26,6 +26,7 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<MenuItem fx:id="m_import_last" mnemonicParsing="false" text="Open recent file"/>
 						<MenuItem fx:id="m_export" mnemonicParsing="false" text="Save as...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="S"
