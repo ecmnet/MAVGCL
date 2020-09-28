@@ -113,11 +113,10 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private XYDataPool pool = null;
 
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService      dataService = AnalysisModelService.getInstance();
 
 	private int max_pt = 0;
-	private int sample_rate = 50;
+	private int sample_rate = 0;
 
 	public Vibration() {
 
@@ -135,10 +134,6 @@ public class Vibration extends VBox implements IChartControl  {
 		}));
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.setDelay(Duration.ZERO);
-
-		fft1 = new FFT( POINTS, sample_rate );
-		fft2 = new FFT( POINTS, sample_rate );
-		fft3 = new FFT( POINTS, sample_rate );
 
 		//		fft1.window(FFT.HAMMING);
 		//		fft2.window(FFT.HAMMING);
@@ -159,11 +154,17 @@ public class Vibration extends VBox implements IChartControl  {
 		series2 = new XYChart.Series<Number,Number>();
 		//		series3 = new XYChart.Series<Number,Number>();
 
+		sample_rate = 1000 / dataService.getCollectorInterval_ms();
+
 		xAxis.setAutoRanging(false);
 		xAxis.setLowerBound(1);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
-		
+
+		fft1 = new FFT( POINTS, sample_rate );
+		fft2 = new FFT( POINTS, sample_rate );
+		fft3 = new FFT( POINTS, sample_rate );
+
 
 		//		yAxis.setAutoRanging(false);
 		//		yAxis.setLowerBound(0);
@@ -283,7 +284,7 @@ public class Vibration extends VBox implements IChartControl  {
 			fft.getData().clear();
 			fft.getData().add(series1);
 			fft.getData().add(series2);
-//			fft.getData().add(series3);
+			//			fft.getData().add(series3);
 			updateGraph();
 		});
 	}
