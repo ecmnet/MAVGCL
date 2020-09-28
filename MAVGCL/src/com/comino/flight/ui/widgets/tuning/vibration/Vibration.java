@@ -118,13 +118,11 @@ public class Vibration extends VBox implements IChartControl  {
 	private int max_pt = 0;
 	private int sample_rate = 0;
 
+
 	public Vibration() {
 
 		FXMLLoadHelper.load(this, "Vibration.fxml");
 		timeline = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
-			vx.setProgress(model.vibration.vibx * 1e3);
-			vy.setProgress(model.vibration.viby * 1e3);
-			vz.setProgress(model.vibration.vibz * 1e3);
 
 			if(dataService.isCollecting()) {
 				max_pt = dataService.getModelList().size() - 1;
@@ -218,6 +216,12 @@ public class Vibration extends VBox implements IChartControl  {
 		series1.getData().clear();
 		series2.getData().clear();
 		//			series3.getData().clear();
+		
+		
+		m = dataService.getModelList().get(max_pt);
+		vx.setProgress((float)m.getValue("VIBX") * 2e2);
+		vy.setProgress((float)m.getValue("VIBY") * 2e2);
+		vz.setProgress((float)m.getValue("VIBZ") * 2e2);
 
 
 		if(max_pt <= POINTS) {
@@ -231,7 +235,7 @@ public class Vibration extends VBox implements IChartControl  {
 			data2[i] = (float)m.getValue("ACCY");	
 			//				data3[i] = (float)Math.sqrt(m.getValue("ACCX") * m.getValue("ACCX") + m.getValue("ACCY") * m.getValue("ACCY") );	
 		}
-
+	
 		fft1.forward(data1); 
 		fft2.forward(data2); 
 		//			fft3.forward(data3);
