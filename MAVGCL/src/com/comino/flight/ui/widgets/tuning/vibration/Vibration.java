@@ -218,6 +218,12 @@ public class Vibration extends VBox implements IChartControl  {
 			});
 
 		});
+		
+		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
+			if(n.intValue()> 0)
+				refreshChart();
+			
+		});
 
 	}
 

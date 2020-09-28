@@ -66,7 +66,7 @@ import javafx.util.Duration;
 public class MotorTest extends VBox  {
 
 
-	private static final int INITIAL_DELAY_MS = 5000;
+	private static final int INITIAL_DELAY_MS = 6000;
 
 
 	@FXML
