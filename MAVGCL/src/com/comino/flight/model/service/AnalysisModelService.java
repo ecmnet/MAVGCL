@@ -303,6 +303,16 @@ public class AnalysisModelService  {
 
 		return current_x0_pt;
 	}
+	
+	public int calculateX1Index(int index_x0) {
+
+		int current_x1_pt = index_x0 + (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
+
+		if(current_x1_pt>modelList.size()-1)
+			current_x1_pt = modelList.size()-1;
+
+		return current_x1_pt;
+	}
 
 	public int calculateXIndexByTime(double time) {
 		int x = (int)(1000f / getCollectorInterval_ms() * time);

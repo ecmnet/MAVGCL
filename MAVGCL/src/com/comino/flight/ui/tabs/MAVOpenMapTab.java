@@ -473,14 +473,16 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-		UBXRTCM3Base.getInstance().getCurrentLocationProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
-				Platform.runLater(() -> {
-					center.getSelectionModel().select(2);
-					map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
-				});
-			}
-		});
+		if(UBXRTCM3Base.getInstance()!=null) {
+			UBXRTCM3Base.getInstance().getCurrentLocationProperty().addListener((e,o,n) -> {
+				if(n.booleanValue()) {
+					Platform.runLater(() -> {
+						center.getSelectionModel().select(2);
+						map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
+					});
+				}
+			});
+		}
 
 
 		this.disabledProperty().addListener((l,o,n) -> {
@@ -602,7 +604,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			if((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") > 4) && type!=1)
 				positionLayer.getIcon().setImage(plane_valid);
 			else if(StateProperties.getInstance().getLPOSAvailableProperty().get())
-			    positionLayer.getIcon().setImage(plane_lpos);
+				positionLayer.getIcon().setImage(plane_lpos);
 			else
 				positionLayer.getIcon().setImage(plane_invalid);
 

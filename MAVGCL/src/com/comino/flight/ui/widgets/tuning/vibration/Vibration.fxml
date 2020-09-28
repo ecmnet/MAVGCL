@@ -2,16 +2,18 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
 
 <fx:root type="javafx.scene.layout.VBox" prefWidth="550"
 	xmlns="http://javafx.com/javafx/8.0.51"
 	xmlns:fx="http://javafx.com/fxml/1"  styleClass="widget" style="-fx-padding: 10 15 10 15;"  >
 	<children>
 	   <Label layoutX="14.0" prefHeight="28.0" text="Vibration" />
-		<VBox spacing="20" >
+		<VBox spacing="15" >
 			<children>
 			     <Label/>
-			     <HBox spacing="20" alignment="CENTER_LEFT" >
+			     <HBox spacing="15" alignment="CENTER_LEFT" >
 			      <children>
 			        <Label text="Vib. X" minWidth="50" />
 			        <ProgressBar fx:id="vx" prefHeight="4.5" prefWidth="300"/>
@@ -29,7 +31,14 @@
 			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="300"/>
 			      </children>
 			     </HBox>
-			     
+			     <LineChart fx:id="fft" maxHeight="210" createSymbols="false" animated="false" legendSide="TOP"  >
+			       <xAxis>
+				    <NumberAxis fx:id="xAxis" animated="false" side="BOTTOM"  />
+			       </xAxis>
+			       <yAxis>
+				     <NumberAxis fx:id="yAxis" animated="false" side="LEFT" />
+			        </yAxis>
+			     </LineChart>    
 			</children>
 		</VBox>
      </children>

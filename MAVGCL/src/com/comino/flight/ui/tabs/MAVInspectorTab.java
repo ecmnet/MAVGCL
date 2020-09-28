@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.mavlink.messages.lquac.msg_heartbeat;
+
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
@@ -195,6 +197,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object _msg) {
+		
 		if(isVisible() && !isDisabled())
 		  parseMessageString(_msg.toString().split("  "));
 	}
