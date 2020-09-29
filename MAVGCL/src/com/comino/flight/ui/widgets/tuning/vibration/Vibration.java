@@ -37,7 +37,6 @@ import com.comino.analysis.FFT;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
@@ -69,7 +68,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private static final int      POINTS = 256;
 	private static final float VIB_SCALE = 40;
-	
+
 
 	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z" };
 
@@ -85,13 +84,13 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@FXML
 	private ProgressBar vz;
-	
+
 	@FXML
 	private Label cx;
-	
+
 	@FXML
 	private Label cy;
-	
+
 	@FXML
 	private Label cz;
 
@@ -109,8 +108,6 @@ public class Vibration extends VBox implements IChartControl  {
 
 
 	private Timeline timeline;
-
-	private DataModel model;
 
 
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
@@ -149,7 +146,7 @@ public class Vibration extends VBox implements IChartControl  {
 			}
 
 		}));
-		
+
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.setDelay(Duration.ZERO);
 
@@ -202,7 +199,6 @@ public class Vibration extends VBox implements IChartControl  {
 	}
 
 	public void setup(IMAVController control) {
-		this.model = control.getCurrentModel();
 
 		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
@@ -216,23 +212,28 @@ public class Vibration extends VBox implements IChartControl  {
 
 		scroll.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
-				max_pt =  dataService.calculateX1IndexByFactor(nv.floatValue());	
+				max_pt =  dataService.calculateIndexByFactor(nv.floatValue()) - 1;
 				updateGraph();
 			});
 		});
 
 		replay.addListener((v, ov, nv) -> {		
 			Platform.runLater(() -> {
-				max_pt = dataService.calculateX1Index(nv.intValue());
+				max_pt =  nv.intValue();
 				updateGraph();
 			});
 
 		});
-		
+
 		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()> 0)
 				refreshChart();
-			
+
+		});
+
+		StateProperties.getInstance().getReplayingProperty().addListener((p,o,n) -> {
+			if(n.booleanValue())
+				refresh(0);
 		});
 
 	}
@@ -242,7 +243,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 		AnalysisDataModel m =null;
 
-		if(isDisabled())
+		if(isDisabled() || max_pt < 0)
 			return;
 
 		series1.getData().clear();
@@ -253,16 +254,16 @@ public class Vibration extends VBox implements IChartControl  {
 			return;
 
 		m = dataService.getModelList().get(max_pt);
-		
-	
+
+
 		vx.setProgress((float)m.getValue("VIBX") * VIB_SCALE);
 		vy.setProgress((float)m.getValue("VIBY") * VIB_SCALE);
 		vz.setProgress((float)m.getValue("VIBZ") * VIB_SCALE);
-		
+
 		cx.setText(String.valueOf((int)m.getValue("VIBCL0")));
 		cy.setText(String.valueOf((int)m.getValue("VIBCL1")));
 		cz.setText(String.valueOf((int)m.getValue("VIBCL2")));
-	
+
 
 
 		if(max_pt <= POINTS) {
@@ -283,7 +284,7 @@ public class Vibration extends VBox implements IChartControl  {
 		switch(source_id) {
 
 		case 0:
-            
+
 			fft1.forward(data1); 
 			for(int i = 0; i < fft1.specSize(); i++ ) {
 				series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
@@ -307,6 +308,17 @@ public class Vibration extends VBox implements IChartControl  {
 
 		}
 
+	}
+
+	private void refresh(int max) {
+		Platform.runLater(() -> {
+			max_pt = max;
+			fft.getData().clear();
+			fft.getData().add(series1);
+			fft.getData().add(series2);
+			fft.getData().add(series3);
+			updateGraph();
+		});
 	}
 
 
@@ -336,27 +348,20 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void refreshChart() {
-		Platform.runLater(() -> {
-			max_pt = dataService.getModelList().size() - 1;
-			fft.getData().clear();
-			fft.getData().add(series1);
-			fft.getData().add(series2);
-			fft.getData().add(series3);
-			updateGraph();
-		});
+		refresh(dataService.getModelList().size() - 1);
 	}
 
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-	
+
 		return null;
 	}
 
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
-	
+
 
 	}
 
