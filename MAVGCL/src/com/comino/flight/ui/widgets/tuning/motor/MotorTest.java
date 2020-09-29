@@ -135,6 +135,8 @@ public class MotorTest extends VBox  {
 		
 		this.modelService =  AnalysisModelService.getInstance();
 		
+		this.disableProperty().bind(StateProperties.getInstance().getConnectedProperty().not());
+		
 		delay = new Timeline(new KeyFrame(Duration.millis(INITIAL_DELAY_MS), ae -> {
 			switch(motor) {
 			case 1:

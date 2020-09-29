@@ -133,6 +133,8 @@ public class Vibration extends VBox implements IChartControl  {
 	private int max_pt = 0;
 	private int sample_rate = 0;
 	private int source_id = 0;
+	
+	private StateProperties state = null;
 
 
 	public Vibration() {
@@ -199,8 +201,10 @@ public class Vibration extends VBox implements IChartControl  {
 	}
 
 	public void setup(IMAVController control) {
+		
+		state = StateProperties.getInstance();
 
-		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
+		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
 				timeline.play();
 			else {
@@ -225,13 +229,13 @@ public class Vibration extends VBox implements IChartControl  {
 
 		});
 
-		StateProperties.getInstance().getRecordingProperty().addListener((p,o,n) -> {
+		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()> 0)
 				refreshChart();
 
 		});
 
-		StateProperties.getInstance().getReplayingProperty().addListener((p,o,n) -> {
+		state.getReplayingProperty().addListener((p,o,n) -> {
 			if(n.booleanValue())
 				refresh(0);
 		});
