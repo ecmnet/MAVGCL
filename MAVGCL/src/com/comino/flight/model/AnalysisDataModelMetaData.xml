@@ -169,21 +169,21 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vibr.Clip 0" uom="mrad" mask="#0.0" key="VIBCL0">
+	<KeyFigure desc="Vibr.Clip 0" uom="" mask="#0.0" key="VIBCL0">
 	    <MSPSource class="vibration" field="cli0"></MSPSource>
 		<Groups>
 			<Group>Vibration</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vibr.Clip 1" uom="mrad" mask="#0.0" key="VIBCL1">
+	<KeyFigure desc="Vibr.Clip 1" uom="" mask="#0.0" key="VIBCL1">
 	    <MSPSource class="vibration" field="cli1"></MSPSource>
 		<Groups>
 			<Group>Vibration</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vibr.Clip 2" uom="mrad" mask="#0.0" key="VIBCL2">
+	<KeyFigure desc="Vibr.Clip 2" uom="" mask="#0.0" key="VIBCL2">
 	    <MSPSource class="vibration" field="cli2"></MSPSource>
 		<Groups>
 			<Group>Vibration</Group>
