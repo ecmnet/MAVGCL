@@ -67,7 +67,9 @@ import javafx.util.Duration;
 
 public class Vibration extends VBox implements IChartControl  {
 
-	private static final int POINTS = 512;
+	private static final int      POINTS = 256;
+	private static final float VIB_SCALE = 40;
+	
 
 	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z" };
 
@@ -147,13 +149,11 @@ public class Vibration extends VBox implements IChartControl  {
 			}
 
 		}));
+		
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.setDelay(Duration.ZERO);
 
-	
-
 		pool = new XYDataPool();
-
 
 	}
 
@@ -255,9 +255,9 @@ public class Vibration extends VBox implements IChartControl  {
 		m = dataService.getModelList().get(max_pt);
 		
 	
-		vx.setProgress((float)m.getValue("VIBX") * 1e2);
-		vy.setProgress((float)m.getValue("VIBY") * 1e2);
-		vz.setProgress((float)m.getValue("VIBZ") * 1e2);
+		vx.setProgress((float)m.getValue("VIBX") * VIB_SCALE);
+		vy.setProgress((float)m.getValue("VIBY") * VIB_SCALE);
+		vz.setProgress((float)m.getValue("VIBZ") * VIB_SCALE);
 		
 		cx.setText(String.valueOf((int)m.getValue("VIBCL0")));
 		cy.setText(String.valueOf((int)m.getValue("VIBCL1")));
@@ -312,7 +312,6 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -331,7 +330,6 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public BooleanProperty getIsScrollingProperty() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -351,14 +349,14 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
-		// TODO Auto-generated method stub
+	
 
 	}
 
