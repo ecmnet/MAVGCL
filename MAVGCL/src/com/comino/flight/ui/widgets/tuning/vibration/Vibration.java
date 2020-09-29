@@ -253,6 +253,8 @@ public class Vibration extends VBox implements IChartControl  {
 			return;
 
 		m = dataService.getModelList().get(max_pt);
+		
+	
 		vx.setProgress((float)m.getValue("VIBX") * 1e2);
 		vy.setProgress((float)m.getValue("VIBY") * 1e2);
 		vz.setProgress((float)m.getValue("VIBZ") * 1e2);
@@ -260,6 +262,7 @@ public class Vibration extends VBox implements IChartControl  {
 		cx.setText(String.valueOf((int)m.getValue("VIBCL0")));
 		cy.setText(String.valueOf((int)m.getValue("VIBCL1")));
 		cz.setText(String.valueOf((int)m.getValue("VIBCL2")));
+	
 
 
 		if(max_pt <= POINTS) {
