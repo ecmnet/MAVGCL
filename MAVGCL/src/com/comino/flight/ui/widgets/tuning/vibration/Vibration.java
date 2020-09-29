@@ -58,6 +58,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -82,6 +83,15 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@FXML
 	private ProgressBar vz;
+	
+	@FXML
+	private Label cx;
+	
+	@FXML
+	private Label cy;
+	
+	@FXML
+	private Label cz;
 
 	@FXML
 	private LineChart<Number, Number> fft;
@@ -246,6 +256,10 @@ public class Vibration extends VBox implements IChartControl  {
 		vx.setProgress((float)m.getValue("VIBX") * 1e2);
 		vy.setProgress((float)m.getValue("VIBY") * 1e2);
 		vz.setProgress((float)m.getValue("VIBZ") * 1e2);
+		
+		cx.setText(String.valueOf((int)m.getValue("VIBCL0")));
+		cy.setText(String.valueOf((int)m.getValue("VIBCL1")));
+		cz.setText(String.valueOf((int)m.getValue("VIBCL2")));
 
 
 		if(max_pt <= POINTS) {
