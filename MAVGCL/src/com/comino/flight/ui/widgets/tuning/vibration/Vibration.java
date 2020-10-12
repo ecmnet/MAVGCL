@@ -175,6 +175,8 @@ public class Vibration extends VBox implements IChartControl  {
 		xAxis.setLowerBound(1);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
+		
+		yAxis.setAutoRanging(true);
 
 		fft1 = new FFT( POINTS, sample_rate );
 		fft2 = new FFT( POINTS, sample_rate );
@@ -290,12 +292,12 @@ public class Vibration extends VBox implements IChartControl  {
 		case 0:
 
 			fft1.forward(data1); 
-			for(int i = 0; i < fft1.specSize(); i++ ) {
+			for(int i = 1; i < fft1.specSize(); i++ ) {
 				series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
 			}
 
 			fft2.forward(data2); 
-			for(int i = 0; i < fft2.specSize(); i++ ) {
+     		for(int i = 1; i < fft2.specSize(); i++ ) {
 				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
 			}
 
@@ -304,9 +306,10 @@ public class Vibration extends VBox implements IChartControl  {
 		case 1:
 
 			fft3.forward(data3);
-			for(int i = 0; i < fft3.specSize(); i++ ) {
+			for(int i = 1; i < fft3.specSize(); i++ ) {
 				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
 			}
+	
 
 			break;
 
