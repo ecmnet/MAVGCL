@@ -124,7 +124,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 
 		ParameterAttributes pp = MAVGCLPX4Parameters.getInstance().get("SDLOG_PROFILE");
-		if(pp.value != 1 ) {
+		if(pp.value != 1  ) {
 			logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1'.");
 			return;
 		}
@@ -167,7 +167,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				}
 			}
 		}, 5000, 5, TimeUnit.MILLISECONDS);
-
+		
+		modelService.setCollectorInterval(5000);
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
 		requestLogList(GET_LAST_LOG_ID);

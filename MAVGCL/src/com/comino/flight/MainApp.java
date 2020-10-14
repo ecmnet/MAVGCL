@@ -404,14 +404,14 @@ public class MainApp extends Application  {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if(state.getArmedProperty().get()) {
-					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
-					return;
-				}
+//				if(state.getArmedProperty().get()) {
+//					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
+//					return;
+//				}
 
 				AnalysisModelService.getInstance().stop();
 
-				r_px4log.setText("Cancel import from device...");
+			//	r_px4log.setText("Cancel import from device...");
 
 				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
 					if(!newvalue.booleanValue()) {
@@ -419,6 +419,8 @@ public class MainApp extends Application  {
 							r_px4log.setText(m_text);
 							controlpanel.getChartControl().refreshCharts();
 						});
+					} else {
+						r_px4log.setText("Cancel import from device...");
 					}
 				});
 

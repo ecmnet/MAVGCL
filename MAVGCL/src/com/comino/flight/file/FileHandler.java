@@ -225,6 +225,7 @@ public class FileHandler {
 					state.getLogLoadedProperty().set(false);
 
 					if(file.getName().endsWith("ulg")) {
+						modelService.setCollectorInterval(5000);
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
 						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());

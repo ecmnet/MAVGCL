@@ -181,6 +181,8 @@ public class Vibration extends VBox implements IChartControl  {
 		fft1 = new FFT( POINTS, sample_rate );
 		fft2 = new FFT( POINTS, sample_rate );
 		fft3 = new FFT( POINTS, sample_rate );
+		
+	
 
 
 		//		yAxis.setAutoRanging(false);
@@ -331,6 +333,22 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
+		
+		sample_rate = 1000 / dataService.getCollectorInterval_ms();
+
+		xAxis.setAutoRanging(false);
+		xAxis.setLowerBound(1);
+		xAxis.setUpperBound(sample_rate/2);
+		xAxis.setLabel("Hz");
+		
+		yAxis.setAutoRanging(true);
+
+		fft1 = new FFT( POINTS, sample_rate );
+		fft2 = new FFT( POINTS, sample_rate );
+		fft3 = new FFT( POINTS, sample_rate );
+		
+		refresh(dataService.getModelList().size() - 1);
+		
 		return null;
 	}
 
@@ -361,15 +379,13 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
-
 		return null;
 	}
 
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
-
-
+	
 	}
 
 }
