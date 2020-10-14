@@ -34,6 +34,7 @@
 package com.comino.flight.ui.tabs;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
@@ -58,7 +59,7 @@ import javafx.util.Duration;
 public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 
-	private final static String[] defaults = { "reboot", "gps status", "sensors status" };
+	private final static String[] defaults = { "reboot", "gps status", "sensors status","dmesg" };
 
 
 	private IMAVController control;
@@ -71,7 +72,13 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private int lastindex = 0;
 
 	private int index = 0;
+
 	private Timeline out = null;
+	private LinkedList<String> buffer = new LinkedList<String>();
+
+	private byte[] bytes = new byte[100];
+	
+	private msg_serial_control msg = new msg_serial_control(1,1);
 
 
 	public MavLinkShellTab() {
@@ -84,12 +91,17 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@FXML
 	private void initialize() {
 
-		this.out = new Timeline(new KeyFrame(Duration.millis(10000), ae ->  {
-			console.appendText("\nnsh> ");
+		this.out = new Timeline(new KeyFrame(Duration.millis(30), ae ->  {
+			if(buffer.isEmpty() || this.isDisabled())
+				return;
+			
+			while(!buffer.isEmpty())
+				console.appendText(buffer.pop());
 			index = console.getText().length();
 			scrollIntoView();
 		}));
 
+		out.setCycleCount(Timeline.INDEFINITE);
 
 		state = StateProperties.getInstance();
 
@@ -97,7 +109,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		console.prefWidthProperty().bind(widthProperty());
 
 		console.setOnKeyPressed(ke -> {
-			if (ke.getCode().equals(KeyCode.ENTER)) {
+			if (ke.getCode().equals(KeyCode.ESCAPE)) {
+				reloadShell();
+			}
+			else if (ke.getCode().equals(KeyCode.ENTER)) {
 				int end = console.getText().length();
 				if(end > index) {
 					String command = console.getText(index,end).trim();
@@ -106,7 +121,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
-					out.play();
 					if(!command.equals(last.peekLast())) {
 						last.add(command);
 					}
@@ -175,6 +189,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
+				out.play();
 				Platform.runLater(() -> {
 					if(console.getText().length()==0)
 						writeToShell("\n");
@@ -182,10 +197,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				scrollIntoView();
 
 			} else {
-				writeToShell(null);
-				Platform.runLater(() -> {
-					console.clear();
-				});
+				out.stop();
 			}
 			lastindex = last.size();
 		});
@@ -203,26 +215,18 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	@Override
 	public void received(Object _msg) {
-		if(!this.isDisabled()) {
-			if(_msg instanceof msg_serial_control) {
-				msg_serial_control msg = (msg_serial_control)_msg;
-				byte[] bytes = new byte[msg.count];
-				for(int i=0;i<msg.count;i++) {
-					if(msg.data[i]==0x1b)
-						break;
-					bytes[i] = (byte)(msg.data[i] & 0xFF);
-				}
-				try {
-					String s = new String(bytes,"US-ASCII").substring(0, msg.count-1);
-					Platform.runLater(() -> {
-						out.stop();
-						console.appendText(s);
-						index = console.getText().length();
-					});
-					scrollIntoView();
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
+		if(_msg instanceof msg_serial_control) {
+			Arrays.fill(bytes, (byte)0);
+			msg_serial_control msg = (msg_serial_control)_msg;
+			for(int i=0;i<msg.count-1 && i < 70;i++) {
+				if(msg.data[i]==0x1b)
+					break;
+				bytes[i] = (byte)(msg.data[i] & 0xFF);
+			} 
+			try {
+				buffer.add(new String(bytes,"US-ASCII").substring(0, msg.count-1));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -232,14 +236,14 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			console.clear();
 			if(!isDisabled())
 				writeToShell("\n");
-			scrollIntoView();
 		});
 	}
 
 
 	private void writeToShell(String s) {
-		msg_serial_control msg = new msg_serial_control(1,1);
+
 		if(s!=null) {
+			Arrays.fill(msg.data, 0);
 			try {
 				if(s.equals("\n")) {
 					msg.data[0] = 13;
@@ -256,18 +260,15 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		} else {
-			msg.count = 0;
-			msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
-		}
-
-		control.sendMAVLinkMessage(msg);
+			control.sendMAVLinkMessage(msg);
+		} 
 	}
 
 	private void scrollIntoView() {
 		Platform.runLater(() -> {
 			console.requestFocus();
-			console.selectRange(index, index);
+			console.selectEnd();
+	//		console.selectRange(index, index);
 		});
 	}
 
