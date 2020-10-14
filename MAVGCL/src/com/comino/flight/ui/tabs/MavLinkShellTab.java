@@ -117,6 +117,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				if(end > index) {
 					String command = console.getText(index,end).trim();
 					if(command.equalsIgnoreCase("reboot")) {
+						buffer.add("..waiting for vehicle to ");
+						console.setEditable(false);
 						new Timeline(new KeyFrame(Duration.millis(6000), ae ->  { reloadShell(); })).play();
 					}
 					console.deleteText(index, end);
@@ -232,8 +234,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	}
 
 	private void reloadShell() {
+		buffer.clear();
 		Platform.runLater(() -> {
 			console.clear();
+			console.setEditable(true);
 			if(!isDisabled())
 				writeToShell("\n");
 		});
