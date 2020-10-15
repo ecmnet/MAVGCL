@@ -117,7 +117,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				if(end > index) {
 					String command = console.getText(index,end).trim();
 					if(command.equalsIgnoreCase("reboot")) {
-						buffer.add("..waiting for vehicle to ");
+						buffer.add("..waiting for FCU to ");
 						console.setEditable(false);
 						new Timeline(new KeyFrame(Duration.millis(6000), ae ->  { reloadShell(); })).play();
 					}
