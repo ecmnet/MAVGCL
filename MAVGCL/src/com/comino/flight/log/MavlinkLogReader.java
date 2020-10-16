@@ -206,7 +206,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					stop();
 					return;
 				}
-				time_utc = entry.time_utc;
+				time_utc = entry.time_utc*1000L;
 				total_package_count = prepareUnreadPackageList(entry.size);
 				System.out.println("Expected packages: " + unread_packages.size());
 				logger.writeLocalMsg("[mgc] Importing Log (" + last_log_id + ") - " + (entry.size / 1024) + " kb");
@@ -267,7 +267,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 			logger.writeLocalMsg("[mgc] Import completed (" + speed + " kb/sec)");
 			props.getLogLoadedProperty().set(true);
-			DateFormat formatter = new SimpleDateFormat("YYYY-MM-DD");
+			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
 			fh.setName("Log-" + last_log_id + "-" + formatter.format(time_utc));
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		}
