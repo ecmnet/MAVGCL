@@ -42,6 +42,7 @@ import org.mavlink.messages.lquac.msg_logging_ack;
 import org.mavlink.messages.lquac.msg_logging_data;
 import org.mavlink.messages.lquac.msg_logging_data_acked;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jmavlib.extensions.UlogMAVLinkParser;
 import com.comino.mavcom.control.IMAVController;
@@ -91,19 +92,19 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 		return parser.getFieldList();
 	}
 
-	public void enableLogging(boolean enable) {
+	public boolean enableLogging(boolean enable) {
 
 	//	new Thread(() -> {
 
 			state=STATE_HEADER_IDLE;
 
 			if(!control.isConnected())
-				return;
+				return false;
 
 			if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
 				if(enable)
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				return;
+				return false;
 			}
 
 			if(enable)  {
@@ -122,7 +123,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 						logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						state=STATE_HEADER_IDLE;
-						return;
+						return false;
 					}
 				}
 
@@ -138,7 +139,9 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				if(state==STATE_DATA) {
 					state=STATE_HEADER_IDLE;
 				}
+				return false;
 			}
+			return true;
 //		}).start();
 	}
 

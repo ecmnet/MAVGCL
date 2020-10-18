@@ -60,7 +60,8 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
-	private static final int DEFAULT_INTERVAL_US = 20000;
+	public static final int DEFAULT_INTERVAL_US = 20000;
+	public static final int HISPEED_INTERVAL_US = 5000;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
@@ -381,7 +382,10 @@ public class AnalysisModelService  {
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					state.getRecordingProperty().set(READING_HEADER);
-					ulogger.enableLogging(true);
+					if(ulogger.enableLogging(true))
+						setCollectorInterval(HISPEED_INTERVAL_US);
+					else
+						setCollectorInterval(DEFAULT_INTERVAL_US);
 					state.getLogLoadedProperty().set(false);
 					state.getRecordingProperty().set(COLLECTING);
 					tms_start = System.nanoTime() / 1000;

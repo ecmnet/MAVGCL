@@ -37,6 +37,7 @@ package com.comino.flight.ui.widgets.panel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Future;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -88,6 +89,8 @@ public class ChartControlWidget extends ChartControlPane  {
 	@FXML
 	private Button play;
 
+	private Future<?> replay = null;
+
 	protected int totalTime_sec = TOTAL_TIME[0];
 	private AnalysisModelService modelService;
 
@@ -124,10 +127,20 @@ public class ChartControlWidget extends ChartControlPane  {
 			modelService.setTotalTimeSec(totalTime_sec);
 			//scroll.setValue(1.0);
 
+			if(state.getReplayingProperty().get()) {
+				state.getReplayingProperty().set(false);
+				for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+					if(chart.getValue().getReplayProperty()!=null) 
+						chart.getValue().getReplayProperty().set(0);
+					chart.getValue().refreshChart();
+				}
+			}
+
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null)
 					chart.getValue().getTimeFrameProperty().set(newValue.intValue());
 			}
+			
 
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms()
 					|| modelService.isCollecting() || modelService.getModelList().size()==0)
@@ -221,10 +234,10 @@ public class ChartControlWidget extends ChartControlPane  {
 					state.getCurrentUpToDate().set(false);
 
 					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-//					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-//						if(chart.getValue().getReplayProperty()!=null)
-//							chart.getValue().getReplayProperty().set(-1);
-//					}
+					//					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+					//						if(chart.getValue().getReplayProperty()!=null)
+					//							chart.getValue().getReplayProperty().set(-1);
+					//					}
 					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 						modelService.setCurrent(index);
 						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );

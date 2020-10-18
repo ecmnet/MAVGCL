@@ -33,8 +33,11 @@
 
 package com.comino.flight.log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -124,8 +128,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 
 		ParameterAttributes pp = MAVGCLPX4Parameters.getInstance().get("SDLOG_PROFILE");
-		if(pp.value != 1  ) {
-			logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1'.");
+		if(pp.value != 1  && pp.value < 17) {
+			logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1' or '17'.");
 			return;
 		}
 
@@ -264,11 +268,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			logger.writeLocalMsg("[mgc] Import completed (" + speed + " kb/sec)");
 			props.getLogLoadedProperty().set(true);
 			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
-			fh.setName("Log-" + last_log_id + "-" + formatter.format(time_utc));
+			String name = "Log-" + last_log_id + "-" + formatter.format(time_utc);
+			fh.setName(name);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		}
 	}
