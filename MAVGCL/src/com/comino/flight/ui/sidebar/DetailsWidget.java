@@ -76,9 +76,10 @@ public class DetailsWidget extends ChartControlPane {
 			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDTT", "SLAMDTO", null,"VISIONFPS", "VISIONQUAL", "FLOWQL",null, "BATC", "BATH",
-			"BATP", null, "IMUTEMP", "MSPTEMP",  null,  "CPUPX4", "CPUMSP", "SWIFI", "RSSI", null, "TARM",
+			"BATP", null, "IMUTEMP", "MSPTEMP",  null,  "CPUPX4", "CPUMSP", "SWIFI", "RSSI", null, "TARM","TBOOT",
 
 	};
+	
 
 	@FXML
 	private ScrollPane scroll;
@@ -93,6 +94,7 @@ public class DetailsWidget extends ChartControlPane {
 	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	
 
 	public DetailsWidget() {
 
@@ -129,13 +131,18 @@ public class DetailsWidget extends ChartControlPane {
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setBorder(Border.EMPTY);
+	
 
 		int i = 0;
 		for (String k : key_figures_details) {
 			figures.add(new KeyFigure(grid, k, i));
 			i++;
 		}
-
+		
+		state.getGPSAvailableProperty().addListener((e, o, n) -> {
+			setBlockVisibility("RGPSNO",n.booleanValue());		  
+		});
+		
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
 				for (KeyFigure figure : figures) {
@@ -152,8 +159,30 @@ public class DetailsWidget extends ChartControlPane {
    //     this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
 
 	}
+	
+	private void setBlockVisibility(String block, boolean visible) {
+		Platform.runLater(() -> {
+		    boolean found = false;
+			for (KeyFigure figure : figures) {
+			  if(block.equals(figure.key)) found = true;
+			  if(found == true ) {
+				  figure.p.setVisible(visible);
+				  grid.getRowConstraints().remove(figure.row);
+				  if(visible)
+					  grid.getRowConstraints().add(figure.row,new RowConstraints(ROWHEIGHT, ROWHEIGHT, ROWHEIGHT));
+				  else
+					  grid.getRowConstraints().add(figure.row,new RowConstraints(0, 0, 0));
+				 if(figure.key==null)
+					 found = false;
+			  }
+				  
+			}	  
+		});			
+	}
 
 	private class KeyFigure {
+		String  key = null;
+		int row = 0;
 		KeyFigureMetaData kf = null;
 		Control value = null;
 		GridPane p = null;
@@ -162,7 +191,9 @@ public class DetailsWidget extends ChartControlPane {
 
 		double val = 0;
 
-		public KeyFigure(GridPane grid, String k, int row) {
+		public KeyFigure(GridPane grid, String k, int r) {
+			this.key = k;
+			this.row = r;
 			p = new GridPane();
 			p.setPadding(new Insets(0, 2, 0, 2));
 			this.kf = meta.getMetaData(k);
