@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.mavlink.messages.lquac.msg_battery_status;
 import org.mavlink.messages.lquac.msg_heartbeat;
 
 import com.comino.flight.FXMLLoadHelper;
@@ -196,10 +197,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	}
 
 	@Override
-	public void received(Object _msg) {
+	public void received(Object msg) {
 		
 		if(isVisible() && !isDisabled())
-		  parseMessageString(_msg.toString().split("  "));
+		  parseMessageString(msg.toString().split("  "));	
 	}
 
 	private void parseMessageString(String[] msg) {

@@ -85,6 +85,8 @@ public class StateProperties {
 	private BooleanProperty isBaseAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isMSPAvailable                   = new SimpleBooleanProperty();
 	private BooleanProperty isIMUAvailable                   = new SimpleBooleanProperty();
+	private BooleanProperty isGPSAvailable                   = new SimpleBooleanProperty();
+	private BooleanProperty isCVAvailable                    = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
@@ -132,7 +134,13 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			ExecutorService.get().schedule(() -> {
 				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				isGPSAvailable.set(true);
+				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+				isCVAvailable.set(true);
+				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+				
 			}, 2, TimeUnit.SECONDS);
+			
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 
@@ -255,6 +263,14 @@ public class StateProperties {
 
 	public BooleanProperty getBaseAvailableProperty() {
 		return isBaseAvailable;
+	}
+	
+	public BooleanProperty getGPSAvailableProperty() {
+		return isGPSAvailable;
+	}
+	
+	public BooleanProperty getCVAvailableProperty() {
+		return isCVAvailable;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {

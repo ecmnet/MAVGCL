@@ -58,6 +58,7 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.log.ProgressInputStream;
 import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
@@ -135,6 +136,7 @@ public class FileHandler {
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
 		this.currentModel  = control.getCurrentModel();
+	
 
 		readPresetFiles();
 
@@ -430,6 +432,8 @@ public class FileHandler {
 					}
 
 				}
+				
+				
 				return null;
 			}
 		}).start();
