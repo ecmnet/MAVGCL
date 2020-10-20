@@ -67,7 +67,7 @@ import javafx.util.Duration;
 public class DetailsWidget extends ChartControlPane {
 
 	private final static int SEPHEIGHT = 12;
-	private final static int ROWHEIGHT = 19;
+	private final static int ROWHEIGHT = 18;
 
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
@@ -142,6 +142,22 @@ public class DetailsWidget extends ChartControlPane {
 		state.getGPSAvailableProperty().addListener((e, o, n) -> {
 			setBlockVisibility("RGPSNO",n.booleanValue());		  
 		});
+		
+//		state.getCVAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("VISIONX",n.booleanValue());		  
+//		});
+//		
+//		state.getCVAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("VISIONH",n.booleanValue());		  
+//		});
+//		
+//		state.getCVAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("VISIONFPS",n.booleanValue());		  
+//		});
+//		
+//		state.getSLAMAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("SLAMDTT",n.booleanValue());		  
+//		});
 		
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
