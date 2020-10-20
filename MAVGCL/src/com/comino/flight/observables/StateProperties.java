@@ -87,6 +87,7 @@ public class StateProperties {
 	private BooleanProperty isIMUAvailable                   = new SimpleBooleanProperty();
 	private BooleanProperty isGPSAvailable                   = new SimpleBooleanProperty();
 	private BooleanProperty isCVAvailable                    = new SimpleBooleanProperty();
+	private BooleanProperty isSLAMAvailable                  = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
@@ -133,11 +134,15 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			ExecutorService.get().schedule(() -> {
+				
 				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				
 				isGPSAvailable.set(true);
 				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
 				isCVAvailable.set(true);
 				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+				isSLAMAvailable.set(true);
+				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
 				
 			}, 2, TimeUnit.SECONDS);
 			
@@ -169,6 +174,18 @@ public class StateProperties {
 			holdProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
 		});
 
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_GPS_AVAILABILITY, (n) -> {
+			isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_OPCV_AVAILABILITY, (n) -> {
+			isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_SLAM_AVAILABILITY, (n) -> {
+			isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+		});
+		
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
@@ -271,6 +288,10 @@ public class StateProperties {
 	
 	public BooleanProperty getCVAvailableProperty() {
 		return isCVAvailable;
+	}
+	
+	public BooleanProperty getSLAMAvailableProperty() {
+		return isSLAMAvailable;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {
