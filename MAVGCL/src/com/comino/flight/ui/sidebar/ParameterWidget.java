@@ -178,7 +178,7 @@ public class ParameterWidget extends ChartControlPane  {
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
 				if(newValue!=null) {
 					ParameterAttributes p = (ParameterAttributes)newValue;
-
+					
 					Platform.runLater(() -> {
 						if(!groups.getItems().contains(p.group_name) && p !=null) {
 							groups.getItems().add(p.group_name);
@@ -190,7 +190,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 							});
 						}
-					});
+					
 
 					if(timeout!=null && !timeout.isDone()) {
 						BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
@@ -199,6 +199,8 @@ public class ParameterWidget extends ChartControlPane  {
 							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						timeout.cancel(true);  timeout_count=0;
 					}
+					
+					});
 
 
 				}
@@ -390,7 +392,7 @@ public class ParameterWidget extends ChartControlPane  {
 			this.editor.focusedProperty().addListener((observable, oldValue, newValue) -> {
 				if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
 					try {
-						float val =  getValueOf(editor);
+						final float val =  getValueOf(editor);
 						if(val != att.value) {
 							if((val >= att.min_val && val <= att.max_val) ||
 									att.min_val == att.max_val ) {
@@ -438,6 +440,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 		private void sendParameter(ParameterAttributes att, float val) {
 			System.out.println("Try to set "+att.name+" to "+val+"...");
+			att.value = val;
 			final msg_param_set msg = new msg_param_set(255,1);
 			msg.target_component = 1;
 			msg.target_system = 1;
@@ -474,6 +477,7 @@ public class ParameterWidget extends ChartControlPane  {
 				return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
 			} else
 				return 0;
+			
 		}
 
 		@SuppressWarnings("unchecked")
