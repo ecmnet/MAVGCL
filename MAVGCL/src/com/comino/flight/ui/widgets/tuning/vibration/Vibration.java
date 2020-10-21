@@ -253,6 +253,8 @@ public class Vibration extends VBox implements IChartControl  {
 
 		if(isDisabled() || max_pt < 0)
 			return;
+		
+		max_pt = max_pt >= dataService.getModelList().size() ? dataService.getModelList().size() -1 : max_pt;
 
 		series1.getData().clear();
 		series2.getData().clear();
