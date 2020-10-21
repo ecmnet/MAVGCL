@@ -125,12 +125,12 @@ public class AnalysisDataModel {
 
 						if( type == KeyFigureMetaData.MSP_SOURCE)
 							val = e.getValueFromMSPModel((DataModel)source);
-						if( type == KeyFigureMetaData.PX4_SOURCE)
-							val = e.getValueFromPX4Model((Map<String,Object>)source);
+//						if( type == KeyFigureMetaData.PX4_SOURCE)
+//							val = e.getValueFromPX4Model((Map<String,Object>)source);
 						if( type == KeyFigureMetaData.ULG_SOURCE)
 							val = e.getValueFromULogModel((Map<String,Object>)source);
-						if( type == KeyFigureMetaData.MAV_SOURCE)
-							val = e.getValueFromMAVLinkMessage(source);
+//						if( type == KeyFigureMetaData.MAV_SOURCE)
+//							val = e.getValueFromMAVLinkMessage(source);
 
 						if(val!=null)
 							data.put(e.hash,val);

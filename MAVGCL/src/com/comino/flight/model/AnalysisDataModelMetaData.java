@@ -214,17 +214,17 @@ public class AnalysisDataModelMetaData extends Observable {
 			if(node.getNodeName().equalsIgnoreCase("MSPSource")) {
 				buildDataSource(KeyFigureMetaData.MSP_SOURCE, keyfigure,node);
 			}
-			if(node.getNodeName().equalsIgnoreCase("PX4Source")) {
-				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
-			}
+//			if(node.getNodeName().equalsIgnoreCase("PX4Source")) {
+//				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
+//			}
 
 			if(node.getNodeName().equalsIgnoreCase("ULogSource")) {
 				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
 			}
 
-			if(node.getNodeName().equalsIgnoreCase("MAVLinkSource")) {
-				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
-			}
+//			if(node.getNodeName().equalsIgnoreCase("MAVLinkSource")) {
+//				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
+//			}
 
 			if(node.getNodeName().equalsIgnoreCase("VirtualSource")) {
 				buildDataSource(KeyFigureMetaData.VIR_SOURCE, keyfigure,node);

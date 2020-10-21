@@ -200,9 +200,8 @@ public class FileHandler {
 				new ExtensionFilter("Log files", "*.mgc", "*.ulg", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
-
-		userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
 		fileImport(file);
+		userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
 	}
 
 	public void fileImportLast() {
@@ -278,12 +277,12 @@ public class FileHandler {
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
 
-					if(file.getName().endsWith("px4log")) {
-						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
-						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
-						converter.doConversion();
-					}
+//					if(file.getName().endsWith("px4log")) {
+//						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+//						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+//						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+//						converter.doConversion();
+//					}
 					name = file.getName();
 					state.getLogLoadedProperty().set(true);
 					lastDir = file.getParent();
