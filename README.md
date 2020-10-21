@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	20/10/2020
+**Development Status:** Last updated 	21/10/2020
 
 * MotorTest added
 * ACCX,Y, Z FFT graph added (up to 100Hz with ULOG)
@@ -30,7 +30,6 @@ Any feedback, comments and contributions are very welcome.
 - Map viewer of global position and raw gps data with option to record path (cached)
 - Offline-mode: Import of key-figures from PX4Log/ULog (file or last log from device via WiFi)
 - Save and load of collected data 
-- Import of Custom KeyFigureMetaDataFiles allows to define *use-case specific* [collections](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/ExampleKeyfigureMetaData.xml) of key-figures.
 - Key figure conversion based on expressions
 - FrSky Taranis USB supported in SITL
 - PS4Controller support in OSX
@@ -39,7 +38,7 @@ Any feedback, comments and contributions are very welcome.
 - Virtual (calculated) key figures added (Example here: [default definition file](https://github.com/ecmnet/MAVGCL/blob/master/MAVGCL/src/com/comino/flight/model/AnalysisDataModelMetaData.xml#L1000))
 - RTCM3 base supported with automatic survey-in for UBlox M8P devices (OS X only)
 
-**Note** that some features (MSP) are only available if you run a companion on your vehicle using MAVComm/MAVSlam .
+**Note** that some features (MSP) are only available if you run a companion on your vehicle using MAVComm .
 
 See MAVGCL XY view in some action: <https://youtu.be/jOWNSIwIA9k>
 
