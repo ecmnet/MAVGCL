@@ -66,7 +66,7 @@ import javafx.util.Duration;
 
 public class Vibration extends VBox implements IChartControl  {
 
-	private static final int      POINTS = 256;
+	private static final int      POINTS = 512;
 	private static final float VIB_SCALE = 40;
 
 
