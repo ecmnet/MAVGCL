@@ -213,11 +213,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@Override
 	public void update(long now) {
-		if(!isRunning || isDisabled() || refreshRequest || id == -1 )
+		
+		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1 )
 			return;
-		if((System.currentTimeMillis()-last_update_ms)> 20 || resolution_ms <= 100) {
+		if((System.currentTimeMillis()-last_update_ms)> 20 ) {
 			Platform.runLater(() -> {
-				updateGraph(false,0);
+				updateGraph(refreshRequest,0);
 				last_update_ms = System.currentTimeMillis();
 			});
 			//	last_update_ms = System.currentTimeMillis();
@@ -628,11 +629,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void returnToOriginalTimeScale() {
 		if(dataService.isCollecting()) {
 			if(isPaused) {
-				Platform.runLater(() -> {
 					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 					setXResolution(timeFrame.get());
 					updateGraph(true,0);
-				});
 				isRunning = true;
 			}
 			else {
@@ -643,7 +642,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		else {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 			setXResolution(timeFrame.get());
-			updateRequest();
+			updateGraph(true,0);
 		}
 	}
 
