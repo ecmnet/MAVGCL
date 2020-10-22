@@ -37,6 +37,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -272,6 +274,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			props.getLogLoadedProperty().set(true);
 			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
 			String name = "Log-" + last_log_id + "-" + formatter.format(time_utc);
+			copyFileToLogDir(path, name);
 			fh.setName(name);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		}
@@ -286,6 +289,23 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			file.close();
 		} catch (IOException e) {
 		}
+	}
+	
+	private void copyFileToLogDir(String path, String targetname) {
+		Path src  = Paths.get(path);
+		
+		String dir = System.getProperty("user.home")+"/Downloads";
+		File f = new File(dir);
+		if(!f.exists()) {
+			return;
+		}
+		Path dest = Paths.get(dir+"/"+targetname+".ulg");
+		try {
+			Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			return;
+		}
+		logger.writeLocalMsg("[mgc] Imported file copied to Downloads");
 	}
 
 	private boolean searchForNextUnreadPackage() {
