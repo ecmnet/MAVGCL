@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.Preferences;
 
 import org.mavlink.messages.lquac.msg_log_data;
 import org.mavlink.messages.lquac.msg_log_entry;
@@ -107,10 +108,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private final MSPLogger logger;
 	private final AnalysisModelService modelService;
 	private final FileHandler fh;
+	private final Preferences userPrefs;
 
 	public MavlinkLogReader(IMAVController control) {
 		this.control = control;
 		this.props = StateProperties.getInstance();
+		this.userPrefs = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
 		this.fh = FileHandler.getInstance();
 		this.modelService = AnalysisModelService.getInstance();
@@ -296,7 +299,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		
 		String dir = System.getProperty("user.home")+"/Downloads";
 		File f = new File(dir);
-		if(!f.exists()) {
+		
+		if(!f.exists() || !userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true)) {
 			return;
 		}
 		Path dest = Paths.get(dir+"/"+targetname+".ulg");

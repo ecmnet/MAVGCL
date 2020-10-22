@@ -71,6 +71,7 @@ public class MAVPreferences {
 	public static final String SPEECH           = "SPEECH";
 	public static final String DEBUG_MSG        = "DEBUG";
 	public static final String LAST_FILE        = "LAST_FILE";
+	public static final String DOWNLOAD         = "DOWNLOAD";
 
 	private static Preferences prefs = null;
 

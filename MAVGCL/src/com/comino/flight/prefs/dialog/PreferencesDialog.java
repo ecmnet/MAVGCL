@@ -100,6 +100,9 @@ public class PreferencesDialog  {
 
 	@FXML
 	private CheckBox ulog;
+	
+	@FXML
+	private CheckBox download;
 
 	@FXML
 	private CheckBox speech;
@@ -207,6 +210,7 @@ public class PreferencesDialog  {
 		reflon.setText(userPrefs.get(MAVPreferences.REFLON, "8.5455940"));
 		speech.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.SPEECH, true));
 		debug.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, true));
+		download.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -225,6 +229,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.REFLON, reflon.getText());
 			userPrefs.putBoolean(MAVPreferences.SPEECH,speech.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DEBUG_MSG,debug.isSelected());
+			userPrefs.putBoolean(MAVPreferences.DOWNLOAD,download.isSelected());
 
 			StateProperties.getInstance().preferencesChangedProperty().set(true);
 

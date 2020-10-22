@@ -8,67 +8,37 @@
 	Hgap="5" Vgap="5" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<Label prefHeight="30.0"
-			text="Please restart MAVGAnalysis after changing preferences!"
-			GridPane.rowIndex="0" GridPane.columnSpan="3" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="IP address and ports:"
-			GridPane.rowIndex="1" GridPane.columnIndex="0" />
-		<TextField fx:id="ip_address" prefHeight="19.0" prefWidth="100.0"
-			GridPane.rowIndex="1" GridPane.columnIndex="1" />
-		<TextField fx:id="peer_port" prefHeight="19.0" prefWidth="50.0"
-			GridPane.rowIndex="1" GridPane.columnIndex="2" />
-		<TextField fx:id="bind_port" prefHeight="19.0" maxWidth="50.0"
-			GridPane.rowIndex="1" GridPane.columnIndex="3" />
-	    <CheckBox fx:id="sitl" GridPane.rowIndex="1" GridPane.columnIndex="4"
-	         text="SITL" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Video URL (mjpeg):"
-			GridPane.rowIndex="2" GridPane.columnIndex="0" />
-		<TextField fx:id="video" prefHeight="19.0" prefWidth="380.0"
-			GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-	    <CheckBox fx:id="vidrec" GridPane.rowIndex="3" GridPane.columnIndex="0"
-	         text="Record video while collecting data" />
-		<Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="4" />
-	    <Label prefHeight="19.0" prefWidth="158.0" text="Path to store data:"
-			GridPane.rowIndex="5" GridPane.columnIndex="0" />
-		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"
-			GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Path to store presets:"
-			GridPane.rowIndex="6" GridPane.columnIndex="0" />
-		<ComboBox fx:id="prespath" prefHeight="19.0" prefWidth="380.0"
-			GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-		<CheckBox fx:id="autosave" GridPane.rowIndex="7" GridPane.columnIndex="0"
-	        GridPane.columnSpan="3" text="Save automatically when recording is stopped" />
-	    <Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="8" />
-		<CheckBox fx:id="ulog" GridPane.rowIndex="9" GridPane.columnIndex="0"
-	        GridPane.columnSpan="3" text="Use ULOG over MAVLINK for data recording" />
-		<Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="11" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:"
-			GridPane.rowIndex="12" GridPane.columnIndex="0" />
-		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"
-			GridPane.rowIndex="12" GridPane.columnIndex="1" />
-		<Label prefHeight="19.0" prefWidth="20.0" text="[m]"
-			GridPane.rowIndex="12" GridPane.columnIndex="2" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference latitude"
-			GridPane.rowIndex="13" GridPane.columnIndex="0" />
-		<TextField fx:id="reflat" prefHeight="19.0" prefWidth="80.0"
-			GridPane.rowIndex="13" GridPane.columnIndex="1" />
-		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"
-			GridPane.rowIndex="13" GridPane.columnIndex="2" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference longitude"
-			GridPane.rowIndex="14" GridPane.columnIndex="0" />
-		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"
-			GridPane.rowIndex="14" GridPane.columnIndex="1" />
-		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"
-			GridPane.rowIndex="14" GridPane.columnIndex="2" />
-		<Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="15" />
-		<CheckBox fx:id="speech" GridPane.rowIndex="16" GridPane.columnIndex="0"
-	        GridPane.columnSpan="4" text="Speech output" />
-	    <CheckBox fx:id="debug" GridPane.rowIndex="17" GridPane.columnIndex="0"
-	        GridPane.columnSpan="4" text="Enable debug messages" />
-	     <Separator maxWidth="-Infinity" prefHeight="14.0"
-					prefWidth="590.0" GridPane.columnSpan="5" GridPane.rowIndex="18" />
+			text="Please restart MAVGAnalysis after changing preferences!" 	            GridPane.rowIndex="0"  GridPane.columnSpan="3" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="IP address and ports:"         GridPane.rowIndex="1"  GridPane.columnIndex="0"/>
+		<TextField fx:id="ip_address" prefHeight="19.0" prefWidth="100.0"               GridPane.rowIndex="1"  GridPane.columnIndex="1"/>
+		<TextField fx:id="peer_port" prefHeight="19.0" prefWidth="50.0" 		        GridPane.rowIndex="1"  GridPane.columnIndex="2"/>
+		<TextField fx:id="bind_port" prefHeight="19.0" maxWidth="50.0"                  GridPane.rowIndex="1"  GridPane.columnIndex="3"/>
+	    <CheckBox fx:id="sitl" text ="SITL"                                             GridPane.rowIndex="1"  GridPane.columnIndex="4"/>
+		<Label prefHeight="19.0" prefWidth="158.0" text="Video URL (mjpeg):"            GridPane.rowIndex="2"  GridPane.columnIndex="0"/>
+		<TextField fx:id="video" prefHeight="19.0" prefWidth="380.0" 			        GridPane.rowIndex="2"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+	    <CheckBox fx:id="vidrec" text="Record video while collecting data"              GridPane.rowIndex="3"  GridPane.columnIndex="0"/>
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="4"  GridPane.columnSpan="5"/>
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Path to store data:"           GridPane.rowIndex="5"  GridPane.columnIndex="0"/>
+		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="5"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+		<Label prefHeight="19.0" prefWidth="158.0" text="Path to store presets:"        GridPane.rowIndex="6"  GridPane.columnIndex="0"/>
+		<ComboBox fx:id="prespath" prefHeight="19.0" prefWidth="380.0"  		        GridPane.rowIndex="6"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+		<CheckBox fx:id="autosave" text="Save automatically when recording is stopped"  GridPane.rowIndex="7"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="8"  GridPane.columnSpan="5" />
+		<CheckBox fx:id="ulog" text="Use ULOG over MAVLINK for data recording"          GridPane.rowIndex="9"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+		<CheckBox fx:id="download" text="Copy last imported file to Downloads        "  GridPane.rowIndex="10" GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="11" GridPane.columnSpan="5"/>
+		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:" 	GridPane.rowIndex="12" GridPane.columnIndex="0"/>
+		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"        			GridPane.rowIndex="12" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="20.0" text="[m]"              			    GridPane.rowIndex="12" GridPane.columnIndex="2" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference latitude"		GridPane.rowIndex="13" GridPane.columnIndex="0" />
+		<TextField fx:id="reflat" prefHeight="19.0" prefWidth="80.0"   			        GridPane.rowIndex="13" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"                 			GridPane.rowIndex="13" GridPane.columnIndex="2" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference longitude" 	GridPane.rowIndex="14" GridPane.columnIndex="0" />
+		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"       			    GridPane.rowIndex="14" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"                 			GridPane.rowIndex="14" GridPane.columnIndex="2" />
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="15" GridPane.columnSpan="5" />
+		<CheckBox fx:id="speech" text="Speech output"                                   GridPane.rowIndex="16" GridPane.columnIndex="0" GridPane.columnSpan="4"  />
+	    <CheckBox fx:id="debug" text="Enable debug messages"                            GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+	     <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"            GridPane.rowIndex="18" GridPane.columnSpan="5" />
 	</children>
 </GridPane>
