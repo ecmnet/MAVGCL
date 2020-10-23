@@ -381,6 +381,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public KeyFigurePreset getKeyFigureSelection() {
+		refresh(dataService.getModelList().size() - 1);
 		return null;
 	}
 
