@@ -149,7 +149,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getLogLoadedProperty().set(false);
 
 		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
-			if ((System.currentTimeMillis() - received_ms) > 2) {
+			if ((System.currentTimeMillis() - received_ms) > 1) {
 
 				switch (state) {
 				case IDLE:
@@ -175,7 +175,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					break;
 				}
 			}
-		}, 5000, 5, TimeUnit.MILLISECONDS);
+		}, 1000000, 500, TimeUnit.MICROSECONDS);
 		
 		modelService.setCollectorInterval(5000);
 		logger.writeLocalMsg("[mgc] Request latest log");
