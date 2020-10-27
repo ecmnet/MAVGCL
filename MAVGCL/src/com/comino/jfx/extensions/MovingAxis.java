@@ -89,7 +89,8 @@ public class MovingAxis extends ValueAxis<Number> {
 
 	@Override
 	protected String getTickMarkLabel(Number label) {
-		return fo.format(label.doubleValue());
+		return String.valueOf((int)label.floatValue());
+	//	return fo.format(label.doubleValue());
 	}
 
 	@Override

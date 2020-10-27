@@ -142,7 +142,7 @@ public class Vibration extends VBox implements IChartControl  {
 		FXMLLoadHelper.load(this, "Vibration.fxml");
 		timeline = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
 
-			if(dataService.isCollecting()) {
+			if(dataService.isCollecting() && isVisible()) {
 				max_pt = dataService.getModelList().size() - 1;
 				updateGraph();
 			}
@@ -251,7 +251,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 		AnalysisDataModel m =null;
 
-		if(isDisabled() || max_pt < 0)
+		if(isDisabled() || !isVisible() ||max_pt < 0)
 			return;
 		
 		max_pt = max_pt >= dataService.getModelList().size() ? dataService.getModelList().size() -1 : max_pt;

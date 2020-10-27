@@ -1524,6 +1524,27 @@
 				<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
+  
+  <KeyFigure desc="Odom.X" uom="m" mask="#0.00" key="ODOMX">
+		<MSPSource class="vision" field="ox"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Odom.Y" uom="m" mask="#0.00" key="ODOMY">
+		<MSPSource class="vision" field="oy"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Odom.Z" uom="m" mask="#0.00" key="ODOMZ">
+		<MSPSource class="vision" field="oz"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
 
   <KeyFigure desc="GrndTruth.X" uom="m" mask="#0.00" key="GNDTRUTHX">
 		<MSPSource class="vision" field="gx"/>
