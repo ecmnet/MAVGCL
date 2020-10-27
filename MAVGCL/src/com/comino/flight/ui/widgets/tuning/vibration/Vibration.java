@@ -142,7 +142,7 @@ public class Vibration extends VBox implements IChartControl  {
 		FXMLLoadHelper.load(this, "Vibration.fxml");
 		timeline = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
 
-			if(dataService.isCollecting() && isVisible()) {
+			if(dataService.isCollecting() && !isDisabled()) {
 				max_pt = dataService.getModelList().size() - 1;
 				updateGraph();
 			}
@@ -207,7 +207,7 @@ public class Vibration extends VBox implements IChartControl  {
 	public void setup(IMAVController control) {
 		
 		state = StateProperties.getInstance();
-
+		
 		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
 				timeline.play();
@@ -216,6 +216,7 @@ public class Vibration extends VBox implements IChartControl  {
 				vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
 			}
 		});
+		
 		ChartControlPane.addChart(9,this);
 
 		scroll.addListener((v, ov, nv) -> {
@@ -248,11 +249,11 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private void updateGraph() {
 
-
 		AnalysisDataModel m =null;
 
 		if(isDisabled() || !isVisible() ||max_pt < 0)
 			return;
+	
 		
 		max_pt = max_pt >= dataService.getModelList().size() ? dataService.getModelList().size() -1 : max_pt;
 
