@@ -94,7 +94,7 @@ public class MAVTuningTab extends Pane {
 
 
 	public void setup(IMAVController control) {
-		
+		setDisable(true);
 		throttle.setup(control);
 		attctl.setup(control);
 		motor.setup(control);
