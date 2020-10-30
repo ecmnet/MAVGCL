@@ -66,6 +66,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -94,6 +96,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
@@ -164,6 +167,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private int current_x0_pt     = 0;
 	private int current_x1_pt     = 0;
 
+
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private AnalysisModelService      dataService = AnalysisModelService.getInstance();
 
@@ -213,9 +217,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	@Override
 	public void update(long now) {
-		
-		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1 )
+
+		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1 ) {
 			return;
+		}
+
 		if((System.currentTimeMillis()-last_update_ms)> 20 ) {
 			Platform.runLater(() -> {
 				updateGraph(refreshRequest,0);
@@ -474,7 +480,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		readRecentList();
 
-		type1 = type2 = type3 = new KeyFigureMetaData();
+		type1 = new KeyFigureMetaData();
+		type2 = new KeyFigureMetaData();
+		type3 = new KeyFigureMetaData();
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
@@ -603,6 +611,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
 			mode.setModeType(nv.intValue());
 		});
+
 	}
 
 
@@ -629,9 +638,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void returnToOriginalTimeScale() {
 		if(dataService.isCollecting()) {
 			if(isPaused) {
-					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-					setXResolution(timeFrame.get());
-					updateGraph(true,0);
+				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+				setXResolution(timeFrame.get());
+				updateGraph(true,0);
 				isRunning = true;
 			}
 			else {
@@ -819,19 +828,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void updateRequest() {
+
 		if(state==null || id == -1 || isDisabled() || refreshRequest)
 			return;
-
-		refreshRequest = true;
+		
 		if(!state.getReplayingProperty().get()) {
-			//	current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
+			refreshRequest = true;
+			updateGraph(refreshRequest,0);
 			});
 		} else {
-
+			refreshRequest = true;
 			Platform.runLater(() -> {
-				updateGraph(refreshRequest,replay.intValue());
+			updateGraph(refreshRequest,replay.intValue());
 			});
 		}
 	}

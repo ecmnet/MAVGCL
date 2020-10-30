@@ -368,6 +368,11 @@ public class MainApp extends Application  {
 				AnalysisModelService.getInstance().stop();
 				FileHandler.getInstance().fileImport();
 				controlpanel.getChartControl().refreshCharts();
+				
+				String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+				if(name!=null) {
+					m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
+				}
 			}
 		});
 		

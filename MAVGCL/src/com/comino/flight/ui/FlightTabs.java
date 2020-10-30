@@ -122,7 +122,7 @@ public class FlightTabs extends Pane {
 		if(!disable) {
 			int tab = tabpane.getSelectionModel().getSelectedIndex();
 			tabs.get(tab).setDisable(false);
-		}
+		} 
 	}
 
 	public void setup(FlightControlPanel flightControl, StatusLineWidget statusline, IMAVController control) {
@@ -132,8 +132,8 @@ public class FlightTabs extends Pane {
 
 		xtanalysistab.setDisable(true);
 		xyanalysistab.setDisable(true);
-	//	mavinspectortab.setDisable(true);
-		mavtunetab.setDisable(false);
+		mavinspectortab.setDisable(true);
+		mavtunetab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mav3dviewtab.setDisable(true);
 		mavlinkshelltab.setDisable(true);
@@ -196,6 +196,7 @@ public class FlightTabs extends Pane {
 		});
 
 		xtanalysistab.setDisable(false);
+		mavtunetab.setDisable(false);
 
 	}
 

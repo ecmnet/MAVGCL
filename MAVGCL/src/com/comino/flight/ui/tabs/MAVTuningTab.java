@@ -83,13 +83,14 @@ public class MAVTuningTab extends Pane {
 
 	@FXML
 	private void initialize() {
+		
         vbox.prefWidthProperty().bind(widthProperty());  
         hbox.prefWidthProperty().bind(widthProperty());    
         chart1.prefWidthProperty().bind(widthProperty());
         chart1.prefHeightProperty().bind(heightProperty().divide(2));
         vibration.disableProperty().bind(this.disabledProperty());
+        chart1.disableProperty().bind(this.disabledProperty());
         
-
 	}
 
 
@@ -99,7 +100,7 @@ public class MAVTuningTab extends Pane {
 		attctl.setup(control);
 		motor.setup(control);
 		vibration.setup(control);
-		ChartControlPane.addChart(8,chart1.setup(control,1));
+		ChartControlPane.addChart(8,chart1.setup(control,8));
 	}
 
 }
