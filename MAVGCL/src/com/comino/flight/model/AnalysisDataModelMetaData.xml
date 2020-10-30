@@ -162,7 +162,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Vibr. Z" uom="mrad" mask="#0.0" key="VIBZ">
+	<KeyFigure desc="Vibr. Z" uom="mrad" mask="#0.000" key="VIBZ">
 	    <MSPSource class="vibration" field="vibz"></MSPSource>
 		<Groups>
 			<Group>Vibration</Group>
@@ -189,6 +189,15 @@
 			<Group>Vibration</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Vibr.Metrics" uom="rad/s" mask="#0.000" key="VIBMET">
+	    <MSPSource class="vibration" field="vibz"></MSPSource>
+		<ULogSource field="estimator_status_0.vibe[2]"/>
+		<Groups>
+			<Group>Vibration</Group>
+		</Groups>
+	</KeyFigure>
+	
 
 	<!-- EKF2 state estimations -->
 
