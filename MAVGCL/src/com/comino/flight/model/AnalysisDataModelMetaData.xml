@@ -148,47 +148,6 @@
 
 	 <!-- Vibration -->
 
-	<KeyFigure desc="Vibr. X" uom="mrad" mask="#0.0" key="VIBX">
-	    <MSPSource class="vibration" field="vibx"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vibr. Y" uom="mrad" mask="#0.0" key="VIBY">
-	    <MSPSource class="vibration" field="viby"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vibr. Z" uom="mrad" mask="#0.000" key="VIBZ">
-	    <MSPSource class="vibration" field="vibz"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vibr.Clip 0" uom="" mask="#0.0" key="VIBCL0">
-	    <MSPSource class="vibration" field="cli0"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vibr.Clip 1" uom="" mask="#0.0" key="VIBCL1">
-	    <MSPSource class="vibration" field="cli1"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vibr.Clip 2" uom="" mask="#0.0" key="VIBCL2">
-	    <MSPSource class="vibration" field="cli2"></MSPSource>
-		<Groups>
-			<Group>Vibration</Group>
-		</Groups>
-	</KeyFigure>
 	
 	<KeyFigure desc="Vibr.Metrics" uom="rad/s" mask="#0.000" key="VIBMET">
 	    <MSPSource class="vibration" field="vibz"></MSPSource>

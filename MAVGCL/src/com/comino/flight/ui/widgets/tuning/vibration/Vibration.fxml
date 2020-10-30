@@ -15,29 +15,11 @@
 			     <Label/>
 			     <HBox spacing="15" alignment="CENTER_LEFT" >
 			      <children>
-			        <Label text="Vib. X" minWidth="50" />
-			        <ProgressBar fx:id="vx" prefHeight="4.5" prefWidth="400"/>    
-			        <Label text="Clip X" minWidth="20" />
-			        <Label fx:id="cx" minWidth="20" text="0"/>
+			        <Label text="Vib.Metrics" minWidth="50"  />
+			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="510"/>
 			      </children>
 			     </HBox>
-			     <HBox spacing="15" alignment="CENTER_LEFT" >
-			      <children>
-			        <Label text="Vib. Y" minWidth="50" />
-			        <ProgressBar fx:id="vy" prefHeight="4.5" prefWidth="400"/>
-			        <Label text="Clip Y" minWidth="20" />
-			        <Label fx:id="cy" minWidth="20" text="0"/>
-			      </children>
-			     </HBox>
-			     <HBox spacing="15" alignment="CENTER_LEFT" >
-			      <children>
-			        <Label text="Vib. Z" minWidth="50"  />
-			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="400"/>
-			        <Label text="Clip Z" minWidth="20" />
-			        <Label fx:id="cz" minWidth="20" text="0"/>
-			      </children>
-			     </HBox>
-			     <LineChart fx:id="fft" maxHeight="190" createSymbols="false" animated="false" legendSide="TOP"  >
+			     <LineChart fx:id="fft" maxHeight="220" createSymbols="false" animated="false" legendSide="TOP"  >
 			       <xAxis>
 				    <NumberAxis fx:id="xAxis" animated="false" side="BOTTOM"  />
 			       </xAxis>

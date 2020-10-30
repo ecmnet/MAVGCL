@@ -67,7 +67,7 @@ import javafx.util.Duration;
 public class Vibration extends VBox implements IChartControl  {
 
 	private static final int      POINTS = 512;
-	private static final float VIB_SCALE = 40;
+	private static final float VIB_SCALE = 50;
 
 
 	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z" };
@@ -76,23 +76,10 @@ public class Vibration extends VBox implements IChartControl  {
 	@FXML
 	private HBox hbox;
 
-	@FXML
-	private ProgressBar vx;
-
-	@FXML
-	private ProgressBar vy;
-
+	
 	@FXML
 	private ProgressBar vz;
 
-	@FXML
-	private Label cx;
-
-	@FXML
-	private Label cy;
-
-	@FXML
-	private Label cz;
 
 	@FXML
 	private LineChart<Number, Number> fft;
@@ -163,7 +150,7 @@ public class Vibration extends VBox implements IChartControl  {
 		source.getItems().addAll(SOURCES);
 		source.getSelectionModel().select(0);
 
-		vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
+		vz.setProgress(0);
 
 		series1 = new XYChart.Series<Number,Number>();
 		series2 = new XYChart.Series<Number,Number>();
@@ -205,6 +192,7 @@ public class Vibration extends VBox implements IChartControl  {
 	}
 
 	public void setup(IMAVController control) {
+	
 		
 		state = StateProperties.getInstance();
 		
@@ -213,7 +201,7 @@ public class Vibration extends VBox implements IChartControl  {
 				timeline.play();
 			else {
 				timeline.stop();
-				vx.setProgress(0); vy.setProgress(0); vz.setProgress(0);
+				vz.setProgress(0);
 			}
 		});
 		
@@ -249,8 +237,8 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private void updateGraph() {
 
-		AnalysisDataModel m =null;
-
+		AnalysisDataModel m =null; float vib = 0;
+		
 		if(isDisabled() || !isVisible() ||max_pt < 0)
 			return;
 	
@@ -266,16 +254,16 @@ public class Vibration extends VBox implements IChartControl  {
 
 		m = dataService.getModelList().get(max_pt);
 
-
-		vx.setProgress((float)m.getValue("VIBX") * VIB_SCALE);
-		vy.setProgress((float)m.getValue("VIBY") * VIB_SCALE);
-		vz.setProgress((float)m.getValue("VIBZ") * VIB_SCALE);
-
-		cx.setText(String.valueOf((int)m.getValue("VIBCL0")));
-		cy.setText(String.valueOf((int)m.getValue("VIBCL1")));
-		cz.setText(String.valueOf((int)m.getValue("VIBCL2")));
-
-
+		vib = (float)m.getValue("VIBMET");
+		
+		if(vib > 0.015)
+			vz.setStyle("-fx-accent: #ed3118;");
+		else if ( vib > 0.010)
+			vz.setStyle("-fx-accent: #e3b34b;");
+		else
+			vz.setStyle("-fx-accent: #1b8233;");
+		vz.setProgress(vib * VIB_SCALE);
+		
 
 		if(max_pt <= POINTS) {
 			return;
