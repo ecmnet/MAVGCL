@@ -12,10 +12,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	23/10/2020
+**Development Status:** Last updated 	30/10/2020
 
 * MotorTest added
 * ACCX,Y, Z FFT graph added (up to 100Hz with ULOG)
+* Vibration metrics
 * Option to copy imported ULOG file to ~/Downloads
 
 
@@ -60,6 +61,8 @@ Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot9.png)
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot10.png)
+
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot11.png)
 
 **How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
 
