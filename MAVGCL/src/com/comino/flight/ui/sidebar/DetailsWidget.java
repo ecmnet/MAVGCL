@@ -221,7 +221,7 @@ public class DetailsWidget extends ChartControlPane {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130);
 				label.setPrefHeight(19);
-				if (kf.uom.contains("%")) {
+				if (kf.uom.equals("%")) {
 					tip = new Tooltip();
 					ProgressBar l2 = new ProgressBar();
 					l2.setPrefWidth(105);
