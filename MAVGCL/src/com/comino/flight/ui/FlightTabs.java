@@ -170,7 +170,7 @@ public class FlightTabs extends Pane {
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
-			this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
+		//	this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
 		//	this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
 		//	this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue());
 			this.tabpane.getTabs().get(6).setDisable(!newvalue.booleanValue() || control.isSimulation());
