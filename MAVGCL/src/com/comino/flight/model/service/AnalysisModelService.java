@@ -56,6 +56,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 
+
 public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
@@ -93,8 +94,9 @@ public class AnalysisModelService  {
 	private CombinedConverter converter = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
-		if(instance==null)
+		if(instance==null) {
 			instance = new AnalysisModelService(control);
+		}
 		return instance;
 	}
 
@@ -304,7 +306,7 @@ public class AnalysisModelService  {
 
 		return current_x0_pt;
 	}
-	
+
 	public int calculateX1Index(int index_x0) {
 
 		int current_x1_pt = index_x0 + (int)(totalTime_sec *  1000f / getCollectorInterval_ms());
@@ -353,118 +355,120 @@ public class AnalysisModelService  {
 		@Override
 		public void run() {
 
-			System.out.println("AnalysisModelService converter thread started...");
-			mode = STOPPED;
+				
+				System.out.println("AnalysisModelService converter thread started ..");
+				mode = STOPPED;
 
-			while(true) {
-
-
-				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
-
-					if(ulogger.isLogging())
-						ulogger.enableLogging(false);
-					mode = STOPPED; old_mode = STOPPED;
-					state.getRecordingProperty().set(STOPPED);
-					if(!state.getReplayingProperty().get())
-						current.setValue("SWIFI", 0);
-
-					synchronized(converter) {
-						System.out.println("Combined Converter is waiting");
-						try { 	this.wait(); } catch (InterruptedException e) { }
-						System.out.println("Combined Converter continued");
-					}
-					continue;
-				}
+				while(true) {
 
 
-				current.setValue("MAVGCLACC", perf);
-				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
-
-				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
-					state.getRecordingProperty().set(READING_HEADER);
-					if(ulogger.enableLogging(true))
-						setCollectorInterval(HISPEED_INTERVAL_US);
-					else
-						setCollectorInterval(DEFAULT_INTERVAL_US);
-					state.getLogLoadedProperty().set(false);
-					state.getRecordingProperty().set(COLLECTING);
-					tms_start = System.nanoTime() / 1000;
-				}
-
-				if(mode==STOPPED && old_mode != STOPPED) {
-					ulogger.enableLogging(false);
-					state.getRecordingProperty().set(STOPPED);
-				}
-
-				old_mode = mode;
-
-				current.msg = null; wait = System.nanoTime();
-
-				if(state.getReplayingProperty().get()) {
-					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
-					continue;
-				}
-
-				if(!state.getInitializedProperty().get())
-					continue;
-
-				synchronized(this) {
-					if(state.getCurrentUpToDate().getValue()) {
-						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-					}
-				}
-
-
-				if(ulogger.isLogging()) {
-					synchronized(this) {
-						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-					}
-				}
-
-				if(model.msg != null && model.msg.text!=null) {
-					current.msg = model.msg;
-					record.msg  = model.msg;
-				} else {
-					current.msg = null; record.msg = null;
-				}
-
-
-				if(mode!=STOPPED) {
-
-					// Skip first
-					if(!isFirst) {
+					if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
 
 						if(ulogger.isLogging())
-							m = record.clone();
+							ulogger.enableLogging(false);
+						mode = STOPPED; old_mode = STOPPED;
+						state.getRecordingProperty().set(STOPPED);
+						if(!state.getReplayingProperty().get())
+							current.setValue("SWIFI", 0);
+
+						synchronized(converter) {
+							System.out.println("Combined Converter is waiting");
+							try { 	this.wait(); } catch (InterruptedException e) { }
+							System.out.println("Combined Converter continued");
+						}
+						continue;
+					}
+
+
+					current.setValue("MAVGCLACC", perf);
+					current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
+
+					if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
+						state.getRecordingProperty().set(READING_HEADER);
+						if(ulogger.enableLogging(true))
+							setCollectorInterval(HISPEED_INTERVAL_US);
 						else
-							m = current.clone();
+							setCollectorInterval(DEFAULT_INTERVAL_US);
+						state.getLogLoadedProperty().set(false);
+						state.getRecordingProperty().set(COLLECTING);
+						tms_start = System.nanoTime() / 1000;
+					}
+
+					if(mode==STOPPED && old_mode != STOPPED) {
+						ulogger.enableLogging(false);
+						state.getRecordingProperty().set(STOPPED);
+					}
+
+					old_mode = mode;
+
+					current.msg = null; wait = System.nanoTime();
+
+					if(state.getReplayingProperty().get()) {
+						try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
+						continue;
+					}
+
+					if(!state.getInitializedProperty().get())
+						continue;
+
+					synchronized(this) {
+						if(state.getCurrentUpToDate().getValue()) {
+							current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+							current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+						}
+					}
 
 
-						m.tms = System.nanoTime() / 1000 - tms_start;
-						m.dt_sec = m.tms / 1e6f;
-						modelList.add(m);
+					if(ulogger.isLogging()) {
+						synchronized(this) {
+							//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+							record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+							record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+						}
+					}
+
+					if(model.msg != null && model.msg.text!=null) {
+						current.msg = model.msg;
+						record.msg  = model.msg;
+					} else {
+						current.msg = null; record.msg = null;
+					}
 
 
-						state.getRecordingAvailableProperty().set(modelList.size()>0);
+					if(mode!=STOPPED) {
 
-						try {
-							for(ICollectorRecordingListener updater : listener)
-								updater.update(System.nanoTime());
-						} catch(Exception e) { }
+						// Skip first
+						if(!isFirst) {
 
-						perf = ( m.tms - tms_last ) / 1e3f;
-						tms_last = m.tms;
+							if(ulogger.isLogging())
+								m = record.clone();
+							else
+								m = current.clone();
 
-					} else
-						tms_last = System.nanoTime() / 1000 - tms_start;
-					isFirst = false;
+
+							m.tms = System.nanoTime() / 1000 - tms_start;
+							m.dt_sec = m.tms / 1e6f;
+							modelList.add(m);
+
+
+							state.getRecordingAvailableProperty().set(modelList.size()>0);
+
+							try {
+								for(ICollectorRecordingListener updater : listener)
+									updater.update(System.nanoTime());
+							} catch(Exception e) { }
+
+							perf = ( m.tms - tms_last ) / 1e3f;
+							tms_last = m.tms;
+
+						} else
+							tms_last = System.nanoTime() / 1000 - tms_start;
+						isFirst = false;
+					}
+					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2700000);
 				}
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1000000);
 			}
 		}
-	}
+	
 
 }
