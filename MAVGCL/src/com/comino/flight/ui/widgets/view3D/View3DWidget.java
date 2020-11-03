@@ -133,16 +133,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				camera.setTranslateY(model.getValue("ALTGL")*100);
-				world.setTranslateY(model.getValue("ALTGL")*100);
+				if(!Double.isNaN(model.getValue("ALTGL"))) {
+					camera.setTranslateY(model.getValue("ALTGL")*100);
+					world.setTranslateY(model.getValue("ALTGL")*100);
+				}
 			}
 		});
 
 
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				camera.setTranslateY(model.getValue("ALTGL")*100);
-				world.setTranslateY(model.getValue("ALTGL")*100);
+				if(!Double.isNaN(model.getValue("ALTGL"))) {
+					camera.setTranslateY(model.getValue("ALTGL")*100);
+					world.setTranslateY(model.getValue("ALTGL")*100);
+				}
 			}
 		});
 
@@ -185,10 +189,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		replay.addListener((v, ov, nv) -> {
-				if(nv.intValue()<=1) {
-					model = dataService.getModelList().get(1);
-				} else
-					model = dataService.getModelList().get(nv.intValue());
+			if(nv.intValue()<=1) {
+				model = dataService.getModelList().get(1);
+			} else
+				model = dataService.getModelList().get(nv.intValue());
 		});
 
 
