@@ -79,6 +79,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
@@ -136,7 +137,7 @@ public class FileHandler {
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
 		this.currentModel  = control.getCurrentModel();
-	
+
 
 		readPresetFiles();
 
@@ -191,21 +192,30 @@ public class FileHandler {
 	}
 
 	public void fileImport() {
+		final StateProperties state = StateProperties.getInstance();
+
 		String dir = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 
 		if(lastDir != null)
 			dir = lastDir;
 
+		state.getReplayingProperty().set(false);
+
 		FileChooser fileChooser = getFileDialog("Open MAVGCL model file...",dir,
 				new ExtensionFilter("Log files", "*.mgc", "*.ulg", "*.px4log"));
 
 		File file = fileChooser.showOpenDialog(stage);
-		fileImport(file);
-		userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
+		if(file!=null) {
+			fileImport(file);
+			userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
+		} else
+			state.getLogLoadedProperty().set(true);
 	}
 
 	public void fileImportLast() {
+		final StateProperties state = StateProperties.getInstance();
 		String name = userPrefs.get(MAVPreferences.LAST_FILE,null);
+		state.getReplayingProperty().set(false);
 		if(name!=null) {
 			File file = new File(name);
 			fileImport(file);
@@ -217,13 +227,12 @@ public class FileHandler {
 		final StateProperties state = StateProperties.getInstance();
 
 		if(file!=null) {
-
+			state.getLogLoadedProperty().set(false);
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
 
 					Type listType = null;
 
-					state.getLogLoadedProperty().set(false);
 
 					if(file.getName().endsWith("ulg")) {
 						modelService.setCollectorInterval(5000);
@@ -277,12 +286,12 @@ public class FileHandler {
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
 
-//					if(file.getName().endsWith("px4log")) {
-//						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
-//						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
-//						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
-//						converter.doConversion();
-//					}
+					//					if(file.getName().endsWith("px4log")) {
+					//						PX4LogReader reader = new PX4LogReader(file.getAbsolutePath());
+					//						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
+					//						PX4toModelConverter converter = new PX4toModelConverter(reader,modelService.getModelList());
+					//						converter.doConversion();
+					//					}
 					name = file.getName();
 					state.getLogLoadedProperty().set(true);
 					lastDir = file.getParent();
@@ -431,8 +440,8 @@ public class FileHandler {
 					}
 
 				}
-				
-				
+
+
 				return null;
 			}
 		}).start();
