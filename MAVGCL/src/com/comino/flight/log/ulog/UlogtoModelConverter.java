@@ -67,10 +67,13 @@ public class UlogtoModelConverter {
 	public void doConversion() throws FormatErrorException {
 
 		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
+		
 
 		Map<String,Object> data = new HashMap<String,Object>();
 
 		list.clear();
+		
+		int interval_us = AnalysisModelService.getInstance().getCollectorInterval_ms()*1000;
 
 		try {
 
@@ -82,7 +85,7 @@ public class UlogtoModelConverter {
 					state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
 					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;
-					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()*1000;
+					tms_slot += interval_us;
 					model.setValues(KeyFigureMetaData.ULG_SOURCE, data, meta);
 					model.calculateVirtualKeyFigures(meta);
 					list.add(model);
@@ -91,7 +94,7 @@ public class UlogtoModelConverter {
 
 			reader.loggedMessages.forEach(s -> {
 				LogMessage msg = new LogMessage(s.message,s.logLevel & 0x00FF - 56);
-				int i = (int)((s.timestamp - reader.getStartMicroseconds())/50000);
+				int i = (int)((s.timestamp - reader.getStartMicroseconds())/interval_us);
 				if(i > 0) {
 					AnalysisDataModel model = list.get(i);
 					model.msg = msg;
