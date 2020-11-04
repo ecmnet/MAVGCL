@@ -827,18 +827,18 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}
 	}
 
-	private void updateRequest() {
+	private synchronized void updateRequest() {
 
 		if(state==null || id == -1 || isDisabled() || refreshRequest)
 			return;
-		
+		refreshRequest = true;
 		if(!state.getReplayingProperty().get()) {
 			Platform.runLater(() -> {
-			refreshRequest = true;
+		//	refreshRequest = true;
 			updateGraph(refreshRequest,0);
 			});
 		} else {
-			refreshRequest = true;
+		//	refreshRequest = true;
 			Platform.runLater(() -> {
 			updateGraph(refreshRequest,replay.intValue());
 			});
