@@ -107,7 +107,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 				chart.fireEvent(event);
 			});
 			label.setLayoutY(15+ypos*18);
-			label.setLayoutX(7);
+			label.setLayoutX(-30);
 			label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
 			this.pane.getChildren().addAll(triangle, label);
 		} else {
