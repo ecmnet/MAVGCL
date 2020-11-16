@@ -33,14 +33,9 @@
 
 package com.comino.flight.ui.tabs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import org.mavlink.messages.lquac.msg_battery_status;
-import org.mavlink.messages.lquac.msg_heartbeat;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.observables.StateProperties;
@@ -93,7 +88,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	@FXML
 	private void initialize() {
 
-		ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
 
 
 		TreeItem<DataSet> root = new TreeItem<DataSet>(new DataSet("", ""));
@@ -183,11 +177,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		StateProperties.getInstance().getConnectedProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
-				allData.clear();
-				treetableview.getRoot().getChildren().clear();
+				Platform.runLater(() -> {
+					allData.clear();
+					treetableview.getRoot().getChildren().clear();
+				});
 			}
 		});
 
+
+		ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
 
 	}
 
@@ -198,9 +196,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object msg) {
-		
-		if(isVisible() && !isDisabled())
-		  parseMessageString(msg.toString().split("  "));	
+		parseMessageString(msg.toString().split("  "));	
 	}
 
 	private void parseMessageString(String[] msg) {
@@ -229,7 +225,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
 				data.ti.getChildren().add(treeItem);
 			}
-			treetableview.sort();
+			Platform.runLater(() -> {
+				treetableview.sort();
+			});	
+
 		} else {
 
 			Data data = allData.get(_msg);
@@ -252,23 +251,37 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		@Override
 		public void run() {
+
+			if(!StateProperties.getInstance().getConnectedProperty().get() && allData.size() > 0) {
+				System.out.println("Treeview cleared");
+				allData.clear();
+				treetableview.getRoot().getChildren().clear();
+				return;
+			}
+
 			if(!isDisabled()) {
+
+				//	Platform.runLater(() -> {
+
 				remData.clear();
-			//	Platform.runLater(() -> {
-					allData.forEach((k,d) -> {
-						if(d.getLastUpdate() == 0 || d.ti.isExpanded())
-							return;
-						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
-							remData.put(k, d);
-						}
-					});
-					remData.forEach((k,d) -> {
-						Platform.runLater(() -> {
-						d.removeFromTree(treetableview);
+				allData.forEach((k,d) -> {
+					if(d.getLastUpdate() == 0 || d.ti.isExpanded())
+						return;
+					if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
+						remData.put(k, d);
+					}
+				});
+				if(remData.size()>0) {
+					Platform.runLater(() -> {
+						remData.forEach((k,d) -> {
+							d.removeFromTree(treetableview);
+							allData.remove(k);
 						});
-						allData.remove(k);
+						treetableview.sort();
 					});
-		//		});
+				}
+				//		});
+
 			}
 		}
 	}
@@ -297,7 +310,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public void addToTree(TreeTableView<DataSet> view) {
-			view.getRoot().getChildren().add(ti);
+			Platform.runLater(() -> {
+				view.getRoot().getChildren().add(ti);
+			});
 		}
 
 		public void removeFromTree(TreeTableView<DataSet> view) {
@@ -326,15 +341,20 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public boolean updateRate() {
 
-			if(tms != 0 && (System.currentTimeMillis() - tms) > 0)
+			if(tms != 0 && (System.currentTimeMillis() - tms) > 0 )
 				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 
-			if(isDisabled())
+			if(isDisabled()) {
+				last_update = System.currentTimeMillis();
 				return false;
+			}
 
-			if((System.currentTimeMillis() - last_update) > 333) {
-				this.name_set.setStr(String.format("%s (%dHz)",name,(int)(rate+0.5f)));
+			if((System.currentTimeMillis() - last_update) > 333 && count > 5) {
+				if(rate > 1)
+				    this.name_set.setStr(name+" ("+(int)(rate)+"Hz)");
+				else if(rate > 0.2)
+				    this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();
 				return true;
 			}
