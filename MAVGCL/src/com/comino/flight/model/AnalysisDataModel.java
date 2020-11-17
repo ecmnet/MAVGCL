@@ -59,7 +59,7 @@ public class AnalysisDataModel {
 		this.data.putAll(d);
 	}
 
-	public  synchronized AnalysisDataModel clone() {
+	public synchronized AnalysisDataModel clone() {
 		AnalysisDataModel d = new AnalysisDataModel(data);
 
 		d.tms = tms;
@@ -92,17 +92,20 @@ public class AnalysisDataModel {
 	}
 
 	public double getValue(KeyFigureMetaData m) {
-		if(m!=null && data.containsKey(m.hash))
+		if(data != null && m!=null && data.containsKey(m.hash))
 			return data.get(m.hash);
 		else
 			return Float.NaN;
 	}
 
 	public void setValue(String kf,double value) {
-		data.put(kf.toLowerCase().hashCode(), value);
+		if(data!=null)
+		  data.put(kf.toLowerCase().hashCode(), value);
 	}
 
 	public void reset(AnalysisDataModelMetaData md) {
+		if(data==null)
+			return;
 		md.getKeyFigureMap().forEach((i,e) -> {
 			data.put(e.hash,Double.valueOf(0));
 		});
