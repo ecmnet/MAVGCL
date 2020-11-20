@@ -1392,6 +1392,15 @@
 			<Group>Battery</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Batt.Temp" uom="°C" mask="#0" key="BATT">
+		<MSPSource class="sys" field="bat_temp"></MSPSource>
+		<Groups>
+			<Group>Battery</Group>
+			<Group>System</Group>
+		</Groups>
+		<Validity min="0" max="80"/>
+	</KeyFigure>
 
 	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
 		<MSPSource class="battery" field="p">
