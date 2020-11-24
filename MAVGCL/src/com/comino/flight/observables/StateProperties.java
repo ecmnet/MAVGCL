@@ -208,8 +208,8 @@ public class StateProperties {
 					return;
 				if(msg.text.contains("]"))
 					VoiceTTS.getInstance().talk(msg.text.substring(msg.text.indexOf(']')));
-				else
-					VoiceTTS.getInstance().talk(msg.text);
+//				else
+//					VoiceTTS.getInstance().talk(msg.text);
 			});
 		}
 	}
