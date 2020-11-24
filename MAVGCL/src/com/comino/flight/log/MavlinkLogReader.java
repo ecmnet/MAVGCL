@@ -95,6 +95,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private int chunk_offset = 0;
 	private int chunk_size = 0;
+	
+	private int read_count = 0;
 
 	private RandomAccessFile file = null;
 
@@ -133,15 +135,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 
 		ParameterAttributes pp = MAVGCLPX4Parameters.getInstance().get("SDLOG_PROFILE");
-		if(pp.value != 1  && pp.value < 17) {
-			logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1' or '17'.");
-			return;
+		if(pp!=null) {
+			if(pp.value != 1  && pp.value < 17 ) {
+				logger.writeLocalMsg("[mgc] No import of extended logs. Use profile to '1' or '17'.");
+				return;
+			}
 		}
+
 
 
 		isCollecting.set(true);
 		state = ENTRY;
 		retry = 0;
+		read_count = 0;
 
 		modelService.getModelList().clear();
 
@@ -156,7 +162,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					timeout.cancel(true);
 					break;
 				case ENTRY:
-					if (++retry > 50) {
+					if (++retry > 100) {
 						abortReadingLog();
 						return;
 					}
@@ -164,7 +170,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					requestLogList(GET_LAST_LOG_ID);
 					break;
 				case DATA:
-					if (++retry > 50) {
+					if (++retry > 200) {
 						abortReadingLog();
 						return;
 					}
@@ -176,7 +182,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				}
 			}
 		}, 1000000, 1000, TimeUnit.MICROSECONDS);
-		
+
 		modelService.setCollectorInterval(5000);
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
@@ -244,13 +250,15 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			return;
 		}
 
-	//	props.getLogLoadedProperty().set(true);
+		//	props.getLogLoadedProperty().set(true);
 		fh.setName("in progress");
 
 		unread_packages.set(p, (long) -1);
-		// System.out.println("Package: "+p +" -> "+unread_packages.get(p));
+		read_count++;
+		
 
-		int unread_count = getUnreadPackageCount();
+		int unread_count = unread_packages.size()-read_count; //getUnreadPackageCount();
+	//	 System.out.println("Package: "+p +" -> "+unread_packages.get(p)+"-> "+unread_count+" -> "+(unread_packages.size()-read_count));
 		props.getProgressProperty().set(1.0f - (float) unread_count / total_package_count);
 		if (unread_count == 0) {
 			stop();
@@ -260,10 +268,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				ParameterAttributes pa = MAVGCLPX4Parameters.getInstance().get("SYS_LOGGER");
 				if (pa == null || pa.value != 0) {
 
-						ULogReader reader = new ULogReader(path);
-						UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
-						converter.doConversion();
-						reader.close();
+					ULogReader reader = new ULogReader(path);
+					UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
+					converter.doConversion();
+					reader.close();
 				} else {
 					PX4LogReader reader = new PX4LogReader(path);
 					MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
@@ -293,13 +301,13 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	private void copyFileToLogDir(String path, String targetname) {
 		Path src  = Paths.get(path);
-		
+
 		String dir = System.getProperty("user.home")+"/Downloads";
 		File f = new File(dir);
-		
+
 		if(!f.exists() || !userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true)) {
 			return;
 		}
@@ -331,14 +339,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return true;
 	}
 
-	private int getUnreadPackageCount() {
-		int c = 0;
-		for (int i = 0; i < unread_packages.size(); i++) {
-			if (unread_packages.get(i) != -1)
-				c++;
-		}
-		return c;
-	}
+//	private int getUnreadPackageCount() {
+//		int c = 0;
+//		for (int i = 0; i < unread_packages.size(); i++) {
+//			if (unread_packages.get(i) != -1)
+//				c++;
+//		}
+//		return c;
+//	}
 
 	private int prepareUnreadPackageList(long size) {
 		unread_packages = new ArrayList<Long>();
