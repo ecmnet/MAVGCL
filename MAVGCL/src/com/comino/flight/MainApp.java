@@ -98,13 +98,13 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_import;
-	
+
 	@FXML
 	private MenuItem m_import_last;
 
 	@FXML
 	private MenuItem m_export;
-	
+
 	@FXML
 	private MenuItem m_reload;
 
@@ -144,28 +144,28 @@ public class MainApp extends Application  {
 	private Scene scene;
 	private BorderPane rootLayout;
 	private AnchorPane flightPane;
-	
+
 	private UBXRTCM3Base base = null;
 
 	private StateProperties state = null;
-	
+
 	private String command_line_options = null;
-	
+
 	public MainApp() {
 		super();
 		com.sun.glass.ui.Application glassApp = com.sun.glass.ui.Application.GetApplication();
-        glassApp.setEventHandler(new com.sun.glass.ui.Application.EventHandler() {
-            @Override
-            public void handleOpenFilesAction(com.sun.glass.ui.Application app, long time, String[] filenames) {
-                super.handleOpenFilesAction(app, time, filenames);
-                if(filenames[0]!=null) {
-                	command_line_options = filenames[0];
-                if(FileHandler.getInstance()!=null && command_line_options.contains(".mgc"))
-                	FileHandler.getInstance().fileImport(new File(filenames[0]));
-	
-                }
-            }
-        });
+		glassApp.setEventHandler(new com.sun.glass.ui.Application.EventHandler() {
+			@Override
+			public void handleOpenFilesAction(com.sun.glass.ui.Application app, long time, String[] filenames) {
+				super.handleOpenFilesAction(app, time, filenames);
+				if(filenames[0]!=null) {
+					command_line_options = filenames[0];
+					if(FileHandler.getInstance()!=null && command_line_options.contains(".mgc") && control!=null && !control.isConnected())
+						FileHandler.getInstance().fileImport(new File(filenames[0]));
+
+				}
+			}
+		});
 	}
 
 
@@ -217,7 +217,7 @@ public class MainApp extends Application  {
 				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
 						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
 					control = new MAVUdpController("127.0.0.1",14557,14540, true);
-				//	new SITLController(control);
+					//	new SITLController(control);
 				} else
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 			}
@@ -234,18 +234,18 @@ public class MainApp extends Application  {
 
 			MSPLogger.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
-			
-			
+
+
 			if(args.get("SERIAL")==null) {
-			  base = UBXRTCM3Base.getInstance(control, analysisModelService);
-			  new Thread(base).start();
+				base = UBXRTCM3Base.getInstance(control, analysisModelService);
+				new Thread(base).start();
 			}
 
 			MAVGCLPX4Parameters.getInstance(control);
 
 
 			state.getConnectedProperty().addListener((v,o,n) -> {
-				
+
 				if(!n.booleanValue())
 					return;
 
@@ -261,20 +261,20 @@ public class MainApp extends Application  {
 						msp.param3  = 500*1000;
 
 						control.sendMAVLinkMessage(msp);
-					    System.out.println("Global Position origin set to base position");
+						System.out.println("Global Position origin set to base position");
 					}
 				}
 				else {
 
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
 
-				msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
-				msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
-				msp.param3  = 500*1000;
+					msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
+					msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
+					msp.param3  = 500*1000;
 
-				control.sendMAVLinkMessage(msp);
-			    System.out.println("Global Position origin set");
+					control.sendMAVLinkMessage(msp);
+					System.out.println("Global Position origin set");
 				}
 			});
 
@@ -283,20 +283,20 @@ public class MainApp extends Application  {
 					analysisModelService.startConverter();
 					new SITLController(control);
 					System.out.println("Initializing");
-					if(command_line_options!=null && command_line_options.contains(".mgc"))
+					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
 						FileHandler.getInstance().fileImport(new File(command_line_options));
 
 				}
 			});
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
-				
+
 				if(n.booleanValue()) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
 				Platform.runLater(() -> {
 					if(r_px4log!=null)
-					  r_px4log.setDisable(!n.booleanValue());
+						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
 
@@ -383,7 +383,7 @@ public class MainApp extends Application  {
 	private void initialize() {
 
 		menubar.setUseSystemMenuBar(true);
-		
+
 		String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
 		if(name!=null) {
 			m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
@@ -395,14 +395,14 @@ public class MainApp extends Application  {
 				AnalysisModelService.getInstance().stop();
 				FileHandler.getInstance().fileImport();
 				controlpanel.getChartControl().refreshCharts();
-				
+
 				String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
 				if(name!=null) {
 					m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
 				}
 			}
 		});
-		
+
 		m_import_last.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -423,11 +423,11 @@ public class MainApp extends Application  {
 		m_def.setOnAction(event -> {
 			FileHandler.getInstance().openKeyFigureMetaDataDefinition();
 		});
-		
+
 		m_reload.setOnAction((ActionEvent event)-> {
 			MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
 			if(params!=null)
-		    	params.refreshParameterList(false);
+				params.refreshParameterList(false);
 		});
 
 		m_pdoc.setOnAction(event -> {
@@ -442,14 +442,14 @@ public class MainApp extends Application  {
 
 			@Override
 			public void handle(ActionEvent event) {
-//				if(state.getArmedProperty().get()) {
-//					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
-//					return;
-//				}
+				//				if(state.getArmedProperty().get()) {
+				//					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
+				//					return;
+				//				}
 
 				AnalysisModelService.getInstance().stop();
 
-			//	r_px4log.setText("Cancel import from device...");
+				//	r_px4log.setText("Cancel import from device...");
 
 				log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
 					if(!newvalue.booleanValue()) {
@@ -489,12 +489,12 @@ public class MainApp extends Application  {
 		//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
 		m_dump.setOnAction(event -> {
 			FileHandler.getInstance().dumpUlogFields();
-//			try {
-//				FileHandler.getInstance().autoSave();
-//			} catch (IOException e1) {
-//
-//				e1.printStackTrace();
-//			}
+			//			try {
+			//				FileHandler.getInstance().autoSave();
+			//			} catch (IOException e1) {
+			//
+			//				e1.printStackTrace();
+			//			}
 		});
 
 		m_about.setOnAction(event -> {
