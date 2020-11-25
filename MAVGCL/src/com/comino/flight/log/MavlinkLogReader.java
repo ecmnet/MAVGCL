@@ -183,7 +183,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			}
 		}, 1000000, 1000, TimeUnit.MICROSECONDS);
 
-		modelService.setCollectorInterval(5000);
+		modelService.setCollectorInterval(AnalysisModelService.DEFAULT_INTERVAL_US);
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
 		requestLogList(GET_LAST_LOG_ID);

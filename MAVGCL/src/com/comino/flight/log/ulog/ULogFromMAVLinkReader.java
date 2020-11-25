@@ -67,6 +67,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	private int package_lost=0;
 
 	private boolean debug = false;
+	private AnalysisModelService service = null;
 
 
 	private MSPLogger logger = null;
@@ -93,6 +94,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 	}
 
 	public boolean enableLogging(boolean enable) {
+		
+		this.service = AnalysisModelService.getInstance();
 
 	//	new Thread(() -> {
 
@@ -102,14 +105,17 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				return false;
 
 			if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
-				if(enable)
+				if(enable) {
+					service.setCollectorInterval(AnalysisModelService.DEFAULT_INTERVAL_US);
 					logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
 				return false;
 			}
 
 			if(enable)  {
 				long tms = System.currentTimeMillis();
 				parser.reset(); header_processed = 0; package_lost = 0;
+				service.setCollectorInterval(AnalysisModelService.HISPEED_INTERVAL_US);
 				logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 
@@ -120,6 +126,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					} catch (InterruptedException e) {	}
 
 					if((System.currentTimeMillis()-tms)>12000) {
+						service.setCollectorInterval(AnalysisModelService.DEFAULT_INTERVAL_US);
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 						logger.writeLocalMsg("[mgc] Logging via MAVLink streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						state=STATE_HEADER_IDLE;
@@ -133,6 +140,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}, 5, TimeUnit.SECONDS);
 
+	
 				logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			} else {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);

@@ -235,7 +235,7 @@ public class FileHandler {
 
 
 					if(file.getName().endsWith("ulg")) {
-						modelService.setCollectorInterval(5000);
+						modelService.setCollectorInterval(AnalysisModelService.HISPEED_INTERVAL_US);
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
 						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());
@@ -585,7 +585,7 @@ public class FileHandler {
 			if(conversion_rate != 0)
 				service.setCollectorInterval(conversion_rate * 1000);
 			else
-				service.setCollectorInterval(50000);
+				service.setCollectorInterval(AnalysisModelService.DEFAULT_INTERVAL_US);
 
 
 		}

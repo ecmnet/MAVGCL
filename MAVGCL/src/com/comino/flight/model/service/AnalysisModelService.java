@@ -62,7 +62,7 @@ public class AnalysisModelService  {
 	private static AnalysisModelService instance = null;
 
 	public static final int DEFAULT_INTERVAL_US = 20000;
-	public static final int HISPEED_INTERVAL_US = 5000;
+	public static final int HISPEED_INTERVAL_US = 10000;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
@@ -386,7 +386,7 @@ public class AnalysisModelService  {
 					if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 						state.getRecordingProperty().set(READING_HEADER);
 						if(ulogger.enableLogging(true))
-							setCollectorInterval(HISPEED_INTERVAL_US);
+							setCollectorInterval(DEFAULT_INTERVAL_US);
 						else
 							setCollectorInterval(DEFAULT_INTERVAL_US);
 						state.getLogLoadedProperty().set(false);
@@ -465,7 +465,7 @@ public class AnalysisModelService  {
 							tms_last = System.nanoTime() / 1000 - tms_start;
 						isFirst = false;
 					}
-					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2700000);
+					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2700000 );
 				}
 			}
 		}

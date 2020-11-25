@@ -693,6 +693,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				current_x0_pt = 0;
 				scroll.setValue(0);
 				isRunning = true;
+				refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
 			} else
 				isRunning = false;
 			setXResolution(timeFrame.get());
