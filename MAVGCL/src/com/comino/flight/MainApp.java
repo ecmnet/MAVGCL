@@ -103,6 +103,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_export;
+	
+	@FXML
+	private MenuItem m_reload;
 
 	@FXML
 	private MenuItem m_csv;
@@ -178,7 +181,7 @@ public class MainApp extends Application  {
 				}
 				else  if(args.get("SERVER")!=null) {
 					System.out.println("Server");
-					control = new MAVUdpController("172.168.178.22",14656,14650, true);
+					control = new MAVUdpController("192.168.178.22",14555,14550, true);
 					//new SITLController(control);
 				}
 				else  if(args.get("SERIAL")!=null) {
@@ -221,6 +224,9 @@ public class MainApp extends Application  {
 
 
 			state.getConnectedProperty().addListener((v,o,n) -> {
+				
+				if(!n.booleanValue())
+					return;
 
 				if(base !=null && base.isConnected()) {
 					System.out.println("Base GPS is connected");
@@ -395,6 +401,12 @@ public class MainApp extends Application  {
 
 		m_def.setOnAction(event -> {
 			FileHandler.getInstance().openKeyFigureMetaDataDefinition();
+		});
+		
+		m_reload.setOnAction((ActionEvent event)-> {
+			MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
+			if(params!=null)
+		    	params.refreshParameterList(false);
 		});
 
 		m_pdoc.setOnAction(event -> {

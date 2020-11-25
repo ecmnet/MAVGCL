@@ -55,17 +55,27 @@
 						<MenuItem fx:id="m_log" mnemonicParsing="false"
 							text="Show local log...">
 						</MenuItem>
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Others">
+					<items>
+					<MenuItem fx:id="m_reload" mnemonicParsing="false"
+							text="Reload params from vehicle">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="P"
+									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
+							text="Show PX4 parameter reference...">
+						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem fx:id="m_def" mnemonicParsing="false"
+					 <MenuItem fx:id="m_def" mnemonicParsing="false"
 							text="Open custom key figure definition...">
 						</MenuItem>
 						<MenuItem fx:id="m_dump" mnemonicParsing="false"
 							text="Dump key figures to console">
-						</MenuItem>
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
-							text="Show PX4 parameter reference...">
-						</MenuItem>
+						</MenuItem>					
 					</items>
 				</Menu>
 			</menus>
