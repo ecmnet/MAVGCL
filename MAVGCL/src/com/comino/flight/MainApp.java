@@ -33,6 +33,7 @@
 
 package com.comino.flight;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
@@ -147,6 +148,25 @@ public class MainApp extends Application  {
 	private UBXRTCM3Base base = null;
 
 	private StateProperties state = null;
+	
+	private String command_line_options = null;
+	
+	public MainApp() {
+		super();
+		com.sun.glass.ui.Application glassApp = com.sun.glass.ui.Application.GetApplication();
+        glassApp.setEventHandler(new com.sun.glass.ui.Application.EventHandler() {
+            @Override
+            public void handleOpenFilesAction(com.sun.glass.ui.Application app, long time, String[] filenames) {
+                super.handleOpenFilesAction(app, time, filenames);
+                if(filenames[0]!=null) {
+                	command_line_options = filenames[0];
+                if(FileHandler.getInstance()!=null && command_line_options.contains(".mgc"))
+                	FileHandler.getInstance().fileImport(new File(filenames[0]));
+	
+                }
+            }
+        });
+	}
 
 
 	@Override
@@ -215,6 +235,7 @@ public class MainApp extends Application  {
 			MSPLogger.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			
+			
 			if(args.get("SERIAL")==null) {
 			  base = UBXRTCM3Base.getInstance(control, analysisModelService);
 			  new Thread(base).start();
@@ -261,15 +282,15 @@ public class MainApp extends Application  {
 				if(n.booleanValue()) {
 					analysisModelService.startConverter();
 					new SITLController(control);
-//					ExecutorService.get().scheduleAtFixedRate(() -> {
-//						msg_ping ping = new msg_ping(255,1);
-//						ping.target_system = 2;
-//						  control.sendMAVLinkMessage(ping);
-//					}, 100, 500, TimeUnit.MILLISECONDS);
+					System.out.println("Initializing");
+					if(command_line_options!=null && command_line_options.contains(".mgc"))
+						FileHandler.getInstance().fileImport(new File(command_line_options));
+
 				}
 			});
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
+				
 				if(n.booleanValue()) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
