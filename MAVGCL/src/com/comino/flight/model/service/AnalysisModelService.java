@@ -49,6 +49,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -61,8 +62,9 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
-	public static final int DEFAULT_INTERVAL_US = 20000;
-	public static final int HISPEED_INTERVAL_US = 10000;
+	public static final int DEFAULT_INTERVAL_US  = 20000;
+	public static final int MAVHIRES_INTERVAL_US = 10000;
+	public static final int HISPEED_INTERVAL_US  = 5000;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
@@ -86,6 +88,8 @@ public class AnalysisModelService  {
 
 	private boolean isFirst     = false;
 	private boolean isReplaying = false;
+	
+	private boolean converter_running = false;
 
 	private int totalTime_sec = 30;
 	private int collector_interval_us = DEFAULT_INTERVAL_US;
@@ -123,6 +127,7 @@ public class AnalysisModelService  {
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
+					
 				synchronized(converter) {
 					converter.notify();
 				}
@@ -211,12 +216,11 @@ public class AnalysisModelService  {
 		if(!control.isConnected()) {
 			return false;
 		}
-
-		setDefaultCollectorInterval();
-
+		
 		this.isFirst=true;
 
 		if(mode==STOPPED) {
+			setDefaultCollectorInterval();
 			modelList.clear();
 			mode = COLLECTING;
 			return true;
@@ -332,6 +336,10 @@ public class AnalysisModelService  {
 		else
 			return 0;
 	}
+	
+	public boolean isConverterRunning() {
+		return converter_running;
+	}
 
 
 	public boolean isCollecting() {
@@ -370,6 +378,7 @@ public class AnalysisModelService  {
 						state.getRecordingProperty().set(STOPPED);
 						if(!state.getReplayingProperty().get())
 							current.setValue("SWIFI", 0);
+						converter_running = false;
 
 						synchronized(converter) {
 							System.out.println("Combined Converter is waiting");
@@ -385,10 +394,7 @@ public class AnalysisModelService  {
 
 					if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 						state.getRecordingProperty().set(READING_HEADER);
-						if(ulogger.enableLogging(true))
-							setCollectorInterval(DEFAULT_INTERVAL_US);
-						else
-							setCollectorInterval(DEFAULT_INTERVAL_US);
+							
 						state.getLogLoadedProperty().set(false);
 						state.getRecordingProperty().set(COLLECTING);
 						tms_start = System.nanoTime() / 1000;
@@ -433,6 +439,8 @@ public class AnalysisModelService  {
 					} else {
 						current.msg = null; record.msg = null;
 					}
+					
+					converter_running = true;
 
 
 					if(mode!=STOPPED) {
@@ -464,8 +472,17 @@ public class AnalysisModelService  {
 						} else
 							tms_last = System.nanoTime() / 1000 - tms_start;
 						isFirst = false;
+					} else {
+						
+						current.tms = System.nanoTime() / 1000 ;
+						perf = ( current.tms - tms_last ) / 1e3f;
+						tms_last = current.tms;
+						
+						// Slow down conversion if not recording
+						LockSupport.parkNanos(100000000 - (System.nanoTime()-wait) - 1700000 );
 					}
-					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2700000 );
+					
+					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1700000 );
 				}
 			}
 		}
