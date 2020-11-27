@@ -297,6 +297,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		private long  tms;
 		private long  count = 0;
 		private long  last_update;
+		
 
 		public TreeItem<DataSet> ti=null;
 
@@ -307,6 +308,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			this.tms = 0;
 			this.ti = new TreeItem<>(name_set);
 			this.ti.setExpanded(false);
+			
 		}
 
 		public void addToTree(TreeTableView<DataSet> view) {
@@ -340,17 +342,18 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public boolean updateRate() {
+			
+			if(isDisabled() || !StateProperties.getInstance().getInitializedProperty().get()) {
+				tms = System.currentTimeMillis(); last_update = tms;
+				return false;
+			}
 
 			if(tms != 0 && (System.currentTimeMillis() - tms) > 0 )
 				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
 
-			if(isDisabled()) {
-				last_update = System.currentTimeMillis();
-				return false;
-			}
 
-			if((System.currentTimeMillis() - last_update) > 333 && count > 5) {
+			if((System.currentTimeMillis() - last_update) > 333 && count > 10  ) {
 				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();
 				return true;
