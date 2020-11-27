@@ -343,17 +343,19 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public boolean updateRate() {
 			
-			if(isDisabled() || !StateProperties.getInstance().getInitializedProperty().get()) {
-				tms = System.currentTimeMillis(); last_update = tms;
-				return false;
-			}
+			
 
 			if(tms != 0 && (System.currentTimeMillis() - tms) > 0 )
 				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
 			tms = System.currentTimeMillis();
+			
+			if(isDisabled()) {
+				last_update = System.currentTimeMillis(); 
+				return false;
+			}
 
 
-			if((System.currentTimeMillis() - last_update) > 333 && count > 10  ) {
+			if((System.currentTimeMillis() - last_update) > 333 && count > 5  ) {
 				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();
 				return true;
