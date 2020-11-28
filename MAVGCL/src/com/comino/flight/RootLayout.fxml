@@ -57,7 +57,7 @@
 						</MenuItem>
 					</items>
 				</Menu>
-				<Menu mnemonicParsing="false" text="Others">
+				<Menu mnemonicParsing="false" text="System">
 					<items>
 					<MenuItem fx:id="m_reload" mnemonicParsing="false"
 							text="Reload params from vehicle">
@@ -66,6 +66,7 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
 							text="Show PX4 parameter reference...">
 						</MenuItem>
@@ -75,7 +76,11 @@
 						</MenuItem>
 						<MenuItem fx:id="m_dump" mnemonicParsing="false"
 							text="Dump key figures to console">
-						</MenuItem>					
+						</MenuItem>		
+						<SeparatorMenuItem mnemonicParsing="false" />	
+						<MenuItem fx:id="m_restart" mnemonicParsing="false"
+							text="Restart flight controller(s)">
+						</MenuItem>			
 					</items>
 				</Menu>
 			</menus>

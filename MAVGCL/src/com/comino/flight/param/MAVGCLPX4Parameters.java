@@ -112,7 +112,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
-				is_reading = false;
+				is_reading = false; timeout.cancel(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
 					parameterList.clear();
@@ -154,7 +154,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
 			}, 10, TimeUnit.SECONDS);
-		}
+		} 
 	}
 
 
@@ -182,7 +182,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			attributes.value = ParamUtils.paramToVal(msg.param_type, msg.param_value);
 			attributes.vtype = msg.param_type;
 
-
 			parameterList.put(attributes.name,attributes);
 			property.setValue(attributes);
 
@@ -197,7 +196,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
 				is_reading = false;
-				if(get("LND_FLIGHT_T_LO")!=null) {
+				if(get("LND_FLIGHT_T_LO")!=null && get("LND_FLIGHT_T_HI") !=null ) {
 					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
 					if(flight_time <1e10f && flight_time > 0)
 						MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),

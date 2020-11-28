@@ -95,7 +95,6 @@
 					  <Label text="Videostream:"/>
                       <ChoiceBox fx:id="stream" prefHeight="19.0" prefWidth="100.0" />
                     </HBox>
-					<Button fx:id="restart" text="Restart flightcontrol" prefWidth="165.0" />
 				</children>
 			</VBox>
 		</children>

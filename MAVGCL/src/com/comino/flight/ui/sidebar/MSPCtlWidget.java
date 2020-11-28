@@ -128,9 +128,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button test_seq1;
 
 	@FXML
-	private Button restart;
-
-	@FXML
 	private Button save_map;
 
 	@FXML
@@ -357,13 +354,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		restart.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_RESTART;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
 		enable_offboard.setOnAction((event) ->{
 
 			if(control.getCurrentModel().sys.isStatus(Status.MSP_LANDED))
@@ -420,7 +410,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 		});
 
-		restart.disableProperty().bind(state.getArmedProperty());
 
 	}
 

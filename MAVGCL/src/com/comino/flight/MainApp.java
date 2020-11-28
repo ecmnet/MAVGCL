@@ -107,6 +107,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_reload;
+	
+	@FXML
+	private MenuItem m_restart;
 
 	@FXML
 	private MenuItem m_csv;
@@ -290,7 +293,7 @@ public class MainApp extends Application  {
 			});
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
-
+				
 				if(n.booleanValue()) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
@@ -299,6 +302,7 @@ public class MainApp extends Application  {
 						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
+			
 
 
 		} catch(Exception e) {
@@ -373,6 +377,7 @@ public class MainApp extends Application  {
 								MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
 				}
 			});
+			
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -499,6 +504,14 @@ public class MainApp extends Application  {
 
 		m_about.setOnAction(event -> {
 			showAboutDialog();
+		});
+		
+		
+		m_restart.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_RESTART;
+			control.sendMAVLinkMessage(msp);
+
 		});
 
 		m_about.setVisible(true);
