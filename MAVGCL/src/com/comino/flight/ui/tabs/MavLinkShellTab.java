@@ -36,6 +36,7 @@ package com.comino.flight.ui.tabs;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.mavlink.messages.SERIAL_CONTROL_DEV;
 import org.mavlink.messages.SERIAL_CONTROL_FLAG;
@@ -74,10 +75,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private int index = 0;
 
 	private Timeline out = null;
-	private LinkedList<String> buffer = new LinkedList<String>();
+	private ConcurrentLinkedQueue<String> buffer = new ConcurrentLinkedQueue<String>();
 
-	private byte[] bytes = new byte[100];
-	
+	private char[] bytes = new char[70];
+
 	private msg_serial_control msg = new msg_serial_control(1,1);
 
 
@@ -94,9 +95,9 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.out = new Timeline(new KeyFrame(Duration.millis(30), ae ->  {
 			if(buffer.isEmpty() || this.isDisabled())
 				return;
-			
+
 			while(!buffer.isEmpty())
-				console.appendText(buffer.pop());
+				console.appendText(buffer.poll());
 			index = console.getText().length();
 			scrollIntoView();
 		}));
@@ -218,19 +219,15 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@Override
 	public void received(Object _msg) {
 		if(_msg instanceof msg_serial_control) {
-			Arrays.fill(bytes, (byte)0);
-			msg_serial_control msg = (msg_serial_control)_msg;
-			int j=0;
-			for(int i=0;i<msg.count-1 && i < 70;i++) {
-				if(msg.data[i]==0x1b) {
-					i++; continue;
-				}
-				bytes[j++] = (byte)(msg.data[i] & 0xFF);
-			} 
-			try {
-				buffer.add(new String(bytes,"US-ASCII").substring(0, j-1));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+			synchronized(this) {
+				Arrays.fill(bytes, (char)0);
+				msg_serial_control msg = (msg_serial_control)_msg;
+				int j=0;
+				for(int i=0;i<msg.count-1 && i < msg.data.length;i++) {
+				//	if(msg.data[i]==0x1b) { i++; continue; }
+					bytes[j++] = (char)(msg.data[i] & 0x7F);
+				} 
+				buffer.add(String.copyValueOf(bytes,1,j-2));
 			}
 		}
 	}
@@ -263,6 +260,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				}
 				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
 				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
+				
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -274,7 +272,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		Platform.runLater(() -> {
 			console.requestFocus();
 			console.selectEnd();
-	//		console.selectRange(index, index);
+			//		console.selectRange(index, index);
 		});
 	}
 
