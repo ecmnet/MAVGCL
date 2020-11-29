@@ -70,7 +70,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private static final float VIB_SCALE = 50;
 
 
-	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z" };
+	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z", "Gyro.X/Gyro.Y" };
 
 
 	@FXML
@@ -119,7 +119,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 	private int max_pt = 0;
 	private int sample_rate = 0;
-	private int source_id = 0;
+	private int source_id = 2;
 
 	private StateProperties state = null;
 
@@ -148,7 +148,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private void initialize() {
 
 		source.getItems().addAll(SOURCES);
-		source.getSelectionModel().select(0);
+		source.getSelectionModel().select(2);
 
 		vz.setProgress(0);
 
@@ -278,10 +278,20 @@ public class Vibration extends VBox implements IChartControl  {
 
 		for(int i = 0; i < POINTS; i++ ) {
 			m = dataService.getModelList().get(max_pt - POINTS + i);
-			data1[i] = (float)m.getValue("ACCX");	
-			data2[i] = (float)m.getValue("ACCY");	
-			data3[i] = (float)m.getValue("ACCZ")+ 9.81f;	
+			switch(source_id) {
+			case 0:
+				data1[i] = (float)m.getValue("ACCX");	
+				data2[i] = (float)m.getValue("ACCY");	
+				break;
+			case 1:
+				data3[i] = (float)m.getValue("ACCZ")+ 9.81f;	
+				break;
+			case 2:
+				data1[i] = (float)m.getValue("GYROX");	
+				data2[i] = (float)m.getValue("GYROY");	
+				break;
 
+			}
 			//				data3[i] = (float)Math.sqrt(m.getValue("ACCX") * m.getValue("ACCX") + m.getValue("ACCY") * m.getValue("ACCY") );	
 		}
 
@@ -289,6 +299,7 @@ public class Vibration extends VBox implements IChartControl  {
 		switch(source_id) {
 
 		case 0:
+		case 2:
 
 			fft1.forward(data1); 
 			for(int i = 1; i < fft1.specSize(); i++ ) {
@@ -379,7 +390,7 @@ public class Vibration extends VBox implements IChartControl  {
 				updateGraph();
 			});
 		} else
-		  refresh(dataService.getModelList().size() - 1);
+			refresh(dataService.getModelList().size() - 1);
 	}
 
 
