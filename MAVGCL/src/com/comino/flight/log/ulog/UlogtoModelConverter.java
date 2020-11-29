@@ -73,8 +73,8 @@ public class UlogtoModelConverter {
 
 		list.clear();
 		
-		int interval_us = AnalysisModelService.getInstance().getCollectorInterval_ms()*1000;
-
+		int interval_us = AnalysisModelService.getInstance().setCollectorInterval(AnalysisModelService.HISPEED_INTERVAL_US);
+		
 		try {
 
 			System.out.println(reader.getStartMicroseconds()+"/"+interval_us);
