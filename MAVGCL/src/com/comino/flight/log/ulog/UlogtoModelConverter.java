@@ -77,7 +77,7 @@ public class UlogtoModelConverter {
 
 		try {
 
-			System.out.println(reader.getStartMicroseconds());
+			System.out.println(reader.getStartMicroseconds()+"/"+interval_us);
 
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data) - reader.getStartMicroseconds();
@@ -106,7 +106,7 @@ public class UlogtoModelConverter {
 
 		} catch(IOException e) {
 			if(errorFlag)
-				System.out.println("WARNING: Some of the key-figures were not available in the PX4Log");
+				System.out.println("WARNING: Some of the key-figures were not available.");
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		}
