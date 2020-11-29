@@ -255,7 +255,7 @@ public class AnalysisModelService  {
 	}
 
 	public void clearModelList() {
-		setDefaultCollectorInterval();
+		//setDefaultCollectorInterval();
 		mode = STOPPED;
 		model.grid.getData().clear();
 		current.clear();

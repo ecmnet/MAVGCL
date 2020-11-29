@@ -149,7 +149,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		retry = 0;
 		read_count = 0;
 
-		modelService.getModelList().clear();
 
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
@@ -183,7 +182,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			}
 		}, 1000000, 1000, TimeUnit.MICROSECONDS);
 
-		modelService.setCollectorInterval(AnalysisModelService.DEFAULT_INTERVAL_US);
+		modelService.setCollectorInterval(AnalysisModelService.HISPEED_INTERVAL_US);
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
 		requestLogList(GET_LAST_LOG_ID);
@@ -265,6 +264,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			long speed = data.ofs * 1000 / (1024 * (System.currentTimeMillis() - start));
 			sendEndNotice();
 			try {
+				modelService.getModelList().clear();
 				ParameterAttributes pa = MAVGCLPX4Parameters.getInstance().get("SYS_LOGGER");
 				if (pa == null || pa.value != 0) {
 
