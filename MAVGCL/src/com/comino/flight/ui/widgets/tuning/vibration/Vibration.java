@@ -76,7 +76,7 @@ public class Vibration extends VBox implements IChartControl  {
 	@FXML
 	private HBox hbox;
 
-	
+
 	@FXML
 	private ProgressBar vz;
 
@@ -120,7 +120,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private int max_pt = 0;
 	private int sample_rate = 0;
 	private int source_id = 0;
-	
+
 	private StateProperties state = null;
 
 
@@ -162,14 +162,14 @@ public class Vibration extends VBox implements IChartControl  {
 		xAxis.setLowerBound(1);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
-		
+
 		yAxis.setAutoRanging(true);
 
 		fft1 = new FFT( POINTS, sample_rate );
 		fft2 = new FFT( POINTS, sample_rate );
 		fft3 = new FFT( POINTS, sample_rate );
-		
-	
+
+
 
 
 		//		yAxis.setAutoRanging(false);
@@ -192,10 +192,10 @@ public class Vibration extends VBox implements IChartControl  {
 	}
 
 	public void setup(IMAVController control) {
-	
-		
+
+
 		state = StateProperties.getInstance();
-		
+
 		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
 				timeline.play();
@@ -204,7 +204,13 @@ public class Vibration extends VBox implements IChartControl  {
 				vz.setProgress(0);
 			}
 		});
-		
+
+		state.getLogLoadedProperty().addListener((p,o,n) -> {
+			if(n.booleanValue()) {
+				getTimeFrameProperty();
+			}
+		});
+
 		ChartControlPane.addChart(9,this);
 
 		scroll.addListener((v, ov, nv) -> {
@@ -238,11 +244,11 @@ public class Vibration extends VBox implements IChartControl  {
 	private void updateGraph() {
 
 		AnalysisDataModel m =null; float vib = 0;
-		
+
 		if(isDisabled() || !isVisible() ||max_pt < 0)
 			return;
-	
-		
+
+
 		max_pt = max_pt >= dataService.getModelList().size() ? dataService.getModelList().size() -1 : max_pt;
 
 		series1.getData().clear();
@@ -255,7 +261,7 @@ public class Vibration extends VBox implements IChartControl  {
 		m = dataService.getModelList().get(max_pt);
 
 		vib = (float)m.getValue("VIBMET");
-		
+
 		if(vib > 0.015)
 			vz.setStyle("-fx-accent: #ed3118;");
 		else if ( vib > 0.010)
@@ -263,7 +269,7 @@ public class Vibration extends VBox implements IChartControl  {
 		else
 			vz.setStyle("-fx-accent: #1b8233;");
 		vz.setProgress(vib * VIB_SCALE);
-		
+
 
 		if(max_pt <= POINTS) {
 			return;
@@ -290,7 +296,7 @@ public class Vibration extends VBox implements IChartControl  {
 			}
 
 			fft2.forward(data2); 
-     		for(int i = 1; i < fft2.specSize(); i++ ) {
+			for(int i = 1; i < fft2.specSize(); i++ ) {
 				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
 			}
 
@@ -302,7 +308,7 @@ public class Vibration extends VBox implements IChartControl  {
 			for(int i = 1; i < fft3.specSize(); i++ ) {
 				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
 			}
-	
+
 
 			break;
 
@@ -324,22 +330,22 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public IntegerProperty getTimeFrameProperty() {
-		
+
 		sample_rate = 1000 / dataService.getCollectorInterval_ms();
 
 		xAxis.setAutoRanging(false);
 		xAxis.setLowerBound(1);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
-		
+
 		yAxis.setAutoRanging(true);
 
 		fft1 = new FFT( POINTS, sample_rate );
 		fft2 = new FFT( POINTS, sample_rate );
 		fft3 = new FFT( POINTS, sample_rate );
-		
+
 		refresh(dataService.getModelList().size() - 1);
-		
+
 		return null;
 	}
 
@@ -364,7 +370,16 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void refreshChart() {
-		refresh(dataService.getModelList().size() - 1);
+		if(dataService.getModelList().isEmpty()) {
+			Platform.runLater(() -> {
+				fft.getData().clear();
+				fft.getData().add(series1);
+				fft.getData().add(series2);
+				fft.getData().add(series3);
+				updateGraph();
+			});
+		} else
+		  refresh(dataService.getModelList().size() - 1);
 	}
 
 
@@ -377,7 +392,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
-	
+
 	}
 
 }
