@@ -58,7 +58,7 @@ import javafx.scene.layout.VBox;
 
 public class MSPCtlWidget extends ChartControlPane   {
 
-	private static final String[]  STREAMS = { "Depth view", "Pose view" };
+	private static final String[]  STREAMS = { "Foreward", "Downward" };
 
 
 	@FXML
@@ -162,7 +162,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 		state.getConnectedProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
-				stream.getSelectionModel().select(0);
+					if(!state.getSLAMAvailableProperty().get()) 
+					  stream.getSelectionModel().select(1);
 				});
 			}
 		});
@@ -171,11 +172,22 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		stream.getItems().addAll(STREAMS);
 
+		state.getFiducialLockedProperty().addListener((v,o,n) -> {
+			if(state.getSLAMAvailableProperty().get()) {
+				Platform.runLater(() -> {
+					if(n.booleanValue())
+						stream.getSelectionModel().select(1);
+					else
+						stream.getSelectionModel().select(0);	
+				}); 
+			}
+		});
+
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
-              msg_msp_command msp = new msg_msp_command(255,1);
-              msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-              msp.param1  = newvalue.intValue();
-              control.sendMAVLinkMessage(msp);
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+			msp.param1  = newvalue.intValue();
+			control.sendMAVLinkMessage(msp);
 		});
 
 

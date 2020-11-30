@@ -88,6 +88,7 @@ public class StateProperties {
 	private BooleanProperty isGPSAvailable                   = new SimpleBooleanProperty();
 	private BooleanProperty isCVAvailable                    = new SimpleBooleanProperty();
 	private BooleanProperty isSLAMAvailable                  = new SimpleBooleanProperty();
+	private BooleanProperty isFiducialLocked                 = new SimpleBooleanProperty();
 
 	private BooleanProperty isCurrentUpToDate                = new SimpleBooleanProperty(true);
 	private BooleanProperty isInitializedProperty            = new SimpleBooleanProperty();
@@ -186,6 +187,10 @@ public class StateProperties {
 			isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
 		});
 		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_FIDUCIAL_LOCKED, (n) -> {
+			isFiducialLocked.set(n.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED));
+		});
+		
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 		});
@@ -272,6 +277,10 @@ public class StateProperties {
 
 	public BooleanProperty getGPOSAvailableProperty() {
 		return isGPOSAvailable;
+	}
+	
+	public BooleanProperty getFiducialLockedProperty() {
+		return isFiducialLocked;
 	}
 
 	public BooleanProperty getLPOSAvailableProperty() {
