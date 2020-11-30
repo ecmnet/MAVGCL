@@ -67,7 +67,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
-	private final static String[]  OFFBOARD_TEXTS   = { "", "Hold","SpeedUp.","SlowDown","Move","Adjust","Turn"};
+	private final static String[]  OFFBOARD_TEXTS   = { "", "Hold","SpeedUp.","SlowDown","Move","Adjust","Turn" };
 
 
 	private Pane         		node         	= null;
@@ -253,7 +253,7 @@ public class ModeAnnotation implements XYAnnotation {
 		if(state < OFFBOARD_TEXTS.length)
 		  addAreaData(time,state);
 		else
-		  addAreaData(time,0);
+		  addAreaData(time,7);
 	}
 
 
