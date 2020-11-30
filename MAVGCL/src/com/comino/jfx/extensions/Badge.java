@@ -65,6 +65,15 @@ public class Badge extends Label {
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		this.setAlignment(Pos.CENTER);
 		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+		
+		this.disabledProperty().addListener((v,o,n) -> {
+			if(n.booleanValue())
+				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+			else
+				setMode(mode);
+				
+			
+		});
 	}
 
 	public void setMode(int mode, Color color) {
