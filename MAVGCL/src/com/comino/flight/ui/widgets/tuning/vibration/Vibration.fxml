@@ -9,17 +9,12 @@
 	xmlns="http://javafx.com/javafx/8.0.51"
 	xmlns:fx="http://javafx.com/fxml/1"  styleClass="widget" style="-fx-padding: 10 15 10 15;"  >
 	<children>
-	   <Label layoutX="14.0" prefHeight="28.0" text="Vibration metrics / Acc/Gyro FFT" />
+	   <Label layoutX="14.0" prefHeight="28.0" text="Vibration analysis" />
 		<VBox spacing="10" >
 			<children>
 			     <Label/>
-			     <HBox spacing="15" alignment="CENTER_LEFT" >
-			      <children>
-			        <Label text="Vib.Metrics" minWidth="50"  />
-			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="510"/>
-			      </children>
-			     </HBox>
-			     <LineChart fx:id="fft" maxHeight="220" createSymbols="false" animated="false" legendSide="TOP"  >
+			     
+			     <LineChart fx:id="fft" maxHeight="273" createSymbols="false" animated="false" legendSide="TOP"  >
 			       <xAxis>
 				    <NumberAxis fx:id="xAxis" animated="false" side="BOTTOM"  />
 			       </xAxis>
@@ -31,6 +26,8 @@
 			      <children>
 			         <Label text="FFT source data" minWidth="50" />
 			         <ChoiceBox fx:id="source" prefHeight="19.0" prefWidth="125.0" />
+			         <Label text="Vibration metrics:" minWidth="40"  />
+			        <ProgressBar fx:id="vz" prefHeight="4.5" prefWidth="200"/>
 			     </children>
 			     </HBox>
 			</children>

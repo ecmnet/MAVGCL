@@ -70,7 +70,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private static final float VIB_SCALE = 50;
 
 
-	private final static String[] SOURCES = { "Acc.X/Acc.Y ", "Acc.Z", "Gyro.X/Gyro.Y" };
+	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Gyro.Y+Gyro.X" };
 
 
 	@FXML
@@ -255,8 +255,10 @@ public class Vibration extends VBox implements IChartControl  {
 		series2.getData().clear();
 		series3.getData().clear();
 
-		if(dataService.getModelList().size()==0)
+		if(dataService.getModelList().size()==0) {
+			vz.setProgress(0);
 			return;
+		}
 
 		m = dataService.getModelList().get(max_pt);
 
@@ -287,8 +289,8 @@ public class Vibration extends VBox implements IChartControl  {
 				data3[i] = (float)m.getValue("ACCZ")+ 9.81f;	
 				break;
 			case 2:
-				data1[i] = (float)m.getValue("GYROX");	
-				data2[i] = (float)m.getValue("GYROY");	
+				data1[i] = (float)m.getValue("GYROY");	
+				data2[i] = (float)m.getValue("GYROX");	
 				break;
 
 			}
@@ -381,7 +383,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void refreshChart() {
-		if(dataService.getModelList().isEmpty()) {
+		if(dataService.getModelList().size()==0) {
 			Platform.runLater(() -> {
 				fft.getData().clear();
 				fft.getData().add(series1);

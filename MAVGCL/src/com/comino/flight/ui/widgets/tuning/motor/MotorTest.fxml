@@ -3,24 +3,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="javafx.scene.layout.VBox" minWidth="650"
+<fx:root type="javafx.scene.layout.VBox" minWidth="520"
 	xmlns="http://javafx.com/javafx/8.0.51"
 	xmlns:fx="http://javafx.com/fxml/1"  styleClass="widget" style="-fx-padding: 10 15 10 15;"  >
 	<children>
 	   <Label layoutX="14.0" prefHeight="28.0" text="Motor test" />
 		<HBox spacing="15" >
 			<children>
-			    <Label layoutX="14.0" prefHeight="28.0" text="Motor 1" />
-				<Slider fx:id="m1"  max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
-				<Label layoutX="14.0" prefHeight="28.0" text="Motor 2" />
-				<Slider fx:id="m2"  max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
-				<Label layoutX="14.0" prefHeight="28.0" text="Motor 3" />
-				<Slider fx:id="m3"  max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
-				<Label layoutX="14.0" prefHeight="28.0" text="Motor 4" />
-				<Slider fx:id="m4"  max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
+			    <Label layoutX="14.0" prefHeight="28.0" text="M1" />
+				<Slider fx:id="m1"  max="1000" min="0" prefHeight="220.0" prefWidth="30.0" value="0"  />
+				<Label layoutX="14.0" prefHeight="28.0" text="M2" />
+				<Slider fx:id="m2"  max="1000" min="0" prefHeight="220.0" prefWidth="30.0" value="0"  />
+				<Label layoutX="14.0" prefHeight="28.0" text="M3" />
+				<Slider fx:id="m3"  max="1000" min="0" prefHeight="220.0" prefWidth="30.0" value="0"  />
+				<Label layoutX="14.0" prefHeight="28.0" text="M4" />
+				<Slider fx:id="m4"  max="1000" min="0" prefHeight="220.0" prefWidth="30.0" value="0"  />
 				<Label prefWidth="50"/>
 				<Label layoutX="14.0" prefHeight="28.0" text="All" />
-				<Slider fx:id="all" max="1000" min="0" prefHeight="200.0" prefWidth="30.0" value="0"  />
+				<Slider fx:id="all" max="1000" min="0" prefHeight="220.0" prefWidth="30.0" value="0"  />
 				<Label prefWidth="30"/>
 				
 			</children>
