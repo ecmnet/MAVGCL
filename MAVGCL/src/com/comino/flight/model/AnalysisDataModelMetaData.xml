@@ -1861,6 +1861,13 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Offboard.Flags" uom="m/s" mask="#0.0" key="SLAMFLG">
+		<MSPSource class="slam" field="flags"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
 
 	<KeyFigure desc="Depth.Quality" uom="m/s" mask="#0.0" key="SLAMQU">
 		<MSPSource class="slam" field="quality"></MSPSource>

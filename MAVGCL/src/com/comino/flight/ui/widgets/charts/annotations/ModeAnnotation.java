@@ -39,6 +39,7 @@ import java.util.Map;
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.mavcom.model.segment.Slam;
 import com.comino.mavcom.model.segment.Status;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -58,6 +59,7 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_EKF2STATUS 	= 2;
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
 	public final static int		MODE_ANNOTATION_GPSMODE 	= 4;
+	public final static int		MODE_ANNOTATION_OFFBOARD 	= 5;
 
 
 
@@ -65,10 +67,11 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
+	private final static String[]  OFFBOARD_TEXTS   = { "", "Hold","SpeedUp.","SlowDown","Move","Adjust","Turn"};
 
 
 	private Pane         		node         	= null;
-	private HBox				legend			=  null;
+	private HBox				legend			= null;
 	private Map<Integer,Color>	colors       	= null;
 	private Map<Integer,Color>	legend_colors   = null;
 
@@ -86,7 +89,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","DARKCYAN");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","DARKCYAN","GRAY");
 	}
 
 
@@ -130,6 +133,10 @@ public class ModeAnnotation implements XYAnnotation {
 			node.setVisible(true);
 			buildLegend(GPSMODE_TEXTS);
 			break;
+		case MODE_ANNOTATION_OFFBOARD:
+			node.setVisible(true);
+			buildLegend(OFFBOARD_TEXTS);
+			break;
 		}
 	}
 
@@ -152,6 +159,9 @@ public class ModeAnnotation implements XYAnnotation {
 			break;
 		case MODE_ANNOTATION_GPSMODE:
 			updateModeDataGPSMode(time,m);
+			break;
+		case MODE_ANNOTATION_OFFBOARD:
+			updateModeDataOffboardMode(time,m);
 			break;
 		}
 	}
@@ -236,6 +246,14 @@ public class ModeAnnotation implements XYAnnotation {
 		default:
 			addAreaData(time,5);
 		}
+	}
+	
+	private void updateModeDataOffboardMode(double time, AnalysisDataModel m) {
+		int state = (int)m.getValue("SLAMFLG");
+		if(state < OFFBOARD_TEXTS.length)
+		  addAreaData(time,state);
+		else
+		  addAreaData(time,0);
 	}
 
 
