@@ -113,6 +113,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			}
 
 			if(enable)  {
+				service.setCollectorInterval(AnalysisModelService.MAVHIRES_INTERVAL_US);
 				long tms = System.currentTimeMillis();
 				parser.reset(); header_processed = 0; package_lost = 0;
 				logger.writeLocalMsg("[mgc] Try to start ULog streaming",MAV_SEVERITY.MAV_SEVERITY_DEBUG);

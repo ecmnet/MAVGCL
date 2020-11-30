@@ -120,12 +120,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		this.fh = FileHandler.getInstance();
 		this.modelService = AnalysisModelService.getInstance();
 		this.isCollecting = new SimpleBooleanProperty();
-
 		this.control.addMAVLinkListener(this);
-
+		
+		props.getRecordingProperty().addListener((o,ov,nv) -> {
+			if(nv.intValue() != AnalysisModelService.STOPPED && isCollecting.get())
+				abortReadingLog();
+		});	
 	}
 
 	public void requestLastLog() {
+		
+		if(props.getRecordingProperty().intValue()!=AnalysisModelService.STOPPED)
+		  return;
+		
 		try {
 			this.path = fh.getTempFile().getPath();
 			this.file = new RandomAccessFile(path, "rw");
@@ -192,6 +199,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	public void abortReadingLog() {
+		if(!isCollecting.get())
+			return;
 		stop();
 		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);

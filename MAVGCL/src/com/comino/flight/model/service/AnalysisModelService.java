@@ -169,8 +169,10 @@ public class AnalysisModelService  {
 		listener.add(l);
 	}
 
-	public void setCollectorInterval(int interval_us) {
+	
+	public int setCollectorInterval(int interval_us) {
 		this.collector_interval_us = interval_us;
+		return this.collector_interval_us;
 	}
 
 	public void setDefaultCollectorInterval() {
