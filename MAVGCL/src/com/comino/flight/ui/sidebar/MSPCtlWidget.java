@@ -173,14 +173,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 		stream.getItems().addAll(STREAMS);
 
 		state.getFiducialLockedProperty().addListener((v,o,n) -> {
-			if(state.getSLAMAvailableProperty().get()) {
 				Platform.runLater(() -> {
 					if(n.booleanValue())
 						stream.getSelectionModel().select(1);
 					else
+					if(state.getSLAMAvailableProperty().get())
 						stream.getSelectionModel().select(0);	
 				}); 
-			}
 		});
 
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
