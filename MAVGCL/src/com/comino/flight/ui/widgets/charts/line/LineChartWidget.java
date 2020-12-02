@@ -612,6 +612,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
 			mode.setModeType(nv.intValue());
+			updateRequest();
 		});
 
 	}
