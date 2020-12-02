@@ -89,7 +89,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","DARKCYAN","GRAY");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","CYAN","GRAY");
 	}
 
 
@@ -319,7 +319,7 @@ public class ModeAnnotation implements XYAnnotation {
 				return;
 
 			double	x = xAxis.getDisplayPosition(from);
-			double	w = xAxis.getDisplayPosition(to) - x;
+			double	w = xAxis.getDisplayPosition(to) - x+3;
 			this.setX(x);
 			this.setWidth(w);
 		}
