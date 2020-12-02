@@ -104,7 +104,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int REFRESH_RATE   = 50;
 	private final static int REFRESH_SLOT   = 20;
 
-	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype", "Offboard Modes" };
+	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype", "Offboard phases" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -162,10 +162,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private int resolution_ms 	  = 100;
 
-	private int current_x_pt      = 0;
+	private volatile int current_x_pt      = 0;
 
-	private int current_x0_pt     = 0;
-	private int current_x1_pt     = 0;
+	private volatile int current_x0_pt     = 0;
+	private volatile int current_x1_pt     = 0;
 
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
@@ -554,9 +554,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		timeFrame.addListener((v, ov, nv) -> {
-
+			
 			current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
-			this.current_x_pt = 0;
+			current_x_pt = current_x0_pt;
+			
 			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
@@ -744,7 +745,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				if(!state.getReplayingProperty().get()) {
-					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+					if(state.getRecordingProperty().getValue().intValue() != AnalysisModelService.COLLECTING)
+					  current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 					Platform.runLater(() -> {
 						refreshRequest = true;
 						updateGraph(refreshRequest,0);
@@ -855,7 +857,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0;
+		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; int count =0;
 
 		if(isDisabled()) {
 			return;
@@ -936,10 +938,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			slot_tms = System.currentTimeMillis();
-
+			
+			//int x_save = current_x_pt;
+            
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
-
+                count++;
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
@@ -1005,6 +1009,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				current_x_pt++;
 			}
 
+//			if(count > 2) System.out.println(count+" / "+current_x0_pt+" / "+x_save); count = 0;
 			if(set_bounds) {
 				setXAxisBounds(current_x0_pt,current_x1_pt);
 				set_bounds=false;
