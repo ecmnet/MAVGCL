@@ -101,8 +101,8 @@ public class ModeAnnotation implements XYAnnotation {
 	private void setModeColors(String... color) {
 		colors.clear();
 		for(int i=0;i<color.length;i++) {
-			colors.put(i+1, Color.web(color[i], 0.07f));
-			legend_colors.put(i+1, Color.web(color[i], 0.15f));
+			colors.put(i+1, Color.web(color[i], 0.08f));
+			legend_colors.put(i+1, Color.web(color[i], 0.20f));
 		}
 	}
 
