@@ -39,7 +39,7 @@
 		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="15" GridPane.columnSpan="5" />
 		<CheckBox fx:id="speech" text="Speech output (Emergency level)"                 GridPane.rowIndex="16" GridPane.columnIndex="0" GridPane.columnSpan="4"  />
 	    <CheckBox fx:id="debug" text="Enable debug messages"                            GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="4" />
-	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="18" GridPane.columnSpan="5" />
-	    <CheckBox fx:id="alert" text="PopUp for critical alert messages "               GridPane.rowIndex="19" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+	    <CheckBox fx:id="alert" text="Show PopUp for critical messages "                GridPane.rowIndex="18" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="19" GridPane.columnSpan="5" />
 	</children>
 </GridPane>
