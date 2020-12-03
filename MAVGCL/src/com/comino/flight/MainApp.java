@@ -168,7 +168,16 @@ public class MainApp extends Application  {
 
 				}
 			}
+
+			@Override
+			public void handleQuitAction(com.sun.glass.ui.Application app, long time) {
+				// TODO Auto-generated method stub
+				super.handleQuitAction(app, time);
+				control.close();
+				System.exit(0);
+			}
 		});
+		
 	}
 
 
