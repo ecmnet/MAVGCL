@@ -37,9 +37,11 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_statustext;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.model.segment.LogMessage;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -63,19 +65,24 @@ public class Alert extends ChartControlPane    {
 	@FXML
 	private void initialize() {	
 		message.setLayoutX(this.getInitialWidth()/2);
+		
 	}
 
 	public void setup(IMAVController control) {
-
+		
 		control.addMAVLinkListener(new IMAVLinkListener() {
 			@Override
 			public void received(Object o) {
 				if(o instanceof msg_statustext && !isDisabled()) {
 					msg_statustext msg = (msg_statustext) o;
-					if(msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY ||
-					   msg.severity == MAV_SEVERITY.MAV_SEVERITY_ALERT	) {
+					if(
+					   (msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY ||
+					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_ALERT     ||
+					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_CRITICAL  ) &&
+						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)) {
 						Platform.runLater(() -> {
-							message.setText((new String(msg.text)).trim());
+							String m = "["+LogMessage.severity_texts[msg.severity]+"] "+(new String(msg.text)).trim();
+							message.setText(m);
 							message.setAlignment(Pos.CENTER);
 							fadeProperty().set(true);	
 							fadeProperty().set(false);	

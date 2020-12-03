@@ -48,6 +48,7 @@ import com.comino.flight.ui.tabs.MAVInspectorTab;
 import com.comino.flight.ui.tabs.MAVOpenMapTab;
 import com.comino.flight.ui.tabs.MAVTuningTab;
 import com.comino.flight.ui.tabs.MavLinkShellTab;
+import com.comino.flight.ui.widgets.alert.Alert;
 import com.comino.flight.ui.widgets.camera.CameraWidget;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mavcom.control.IMAVController;
@@ -96,6 +97,9 @@ public class FlightTabs extends Pane {
 
 	@FXML
 	private CameraWidget camera;
+	
+	@FXML
+	private Alert alert;
 
 //	@FXML
 //	private MAVParameterTab mavparametertab;
@@ -162,6 +166,7 @@ public class FlightTabs extends Pane {
 		mavtunetab.setup(control);
 		xtanalysistab.setup(control);
 		xyanalysistab.setup(control);
+		alert.setup(control);
 
 		mavlinkshelltab.setup(control);
 

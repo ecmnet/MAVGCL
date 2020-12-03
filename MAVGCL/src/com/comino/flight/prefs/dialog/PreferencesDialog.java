@@ -109,6 +109,9 @@ public class PreferencesDialog  {
 
 	@FXML
 	private CheckBox debug;
+	
+	@FXML
+	private CheckBox alert;
 
 	@FXML
 	private TextField svinacc;
@@ -211,6 +214,7 @@ public class PreferencesDialog  {
 		speech.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.SPEECH, true));
 		debug.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, true));
 		download.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true));
+		alert.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ALERT, false));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -230,6 +234,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.SPEECH,speech.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DEBUG_MSG,debug.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DOWNLOAD,download.isSelected());
+			userPrefs.putBoolean(MAVPreferences.ALERT,alert.isSelected());
 
 			StateProperties.getInstance().preferencesChangedProperty().set(true);
 

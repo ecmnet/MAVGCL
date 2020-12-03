@@ -10,6 +10,7 @@
 <?import com.comino.flight.ui.sidebar.*?>
 <?import com.comino.flight.ui.widgets.camera.CameraWidget?>
 <?import com.comino.flight.ui.widgets.progress.ProgressWidget?>
+<?import com.comino.flight.ui.widgets.alert.Alert?>
 <?import javafx.scene.layout.AnchorPane?>
 
 
@@ -78,7 +79,7 @@
 
 				<CameraWidget fx:id="camera" visible="false" moveable="true"
 					initialWidth="325" initialHeight="225" layoutX="300" layoutY="500" />
-
+				<Alert fx:id="alert" initialWidth="600" initialHeight="60" moveable="true" />
 
 				<ProgressWidget maxHeight="15">
 					<StackPane.margin>
