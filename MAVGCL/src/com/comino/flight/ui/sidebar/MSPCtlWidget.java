@@ -162,9 +162,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 		state.getConnectedProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
-					if(!state.getSLAMAvailableProperty().get()) 
-					  stream.getSelectionModel().select(1);
-				});
+				    stream.getSelectionModel().select(1);
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+					msp.param1  = stream.getSelectionModel().getSelectedIndex();
+					control.sendMAVLinkMessage(msp);
+				}); 
 			}
 		});
 
@@ -173,20 +176,20 @@ public class MSPCtlWidget extends ChartControlPane   {
 		stream.getItems().addAll(STREAMS);
 
 		state.getFiducialLockedProperty().addListener((v,o,n) -> {
-				Platform.runLater(() -> {
-					if(n.booleanValue())
-						stream.getSelectionModel().select(1);
-					else
+			Platform.runLater(() -> {
+				if(n.booleanValue())
+					stream.getSelectionModel().select(1);
+				else
 					if(state.getSLAMAvailableProperty().get())
 						stream.getSelectionModel().select(0);	
-				}); 
+			}); 
 		});
 
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-			msp.param1  = newvalue.intValue();
-			control.sendMAVLinkMessage(msp);
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+				msp.param1  = newvalue.intValue();
+				control.sendMAVLinkMessage(msp);
 		});
 
 
