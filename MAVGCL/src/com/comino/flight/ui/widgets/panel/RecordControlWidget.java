@@ -156,6 +156,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 				);
 
 		recording.setOnMousePressed(event -> {
+		   if(!modelService.isCollecting())
 			enablemodetrig.selectedProperty().set(false);
 		});
 
@@ -174,7 +175,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
 			state.getLogLoadedProperty().set(false);
-			
+
 
 			if(!state.getConnectedProperty().get())
 				MAVGCLPX4Parameters.getInstance().clear();
@@ -241,6 +242,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		enablemodetrig.selectedProperty().set(true);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
+
 			Platform.runLater(() -> {
 				switch(nv.intValue()) {
 				case AnalysisModelService.STOPPED:
@@ -358,9 +360,12 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 
 	private void recording(boolean start, int delay) {
-		if(start)
+		if(start) {
+
 			modelService.start();
+		}
 		else
 			modelService.stop(delay);
+		
 	}
 }
