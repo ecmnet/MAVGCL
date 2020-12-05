@@ -60,6 +60,7 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_POSESTIMAT 	= 3;
 	public final static int		MODE_ANNOTATION_GPSMODE 	= 4;
 	public final static int		MODE_ANNOTATION_OFFBOARD 	= 5;
+	public final static int		MODE_ANNOTATION_VISION   	= 6;
 
 
 
@@ -68,6 +69,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Hold","SpeedUp.","SlowDown","Move","Adjust","Turn" };
+	private final static String[]  VISION_TEXTS     = { "", "Reset","Pos.Valid","Locked" };
 
 
 	private Pane         		node         	= null;
@@ -137,6 +139,10 @@ public class ModeAnnotation implements XYAnnotation {
 			node.setVisible(true);
 			buildLegend(OFFBOARD_TEXTS);
 			break;
+		case MODE_ANNOTATION_VISION:
+			node.setVisible(true);
+			buildLegend(VISION_TEXTS);
+			break;
 		}
 	}
 
@@ -162,6 +168,9 @@ public class ModeAnnotation implements XYAnnotation {
 			break;
 		case MODE_ANNOTATION_OFFBOARD:
 			updateModeDataOffboardMode(time,m);
+			break;
+		case MODE_ANNOTATION_VISION:
+			updateVisionData(time,m);
 			break;
 		}
 	}
@@ -255,6 +264,24 @@ public class ModeAnnotation implements XYAnnotation {
 		else
 		  addAreaData(time,7);
 	}
+	
+	private void updateVisionData(double time, AnalysisDataModel m) {
+		int state = (int)m.getValue("VISIONFLAGS");
+		switch(state) {
+		case 0:
+			addAreaData(time,0); break;
+		case 1:
+			addAreaData(time,1); break;
+		case 4:
+			addAreaData(time,2); break;
+		case 20:
+			addAreaData(time,3); break;
+		default:
+			addAreaData(time,0); break;
+			
+		}
+	}
+
 
 
 	private void addAreaData(double time, int mode) {

@@ -653,13 +653,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private void setXResolution(int frame) {
 		this.frame_secs = frame;
 		if(frame >= 200)
-			resolution_ms = 400;
-		else if(frame >= 60)
 			resolution_ms = 200;
-		else if(frame >= 30)
+		else if(frame >= 60)
 			resolution_ms = 100;
-		else if(frame >= 15)
+		else if(frame >= 30)
 			resolution_ms = 50;
+		else if(frame >= 15)
+			resolution_ms = 20;
 		else
 			resolution_ms = dataService.getCollectorInterval_ms();
 

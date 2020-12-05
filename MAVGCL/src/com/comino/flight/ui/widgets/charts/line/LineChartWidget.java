@@ -104,7 +104,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int REFRESH_RATE   = 50;
 	private final static int REFRESH_SLOT   = 20;
 
-	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", "GPS fixtype", "Offboard phases" };
+	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", 
+			                                    "GPS fixtype", "Offboard phases", "Vision Subsystem" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -812,18 +813,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private void setXResolution(float frame) {
 
 		if(frame >= 200)
-			resolution_ms = dataService.isCollecting()  ? 500 : 200;
+			resolution_ms = dataService.isCollecting()  ? 500 : 500;
 		else if(frame >= 100)
-			resolution_ms = dataService.isCollecting()  ? 200 : 100;
+			resolution_ms = dataService.isCollecting()  ? 200 : 200;
 		else if(frame >= 60)
-			resolution_ms = dataService.isCollecting()  ? 100 : 50;
+			resolution_ms = dataService.isCollecting()  ? 100 : 100;
 		else if(frame >= 30)
 			resolution_ms = dataService.isCollecting()  ? 100 : 20;
-		else if(frame >= 15)
+		else 
 			resolution_ms = dataService.isCollecting()  ? 50  : dataService.getCollectorInterval_ms();
-		else
-			resolution_ms = dataService.getCollectorInterval_ms();
-
+		
 		timeframe = frame;
 
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
