@@ -52,6 +52,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -340,6 +341,67 @@ public class FileHandler {
 				}
 			}).start();
 
+		}
+	}
+
+	public void csvParameterImport() {
+		
+		final StateProperties state = StateProperties.getInstance();
+
+		String dir = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
+		String line = null;
+		
+		if(!state.getConnectedProperty().get()) 
+			return;
+		
+
+		FileChooser fileChooser = getFileDialog("Open CSV parameter file...",dir,
+				new ExtensionFilter("Parameter Files", "*.csv","*.txt"));
+
+		File file = fileChooser.showOpenDialog(stage);
+		if(file==null) 
+			return;
+
+		Map<String,String> params = new HashMap<String,String>();
+
+		try {
+			Reader reader = new FileReader(file);
+			BufferedReader br = new BufferedReader(reader);
+			while ((line = br.readLine()) != null)   {
+        
+				String[] tokens = line.toUpperCase().replaceAll("^ +| +$|( )+", "$1").split(" ",3);
+				if(!tokens[0].contains("_ID")) {
+				  params.put(tokens[0], tokens[1]);
+				}
+
+			}
+			br.close();	
+		} catch (Exception e) {
+			MSPLogger.getInstance().writeLocalMsg("[mgc] ParameterFile could not be read.",MAV_SEVERITY.MAV_SEVERITY_ERROR);	
+			return;
+		}	
+
+		MAVGCLPX4Parameters paramHandler = MAVGCLPX4Parameters.getInstance();
+		if(paramHandler!=null ) {
+			new Thread(new Task<Void>() {
+				int count = 0; int valid = 0; 
+				@Override protected Void call() throws Exception {
+					params.forEach((n,v) -> {
+						state.getProgressProperty().set(count++/(float)params.size());
+						if(paramHandler.sendParameter(n,Float.parseFloat(v))) 
+							valid++;
+						else
+							MSPLogger.getInstance().writeLocalMsg("[mgc] "+n+" could not be set to "+v,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+						try { Thread.sleep(100); } catch (InterruptedException e) { }
+					});
+					state.getProgressProperty().set(0);
+					if(count == valid)
+						MSPLogger.getInstance().writeLocalMsg("[mgc] Parameters set successfully",MAV_SEVERITY.MAV_SEVERITY_INFO);
+					else
+						MSPLogger.getInstance().writeLocalMsg("[mgc] Some parameters could not be set",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+					return null;
+				}
+			}).start();
 		}
 	}
 

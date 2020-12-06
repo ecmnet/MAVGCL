@@ -73,6 +73,8 @@ public class MAVPreferences {
 	public static final String LAST_FILE        = "LAST_FILE";
 	public static final String DOWNLOAD         = "DOWNLOAD";
 	public static final String ALERT            = "ALERT";
+	
+	public static final String USER_PREC_LOCK   = "USER_PRECISION_LOCK";
 
 	private static Preferences prefs = null;
 

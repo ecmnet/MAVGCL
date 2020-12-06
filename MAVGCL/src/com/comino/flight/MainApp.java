@@ -119,6 +119,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_prefs;
+	
+	@FXML
+	private MenuItem m_params;
 
 	@FXML
 	private MenuItem m_dump;
@@ -295,8 +298,12 @@ public class MainApp extends Application  {
 					analysisModelService.startConverter();
 					new SITLController(control);
 					System.out.println("Initializing");
+					
 					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
 						FileHandler.getInstance().fileImport(new File(command_line_options));
+					
+					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
+			
 
 				}
 			});
@@ -311,6 +318,7 @@ public class MainApp extends Application  {
 						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
+			
 			
 
 
@@ -436,6 +444,10 @@ public class MainApp extends Application  {
 
 		m_def.setOnAction(event -> {
 			FileHandler.getInstance().openKeyFigureMetaDataDefinition();
+		});
+		
+		m_params.setOnAction(event -> {
+			FileHandler.getInstance().csvParameterImport();
 		});
 
 		m_reload.setOnAction((ActionEvent event)-> {
