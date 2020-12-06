@@ -101,11 +101,11 @@ import javafx.util.Duration;
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
 	private final static int MAXRECENT 	    = 20;
-	private final static int REFRESH_RATE   = 50;
+	private final static int REFRESH_RATE   = 40;
 	private final static int REFRESH_SLOT   = 20;
 
-	private final static String[] BCKGMODES = { "No mode annotation ", "FlightMode","EKF2 Status", "Position estimation", 
-			                                    "GPS fixtype", "Offboard phases", "Vision Subsystem" };
+	private final static String[] BCKGMODES = { "No mode annotation ", "Flight Mode","EKF2 Status", "Position Estimation", 
+			                                    "GPS Fixtype", "Offboard Phases", "Vision Subsystem" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
