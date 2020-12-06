@@ -34,6 +34,7 @@
 package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
@@ -42,6 +43,7 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.jfx.extensions.StateButton;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
@@ -136,7 +138,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 	@FXML
 	private Button   abort;
 
-	private IMAVController control=null;
+	private IMAVController  control = null;
+	private Preferences     prefs   = null;
 
 	public MSPCtlWidget() {
 
@@ -430,6 +433,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	public void setup(IMAVController control) {
 		this.control = control;
+		this.prefs   = MAVPreferences.getInstance();
+		
+		
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
@@ -463,7 +469,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			enable_takeoff_proc.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
 
