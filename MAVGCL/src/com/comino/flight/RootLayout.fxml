@@ -66,6 +66,9 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<MenuItem fx:id="m_params" mnemonicParsing="false"
+							text="Upload parameters from file...">
+						</MenuItem>	
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
 							text="Show PX4 parameter reference...">
@@ -78,9 +81,6 @@
 							text="Dump key figures to console">
 						</MenuItem>		
 						<SeparatorMenuItem mnemonicParsing="false" />	
-						<MenuItem fx:id="m_params" mnemonicParsing="false"
-							text="Upload parameters from file...">
-						</MenuItem>	
 						<MenuItem fx:id="m_restart" mnemonicParsing="false"
 							text="Restart flight controller(s)">
 						</MenuItem>			
