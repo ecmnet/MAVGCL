@@ -33,6 +33,8 @@
 
 package com.comino.flight.ui.widgets.tuning.vibration;
 
+import java.util.Arrays;
+
 import com.comino.analysis.FFT;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
@@ -245,7 +247,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 		AnalysisDataModel m =null; float vib = 0;
 
-		if(isDisabled() || !isVisible() ||max_pt < 0)
+		if(isDisabled() || !isVisible() || max_pt < 0)
 			return;
 
 
@@ -383,8 +385,13 @@ public class Vibration extends VBox implements IChartControl  {
 
 	@Override
 	public void refreshChart() {
-		if(dataService.getModelList().size()==0) {
+		if(dataService.getModelList().isEmpty()) {
+			Arrays.fill(data1, 0f); Arrays.fill(data2, 0f); Arrays.fill(data3, 0f);
 			Platform.runLater(() -> {
+				getTimeFrameProperty();
+				series1.getData().clear();
+				series2.getData().clear();
+				series3.getData().clear();
 				fft.getData().clear();
 				fft.getData().add(series1);
 				fft.getData().add(series2);
