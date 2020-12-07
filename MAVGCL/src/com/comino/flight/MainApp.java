@@ -35,6 +35,7 @@ package com.comino.flight;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -159,6 +160,8 @@ public class MainApp extends Application  {
 
 	public MainApp() {
 		super();
+		
+		
 		com.sun.glass.ui.Application glassApp = com.sun.glass.ui.Application.GetApplication();
 		glassApp.setEventHandler(new com.sun.glass.ui.Application.EventHandler() {
 			@Override
@@ -233,8 +236,10 @@ public class MainApp extends Application  {
 						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
 					control = new MAVUdpController("127.0.0.1",14557,14540, true);
 					//	new SITLController(control);
-				} else
+				} else {
+					try { redirectConsole(); } catch (IOException e2) { }
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+				}
 			}
 
 			state = StateProperties.getInstance(control);
@@ -622,6 +627,19 @@ public class MainApp extends Application  {
 		} catch(IOException io ) {
 		}
 		return appProps;
+	}
+	
+	private void redirectConsole() throws IOException {
+		
+		File file = new File(System.getProperty("user.home")+"/MAVGCL/mavgcl.log");
+
+		if(!file.exists())
+			file.createNewFile();
+
+		PrintStream fileOut = new PrintStream(file);
+		System.setOut(fileOut);
+		System.setErr(fileOut);
+
 	}
 
 
