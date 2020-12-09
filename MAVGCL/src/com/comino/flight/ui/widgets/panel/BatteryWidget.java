@@ -77,6 +77,11 @@ public class BatteryWidget extends ChartControlPane  {
 			@Override public void handle(long now) {
 				if((System.currentTimeMillis()-tms)>1000) {
 					tms = System.currentTimeMillis();
+		            if(!Double.isFinite(model.getValue("BATV"))) {
+		            	g_voltage.setValue(0);
+		            	g_voltage.setBarColor(Color.DARKGREY);
+		            	return;
+		            }
 					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
 						voltage = model.getValue("BATV");
 						g_voltage.setValue(voltage);
@@ -85,6 +90,11 @@ public class BatteryWidget extends ChartControlPane  {
 						if(voltage > 11.0)
 							g_voltage.setBarColor(Color.web("#2e9fbf"));
 					}
+					 if(!Double.isFinite(model.getValue("BATP"))) {
+			            	g_capacity.setValue(0);
+			            	g_capacity.setBarColor(Color.DARKGREY);
+			            	return;
+			            }
 					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
 						capacity = model.getValue("BATP");
 						g_capacity.setValue(capacity*100f);
