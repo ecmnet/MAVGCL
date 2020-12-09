@@ -135,14 +135,14 @@ public class CameraWidget extends ChartControlPane  {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false)
-					|| !state.isAutoRecording().get()
-					|| !control.getCurrentModel().sys.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY))
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get())
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
 				if(source==null)
 					connect();
+				if(!isConnected)
+					return;
 				if(!source.isRunning())
 					source.start();
 				recorder.getRecordMP4Property().set(true);
