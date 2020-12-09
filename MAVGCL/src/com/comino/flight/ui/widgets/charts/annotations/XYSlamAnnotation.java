@@ -44,6 +44,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.transform.Rotate;
 
@@ -53,9 +54,10 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private static final int SIZE_OBS 	= 3;
 
 
-	private  Pane   	  			pane 	   = null;
+	private  Pane   	  			pane 	    = null;
 	private  Polygon        		act_dir     = null;
 	private  Polygon        		plan_dir    = null;
+	private  Polyline        		lock        = null;
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
 	private  Polygon  				vhc         = null;
@@ -84,6 +86,10 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		act_dir.getTransforms().add(act_rotate);
 		act_dir.setStrokeType(StrokeType.INSIDE);
 		act_dir.setVisible(false);
+		
+		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
+		lock.setStroke(Color.rgb(60, 220, 230, 0.8));
+		lock.setVisible(false);
 
 		vhc_rotate = Rotate.rotate(0, 0, 0);
 		vhc = new Polygon( -7,-2, -1,1, 1,1, 7,-2, 0,12);
@@ -106,7 +112,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.obstacle.setStroke(Color.RED);
 		this.obstacle.setVisible(true);
 
-		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected, obstacle);
+		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected, obstacle, lock);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -148,6 +154,14 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			projected.setVisible(false);
 
 		}
+		
+		if(Double.isFinite(model.getValue("PRECLOCKX")) && Double.isFinite(model.getValue("PRECLOCKY"))) {
+			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
+			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
+			lock.setVisible(true);
+		} else
+			lock.setVisible(false);
+			
 
 		if(model.getValue("SLAMOBX") != 0 && model.getValue("SLAMOBY") != 0 ) {
 
