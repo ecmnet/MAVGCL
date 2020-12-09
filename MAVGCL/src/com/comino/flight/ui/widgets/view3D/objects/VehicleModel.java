@@ -53,7 +53,8 @@ public class VehicleModel extends Group {
 	public Rotate ry = new Rotate(0, Rotate.Y_AXIS);
 	public Rotate rz = new Rotate(0, Rotate.Z_AXIS);
 
-	private double z_pos = 0;
+	private double z_pos        = 0;
+	private double z_pos_offset = 0;
 
 
 	public VehicleModel(float scale) {
@@ -84,11 +85,12 @@ public class VehicleModel extends Group {
 		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
 
 		this.setTranslateX(-model.getValue("LPOSY")*100);
+		
+		if(model.getValue("LANDED")>0.5)
+			z_pos_offset = model.getValue("LPOSZ");
+		
+		z_pos =   -  ( model.getValue("LPOSZ") -z_pos_offset ) * 100 - 12 ;
 
-		if(Double.isNaN(model.getValue("ALTTR")))
-			z_pos =  ( model.getValue("ALTRE") ) * 100 - 12 ;
-		else
-			z_pos =  ( -model.getValue("LPOSZ") -  model.getValue("ALTTR") ) * 100 - 12 ;
 
 		this.setTranslateY(z_pos < 0 ? 0 : z_pos);
 		this.setTranslateZ(model.getValue("LPOSX")*100);

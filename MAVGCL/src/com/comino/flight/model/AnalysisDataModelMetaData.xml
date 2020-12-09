@@ -186,7 +186,7 @@
 
     <!-- Altitudes -->
 
-	<KeyFigure desc="Alt.Sea level" uom="m" mask="#0.0" key="ALTSL">
+	<KeyFigure desc="Alt.Ground level" uom="m" mask="#0.0" key="ALTSL">
 		<MSPSource class="hud" field="ag"></MSPSource>
 		<PX4Source field="GPOS.Alt"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.alt"/>
@@ -199,7 +199,7 @@
 	<KeyFigure desc="Alt.Local" uom="m" mask="#0.0" key="ALTGL">
 		<MSPSource class="hud" field="al"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
-		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
+	<!--  <ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource> -->
 		<Groups>
 			<Group>Altitude</Group>
 			<Group>Telemetry</Group>
@@ -231,6 +231,7 @@
 		<ULogSource field="vehicle_gps_position_0.alt"/>
 		<Groups>
 			<Group>Altitude</Group>
+			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1058,13 +1059,6 @@
 		<Validity min="6" max="30"/>
 	</KeyFigure>
 
-	<KeyFigure desc="GPS Alt." uom="m" mask="#0" key="RGPSALT">
-	    <MSPSource class="gps" field="altitude"></MSPSource>
-		<Groups>
-			<Group>GPS</Group>
-		</Groups>
-	</KeyFigure>
-
 	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
 		<MSPSource class="gps" field="hdop"></MSPSource>
 		<ULogSource field="vehicle_gps_position_0.hdop"></ULogSource>
@@ -1281,6 +1275,15 @@
 		<ULogSource field="estimator_status_0.health_flags">
 		   <Converter class="BitMaskConverter" p1="5"/>
 		</ULogSource>
+		<Groups>
+			<Group>Estimator Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Landed" uom="" mask="#0" key="LANDED">
+	    <MSPSource class="sys" field="status">
+		  <Converter class="BitMaskConverter" p1="9"/>
+		</MSPSource>
 		<Groups>
 			<Group>Estimator Status</Group>
 		</Groups>

@@ -73,7 +73,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private Timeline 		task 		= null;
 	private Xform 			world 		= new Xform();
 
-	private Box             	ground     	= null;
+	private Box             ground     	= null;
 
 	private MapGroup 		map			= null;
 	private Camera 			camera		= null;
@@ -85,6 +85,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private AnalysisDataModel model      = null;
 	private StateProperties state        = null;
+	
+	private float lposz_offset = 0;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
