@@ -156,8 +156,10 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		}
 		
 		if(Double.isFinite(model.getValue("PRECLOCKX")) && Double.isFinite(model.getValue("PRECLOCKY"))) {
-			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
-			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
+//			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
+//			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
+			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
+			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
 			lock.setVisible(true);
 		} else
 			lock.setVisible(false);
