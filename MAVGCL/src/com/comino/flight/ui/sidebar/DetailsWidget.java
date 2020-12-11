@@ -261,7 +261,7 @@ public class DetailsWidget extends ChartControlPane {
 				}
 
 				if (kf.min != kf.max) {
-					if (val < kf.min || val > kf.max) {
+					if ((val < kf.min || val > kf.max) && state.getConnectedProperty().get()) {
 						label.setDashColor(Color.WHITE);
 						p.setStyle(STYLE_OUTOFBOUNDS);
 					} else {

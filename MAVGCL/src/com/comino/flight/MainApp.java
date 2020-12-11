@@ -190,6 +190,8 @@ public class MainApp extends Application  {
 	@Override
 	public void init() throws Exception {
 		try {
+			
+			System.out.println("init");
 
 			ExecutorService.create();
 
@@ -237,7 +239,7 @@ public class MainApp extends Application  {
 					control = new MAVUdpController("127.0.0.1",14557,14540, true);
 					//	new SITLController(control);
 				} else {
-					try { redirectConsole(); } catch (IOException e2) { }
+				//	try { redirectConsole(); } catch (IOException e2) { }
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 				}
 			}
