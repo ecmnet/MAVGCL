@@ -17,7 +17,7 @@
 	</KeyFigure>
 
 	 <KeyFigure desc="EKF.Inn.HAGL" uom="" mask="#0.00" key="EKFINHAGL">
-		<ULogSource field="ekf2_innovations_0.hagl_innov"/>
+		<ULogSource field="ekf2_innovations_0ALT.hagl_innov"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
@@ -196,7 +196,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.Local" uom="m" mask="#0.0" key="ALTGL">
+	<KeyFigure desc="Alt.Local" uom="m" mask="#0.00" key="ALTGL">
 		<MSPSource class="hud" field="al"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
 	<!--  <ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource> -->
@@ -206,7 +206,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.Relative" uom="m" mask="#0.0" key="ALTRE">
+	<KeyFigure desc="Alt.Relative" uom="m" mask="#0.00" key="ALTRE">
 		<MSPSource class="hud" field="ar"></MSPSource>
 		<PX4Source field="LPOS.Dist"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.dist_bottom"></ULogSource>
@@ -235,7 +235,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.0" key="ALTTR">
+	<KeyFigure desc="Alt.Terrain" uom="m" mask="#0.00" key="ALTTR">
 		<MSPSource class="hud" field="at"></MSPSource>
 		<PX4Source field="GPOS.TALT"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.terrain_alt"/>
