@@ -151,7 +151,7 @@ public class CommanderWidget extends ChartControlPane  {
 		land_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
 		land_command.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0, 0 );
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0, Float.NaN );
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
