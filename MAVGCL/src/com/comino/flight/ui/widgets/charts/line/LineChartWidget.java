@@ -105,7 +105,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int REFRESH_SLOT   = 20;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "PX4 Flight Mode","EKF2 Status", "Position Estimation", 
-			                                    "GPS Fixtype", "Offboard Phases", "Vision Subsystem" };
+			"GPS Fixtype", "Offboard Phases", "Vision Subsystem" };
 
 	@FXML
 	private SectionLineChart<Number, Number> linechart;
@@ -188,9 +188,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private DashBoardAnnotation dashboard3 = null;
 	private ModeAnnotation            mode = null;
 
+	private final Line  measure    = new Line();
+	private final Label time_label = new Label();
+
 	private List<IChartSyncControl> syncCharts = null;
 
 	private XYDataPool pool = null;
+	private Group chartArea = null;
 
 	private Preferences prefs = MAVPreferences.getInstance();
 
@@ -288,7 +292,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-		Group chartArea = (Group)linechart.getAnnotationArea();
+		this.chartArea = (Group)linechart.getAnnotationArea();
 
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
@@ -303,12 +307,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		zoom_label.setVisible(false);
 		chartArea.getChildren().add(zoom_label);
 
-		final Label time_label = new Label();
 		time_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #E0E0D0; -fx-padding:3;");
 		time_label.setVisible(false);
 		chartArea.getChildren().add(time_label);
 
-		final Line measure = new Line();
 		measure.setVisible(false);
 		measure.setStartY(0);
 		measure.setEndY(1000);
@@ -317,8 +319,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		linechart.setOnMouseExited(mouseEvent -> {
-			measure.setVisible(false);
-			time_label.setVisible(false);
+			for(IChartSyncControl sync : syncCharts)
+				sync.setMarker(0,0);	
 			mouseEvent.consume();
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
@@ -328,36 +330,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setOnMouseMoved(mouseEvent -> {
 
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
-				measure.setVisible(false);
-				time_label.setVisible(false);
+				for(IChartSyncControl sync : syncCharts)
+					sync.setMarker(0,x);	
 				mouseEvent.consume();
 				return;
 			}
 
-			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+			x = mouseEvent.getX();
+			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue());
+			for(IChartSyncControl sync : syncCharts)
+				sync.setMarker(x1,x);
 
-				measure.setVisible(true);
-
-				x = mouseEvent.getX();
-
-				int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue());
-				if(x1 > 0) {
-					dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
-					dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
-					dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
-				}
-
-				time_label.setVisible(true);
-				time_label.setLayoutY(xAxis.getLayoutY()-25);
-				time_label.setText(String.format("%#.2fs", (x1 * dataService.getCollectorInterval_ms()/1000f)));
-				time_label.setLayoutX(x-xAxis.getLayoutX());
-
-
-				measure.setStartX(x-chartArea.getLayoutX()-7);
-				measure.setEndX(x-chartArea.getLayoutX()-7);
-				linechart.getPlotArea().requestLayout();
-
-			}
 		});
 
 		linechart.setOnMousePressed(mouseEvent -> {
@@ -555,10 +538,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		timeFrame.addListener((v, ov, nv) -> {
-			
+
 			current_x0_pt = dataService.calculateX0Index(dataService.getModelList().size()-1);
 			current_x_pt = current_x0_pt;
-			
+
 			setXResolution(timeFrame.get());
 			xAxis.setTickUnit(resolution_ms/20);
 			xAxis.setMinorTickCount(10);
@@ -668,6 +651,33 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}	
 	}
 
+	public void setMarker(int x1, double mousex) {
+
+		if(x1 <= 0 || (type1.hash==0  && type2.hash==0 && type3.hash==0)) {
+			measure.setVisible(false);
+			time_label.setVisible(false);
+			return;
+		}
+		
+		measure.setVisible(true);
+		time_label.setVisible(true);
+
+		dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
+		dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
+		dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
+
+		time_label.setLayoutY(xAxis.getLayoutY()-25);
+		time_label.setText(String.format("%#.2fs", (x1 * dataService.getCollectorInterval_ms()/1000f)));
+		time_label.setLayoutX(mousex-xAxis.getLayoutX());
+
+
+		measure.setStartX(mousex-chartArea.getLayoutX()-7);
+		measure.setEndX(mousex-chartArea.getLayoutX()-7);
+		linechart.getPlotArea().requestLayout();
+
+
+	}
+
 	public void registerSyncChart(IChartSyncControl syncChart) {
 		this.syncCharts.add(syncChart);
 	}
@@ -747,7 +757,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(!n.booleanValue()) {
 				if(!state.getReplayingProperty().get()) {
 					if(state.getRecordingProperty().getValue().intValue() != AnalysisModelService.COLLECTING)
-					  current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+						current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
 					Platform.runLater(() -> {
 						refreshRequest = true;
 						updateGraph(refreshRequest,0);
@@ -822,7 +832,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			resolution_ms = dataService.isCollecting()  ? 100 : 20;
 		else 
 			resolution_ms = dataService.isCollecting()  ? 50  : dataService.getCollectorInterval_ms();
-		
+
 		timeframe = frame;
 
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
@@ -937,12 +947,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			slot_tms = System.currentTimeMillis();
-			
+
 			//int x_save = current_x_pt;
-            
+
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
-                count++;
+				count++;
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
@@ -1008,7 +1018,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				current_x_pt++;
 			}
 
-//			if(count > 2) System.out.println(count+" / "+current_x0_pt+" / "+x_save); count = 0;
+			//			if(count > 2) System.out.println(count+" / "+current_x0_pt+" / "+x_save); count = 0;
 			if(set_bounds) {
 				setXAxisBounds(current_x0_pt,current_x1_pt);
 				set_bounds=false;
