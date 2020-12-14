@@ -12,12 +12,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	29/11/2020 (Release V0.820)
+**Development Status:** Last updated 	14/12/2020 (Release V0.820)
 
 * MotorTest added
 * ACCX,Y, Z FFT graph added (up to 100Hz with ULOG)
 * Vibration metrics
 * Option to copy imported ULOG file to ~/Downloads
+* Minor UI improvements, Performance
 
 
 **Features:**
