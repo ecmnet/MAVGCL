@@ -68,6 +68,7 @@ public class VehicleModel extends Group {
 	}
 
 	public void updateState(AnalysisDataModel model) {
+		
 
 
 		//		model.setValue("LPOSZ", -2.0);
@@ -111,15 +112,18 @@ public class VehicleModel extends Group {
 
 	private void addRotate(Group node, Rotate rotate, double angle) {
 
-		Affine affine = node.getTransforms().isEmpty() ? new Affine() : new Affine(node.getTransforms().get(0));
+		Affine affine = node.getTransforms().isEmpty() ? new Affine() : (Affine)(node.getTransforms().get(0));
+		
 		double A11 = affine.getMxx(), A12 = affine.getMxy(), A13 = affine.getMxz();
 		double A21 = affine.getMyx(), A22 = affine.getMyy(), A23 = affine.getMyz();
 		double A31 = affine.getMzx(), A32 = affine.getMzy(), A33 = affine.getMzz();
+		
 
 		// rotations over local axis
 		Rotate newRotateX = new Rotate(angle, new Point3D(A11, A21, A31));
 		Rotate newRotateY = new Rotate(angle, new Point3D(A12, A22, A32));
 		Rotate newRotateZ = new Rotate(angle, new Point3D(A13, A23, A33));
+		
 
 		// apply rotation
 		affine.prepend(rotate.getAxis() == Rotate.X_AXIS ? newRotateX :

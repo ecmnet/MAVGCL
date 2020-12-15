@@ -85,7 +85,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private AnalysisDataModel model      = null;
 	private StateProperties state        = null;
-	
+
 	private float lposz_offset = 0;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
@@ -164,17 +164,19 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		task = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
-			target.updateState(model);
-			vehicle.updateState(model);
-			switch(perspective) {
-			case Camera.OBSERVER_PERSPECTIVE:
+			Platform.runLater(() -> {
+				target.updateState(model);
 				vehicle.updateState(model);
-				vehicle.setVisible(true);
-				break;
-			case Camera.VEHICLE_PERSPECTIVE:
-				camera.updateState(model);
-				break;
-			}
+				switch(perspective) {
+				case Camera.OBSERVER_PERSPECTIVE:
+					vehicle.updateState(model);
+					vehicle.setVisible(true);
+					break;
+				case Camera.VEHICLE_PERSPECTIVE:
+					camera.updateState(model);
+					break;
+				}
+			});
 		} ) );
 
 		scroll.addListener((v, ov, nv) -> {
@@ -221,28 +223,32 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	public void setPerspective(int perspective) {
 		this.perspective = perspective;
-		camera.setPerspective(perspective,model);
-		switch(perspective) {
-		case Camera.OBSERVER_PERSPECTIVE:
-			vehicle.show(true);
-			map.setMode2D(false);
-			break;
-		case Camera.VEHICLE_PERSPECTIVE:
-			vehicle.show(false);
-			map.setMode2D(true);
-			break;
-		}
+		Platform.runLater(() -> {
+			camera.setPerspective(perspective,model);
+			switch(perspective) {
+			case Camera.OBSERVER_PERSPECTIVE:
+				vehicle.show(true);
+				map.setMode2D(false);
+				break;
+			case Camera.VEHICLE_PERSPECTIVE:
+				vehicle.show(false);
+				map.setMode2D(true);
+				break;
+			}
+		});
 	}
 
 	public void scale(float scale) {
-		switch(perspective) {
-		case Camera.OBSERVER_PERSPECTIVE:
-			world.setScale(scale/100);
-			break;
-		case Camera.VEHICLE_PERSPECTIVE:
-			camera.setFieldOfView(scale);
-			break;
-		}
+		Platform.runLater(() -> {
+			switch(perspective) {
+			case Camera.OBSERVER_PERSPECTIVE:
+				world.setScale(scale/100);
+				break;
+			case Camera.VEHICLE_PERSPECTIVE:
+				camera.setFieldOfView(scale);
+				break;
+			}
+		});
 	}
 
 
