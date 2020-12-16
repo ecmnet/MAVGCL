@@ -124,7 +124,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button rotate_north;
 
 	@FXML
-	private Button exec_lock;
+	private Button exec_land;
 
 	@FXML
 	private Button test_seq1;
@@ -338,11 +338,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		exec_lock.setOnAction((event) ->{
+		exec_land.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.LOCK;
-			msp.param3 = 0f;
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.LAND;
 			control.sendMAVLinkMessage(msp);
 
 		});
