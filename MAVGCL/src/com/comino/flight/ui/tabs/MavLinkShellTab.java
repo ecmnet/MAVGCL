@@ -91,6 +91,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	@FXML
 	private void initialize() {
+		
 
 		this.out = new Timeline(new KeyFrame(Duration.millis(30), ae ->  {
 			if(buffer.isEmpty() || this.isDisabled())
@@ -223,11 +224,14 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				Arrays.fill(bytes, (char)0);
 				msg_serial_control msg = (msg_serial_control)_msg;
 				int j=0;
-				for(int i=0;i<msg.count-1 && i < msg.data.length;i++) {
-				//	if(msg.data[i]==0x1b) { i++; continue; }
+				for(int i=0;i<msg.count && i < msg.data.length;i++) {
+					if(msg.data[i]==0x1b) { i++; continue; }
 					bytes[j++] = (char)(msg.data[i] & 0x7F);
 				} 
-				buffer.add(String.copyValueOf(bytes,1,j-2));
+				String line = String.copyValueOf(bytes,1,j-2);
+				if(line.contains("nsh>"))
+					buffer.add("\n");
+				buffer.add(line);
 			}
 		}
 	}
