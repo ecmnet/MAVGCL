@@ -50,7 +50,7 @@
 							</Insets>
 						</VBox.margin>
 					</StateButton>
-					<Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
+					<Button fx:id="exec_land" text="Precision Landing" prefWidth="165.0" />
 
 				</children>
 			</VBox>
@@ -60,7 +60,6 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
-				    <Button fx:id="exec_land" text="Precision Landing" prefWidth="165.0" />
 				    <StateButton fx:id="enable_rtl" text="Return To Launch (local)"
 						prefWidth="165.0" >
 						<VBox.margin>
@@ -69,7 +68,7 @@
 							</Insets>
 						</VBox.margin>
 					</StateButton>
-
+                    <Button fx:id="test_seq1" text="Execute test sequence" prefWidth="165.0" />
 					<Button fx:id="abort" prefWidth="165.0" text="Abort autopilot"
 						styleClass="emergency">
 						<VBox.margin>
