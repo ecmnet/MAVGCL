@@ -40,6 +40,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
+import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
 import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
@@ -76,6 +77,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private Box             ground     	= null;
 
 	private MapGroup 		map			= null;
+//	private Map3DGroup      map         = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
 	private Target			target      = null;
@@ -85,8 +87,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private AnalysisDataModel model      = null;
 	private StateProperties state        = null;
-
-	private float lposz_offset = 0;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
@@ -132,12 +132,15 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.map   = new MapGroup(control.getCurrentModel());
 		world.getChildren().addAll(map);
+		
+//		this.map   = new Map3DGroup(world,control.getCurrentModel());
+		
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				if(!Double.isNaN(model.getValue("ALTGL"))) {
-					camera.setTranslateY(model.getValue("ALTGL")*100);
-					world.setTranslateY(model.getValue("ALTGL")*100);
+				if(!Double.isNaN(model.getValue("ALTTR"))) {
+					camera.setTranslateY(model.getValue("ALTTR")*100);
+					world.setTranslateY(model.getValue("ALTTR")*100);
 				}
 			}
 		});
@@ -145,9 +148,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				if(!Double.isNaN(model.getValue("ALTGL"))) {
-					camera.setTranslateY(model.getValue("ALTGL")*100);
-					world.setTranslateY(model.getValue("ALTGL")*100);
+				if(!Double.isNaN(model.getValue("ALTTR"))) {
+					camera.setTranslateY(model.getValue("ALTTR")*100);
+					world.setTranslateY(model.getValue("ALTTR")*100);
 				}
 			}
 		});
@@ -166,10 +169,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		task = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
 			Platform.runLater(() -> {
 				target.updateState(model);
-				vehicle.updateState(model);
+				vehicle.updateState(model,model.getValue("ALTTR"));
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
-					vehicle.updateState(model);
+					vehicle.updateState(model,model.getValue("ALTTR"));
 					vehicle.setVisible(true);
 					break;
 				case Camera.VEHICLE_PERSPECTIVE:
@@ -228,11 +231,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 			switch(perspective) {
 			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.show(true);
-				map.setMode2D(false);
+//				map.setMode2D(false);
 				break;
 			case Camera.VEHICLE_PERSPECTIVE:
 				vehicle.show(false);
-				map.setMode2D(true);
+//				map.setMode2D(true);
 				break;
 			}
 		});

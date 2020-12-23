@@ -54,7 +54,6 @@ public class VehicleModel extends Group {
 	public Rotate rz = new Rotate(0, Rotate.Z_AXIS);
 
 	private double z_pos        = 0;
-	private double z_pos_offset = 0;
 
 
 	public VehicleModel(float scale) {
@@ -67,7 +66,7 @@ public class VehicleModel extends Group {
 		this.setScaleZ(scale);
 	}
 
-	public void updateState(AnalysisDataModel model) {
+	public void updateState(AnalysisDataModel model, double z_offset) {
 		
 
 
@@ -87,10 +86,10 @@ public class VehicleModel extends Group {
 
 		this.setTranslateX(-model.getValue("LPOSY")*100);
 		
-		if(model.getValue("LANDED")>0.5)
-			z_pos_offset = model.getValue("LPOSZ");
-		
-		z_pos =   -  ( model.getValue("LPOSZ") -z_pos_offset ) * 100 - 12 ;
+		if(Double.isFinite(z_offset))
+		  z_pos =    ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
+		else
+			 z_pos =  - model.getValue("LPOSZ") * 100  ;
 
 
 		this.setTranslateY(z_pos < 0 ? 0 : z_pos);
