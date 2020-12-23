@@ -68,13 +68,22 @@ public class MapGroup extends Xform {
 
 		mapMaterial.setDiffuseColor(Color.web("#2892b0"));
 
-		maptimer = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
-			for(int k=0;k<this.getChildren().size();k++)
-				this.getChildren().get(k).setVisible(false);
+		maptimer = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
+			
+			if(model.grid.getData().size()==0) {
+				blocks.clear();
+			}
+			
+			for(int k=0;k<this.getChildren().size();k++) {
+				if(!blocks.containsValue(this.getChildren().get(k)))
+						this.getChildren().remove(k);
+			}
 			model.grid.getData().forEach((i,b) -> {
-				getBlockBox(i,b).setVisible(true);;
+				if(!blocks.containsKey(i))
+				  addBox(i,b).setVisible(true);;
 			});
 		} ) );
+		
 		maptimer.setCycleCount(Timeline.INDEFINITE);
 
 		this.disabledProperty().addListener((l,o,n) -> {
@@ -88,8 +97,8 @@ public class MapGroup extends Xform {
 	}
 
 	public void clear() {
+		Platform.runLater(() -> {
 		blocks.forEach((i,p) -> {
-			Platform.runLater(() -> {
 				this.getChildren().remove(p);
 			});
 		});
@@ -101,10 +110,7 @@ public class MapGroup extends Xform {
 		clear();
 	}
 
-	private Group getBlockBox(int block, MapPoint3D_F32 b) {
-
-		if(blocks.containsKey(block))
-			return blocks.get(block);
+	private Group addBox(int block, MapPoint3D_F32 b) {
 
 
 		final Group boxGroup = new Group();

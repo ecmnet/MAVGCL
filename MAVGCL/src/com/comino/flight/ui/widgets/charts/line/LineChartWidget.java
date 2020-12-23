@@ -551,6 +551,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				updateGraph(refreshRequest,0);
 			});
 		});
+		
 
 
 		scroll.addListener((v, ov, nv) -> {
