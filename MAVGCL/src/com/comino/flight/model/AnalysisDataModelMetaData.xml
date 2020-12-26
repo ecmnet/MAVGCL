@@ -1473,7 +1473,7 @@
 
 	<KeyFigure desc="Wifi quality" uom="%" mask="#0.00" key="SWIFI">
 		<MSPSource class="sys" field="wifi_quality"/>
-		<Validity min="0.5" max="1.0"/>
+		<Validity min="0.2" max="1.0"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
