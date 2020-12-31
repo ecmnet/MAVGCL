@@ -921,7 +921,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.control = control;
 
-		grid.setModel(control.getCurrentModel());
+		grid.setController(control);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {

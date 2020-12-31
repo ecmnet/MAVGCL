@@ -33,14 +33,21 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import com.comino.flight.model.map.IMAVMap;
+import com.comino.flight.model.map.MAV2DMap;
+import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import georegression.struct.point.Point3D_F32;
+import georegression.struct.point.Point3D_I32;
 import javafx.application.Platform;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
@@ -53,7 +60,10 @@ public class XYGridAnnotation  implements XYAnnotation {
 	private  Pane   	    pane 		= null;
 	private  Pane           indicator   = null;
 
+	private  IMAVMap          map       = null;
+
 	private Map<Integer,Pane> blocks    = null;
+	private Set<Integer>      tmp      = null;
 	private DataModel         model     = null;
 
 	private boolean        enabled = false;
@@ -65,6 +75,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 
 		this.blocks = new HashMap<Integer,Pane>();
+		this.tmp    = new HashSet<Integer>();
 
 		//		indicator = new Pane();
 		//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
@@ -74,8 +85,9 @@ public class XYGridAnnotation  implements XYAnnotation {
 		//		pane.getChildren().add(indicator);
 	}
 
-	public void setModel(DataModel model) {
-		this.model = model;
+	public void setController(IMAVController control) {
+		this.model = control.getCurrentModel();
+		this.map   = new MAV2DMap(control);	
 	}
 
 
@@ -88,55 +100,58 @@ public class XYGridAnnotation  implements XYAnnotation {
 	@SuppressWarnings("unchecked")
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
-		for(int i=0;i<pane.getChildren().size();i++)
-			pane.getChildren().get(i).setVisible(false);
-
-		if(model == null || model.grid==null || !model.grid.hasBlocked() || !enabled)
+		if(pane.isDisabled() || !pane.isVisible())
 			return;
 
-		model.grid.getData().forEach((i,b) -> {
 
-			if( (b.x==0 && b.y==0))
-				return;
+		for(int i=0;i<pane.getChildren().size();i++) {
+			if(!blocks.containsValue(pane.getChildren().get(i)))
+				pane.getChildren().remove(i);
+		}
 
-			// TODO: Z Plane filter (selectable)
+		if(model == null || model.grid==null || !enabled)
+			return;
+		
 
-			Pane bp = getBlockPane(i,b);
-			bp.setLayoutX(xAxis.getDisplayPosition(b.y));
-			bp.setLayoutY(yAxis.getDisplayPosition(b.x+model.grid.getResolution()));
-			bp.setPrefSize(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0),
-					yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
-			bp.setVisible( true);
-		});
+			invalidate(enabled);
+
+			map.getMap().forEach((i,b) -> {
+				Pane p = null;
+				// System.out.println(i+" => "+((Point3D_F32)b).x+"/"+((Point3D_F32)b).y);
+				if(!blocks.containsKey(i))
+					p = addBlockPane((int)i);
+				else
+					p = blocks.get(i);
+
+				p.setLayoutX(xAxis.getDisplayPosition(((Point3D_F32)b).y));
+				p.setLayoutY(yAxis.getDisplayPosition(((Point3D_F32)b).x+model.grid.getResolution()));
+				p.setPrefWidth(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0));
+				p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
+			});
 	}
 
-	public void invalidate(boolean enable) {
+	public  void invalidate(boolean enable) {
+		tmp.clear();
 		blocks.forEach((i,p) -> {
-			p.setVisible(false);
+			if(!map.getMap().containsKey(i))
+				tmp.add(i);
 		});
+
+		tmp.forEach((i) -> { blocks.remove(i); });
 		enabled = enable;
 	}
 
 	public void clear() {
-		Platform.runLater(() -> {
-			blocks.forEach((i,p) -> {
-				pane.getChildren().remove(p);
-			});
-		});
 		blocks.clear();
 	}
 
 
-	private Pane getBlockPane(int block, MapPoint3D_F32 b) {
-
-		if(blocks.containsKey(block))
-			return blocks.get(block);
-
+	private Pane addBlockPane(int block) {
 		Pane p = new Pane();
 		p.setStyle("-fx-background-color: rgba(38, 136, 163, 0.5); -fx-padding:-1px; -fx-border-color: #20738a;");
-		p.setVisible(false);
 		pane.getChildren().add(p);
 		blocks.put(block, p);
+		p.setVisible( true);
 		return p;
 	}
 
