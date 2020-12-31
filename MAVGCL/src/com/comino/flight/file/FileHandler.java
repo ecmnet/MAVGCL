@@ -633,7 +633,6 @@ public class FileHandler {
 		public void prepareData(AnalysisModelService service, MAVGCLPX4Parameters param, DataModel model) {
 			data   = service.getModelList();
 			params = param.get();
-			grid  = model.grid.getData();
 			conversion_rate = service.getCollectorInterval_ms();
 		}
 
@@ -642,8 +641,6 @@ public class FileHandler {
 				service.setModelList(data);
 			if(params!=null)
 				param.set(params);
-			if(grid!=null)
-				model.grid.setData(grid);
 			if(conversion_rate != 0)
 				service.setCollectorInterval(conversion_rate * 1000);
 			else

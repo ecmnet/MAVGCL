@@ -132,7 +132,6 @@ public class AnalysisModelService  {
 					converter.notify();
 				}
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-				model.grid.clear();
 				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			} else {
@@ -259,7 +258,6 @@ public class AnalysisModelService  {
 	public void clearModelList() {
 		//setDefaultCollectorInterval();
 		mode = STOPPED;
-		model.grid.getData().clear();
 		current.clear();
 		modelList.clear();
 	}
