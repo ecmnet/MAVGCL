@@ -103,41 +103,30 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(pane.isDisabled() || !pane.isVisible())
 			return;
 
-
-		for(int i=0;i<pane.getChildren().size();i++) {
-			if(!blocks.containsValue(pane.getChildren().get(i)))
-				pane.getChildren().remove(i);
-		}
+		pane.getChildren().retainAll(blocks.values());
 
 		if(model == null || model.grid==null || !enabled)
 			return;
-		
 
-			invalidate(enabled);
+		blocks.keySet().retainAll(map.getMap().keySet());	
 
-			map.getMap().forEach((i,b) -> {
-				Pane p = null;
-				// System.out.println(i+" => "+((Point3D_F32)b).x+"/"+((Point3D_F32)b).y);
-				if(!blocks.containsKey(i))
-					p = addBlockPane((int)i);
-				else
-					p = blocks.get(i);
+		map.getMap().forEach((i,b) -> {
+			Pane p = null;
+			if(!blocks.containsKey(i))
+				p = addBlockPane(i);
+			else
+				p = blocks.get(i);
 
-				p.setLayoutX(xAxis.getDisplayPosition(((Point3D_F32)b).y));
-				p.setLayoutY(yAxis.getDisplayPosition(((Point3D_F32)b).x+model.grid.getResolution()));
-				p.setPrefWidth(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0));
-				p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
-			});
+			p.setLayoutX(xAxis.getDisplayPosition(b.y/100f));
+			p.setLayoutY(yAxis.getDisplayPosition(b.x/100f+model.grid.getResolution()));
+			p.setPrefWidth(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0));
+			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
+		});
 	}
 
 	public  void invalidate(boolean enable) {
-		tmp.clear();
-		blocks.forEach((i,p) -> {
-			if(!map.getMap().containsKey(i))
-				tmp.add(i);
-		});
-
-		tmp.forEach((i) -> { blocks.remove(i); });
+		if(map!=null)
+			blocks.keySet().retainAll(map.getMap().keySet());	
 		enabled = enable;
 	}
 
