@@ -33,23 +33,16 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.comino.flight.model.map.IMAVMap;
 import com.comino.flight.model.map.MAV2DMap;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import georegression.struct.point.Point3D_F32;
-import georegression.struct.point.Point3D_I32;
 import javafx.application.Platform;
-import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -57,16 +50,13 @@ import javafx.scene.layout.Pane;
 public class XYGridAnnotation  implements XYAnnotation {
 
 
-	private  Pane   	    pane 		= null;
-	private  Pane           indicator   = null;
-
+	private  Pane   	      pane 		= null;
+//	private  Pane             indicator = null;
 	private  IMAVMap          map       = null;
-
 	private Map<Integer,Pane> blocks    = null;
-	private Set<Integer>      tmp      = null;
 	private DataModel         model     = null;
-
-	private boolean        enabled = false;
+	private final ZFilter     z_filter  = null;//new ZFilter();   
+	private boolean           enabled   = false;
 
 
 	public XYGridAnnotation() {
@@ -75,7 +65,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 
 		this.blocks = new HashMap<Integer,Pane>();
-		this.tmp    = new HashSet<Integer>();
 
 		//		indicator = new Pane();
 		//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
@@ -108,10 +97,9 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(model == null || model.grid==null || !enabled)
 			return;
 
-		blocks.keySet().retainAll(map.keySet());	
+		blocks.keySet().retainAll(map.keySet(z_filter));	
 
-		
-		map.forEach((i,b) -> {
+		map.forEach(z_filter,(i,b) -> {
 			Pane p = null;
 			if(!blocks.containsKey(i))
 				p = addBlockPane(i);
@@ -127,14 +115,13 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public  void invalidate(boolean enable) {
 		if(map!=null)
-			blocks.keySet().retainAll(map.keySet());	
+			blocks.keySet().retainAll(map.keySet(z_filter));	
 		enabled = enable;
 	}
 
 	public void clear() {
-		blocks.clear(); 
+		map.clear(); 
 	}
-
 
 	private Pane addBlockPane(int block) {
 		Pane p = new Pane();
@@ -143,6 +130,15 @@ public class XYGridAnnotation  implements XYAnnotation {
 		blocks.put(block, p);
 		p.setVisible( true);
 		return p;
+	}
+	
+	private class ZFilter implements Comparable<Integer> {
+
+		@Override
+		public int compareTo(Integer z) {
+			if(Math.abs(model.hud.ar*100 - z) < 50) return 0; else return 1; 
+		}
+		
 	}
 
 

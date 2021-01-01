@@ -1,29 +1,25 @@
 package com.comino.flight.model.map;
 
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-import org.ddogleg.struct.FastQueue;
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 
-import bubo.construct.Octree_I32;
-import bubo.maps.d3.grid.CellProbability_F64;
-import bubo.maps.d3.grid.impl.MapLeaf;
 import georegression.struct.point.Point3D_I32;
 
 public class MAV2DMap implements IMAVMap {
 
 	private final DataModel                  model;
 	private final Map<Integer,Point3D_I32>   map;
+	private final HashSet<Integer>           set;
 
 	private int cx = 0;
 	private int cy = 0;
@@ -31,13 +27,12 @@ public class MAV2DMap implements IMAVMap {
 
 	private int dimension = 400;
 	private int resolution_cm = 5;
-
-
-
+	
 	public MAV2DMap(IMAVController control) {
 
 		this.model = control.getCurrentModel();
 		this.map   = new ConcurrentHashMap<Integer, Point3D_I32>();
+		this.set   = new HashSet<Integer>();
 
 		this.dimension = (int)(20.0f/0.05f)*2;
 		this.resolution_cm = (int)(0.05f*100f);
@@ -76,6 +71,26 @@ public class MAV2DMap implements IMAVMap {
 			consumer.accept(entry.getKey(),entry.getValue());
 		}
 	}
+	
+	@Override
+	public Set<Integer> keySet(Comparable<Integer> zfilter) {
+		if(zfilter==null)
+			return map.keySet();
+		set.clear();
+		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
+			if(zfilter.compareTo(entry.getValue().z)==0)
+			 set.add(entry.getKey());
+		}
+		return set;	
+	}
+	
+	@Override
+	public void forEach(Comparable<Integer> zfilter, BiConsumer<Integer,Point3D_I32 > consumer) {
+		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
+			if(zfilter==null || zfilter.compareTo(entry.getValue().z)==0)
+			  consumer.accept(entry.getKey(),entry.getValue());
+		}
+	}
 
 	private void mapItemWorker(LinkedList<Integer> transfers) {
 		int mpi= 0;
@@ -99,7 +114,6 @@ public class MAV2DMap implements IMAVMap {
 
 		return p;
 	}
-	
-	
+
 
 }
