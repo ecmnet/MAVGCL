@@ -108,9 +108,10 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(model == null || model.grid==null || !enabled)
 			return;
 
-		blocks.keySet().retainAll(map.getMap().keySet());	
+		blocks.keySet().retainAll(map.keySet());	
 
-		map.getMap().forEach((i,b) -> {
+		
+		map.forEach((i,b) -> {
 			Pane p = null;
 			if(!blocks.containsKey(i))
 				p = addBlockPane(i);
@@ -126,12 +127,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public  void invalidate(boolean enable) {
 		if(map!=null)
-			blocks.keySet().retainAll(map.getMap().keySet());	
+			blocks.keySet().retainAll(map.keySet());	
 		enabled = enable;
 	}
 
 	public void clear() {
-		blocks.clear();
+		blocks.clear(); 
 	}
 
 

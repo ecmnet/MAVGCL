@@ -1,13 +1,23 @@
 package com.comino.flight.model.map;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+import org.ddogleg.struct.FastQueue;
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
+
+import bubo.construct.Octree_I32;
+import bubo.maps.d3.grid.CellProbability_F64;
+import bubo.maps.d3.grid.impl.MapLeaf;
 import georegression.struct.point.Point3D_I32;
 
 public class MAV2DMap implements IMAVMap {
@@ -46,8 +56,6 @@ public class MAV2DMap implements IMAVMap {
 	}
 
 
-
-	@Override
 	public Map<Integer, Point3D_I32> getMap() {
 		return map;
 	}
@@ -55,6 +63,18 @@ public class MAV2DMap implements IMAVMap {
 	@Override
 	public void clear() {
 		map.clear();
+	}
+	
+	@Override
+	public Set<Integer> keySet() {
+		return map.keySet();
+	}
+	
+	@Override
+	public void forEach(BiConsumer<Integer,Point3D_I32 > consumer) {
+		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
+			consumer.accept(entry.getKey(),entry.getValue());
+		}
 	}
 
 	private void mapItemWorker(LinkedList<Integer> transfers) {
@@ -79,5 +99,7 @@ public class MAV2DMap implements IMAVMap {
 
 		return p;
 	}
+	
+	
 
 }
