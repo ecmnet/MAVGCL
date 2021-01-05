@@ -57,6 +57,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -102,7 +103,7 @@ public class AnalysisModelService  {
 
 	private CombinedConverter converter = null;
 
-	private Timeline task = null;
+	private AnimationTimer task = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null) {
@@ -153,15 +154,16 @@ public class AnalysisModelService  {
 				}
 			}
 		});
-
-		task = new Timeline(new KeyFrame(Duration.millis(10), ae -> {
-			try {
-				for(ICollectorRecordingListener updater : listener)
-					updater.update(System.nanoTime());
-			} catch(Exception e) { }
-		} ) );
-		task.setCycleCount(Timeline.INDEFINITE);
-
+		
+		task = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				try {
+				  for(ICollectorRecordingListener updater : listener)
+						updater.update(System.nanoTime());
+				} catch(Exception e) {  e.printStackTrace(); }		
+			}		
+		};
 	}
 
 	public AnalysisModelService(DataModel model) {
@@ -238,7 +240,7 @@ public class AnalysisModelService  {
 		if(mode==STOPPED) {
 			setDefaultCollectorInterval();
 			modelList.clear();
-			task.play();
+			task.start();
 			mode = COLLECTING;
 			return true;
 		}
