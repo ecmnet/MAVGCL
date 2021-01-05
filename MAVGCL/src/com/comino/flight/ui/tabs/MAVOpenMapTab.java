@@ -56,6 +56,7 @@ import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
@@ -68,6 +69,7 @@ import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -146,7 +148,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	//	private LicenceLayer  		licenceLayer;
 	private CanvasLayer			canvasLayer;
 
-	private Timeline task = null;
+	private AnimationTimer task = null;
 
 	private AnalysisDataModel model;
 	private int type = 0;
@@ -184,12 +186,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
 		this.state = StateProperties.getInstance();
-		task = new Timeline(new KeyFrame(Duration.millis(50), ae -> {
-			Platform.runLater(() -> {
+		
+		task = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
 				updateMap(true);
-			});
-		} ) );
-		task.setCycleCount(Timeline.INDEFINITE);
+			}		
+		};
 
 	}
 
@@ -487,7 +490,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				task.play();
+				task.start();
 				model = dataService.getCurrent();
 			} else {
 				task.stop();

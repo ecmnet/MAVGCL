@@ -37,6 +37,7 @@ package com.comino.flight.ui.widgets.view3D;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
@@ -47,6 +48,7 @@ import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -70,13 +72,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 	private static final double PLANE_LENGTH = 2000.0;
+	
 
-	private Timeline 		task 		= null;
+	private AnimationTimer 	task 		= null;
 	private Xform 			world 		= new Xform();
 
 	private Box             ground     	= null;
 
-	private MapGroup 		map			= null;
+	private MapGroup 		blocks		= null;
 //	private Map3DGroup      map         = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
@@ -130,8 +133,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.model = dataService.getCurrent();
 
-		this.map   = new MapGroup(control.getCurrentModel());
-		world.getChildren().addAll(map);
+		this.blocks   = new MapGroup(control.getCurrentModel());
+		world.getChildren().addAll(blocks);
 		
 //		this.map   = new Map3DGroup(world,control.getCurrentModel());
 		
@@ -164,10 +167,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 				this.model = dataService.getCurrent();
 			}
 		});
-
-
-		task = new Timeline(new KeyFrame(Duration.millis(33), ae -> {
-			Platform.runLater(() -> {
+		
+		task = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
 				target.updateState(model);
 				vehicle.updateState(model,model.getValue("ALTTR"));
 				switch(perspective) {
@@ -179,8 +182,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 					camera.updateState(model);
 					break;
 				}
-			});
-		} ) );
+			}		
+		};
+
+
 
 		scroll.addListener((v, ov, nv) -> {
 			if(StateProperties.getInstance().getRecordingProperty().get()==AnalysisModelService.STOPPED) {
@@ -203,11 +208,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 		});
 
 
-		task.setCycleCount(Timeline.INDEFINITE);
-
 		this.visibleProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				task.play();
+				task.start();
 			} else {
 				task.stop();
 			}
@@ -215,7 +218,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				task.play();
+				task.start();
 			} else {
 				task.stop();
 			}
@@ -256,7 +259,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 	public void clear() {
-		map.clear();
+		blocks.clear();
 	}
 
 	private Group addPole(char orientation) {

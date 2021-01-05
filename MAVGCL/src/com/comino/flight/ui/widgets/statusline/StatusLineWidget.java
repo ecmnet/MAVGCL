@@ -41,6 +41,7 @@ import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
@@ -50,6 +51,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.speech.VoiceTTS;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -107,7 +109,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private String filename;
 
-	private Timeline task = null;
+	private AnimationTimer task = null;
 
 	int current_x0_pt = 0; int current_x1_pt = 0;
 
@@ -124,16 +126,16 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			throw new RuntimeException(exception);
 		}
 
-		task = new Timeline(new KeyFrame(Duration.millis(200), new EventHandler<ActionEvent>() {
-
-			List<AnalysisDataModel> list = null;
-
+		task = new AnimationTimer() {
 			@Override
-			public void handle(ActionEvent event) {
+			public void handle(long now) {
+
+				List<AnalysisDataModel> list = null;
+
 
 				if(model.slam.wpcount > 0) {
-				   wp.setText(String.format("WP %d", model.slam.wpcount));
-				   wp.setMode(Badge.MODE_ON);
+					wp.setText(String.format("WP %d", model.slam.wpcount));
+					wp.setMode(Badge.MODE_ON);
 				}
 				else if(model.sys.t_takeoff_ms < 0 ) {
 					wp.setText(String.format("T % d", (int)(model.sys.t_takeoff_ms/1000-0.5f)));
@@ -254,9 +256,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					time.setMode(Badge.MODE_ON);
 				}
 			}
-		} ) );
+		};
 
-		task.setCycleCount(Timeline.INDEFINITE);
+
 		driver.setAlignment(Pos.CENTER_LEFT);
 	}
 
@@ -318,7 +320,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		});
 
 
-		task.play();
+		task.start();
 	}
 
 	@Override

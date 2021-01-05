@@ -40,6 +40,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
@@ -47,6 +48,7 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -96,7 +98,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private ChoiceBox<String> source;
 
 
-	private Timeline timeline;
+	private AnimationTimer task;
 
 
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
@@ -129,17 +131,17 @@ public class Vibration extends VBox implements IChartControl  {
 	public Vibration() {
 
 		FXMLLoadHelper.load(this, "Vibration.fxml");
-		timeline = new Timeline(new KeyFrame(Duration.millis(100), ae -> {
-
-			if(dataService.isCollecting() && !isDisabled()) {
-				max_pt = dataService.getModelList().size() - 1;
-				updateGraph();
-			}
-
-		}));
-
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.setDelay(Duration.ZERO);
+		
+		task = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if(dataService.isCollecting() && !isDisabled()) {
+					max_pt = dataService.getModelList().size() - 1;
+					updateGraph();
+				}
+			}		
+		};
+	
 
 		pool = new XYDataPool();
 
@@ -200,9 +202,9 @@ public class Vibration extends VBox implements IChartControl  {
 
 		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
-				timeline.play();
+				task.start();
 			else {
-				timeline.stop();
+				task.stop();
 				vz.setProgress(0);
 			}
 		});
