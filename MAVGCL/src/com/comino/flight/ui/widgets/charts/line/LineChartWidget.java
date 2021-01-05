@@ -226,14 +226,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1 ) {
 			return;
 		}
-
-		if((System.currentTimeMillis()-last_update_ms)> 20 ) {
-			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
-				last_update_ms = System.currentTimeMillis();
-			});
-			//	last_update_ms = System.currentTimeMillis();
-		}
+		
+	//	Platform.runLater(() -> { updateGraph(refreshRequest,0);  });
+		updateGraph(refreshRequest,0);
 	}
 
 	@FXML
@@ -551,7 +546,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				updateGraph(refreshRequest,0);
 			});
 		});
-		
+
 
 
 		scroll.addListener((v, ov, nv) -> {
@@ -659,7 +654,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			time_label.setVisible(false);
 			return;
 		}
-		
+
 		measure.setVisible(true);
 		time_label.setVisible(true);
 

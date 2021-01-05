@@ -57,6 +57,11 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.util.Duration;
+
 
 public class AnalysisModelService  {
 
@@ -88,7 +93,7 @@ public class AnalysisModelService  {
 
 	private boolean isFirst     = false;
 	private boolean isReplaying = false;
-	
+
 	private boolean converter_running = false;
 
 	private int totalTime_sec = 30;
@@ -96,6 +101,8 @@ public class AnalysisModelService  {
 	private IMAVController control = null;
 
 	private CombinedConverter converter = null;
+
+	private Timeline task = null;
 
 	public static AnalysisModelService getInstance(IMAVController control) {
 		if(instance==null) {
@@ -127,7 +134,7 @@ public class AnalysisModelService  {
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 			if(nv.booleanValue()) {
-					
+
 				synchronized(converter) {
 					converter.notify();
 				}
@@ -146,6 +153,14 @@ public class AnalysisModelService  {
 				}
 			}
 		});
+
+		task = new Timeline(new KeyFrame(Duration.millis(10), ae -> {
+			try {
+				for(ICollectorRecordingListener updater : listener)
+					updater.update(System.nanoTime());
+			} catch(Exception e) { }
+		} ) );
+		task.setCycleCount(Timeline.INDEFINITE);
 
 	}
 
@@ -168,7 +183,7 @@ public class AnalysisModelService  {
 		listener.add(l);
 	}
 
-	
+
 	public int setCollectorInterval(int interval_us) {
 		this.collector_interval_us = interval_us;
 		return this.collector_interval_us;
@@ -217,12 +232,13 @@ public class AnalysisModelService  {
 		if(!control.isConnected()) {
 			return false;
 		}
-		
+
 		this.isFirst=true;
 
 		if(mode==STOPPED) {
 			setDefaultCollectorInterval();
 			modelList.clear();
+			task.play();
 			mode = COLLECTING;
 			return true;
 		}
@@ -240,7 +256,7 @@ public class AnalysisModelService  {
 		ExecutorService.get().schedule(new Runnable() {
 			@Override
 			public void run() {
-				stop();
+				stop(); task.stop();
 			}
 		}, delay_sec, TimeUnit.SECONDS);
 	}
@@ -336,7 +352,7 @@ public class AnalysisModelService  {
 		else
 			return 0;
 	}
-	
+
 	public boolean isConverterRunning() {
 		return converter_running;
 	}
@@ -363,129 +379,124 @@ public class AnalysisModelService  {
 		@Override
 		public void run() {
 
-				
-				System.out.println("AnalysisModelService converter thread started ..");
-				mode = STOPPED;
 
-				while(true) {
+			System.out.println("AnalysisModelService converter thread started ..");
+			mode = STOPPED;
+
+			while(true) {
 
 
-					if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+
+					if(ulogger.isLogging())
+						ulogger.enableLogging(false);
+					mode = STOPPED; old_mode = STOPPED;
+					state.getRecordingProperty().set(STOPPED);
+					if(!state.getReplayingProperty().get())
+						current.setValue("SWIFI", 0);
+					converter_running = false;
+
+					synchronized(converter) {
+						System.out.println("Combined Converter is waiting");
+						try { 	this.wait(); } catch (InterruptedException e) { }
+						System.out.println("Combined Converter continued");
+					}
+					continue;
+				}
+
+
+				current.setValue("MAVGCLACC", perf);
+				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
+
+				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
+					state.getRecordingProperty().set(READING_HEADER);
+
+					state.getLogLoadedProperty().set(false);
+					state.getRecordingProperty().set(COLLECTING);
+					tms_start = System.nanoTime() / 1000;
+				}
+
+				if(mode==STOPPED && old_mode != STOPPED) {
+					ulogger.enableLogging(false);
+					state.getRecordingProperty().set(STOPPED);
+				}
+
+				old_mode = mode;
+
+				current.msg = null; wait = System.nanoTime();
+
+				if(state.getReplayingProperty().get()) {
+					try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
+					continue;
+				}
+
+				if(!state.getInitializedProperty().get())
+					continue;
+
+				synchronized(this) {
+					if(state.getCurrentUpToDate().getValue()) {
+						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					}
+				}
+
+
+				if(ulogger.isLogging()) {
+					synchronized(this) {
+						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+					}
+				}
+
+				if(model.msg != null && model.msg.text!=null) {
+					current.msg = model.msg;
+					record.msg  = model.msg;
+				} else {
+					current.msg = null; record.msg = null;
+				}
+
+				converter_running = true;
+
+
+				if(mode!=STOPPED) {
+
+					// Skip first
+					if(!isFirst) {
 
 						if(ulogger.isLogging())
-							ulogger.enableLogging(false);
-						mode = STOPPED; old_mode = STOPPED;
-						state.getRecordingProperty().set(STOPPED);
-						if(!state.getReplayingProperty().get())
-							current.setValue("SWIFI", 0);
-						converter_running = false;
-
-						synchronized(converter) {
-							System.out.println("Combined Converter is waiting");
-							try { 	this.wait(); } catch (InterruptedException e) { }
-							System.out.println("Combined Converter continued");
-						}
-						continue;
-					}
+							m = record.clone();
+						else
+							m = current.clone();
 
 
-					current.setValue("MAVGCLACC", perf);
-					current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
-
-					if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
-						state.getRecordingProperty().set(READING_HEADER);
-							
-						state.getLogLoadedProperty().set(false);
-						state.getRecordingProperty().set(COLLECTING);
-						tms_start = System.nanoTime() / 1000;
-					}
-
-					if(mode==STOPPED && old_mode != STOPPED) {
-						ulogger.enableLogging(false);
-						state.getRecordingProperty().set(STOPPED);
-					}
-
-					old_mode = mode;
-
-					current.msg = null; wait = System.nanoTime();
-
-					if(state.getReplayingProperty().get()) {
-						try { 	Thread.sleep(100); 	} catch (InterruptedException e) { 	}
-						continue;
-					}
-
-					if(!state.getInitializedProperty().get())
-						continue;
-
-					synchronized(this) {
-						if(state.getCurrentUpToDate().getValue()) {
-							current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-							current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-						}
-					}
+						m.tms = System.nanoTime() / 1000 - tms_start;
+						m.dt_sec = m.tms / 1e6f;
+						modelList.add(m);
 
 
-					if(ulogger.isLogging()) {
-						synchronized(this) {
-							//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-							record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-							record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
-						}
-					}
+						state.getRecordingAvailableProperty().set(modelList.size()>0);
 
-					if(model.msg != null && model.msg.text!=null) {
-						current.msg = model.msg;
-						record.msg  = model.msg;
-					} else {
-						current.msg = null; record.msg = null;
-					}
-					
-					converter_running = true;
+						perf = ( m.tms - tms_last ) / 1e3f;
+						tms_last = m.tms;
 
+					} else
+						tms_last = System.nanoTime() / 1000 - tms_start;
+					isFirst = false;
+				} else {
 
-					if(mode!=STOPPED) {
+					current.tms = System.nanoTime() / 1000 ;
+					perf = ( current.tms - tms_last ) / 1e3f;
+					tms_last = current.tms;
 
-						// Skip first
-						if(!isFirst) {
-
-							if(ulogger.isLogging())
-								m = record.clone();
-							else
-								m = current.clone();
-
-
-							m.tms = System.nanoTime() / 1000 - tms_start;
-							m.dt_sec = m.tms / 1e6f;
-							modelList.add(m);
-
-
-							state.getRecordingAvailableProperty().set(modelList.size()>0);
-
-							try {
-								for(ICollectorRecordingListener updater : listener)
-									updater.update(System.nanoTime());
-							} catch(Exception e) { }
-
-							perf = ( m.tms - tms_last ) / 1e3f;
-							tms_last = m.tms;
-
-						} else
-							tms_last = System.nanoTime() / 1000 - tms_start;
-						isFirst = false;
-					} else {
-						
-						current.tms = System.nanoTime() / 1000 ;
-						perf = ( current.tms - tms_last ) / 1e3f;
-						tms_last = current.tms;
-						
-						// Slow down conversion if not recording
-						LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 1700000 );
-					}
-					
-					LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1700000 );
+					// Slow down conversion if not recording
+					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 1700000 );
 				}
+
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1700000 );
 			}
 		}
-	
+	}
+
 
 }
