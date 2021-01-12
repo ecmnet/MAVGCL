@@ -14,14 +14,7 @@ Any feedback, comments and contributions are very welcome.
 
 **Development Status:** Last updated 	12/01/21 (Release V0.820)
 
-** Moved to maven build **
-
-* MotorTest added
-* ACCX,Y, Z FFT graph added (up to 100Hz with ULOG)
-* Vibration metrics
-* Option to copy imported ULOG file to ~/Downloads
-* Minor UI improvements, Performance
-
+* switched to maven based build
 
 **Features:**
 
