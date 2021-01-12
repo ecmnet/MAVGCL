@@ -10,113 +10,31 @@
 
 	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home}lib/ant-javafx.jar" />
 
-	<target name="all" depends="clean,compile,build" />
-	<target name="all_deploy" depends="clean,compile,build,deploy_osx" />
+	<target name="metadata" >
+		<echo>JDK used: ${jdk.home}</echo>
+			<tstamp>
+			  <format property="current.time" pattern="dd.MM.yyyy" />
+			</tstamp>
+			<buildnumber />
+		    <echo>Current build number:${build.number}</echo>
+			<propertyfile file="src/main/java/com/comino/flight/build.info">
+				<entry key="build" value="${build.number}" />
+				<entry key="build_date" value="${current.time}" />
+			</propertyfile>
+		</target>
 
-	<target name="clean">
-		<delete dir="dist" />
-		<mkdir dir="dist"  />
-		<mkdir dir="dist/deploy"  />
-		<delete dir="bin"  />
-		<mkdir dir="bin"   />
+	<target name="mvn" depends="metadata">
+	    <exec dir="." executable="sh">
+		   <arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn compile install -amd'" />
+	    </exec>
 	</target>
 
-	<target name="metadata" depends="clean">
-		<tstamp>
-		  <format property="current.time" pattern="dd.MM.yyyy" />
-		</tstamp>
-		<buildnumber />
-	    <echo>Current build number:${build.number}</echo>
-		<propertyfile file="src/com/comino/flight/build.info">
-			<entry key="build" value="${build.number}" />
-			<entry key="build_date" value="${current.time}" />
-		</propertyfile>
-	</target>
-
-	<target name="compile" depends="metadata">
-		<copy todir="bin">
-			<fileset dir="src">
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-		<javac destdir="bin" includeantruntime="false">
-			<compilerarg value="--add-exports=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED" />
-			<src path="src" />
-			<classpath>
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="build" depends="compile">
-		<fx:jar destfile="dist/MAVGAnalysis.jar">
-			<fx:application mainClass="com.comino.flight.MainApp" />
-			<fileset dir="bin/">
-				<include name="**" />
-				<exclude name="**/FirstPreloader.*" />
-			</fileset>
-			<manifest>
-				<attribute name="Main-Class" value="com.comino.flight.MainApp" />
-				<attribute name="Class-Path" value="mavcom-0.0.1.jar mavutils-0.0.1.jar jna-4.1.0.jar poly2tri-core.jar mavbase.jar
-					                                JCSG.jar medusa-7.4.jar gson-2.8.5.jar jfxchartext-1.1.jar jSerialComm-1.3.11
-					                                Jamepad-1.3.2.jar javaparser-core-2.3.0.jar gdx-jnigen-1.9.9.jar
-					                                MAVGPreloader.jar exp4j-0.4.7.jar core-0.29.jar  dense64-0.29.jar
-				                                    jcodec-0.1.9.jar jcodec-javase-0.1.9.jar georegression-0.10.jar
-					                                ObjImport.jar jlayer-1.0.1.jar" />
-			</manifest>
-		</fx:jar>
-
-		<fx:jar destfile="dist/MAVGPreloader.jar">
-			<fx:application mainClass="com.comino.flight.FirstPreloader" />
-			<fileset dir="bin/">
-				<include name="**/FirstPreloader.class" />
-			</fileset>
-			<manifest>
-				<attribute name="Main-Class" value="com.comino.flight.FirstPreloader" />
-			</manifest>
-		</fx:jar>
-
-		<copy todir="dist">
-			<fileset dir=".">
-				<include name="MAV*.icns" />
-				<include name="MAV*.png" />
-			</fileset>
-		</copy>
-		<copy todir="dist">
-			<fileset dir="lib/">
-				<include name="mavcom-0.0.1.jar" />
-				<include name="mavutils-0.0.1.jar" />
-				<include name="mavbase.jar" />
-				<include name="jSerialComm-1.3.11.jar" />
-				<include name="jna-4.1.0.jar" />
-				<include name="JCSG.jar" />
-				<include name="medusa-7.4.jar" />
-				<include name="gson-2.8.5.jar" />
-				<include name="exp4j-0.4.7.jar" />
-				<include name="jfxchartext-1.1.jar" />
-				<include name="core-0.29.jar" />
-				<include name="dense64-0.29.jar" />
-				<include name="jcodec-0.1.9.jar" />
-				<include name="jcodec-javase-0.1.9.jar" />
-				<include name="georegression-0.10.jar" />
-				<include name="ObjImport.jar" />
-				<include name="jlayer-1.0.1.jar" />
-				<include name="Jamepad-1.3.2.jar" />
-				<include name="javaparser-core-2.3.0.jar" />
-				<include name="gdx-jnigen-1.9.9.jar" />
-			</fileset>
-		</copy>
-
-	</target>
-
-	<target name="deploy_osx" depends="build">
+	<target name="deploy_osx" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
 			</fx:application>
 			<fx:resources>
-				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
+				<fx:fileset requiredFor="startup"   dir="target/deploy" includes="*.*" />
 			</fx:resources>
 			<fx:info title="MAVGAnalysis" vendor="ecmnet">
 				<fx:icon href="MAVGAnalysis.icns" />
@@ -126,7 +44,7 @@
 	</target>
 
 
-	<target name="deploy_linux" depends="build">
+	<target name="deploy_linux" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="deb">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
 						</fx:application>
@@ -139,7 +57,7 @@
 	</target>
 
 
-	<target name="deploy_windows" depends="build">
+	<target name="deploy_windows" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="msi">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
 
