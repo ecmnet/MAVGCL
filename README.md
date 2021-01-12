@@ -12,7 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	14/12/2020 (Release V0.820)
+**Development Status:** Last updated 	12/01/21 (Release V0.820)
+
+** Moved to maven build **
 
 * MotorTest added
 * ACCX,Y, Z FFT graph added (up to 100Hz with ULOG)
