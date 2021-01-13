@@ -25,7 +25,7 @@
 
 	<target name="mvn" depends="metadata">
 	    <exec dir="." executable="sh">
-		   <arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn compile install -amd'" />
+		   <arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
 	    </exec>
 	</target>
 
