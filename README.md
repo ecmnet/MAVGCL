@@ -16,6 +16,8 @@ Any feedback, comments and contributions are very welcome.
 
 * switched to maven based build
 
+Note: maven build currently requires mavcom, mavmap, mavodometry and mavutils built locally
+
 **Features:**
 
 - Realtime data acquisition (20ms sampling, 100ms rolling display) based on MAVLink messages or ULOG data over MAVLink
