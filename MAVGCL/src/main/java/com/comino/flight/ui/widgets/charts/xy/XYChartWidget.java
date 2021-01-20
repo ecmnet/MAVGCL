@@ -665,7 +665,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x_pt  = dataService.calculateX0IndexByFactor(1);
-		grid.clear();
 		scroll.setValue(1);
 		refreshChart();
 	}

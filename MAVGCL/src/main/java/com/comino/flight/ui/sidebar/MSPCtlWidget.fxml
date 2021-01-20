@@ -24,6 +24,7 @@
 						text="Save current map to store" />
 					<Button fx:id="load_map" prefWidth="165.0"
 						text="Load current map to from store" />
+						<Button fx:id="debug_mode2" text="Build virtual wall" prefWidth="165.0" />
 				</children>
 			</VBox>
 			<VBox fx:id="settings" spacing="10" styleClass="widget"
@@ -79,7 +80,7 @@
 					</Button>
 					<Button fx:id="debug_mode1" text="Testing Mode1"
 						prefWidth="165.0" />
-					<Button fx:id="debug_mode2" text="Build virtual wall" prefWidth="165.0" />
+					
 					<Button fx:id="rotate_north" text="Rotate North" prefWidth="165.0" />
 
 				</children>

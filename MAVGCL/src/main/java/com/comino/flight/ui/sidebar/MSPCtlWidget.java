@@ -43,6 +43,7 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.jfx.extensions.StateButton;
+import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
@@ -423,6 +424,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
+			MAVGCLMap.getInstance().clear();
 		});
 
 

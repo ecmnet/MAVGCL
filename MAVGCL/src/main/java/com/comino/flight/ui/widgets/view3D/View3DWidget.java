@@ -37,20 +37,16 @@ package com.comino.flight.ui.widgets.view3D;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
-import com.comino.flight.ui.widgets.view3D.objects.MapGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -66,7 +62,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class View3DWidget extends SubScene implements IChartControl {
 
@@ -79,8 +74,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private Box             ground     	= null;
 
-	private MapGroup 		blocks		= null;
-//	private Map3DGroup      map         = null;
+//	private MapGroup 		blocks		= null;
+	private Map3DGroup      blocks      = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
 	private Target			target      = null;
@@ -133,8 +128,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.model = dataService.getCurrent();
 
-		this.blocks   = new MapGroup(control.getCurrentModel());
-		world.getChildren().addAll(blocks);
+		this.blocks   = new Map3DGroup(world,control.getCurrentModel());
+	//	world.getChildren().addAll(blocks);
 		
 //		this.map   = new Map3DGroup(world,control.getCurrentModel());
 		
@@ -258,9 +253,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 	}
 
 
-	public void clear() {
-		blocks.clear();
-	}
+//	public void clear() {
+//		blocks.clear();
+//	}
 
 	private Group addPole(char orientation) {
 

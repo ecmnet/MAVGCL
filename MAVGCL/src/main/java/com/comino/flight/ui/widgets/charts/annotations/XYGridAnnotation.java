@@ -34,15 +34,19 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-import com.comino.flight.model.map.IMAVMap;
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import javafx.application.Platform;
+import bubo.maps.d3.grid.CellProbability_F64;
+import georegression.struct.point.Point3D_F32;
+import georegression.struct.point.Point3D_F64;
+import georegression.struct.point.Point3D_I32;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
@@ -52,11 +56,12 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	private  Pane   	      pane 		= null;
 //	private  Pane             indicator = null;
-	private  IMAVMap          map       = null;
-	private Map<Integer,Pane> blocks    = null;
+	private  MAVGCLMap          map       = null;
+	private Map<Long,Pane>    blocks    = null;
 	private DataModel         model     = null;
-	private final ZFilter     z_filter  = null;//new ZFilter();   
 	private boolean           enabled   = false;
+    private Point3D_I32       mapp      = new Point3D_I32();
+    private Point3D_F64       mapo      = new Point3D_F64();
 
 
 	public XYGridAnnotation() {
@@ -64,7 +69,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
 
-		this.blocks = new HashMap<Integer,Pane>();
+		this.blocks = new HashMap<Long,Pane>();
 
 		//		indicator = new Pane();
 		//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
@@ -76,7 +81,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public void setController(IMAVController control) {
 		this.model = control.getCurrentModel();
-		this.map   = MAVGCLMap.getInstance(control);
+		this.map   = MAVGCLMap.getInstance();
 	}
 
 
@@ -97,33 +102,39 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(model == null || model.grid==null || !enabled)
 			return;
 
-		blocks.keySet().retainAll(map.keySet(z_filter));	
-
-		map.forEach(z_filter,(i,b) -> {
+		
+		Set<Long> set = map.getLevelSet();
+		
+		blocks.keySet().retainAll(set);	
+		
+		set.forEach((i) -> {
+			
 			Pane p = null;
 			if(!blocks.containsKey(i))
 				p = addBlockPane(i);
 			else
 				p = blocks.get(i);
-
-			p.setLayoutX(xAxis.getDisplayPosition(b.y/100f));
-			p.setLayoutY(yAxis.getDisplayPosition(b.x/100f+model.grid.getResolution()));
-			p.setPrefWidth(xAxis.getDisplayPosition(model.grid.getResolution())-xAxis.getDisplayPosition(0));
-			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(model.grid.getResolution()));
+			
+			map.getInfo().decodeMapPoint(i, mapp);
+			map.getInfo().mapToGlobal(mapp, mapo);
+			
+			p.setLayoutX(xAxis.getDisplayPosition(mapo.y));
+			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getInfo().getCellSize()));
+			p.setPrefWidth(xAxis.getDisplayPosition(map.getInfo().getCellSize())-xAxis.getDisplayPosition(0));
+			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getInfo().getCellSize()));
+		
+			
 		});
 	}
 
 	public  void invalidate(boolean enable) {
 		if(map!=null)
-			blocks.keySet().retainAll(map.keySet(z_filter));	
+			blocks.keySet().retainAll(map.getLevelSet());	
 		enabled = enable;
 	}
 
-	public void clear() {
-		map.clear(); 
-	}
 
-	private Pane addBlockPane(int block) {
+	private Pane addBlockPane(long block) {
 		Pane p = new Pane();
 		p.setStyle("-fx-background-color: rgba(38, 136, 163, 0.5); -fx-padding:-1px; -fx-border-color: #20738a;");
 		pane.getChildren().add(p);
@@ -132,15 +143,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 		return p;
 	}
 	
-	// Z filter 0.5m araound rel.altitude
-	private class ZFilter implements Comparable<Integer> {
-
-		@Override
-		public int compareTo(Integer z) {
-			if(Math.abs(model.hud.ar*100 - z) < 50) return 0; else return 1; 
-		}
-		
-	}
 
 
 }

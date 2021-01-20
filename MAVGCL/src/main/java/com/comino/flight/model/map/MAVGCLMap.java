@@ -1,127 +1,91 @@
 package com.comino.flight.model.map;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavmap.map.map3D.LocalMap3D;
+import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
+import com.comino.mavutils.legacy.ExecutorService;
 
+import bubo.maps.d3.grid.CellProbability_F64;
 import georegression.struct.point.Point3D_I32;
 
-public class MAVGCLMap implements IMAVMap {
+public class MAVGCLMap  {
 	
-	private static IMAVMap mav2dmap = null;
+	private static MAVGCLMap mav2dmap = null;
 
-	private final DataModel                  model;
-	private final Map<Integer,Point3D_I32>   map;
-	private final HashSet<Integer>           set;
-
-	private int cx = 0;
-	private int cy = 0;
-	private int cz = 0;
-
-	private int dimension     = 800;
-	private int resolution_cm = 5;
+	private final DataModel  model;
+	private final LocalMap3D map         = new LocalMap3D();
+	private final Point3D_I32 p          = new Point3D_I32();
 	
-	public static IMAVMap getInstance(IMAVController control) {
+	private final HashSet<Long> set      = new HashSet<Long>();
+	
+	
+	public static MAVGCLMap getInstance(IMAVController control) {
 		if(mav2dmap==null)
 			mav2dmap = new MAVGCLMap(control);
+		return mav2dmap;
+	}
+	
+	public static MAVGCLMap getInstance() {
 		return mav2dmap;
 	}
 	
 	private MAVGCLMap(IMAVController control) {
 
 		this.model = control.getCurrentModel();
-		this.map   = new ConcurrentHashMap<Integer, Point3D_I32>();
-		this.set   = new HashSet<Integer>();
-
-		this.dimension = (int)(20.0f/0.05f)*2;
-		this.resolution_cm = (int)(0.05f*100f);
-
-		this.cx = dimension / 2;
-		this.cy = dimension / 2;
-		this.cz = dimension / 2;
-
-
-		control.addMAVLinkListener((o) -> {
-			if(o instanceof msg_msp_micro_grid) {
-				if(model.grid.hasTransfers()) 
-					mapItemWorker(model.grid.getTransfers());
-			}
-		});	
-	}
-
-	@Override
-	public Map<Integer, Point3D_I32> getMap() {
-		return map;
-	}
-
-	@Override
-	public void clear() {
-		map.clear();
+		
+		ExecutorService.get().scheduleAtFixedRate(() -> {
+			LinkedList<Long> list = model.grid.getTransfers();
+			while(!list.isEmpty()) {
+				double probabiliy = map.getMapInfo().decodeMapPoint(list.pop(), p);
+				map.setMapPoint(p, probabiliy);
+			}	
+		}, 100, 100, TimeUnit.MILLISECONDS);
 	}
 	
-	@Override
-	public Set<Integer> keySet() {
-		return map.keySet();
+	public Iterator<CellProbability_F64> getMapLevelItems() {
+	  return map.getMapLevelItems( model.hud.ar-0.5f,model.hud.ar+0.5f);
 	}
 	
-	@Override
-	public void forEach(BiConsumer<Integer,Point3D_I32 > consumer) {
-		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
-			consumer.accept(entry.getKey(),entry.getValue());
+	public Iterator<CellProbability_F64> getLatestMapItems(long tms) {
+		  return map.getLatestMapItems(tms);
 		}
-	}
 	
-	@Override
-	public Set<Integer> keySet(Comparable<Integer> zfilter) {
-		if(zfilter==null)
-			return map.keySet();
+	public Set<Long> getLevelSet() {
 		set.clear();
-		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
-			if(zfilter.compareTo(entry.getValue().z)==0)
-			 set.add(entry.getKey());
+		Iterator<CellProbability_F64> i = getMapLevelItems();
+		while(i.hasNext()) {
+			CellProbability_F64 p = i.next();
+			set.add(map.getMapInfo().encodeMapPoint(p, p.probability));
 		}
 		return set;	
 	}
+
+	public Map3DSpacialInfo getInfo() {
+		return map.getMapInfo();
+	}
 	
-	@Override
-	public void forEach(Comparable<Integer> zfilter, BiConsumer<Integer,Point3D_I32 > consumer) {
-		for(Entry<Integer, Point3D_I32> entry : map.entrySet()) {
-			if(zfilter==null || zfilter.compareTo(entry.getValue().z)==0)
-			  consumer.accept(entry.getKey(),entry.getValue());
-		}
+	public void clear() {
+		map.clear();	
 	}
-
-	private void mapItemWorker(LinkedList<Integer> transfers) {
-		int mpi= 0;
-		while(!transfers.isEmpty()) {
-			mpi = transfers.poll();
-			if(map.containsKey(mpi))
-				continue;
-			if(mpi > 0) 
-				map.put(mpi, decodeMapPoint(mpi));
-			else 
-				map.remove(-mpi);	
-		}
+	
+	public boolean isEmpty() {
+		return map.size() == 1;
 	}
+	
 
-	private Point3D_I32 decodeMapPoint(int mpi) {
-
-		Point3D_I32 p = new Point3D_I32();
-		p.x = ((int)(mpi % dimension)-cx)*resolution_cm;
-		p.y = ((int)((mpi / dimension) % dimension)-cy)*resolution_cm;
-		p.z = ((int)(mpi  / (dimension* dimension))-cz)*resolution_cm;
-
-		return p;
-	}
-
+	
 
 }
