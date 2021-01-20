@@ -52,6 +52,7 @@ import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
+import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
@@ -243,16 +244,15 @@ public class MainApp extends Application  {
 					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 				}
 			}
+			
+			
+			MAVGCLMap.getInstance(control);
 
 			state = StateProperties.getInstance(control);
 			MAVPreferences.init();
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
-
-
-
-			control.getStatusManager().start();
 
 			MSPLogger.getInstance(control);
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
@@ -306,7 +306,11 @@ public class MainApp extends Application  {
 
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
+					
+					control.getStatusManager().start();
+					
 					analysisModelService.startConverter();
+					
 					new SITLController(control);
 					System.out.println("Initializing");
 
