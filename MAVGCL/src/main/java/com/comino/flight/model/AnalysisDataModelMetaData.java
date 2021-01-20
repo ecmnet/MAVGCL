@@ -86,6 +86,10 @@ public class AnalysisDataModelMetaData extends Observable {
 				buildDocument(is);
 			} else {
 				is = AnalysisDataModelMetaData.class.getResourceAsStream("AnalysisDataModelMetaData.xml");
+				if(is==null) {
+					System.err.println("Path to resources cannot be found: AnalysisDataModelMetaData.xml.");
+					System.exit(0);
+				}
 				buildDocument(is);
 			}
 			sortedMetaList = buildSortedList();
