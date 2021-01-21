@@ -22,10 +22,9 @@ public class Map3DGroup {
 
 	private final Group root;
 	
-	private AnimationTimer              task = null;
-	private final List<PhongMaterial>  	blocked 	= new ArrayList<PhongMaterial>();
-	
-	private final Map<Long,Box>         boxes = new HashMap<Long,Box>();
+	private AnimationTimer              task    = null;
+	private final List<PhongMaterial>  	blocked = new ArrayList<PhongMaterial>();
+	private final Map<Long,Box>         boxes   = new HashMap<Long,Box>();
 	
 	private final MAVGCLMap             map;
 	private final Map3DSpacialInfo      info;
@@ -42,9 +41,10 @@ public class Map3DGroup {
 		this.info = map.getInfo();
 		this.size = info.getCellSize() * 100;
 		
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < 10; i++) {
 			PhongMaterial m = new PhongMaterial();
-			m.setDiffuseColor(Color.web("DARKORANGE", (20 - i)/20f));
+			m.setDiffuseColor(Color.web("DARKCYAN", i/10f));
+			m.setSpecularColor(Color.WHITE);
 			blocked.add(m);
 		}
 		
@@ -88,7 +88,7 @@ public class Map3DGroup {
 			box.setTranslateZ(global.x*100);
 			box.setTranslateX(-global.y*100);
 			box.setTranslateY(-global.z*100);
-			box.setMaterial(blocked.get(1));
+			box.setMaterial(blocked.get((int)(pos.probability*10)-1));
 			box.setCullFace(CullFace.BACK);
 			root.getChildren().add(box);
 			boxes.put(h, box);
