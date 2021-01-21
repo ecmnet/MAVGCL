@@ -12,21 +12,21 @@
 
 	<target name="metadata" >
 		<echo>JDK used: ${jdk.home}</echo>
-			<tstamp>
-			  <format property="current.time" pattern="dd.MM.yyyy" />
-			</tstamp>
-			<buildnumber />
-		    <echo>Current build number:${build.number}</echo>
-			<propertyfile file="src/main/java/com/comino/flight/build.info">
-				<entry key="build" value="${build.number}" />
-				<entry key="build_date" value="${current.time}" />
-			</propertyfile>
-		</target>
+		<tstamp>
+			<format property="current.time" pattern="dd.MM.yyyy" />
+		</tstamp>
+		<buildnumber />
+		<echo>Current build number:${build.number}</echo>
+		<propertyfile file="src/main/java/com/comino/flight/build.info">
+			<entry key="build" value="${build.number}" />
+			<entry key="build_date" value="${current.time}" />
+		</propertyfile>
+	</target>
 
 	<target name="mvn" depends="metadata">
-	    <exec dir="." executable="sh">
-		   <arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
-	    </exec>
+		<exec dir="." executable="sh">
+			<arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
+		</exec>
 	</target>
 
 	<target name="deploy_osx" depends="mvn">
@@ -40,6 +40,9 @@
 				<fx:icon href="MAVGAnalysis.icns" />
 				<fx:association extension="mgc" description="*.mgc files"/>
 			</fx:info>
+			<fx:platform>
+				<fx:jvmarg value="-Xms1G"/>
+			</fx:platform>
 		</fx:deploy>
 	</target>
 
@@ -47,12 +50,15 @@
 	<target name="deploy_linux" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="deb">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
-						</fx:application>
-						<fx:resources>
-							<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
-						</fx:resources>
-						<fx:info title="MAVGAnalysis" vendor="ecmnet">
-						</fx:info>
+			</fx:application>
+			<fx:resources>
+				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
+			</fx:resources>
+			<fx:info title="MAVGAnalysis" vendor="ecmnet">
+			</fx:info>
+			<fx:platform>
+				<fx:jvmarg value="-Xms1G"/>
+			</fx:platform>
 		</fx:deploy>
 	</target>
 
@@ -61,15 +67,15 @@
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="msi">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
 
-						</fx:application>
-						<fx:resources>
-							<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
-						</fx:resources>
-						<fx:info title="MAVGAnalysis" vendor="ecmnet">
-							<fx:icon href="MAVGAnalysis.icns" />
-						</fx:info>
+			</fx:application>
+			<fx:resources>
+				<fx:fileset requiredFor="startup"   dir="dist" includes="*.*" />
+			</fx:resources>
+			<fx:info title="MAVGAnalysis" vendor="ecmnet">
+				<fx:icon href="MAVGAnalysis.icns" />
+			</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms1000m"/>
+				<fx:jvmarg value="-Xms1G"/>
 			</fx:platform>
 		</fx:deploy>
 	</target>
