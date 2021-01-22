@@ -79,7 +79,8 @@ public class Alert extends ChartControlPane    {
 					   (msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY ||
 					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_ALERT     ||
 					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_CRITICAL  ) &&
-						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)) {
+						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)
+						&& !control.isSimulation()) {
 						
 						Platform.runLater(() -> {
 							String m = "["+LogMessage.severity_texts[msg.severity]+"] "+(new String(msg.text)).trim();
