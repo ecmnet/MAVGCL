@@ -12,6 +12,7 @@ import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
 import bubo.maps.d3.grid.CellProbability_F64;
 import georegression.struct.point.Point3D_F64;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -87,7 +88,7 @@ public class Map3DGroup {
 			final Box box = new Box(size, size, size);
 			box.setTranslateZ(global.x*100);
 			box.setTranslateX(-global.y*100);
-			box.setTranslateY(-global.z*100);
+			box.setTranslateY((-global.z+info.getCellSize()/2)*100);
 			box.setMaterial(blocked.get((int)(pos.probability*5)-1));
 			box.setCullFace(CullFace.BACK);
 			root.getChildren().add(box);
@@ -113,7 +114,11 @@ public class Map3DGroup {
 //	}
 	
 	public void invalidate() {
-		this.tms = 0;
+		Platform.runLater(() -> {
+			root.getChildren().removeAll(boxes.values());
+			boxes.clear();
+			map.getLatestMapItems(0).forEachRemaining((p) -> { addBlock(p); });
+		});
 	}
 
 	
