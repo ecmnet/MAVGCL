@@ -18,6 +18,7 @@ Any feedback, comments and contributions are very welcome.
 * switched to maven based build
 
 Note: 3D map data can be transferred to MAVGCL using the custom MAVLink message [msg_msp_micro_grid](https://github.com/ecmnet/mavcom/blob/af3a826866d977b898170547d15e1ad334899682/mavcom/mavlink/lquac.xml#L231) - for encoding refer to [MAP3DSpacialInfo.java](https://github.com/ecmnet/mavmap/blob/aa739520e2de797cad3ba71da01f041c87445557/mavmap/src/main/java/com/comino/mavmap/map/map3D/Map3DSpacialInfo.java#L84)
+
 Note: maven build currently requires mavcom, mavmap, mavodometry and mavutils built locally
 
 **Features:**
