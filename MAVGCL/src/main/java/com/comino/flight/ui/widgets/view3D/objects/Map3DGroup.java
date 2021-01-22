@@ -41,9 +41,9 @@ public class Map3DGroup {
 		this.info = map.getInfo();
 		this.size = info.getCellSize() * 100;
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 5; i++) {
 			PhongMaterial m = new PhongMaterial();
-			m.setDiffuseColor(Color.web("DARKCYAN", i/10f));
+			m.setDiffuseColor(Color.web("DARKCYAN", i/5f));
 			m.setSpecularColor(Color.WHITE);
 			blocked.add(m);
 		}
@@ -88,15 +88,17 @@ public class Map3DGroup {
 			box.setTranslateZ(global.x*100);
 			box.setTranslateX(-global.y*100);
 			box.setTranslateY(-global.z*100);
-			box.setMaterial(blocked.get((int)(pos.probability*10)-1));
+			box.setMaterial(blocked.get((int)(pos.probability*5)-1));
 			box.setCullFace(CullFace.BACK);
 			root.getChildren().add(box);
 			boxes.put(h, box);
 			return;
 
-		}
+		} 
+		
+		else {
 
-		if(pos.probability < 0.5f) {
+	//	if(pos.probability < 0.1f || pos.probability == 0.5f) {
 			Box box = boxes.remove(h);
 			if(box!=null) {
 				root.getChildren().remove(box);	

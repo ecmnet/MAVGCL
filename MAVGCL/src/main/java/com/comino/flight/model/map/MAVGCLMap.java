@@ -46,13 +46,16 @@ public class MAVGCLMap  {
 
 		this.model = control.getCurrentModel();
 		
-		ExecutorService.get().scheduleAtFixedRate(() -> {
-			LinkedList<Long> list = model.grid.getTransfers();
-			while(!list.isEmpty()) {
-				double probabiliy = map.getMapInfo().decodeMapPoint(list.pop(), p);
-				map.setMapPoint(p, probabiliy);
-			}	
-		}, 100, 100, TimeUnit.MILLISECONDS);
+		control.addMAVLinkListener((o) -> {
+			if(o instanceof msg_msp_micro_grid) {
+				LinkedList<Long> list = model.grid.getTransfers();
+				while(!list.isEmpty()) {
+					double probabiliy = map.getMapInfo().decodeMapPoint(list.pop(), p);
+					map.setMapPoint(p, probabiliy);
+				}
+			}
+		});
+		
 	}
 	
 	public Iterator<CellProbability_F64> getMapLevelItems() {
