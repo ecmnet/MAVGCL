@@ -46,6 +46,7 @@ import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
 
+import georegression.struct.point.Point3D_F64;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -59,6 +60,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
@@ -72,7 +74,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private AnimationTimer 	task 		= null;
 	private Xform 			world 		= new Xform();
 
-	private Box             ground     	= null;
+	private Box             ground;
 
 //	private MapGroup 		blocks		= null;
 	private Map3DGroup      blocks      = null;
@@ -101,6 +103,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.WHITE);
+		
 
 		PhongMaterial groundMaterial = new PhongMaterial();
 		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
@@ -129,7 +132,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.model = dataService.getCurrent();
 
 		this.blocks   = new Map3DGroup(world,control.getCurrentModel());
-	//	world.getChildren().addAll(blocks);
 		
 //		this.map   = new Map3DGroup(world,control.getCurrentModel());
 		
@@ -221,6 +223,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		return this;
 	}
+	
 
 	public void setPerspective(int perspective) {
 		this.perspective = perspective;
@@ -327,5 +330,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 	}
-
+	
+	
 }

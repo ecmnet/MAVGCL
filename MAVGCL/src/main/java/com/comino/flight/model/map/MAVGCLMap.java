@@ -19,6 +19,7 @@ import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import bubo.maps.d3.grid.CellProbability_F64;
+import georegression.struct.point.Point3D_F64;
 import georegression.struct.point.Point3D_I32;
 
 public class MAVGCLMap  {
@@ -30,6 +31,8 @@ public class MAVGCLMap  {
 	private final Point3D_I32 p          = new Point3D_I32();
 	
 	private final HashSet<Long> set      = new HashSet<Long>();
+
+	private long last_update = - 1;
 	
 	
 	public static MAVGCLMap getInstance(IMAVController control) {
@@ -53,6 +56,8 @@ public class MAVGCLMap  {
 					double probabiliy = map.getMapInfo().decodeMapPoint(list.pop(), p);
 					map.setMapPoint(p, probabiliy);
 				}
+			  map.setIndicator(model.grid.ix, model.grid.iy, model.grid.iz);
+			  last_update  = System.currentTimeMillis();
 			}
 		});
 		
@@ -80,8 +85,21 @@ public class MAVGCLMap  {
 		return map.getMapInfo();
 	}
 	
+	public Point3D_F64 getIndicator() {
+		return map.getIndicator();
+	}
+	
 	public void clear() {
+	    last_update = - 1;
 		map.clear();	
+	}
+	
+	public LocalMap3D getMap() {
+		return map;
+	}
+	
+	public long getLastUpdate() {
+		return last_update;
 	}
 	
 	public boolean isEmpty() {
