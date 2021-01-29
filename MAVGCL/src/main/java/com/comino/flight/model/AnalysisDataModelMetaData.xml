@@ -244,6 +244,13 @@
 			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Alt.BottomClearance" uom="m" mask="#0.00" key="ALTBC">
+		<MSPSource class="hud" field="bc"></MSPSource>
+		<Groups>
+			<Group>Altitude</Group>
+		</Groups>
+	</KeyFigure>
 
 
 	<!-- Local position  -->
