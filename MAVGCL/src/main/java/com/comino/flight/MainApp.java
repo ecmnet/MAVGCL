@@ -124,6 +124,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_params;
+	
+	@FXML
+	private MenuItem m_map;
 
 	@FXML
 	private MenuItem m_dump;
@@ -469,6 +472,7 @@ public class MainApp extends Application  {
 			m_params.setOnAction(event -> {
 				FileHandler.getInstance().csvParameterImport();
 			});
+			
 
 			m_reload.setOnAction((ActionEvent event)-> {
 				MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
