@@ -12,6 +12,8 @@ import java.util.function.BiConsumer;
 
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavmap.map.map3D.LocalMap3D;
@@ -26,8 +28,9 @@ public class MAVGCLMap  {
 	
 	private static MAVGCLMap mav2dmap = null;
 
-	private final DataModel  model;
-	private final LocalMap3D map         = new LocalMap3D();
+	private final DataModel  model;  // Todo: Get rid of the current model
+	
+	private final LocalMap3D map;
 	private final Point3D_I32 p          = new Point3D_I32();
 	
 	private final HashSet<Long> set      = new HashSet<Long>();
@@ -46,7 +49,8 @@ public class MAVGCLMap  {
 	}
 	
 	private MAVGCLMap(IMAVController control) {
-
+		
+		this.map   = new LocalMap3D(new Map3DSpacialInfo(0.10f,20.0f,20.0f,5.0f),false);
 		this.model = control.getCurrentModel();
 		
 		control.addMAVLinkListener((o) -> {
@@ -56,6 +60,8 @@ public class MAVGCLMap  {
 					double probabiliy = map.getMapInfo().decodeMapPoint(list.pop(), p);
 					map.setMapPoint(p, probabiliy);
 				}
+				
+			  // TODO: Access AnalysisDatamodel
 			  map.setIndicator(model.grid.ix, model.grid.iy, model.grid.iz);
 			  last_update  = System.currentTimeMillis();
 			}
@@ -64,7 +70,9 @@ public class MAVGCLMap  {
 	}
 	
 	public Iterator<CellProbability_F64> getMapLevelItems() {
-	  return map.getMapLevelItems( model.hud.ar-0.5f,model.hud.ar+0.5f);
+	  float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
+	  float delta = 2.0f*map.getMapInfo().getCellSize();
+	  return map.getMapLevelItems(current_altitude-delta,current_altitude+delta);
 	}
 	
 	public Iterator<CellProbability_F64> getLatestMapItems(long tms) {

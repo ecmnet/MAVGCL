@@ -65,6 +65,7 @@ import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
+import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
@@ -76,6 +77,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.comino.mavcom.param.ParameterAttributes;
+import com.comino.mavmap.map.map3D.store.LocaMap3DStorage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -212,6 +214,7 @@ public class FileHandler {
 		} else
 			state.getLogLoadedProperty().set(true);
 	}
+	
 
 	public void fileImportLast() {
 		final StateProperties state = StateProperties.getInstance();
