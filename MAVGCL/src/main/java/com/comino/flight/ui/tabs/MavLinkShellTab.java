@@ -224,14 +224,19 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@Override
 	public void received(Object _msg) {
 		if(!isDisabled() && _msg instanceof msg_serial_control) {
-			msg_serial_control msg = (msg_serial_control)_msg;
+			final msg_serial_control msg = (msg_serial_control)_msg;
 			int j=0;
+			Arrays.fill(bytes,(char)0x20);
 			if(msg.count > 0) {
-				for(int i=0;i<msg.count && i < msg.data.length;i++) {
-					if(msg.data[i]!=0)
-						bytes[j++] = (char)(msg.data[i] & 0x7F);	
+				for(int i=0;i<=msg.count && i < msg.data.length;i++) {
+					if((msg.data[i] & 0x007F)!=0)
+						bytes[j++] = (char)(msg.data[i] & 0x007F);	
 				}
-				buffer.add(String.copyValueOf(bytes,0,j-2).replace("[K", ""));
+				String line = String.copyValueOf(bytes,0,j).replace("[K", "");
+				if(line.contains(">"))
+					buffer.add(line.substring(0,line.length()-1));
+				else
+				buffer.add(line);
 			}
 		}
 	}
