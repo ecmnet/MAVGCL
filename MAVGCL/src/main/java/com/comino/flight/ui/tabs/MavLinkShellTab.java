@@ -47,6 +47,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -74,10 +75,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	private int index = 0;
 
-	private Timeline out = null;
+	private AnimationTimer out = null;
 	private ConcurrentLinkedQueue<String> buffer = new ConcurrentLinkedQueue<String>();
 
-	private char[] bytes = new char[70];
+	private char[] bytes = new char[132];
 
 	private msg_serial_control msg = new msg_serial_control(1,1);
 
@@ -91,19 +92,21 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	@FXML
 	private void initialize() {
+
 		
+		this.out = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if(buffer.isEmpty())
+					return;
 
-		this.out = new Timeline(new KeyFrame(Duration.millis(30), ae ->  {
-			if(buffer.isEmpty() || this.isDisabled())
-				return;
+				while(!buffer.isEmpty())
+					console.appendText(buffer.poll());
+				index = console.getText().length();
+				scrollIntoView();
+			}
+		};
 
-			while(!buffer.isEmpty())
-				console.appendText(buffer.poll());
-			index = console.getText().length();
-			scrollIntoView();
-		}));
-
-		out.setCycleCount(Timeline.INDEFINITE);
 
 		state = StateProperties.getInstance();
 
@@ -193,7 +196,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
-				out.play();
+				out.start();
 				Platform.runLater(() -> {
 					if(console.getText().length()==0)
 						writeToShell("\n");
@@ -217,21 +220,18 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			console.requestFocus(); });
 	}
 
+
 	@Override
 	public void received(Object _msg) {
-		if(_msg instanceof msg_serial_control) {
-			synchronized(this) {
-				Arrays.fill(bytes, (char)0);
-				msg_serial_control msg = (msg_serial_control)_msg;
-				int j=0;
+		if(!isDisabled() && _msg instanceof msg_serial_control) {
+			msg_serial_control msg = (msg_serial_control)_msg;
+			int j=0;
+			if(msg.count > 0) {
 				for(int i=0;i<msg.count && i < msg.data.length;i++) {
-					if(msg.data[i]==0x1b) { i++; continue; }
-					bytes[j++] = (char)(msg.data[i] & 0x7F);
-				} 
-				String line = String.copyValueOf(bytes,1,j-2);
-				if(line.contains("nsh>"))
-					buffer.add("\n");
-				buffer.add(line);
+					if(msg.data[i]!=0)
+						bytes[j++] = (char)(msg.data[i] & 0x7F);	
+				}
+				buffer.add(String.copyValueOf(bytes,0,j-2).replace("[K", ""));
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				}
 				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
 				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
-				
+
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
