@@ -128,7 +128,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					}
 					console.deleteText(index, end);
 					writeToShell(command+"\n");
-					if(!command.equals(last.peekLast())) {
+					if(!command.equals(last.peekLast()) && command.length()>1) {
 						last.add(command);
 					}
 					scrollIntoView();
@@ -197,10 +197,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
 				out.start();
-				Platform.runLater(() -> {
-					if(console.getText().length()==0)
-						writeToShell("\n");
-				});
 				scrollIntoView();
 
 			} else {
@@ -226,7 +222,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		if(!isDisabled() && _msg instanceof msg_serial_control) {
 			final msg_serial_control msg = (msg_serial_control)_msg;
 			int j=0;
-			Arrays.fill(bytes,(char)0x20);
 			if(msg.count > 0) {
 				for(int i=0;i<=msg.count && i < msg.data.length;i++) {
 					if((msg.data[i] & 0x007F)!=0)
