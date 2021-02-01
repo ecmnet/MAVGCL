@@ -12,8 +12,9 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	22/01/21 
+**Development Status:** Last updated 	01/02/21 
 
+* MavShell client implementation finally working 
 * OctTree based 3D map representation visualized in 3DView and XYView (flat representation of the map according to relative altitude)
 * switched to maven based build
 
