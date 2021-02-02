@@ -50,7 +50,7 @@ public class Map3DGroup {
 
 		for(int i = 0; i < 5; i++) {
 			PhongMaterial m = new PhongMaterial();
-			m.setDiffuseColor(Color.web("DARKCYAN", i/5f));
+			m.setDiffuseColor(Color.web("DARKCYAN", 1));
 			m.setSpecularColor(Color.WHITE);
 			blocked.add(m);
 		}

@@ -87,7 +87,7 @@ public class VehicleModel extends Group {
 		this.setTranslateX(-model.getValue("LPOSY")*100);
 		
 		if(Double.isFinite(z_offset))
-		  z_pos =    ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
+		     z_pos =    ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
 		else
 			 z_pos =  - model.getValue("LPOSZ") * 100  ;
 

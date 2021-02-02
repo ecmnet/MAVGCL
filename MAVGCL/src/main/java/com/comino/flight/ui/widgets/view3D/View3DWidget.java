@@ -56,6 +56,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
@@ -102,13 +103,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.state = StateProperties.getInstance();
 
 		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(Color.WHITE);
+		ambient.setColor(Color.web("DARKGRAY", 0.1));
 		
 
 		PhongMaterial groundMaterial = new PhongMaterial();
 		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 		groundMaterial.setDiffuseMap(new Image
 				(getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
+		
+		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
+	    pointLight.setTranslateX(100);
+	    pointLight.setTranslateY(800);
+	    pointLight.setRotate(45);
+	    pointLight.setTranslateZ(-800);
+	   
 
 
 		PhongMaterial northMaterial = new PhongMaterial();
@@ -120,7 +128,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ground.setMaterial(groundMaterial);
 
 		vehicle = new VehicleModel(75);
-		world.getChildren().addAll(ground, vehicle, ambient, target,
+		world.getChildren().addAll(ground, vehicle,  target, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);

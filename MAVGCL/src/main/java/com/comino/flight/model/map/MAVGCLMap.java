@@ -16,8 +16,8 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavmap.map.map3D.LocalMap3D;
 import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
+import com.comino.mavmap.map.map3D.impl.octree.LocalMap3D;
 import com.comino.mavutils.legacy.ExecutorService;
 
 import bubo.maps.d3.grid.CellProbability_F64;
