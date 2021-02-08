@@ -40,7 +40,7 @@ import javafx.scene.shape.Line;
  *
  * @author Bruce Schubert
  */
-@SuppressWarnings("unchecked")
+
 public class XYLineAnnotation implements XYAnnotation {
 
     private final Line line = new Line();

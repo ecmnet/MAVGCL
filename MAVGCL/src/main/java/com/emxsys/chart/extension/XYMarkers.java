@@ -45,7 +45,7 @@ import javafx.scene.chart.XYChart;
  * @param <X>
  * @param <Y>
  */
-@SuppressWarnings("unchecked")
+
 public final class XYMarkers<X, Y> {
 
     private final XYChart<X, Y> chart;

@@ -43,7 +43,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author Bruce Schubert
  */
-@SuppressWarnings("unchecked")
+
 public class XYImageAnnotation implements XYAnnotation {
 
     private final double x;

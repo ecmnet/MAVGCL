@@ -154,12 +154,12 @@ public class AnalysisModelService  {
 				}
 			}
 		});
-		
+
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				try {
-				  for(ICollectorRecordingListener updater : listener)
+					for(ICollectorRecordingListener updater : listener)
 						updater.update(System.nanoTime());
 				} catch(Exception e) {  e.printStackTrace(); }		
 			}		
@@ -367,7 +367,6 @@ public class AnalysisModelService  {
 	public boolean isReplaying() {
 		return isReplaying;
 	}
-
 
 	public int getMode() {
 		return mode;

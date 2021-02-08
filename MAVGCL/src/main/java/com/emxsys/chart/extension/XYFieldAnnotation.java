@@ -12,7 +12,7 @@ import javafx.scene.shape.Rectangle;
  * @author Mikael Grev, Avioniq AB
  *         Date: 16-02-09, Time: 23:09
  */
-@SuppressWarnings("unchecked")
+
 public class XYFieldAnnotation implements XYAnnotation {
 
 	private final Rectangle rectangle = new Rectangle();

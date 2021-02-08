@@ -45,7 +45,7 @@ public class TickUnitSource {
 
     List<TickUnit> tickUnits = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
+
     public void add(TickUnit tickUnit) {
         tickUnits.add(tickUnit);
         Collections.sort(tickUnits);

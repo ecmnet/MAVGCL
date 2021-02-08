@@ -84,7 +84,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	@FXML
 	private void initialize() {
 

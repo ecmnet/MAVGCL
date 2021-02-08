@@ -38,6 +38,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.mavlink.messages.lquac.msg_msp_micro_grid;
+
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
@@ -91,7 +93,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
 		if(pane.isDisabled() || !pane.isVisible())
@@ -101,9 +102,10 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 		if(model == null || model.grid==null || !enabled)
 			return;
-
 		
-		Set<Long> set = map.getLevelSet();
+		Set<Long> set = map.getLevelSet(blocks.isEmpty());
+		if(set.isEmpty())
+			return;
 		
 		blocks.keySet().retainAll(set);	
 		
@@ -128,8 +130,9 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	public  void invalidate(boolean enable) {
-		if(map!=null)
-			blocks.keySet().retainAll(map.getLevelSet());	
+		if(map!=null) {
+		    blocks.keySet().retainAll(map.getLevelSet(true));	
+		}
 		enabled = enable;
 	}
 

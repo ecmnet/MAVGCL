@@ -33,7 +33,9 @@
 
 package com.comino.flight.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.comino.mavcom.model.DataModel;
@@ -49,18 +51,22 @@ public class AnalysisDataModel {
 	public float    dt_sec = 0;
 
 	private volatile Map<Integer,Double> data = null;
+	private volatile List<Long> grid = null;
 
 	public AnalysisDataModel() {
 		this.data = new HashMap<Integer,Double>();
+		this.grid = new ArrayList<Long>();
 	}
 
-	private AnalysisDataModel(Map<Integer,Double> d) {
+	private AnalysisDataModel(Map<Integer,Double> d, List<Long> grid) {
 		this.data = new HashMap<Integer,Double>();
 		this.data.putAll(d);
+		this.grid = new ArrayList<Long>();
+		this.grid.addAll(grid);
 	}
 
 	public synchronized AnalysisDataModel clone() {
-		AnalysisDataModel d = new AnalysisDataModel(data);
+		AnalysisDataModel d = new AnalysisDataModel(data, grid);
 
 		d.tms = tms;
 		if(msg!=null)
@@ -73,15 +79,21 @@ public class AnalysisDataModel {
 	public void set(AnalysisDataModel model) {
 		this.data.clear();
 		this.data.putAll(model.data);
+		this.grid.clear();
+		this.grid.addAll(model.grid);
 	}
 
 	public void clear()  {
 		data.clear();
+		grid.clear();
 		tms = 0;
 		msg = null;
 		status = null;
 	}
-
+	
+	public List<Long> getGrid() {
+		return grid;
+	}
 
 	public double getValue(String kf) {
 		int hash = kf.toLowerCase().hashCode();
@@ -113,7 +125,8 @@ public class AnalysisDataModel {
 
 	private Double val = null;
 
-	@SuppressWarnings("unchecked")
+	
+
 	public  void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 
 		synchronized(this) {

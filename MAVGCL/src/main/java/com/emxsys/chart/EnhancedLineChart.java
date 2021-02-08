@@ -60,7 +60,7 @@ public class EnhancedLineChart<X, Y> extends LineChart<X, Y>
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
     }
 
-    @SuppressWarnings("OverridableMethodCallInConstructor")
+
     public EnhancedLineChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data") ObservableList<Series<X, Y>> data) {
         super(xAxis, yAxis, data);
 

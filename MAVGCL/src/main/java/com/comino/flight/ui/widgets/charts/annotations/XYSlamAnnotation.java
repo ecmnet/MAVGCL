@@ -126,7 +126,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
 		if(model==null)

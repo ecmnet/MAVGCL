@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.charts.xy;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -941,6 +942,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} catch(NumberFormatException e) {
 
 		}
+		
+		// Used to update the grid when connected.
+//		ExecutorService.get().scheduleAtFixedRate(() -> {
+//			if(state.getRecordingProperty().get()==0 && !isDisabled()) {
+//				updateRequest();
+//			}
+//		}, 0, 1, TimeUnit.SECONDS);
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {

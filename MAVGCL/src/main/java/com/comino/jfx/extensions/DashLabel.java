@@ -42,7 +42,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 
-@SuppressWarnings("restriction")
+
 public class DashLabel extends GridPane {
 
 	private Line  line      = null;
@@ -51,7 +51,7 @@ public class DashLabel extends GridPane {
 	private String old_value = null;
 
 
-	@SuppressWarnings("restriction")
+
 	public DashLabel() {
 		super();
 		this.setPadding(new Insets(3,0,3,0));

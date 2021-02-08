@@ -67,7 +67,7 @@ public class LogScatterChart<X, Y> extends EnhancedScatterChart<X, Y> {
      * @param yAxis
      * @param data
      */
-    @SuppressWarnings("OverridableMethodCallInConstructor")
+
     public LogScatterChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis,
         @NamedArg("data") ObservableList<Series<X, Y>> data) {
         super(xAxis, yAxis, data);

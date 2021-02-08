@@ -57,7 +57,7 @@ public class EnhancedStackedAreaChart<X, Y> extends StackedAreaChart<X, Y>
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
     }
 
-    @SuppressWarnings("OverridableMethodCallInConstructor")
+
     public EnhancedStackedAreaChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data") ObservableList<Series<X, Y>> data) {
         super(xAxis, yAxis, data);
 

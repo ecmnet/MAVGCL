@@ -81,9 +81,6 @@ public class JoyStickController implements Runnable {
 		if(control!=null)
 		  this.model   = control.getCurrentModel();
 
-		Thread thread = new Thread(this);
-		thread.setName("Joystick worker");
-		thread.start();
 
 		joystick.addButtonListener(ch_land, (state) -> {
 			if(state == JoyStickModel.PRESSED)
@@ -171,7 +168,12 @@ public class JoyStickController implements Runnable {
 					deadzone((t-1500.0f)/-1000.0f,0.10f),
 					deadzone((y-1500.0f)/-1000.0f,0.05f));
 		});
-
+		
+		if(isConnected()) {
+		Thread thread = new Thread(this);
+		thread.setName("Joystick worker");
+		thread.start();
+		}
 
 
 	}

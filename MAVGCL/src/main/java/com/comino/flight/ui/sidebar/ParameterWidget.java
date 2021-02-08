@@ -463,7 +463,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 
 
-		@SuppressWarnings("unchecked")
+		
 		public float getValueOf(Control p) throws NumberFormatException {
 			if(p==null)
 				return 0;
@@ -480,7 +480,7 @@ public class ParameterWidget extends ChartControlPane  {
 			
 		}
 
-		@SuppressWarnings("unchecked")
+		
 		public void setValueOf(Control p, double v) {
 			Platform.runLater(() -> {
 				if(p instanceof TextField) {
@@ -503,7 +503,7 @@ public class ParameterWidget extends ChartControlPane  {
 			});
 		}
 
-		@SuppressWarnings("unchecked")
+		
 		private void checkDefaultOf(Control p, double v) {
 			Control e = p;
 			if(p instanceof Spinner)
@@ -517,7 +517,7 @@ public class ParameterWidget extends ChartControlPane  {
 				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
 		}
 
-		@SuppressWarnings("unchecked")
+		
 		private void setContextMenu(Control p) {
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");

@@ -53,7 +53,7 @@ import javafx.scene.shape.Line;
  *
  * @author Bruce Schubert
  */
-@SuppressWarnings("unchecked")
+
 public class ValueMarker {
 
     private final DoubleProperty value = new SimpleDoubleProperty();

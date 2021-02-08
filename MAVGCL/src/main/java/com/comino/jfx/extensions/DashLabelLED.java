@@ -47,7 +47,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeType;
 import javafx.util.Duration;
 
-@SuppressWarnings("restriction")
+
 public class DashLabelLED extends GridPane {
 
 	public final static int MODE_OFF = 0;
@@ -63,7 +63,7 @@ public class DashLabelLED extends GridPane {
 	private boolean toggle = false;
 	private Timeline timeline;
 
-	@SuppressWarnings("restriction")
+
 	public DashLabelLED() {
 		super();
 		this.color = Color.WHITE;

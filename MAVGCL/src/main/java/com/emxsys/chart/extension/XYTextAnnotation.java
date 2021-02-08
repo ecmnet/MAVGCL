@@ -40,7 +40,7 @@ import javafx.scene.control.Label;
  *
  * @author Bruce Schubert
  */
-@SuppressWarnings("unchecked")
+
 public class XYTextAnnotation implements XYAnnotation {
 
     private final Label label = new Label();

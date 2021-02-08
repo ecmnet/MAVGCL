@@ -82,7 +82,7 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 		return pane;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		float size = (float)(xAxis.getDisplayPosition(3*sigma) - xAxis.getDisplayPosition(0));

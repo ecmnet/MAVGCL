@@ -96,7 +96,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		this.listener.add(listener);
 	}
 
-	@SuppressWarnings("rawtypes")
+	
 	public void run()
 	{
 		StreamSplit ssplit = null;;
@@ -118,8 +118,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 				try {
 
 					conn = url.openConnection();
-					conn.setReadTimeout(1000);
-					conn.setConnectTimeout(1000);
+					conn.setReadTimeout(5000);
+					conn.setConnectTimeout(5000);
 					conn.setRequestProperty("Host", url.getHost());
 					conn.setRequestProperty("Client", "chromium");
 					conn.connect();
@@ -154,6 +154,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 				}
 
 			} while(connectionError != null && isRunning && !m_collecting);
+			
 
 			isAvailable = true;
 

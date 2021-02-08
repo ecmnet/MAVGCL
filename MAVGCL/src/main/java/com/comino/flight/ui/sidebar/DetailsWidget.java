@@ -73,7 +73,7 @@ public class DetailsWidget extends ChartControlPane {
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
 
 	private final static String[] key_figures_details = { "ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
-			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE", null, "LIDAR",
+			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE",null, "LIDAR",
 			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, "LPOSXYERR", "LPOSZERR", null, "VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDTT", "SLAMDTO", null,
 		//	"PRECLOCKX", "PRECLOCKY","PRECLOCKW",null,

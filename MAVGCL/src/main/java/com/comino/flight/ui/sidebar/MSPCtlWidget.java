@@ -44,6 +44,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.jfx.extensions.StateButton;
 import com.comino.flight.model.map.MAVGCLMap;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;

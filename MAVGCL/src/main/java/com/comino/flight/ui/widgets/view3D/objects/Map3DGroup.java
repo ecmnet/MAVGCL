@@ -35,6 +35,7 @@ public class Map3DGroup {
 	private final Map3DSpacialInfo      info;
 	private double                      size = 0;
 
+	private final Point3D_I32           local =  new Point3D_I32();
 	private final Point3D_F64           global = new Point3D_F64();
 	private long  tms = 0;
 
@@ -64,7 +65,6 @@ public class Map3DGroup {
 
 				if((tms - map.getLastUpdate()) > 200 && map.getLastUpdate() != -1)
 					return;
-
 
 				if(map.isEmpty()) {
 					if(!boxes.isEmpty()) {
@@ -106,6 +106,43 @@ public class Map3DGroup {
 			box.setTranslateX(-global.y*100);
 			box.setTranslateY((-global.z+info.getCellSize()/2)*100);
 			box.setMaterial(blocked.get((int)(pos.probability*5)-1));
+			box.setCullFace(CullFace.BACK);
+			root.getChildren().add(box);
+			boxes.put(h, box);
+			return;
+
+		} 
+
+		else {
+
+			if(!boxes.containsKey(h))
+				return;
+
+			//	if(pos.probability < 0.1f || pos.probability == 0.5f) {
+			Box box = boxes.remove(h);
+			if(box!=null) {
+				root.getChildren().remove(box);	
+			} 
+		}
+	}
+	
+	public void addBlock(Long h) {
+
+        double p = info.decodeMapPoint(h, local);
+		
+		if(p > 0.5) {
+
+			if(boxes.containsKey(h))
+				return;
+
+			info.mapToGlobal(local, global);
+
+			// TODO: Fix rotation
+			final Box box = new Box(size, size, size);
+			box.setTranslateZ(global.x*100);
+			box.setTranslateX(-global.y*100);
+			box.setTranslateY((-global.z+info.getCellSize()/2)*100);
+			box.setMaterial(blocked.get((int)(p*5)-1));
 			box.setCullFace(CullFace.BACK);
 			root.getChildren().add(box);
 			boxes.put(h, box);

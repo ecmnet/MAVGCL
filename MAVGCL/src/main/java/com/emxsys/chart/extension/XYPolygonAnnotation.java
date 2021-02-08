@@ -42,7 +42,7 @@ import javafx.scene.shape.Polygon;
  *
  * @author Bruce Schubert
  */
-@SuppressWarnings("unchecked")
+
 public class XYPolygonAnnotation implements XYAnnotation {
 
     private final Polygon polygon = new Polygon();
