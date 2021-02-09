@@ -34,7 +34,7 @@ public class MAVGCLMap  {
 
 	private float last_altitude  = -Float.MAX_VALUE;
 	private long last_update = - 1;
-	
+
 	private int num_of_items = 0;
 
 
@@ -55,14 +55,21 @@ public class MAVGCLMap  {
 
 		control.addMAVLinkListener((o) -> {
 			if(o instanceof msg_msp_micro_grid) {
+				num_of_items = model.grid.count;
+				if(model.grid.count == 0) {
+					clear();
+					return;
+				}
 				LinkedList<Long> list = model.grid.getTransfers();
 				while(!list.isEmpty()) {
 					Long entry = list.pop();
-					if(!mapset.containsKey(entry) && mapset.size()<MAXMAPPOINTS)
-						mapset.put(entry, System.currentTimeMillis());
+					if(entry >= 0) {
+						if(!mapset.containsKey(entry) && mapset.size()<MAXMAPPOINTS)
+							mapset.put(entry, System.currentTimeMillis());
+					} else {
+						mapset.remove(-entry);
+					}
 				}
-				
-				num_of_items = model.grid.count;
 
 				// TODO: Access AnalysisDatamodel
 				indicator.set(model.grid.ix, model.grid.iy, model.grid.iz);
@@ -83,20 +90,20 @@ public class MAVGCLMap  {
 	}
 
 	public Set<Long> getLevelSet(boolean enforce) {
-		
+
 		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
 		set.clear();
-		
+
 		if(set.size()> 0 && Math.abs(current_altitude - last_altitude) < info.getCellSize() && !enforce)
 			return set;
-		
+
 		set.clear();
 		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
 		while(i.hasNext()) {
 			CellProbability_F64 p = i.next();
 			set.add(info.encodeMapPoint(p, p.probability));
 		}
-		
+
 		last_altitude = current_altitude;
 		return set;	
 	}
@@ -129,11 +136,11 @@ public class MAVGCLMap  {
 	public boolean isEmpty() {
 		return mapset.isEmpty();
 	}
-	
+
 	public int size() {
 		return mapset.size();
 	}
-	
+
 	public boolean isComplete() {
 		if(num_of_items == 0)
 			return false;
@@ -170,6 +177,9 @@ public class MAVGCLMap  {
 
 		protected CellProbability_F64 searchNext() {
 			next_tms = 0; 
+			if(mapset.isEmpty())
+				return storage;
+			
 			while(m.hasNext()) {
 				long h = m.next(); next_tms = mapset.get(h);
 				storage.probability = info.decodeMapPoint(h, storage);

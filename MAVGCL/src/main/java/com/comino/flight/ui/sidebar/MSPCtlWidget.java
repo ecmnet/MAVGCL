@@ -425,7 +425,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
-			MAVGCLMap.getInstance().clear();
 		});
 
 

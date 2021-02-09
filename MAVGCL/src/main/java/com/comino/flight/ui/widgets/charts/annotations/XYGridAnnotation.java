@@ -103,6 +103,11 @@ public class XYGridAnnotation  implements XYAnnotation {
 		if(model == null || model.grid==null || !enabled)
 			return;
 		
+		if(map.size()==0) {
+			blocks.clear();
+			return;
+		}
+		
 		Set<Long> set = map.getLevelSet(blocks.isEmpty());
 		if(set.isEmpty())
 			return;
