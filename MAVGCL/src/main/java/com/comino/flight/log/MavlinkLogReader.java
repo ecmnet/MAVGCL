@@ -245,7 +245,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 		int p = getPackageNumber(data.ofs);
 
-		if (p >= unread_packages.size() || unread_packages.get(p) == -1 || unread_packages == null)
+		if( unread_packages == null || p >= unread_packages.size() || unread_packages.get(p) == -1)
 			return;
 
 		try {
