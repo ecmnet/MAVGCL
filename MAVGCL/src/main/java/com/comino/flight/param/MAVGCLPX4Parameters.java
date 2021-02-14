@@ -50,6 +50,7 @@ import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -68,6 +69,8 @@ import javafx.beans.value.ObservableValue;
 
 
 public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListener {
+	
+	private static final String BARO_ICAO = "EDDM";
 
 	private static MAVGCLPX4Parameters px4params = null;
 
@@ -82,6 +85,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	private boolean is_reading = false;
 
 	private ScheduledFuture<?> timeout = null;
+	private final float qnh;
 
 	public static MAVGCLPX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
@@ -99,6 +103,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
+		this.qnh = new MetarQNHService(BARO_ICAO).getQNH();
 
 		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -120,7 +125,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 			} else {
 				ExecutorService.get().schedule(() -> {
-				  refreshParameterList(true);
+					refreshParameterList(true);
 				},500,TimeUnit.MILLISECONDS);
 			}
 		});
@@ -192,17 +197,25 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 			if(msg.param_index >= msg.param_count-1) {
 				if(timeout!=null)
-				  timeout.cancel(true);
+					timeout.cancel(true);
 				state.getParamLoadedProperty().set(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
 				is_reading = false;
+				
+				// Flight time
 				if(get("LND_FLIGHT_T_LO")!=null && get("LND_FLIGHT_T_HI") !=null ) {
 					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
 					if(flight_time <1e10f && flight_time > 0)
 						MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
 								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
+
+				// Baro QNH check
+				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
+					MSPLogger.getInstance().writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					sendParameter("SENS_BARO_QNH",qnh);
 				}
 			}
 		}
