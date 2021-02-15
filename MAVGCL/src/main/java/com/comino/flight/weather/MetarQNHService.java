@@ -29,7 +29,7 @@ public class MetarQNHService {
 			conn.connect();
 			dom = db.parse(new BufferedInputStream(conn.getInputStream()));
 			String metar_data = dom.getElementsByTagName("raw_text").item(0).getTextContent();
-			System.out.println("METAR data used: "+metar_data);
+			System.out.println("METAR data for used: "+metar_data);
 			int i = metar_data.indexOf('Q')+1;
 			qnh = Float.parseFloat(metar_data.substring(i,i+4));		
 

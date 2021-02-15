@@ -41,5 +41,8 @@
 	    <CheckBox fx:id="debug" text="Enable debug messages"                            GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="4" />
 	    <CheckBox fx:id="alert" text="Show PopUp for critical messages "                GridPane.rowIndex="18" GridPane.columnIndex="0" GridPane.columnSpan="4" />
 	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="19" GridPane.columnSpan="5" />
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Local ICAO code for QNH" 	    GridPane.rowIndex="20" GridPane.columnIndex="0" />
+		<TextField fx:id="icao" prefHeight="19.0" maxWidth="50.0"       			    GridPane.rowIndex="20" GridPane.columnIndex="1" />
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="21" GridPane.columnSpan="5" />
 	</children>
 </GridPane>

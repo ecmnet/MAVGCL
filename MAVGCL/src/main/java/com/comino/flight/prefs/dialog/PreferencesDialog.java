@@ -121,6 +121,9 @@ public class PreferencesDialog  {
 
 	@FXML
 	private TextField reflon;
+	
+	@FXML
+	private TextField icao;
 
 	private IMAVController control;
 	private Preferences userPrefs;
@@ -215,6 +218,7 @@ public class PreferencesDialog  {
 		debug.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, true));
 		download.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true));
 		alert.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ALERT, false));
+		icao.setText(userPrefs.get(MAVPreferences.ICAO, "EDDM"));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -235,6 +239,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.DEBUG_MSG,debug.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DOWNLOAD,download.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ALERT,alert.isSelected());
+			userPrefs.put(MAVPreferences.ICAO, icao.getText());
 
 			StateProperties.getInstance().preferencesChangedProperty().set(true);
 

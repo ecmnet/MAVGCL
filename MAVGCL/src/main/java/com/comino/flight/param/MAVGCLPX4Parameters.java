@@ -69,8 +69,6 @@ import javafx.beans.value.ObservableValue;
 
 
 public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListener {
-	
-	private static final String BARO_ICAO = "EDDM";
 
 	private static MAVGCLPX4Parameters px4params = null;
 
@@ -85,7 +83,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	private boolean is_reading = false;
 
 	private ScheduledFuture<?> timeout = null;
-	private final float qnh;
+	private float qnh;
 
 	public static MAVGCLPX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
@@ -103,7 +101,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
-		this.qnh = new MetarQNHService(BARO_ICAO).getQNH();
+		
+	    this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
 		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
