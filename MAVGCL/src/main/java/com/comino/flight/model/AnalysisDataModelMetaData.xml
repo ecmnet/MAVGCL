@@ -245,7 +245,7 @@
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Alt.BottomClearance" uom="m" mask="#0.00" key="ALTBC">
+	<KeyFigure desc="Alt.Clearance" uom="m" mask="#0.00" key="ALTBC">
 		<MSPSource class="hud" field="bc"></MSPSource>
 		<Groups>
 			<Group>Altitude</Group>
@@ -813,7 +813,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LIDAR Dist." uom="m" mask="#0.00" key="LIDAR">
+	<KeyFigure desc="RangeFinder Dist." uom="m" mask="#0.00" key="LIDAR">
 		<MSPSource class="raw" field="di">
 		    <Converter class="SignConverter" expression="LIDAR" />
 		</MSPSource>
@@ -824,7 +824,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LIDAR Dist.Cov." uom="m" mask="#0.00" key="LIDARCOV">
+	<KeyFigure desc="RangeFinder Dist.Cov." uom="m" mask="#0.00" key="LIDARCOV">
 		<MSPSource class="raw" field="dicov"></MSPSource>
 		<PX4Source field="DIST.Covariance"></PX4Source>
 		<ULogSource field="distance_sensor_0.covariance"/>
@@ -1239,7 +1239,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="LIDAR timeout" uom="" mask="#0" key="TOLIDAR">
+	<KeyFigure desc="RangeFinder timeout" uom="" mask="#0" key="TOLIDAR">
 		<PX4Source field="EST2.fHealth">
 		   <Converter class="BitMaskConverter" p1="2"/>
 		</PX4Source>
