@@ -383,6 +383,7 @@ public class AnalysisModelService  {
 
 			System.out.println("AnalysisModelService converter thread started ..");
 			mode = STOPPED;
+			
 
 			while(true) {
 
@@ -437,7 +438,7 @@ public class AnalysisModelService  {
 				synchronized(this) {
 					if(state.getCurrentUpToDate().getValue()) {
 						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						current.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+						current.calculateVirtualKeyFigures(meta);
 					}
 				}
 
@@ -446,7 +447,7 @@ public class AnalysisModelService  {
 					synchronized(this) {
 						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-						record.calculateVirtualKeyFigures(AnalysisDataModelMetaData.getInstance());
+						record.calculateVirtualKeyFigures(meta);
 					}
 				}
 

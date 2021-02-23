@@ -73,7 +73,11 @@ public class Alert extends ChartControlPane    {
 		control.addMAVLinkListener(new IMAVLinkListener() {
 			@Override
 			public void received(Object o) {
-				if(o instanceof msg_statustext && !isDisabled()) {
+				
+				if(isDisabled())
+					return;
+				
+				if(o instanceof msg_statustext) {
 					msg_statustext msg = (msg_statustext) o;
 					if(
 					   (msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY ||

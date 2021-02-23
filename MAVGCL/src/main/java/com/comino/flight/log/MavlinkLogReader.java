@@ -209,10 +209,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	@Override
 	public void received(Object o) {
-		if (o instanceof msg_log_entry && isCollecting.get())
+		
+		if(!isCollecting.get())
+			return;
+		
+		if (o instanceof msg_log_entry)
 			handleLogEntry((msg_log_entry) o);
 
-		if (o instanceof msg_log_data && isCollecting.get())
+		if (o instanceof msg_log_data )
 			handleLogData((msg_log_data) o);
 	}
 

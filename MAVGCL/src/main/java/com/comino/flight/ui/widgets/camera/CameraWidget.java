@@ -211,8 +211,7 @@ public class CameraWidget extends ChartControlPane  {
 
 
 		System.out.println(url_string);
-
-
+		
 		try {
 			URL url = new URL(url_string);
 			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
