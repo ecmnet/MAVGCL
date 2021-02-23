@@ -47,7 +47,6 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
-import com.comino.mavcom.model.segment.Status;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.StreamVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
@@ -60,8 +59,8 @@ import javafx.scene.image.ImageView;
 
 public class CameraWidget extends ChartControlPane  {
 
-	private int X = 800 / 2;
-	private int Y = 800 / 2;
+	private int X = 640 / 2;
+	private int Y = 480 / 2;
 
 
 	@FXML
@@ -85,7 +84,7 @@ public class CameraWidget extends ChartControlPane  {
 	@FXML
 	private void initialize() {
 
-
+     
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
 			if(source==null && !connect()) {
@@ -121,6 +120,7 @@ public class CameraWidget extends ChartControlPane  {
 					control.sendMAVLinkMessage(msp);
 				}
 			}
+			event.consume();
 
 		});
 
@@ -172,12 +172,18 @@ public class CameraWidget extends ChartControlPane  {
 	private void resize(boolean big, int maxX, int maxY) {
 		Platform.runLater(() -> {
 			if(big) {
+				this.setInitialHeight(maxY); 
+				this.setInitialWidth(maxX);
+				this.setMaxHeight(maxY);
+				this.setMaxWidth(maxX);
 				image.setLayoutX(0); image.setFitWidth(maxX);
 				image.setLayoutY(0); image.setFitHeight(maxY);
 			} else
 			{
-				image.setLayoutX(maxX/2); image.setFitWidth(maxX/2);
-				image.setLayoutY(maxY/2); image.setFitHeight(maxY/2);
+				this.setInitialHeight(maxY/2); this.setMaxHeight(maxY/2);
+				this.setInitialWidth(maxX/2); this.setMaxWidth(maxX/2);
+				image.setLayoutX(0); image.setFitWidth(maxX/2);
+				image.setLayoutY(0); image.setFitHeight(maxY/2);
 			}
 		});
 	}
@@ -206,8 +212,6 @@ public class CameraWidget extends ChartControlPane  {
 
 		System.out.println(url_string);
 
-		if(url_string.isEmpty())
-			url_string = "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
 
 		try {
 			URL url = new URL(url_string);

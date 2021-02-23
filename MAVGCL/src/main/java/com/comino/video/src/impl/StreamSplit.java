@@ -133,7 +133,13 @@ public class StreamSplit {
 		int chidx = 0;
 		byte ch;
 		do {
+			
 			try {
+				if(m_dis.available()<1) {
+					Thread.sleep(100);
+					continue;
+				}
+					
 				//m_dis.readFully(buffer);
 				ch = m_dis.readByte();
 			} catch (Exception e) {
