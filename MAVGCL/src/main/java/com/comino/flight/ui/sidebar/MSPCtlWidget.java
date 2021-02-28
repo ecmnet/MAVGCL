@@ -49,6 +49,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavcom.status.StatusManager;
 
 import javafx.application.Platform;
@@ -163,18 +164,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 		box.prefHeightProperty().bind(this.heightProperty());
 
 		modes.disableProperty().bind(state.getOffboardProperty().not());
-
-		state.getConnectedProperty().addListener((c,o,n) -> {
-			if(n.booleanValue()) {
-				Platform.runLater(() -> {
-				    stream.getSelectionModel().select(1);
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-					msp.param1  = stream.getSelectionModel().getSelectedIndex();
-					control.sendMAVLinkMessage(msp);
-				}); 
-			}
-		});
 
 		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
@@ -434,6 +423,21 @@ public class MSPCtlWidget extends ChartControlPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
+		
+		state.getConnectedProperty().addListener((c,o,n) -> {
+			if(n.booleanValue()) {
+				Platform.runLater(() -> {
+				    stream.getSelectionModel().select(1);
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+					msp.param1  = stream.getSelectionModel().getSelectedIndex();
+					control.sendMAVLinkMessage(msp);
+					
+					enable_vision.setSelected(control.getCurrentModel().vision.isStatus(Vision.PUBLISHED));
+					
+				}); 
+			}
+		});
 		
 		
 
