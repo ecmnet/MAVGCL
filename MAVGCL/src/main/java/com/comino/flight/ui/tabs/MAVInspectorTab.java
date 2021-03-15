@@ -42,6 +42,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -79,12 +80,14 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	final ObservableMap<String,Data> allData = FXCollections.observableHashMap();
 	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
+	private final WorkQueue wq = WorkQueue.getInstance();
+
 
 	public MAVInspectorTab() {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
 	}
 
-	
+
 	@FXML
 	private void initialize() {
 
@@ -185,7 +188,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 
-		ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
+		wq.addCyclicTask("LP", 5000, new CleanUp());
+		//ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
 
 	}
 
@@ -197,7 +201,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	@Override
 	public void received(Object msg) {
 		if(!this.isDisabled())
-		  parseMessageString(msg.toString().split("  "));	
+			parseMessageString(msg.toString().split("  "));	
 	}
 
 	private void parseMessageString(String[] msg) {
@@ -229,23 +233,21 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			Platform.runLater(() -> {
 				treetableview.sort();
 			});	
+			return;
 
-		} else {
+		} 
 
-			Data data = allData.get(_msg);
-			if(data.updateRate()) {
-				for(String v : msg) {
-					if(v.contains("=")) {
-						String[] p = v.split("=");
-						try {
-							data.getData().get(p[0].trim()).setValue(p[1]);
-						} catch(Exception k) {   }
-					}
+		Data data = allData.get(_msg);
+		if(data.updateRate()) {
+			for(String v : msg) {
+				if(v.contains("=")) {
+					String[] p = v.split("=");
+					try {
+						data.getData().get(p[0].trim()).setValue(p[1]);
+					} catch(Exception k) {   }
 				}
 			}
-
 		}
-
 	}
 
 	class CleanUp implements Runnable {
@@ -266,6 +268,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 				remData.clear();
 				allData.forEach((k,d) -> {
+
 					if(d.getLastUpdate() == 0 || d.ti.isExpanded())
 						return;
 					if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
@@ -288,7 +291,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	}
 
 
-	class Data {
+	private class Data {
 
 		private DataSet name_set;
 		private String name;
@@ -298,7 +301,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		private long  tms;
 		private long  count = 0;
 		private long  last_update;
-		
+
 
 		public TreeItem<DataSet> ti=null;
 
@@ -309,7 +312,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			this.tms = 0;
 			this.ti = new TreeItem<>(name_set);
 			this.ti.setExpanded(false);
-			
+
 		}
 
 		public void addToTree(TreeTableView<DataSet> view) {
@@ -320,6 +323,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public void removeFromTree(TreeTableView<DataSet> view) {
 			view.getRoot().getChildren().remove(ti);
+			tms = 0;
 		}
 
 		public Map<String,DataSet> getData() {
@@ -343,29 +347,30 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 
 		public boolean updateRate() {
-			
-			
 
-			if(tms != 0 && (System.currentTimeMillis() - tms) > 0 )
-				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
-			tms = System.currentTimeMillis();
-			
 			if(isDisabled()) {
 				last_update = System.currentTimeMillis(); 
+				tms = 0;
 				return false;
 			}
 
+			if(tms != 0 && (System.currentTimeMillis() - tms) > 3 )
+				rate = (rate *  count + 1000.0f/(System.currentTimeMillis() - tms)) / ++count;
+			tms = System.currentTimeMillis();
 
-			if((System.currentTimeMillis() - last_update) > 333 && count > 5  ) {
-				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
+
+			if((System.currentTimeMillis() - last_update) > 333  ) {
+
+				this.name_set.setStr(name+" ("+(int)(rate+0.1f)+"Hz)");
 				last_update = System.currentTimeMillis();
+				
 				return true;
 			}
 			return false;
 		}
 	}
 
-	class DataSet {
+	private class DataSet {
 
 		StringProperty str = new SimpleStringProperty();
 		StringProperty value = new SimpleStringProperty();
