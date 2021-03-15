@@ -116,7 +116,9 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
-				is_reading = false; timeout.cancel(true);
+				is_reading = false; 
+				if(timeout!=null)
+					timeout.cancel(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
 					parameterList.clear();

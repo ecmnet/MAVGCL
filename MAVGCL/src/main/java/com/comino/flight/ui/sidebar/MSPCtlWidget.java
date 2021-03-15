@@ -431,10 +431,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 					msp.param1  = stream.getSelectionModel().getSelectedIndex();
-					control.sendMAVLinkMessage(msp);
-					
-					enable_vision.setSelected(control.getCurrentModel().vision.isStatus(Vision.PUBLISHED));
-					
+					control.sendMAVLinkMessage(msp);	
 				}); 
 			}
 		});
@@ -476,11 +473,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
-
-		Platform.runLater(() -> {
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES, Status.MSP_OPCV_AVAILABILITY,(n) -> {
+			if(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
 			enable_vision.setSelected(true);
 		});
-
 	}
 
 }
