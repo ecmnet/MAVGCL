@@ -61,6 +61,7 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
+import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.control.impl.MAVSerialController;
 import com.comino.mavcom.control.impl.MAVSimController;
@@ -68,6 +69,7 @@ import com.comino.mavcom.control.impl.MAVUdpController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -161,6 +163,9 @@ public class MainApp extends Application  {
 	private StateProperties state = null;
 
 	private String command_line_options = null;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
+	
 
 	public MainApp() {
 		super();
@@ -269,7 +274,7 @@ public class MainApp extends Application  {
 			
 
 			MAVGCLPX4Parameters.getInstance(control);
-
+			
 
 			state.getConnectedProperty().addListener((v,o,n) -> {
 
@@ -321,6 +326,9 @@ public class MainApp extends Application  {
 						FileHandler.getInstance().fileImport(new File(command_line_options));
 
 					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
+					
+					wq.start();
+					wq.printStatus();
 
 
 				}
