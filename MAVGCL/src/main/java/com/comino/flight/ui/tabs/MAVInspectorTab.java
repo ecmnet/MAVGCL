@@ -189,8 +189,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 
 		wq.addCyclicTask("LP", 5000, new CleanUp());
-		//ExecutorService.get().scheduleAtFixedRate(new CleanUp(), 20, 5, TimeUnit.SECONDS);
-
 	}
 
 	public MAVInspectorTab setup(IMAVController control) {
@@ -361,7 +359,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 			if((System.currentTimeMillis() - last_update) > 333  ) {
 
-				this.name_set.setStr(name+" ("+(int)(rate+0.1f)+"Hz)");
+				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();
 				
 				return true;

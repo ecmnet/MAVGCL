@@ -326,10 +326,6 @@ public class MainApp extends Application  {
 						FileHandler.getInstance().fileImport(new File(command_line_options));
 
 					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
-					
-					wq.start();
-					wq.printStatus();
-
 
 				}
 			});
@@ -346,6 +342,8 @@ public class MainApp extends Application  {
 			});
 
 
+			wq.start();
+			wq.printStatus();
 
 
 		} catch(Exception e) {

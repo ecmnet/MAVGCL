@@ -44,6 +44,7 @@ import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 import com.comino.speech.VoiceTTS;
 
 import javafx.application.Platform;
@@ -100,6 +101,8 @@ public class StateProperties {
 	private IMAVController control;
 
 	private MSPLogger logger;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 
 	public static StateProperties getInstance() {
@@ -119,10 +122,8 @@ public class StateProperties {
 		this.logger = MSPLogger.getInstance();
 
 		simulationProperty.set(control.isSimulation());
-
-		ExecutorService.get().schedule(() -> {
-			isInitializedProperty.set(true);
-		}, 5, TimeUnit.SECONDS);
+		
+		wq.addSingleTask("LP", 5000, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
@@ -134,7 +135,8 @@ public class StateProperties {
 		});
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-			ExecutorService.get().schedule(() -> {
+			
+			wq.addSingleTask("LP", 2000,() -> {
 				
 				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				
@@ -145,7 +147,7 @@ public class StateProperties {
 				isSLAMAvailable.set(true);
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
 				
-			}, 2, TimeUnit.SECONDS);
+			});
 			
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));

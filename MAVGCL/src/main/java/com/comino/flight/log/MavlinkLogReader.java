@@ -187,7 +187,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					break;
 				}
 			}
-		}, 1000000, 1000, TimeUnit.MICROSECONDS);
+		}, 10000, 2000, TimeUnit.MICROSECONDS);
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
