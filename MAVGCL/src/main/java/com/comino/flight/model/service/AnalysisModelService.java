@@ -49,19 +49,14 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
-import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.util.Duration;
 
 
 public class AnalysisModelService  {
@@ -102,6 +97,8 @@ public class AnalysisModelService  {
 	private IMAVController control = null;
 
 	private CombinedConverter converter = null;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 	private AnimationTimer task = null;
 
@@ -177,7 +174,7 @@ public class AnalysisModelService  {
 	public void startConverter() {
 		Thread c = new Thread(converter);
 		c.setName("Combined model converter");
-		//c.setPriority(Thread.MAX_PRIORITY);
+		c.setPriority(Thread.NORM_PRIORITY+2);
 		c.start();
 	}
 
@@ -255,12 +252,11 @@ public class AnalysisModelService  {
 
 	public void stop(int delay_sec) {
 		mode = POST_COLLECTING;
-		ExecutorService.get().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stop(); task.stop();
-			}
-		}, delay_sec, TimeUnit.SECONDS);
+		if(delay_sec > 0)
+		  wq.addSingleTask("LP",delay_sec * 1000, () -> { stop(); task.stop(); } );
+		else {
+			stop(); task.stop(); 
+		}
 	}
 
 	public void setModelList(List<AnalysisDataModel> list) {
