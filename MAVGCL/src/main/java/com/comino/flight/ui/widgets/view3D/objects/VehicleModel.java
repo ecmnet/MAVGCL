@@ -85,11 +85,13 @@ public class VehicleModel extends Group {
 		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
 
 		this.setTranslateX(-model.getValue("LPOSY")*100);
-		
-		if(Double.isFinite(z_offset))
+//		
+//		if(Double.isFinite(z_offset))
 		     z_pos =    ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
-		else
-			 z_pos =  - model.getValue("LPOSZ") * 100  ;
+//		else
+//			 z_pos =  - model.getValue("LPOSZ") * 100  ;
+		
+//		 z_pos =   model.getValue("ALTRE") * 100  ;
 
 
 		this.setTranslateY(z_pos < 0 ? 0 : z_pos);

@@ -88,6 +88,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private AnalysisDataModel model      = null;
 	private StateProperties state        = null;
+	
+	private float           offset       = 0;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
 
@@ -149,6 +151,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				if(!Double.isNaN(model.getValue("ALTTR"))) {
 					camera.setTranslateY(model.getValue("ALTTR")*100);
 					world.setTranslateY(model.getValue("ALTTR")*100);
+					this.offset = -(float)model.getValue("LPOSZ");
 				}
 			}
 		});
@@ -173,14 +176,15 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 		
+		
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				target.updateState(model);
-				vehicle.updateState(model,model.getValue("ALTTR"));
+				vehicle.updateState(model,offset);
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
-					vehicle.updateState(model,model.getValue("ALTTR"));
+					vehicle.updateState(model,offset);
 					vehicle.setVisible(true);
 					break;
 				case Camera.VEHICLE_PERSPECTIVE:
