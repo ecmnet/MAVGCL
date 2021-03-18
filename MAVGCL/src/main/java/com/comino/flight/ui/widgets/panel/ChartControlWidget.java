@@ -48,6 +48,7 @@ import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -95,6 +96,11 @@ public class ChartControlWidget extends ChartControlPane  {
 	private AnalysisModelService modelService;
 
 	private StateProperties state = StateProperties.getInstance();
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
+	
+	private int replay_index = 0;
+	private int wq_id        = 0;
 
 	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
@@ -225,36 +231,28 @@ public class ChartControlWidget extends ChartControlPane  {
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
-				ExecutorService.get().submit(() -> {
-
-					if(scroll.getValue() <0.01)
-						scroll.setValue(1);
-
-					state.getProgressProperty().set(0);
-					state.getCurrentUpToDate().set(false);
-
-					int index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-					//					for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-					//						if(chart.getValue().getReplayProperty()!=null)
-					//							chart.getValue().getReplayProperty().set(-1);
-					//					}
-					while(index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
-						modelService.setCurrent(index);
-						state.getProgressProperty().set((float)(index) / modelService.getModelList().size() );
-						scroll.setValue((1f - (float)index/modelService.getModelList().size()));
+				
+				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
+				
+				 wq_id = wq.addCyclicTask("LP", modelService.getCollectorInterval_ms(), () -> {
+					
+					if(replay_index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
+						modelService.setCurrent(replay_index);
+						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
+						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
 						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 							if(chart.getValue().getReplayProperty()!=null)
-								chart.getValue().getReplayProperty().set(index);
-
+								chart.getValue().getReplayProperty().set(replay_index);
 						}
-						index++;
-						try { Thread.sleep(modelService.getCollectorInterval_ms()); } catch (InterruptedException e) {	}
+						replay_index++;
+						
+					} else {
+						wq.removeTask("LP", wq_id);
+						modelService.setReplaying(false);
+						state.getProgressProperty().set(-1);
+						state.getReplayingProperty().set(false);
+						state.getCurrentUpToDate().set(true);
 					}
-					modelService.setReplaying(false);
-					state.getProgressProperty().set(-1);
-					state.getReplayingProperty().set(false);
-					state.getCurrentUpToDate().set(true);
-
 				});
 			} else {
 				modelService.setReplaying(false);
@@ -273,6 +271,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setDisable(true);
 				}
 				else {
+					wq.removeTask("LP", wq_id);
 					play.setText("\u25B6");
 					scroll.setDisable(false);
 				}
