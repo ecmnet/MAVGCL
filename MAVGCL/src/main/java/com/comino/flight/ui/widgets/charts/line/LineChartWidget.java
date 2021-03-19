@@ -823,7 +823,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		else if(frame >= 60)
 			resolution_ms = dataService.isCollecting()  ? 100 : 50;
 		else if(frame >= 30)
-			resolution_ms = dataService.isCollecting()  ? 100 : 50;
+			resolution_ms = dataService.isCollecting()  ? 100 : dataService.getCollectorInterval_ms();
 		else 
 			resolution_ms = dataService.isCollecting()  ? 50  : dataService.getCollectorInterval_ms();
 
