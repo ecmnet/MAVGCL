@@ -232,6 +232,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get() && modelService.getCollectorInterval_ms() >= 25) {
 				state.getReplayingProperty().set(true);
+				if(scroll.getValue()<0.05) scroll.setValue(1);
 				
 				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
 				
@@ -258,7 +259,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				
 
 			} else {
-
+				state.getProgressProperty().set(-1);
 				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
 				state.getCurrentUpToDate().set(true);
@@ -276,6 +277,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				}
 				else {
 					wq.removeTask("LP", wq_id);
+					state.getProgressProperty().set(-1);
 					replay_index = 0;
 					play.setText("\u25B6");
 					scroll.setDisable(false);
