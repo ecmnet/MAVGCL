@@ -36,8 +36,8 @@ package com.comino.flight.ui.widgets.panel;
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.jfx.extensions.ChartControlPane;
+import com.comino.jfx.extensions.DashLabelLED;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;

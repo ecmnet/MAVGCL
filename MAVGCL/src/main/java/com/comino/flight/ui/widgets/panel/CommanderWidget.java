@@ -48,16 +48,12 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.jfx.extensions.StateButton;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
-import com.comino.mavutils.legacy.ExecutorService;
 
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

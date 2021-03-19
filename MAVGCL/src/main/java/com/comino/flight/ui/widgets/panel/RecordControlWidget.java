@@ -42,7 +42,6 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
-import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;

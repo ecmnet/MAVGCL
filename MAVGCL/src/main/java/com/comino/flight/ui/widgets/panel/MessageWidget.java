@@ -46,7 +46,6 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.model.segment.LogMessage;
 
-import eu.hansolo.airseries.AirCompass;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -55,7 +54,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 
 public class MessageWidget extends ChartControlPane implements IChartControl {
 
