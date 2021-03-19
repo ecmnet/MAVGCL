@@ -134,6 +134,7 @@ public class ChartControlWidget extends ChartControlPane  {
 			//scroll.setValue(1.0);
 
 			if(state.getReplayingProperty().get()) {
+				replay_index = 0; scroll.setValue(1.0);
 				state.getReplayingProperty().set(false);
 				for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 					if(chart.getValue().getReplayProperty()!=null) 
@@ -229,7 +230,7 @@ public class ChartControlWidget extends ChartControlPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		play.setOnAction((ActionEvent event)-> {
-			if(!state.getReplayingProperty().get()) {
+			if(!state.getReplayingProperty().get() && modelService.getCollectorInterval_ms() >= 25) {
 				state.getReplayingProperty().set(true);
 				
 				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
@@ -254,7 +255,10 @@ public class ChartControlWidget extends ChartControlPane  {
 						state.getCurrentUpToDate().set(true);
 					}
 				});
+				
+
 			} else {
+
 				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
 				state.getCurrentUpToDate().set(true);
@@ -265,13 +269,14 @@ public class ChartControlWidget extends ChartControlPane  {
 		state.getReplayingProperty().addListener((e,o,n) -> {
 
 			Platform.runLater(() -> {
-				if(n.booleanValue()) {
+				if(n.booleanValue() ) {
 					//	play.setText("\u25A0");
 					play.setText("||");
 					scroll.setDisable(true);
 				}
 				else {
 					wq.removeTask("LP", wq_id);
+					replay_index = 0;
 					play.setText("\u25B6");
 					scroll.setDisable(false);
 				}
