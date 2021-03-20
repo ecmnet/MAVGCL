@@ -50,6 +50,7 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.GPS;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -76,6 +77,8 @@ public class UBXRTCM3Base implements Runnable {
 	private MSPLogger logger =null;
 
 	private IMAVController control;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public static UBXRTCM3Base getInstance(IMAVController control, AnalysisModelService analysisModelService) {
 		if(instance == null) {
@@ -97,7 +100,7 @@ public class UBXRTCM3Base implements Runnable {
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
 
-		ExecutorService.get().scheduleAtFixedRate(this, 0, 5, TimeUnit.SECONDS);
+		wq.addCyclicTask("LP", 5000, this);
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
