@@ -49,6 +49,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 import org.mavlink.messages.lquac.msg_ping;
 
 import com.comino.flight.base.UBXRTCM3Base;
+
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
@@ -419,6 +420,9 @@ public class MainApp extends Application  {
 					if(control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM, 0, 21196 ))
 						MSPLogger.getInstance().writeLocalMsg("EMERGENCY: User requested to switch off motors",
 								MAV_SEVERITY.MAV_SEVERITY_EMERGENCY);
+				}
+				if(event.getCode()==KeyCode.W) {
+					wq.printStatus();
 				}
 			});
 
