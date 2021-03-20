@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -57,7 +55,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.param.ParamUtils;
 import com.comino.mavcom.param.ParameterAttributes;
-import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -106,12 +104,15 @@ public class ParameterWidget extends ChartControlPane  {
 
 	private MAVGCLPX4Parameters  params;
 
-	private ScheduledFuture<?> timeout;
-	private int timeout_count=0;
-
 	private List<ParamItem> items = new ArrayList<ParamItem>();
 
 	private StateProperties state = null;
+	
+	private int timeout;
+	private int timeout_count=0;
+
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public ParameterWidget() {
 		super();
@@ -191,13 +192,14 @@ public class ParameterWidget extends ChartControlPane  {
 							});
 						}
 					
-
-					if(timeout!=null && !timeout.isDone()) {
+				    // Issue: BAT parameters are always sent back when changing a parameter.
+					//System.out.println(wq.isInQueue("LP", timeout)+" P:"+p.name);
+					if(wq.isInQueue("LP", timeout)) {
 						BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
 						MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						if(p.reboot_required)
 							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						timeout.cancel(true);  timeout_count=0;
+						wq.removeTask("LP", timeout);  timeout_count=0;
 					}
 					
 					});
@@ -390,7 +392,7 @@ public class ParameterWidget extends ChartControlPane  {
 			setValueOf(editor,att.value);
 
 			this.editor.focusedProperty().addListener((observable, oldValue, newValue) -> {
-				if(!editor.isFocused() && (timeout==null || timeout.isDone())) {
+				if(!editor.isFocused() && !wq.isInQueue("LP", timeout)) {
 					try {
 						final float val =  getValueOf(editor);
 						if(val != att.value) {
@@ -448,17 +450,19 @@ public class ParameterWidget extends ChartControlPane  {
 			msg.setParam_id(att.name);
 			msg.param_value = ParamUtils.valToParam(att.vtype, val);
 			control.sendMAVLinkMessage(msg);
-			timeout = ExecutorService.get().schedule(() -> {
+			timeout = wq.addCyclicTask("LP",300,() -> {
 				if(++timeout_count > 3) {
+					wq.removeTask("LP", timeout);
 					MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
 							MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-					setValueOf(editor,att.value); }
+					setValueOf(editor,att.value);
+				}
 				else {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] Timeout setting parameter. Retry "
 							+timeout_count,MAV_SEVERITY.MAV_SEVERITY_DEBUG);
-					sendParameter(att,val);
+					control.sendMAVLinkMessage(msg);
 				}
-			}, 200, TimeUnit.MILLISECONDS);
+			});
 		}
 
 

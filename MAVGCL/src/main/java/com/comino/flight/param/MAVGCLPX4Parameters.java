@@ -83,10 +83,10 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	private boolean is_reading = false;
 
-//	private ScheduledFuture<?> timeout = null;
+	//	private ScheduledFuture<?> timeout = null;
 	private int timeout=0;
 	private float qnh;
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public static MAVGCLPX4Parameters getInstance(IMAVController control) {
@@ -105,8 +105,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
-		
-	    this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
+
+		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
 		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
@@ -122,8 +122,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			if(!n.booleanValue()) {
 				is_reading = false; 
 				wq.removeTask("LP", timeout);
-//				if(timeout!=null)
-//					timeout.cancel(true);
+				//				if(timeout!=null)
+				//					timeout.cancel(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
 					parameterList.clear();
@@ -131,9 +131,9 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 			} else {
 				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
-//				ExecutorService.get().schedule(() -> {
-//					refreshParameterList(true);
-//				},500,TimeUnit.MILLISECONDS);
+				//				ExecutorService.get().schedule(() -> {
+				//					refreshParameterList(true);
+				//				},500,TimeUnit.MILLISECONDS);
 			}
 		});
 
@@ -144,8 +144,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		parameterList.clear();
 		property.setValue(null);
 		wq.removeTask("LP", timeout);
-//		if(timeout!=null)
-//			timeout.cancel(true);
+		//		if(timeout!=null)
+		//			timeout.cancel(true);
 	}
 
 	public void refreshParameterList(boolean loaded) {
@@ -160,14 +160,14 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 			is_reading = true;
-			
+
 			wq.removeTask("LP", timeout);
-//			if(timeout!=null)
-//				timeout.cancel(true);
-			
-			
-			
-//			timeout = ExecutorService.get().schedule(() -> {
+			//			if(timeout!=null)
+			//				timeout.cancel(true);
+
+
+
+			//			timeout = ExecutorService.get().schedule(() -> {
 			timeout = wq.addSingleTask("LP", 10000, () -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
@@ -175,7 +175,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
 			});
-//			}, 10, TimeUnit.SECONDS);
+			//			}, 10, TimeUnit.SECONDS);
 		} 
 	}
 
@@ -188,38 +188,45 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	public void received(Object _msg) {
 
 		if( _msg instanceof msg_param_value) {
-			
-			long flight_time = 0;
 
-			property.setValue(null);
+			long flight_time = 0; double val;
 
 			msg_param_value msg = (msg_param_value)_msg;
 
 			if(msg.param_id[0]=='_')
 				return;
 
+			val = 	ParamUtils.paramToVal(msg.param_type, msg.param_value);
+
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
 				attributes = new ParameterAttributes(msg.getParam_id(),"Default Group");
-			attributes.value = ParamUtils.paramToVal(msg.param_type, msg.param_value);
-			attributes.vtype = msg.param_type;
+			
+			//System.out.println(attributes.value+"/"+val);
 
-			parameterList.put(attributes.name,attributes);
-			property.setValue(attributes);
+			//if(attributes.value != val) {
+
+				property.setValue(null);
+				attributes.value = val;
+				attributes.vtype = msg.param_type;
+
+				parameterList.put(attributes.name,attributes);
+				property.setValue(attributes);
+
+			//}
+
 
 			if(is_reading)
 				state.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
 				wq.removeTask("LP", timeout);
-//				if(timeout!=null)
-//					timeout.cancel(true);
 				state.getParamLoadedProperty().set(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
 				is_reading = false;
-				
+
 				// Flight time
 				if(get("LND_FLIGHT_T_LO")!=null && get("LND_FLIGHT_T_HI") !=null ) {
 					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
