@@ -68,6 +68,7 @@ import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -255,6 +256,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private BooleanProperty isScrolling = new SimpleBooleanProperty();
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public XYChartWidget() {
 
@@ -806,7 +809,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		}
 
 		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
-			ExecutorService.get().execute(() -> {
+			wq.addSingleTask("LP",() -> {
 				dashboard_update_tms = System.currentTimeMillis();
 				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
 				s2.getStatistics(current_x0_pt,current_x1_pt,mList);
