@@ -66,6 +66,7 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.param.ParameterAttributes;
 import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -102,7 +103,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private BooleanProperty isCollecting = null;
 	private List<Long> unread_packages = null;
-	private ScheduledFuture<?> timeout;
+	private int timeout;
 
 	private String path = null;
 
@@ -111,6 +112,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private final AnalysisModelService modelService;
 	private final FileHandler fh;
 	private final Preferences userPrefs;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public MavlinkLogReader(IMAVController control) {
 		this.control = control;
@@ -160,12 +163,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = ExecutorService.get().scheduleAtFixedRate(() -> {
+		timeout = wq.addCyclicTask("NP",5,() -> {
 			if ((System.currentTimeMillis() - received_ms) > 2) {
 
 				switch (state) {
 				case IDLE:
-					timeout.cancel(true);
+					wq.removeTask("NP",timeout);
 					break;
 				case ENTRY:
 					if (++retry > 100) {
@@ -187,7 +190,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					break;
 				}
 			}
-		}, 10000, 2000, TimeUnit.MICROSECONDS);
+		});
 
 		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
@@ -205,6 +208,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		logger.writeLocalMsg("[mgc] Abort reading log");
+		wq.removeTask("NP",timeout);
 	}
 
 	@Override
@@ -305,7 +309,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private void stop() {
 		sendEndNotice();
-		timeout.cancel(false);
+		wq.removeTask("NP",timeout);
 		state = IDLE;
 		isCollecting.set(false);
 		try {

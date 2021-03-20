@@ -37,11 +37,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -59,7 +56,6 @@ import com.comino.mavcom.param.PX4Parameters;
 import com.comino.mavcom.param.ParamUtils;
 import com.comino.mavcom.param.ParameterAttributes;
 import com.comino.mavcom.param.ParameterFactMetaData;
-import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
@@ -122,8 +118,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			if(!n.booleanValue()) {
 				is_reading = false; 
 				wq.removeTask("LP", timeout);
-				//				if(timeout!=null)
-				//					timeout.cancel(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				if(!preferences.getBoolean(MAVPreferences.AUTOSAVE, false)) {
 					parameterList.clear();
@@ -131,9 +125,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 			} else {
 				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
-				//				ExecutorService.get().schedule(() -> {
-				//					refreshParameterList(true);
-				//				},500,TimeUnit.MILLISECONDS);
 			}
 		});
 
@@ -144,8 +135,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		parameterList.clear();
 		property.setValue(null);
 		wq.removeTask("LP", timeout);
-		//		if(timeout!=null)
-		//			timeout.cancel(true);
 	}
 
 	public void refreshParameterList(boolean loaded) {
@@ -162,12 +151,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			is_reading = true;
 
 			wq.removeTask("LP", timeout);
-			//			if(timeout!=null)
-			//				timeout.cancel(true);
-
-
-
-			//			timeout = ExecutorService.get().schedule(() -> {
 			timeout = wq.addSingleTask("LP", 10000, () -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
@@ -175,7 +158,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
 			});
-			//			}, 10, TimeUnit.SECONDS);
 		} 
 	}
 

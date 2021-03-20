@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -34,7 +34,6 @@
 package com.comino.flight.log.ulog;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -48,7 +47,7 @@ import com.comino.jmavlib.extensions.UlogMAVLinkParser;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
-import com.comino.mavutils.legacy.ExecutorService;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {
@@ -71,6 +70,8 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 
 	private MSPLogger logger = null;
+	
+	private final WorkQueue wq = WorkQueue.getInstance();
 
 
 	public ULogFromMAVLinkReader(IMAVController control, boolean debug)  {
@@ -134,11 +135,11 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 					}
 				}
 
-				ExecutorService.get().schedule(() -> {
+				wq.addSingleTask("LP",5000,() -> {
 					if(state==STATE_DATA && lostPackageRatio() > 0.02f)
 						logger.writeLocalMsg("[mgc] ULog lost package ratio: "+(int)(lostPackageRatio()*100f)+"%",
 								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				}, 5, TimeUnit.SECONDS);
+				});
 
 	
 				logger.writeLocalMsg("[mgc] Logging via ULog streaming",MAV_SEVERITY.MAV_SEVERITY_NOTICE);

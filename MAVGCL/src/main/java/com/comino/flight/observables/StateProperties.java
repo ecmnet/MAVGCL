@@ -33,8 +33,6 @@
 
 package com.comino.flight.observables;
 
-import java.util.concurrent.TimeUnit;
-
 import org.mavlink.messages.MAV_SEVERITY;
 
 import com.comino.flight.prefs.MAVPreferences;
@@ -43,11 +41,9 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
-import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 import com.comino.speech.VoiceTTS;
 
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
