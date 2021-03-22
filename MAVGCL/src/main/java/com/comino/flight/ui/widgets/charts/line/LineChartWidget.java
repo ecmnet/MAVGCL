@@ -553,7 +553,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 
-
 		replay.addListener((v, ov, nv) -> {
 			
 			if(isDisabled())
