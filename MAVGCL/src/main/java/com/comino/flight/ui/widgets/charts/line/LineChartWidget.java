@@ -566,11 +566,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				Platform.runLater(() -> updateGraph(true,1) );
 			} else {
 				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
-				
-				if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get()) {
-					dataService.setCurrent(dataService.calculateX1IndexByFactor(nv.floatValue())-1);
-				}
+			    dataService.setCurrent(nv.intValue());
 			}
+			
 		});
 
 		isScrolling.addListener((v, ov, nv) -> {
