@@ -87,16 +87,15 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private IMAVController control = null;
 
 	private int last_log_id = 0;
-	private long received_ms = 0;
 	private int retry = 0;
 	private long start = 0;
 	private long time_utc = 0;
 
 	private int total_package_count = 0;
 
-	private int chunk_offset = 0;
-	private int chunk_size = 0;
-	
+	private volatile int chunk_offset = 0;
+	private volatile int chunk_size = 0;
+
 	private int read_count = 0;
 
 	private RandomAccessFile file = null;
@@ -112,7 +111,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private final AnalysisModelService modelService;
 	private final FileHandler fh;
 	private final Preferences userPrefs;
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public MavlinkLogReader(IMAVController control) {
@@ -124,7 +123,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		this.modelService = AnalysisModelService.getInstance();
 		this.isCollecting = new SimpleBooleanProperty();
 		this.control.addMAVLinkListener(this);
-		
+
 		props.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue() != AnalysisModelService.STOPPED && isCollecting.get())
 				abortReadingLog();
@@ -132,10 +131,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	public void requestLastLog() {
-		
+
 		if(props.getRecordingProperty().intValue()!=AnalysisModelService.STOPPED)
-		  return;
-		
+			return;
+
 		try {
 			this.path = fh.getTempFile().getPath();
 			this.file = new RandomAccessFile(path, "rw");
@@ -163,32 +162,28 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("NP",5,() -> {
-			if ((System.currentTimeMillis() - received_ms) > 2) {
+		timeout = wq.addCyclicTask("NP",2,() -> {
 
-				switch (state) {
-				case IDLE:
-					wq.removeTask("NP",timeout);
-					break;
-				case ENTRY:
-					if (++retry > 100) {
-						abortReadingLog();
-						return;
-					}
-					received_ms = System.currentTimeMillis();
-					requestLogList(GET_LAST_LOG_ID);
-					break;
-				case DATA:
-					if (++retry > 200) {
-						abortReadingLog();
-						return;
-					}
-					if (searchForNextUnreadPackage()) {
-						requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
-					}
-					received_ms = System.currentTimeMillis();
-					break;
+			switch (state) {
+			case IDLE:
+				wq.removeTask("NP",timeout);
+				break;
+			case ENTRY:
+				if (++retry > 100) {
+					abortReadingLog();
+					return;
 				}
+				requestLogList(GET_LAST_LOG_ID);
+				break;
+			case DATA:
+				if (++retry > 500) {
+					abortReadingLog();
+					return;
+				}
+				if(searchForNextUnreadPackage()) {
+					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
+				}
+				break;
 			}
 		});
 
@@ -213,10 +208,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	@Override
 	public void received(Object o) {
-		
+
 		if(!isCollecting.get())
 			return;
-		
+
 		if (o instanceof msg_log_entry)
 			handleLogEntry((msg_log_entry) o);
 
@@ -224,9 +219,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			handleLogData((msg_log_data) o);
 	}
 
-	private void handleLogEntry(msg_log_entry entry) {
+	private synchronized void handleLogEntry(msg_log_entry entry) {
 		last_log_id = entry.num_logs - 1;
-		received_ms = System.currentTimeMillis();
 		if (last_log_id > -1) {
 			if (entry.id != last_log_id)
 				requestLogList(last_log_id);
@@ -240,6 +234,13 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				total_package_count = prepareUnreadPackageList(entry.size);
 				System.out.println("Expected packages: " + unread_packages.size());
 				logger.writeLocalMsg("[mgc] Importing Log (" + last_log_id + ") - " + (entry.size / 1024) + " kb");
+				try {
+					file.setLength(entry.size);
+				} catch (IOException e) {
+					System.err.println(e.getLocalizedMessage());
+					stop();
+					return;
+				}
 				state = DATA;
 				requestDataPackages(0, entry.size);
 
@@ -247,8 +248,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 	}
 
-	private void handleLogData(msg_log_data data) {
-		received_ms = System.currentTimeMillis();
+	private synchronized void handleLogData(msg_log_data data) {
+
 		retry = 0;
 
 		int p = getPackageNumber(data.ofs);
@@ -259,7 +260,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		try {
 			file.seek(data.ofs);
 			for (int i = 0; i < data.count; i++)
-				file.write((byte) (data.data[i] & 0x00FF));
+				file.writeByte((byte) (data.data[i] & 0x000000FF));
 		} catch (IOException e) {
 			System.err.println(e.getLocalizedMessage());
 			return;
@@ -270,10 +271,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 		unread_packages.set(p, (long) -1);
 		read_count++;
-		
+
 
 		int unread_count = unread_packages.size()-read_count; //getUnreadPackageCount();
-	//	 System.out.println("Package: "+p +" -> "+unread_packages.get(p)+"-> "+unread_count+" -> "+(unread_packages.size()-read_count));
+		//	 System.out.println("Package: "+p +" -> "+unread_packages.get(p)+"-> "+unread_count+" -> "+(unread_packages.size()-read_count));
 		props.getProgressProperty().set(1.0f - (float) unread_count / total_package_count);
 		if (unread_count == 0) {
 			stop();
@@ -308,8 +309,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void stop() {
-		sendEndNotice();
 		wq.removeTask("NP",timeout);
+		sendEndNotice();
 		state = IDLE;
 		isCollecting.set(false);
 		try {
@@ -355,18 +356,18 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return true;
 	}
 
-//	private int getUnreadPackageCount() {
-//		int c = 0;
-//		for (int i = 0; i < unread_packages.size(); i++) {
-//			if (unread_packages.get(i) != -1)
-//				c++;
-//		}
-//		return c;
-//	}
+	//	private int getUnreadPackageCount() {
+	//		int c = 0;
+	//		for (int i = 0; i < unread_packages.size(); i++) {
+	//			if (unread_packages.get(i) != -1)
+	//				c++;
+	//		}
+	//		return c;
+	//	}
 
 	private int prepareUnreadPackageList(long size) {
-		unread_packages = new ArrayList<Long>();
 		int count = getPackageNumber(size);
+		unread_packages = new ArrayList<Long>(count);
 		for (long i = 0; i < count + 1; i++)
 			unread_packages.add(i * LOG_PACKAG_DATA_LENGTH);
 		return count;
