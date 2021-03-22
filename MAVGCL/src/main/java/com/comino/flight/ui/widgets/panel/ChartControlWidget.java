@@ -89,9 +89,9 @@ public class ChartControlWidget extends ChartControlPane  {
 	private AnalysisModelService modelService;
 
 	private StateProperties state = StateProperties.getInstance();
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
-	
+
 	private int replay_index = 0;
 	private int wq_id        = 0;
 
@@ -140,7 +140,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				if(chart.getValue().getTimeFrameProperty()!=null)
 					chart.getValue().getTimeFrameProperty().set(newValue.intValue());
 			}
-			
+
 
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms()
 					|| modelService.isCollecting() || modelService.getModelList().size()==0)
@@ -226,15 +226,15 @@ public class ChartControlWidget extends ChartControlPane  {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
 				if(scroll.getValue()<0.05) scroll.setValue(1);
-				
+
 				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-				
+
 				final int cycle_ms = modelService.getCollectorInterval_ms() < 25 ? 25 : modelService.getCollectorInterval_ms();
-				
-				 wq_id = wq.addCyclicTask("LP", cycle_ms, () -> {
-					
+
+				wq_id = wq.addCyclicTask("LP", cycle_ms, () -> {
+
 					if(replay_index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
-						
+
 						modelService.setCurrent(replay_index);
 						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
 						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
@@ -243,7 +243,7 @@ public class ChartControlWidget extends ChartControlPane  {
 								chart.getValue().getReplayProperty().set(replay_index);
 						}
 						replay_index = replay_index + ( cycle_ms / modelService.getCollectorInterval_ms());
-						
+
 					} else {
 						wq.removeTask("LP", wq_id);
 						modelService.setReplaying(false);
@@ -252,7 +252,7 @@ public class ChartControlWidget extends ChartControlPane  {
 						state.getCurrentUpToDate().set(true);
 					}
 				});
-				
+
 
 			} else {
 				state.getProgressProperty().set(-1);

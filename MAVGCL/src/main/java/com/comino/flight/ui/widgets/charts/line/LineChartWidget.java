@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -61,13 +60,10 @@ import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavutils.legacy.ExecutorService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
@@ -96,7 +92,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
@@ -540,9 +535,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			xAxis.setMinorTickCount(10);
 
 			refreshRequest = true;
-			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
-			});
+			Platform.runLater(() -> updateGraph(refreshRequest,0) );
 		});
 
 
@@ -551,9 +544,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
 			if(!isDisabled() && !refreshRequest) {
 				refreshRequest = true;
-				Platform.runLater(() -> {
-					updateGraph(refreshRequest,0);
-				});
+				Platform.runLater(() -> updateGraph(refreshRequest,0) );
 			}
 
 			if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get()) {
@@ -564,15 +555,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
-				if(nv.intValue()<=1) {
-					setXResolution(timeFrame.get());
-					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-					updateGraph(true,1);
-				} else {
-					updateGraph(false,nv.intValue());
-				}
-			});
+			if(nv.intValue()<=2) {
+				setXResolution(timeFrame.get());
+				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+				Platform.runLater(() -> updateGraph(true,1) );
+			} else {
+				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
+			}
 		});
 
 		isScrolling.addListener((v, ov, nv) -> {
@@ -823,7 +812,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		else if(frame >= 60)
 			resolution_ms = dataService.isCollecting()  ? 100 : 50;
 		else if(frame >= 30)
-			resolution_ms = dataService.isCollecting()  ? 100 : dataService.getCollectorInterval_ms();
+			resolution_ms = dataService.isCollecting()  ? 50 : 25;
 		else 
 			resolution_ms = dataService.isCollecting()  ? 50  : dataService.getCollectorInterval_ms();
 
