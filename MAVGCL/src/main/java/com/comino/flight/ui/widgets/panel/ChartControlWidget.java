@@ -225,23 +225,33 @@ public class ChartControlWidget extends ChartControlPane  {
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
 				state.getReplayingProperty().set(true);
+				
+				modelService.setReplaying(true);
+				
+				charts.entrySet().forEach((chart) -> { 
+					if(chart.getValue().getReplayProperty()!=null)
+						chart.getValue().getReplayProperty().set(0);
+				});
+				
 				if(scroll.getValue()<0.05) scroll.setValue(1);
 
 				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-
+				
 				final int cycle_ms = modelService.getCollectorInterval_ms() < 25 ? 25 : modelService.getCollectorInterval_ms();
 
 				wq_id = wq.addCyclicTask("LP", cycle_ms, () -> {
 
 					if(replay_index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
-
-						modelService.setCurrent(replay_index);
-						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
-						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
-						for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
+						
+						charts.entrySet().forEach((chart) -> { 
 							if(chart.getValue().getReplayProperty()!=null)
 								chart.getValue().getReplayProperty().set(replay_index);
-						}
+						});
+						
+						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
+						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
+						modelService.setCurrent(replay_index);
+						
 						replay_index = replay_index + ( cycle_ms / modelService.getCollectorInterval_ms());
 
 					} else {
