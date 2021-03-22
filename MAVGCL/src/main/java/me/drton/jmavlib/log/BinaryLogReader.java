@@ -5,19 +5,18 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.channels.SeekableByteChannel;
-
+import java.nio.channels.FileChannel;
 
 /**
  * User: ton Date: 03.06.13 Time: 14:51
  */
 public abstract class BinaryLogReader implements LogReader {
     protected ByteBuffer buffer;
-    protected SeekableByteChannel channel = null;
+    protected FileChannel channel = null;
     protected long channelPosition = 0;
 
     public BinaryLogReader(String fileName) throws IOException {
-        buffer = ByteBuffer.allocate(8192);
+        buffer = ByteBuffer.allocate(65536);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.flip();
         channel = new RandomAccessFile(fileName, "r").getChannel();

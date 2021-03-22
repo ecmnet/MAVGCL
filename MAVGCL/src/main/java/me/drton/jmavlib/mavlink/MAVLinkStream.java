@@ -68,8 +68,11 @@ public class MAVLinkStream {
                     throw ioe;
                 }
                 buffer.flip();
-                if (n <= 0) {
+                if (n == 0) {
                     return null;
+                }
+                if (n == -1) { // -1 means End of Stream (i.e. the other side closed the socket)
+                    throw new IOException("End of Stream");
                 }
             }
         }
