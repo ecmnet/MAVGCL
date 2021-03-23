@@ -507,7 +507,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
-				if(nv.intValue()<=1) {
+				if(nv.intValue()<=5) {
 					updateMap(true);
 				} else
 					updateMap(false);
