@@ -553,12 +553,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			
 			refreshRequest = true; 
 			if(nv.intValue()<=5) {
 				setXResolution(timeFrame.get());
 				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-				Platform.runLater(() -> updateGraph(true,1) );
+				Platform.runLater(() -> updateGraph(true, nv.intValue()) );
 			} else {
 				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
 			    dataService.setCurrent(nv.intValue());
