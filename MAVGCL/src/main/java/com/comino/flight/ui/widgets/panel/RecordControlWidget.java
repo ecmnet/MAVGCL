@@ -146,7 +146,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		trigstop.getSelectionModel().select(0);
 		trigstop.setDisable(true);
 		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
-		trigdelay.getSelectionModel().select(0);
+		trigdelay.getSelectionModel().select(1);
 		trigdelay.setDisable(true);
 
 		recording.disableProperty().bind(
