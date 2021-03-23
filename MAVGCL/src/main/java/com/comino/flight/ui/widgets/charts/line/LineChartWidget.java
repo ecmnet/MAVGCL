@@ -554,9 +554,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		replay.addListener((v, ov, nv) -> {
 			
-			if(isDisabled())
-				return;
-			
 			refreshRequest = true; 
 			if(nv.intValue()<=5) {
 				setXResolution(timeFrame.get());
