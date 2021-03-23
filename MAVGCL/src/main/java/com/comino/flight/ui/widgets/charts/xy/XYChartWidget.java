@@ -603,7 +603,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		replay.addListener((v, ov, nv) -> {
 			Platform.runLater(() -> {
-				if(nv.intValue()<=1) {
+				if(nv.intValue()<=5) {
 					current_x0_pt =  0;
 					updateGraph(true,1);
 				} else
