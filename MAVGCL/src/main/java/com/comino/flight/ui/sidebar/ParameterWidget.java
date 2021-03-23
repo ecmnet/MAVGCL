@@ -107,11 +107,11 @@ public class ParameterWidget extends ChartControlPane  {
 	private List<ParamItem> items = new ArrayList<ParamItem>();
 
 	private StateProperties state = null;
-	
+
 	private int timeout;
 	private int timeout_count=0;
 
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public ParameterWidget() {
@@ -179,7 +179,7 @@ public class ParameterWidget extends ChartControlPane  {
 			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
 				if(newValue!=null) {
 					ParameterAttributes p = (ParameterAttributes)newValue;
-					
+
 					Platform.runLater(() -> {
 						if(!groups.getItems().contains(p.group_name) && p !=null) {
 							groups.getItems().add(p.group_name);
@@ -191,17 +191,17 @@ public class ParameterWidget extends ChartControlPane  {
 
 							});
 						}
-					
-				    // Issue: BAT parameters are always sent back when changing a parameter.
-					//System.out.println(wq.isInQueue("LP", timeout)+" P:"+p.name);
-					if(wq.isInQueue("LP", timeout)) {
-						BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
-						MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						if(p.reboot_required)
-							MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						wq.removeTask("LP", timeout);  timeout_count=0;
-					}
-					
+
+						// Issue: BAT parameters are always sent back when changing a parameter.
+						//System.out.println(wq.isInQueue("LP", timeout)+" P:"+p.name);
+						if(wq.isInQueue("LP", timeout)) {
+							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
+							MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							if(p.reboot_required)
+								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							wq.removeTask("LP", timeout);  timeout_count=0;
+						}
+
 					});
 
 
@@ -216,10 +216,10 @@ public class ParameterWidget extends ChartControlPane  {
 		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					if(state.getParamLoadedProperty().get() && newValue!=null) {
-						prefs.put(MAVPreferences.TUNING_GROUP, newValue);
-						populateParameterList(newValue);
-					}
+				if(state.getParamLoadedProperty().get() && newValue!=null) {
+					prefs.put(MAVPreferences.TUNING_GROUP, newValue);
+					populateParameterList(newValue);
+				}
 			}
 		});
 
@@ -466,25 +466,27 @@ public class ParameterWidget extends ChartControlPane  {
 		}
 
 
-
-		
 		public float getValueOf(Control p) throws NumberFormatException {
-			if(p==null)
+			try {
+				if(p==null)
+					return 0;
+				if(p instanceof TextField) {
+					((TextField)p).commitValue();
+					return Float.parseFloat(((TextField)p).getText());
+				}
+				else if(p instanceof Spinner)
+					return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
+				else if(p instanceof ChoiceBox) {
+					return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
+				} else
+					return 0;
+			} catch(Exception e) {
+				System.err.println(e.getMessage());
 				return 0;
-			if(p instanceof TextField) {
-				((TextField)p).commitValue();
-				return Float.parseFloat(((TextField)p).getText());
 			}
-			else if(p instanceof Spinner)
-				return (((Spinner<Double>)editor).getValueFactory().getValue()).floatValue();
-			else if(p instanceof ChoiceBox) {
-				return ((ChoiceBox<Entry<Integer,String>>)editor).getSelectionModel().getSelectedItem().getKey();
-			} else
-				return 0;
-			
 		}
 
-		
+
 		public void setValueOf(Control p, double v) {
 			Platform.runLater(() -> {
 				if(p instanceof TextField) {
@@ -507,7 +509,7 @@ public class ParameterWidget extends ChartControlPane  {
 			});
 		}
 
-		
+
 		private void checkDefaultOf(Control p, double v) {
 			Control e = p;
 			if(p instanceof Spinner)
@@ -521,7 +523,7 @@ public class ParameterWidget extends ChartControlPane  {
 				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
 		}
 
-		
+
 		private void setContextMenu(Control p) {
 			ContextMenu ctxm = new ContextMenu();
 			MenuItem cmItem1 = new MenuItem("Set default");
