@@ -210,7 +210,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		replay.addListener((v, ov, nv) -> {
-			if(nv.intValue()<=1) {
+			if(nv.intValue()<=5) {
 				model = dataService.getModelList().get(1);
 			} else
 				model = dataService.getModelList().get(nv.intValue());
