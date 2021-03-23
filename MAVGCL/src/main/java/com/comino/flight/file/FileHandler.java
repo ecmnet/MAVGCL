@@ -59,17 +59,13 @@ import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
-import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.log.ProgressInputStream;
-import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
-import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
-
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
@@ -77,18 +73,15 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.struct.MapPoint3D_F32;
 import com.comino.mavcom.param.ParameterAttributes;
-import com.comino.mavmap.map.map3D.store.LocaMap3DStorage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
 
