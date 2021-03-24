@@ -267,7 +267,7 @@ public class MainApp extends Application  {
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 
 
-			if(args.get("SERIAL")==null) {
+			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
 				new Thread(base).start();
 			}
