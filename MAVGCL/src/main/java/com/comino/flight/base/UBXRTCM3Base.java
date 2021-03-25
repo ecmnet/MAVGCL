@@ -79,6 +79,7 @@ public class UBXRTCM3Base implements Runnable {
 	private IMAVController control;
 	
 	private final WorkQueue wq = WorkQueue.getInstance();
+	private int ubxtask = 0;
 
 	public static UBXRTCM3Base getInstance(IMAVController control, AnalysisModelService analysisModelService) {
 		if(instance == null) {
@@ -100,7 +101,7 @@ public class UBXRTCM3Base implements Runnable {
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
 
-		wq.addCyclicTask("LP", 5000, this);
+		ubxtask = wq.addCyclicTask("LP", 5000, this);
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
@@ -161,7 +162,10 @@ public class UBXRTCM3Base implements Runnable {
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
 			int time = Integer.parseInt(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINTIM, "60"));
-			this.ubx.init(time,accuracy);
+			if(!ubx.init(time,accuracy)) {
+				wq.removeTask("LP", ubxtask);
+				logger.writeLocalMsg("[mgc] USB port in use. Searching for base stopped.", MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+			}
 			connected = true;
 		} catch (Exception e) {
 			return;
