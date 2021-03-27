@@ -760,7 +760,9 @@
 	</KeyFigure>
 
 	<KeyFigure desc="FLow.Dist." uom="m" mask="#0.00" key="FLOWDI">
-		<MSPSource class="raw" field="fd"></MSPSource>
+		<MSPSource class="raw" field="fd">
+		    <Converter class="SignConverter" expression="LIDAR" />
+		</MSPSource>
 		<PX4Source field="FLOW.Dist"></PX4Source>
 		<ULogSource field="optical_flow_0.ground_distance_m"/>
 		<Groups>
