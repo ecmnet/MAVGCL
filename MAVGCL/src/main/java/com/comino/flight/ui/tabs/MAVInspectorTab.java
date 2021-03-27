@@ -205,7 +205,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		
 		// Split messages by id if available (e.g. distance sensors)
 		for(int k = 0; k<msg.length;k++) {
-			if(msg[k].startsWith("id"))
+			if(msg[k].startsWith("id") && !msg[0].contains("STAT"))
 				_msg = _msg+"_"+msg[k].substring(3, 4);
 		}
 	
