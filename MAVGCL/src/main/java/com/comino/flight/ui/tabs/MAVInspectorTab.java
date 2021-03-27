@@ -202,7 +202,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].replace(':', ' ').trim();
-
+		
+		// Split messages by id if available (e.g. distance sensors)
+		for(int k = 0; k<msg.length;k++) {
+			if(msg[k].startsWith("id"))
+				_msg = _msg+"_"+msg[k].substring(3, 4);
+		}
+	
 		if(!allData.containsKey(_msg)) {
 
 			ObservableMap<String,DataSet> variables =  FXCollections.observableHashMap();
