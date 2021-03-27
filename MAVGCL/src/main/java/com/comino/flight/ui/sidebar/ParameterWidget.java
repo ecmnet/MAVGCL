@@ -493,8 +493,12 @@ public class ParameterWidget extends ChartControlPane  {
 					if(att.vtype==MAV_PARAM_TYPE.MAV_PARAM_TYPE_INT32)
 						((TextField)p).setText(String.valueOf((int)v));
 					else {
-						BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
-						((TextField)p).setText(bd.toPlainString());
+						if(Double.isFinite(v)) {
+							BigDecimal bd = new BigDecimal(v).setScale(att.decimals,BigDecimal.ROUND_HALF_UP);
+							((TextField)p).setText(bd.toPlainString());
+						} else
+							MSPLogger.getInstance().writeLocalMsg(att.name+" was not set. Value is invalid",
+									MAV_SEVERITY.MAV_SEVERITY_WARNING);
 					}
 				}
 				else if(p instanceof Spinner)
