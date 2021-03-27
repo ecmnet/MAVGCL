@@ -202,13 +202,14 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].replace(':', ' ').trim();
-		
-		// Split messages by id if available (e.g. distance sensors)
-		for(int k = 0; k<msg.length;k++) {
-			if(msg[k].startsWith("id") && !msg[0].contains("STAT"))
-				_msg = _msg+"_"+msg[k].substring(3, 4);
+
+		if(_msg.contains("DISTANCE")) {
+			for(int k = 0; k<msg.length;k++) {
+				if(msg[k].startsWith("id"))
+					_msg = _msg+"_"+msg[k].substring(3, 4);
+			}
 		}
-	
+
 		if(!allData.containsKey(_msg)) {
 
 			ObservableMap<String,DataSet> variables =  FXCollections.observableHashMap();
@@ -365,7 +366,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();
-				
+
 				return true;
 			}
 			return false;
