@@ -124,14 +124,15 @@ public class PreferencesDialog  {
 
 	@FXML
 	private TextField reflon;
+	
+	@FXML
+	private TextField refalt;
 
 	@FXML
 	private TextField icao;
 
 	private IMAVController control;
 	private Preferences userPrefs;
-
-	private boolean sendOriginEnable = false;
 
 	public PreferencesDialog(IMAVController control) {
 		this.control = control;
@@ -166,13 +167,6 @@ public class PreferencesDialog  {
 			});
 		});
 
-		this.reflat.textProperty().addListener((s,o,n) -> {
-			sendOriginEnable = true;
-		});
-
-		this.reflon.textProperty().addListener((s,o,n) -> {
-			sendOriginEnable = true;
-		});
 
 		prespath.setEditable(true);
 		prespath.setOnShowing(event -> {
@@ -214,7 +208,6 @@ public class PreferencesDialog  {
 
 	public void show() {
 
-		sendOriginEnable = false;
 
 		StateProperties.getInstance().preferencesChangedProperty().set(false);
 
@@ -231,6 +224,7 @@ public class PreferencesDialog  {
 		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
 		reflat.setText(userPrefs.get(MAVPreferences.REFLAT, "47.3977420"));
 		reflon.setText(userPrefs.get(MAVPreferences.REFLON, "8.5455940"));
+		refalt.setText(userPrefs.get(MAVPreferences.REFALT, "400"));
 		speech.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.SPEECH, true));
 		debug.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, true));
 		download.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true));
@@ -252,6 +246,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 			userPrefs.put(MAVPreferences.REFLAT, reflat.getText());
 			userPrefs.put(MAVPreferences.REFLON, reflon.getText());
+			userPrefs.put(MAVPreferences.REFALT, refalt.getText());
 			userPrefs.putBoolean(MAVPreferences.SPEECH,speech.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DEBUG_MSG,debug.isSelected());
 			userPrefs.putBoolean(MAVPreferences.DOWNLOAD,download.isSelected());
@@ -267,25 +262,8 @@ public class PreferencesDialog  {
 				e.printStackTrace();
 			}
 			
-			if(sendOriginEnable) 
-				sendOrigintoVehicle();
-			
 			MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
 		}
-	}
-
-	private void sendOrigintoVehicle() {
-
-		msg_msp_command msp = new msg_msp_command(255,1);
-		msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
-
-		msp.param1  = (long)(userPrefs.getDouble(MAVPreferences.REFLAT, 0) * 1e7);
-		msp.param2  = (long)(userPrefs.getDouble(MAVPreferences.REFLON, 0) * 1e7);
-
-		msp.param3  = 577*1000;
-
-		control.sendMAVLinkMessage(msp);
-		System.out.println("Global Position origin set");
 	}
 
 

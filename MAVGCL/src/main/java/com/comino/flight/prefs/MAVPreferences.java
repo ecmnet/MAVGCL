@@ -68,6 +68,7 @@ public class MAVPreferences {
 	public static final String VIDREC           = "VIDREC";
 	public static final String REFLAT           = "REFLAT";
 	public static final String REFLON           = "REFLON";
+	public static final String REFALT           = "REFALT";
 	public static final String SPEECH           = "SPEECH";
 	public static final String DEBUG_MSG        = "DEBUG";
 	public static final String LAST_FILE        = "LAST_FILE";
