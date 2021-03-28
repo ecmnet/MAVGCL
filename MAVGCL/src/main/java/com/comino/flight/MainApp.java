@@ -293,7 +293,7 @@ public class MainApp extends Application  {
 						msp.param1  = (long)(base.getLatitude()  * 1e7);
 						msp.param2  = (long)(base.getLongitude() * 1e7);
 
-						msp.param3  = 500*1000;
+						msp.param3  = 577*1000;
 
 						control.sendMAVLinkMessage(msp);
 						System.out.println("Global Position origin set to base position");
@@ -306,7 +306,7 @@ public class MainApp extends Application  {
 
 					msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
 					msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
-					msp.param3  = 500*1000;
+					msp.param3  = 577*1000;
 
 					control.sendMAVLinkMessage(msp);
 					System.out.println("Global Position origin set");

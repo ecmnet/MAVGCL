@@ -38,6 +38,9 @@ import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_msp_command;
+
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
@@ -100,7 +103,7 @@ public class PreferencesDialog  {
 
 	@FXML
 	private CheckBox ulog;
-	
+
 	@FXML
 	private CheckBox download;
 
@@ -109,7 +112,7 @@ public class PreferencesDialog  {
 
 	@FXML
 	private CheckBox debug;
-	
+
 	@FXML
 	private CheckBox alert;
 
@@ -121,12 +124,14 @@ public class PreferencesDialog  {
 
 	@FXML
 	private TextField reflon;
-	
+
 	@FXML
 	private TextField icao;
 
 	private IMAVController control;
 	private Preferences userPrefs;
+
+	private boolean sendOriginEnable = false;
 
 	public PreferencesDialog(IMAVController control) {
 		this.control = control;
@@ -161,6 +166,14 @@ public class PreferencesDialog  {
 			});
 		});
 
+		this.reflat.textProperty().addListener((s,o,n) -> {
+			sendOriginEnable = true;
+		});
+
+		this.reflon.textProperty().addListener((s,o,n) -> {
+			sendOriginEnable = true;
+		});
+
 		prespath.setEditable(true);
 		prespath.setOnShowing(event -> {
 			DirectoryChooser dir = new DirectoryChooser();
@@ -175,12 +188,14 @@ public class PreferencesDialog  {
 		});
 
 		svinacc.textProperty().addListener(new ChangeListener<String>() {
-		    @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		        if (newValue.length()>1 && !newValue.matches("[+-]?([0-9]*[.]?)?[0-9]?")) {
-		            svinacc.setText(oldValue);
-		        }
-		    }
+			@Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.length()>1 && !newValue.matches("[+-]?([0-9]*[.]?)?[0-9]?")) {
+					svinacc.setText(oldValue);
+				}
+			}
 		});
+
+
 
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 		prefDialog.getDialogPane().getButtonTypes().add(buttonTypeCancel);
@@ -198,6 +213,8 @@ public class PreferencesDialog  {
 	}
 
 	public void show() {
+
+		sendOriginEnable = false;
 
 		StateProperties.getInstance().preferencesChangedProperty().set(false);
 
@@ -249,8 +266,26 @@ public class PreferencesDialog  {
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
+			
+			if(sendOriginEnable) 
+				sendOrigintoVehicle();
+			
 			MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
 		}
+	}
+
+	private void sendOrigintoVehicle() {
+
+		msg_msp_command msp = new msg_msp_command(255,1);
+		msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+
+		msp.param1  = (long)(userPrefs.getDouble(MAVPreferences.REFLAT, 0) * 1e7);
+		msp.param2  = (long)(userPrefs.getDouble(MAVPreferences.REFLON, 0) * 1e7);
+
+		msp.param3  = 577*1000;
+
+		control.sendMAVLinkMessage(msp);
+		System.out.println("Global Position origin set");
 	}
 
 
