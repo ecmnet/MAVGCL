@@ -169,7 +169,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				wq.removeTask("NP",timeout);
 				break;
 			case ENTRY:
-				if (++retry > 100) {
+				if (++retry > 1000) {
 					abortReadingLog();
 					return;
 				}
