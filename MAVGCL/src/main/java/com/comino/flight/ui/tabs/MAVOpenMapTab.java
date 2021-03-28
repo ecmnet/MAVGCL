@@ -232,7 +232,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		clip.heightProperty().bind(map.heightProperty());
 		clip.widthProperty().bind(map.widthProperty());
 
-		map.setZoom(19.5);
+		map.setZoom(zoom.getValue());
 
 		canvasLayer = new CanvasLayer();
 		map.getLayers().add(canvasLayer);
