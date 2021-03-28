@@ -88,7 +88,7 @@ public class Alert extends ChartControlPane    {
 						
 						Platform.runLater(() -> {
 							String m = "["+LogMessage.severity_texts[msg.severity]+"] "+(new String(msg.text)).trim();
-							message.setText(m);
+							message.setText(m.length() > 60 ? m.substring(0, 58)+".." : m );
 							message.setAlignment(Pos.CENTER);
 							fadeProperty().set(true);	
 							fadeProperty().set(false);	
