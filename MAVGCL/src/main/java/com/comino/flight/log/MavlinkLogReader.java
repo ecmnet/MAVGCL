@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.lquac.msg_log_data;
@@ -162,11 +163,13 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("NP",2,() -> {
+		timeout = wq.addCyclicTask("NP",5,() -> {
 
 			switch (state) {
 			case IDLE:
 				wq.removeTask("NP",timeout);
+				retry=0;
+				read_count = 0;
 				break;
 			case ENTRY:
 				if (++retry > 1000) {
@@ -180,8 +183,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					abortReadingLog();
 					return;
 				}
-				if(searchForNextUnreadPackage()) {
-					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
+				for(int i = 0; i< 5; i++) {
+					if(searchForNextUnreadPackage()) {
+						requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
+						LockSupport.parkNanos(200000);
+					} else
+						break;
 				}
 				break;
 			}
@@ -220,6 +227,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private synchronized void handleLogEntry(msg_log_entry entry) {
+	
 		last_log_id = entry.num_logs - 1;
 		if (last_log_id > -1) {
 			if (entry.id != last_log_id)
@@ -232,7 +240,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				}
 				time_utc = entry.time_utc*1000L;
 				total_package_count = prepareUnreadPackageList(entry.size);
-				System.out.println("Expected packages: " + unread_packages.size());
+				System.out.println("Expected packages: " + unread_packages.size()+"/"+entry.size);
 				logger.writeLocalMsg("[mgc] Importing Log (" + last_log_id + ") - " + (entry.size / 1024) + " kb");
 				try {
 					file.setLength(entry.size);
@@ -241,6 +249,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					stop();
 					return;
 				}
+				retry = 0;
 				state = DATA;
 				requestDataPackages(0, entry.size);
 
