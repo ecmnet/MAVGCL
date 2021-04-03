@@ -72,30 +72,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EKF.TMS.FLOW" uom="" mask="#0.00" key="EKFTMSFLOW">
-		<ULogSource field="ekf2_timestamps_0.optical_flow_timestamp_rel"/>
-		<Groups>
-			<Group>EKF2 Innovations</Group>
-		</Groups>
-		<Clip min="-9999" max="9999"/>
-	</KeyFigure>
-
-	<KeyFigure desc="EKF.TMS.VIS" uom="" mask="#0.00" key="EKFTMSVIS">
-		<ULogSource field="ekf2_timestamps_0.vision_position_timestamp_rel"/>
-		<Groups>
-			<Group>EKF2 Innovations</Group>
-		</Groups>
-		<Clip min="-9999" max="9999"/>
-	</KeyFigure>
-
-	<KeyFigure desc="EKF.TMS.MAG" uom="" mask="#0.00" key="EKFTMSMAG">
-		<ULogSource field="ekf2_timestamps_0.vehicle_magnetometer_timestamp_rel"/>
-		<Groups>
-			<Group>EKF2 Innovations</Group>
-		</Groups>
-		<Clip min="-9999" max="9999"/>
-	</KeyFigure>
-
 
     <!-- EKF2 Innovation Status -->
 
@@ -145,7 +121,42 @@
 			<Group>EKF2 States</Group>
 		</Groups>
 	</KeyFigure>
-
+	
+	<KeyFigure desc="Control.Flags" uom="" mask="#" key="EKFCTLFLG">
+	    <ULogSource field="estimator_status_flags_0.control_mode_flags"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Height.Mode.RNG" uom="" mask="#" key="CTLFLGH_RNG">
+	    <ULogSource field="estimator_status_flags_0.cs_rng_hgt"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Height.Mode.EV" uom="" mask="#" key="CTLFLGH_EV">
+	    <ULogSource field="estimator_status_flags_0.cs_ev_hgt"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Height.Mode.BARO" uom="" mask="#" key="CTLFLGH_BARO">
+	    <ULogSource field="estimator_status_flags_0.cs_baro_hgt"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Height.Mode.GPS" uom="" mask="#" key="CTLFLGH_GPS">
+	    <ULogSource field="estimator_status_flags_0.cs_gps_hgt"/>
+		<Groups>
+			<Group>EKF2 States</Group>
+		</Groups>
+	</KeyFigure>
+	
 	 <!-- Vibration -->
 
 	

@@ -61,6 +61,7 @@ public class ModeAnnotation implements XYAnnotation {
 	public final static int		MODE_ANNOTATION_GPSMODE 	= 4;
 	public final static int		MODE_ANNOTATION_OFFBOARD 	= 5;
 	public final static int		MODE_ANNOTATION_VISION   	= 6;
+	public final static int		MODE_ANNOTATION_EKFHGTMODE	= 7;
 
 
 
@@ -70,6 +71,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","SpeedUp","SlowDown","Move","Turn","Land" };
 	private final static String[]  VISION_TEXTS     = { "", "Reset","Pos.Valid","Locked" };
+	private final static String[]  EKFHGTMODE_TEXTS = { "", "Baro","GPS","Range","Vision" };
 
 
 	private Pane         		node         	= null;
@@ -143,6 +145,10 @@ public class ModeAnnotation implements XYAnnotation {
 			node.setVisible(true);
 			buildLegend(VISION_TEXTS);
 			break;
+		case MODE_ANNOTATION_EKFHGTMODE:
+			node.setVisible(true);
+			buildLegend(EKFHGTMODE_TEXTS);
+			break;
 		}
 	}
 
@@ -171,6 +177,9 @@ public class ModeAnnotation implements XYAnnotation {
 			break;
 		case MODE_ANNOTATION_VISION:
 			updateVisionData(time,m);
+			break;
+		case MODE_ANNOTATION_EKFHGTMODE:
+			updateHeightMode(time,m);
 			break;
 		}
 	}
@@ -280,6 +289,20 @@ public class ModeAnnotation implements XYAnnotation {
 			addAreaData(time,0); break;
 			
 		}
+	}
+	
+	private void updateHeightMode(double time, AnalysisDataModel m) {
+		
+		if(m.getValue("CTLFLGH_BARO") > 0)
+			addAreaData(time,1); 
+		else if(m.getValue("CTLFLGH_GPS") > 0)
+			addAreaData(time,2); 
+		else if(m.getValue("CTLFLGH_RNG") > 0)
+			addAreaData(time,3); 
+		else if(m.getValue("CTLFLGH_EV") > 0)
+			addAreaData(time,4); 
+		else
+			addAreaData(time,0); 
 	}
 
 
