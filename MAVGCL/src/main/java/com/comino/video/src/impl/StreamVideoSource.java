@@ -35,6 +35,7 @@ package com.comino.video.src.impl;
 
 
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -44,6 +45,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.video.src.IMWStreamVideoProcessListener;
@@ -72,6 +75,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	private boolean m_collecting =false;
 	private boolean isRunning = false;
 	private boolean isAvailable = true;
+	
+	private BufferedImage image;
 
 	private long tms=0;
 
@@ -223,10 +228,10 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							try {
 								if(System.currentTimeMillis() >= trigger) {
 
-									Image raw_img = getfromjpeg(img);
+									image = ImageIO.read(new ByteArrayInputStream(img));
 									listener.forEach((l) -> {
 										try {
-										l.process(raw_img, img, fps);
+										l.process(image, fps);
 										} catch (Exception e) {
 											e.printStackTrace();
 											System.err.println(e.getMessage());
@@ -309,9 +314,9 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 
-	private Image getfromjpeg(byte[] in) {
-		return new Image(new ByteArrayInputStream(in));
-	}
+//	private Image getfromjpeg(byte[] in) {
+//		return new Image(new ByteArrayInputStream(in));
+//	}
 
 	@Override
 	public void removeListeners() {

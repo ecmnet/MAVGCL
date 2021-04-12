@@ -48,23 +48,26 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
-import com.comino.video.src.impl.StreamVideoSource;
+import com.comino.video.src.impl.MJpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 
 public class CameraWidget extends ChartControlPane  {
 
-	private int X = 640 / 2;
-	private int Y = 480 / 2;
+	private int X = 640 ;
+	private int Y = 480 ;
 
 
 	@FXML
-	private ImageView image;
+	private ImageView        image;
+	private WritableImage     imfx;
 
 	private IMWVideoSource 	source = null;
 	private boolean			big_size=false;
@@ -76,6 +79,8 @@ public class CameraWidget extends ChartControlPane  {
 	private MSPLogger       logger = null;
 	private Preferences userPrefs;
 
+
+
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 	}
@@ -84,7 +89,7 @@ public class CameraWidget extends ChartControlPane  {
 	@FXML
 	private void initialize() {
 
-     
+
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
 			if(source==null && !connect()) {
@@ -100,6 +105,9 @@ public class CameraWidget extends ChartControlPane  {
 		});
 
 		resize(false,X,Y);
+
+		imfx = new WritableImage(X,Y);
+
 
 		image.setOnMouseClicked(event -> {
 
@@ -211,14 +219,16 @@ public class CameraWidget extends ChartControlPane  {
 
 
 		System.out.println(url_string);
-		
+
 		try {
 			URL url = new URL(url_string);
-			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-			source.addProcessListener((im,buf, fps) -> {
+			//		source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+			source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+			source.addProcessListener((im, fps) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
-						image.setImage(im);
+						imfx = SwingFXUtils.toFXImage(im, imfx);
+						image.setImage(imfx);
 
 					});
 			});

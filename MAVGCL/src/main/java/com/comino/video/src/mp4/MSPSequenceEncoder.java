@@ -85,7 +85,11 @@ public class MSPSequenceEncoder {
         H264Utils.encodeMOVPacket(result);
 
         // Add packet to video track
+        try {
         outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
+        } catch(IllegalStateException e) {
+        	return;
+        }
 
         frameNo++;
     }

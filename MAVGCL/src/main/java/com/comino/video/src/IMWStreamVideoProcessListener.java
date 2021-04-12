@@ -33,11 +33,13 @@
 
 package com.comino.video.src;
 
+import java.awt.image.BufferedImage;
+
 import javafx.scene.image.Image;
 
 
 public interface IMWStreamVideoProcessListener {
 
-	public void process(Image image, byte[] buffer, int fps) throws Exception;
+	public void process(BufferedImage image,  int fps) throws Exception;
 
 }
