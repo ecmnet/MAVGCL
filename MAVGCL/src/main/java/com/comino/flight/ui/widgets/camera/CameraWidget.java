@@ -227,8 +227,8 @@ public class CameraWidget extends ChartControlPane  {
 			source.addProcessListener((im, fps) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
-						imfx = SwingFXUtils.toFXImage(im, imfx);
-						image.setImage(imfx);
+//						imfx = SwingFXUtils.toFXImage(im, imfx);
+						image.setImage(im);
 
 					});
 			});

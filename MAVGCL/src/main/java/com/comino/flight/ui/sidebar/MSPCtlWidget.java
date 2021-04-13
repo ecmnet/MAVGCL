@@ -427,7 +427,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		state.getConnectedProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
-				    stream.getSelectionModel().select(1);
+				    stream.getSelectionModel().select(0);
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 					msp.param1  = stream.getSelectionModel().getSelectedIndex();

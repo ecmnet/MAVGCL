@@ -76,7 +76,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	private boolean isRunning = false;
 	private boolean isAvailable = true;
 	
-	private BufferedImage image;
+	private Image image;
 
 	private long tms=0;
 
@@ -227,8 +227,8 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							}
 							try {
 								if(System.currentTimeMillis() >= trigger) {
-
-									image = ImageIO.read(new ByteArrayInputStream(img));
+									image = new Image(new ByteArrayInputStream(img));
+								//	image = ImageIO.read(new ByteArrayInputStream(img));
 									listener.forEach((l) -> {
 										try {
 										l.process(image, fps);

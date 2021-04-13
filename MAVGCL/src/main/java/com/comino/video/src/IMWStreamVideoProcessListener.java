@@ -40,6 +40,6 @@ import javafx.scene.image.Image;
 
 public interface IMWStreamVideoProcessListener {
 
-	public void process(BufferedImage image,  int fps) throws Exception;
+	public void process(Image image,  int fps) throws Exception;
 
 }
