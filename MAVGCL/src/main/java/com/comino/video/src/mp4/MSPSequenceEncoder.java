@@ -1,10 +1,15 @@
 package com.comino.video.src.mp4;
 
+import static org.jcodec.common.model.ColorSpace.RGB;
+
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jcodec.codecs.h264.H264Encoder;
 import org.jcodec.codecs.h264.H264Utils;
@@ -21,6 +26,11 @@ import org.jcodec.scale.AWTUtil;
 import org.jcodec.scale.ColorUtil;
 import org.jcodec.scale.Transform;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
+import javafx.scene.paint.Color;
+
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
@@ -29,81 +39,109 @@ import org.jcodec.scale.Transform;
  *
  */
 public class MSPSequenceEncoder {
-    private SeekableByteChannel ch;
-    private Picture toEncode;
-    private Transform transform;
-    private H264Encoder encoder;
-    private ArrayList<ByteBuffer> spsList;
-    private ArrayList<ByteBuffer> ppsList;
-    private FramesMP4MuxerTrack outTrack;
-    private ByteBuffer _out;
-    private int frameNo;
-    private MP4Muxer muxer;
-    private int rate;
+	
+	private SeekableByteChannel ch;
+	private Picture toEncode;
+	private Transform transform;
+	private H264Encoder encoder;
+	private ArrayList<ByteBuffer> spsList;
+	private ArrayList<ByteBuffer> ppsList;
+	private FramesMP4MuxerTrack outTrack;
+	private ByteBuffer _out;
+	private int frameNo;
+	private MP4Muxer muxer;
+	private int rate;
+	
+	private byte[] buf = new byte[640*480*4];
 
-    public MSPSequenceEncoder(File out) throws IOException {
-        this.ch = NIOUtils.writableFileChannel(out);
+	public MSPSequenceEncoder(File out) throws IOException {
 
-        // Muxer that will store the encoded frames
-        muxer = new MP4Muxer(ch, Brand.MP4);
+		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
-        // Add video track to muxer
-        outTrack = muxer.addTrack(TrackType.VIDEO, 12);
+		this.ch = NIOUtils.writableFileChannel(out);
 
-        // Allocate a buffer big enough to hold output frames
-        _out = ByteBuffer.allocate(1920 * 1080 * 6);
+		// Muxer that will store the encoded frames
+		muxer = new MP4Muxer(ch, Brand.MP4);
 
-        // Create an instance of encoder
-        encoder = new H264Encoder();
+		// Add video track to muxer
+		outTrack = muxer.addTrack(TrackType.VIDEO, 30);
 
-        // Transform to convert between RGB and YUV
-        transform = ColorUtil.getTransform(ColorSpace.RGB, encoder.getSupportedColorSpaces()[0]);
+		// Allocate a buffer big enough to hold output frames
+		_out = ByteBuffer.allocate(640*480 * 12);
 
-        // Encoder extra data ( SPS, PPS ) to be stored in a special place of
-        // MP4
-        spsList = new ArrayList<ByteBuffer>();
-        ppsList = new ArrayList<ByteBuffer>();
+		// Create an instance of encoder
+		encoder = new H264Encoder();
 
-    }
+		// Transform to convert between RGB and YUV
+		transform = ColorUtil.getTransform(ColorSpace.RGB, encoder.getSupportedColorSpaces()[0]);
 
-    public void encodeNativeFrame(Picture pic, int fps) throws IOException {
-        if (toEncode == null) {
-            toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
-        }
+		// Encoder extra data ( SPS, PPS ) to be stored in a special place of
+		// MP4
+		spsList = new ArrayList<ByteBuffer>();
+		ppsList = new ArrayList<ByteBuffer>();
 
-        // Perform conversion
-        transform.transform(pic, toEncode);
+	}
 
-        // Encode image into H.264 frame, the result is stored in '_out' buffer
-        _out.clear();
-        ByteBuffer result = encoder.encodeFrame(toEncode, _out);
+	public void encodeNativeFrame(Picture pic, int fps) throws IOException {
+		if (toEncode == null) {
+			toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
+		}
 
-        // Based on the frame above form correct MP4 packet
-        spsList.clear();
-        ppsList.clear();
-        H264Utils.wipePS(result, spsList, ppsList);
-        H264Utils.encodeMOVPacket(result);
+		// Perform conversion
+		transform.transform(pic, toEncode);
 
-        // Add packet to video track
-        try {
-        outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
-        } catch(IllegalStateException e) {
-        	return;
-        }
+		// Encode image into H.264 frame, the result is stored in '_out' buffer
+		_out.clear();
+		ByteBuffer result = encoder.encodeFrame(toEncode, _out);
 
-        frameNo++;
-    }
+		// Based on the frame above form correct MP4 packet
+		spsList.clear();
+		ppsList.clear();
+		H264Utils.wipePS(result, spsList, ppsList);
+		H264Utils.encodeMOVPacket(result);
 
-    public void finish() throws IOException {
-        // Push saved SPS/PPS to a special storage in MP4
-        outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
+		// Add packet to video track
+		try {
+			outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
+		} catch(IllegalStateException e) {
+			return;
+		}
 
-        // Write MP4 header and finalize recording
-        muxer.writeHeader();
-        NIOUtils.closeQuietly(ch);
-    }
+		frameNo++;
+	}
 
-    public void encodeImage(BufferedImage bi, int fps) throws IOException {
-        encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps);
-    }
+	public void finish() throws IOException {
+		// Push saved SPS/PPS to a special storage in MP4
+		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
+
+		// Write MP4 header and finalize recording
+		muxer.writeHeader();
+		NIOUtils.closeQuietly(ch);
+	}
+
+	public void encodeImage(BufferedImage bi, int fps) throws IOException {
+		encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps);
+	}
+
+//	public void encodeImage(Image bi, int fps) throws IOException {
+//		int w = (int)bi.getWidth();
+//		int h = (int)bi.getHeight();
+//		Picture dst = Picture.create(w, h, RGB);
+//		int[] dstData = dst.getPlaneData(0);
+//		
+//		bi.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, 0, w * 4);
+//		
+//		int off = 0;
+//		for (int i = 0; i < h; i++) {
+//            for (int j = 0; j < w; j++) {
+//            	  dstData[off++] = buf[i*w*4+j*4+2] ;
+//            	  dstData[off++] = buf[i*w*4+j*4+1] ;
+//            	  dstData[off++] = buf[i*w*4+j*4+0] ;
+// //           	  dstData[off++] = buf[i*w*4+j*4+3];
+//            	 
+//            }
+//        }
+//		encodeNativeFrame(dst, fps);
+//
+//	}
 }

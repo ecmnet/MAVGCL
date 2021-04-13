@@ -35,6 +35,8 @@ package com.comino.flight.ui.widgets.camera;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -83,6 +85,7 @@ public class CameraWidget extends ChartControlPane  {
 
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
+		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 	}
 
 
@@ -143,7 +146,7 @@ public class CameraWidget extends ChartControlPane  {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get())
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) )// || !state.isAutoRecording().get())
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {

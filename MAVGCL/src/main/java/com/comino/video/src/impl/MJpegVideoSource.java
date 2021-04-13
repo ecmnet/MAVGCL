@@ -44,7 +44,6 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		
 		ImageIO.setUseCache(true);
 		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
-		
 	}
 
 
@@ -141,7 +140,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			next = null;
 		} else {		
 			next = new Image(new ByteArrayInputStream(data));
-			fps = (int) (1000 / (System.currentTimeMillis() - tms));
+			fps = (int) (fps * 0.7f + (1000 / (System.currentTimeMillis() - tms)) * 0.3f);
 			tms = System.currentTimeMillis();
 		}
 	}

@@ -71,9 +71,10 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 
 	@Override
 	public void process(Image image,  int fps) throws Exception {
-		if(recording.get() && image!=null) {
+		if(recording.get() && image!=null && encoder!=null) {
 			bimg = SwingFXUtils.fromFXImage(image, bimg);
 			encoder.encodeImage(bimg, fps);
+	//		encoder.encodeImage(image, fps);
 		}
 	}
 
