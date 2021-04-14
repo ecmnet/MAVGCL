@@ -56,7 +56,7 @@ public class AnalysisModelTest {
 		     model.setValues(KeyFigureMetaData.MSP_SOURCE,m, md);
 
 
-		 AnalysisDataModel model2 = model.clone();
+		 AnalysisDataModel model2 = (AnalysisDataModel)model.clone();
 		 System.out.println(model2.getValue("ALTGL"));
 		 System.out.println(model2.getValue("LPOSY"));
 		 System.out.println(model2.getValue("LPOSZ"));

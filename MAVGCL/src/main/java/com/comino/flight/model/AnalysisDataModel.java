@@ -42,7 +42,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 
-public class AnalysisDataModel {
+public class AnalysisDataModel implements Cloneable {
 
 	public long       tms  = 0;
 	public LogMessage msg  = null;
@@ -65,8 +65,9 @@ public class AnalysisDataModel {
 		this.grid.addAll(grid);
 	}
 
-	public synchronized AnalysisDataModel clone() {
-		AnalysisDataModel d = new AnalysisDataModel(data, grid);
+
+	public Object clone() {
+	   AnalysisDataModel d = new AnalysisDataModel(data, grid);
 
 		d.tms = tms;
 		if(msg!=null)

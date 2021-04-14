@@ -461,9 +461,9 @@ public class AnalysisModelService  {
 					if(!isFirst) {
 
 						if(ulogger.isLogging())
-							m = record.clone();
+							m = (AnalysisDataModel)record.clone();
 						else
-							m = current.clone();
+							m = (AnalysisDataModel)current.clone();
 
 
 						m.tms = System.nanoTime() / 1000 - tms_start;

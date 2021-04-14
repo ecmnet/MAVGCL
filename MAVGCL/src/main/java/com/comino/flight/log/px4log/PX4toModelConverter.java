@@ -90,7 +90,7 @@ public class PX4toModelConverter {
 					tms_slot += AnalysisModelService.getInstance().getCollectorInterval_ms()/1000;
 					model.setValues(KeyFigureMetaData.PX4_SOURCE,data, meta);
 					model.calculateVirtualKeyFigures(meta);
-					list.add(model.clone());
+					list.add((AnalysisDataModel)model.clone());
 				}
 			}
 			state.getProgressProperty().set(StateProperties.NO_PROGRESS);
