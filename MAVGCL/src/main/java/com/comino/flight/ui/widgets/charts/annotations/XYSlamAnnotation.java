@@ -60,6 +60,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private  Polyline        		lock        = null;
 	private  Rotate       		    act_rotate  = null;
 	private  Rotate       		    plan_rotate = null;
+	private  Rotate       		    lock_rotate = null;
 	private  Polygon  				vhc         = null;
 	private  Rotate  				vhc_rotate  = null;
 	private  Circle                 projected   = null;
@@ -87,7 +88,9 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		act_dir.setStrokeType(StrokeType.INSIDE);
 		act_dir.setVisible(false);
 		
+		lock_rotate = Rotate.rotate(0, 0, 0);
 		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
+		lock.getTransforms().add(lock_rotate);
 		lock.setStroke(Color.rgb(60, 220, 230, 0.8));
 		lock.setVisible(false);
 
@@ -158,6 +161,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		if(Double.isFinite(model.getValue("PRECLOCKX")) && Double.isFinite(model.getValue("PRECLOCKY"))) {
 //			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
 //			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
+			
+			lock_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("PRECLOCKW")));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
 			lock.setVisible(true);
