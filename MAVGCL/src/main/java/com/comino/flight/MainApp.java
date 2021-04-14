@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_CMD;
@@ -200,6 +202,9 @@ public class MainApp extends Application  {
 	@Override
 	public void init() throws Exception {
 		try {
+			
+			// To avoid MJPEG warnings
+			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
 			System.out.println("Initializing application ( Java: "+Runtime.version()+")"); 
 

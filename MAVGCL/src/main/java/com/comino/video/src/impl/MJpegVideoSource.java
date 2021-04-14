@@ -42,7 +42,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		this.url   = url;
 		this.codec = new VideoMjpegCodec();
 		
-		ImageIO.setUseCache(true);
+		ImageIO.setUseCache(false);
 		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 	}
 
@@ -60,6 +60,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			}
 
 			try {
+				LockSupport.parkNanos(10000000);
 				processNext();
 				if(next!=null) {
 					listeners.forEach((listener) -> {
@@ -68,11 +69,16 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 						} catch (Exception e) { e.printStackTrace(); }
 					} );
 				} else {
-					LockSupport.parkNanos(40000000);
+					LockSupport.parkNanos(30000000);
 				}
 			} catch (IOException e) { e.printStackTrace(); }
 		}
-
+		
+		System.out.println("Video stopped");
+		try {
+			in.close();
+		} catch (IOException e) {e.printStackTrace(); }
+		isAvailable = false;
 	}
 
 	@Override
@@ -120,23 +126,22 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	}
 
 	private void connect(URL url) throws IOException {
-
 		URLConnection conn;
-
 		conn = url.openConnection();
-		conn.setReadTimeout(5000);
-		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(1000);
+		conn.setConnectTimeout(10000);
+		conn.setUseCaches(false);
 		conn.setRequestProperty("Host", url.getHost());
 		conn.setRequestProperty("Client", "chromium");
 		conn.connect();
 
-		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),1024*20));
+		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),1024*30));
 		isAvailable = true;
 	}
 
 	private void processNext() throws IOException {
 		byte[] data = codec.readFrame(in);
-		if( data == null ) {
+		if( data == null || data.length < 16384) {
 			next = null;
 		} else {		
 			next = new Image(new ByteArrayInputStream(data));

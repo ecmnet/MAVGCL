@@ -85,7 +85,6 @@ public class CameraWidget extends ChartControlPane  {
 
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
-		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 	}
 
 
@@ -103,7 +102,7 @@ public class CameraWidget extends ChartControlPane  {
 				source.start();
 			else {
 				if(!recorder.getRecordMP4Property().get())
-					source.stop();
+				source.stop();
 			}
 		});
 
@@ -137,16 +136,18 @@ public class CameraWidget extends ChartControlPane  {
 
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			image.setImage(null);
-			if(fadeProperty().getValue() && !source.isRunning()) {
-				if(nv.booleanValue()) {
-					connect(); source.start();
+			if(nv.booleanValue()) {
+				image.setImage(null);
+				if(fadeProperty().getValue() && !source.isRunning()) {
+						connect(); source.start();
 				}
-			}
+			} else
+				source.stop();
+				
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) )// || !state.isAutoRecording().get())
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get())
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
@@ -230,7 +231,7 @@ public class CameraWidget extends ChartControlPane  {
 			source.addProcessListener((im, fps) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
-//						imfx = SwingFXUtils.toFXImage(im, imfx);
+						//						imfx = SwingFXUtils.toFXImage(im, imfx);
 						image.setImage(im);
 
 					});
