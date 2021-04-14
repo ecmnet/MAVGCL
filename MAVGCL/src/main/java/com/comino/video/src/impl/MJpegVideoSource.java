@@ -141,7 +141,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 
 	private void processNext() throws IOException {
 		byte[] data = codec.readFrame(in);
-		if( data == null || data.length < 16384) {
+		if( data == null || data.length < 4096) {
 			next = null;
 		} else {		
 			next = new Image(new ByteArrayInputStream(data));
