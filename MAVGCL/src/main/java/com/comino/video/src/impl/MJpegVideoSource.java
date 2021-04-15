@@ -28,7 +28,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	private int     fps;
 	private Thread  thread = null;  
 
-	private VideoMjpegCodec codec;
+	private MSPVideoMjpegCodec codec;
 	private DataInputStream in;
 	private Image next;
 
@@ -40,7 +40,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 
 	public MJpegVideoSource(URL url, AnalysisDataModel model) {
 		this.url   = url;
-		this.codec = new VideoMjpegCodec();
+		this.codec = new MSPVideoMjpegCodec();
 		
 		ImageIO.setUseCache(false);
 		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
@@ -135,7 +135,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		conn.setRequestProperty("Client", "chromium");
 		conn.connect();
 
-		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),1024*30));
+		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),8192));
 		isAvailable = true;
 	}
 

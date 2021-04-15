@@ -142,7 +142,8 @@ public class CameraWidget extends ChartControlPane  {
 						connect(); source.start();
 				}
 			} else
-				source.stop();
+				if(source!=null)
+				  source.stop();
 				
 		});
 
