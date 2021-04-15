@@ -60,7 +60,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			}
 
 			try {
-				LockSupport.parkNanos(10000000);
+				LockSupport.parkNanos(30000000);
 				processNext();
 				if(next!=null) {
 					listeners.forEach((listener) -> {
@@ -69,7 +69,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 						} catch (Exception e) { e.printStackTrace(); }
 					} );
 				} else {
-					LockSupport.parkNanos(30000000);
+					LockSupport.parkNanos(20000000);
 				}
 			} catch (IOException e) { e.printStackTrace(); }
 		}
