@@ -60,7 +60,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			}
 
 			try {
-				LockSupport.parkNanos(30000000);
+				LockSupport.parkNanos(40000000);
 				processNext();
 				if(next!=null) {
 					listeners.forEach((listener) -> {
@@ -68,9 +68,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 							listener.process(next, fps);
 						} catch (Exception e) { e.printStackTrace(); }
 					} );
-				} else {
-					LockSupport.parkNanos(20000000);
-				}
+				} 
 			} catch (IOException e) { e.printStackTrace(); }
 		}
 		
@@ -128,14 +126,15 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	private void connect(URL url) throws IOException {
 		URLConnection conn;
 		conn = url.openConnection();
-		conn.setReadTimeout(1000);
+		conn.setReadTimeout(2000);
 		conn.setConnectTimeout(10000);
 		conn.setUseCaches(false);
 		conn.setRequestProperty("Host", url.getHost());
 		conn.setRequestProperty("Client", "chromium");
 		conn.connect();
 
-		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),2048));
+		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),16384));
+	//	in = new DataInputStream(conn.getInputStream());
 		isAvailable = true;
 	}
 
