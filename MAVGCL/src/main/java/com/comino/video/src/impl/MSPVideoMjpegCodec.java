@@ -94,7 +94,7 @@ public class MSPVideoMjpegCodec {
 	}
 
 	private byte[] readJpegData(DataInputStream in, byte marker) throws IOException {
-		ByteArrayOutputStream bout = new ByteArrayOutputStream(8192);
+		ByteArrayOutputStream bout = new ByteArrayOutputStream(4096);
 
 		// add the SOI marker back into it
 		bout.write(0xFF);

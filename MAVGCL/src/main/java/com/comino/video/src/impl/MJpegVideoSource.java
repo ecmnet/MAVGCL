@@ -135,11 +135,12 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		conn.setRequestProperty("Client", "chromium");
 		conn.connect();
 
-		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),8192));
+		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),2048));
 		isAvailable = true;
 	}
 
 	private void processNext() throws IOException {
+		
 		byte[] data = codec.readFrame(in);
 		if( data == null || data.length < 4096) {
 			next = null;
