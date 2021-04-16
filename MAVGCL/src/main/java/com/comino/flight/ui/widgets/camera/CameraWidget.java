@@ -51,6 +51,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.MJpegVideoSource;
+import com.comino.video.src.impl.StreamVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
@@ -227,7 +228,7 @@ public class CameraWidget extends ChartControlPane  {
 
 		try {
 			URL url = new URL(url_string);
-			//		source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+		//			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source.addProcessListener((im, fps) -> {
 				if(isVisible())
