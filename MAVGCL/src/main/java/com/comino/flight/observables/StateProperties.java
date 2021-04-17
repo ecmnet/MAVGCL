@@ -44,6 +44,7 @@ import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.workqueue.WorkQueue;
 import com.comino.speech.VoiceTTS;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
@@ -122,11 +123,15 @@ public class StateProperties {
 		wq.addSingleTask("LP", 5000, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
+			Platform.runLater(()-> {
 			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
+			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_ARMED, (n) -> {
-			armedProperty.set(n.isStatus(Status.MSP_ARMED));
+			Platform.runLater(()-> {
+			  armedProperty.set(n.isStatus(Status.MSP_ARMED));
+			});
 
 		});
 
@@ -154,55 +159,81 @@ public class StateProperties {
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (n) -> {
-			landedProperty.set(n.isStatus(Status.MSP_LANDED));
+			Platform.runLater(()-> {
+		    	landedProperty.set(n.isStatus(Status.MSP_LANDED));
+			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL,  (n) -> {
+			Platform.runLater(()-> {
 			altholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
+			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, (n) -> {
+			Platform.runLater(()-> {
 			posholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
+			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_OFFBOARD, (n) -> {
+			Platform.runLater(()-> {
 			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
+			Platform.runLater(()-> {
 			holdProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
+			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_GPS_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
 			isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+			});
 		});
 		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_OPCV_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
 			isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+			});
 		});
 		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_SLAM_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
 			isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+			});
 		});
 		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_FIDUCIAL_LOCKED, (n) -> {
+			Platform.runLater(()-> {
 			isFiducialLocked.set(n.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED));
+			});
 		});
 		
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
+			Platform.runLater(()-> {
 			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
+			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_IMU_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
 			isIMUAvailable.set(n.isStatus(Status.MSP_IMU_AVAILABILITY));
+			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
+			Platform.runLater(()-> {
 			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
+			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
+			Platform.runLater(()-> {
 			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
+			});
 		});
 
 		if(MAVPreferences.getInstance().getBoolean("SPEECH", false)) {

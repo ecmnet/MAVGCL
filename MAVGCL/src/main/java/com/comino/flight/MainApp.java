@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -47,6 +48,7 @@ import java.util.prefs.Preferences;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
 import org.mavlink.messages.lquac.msg_ping;
 
@@ -86,6 +88,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -123,6 +127,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem r_px4log;
+	
+	@FXML
+	private MenuItem r_dellog;
 
 	@FXML
 	private MenuItem m_prefs;
@@ -484,6 +491,7 @@ public class MainApp extends Application  {
 				FileHandler.getInstance().openKeyFigureMetaDataDefinition();
 			});
 
+			m_params.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			m_params.setOnAction(event -> {
 				FileHandler.getInstance().csvParameterImport();
 			});
@@ -498,8 +506,27 @@ public class MainApp extends Application  {
 			m_pdoc.setOnAction(event -> {
 				this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
 			});
+			
+			r_dellog.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
+			r_dellog.setOnAction(event -> {
+				
+				Alert alert = new Alert(AlertType.CONFIRMATION,
+						         "Delete all local logs from device. Do you really want tod do this?",
+				                 ButtonType.OK, 
+				                 ButtonType.CANCEL);
+				alert.getDialogPane().getStylesheets().add(
+				   getClass().getResource("application.css").toExternalForm());
+				alert.setTitle("Erase local log files");
+				alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
+				Optional<ButtonType> result = alert.showAndWait();
 
+				if (result.get() == ButtonType.OK) {
+				   control.sendMAVLinkMessage(new msg_log_erase(1,2));
+				}
+				
+			});
 
+			r_px4log.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 
 				String m_text = r_px4log.getText();
@@ -546,7 +573,7 @@ public class MainApp extends Application  {
 					FileHandler.getInstance().csvExport();
 			});
 
-			m_prefs.setDisable(false);
+			m_prefs.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			m_prefs.setOnAction(event -> {
 				new PreferencesDialog(control).show();
 			});
@@ -567,6 +594,7 @@ public class MainApp extends Application  {
 			});
 
 
+			m_restart.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			m_restart.setOnAction((event) ->{
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_RESTART;
