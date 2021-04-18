@@ -194,7 +194,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			}
 		});
 
-		logger.writeLocalMsg("[mgc] Request latest log");
 		start = System.currentTimeMillis();
 		requestLogList(GET_LAST_LOG_ID);
 	}
@@ -254,6 +253,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				requestDataPackages(0, entry.size);
 
 			}
+		} else {
+			stop();
+			props.getLogLoadedProperty().set(false);
+			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
+			wq.removeTask("NP",timeout);
+			logger.writeLocalMsg("[mgc] No log available.");
 		}
 	}
 
