@@ -796,7 +796,7 @@
 			<Group>Raw data</Group>
 			<Group>Optical Flow</Group>
 		</Groups>
-		<Validity min="0.25" max="1.0"/>
+		<Validity min="0.05" max="1.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.X" uom="m" mask="#0.00" key="FLOWGYX">
@@ -1901,8 +1901,10 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Depth.Quality" uom="m/s" mask="#0.0" key="SLAMQU">
-		<MSPSource class="slam" field="quality"></MSPSource>
+	<KeyFigure desc="Depth.Quality" uom="%" mask="#0.0" key="SLAMQU">
+		<MSPSource class="slam" field="quality">
+		   <Converter class="ExpressionConverter" expression="SLAMQU/100" />
+		</MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Mapping</Group>

@@ -79,7 +79,7 @@ public class DetailsWidget extends ChartControlPane {
 			"VISIONX", "VISIONY",
 			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDTT", "SLAMDTO", null,
 		//	"PRECLOCKX", "PRECLOCKY","PRECLOCKW",null,
-			"VISIONFPS", "VISIONQUAL", "FLOWQL",null, "BATC", "BATH",
+			"VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",null, "BATC", "BATH",
 			"BATP", //"BATT", 
 			null, "IMUTEMP", "MSPTEMP",  null,  "CPUPX4", "CPUMSP", "SWIFI", "RSSI", null, "TARM","TBOOT",
 
