@@ -36,6 +36,8 @@ package com.comino.flight.ui.widgets.statusline;
 import java.io.IOException;
 import java.util.List;
 
+import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
+
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
@@ -90,6 +92,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private Badge gps;
 
 	@FXML
+	private Badge ekf;
+
+	@FXML
 	private Badge gpos;
 
 	@FXML
@@ -108,6 +113,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private StateProperties state = null;
 
 	private String filename;
+
+	private final static String[]  EKF2STATUS_TEXTS = { "", "ATT", "RPOS", "APOS", "FAULT", "OTHER"  };
 
 	private AnimationTimer task = null;
 
@@ -255,6 +262,14 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				} else {
 					time.setMode(Badge.MODE_ON);
 				}
+
+				int ekf_status = getEKF2Status();
+				ekf.setText(EKF2STATUS_TEXTS[ekf_status]);
+				if(ekf_status != 4)
+					ekf.setBackgroundColor(Color.web("#1c6478"));
+				else
+					ekf.setBackgroundColor(Color.DARKRED);
+
 			}
 		};
 
@@ -275,6 +290,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			lpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			driver.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			controller.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			ekf.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 
 		});
 
@@ -319,7 +335,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			}
 		});
 
-
+		ekf.setMode(Badge.MODE_ON);
 		task.start();
 	}
 
@@ -353,6 +369,26 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	public KeyFigurePreset getKeyFigureSelection() {
 		return null;
+	}
+
+	private int getEKF2Status() {
+		int flags = (int)model.est.flags;
+
+		if(flags == 0
+				|| (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR
+				|| (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) {
+			return 4;
+		}
+
+		if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS )
+			return 3;
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL )
+			return 2;
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE )
+			return 1;
+		else
+			return 5;
+
 	}
 
 

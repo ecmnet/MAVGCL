@@ -14,6 +14,7 @@
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="#1c6478" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="50.0" text="GPOS" color="#1c6478" />
 				<Badge fx:id="lpos" prefHeight="16.0" prefWidth="50.0" text="LPOS" color="#1c6478" />
+				<Badge fx:id="ekf" prefHeight="16.0" prefWidth="40.0" text="-" color="#1c6478" />
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="#1c6478" />
 				<Badge fx:id="controller" prefHeight="16.0" prefWidth="30.0" text="PS4" color="#1c6478" />
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
