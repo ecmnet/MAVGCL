@@ -263,12 +263,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					time.setMode(Badge.MODE_ON);
 				}
 
-				int ekf_status = getEKF2Status();
-				ekf.setText(EKF2STATUS_TEXTS[ekf_status]);
-				if(ekf_status != 4)
-					ekf.setBackgroundColor(Color.web("#1c6478"));
-				else
-					ekf.setBackgroundColor(Color.DARKRED);
+				if(control.isConnected()) {
+					int ekf_status = getEKF2Status();
+					ekf.setText(EKF2STATUS_TEXTS[ekf_status]);
+					if(ekf_status != 4)
+						ekf.setBackgroundColor(Color.web("#1c6478"));
+					else
+						ekf.setBackgroundColor(Color.DARKRED);
+					ekf.setMode(Badge.MODE_ON);
+				}
 
 			}
 		};
@@ -335,7 +338,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			}
 		});
 
-		ekf.setMode(Badge.MODE_ON);
 		task.start();
 	}
 
