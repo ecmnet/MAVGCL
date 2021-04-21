@@ -95,7 +95,7 @@ public class AnalysisModelService  {
 	private IMAVController control = null;
 
 	private CombinedConverter converter = null;
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	private AnimationTimer task = null;
@@ -135,8 +135,10 @@ public class AnalysisModelService  {
 					converter.notify();
 				}
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-				control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-				MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				if(!model.sys.isStatus(Status.MSP_ARMED)) {
+					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
 			} else {
 
 			}
@@ -251,7 +253,7 @@ public class AnalysisModelService  {
 	public void stop(int delay_sec) {
 		mode = POST_COLLECTING;
 		if(delay_sec > 0)
-		  wq.addSingleTask("LP",delay_sec * 1000, () -> { stop(); task.stop(); } );
+			wq.addSingleTask("LP",delay_sec * 1000, () -> { stop(); task.stop(); } );
 		else {
 			stop(); task.stop(); 
 		}
@@ -377,7 +379,7 @@ public class AnalysisModelService  {
 
 			System.out.println("AnalysisModelService converter thread started ..");
 			mode = STOPPED;
-			
+
 
 			while(true) {
 
