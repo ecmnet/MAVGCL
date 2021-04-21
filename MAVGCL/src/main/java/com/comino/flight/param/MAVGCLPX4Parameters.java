@@ -51,6 +51,7 @@ import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.param.IPX4ParameterRefresh;
 import com.comino.mavcom.param.PX4Parameters;
 import com.comino.mavcom.param.ParamUtils;
@@ -127,6 +128,12 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
 			}
 		});
+		
+		state.getArmedProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
+				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
+			}
+		});
 
 	}
 
@@ -138,7 +145,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	}
 
 	public void refreshParameterList(boolean loaded) {
-		if(!is_reading) {
+		if(!is_reading && !control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) {
 			property.setValue(null);
 			parameterList.clear();
 			msg_param_request_list msg = new msg_param_request_list(255,1);
@@ -227,7 +234,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	}
 
 	public void setParametersFromLog(Map<String,Object> list) {
-		StateProperties.getInstance().getParamLoadedProperty().set(false);
+		state.getParamLoadedProperty().set(false);
 		parameterList.clear();
 		list.forEach((s,o) -> {
 			ParameterAttributes attributes = metadata.getMetaData(s);
