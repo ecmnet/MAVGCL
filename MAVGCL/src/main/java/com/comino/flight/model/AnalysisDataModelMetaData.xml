@@ -1682,21 +1682,21 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.FrameRate" uom="fps" mask="#0" key="VISIONFPS">
+  <KeyFigure desc="Odom.FrameRate" uom="fps" mask="#0" key="VISIONFPS">
 		<MSPSource class="vision" field="fps"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Flags" uom="" mask="#0" key="VISIONFLAGS">
+  <KeyFigure desc="Odom.Flags" uom="" mask="#0" key="VISIONFLAGS">
 		<MSPSource class="vision" field="flags"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Quality" uom="%" mask="#0.0" key="VISIONQUAL">
+  <KeyFigure desc="Odom.Quality" uom="%" mask="#0.0" key="VISIONQUAL">
 		<MSPSource class="vision" field="qual">
 		   <Converter class="ExpressionConverter" expression="VISIONQUAL/100" />
 		 </MSPSource>
@@ -1929,9 +1929,23 @@
 
 	<KeyFigure desc="Obstacle.X" uom="m" mask="#0.00" key="SLAMOBX">
 		<MSPSource class="slam" field="ox"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
 	</KeyFigure>
+	
 	<KeyFigure desc="Obstacle.Y" uom="m" mask="#0.00" key="SLAMOBY">
 		<MSPSource class="slam" field="oy"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Obstacle.Z" uom="m" mask="#0.00" key="SLAMOBZ">
+		<MSPSource class="slam" field="oz"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
 	</KeyFigure>
 
 	<!-- Status Flags  -->
