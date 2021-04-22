@@ -289,10 +289,13 @@ public class MainApp extends Application  {
 			MAVGCLPX4Parameters.getInstance(control);
 			
 
-			state.getConnectedProperty().addListener((v,o,n) -> {
-
-				if(!n.booleanValue())
+			
+			state.getLPOSAvailableProperty().addListener((v,o,n) -> {
+				
+				// should check for homepos 
+				if(!n.booleanValue() || state.getGPOSAvailableProperty().get())
 					return;
+				
 				
 				System.out.println("Detect base GPS");
 
@@ -323,6 +326,7 @@ public class MainApp extends Application  {
 					control.sendMAVLinkMessage(msp);
 					System.out.println("Global Position origin set");
 				}
+				
 			});
 
 			state.getInitializedProperty().addListener((v,o,n) -> {
