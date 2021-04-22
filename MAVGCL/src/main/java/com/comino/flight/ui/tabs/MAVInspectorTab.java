@@ -267,27 +267,24 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 			if(!isDisabled()) {
 
-				//	Platform.runLater(() -> {
+				Platform.runLater(() -> {
 
-				remData.clear();
-				allData.forEach((k,d) -> {
-
-					if(d.getLastUpdate() == 0 || d.ti.isExpanded())
-						return;
-					if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
-						remData.put(k, d);
-					}
-				});
-				if(remData.size()>0) {
-					Platform.runLater(() -> {
+					remData.clear();
+					allData.forEach((k,d) -> {
+						if(d.getLastUpdate() == 0 || d.ti.isExpanded())
+							return;
+						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
+							remData.put(k, d);
+						}
+					});
+					if(remData.size()>0) {
 						remData.forEach((k,d) -> {
 							d.removeFromTree(treetableview);
 							allData.remove(k);
 						});
 						treetableview.sort();
-					});
-				}
-				//		});
+					}
+				});
 
 			}
 		}
