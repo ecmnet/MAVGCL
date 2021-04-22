@@ -41,7 +41,8 @@
 				<fx:association extension="mgc" description="*.mgc files"/>
 			</fx:info>
 			<fx:platform>
-				<fx:jvmarg value="-Xms2G"/>
+				<fx:jvmarg value="-Xms4G"/>
+				<fx:jvmarg value="-XX:MaxGCPauseMillis=10"/>
 			</fx:platform>
 		</fx:deploy>
 	</target>
@@ -58,6 +59,7 @@
 			</fx:info>
 			<fx:platform>
 				<fx:jvmarg value="-Xms1G"/>
+				
 			</fx:platform>
 		</fx:deploy>
 	</target>
