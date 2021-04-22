@@ -66,6 +66,8 @@ public class MSPVideoMjpegCodec {
 	public static final byte SOI = (byte)0xD8;
 	// end of image
 	public static final byte EOI = (byte)0xD9;
+	
+	ByteArrayOutputStream bout = new ByteArrayOutputStream(16384);
 
 	public List<byte[]> read( InputStream streamIn ) {
 		// read the whole movie in at once to make it faster
@@ -127,7 +129,8 @@ public class MSPVideoMjpegCodec {
 	}
 
 	private byte[] readJpegData(DataInputStream in, byte marker) throws IOException {
-		ByteArrayOutputStream bout = new ByteArrayOutputStream(4096);
+	    
+		bout.reset();
 
 		// add the SOI marker back into it
 		bout.write(0xFF);
@@ -139,7 +142,7 @@ public class MSPVideoMjpegCodec {
 			byte d = in.readByte();
 			if( foundFF ) {
 				if( d == marker )
-					break;
+					return bout.toByteArray();
 				else {
 					bout.write(0xFF);
 					bout.write(d);
@@ -151,7 +154,7 @@ public class MSPVideoMjpegCodec {
 				bout.write(d);
 			}
 		}
-		return bout.toByteArray();
+		return null;
 	}
 
 

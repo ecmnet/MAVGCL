@@ -93,7 +93,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			}
 
 			try {
-				LockSupport.parkNanos(40000000);
+				LockSupport.parkNanos(20000000);
 				processNext();
 				if(next!=null) {
 					listeners.forEach((listener) -> {
@@ -128,6 +128,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			return thread;
 
 		isRunning   = true;
+		next = null;
 
 		thread = new Thread(this);
 		thread.setName("Video worker");
@@ -174,10 +175,10 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	private void processNext() throws IOException {
 		
 		byte[] data = codec.readFrame(in);
-		if( data == null || data.length < 4096) {
+		if( data == null) {
 			next = null;
 		} else {		
-			next = new Image(new ByteArrayInputStream(data));
+			next = new Image(new ByteArrayInputStream(data), 0, 0, false, true);
 			fps = (int) (fps * 0.7f + (1000 / (System.currentTimeMillis() - tms)) * 0.3f);
 			tms = System.currentTimeMillis();
 		}

@@ -140,7 +140,7 @@ public class CameraWidget extends ChartControlPane  {
 			if(nv.booleanValue()) {
 				image.setImage(null);
 				if(fadeProperty().getValue() && !source.isRunning()) {
-						connect(); source.start();
+						connect(); source.start(); image.setImage(null);
 				}
 			} else
 				if(source!=null)
