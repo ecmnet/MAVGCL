@@ -43,6 +43,13 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
+						<MenuItem fx:id="r_dellog" mnemonicParsing="false"
+							text="Erase all local logs stored">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="L"
+									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+							</accelerator>
+						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_prefs" mnemonicParsing="false"
 							text="Preferences...">
