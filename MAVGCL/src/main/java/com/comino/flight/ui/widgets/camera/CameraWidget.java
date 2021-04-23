@@ -165,6 +165,8 @@ public class CameraWidget extends ChartControlPane  {
 				if(recorder.getRecordMP4Property().get()) {
 					recorder.getRecordMP4Property().set(false);
 					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					if(!fadeProperty().getValue())
+						source.stop();
 				}
 			}
 
