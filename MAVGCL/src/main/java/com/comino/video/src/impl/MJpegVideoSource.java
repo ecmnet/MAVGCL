@@ -166,9 +166,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		conn.setRequestProperty("Host", url.getHost());
 		conn.setRequestProperty("Client", "chromium");
 		conn.connect();
-
-		in = new DataInputStream(new BufferedInputStream(conn.getInputStream(),16384));
-	//	in = new DataInputStream(conn.getInputStream());
+		in = new DataInputStream(conn.getInputStream());
 		isAvailable = true;
 	}
 

@@ -228,7 +228,7 @@ public class CameraWidget extends ChartControlPane  {
 
 		try {
 			URL url = new URL(url_string);
-		//			source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+	//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			source.addProcessListener((im, fps) -> {
 				if(isVisible())
