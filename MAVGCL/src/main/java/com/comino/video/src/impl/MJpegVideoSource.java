@@ -93,7 +93,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 			}
 
 			try {
-				LockSupport.parkNanos(20000000);
+				LockSupport.parkNanos(40000000);
 				processNext();
 				if(next!=null) {
 					listeners.forEach((listener) -> {
