@@ -44,6 +44,7 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.jfx.extensions.DashLabel;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Status;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -120,6 +121,8 @@ public class DetailsWidget extends ChartControlPane {
 			int i = 0;
 			for (KeyFigure figure : figures)
 				figure.setValue(model, i++);
+			// Workaround to display GPS data whenever GPS is available
+			state.getGPSAvailableProperty().set(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
 		}));
 
 		task.setCycleCount(Timeline.INDEFINITE);
@@ -131,6 +134,8 @@ public class DetailsWidget extends ChartControlPane {
 	}
 
 	public void setup(IMAVController control) {
+		
+		this.control = control;
 
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
