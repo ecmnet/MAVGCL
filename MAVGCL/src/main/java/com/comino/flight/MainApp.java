@@ -296,6 +296,8 @@ public class MainApp extends Application  {
 				if(!n.booleanValue() || state.getGPOSAvailableProperty().get())
 					return;
 				
+				DataModel model = control.getCurrentModel();
+				
 				
 				System.out.println("Detect base GPS");
 
@@ -313,6 +315,18 @@ public class MainApp extends Application  {
 						control.sendMAVLinkMessage(msp);
 						System.out.println("Global Position origin set to base position");
 					}
+				}
+				else if(model.gps.numsat > 9) {
+					
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+
+					msp.param1  = (long)(model.gps.latitude * 1e7);
+					msp.param2  = (long)(model.gps.longitude * 1e7);
+					msp.param3  = (int)(model.gps.altitude)*1000;
+
+					control.sendMAVLinkMessage(msp);
+					System.out.println("Global Position origin set to vehicle position");
 				}
 				else {
 
