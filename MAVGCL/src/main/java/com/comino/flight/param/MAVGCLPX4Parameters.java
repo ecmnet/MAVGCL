@@ -225,10 +225,10 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 
 				// Baro QNH check
-				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
-					MSPLogger.getInstance().writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-					sendParameter("SENS_BARO_QNH",qnh);
-				}
+//				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
+//					MSPLogger.getInstance().writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+//					sendParameter("SENS_BARO_QNH",qnh);
+//				}
 			}
 		}
 	}
