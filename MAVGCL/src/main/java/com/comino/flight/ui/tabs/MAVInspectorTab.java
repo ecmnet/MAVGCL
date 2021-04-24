@@ -33,6 +33,7 @@
 
 package com.comino.flight.ui.tabs;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -121,6 +122,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			};
 		});
 
+		message_col.setSortType(SortType.ASCENDING);
+		message_col.setSortable(true);
+
+
 
 		variable_col.setCellValueFactory(new Callback<CellDataFeatures<DataSet, String>, ObservableValue<String>>() {
 			@Override
@@ -186,7 +191,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 
-		wq.addCyclicTask("LP", 5000, new CleanUp());
+		wq.addCyclicTask("LP", 250, new Update());
 	}
 
 	public MAVInspectorTab setup(IMAVController control) {
@@ -220,22 +225,20 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						String[] p = v.split("=");
 						variables.put(p[0].trim(), new DataSet(p[0].trim(),p[1]));
 					} catch(Exception e) {
-						//System.err.println(e.getMessage()+": "+v);
+
 					}
 				}
 
 			Data data = new Data(_msg,variables);
-			data.addToTree(treetableview);
-
-			allData.put(_msg,data);
 
 			for (DataSet dataset : data.getData().values()) {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
 				data.ti.getChildren().add(treeItem);
 			}
-			Platform.runLater(() -> {
-				treetableview.sort();
-			});	
+
+			data.addToTree(treetableview);
+			allData.put(_msg,data);
+
 			return;
 
 		} 
@@ -253,23 +256,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		}
 	}
 
-	class CleanUp implements Runnable {
+	class Update implements Runnable {
 
 		@Override
 		public void run() {
 
-			if(!StateProperties.getInstance().getConnectedProperty().get() && allData.size() > 0) {
-				System.out.println("Treeview cleared");
-				allData.clear();
-				treetableview.getRoot().getChildren().clear();
-				return;
-			}
-
 			if(!isDisabled()) {
-
-				Platform.runLater(() -> {
-
-					remData.clear();
+				
+				remData.clear();
+				try {
 					allData.forEach((k,d) -> {
 						if(d.getLastUpdate() == 0 || d.ti.isExpanded())
 							return;
@@ -277,14 +272,16 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 							remData.put(k, d);
 						}
 					});
-					if(remData.size()>0) {
-						remData.forEach((k,d) -> {
-							d.removeFromTree(treetableview);
-							allData.remove(k);
-						});
-						treetableview.sort();
-					}
-				});
+				} catch(ConcurrentModificationException e) {return; }
+				if(remData.size()>0) {
+					remData.forEach((k,d) -> {
+						d.removeFromTree(treetableview);
+						allData.remove(k);
+					});
+				}
+
+				message_col.setSortType(SortType.ASCENDING);
+				treetableview.sort();
 
 			}
 		}
@@ -309,16 +306,18 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			this.name = name.substring(15);
 			this.name_set = new DataSet(name.substring(15),null);
 			this.data = data;
-			this.tms = 0;
 			this.ti = new TreeItem<>(name_set);
 			this.ti.setExpanded(false);
 
 		}
 
 		public void addToTree(TreeTableView<DataSet> view) {
-			Platform.runLater(() -> {
+			if(!view.getRoot().getChildren().contains(ti)) {
+				this.tms = System.currentTimeMillis();
 				view.getRoot().getChildren().add(ti);
-			});
+				message_col.setSortType(SortType.ASCENDING);
+				treetableview.sort();
+			}
 		}
 
 		public void removeFromTree(TreeTableView<DataSet> view) {
