@@ -274,6 +274,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 			}
+			
 		};
 
 
