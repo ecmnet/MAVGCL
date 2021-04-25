@@ -61,6 +61,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 
 public class CameraWidget extends ChartControlPane  {
 
@@ -113,26 +114,31 @@ public class CameraWidget extends ChartControlPane  {
 
 
 		image.setOnMouseClicked(event -> {
-
-			if(event.getClickCount()==2 && !event.isShiftDown()) {
+			
+			if(event.getButton().compareTo(MouseButton.PRIMARY)==0) {
 				if(!big_size)
 					big_size=true;
 				else
 					big_size=false;
 				resize(big_size,X,Y);
+				
 			} else {
-				if(event.isShiftDown()) {
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.SET_OPTICAL_TARGET;
-
-					msp.param1 =  (float)event.getX();
-					msp.param2 =  (float)event.getY();
-
-					control.sendMAVLinkMessage(msp);
-				}
+				
+				if(state.getStreamProperty().get() == 0)
+					state.getStreamProperty().set(1);
+				else
+					state.getStreamProperty().set(0);	
+				
 			}
 			event.consume();
-
+		});
+		
+		state.getStreamProperty().addListener((o,ov,nv) -> {
+			
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+			msp.param1  = nv.intValue();
+			control.sendMAVLinkMessage(msp);
 		});
 
 

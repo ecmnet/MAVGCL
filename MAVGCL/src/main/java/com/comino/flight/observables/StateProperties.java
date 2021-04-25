@@ -72,6 +72,7 @@ public class StateProperties {
 	private BooleanProperty holdProperty 			        = new SimpleBooleanProperty();
 
 	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
+	private IntegerProperty streamProperty     		    	= new SimpleIntegerProperty();
 	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
@@ -262,6 +263,10 @@ public class StateProperties {
 
 	public BooleanProperty getArmedProperty() {
 		return armedProperty;
+	}
+	
+	public IntegerProperty getStreamProperty() {
+		return streamProperty;
 	}
 
 	public BooleanProperty getConnectedProperty() {

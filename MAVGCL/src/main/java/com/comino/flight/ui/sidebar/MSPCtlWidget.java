@@ -170,22 +170,21 @@ public class MSPCtlWidget extends ChartControlPane   {
 		stream.getItems().addAll(STREAMS);
 
 		state.getFiducialLockedProperty().addListener((v,o,n) -> {
-			Platform.runLater(() -> {
-				if(n.booleanValue())
-					stream.getSelectionModel().select(1);
-				else
-					if(state.getSLAMAvailableProperty().get())
-						stream.getSelectionModel().select(0);	
-			}); 
+			if(n.booleanValue())
+				state.getStreamProperty().set(1);
+			else
+				if(state.getSLAMAvailableProperty().get())
+					state.getStreamProperty().set(0);
 		});
 
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-				msp.param1  = newvalue.intValue();
-				control.sendMAVLinkMessage(msp);
+			state.getStreamProperty().set(newvalue.intValue());
 		});
 
+
+		state.getStreamProperty().addListener((o,ov,nv) -> {
+			stream.getSelectionModel().select(nv.intValue());		
+		});
 
 		enable_vision.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -423,11 +422,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
-		
+
 		state.getConnectedProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
-				    stream.getSelectionModel().select(0);
+					stream.getSelectionModel().select(0);
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 					msp.param1  = stream.getSelectionModel().getSelectedIndex();
@@ -435,8 +434,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 				}); 
 			}
 		});
-		
-		
+
+
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
@@ -473,10 +472,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES, Status.MSP_OPCV_AVAILABILITY,(n) -> {
 			if(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
-			enable_vision.setSelected(true);
+				enable_vision.setSelected(true);
 		});
 	}
 

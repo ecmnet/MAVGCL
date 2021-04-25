@@ -122,7 +122,8 @@ public class DetailsWidget extends ChartControlPane {
 			for (KeyFigure figure : figures)
 				figure.setValue(model, i++);
 			// Workaround to display GPS data whenever GPS is available
-			state.getGPSAvailableProperty().set(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+			if(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
+			   state.getGPSAvailableProperty().set(true);
 		}));
 
 		task.setCycleCount(Timeline.INDEFINITE);
