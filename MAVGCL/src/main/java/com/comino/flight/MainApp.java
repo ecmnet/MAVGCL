@@ -316,7 +316,7 @@ public class MainApp extends Application  {
 						System.out.println("Global Position origin set to base position");
 					}
 				}
-				else if(model.gps.numsat > 9) {
+				else if(model.gps.numsat > 6 && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
 					
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
