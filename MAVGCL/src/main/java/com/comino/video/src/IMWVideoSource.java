@@ -38,7 +38,7 @@ public interface IMWVideoSource {
 	void addProcessListener(IMWStreamVideoProcessListener listener);
 	void removeListeners();
 
-	Thread start();
+	void start();
 	void stop();
 	boolean isAvailable();
 	public boolean isRunning();

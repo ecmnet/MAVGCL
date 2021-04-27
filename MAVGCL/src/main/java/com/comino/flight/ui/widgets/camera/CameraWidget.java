@@ -34,6 +34,8 @@
 package com.comino.flight.ui.widgets.camera;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,8 +52,9 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
-import com.comino.video.src.impl.MJpegVideoSource;
-import com.comino.video.src.impl.StreamVideoSource;
+import com.comino.video.src.impl.http.MJpegVideoSource;
+import com.comino.video.src.impl.http.StreamVideoSource;
+import com.comino.video.src.impl.rtps.RTPSMjpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
@@ -71,7 +74,6 @@ public class CameraWidget extends ChartControlPane  {
 
 	@FXML
 	private ImageView        image;
-	private WritableImage     imfx;
 
 	private IMWVideoSource 	source = null;
 	private boolean			big_size=false;
@@ -81,7 +83,7 @@ public class CameraWidget extends ChartControlPane  {
 	private boolean         isConnected = false;
 
 	private MSPLogger       logger = null;
-	private Preferences userPrefs;
+	private Preferences     userPrefs;
 
 
 
@@ -110,7 +112,7 @@ public class CameraWidget extends ChartControlPane  {
 
 		resize(false,X,Y);
 
-		imfx = new WritableImage(X,Y);
+	//	imfx = new WritableImage(X,Y);
 
 
 		image.setOnMouseClicked(event -> {
@@ -231,23 +233,32 @@ public class CameraWidget extends ChartControlPane  {
 		else
 			url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"none");
 
-
-		System.out.println(url_string);
-
 		try {
-			URL url = new URL(url_string);
+			URI url = new URI(url_string);
+			
+			System.out.println(url.toString());
+			
+			if(url.toString().startsWith("http")) {
 	//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-			source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+	     		source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+			} 
+			else if(url.toString().startsWith("rtps")) {
+				source = new RTPSMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+				}
+			else {
+				System.out.println("Wrong video protocol");
+				return false;
+			}
 			source.addProcessListener((im, fps) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
-						//						imfx = SwingFXUtils.toFXImage(im, imfx);
 						image.setImage(im);
 
 					});
 			});
 			source.addProcessListener(recorder);
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 			return false;
 		}
 		resize(big_size,X,Y);

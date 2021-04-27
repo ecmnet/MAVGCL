@@ -31,12 +31,14 @@
  *
  ****************************************************************************/
 
-package com.comino.video.src.impl;
+package com.comino.video.src.impl.http;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -71,8 +73,11 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
 
-	public MJpegVideoSource(URL url, AnalysisDataModel model) {
-		this.url   = url;
+	public MJpegVideoSource(URI uri, AnalysisDataModel model) {
+		try {
+			this.url   = uri.toURL();
+		} catch (MalformedURLException e) {
+		}
 		this.codec = new MSPVideoMjpegCodec();
 		
 		ImageIO.setUseCache(false);
@@ -123,9 +128,9 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	}
 
 	@Override
-	public Thread start() {
+	public void start() {
 		if(isRunning)
-			return thread;
+			return;
 
 		isRunning   = true;
 		next = null;
@@ -133,7 +138,6 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		thread = new Thread(this);
 		thread.setName("Video worker");
 		thread.start();
-		return thread;
 	}
 
 	@Override
