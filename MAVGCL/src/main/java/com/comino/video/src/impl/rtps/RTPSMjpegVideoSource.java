@@ -16,7 +16,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URI;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,6 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 
 	//	private byte[] buf;                 //buffer used to store data received from the server 
 
-	private int state;
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
 
@@ -77,13 +75,13 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 	int statExpRtpNb;           //Expected Sequence number of RTP messages within the session
 	int statHighSeqNb;          //Highest sequence number received in session
 
-	private FrameSynchronizer fsynch;
+	//private FrameSynchronizer fsynch;
 
 	private final static String CRLF = "\r\n";
 
 	public RTPSMjpegVideoSource(URI uri, AnalysisDataModel model) {
 
-		timer = new Timer(20, new ReceiveTimer());
+		timer = new Timer(40, new ReceiveTimer());
 		timer.setInitialDelay(0);
 		timer.setCoalesce(true);
 
@@ -91,7 +89,7 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 		rtcpSender = new RtcpSender(400);
 
 		//create the frame synchronizer
-		fsynch = new FrameSynchronizer(100);
+	//	fsynch = new FrameSynchronizer(100);
 		
 		try {
 			ServerIPAddr = InetAddress.getByName(uri.getHost());
@@ -238,12 +236,13 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 				}
 
 				//get an Image object from the payload bitstream
-				fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
+		//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
 				fps = (int) (fps * 0.7f + (1000 / (System.currentTimeMillis() - tms)) * 0.3f);
 				tms = System.currentTimeMillis();
 
 				//call image receivers
-				next = fsynch.nextFrame();
+		//		next = fsynch.nextFrame();
+				next = new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true);
 				if(next!=null) {
 					listeners.forEach((listener) -> {
 						try {
@@ -387,7 +386,7 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 		statExpRtpNb = 0;          
 		statHighSeqNb = 0;
 		statCumLost = 0;
-		fsynch.reset();
+//		fsynch.reset();
 
 		try { RTSPsocket.close(); } catch (IOException e) { }
 
