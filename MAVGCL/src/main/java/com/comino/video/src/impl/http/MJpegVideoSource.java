@@ -49,14 +49,19 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.IOUtils;
+
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
+import com.comino.video.src.impl.proxy.MSPVideoProxy;
 
 import boofcv.io.video.VideoMjpegCodec;
 import javafx.scene.image.Image;
 
 public class MJpegVideoSource  implements IMWVideoSource, Runnable {
+	
+	private static final boolean PROXY = true;
 
 	private boolean isAvailable;
 	private boolean isRunning;
@@ -69,7 +74,10 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 
 	private URL     url;
 	private long    tms;
-
+	
+	private boolean proxy_enabled = PROXY;
+	
+	MSPVideoProxy proxy = new MSPVideoProxy();;
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
 
@@ -82,6 +90,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 		
 		ImageIO.setUseCache(false);
 		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
+
 	}
 
 
@@ -164,7 +173,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	private void connect(URL url) throws IOException {
 		URLConnection conn;
 		conn = url.openConnection();
-		conn.setReadTimeout(2000);
+		conn.setReadTimeout(4000);
 		conn.setConnectTimeout(10000);
 		conn.setUseCaches(false);
 		conn.setRequestProperty("Host", url.getHost());
@@ -175,13 +184,15 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	}
 
 	private void processNext() throws IOException {
-		
 		byte[] data = codec.readFrame(in);
+		
 		if( data == null) {
 			next = null;
-		} else {		
+		} else {
+			if(proxy_enabled)
+			  proxy.process(data, data.length);
 			next = new Image(new ByteArrayInputStream(data), 0, 0, false, true);
-			fps = (int) (fps * 0.7f + (1000 / (System.currentTimeMillis() - tms)) * 0.3f);
+			fps = (int)(((fps * 59) + ((float)(1000f / (System.currentTimeMillis()-tms)))) /60f);
 			tms = System.currentTimeMillis();
 		}
 	}

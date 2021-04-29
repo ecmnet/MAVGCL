@@ -39,6 +39,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.comino.video.src.impl.proxy.MSPVideoProxy;
+
 /**
  * Very simple MJPEG reader
  *
@@ -50,7 +52,7 @@ public class MSPVideoMjpegCodec {
 	// end of image
 	public static final byte EOI = (byte)0xD9;
 	
-	ByteArrayOutputStream bout = new ByteArrayOutputStream(16384);
+	ByteArrayOutputStream bout = new ByteArrayOutputStream(32768);
 
 
 	/**
