@@ -33,12 +33,8 @@
 
 package com.comino.flight.ui.widgets.camera;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -53,17 +49,15 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
-import com.comino.video.src.impl.http.StreamVideoSource;
 import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 
 public class CameraWidget extends ChartControlPane  {
@@ -106,37 +100,41 @@ public class CameraWidget extends ChartControlPane  {
 				source.start();
 			else {
 				if(!recorder.getRecordMP4Property().get())
-				source.stop();
+					source.stop();
 			}
 		});
 
 		resize(false,X,Y);
 
-	//	imfx = new WritableImage(X,Y);
-
-
+		//	imfx = new WritableImage(X,Y);
+		
 		image.setOnMouseClicked(event -> {
 			
+
 			if(event.getButton().compareTo(MouseButton.PRIMARY)==0) {
-				if(!big_size)
-					big_size=true;
-				else
-					big_size=false;
-				resize(big_size,X,Y);
 				
+				if(event.getClickCount()!=2)
+					return;
+				
+					if(!big_size)
+						big_size=true;
+					else
+						big_size=false;
+					resize(big_size,X,Y);
+					
 			} else {
-				
+
 				if(state.getStreamProperty().get() == 0)
 					state.getStreamProperty().set(1);
 				else
 					state.getStreamProperty().set(0);	
-				
+
 			}
 			event.consume();
 		});
-		
+
 		state.getStreamProperty().addListener((o,ov,nv) -> {
-			
+
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 			msp.param1  = nv.intValue();
@@ -148,12 +146,12 @@ public class CameraWidget extends ChartControlPane  {
 			if(nv.booleanValue()) {
 				image.setImage(null);
 				if(fadeProperty().getValue() && !source.isRunning()) {
-						connect(); source.start(); image.setImage(null);
+					connect(); source.start(); image.setImage(null);
 				}
 			} else
 				if(source!=null)
-				  source.stop();
-				
+					source.stop();
+
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
@@ -235,16 +233,16 @@ public class CameraWidget extends ChartControlPane  {
 
 		try {
 			URI url = new URI(url_string);
-			
+
 			System.out.println(url.toString());
-			
+
 			if(url.toString().startsWith("http")) {
-	//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-	     		source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+				//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+				source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			} 
 			else if(url.toString().startsWith("rtsp")) {
 				source = new RTSPMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-				}
+			}
 			else {
 				System.out.println("Wrong video protocol");
 				return false;
