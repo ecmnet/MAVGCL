@@ -33,7 +33,6 @@
 
 package com.comino.video.src.impl.http;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -49,14 +48,11 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.IOUtils;
-
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.proxy.MSPVideoProxy;
 
-import boofcv.io.video.VideoMjpegCodec;
 import javafx.scene.image.Image;
 
 public class MJpegVideoSource  implements IMWVideoSource, Runnable {
@@ -77,7 +73,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 	
 	private boolean proxy_enabled = PROXY;
 	
-	MSPVideoProxy proxy = new MSPVideoProxy();;
+	private MSPVideoProxy proxy = new MSPVideoProxy();
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
 

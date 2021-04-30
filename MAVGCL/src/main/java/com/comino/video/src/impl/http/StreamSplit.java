@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.video.src.impl;
+package com.comino.video.src.impl.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;

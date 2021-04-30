@@ -54,7 +54,7 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.http.StreamVideoSource;
-import com.comino.video.src.impl.rtps.RTPSMjpegVideoSource;
+import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
@@ -242,8 +242,8 @@ public class CameraWidget extends ChartControlPane  {
 	//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 	     		source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			} 
-			else if(url.toString().startsWith("rtps")) {
-				source = new RTPSMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+			else if(url.toString().startsWith("rtsp")) {
+				source = new RTSPMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 				}
 			else {
 				System.out.println("Wrong video protocol");

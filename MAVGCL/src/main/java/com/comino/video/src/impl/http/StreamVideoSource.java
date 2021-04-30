@@ -31,7 +31,7 @@
  *
  ****************************************************************************/
 
-package com.comino.video.src.impl;
+package com.comino.video.src.impl.http;
 
 
 
@@ -40,6 +40,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -87,14 +89,20 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	private List<IMWStreamVideoProcessListener> listener = new ArrayList<IMWStreamVideoProcessListener>();
 
 
-	public StreamVideoSource(URL url, AnalysisDataModel model) {
+	public StreamVideoSource(URI uri, AnalysisDataModel model) {
 
 
 		if (url == null)
 			throw new NullPointerException();
 
+		
+		try {
+			this.url = uri.toURL();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return;
+		}
 		isAvailable = true;
-		this.url = url;
 	}
 
 	public void addProcessListener(IMWStreamVideoProcessListener listener) {
@@ -244,7 +252,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 									trigger = System.currentTimeMillis()+RATE;
 								}
 								else
-									Thread.sleep(20);
+									Thread.sleep(RATE);
 
 							} catch (Exception e) {
 								throw new Exception(e.getMessage());
@@ -265,9 +273,9 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 	}
 
 
-	public Thread start() {
+	public void start() {
 		if(isRunning)
-			return thread;
+			return;
 
 		isRunning = true;
 		thread = new Thread(this);
@@ -275,7 +283,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 		thread.start();
 		isAvailable = true;
 		trigger = System.currentTimeMillis();
-		return thread;
+		
 	}
 
 	/**
