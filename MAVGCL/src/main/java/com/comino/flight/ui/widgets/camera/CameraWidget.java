@@ -107,7 +107,7 @@ public class CameraWidget extends ChartControlPane  {
 			}
 		});
 
-		resize(false,X,Y);
+	//	resize(false,X,Y);
 
 		//	imfx = new WritableImage(X,Y);
 		
@@ -259,7 +259,7 @@ public class CameraWidget extends ChartControlPane  {
 			e.printStackTrace();
 			return false;
 		}
-		resize(big_size,X,Y);
+	//	resize(big_size,X,Y);
 		isConnected = true;
 		return true;
 	}

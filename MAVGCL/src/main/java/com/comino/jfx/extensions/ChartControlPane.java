@@ -129,6 +129,10 @@ public class ChartControlPane extends Pane {
 						setLayoutX(MAVPreferences.getInstance().getDouble(prefKey+"X", 10));
 						setLayoutY(MAVPreferences.getInstance().getDouble(prefKey+"Y", 10));
 					}
+					if(resizable.get()) {
+						setWidth(MAVPreferences.getInstance().getDouble(prefKey+"SX", 320));
+						setHeight(MAVPreferences.getInstance().getDouble(prefKey+"SY", 240));
+					}
 					setVisible(true);
 					in.play();
 				}
@@ -186,6 +190,11 @@ public class ChartControlPane extends Pane {
 			if(moveable.get()) {
 				MAVPreferences.getInstance().putDouble(prefKey+"X",getLayoutX());
 				MAVPreferences.getInstance().putDouble(prefKey+"Y",getLayoutY());
+			}
+			
+			if(resizable.get()) {
+				MAVPreferences.getInstance().putDouble(prefKey+"SX",getWidth());
+				MAVPreferences.getInstance().putDouble(prefKey+"SY",getHeight());
 			}
 			this.setCursor(Cursor.DEFAULT);
 			event.consume();
