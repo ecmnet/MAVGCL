@@ -64,7 +64,7 @@ public class Alert extends ChartControlPane    {
 
 	@FXML
 	private void initialize() {	
-		message.setLayoutX(this.getInitialWidth()/2);
+		message.setLayoutX(this.getWidth()/2);
 		
 	}
 

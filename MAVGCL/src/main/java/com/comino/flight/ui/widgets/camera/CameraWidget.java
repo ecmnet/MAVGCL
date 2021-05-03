@@ -83,12 +83,15 @@ public class CameraWidget extends ChartControlPane  {
 
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
+		image.fitWidthProperty().bind(this.widthProperty());
+		image.fitHeightProperty().bind(this.heightProperty());
 	}
 
 
 	@FXML
 	private void initialize() {
 
+		this.setFixedRatio((double)Y/X);
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
@@ -132,6 +135,7 @@ public class CameraWidget extends ChartControlPane  {
 			}
 			event.consume();
 		});
+		
 
 		state.getStreamProperty().addListener((o,ov,nv) -> {
 
@@ -198,14 +202,10 @@ public class CameraWidget extends ChartControlPane  {
 				this.setInitialWidth(maxX);
 				this.setMaxHeight(maxY);
 				this.setMaxWidth(maxX);
-				image.setLayoutX(0); image.setFitWidth(maxX);
-				image.setLayoutY(0); image.setFitHeight(maxY);
 			} else
 			{
 				this.setInitialHeight(maxY/2); this.setMaxHeight(maxY/2);
 				this.setInitialWidth(maxX/2); this.setMaxWidth(maxX/2);
-				image.setLayoutX(0); image.setFitWidth(maxX/2);
-				image.setLayoutY(0); image.setFitHeight(maxY/2);
 			}
 		});
 	}

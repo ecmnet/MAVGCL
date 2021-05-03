@@ -45,14 +45,19 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Cursor;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public class ChartControlPane extends Pane {
+
+	private static final int RESIZE_MARGIN = 25;
 
 	protected IMAVController control = null;
 
@@ -62,12 +67,20 @@ public class ChartControlPane extends Pane {
 
 	private FadeTransition in = null;
 	private FadeTransition out = null;
+	
+	private double fixed_ratio = Double.NaN;
 
 	private double mouseX ;
 	private double mouseY ;
 
-	private BooleanProperty fade     = new SimpleBooleanProperty(false);
-	private BooleanProperty moveable = new SimpleBooleanProperty(false);
+	private double initWidth;
+	private double initHeight;
+
+	private BooleanProperty fade       = new SimpleBooleanProperty(false);
+	private BooleanProperty moveable   = new SimpleBooleanProperty(false);
+	private BooleanProperty resizable  = new SimpleBooleanProperty(false);
+
+	public boolean is_resizing = false;
 
 	private String prefKey = MAVPreferences.CTRLPOS+this.getClass().getSimpleName().toUpperCase();
 
@@ -75,7 +88,7 @@ public class ChartControlPane extends Pane {
 
 	public static void addChart(int id,IChartControl chart) {
 		if(!charts.containsKey(id))
-		    charts.put(id,chart);
+			charts.put(id,chart);
 	}
 
 	public ChartControlPane() {
@@ -125,29 +138,71 @@ public class ChartControlPane extends Pane {
 		});
 
 		setOnMousePressed(event -> {
-			if(moveable.get()) {
+
+			initWidth = getWidth();
+			initHeight = getHeight();
+
+			if(moveable.get() || resizable.get()) {
+				is_resizing = isResizeEvent(event);
 				mouseX = event.getSceneX() ;
 				mouseY = event.getSceneY() ;
 			}
+			event.consume();
 		});
 
 		setOnMouseDragged(event -> {
+
+			final double deltaX = event.getSceneX() - mouseX;
+			final double deltaY = event.getSceneY() - mouseY;
+
+			if(resizable.get() && is_resizing) {
+				if(!Double.isNaN(fixed_ratio)) {
+					if(deltaX > deltaY) {
+						this.setWidth(initWidth+deltaX);
+						this.setHeight((initWidth+deltaX)*fixed_ratio);
+					} else {
+						this.setHeight(initHeight+deltaY);
+						this.setWidth((initHeight+deltaY)/fixed_ratio);
+					}
+				}
+				else {
+				  this.setWidth(initWidth+deltaX);
+				  this.setHeight(initHeight+deltaY);
+				}
+				event.consume();
+				return;
+			}	
 			if(moveable.get()) {
-				double deltaX = event.getSceneX() - mouseX ;
-				double deltaY = event.getSceneY() - mouseY ;
 				relocate(getLayoutX() + deltaX, getLayoutY() + deltaY);
 				mouseX = event.getSceneX() ;
 				mouseY = event.getSceneY() ;
+				event.consume();
 			}
 		});
 
 		setOnMouseReleased(event -> {
+			is_resizing = false;
+			relocate(getLayoutX(), getLayoutY());
 			if(moveable.get()) {
 				MAVPreferences.getInstance().putDouble(prefKey+"X",getLayoutX());
 				MAVPreferences.getInstance().putDouble(prefKey+"Y",getLayoutY());
 			}
+			this.setCursor(Cursor.DEFAULT);
+			event.consume();
 		});
 
+		setOnMouseMoved(event -> {
+			if(resizable.get()) {
+				is_resizing = isResizeEvent(event);
+			} else
+				this.setCursor(Cursor.DEFAULT);
+		});
+
+	}
+	
+	public void setFixedRatio(double val) {
+		this.fixed_ratio = val;
+		this.setHeight(getWidth()*val);
 	}
 
 	public void setup(IMAVController control) {
@@ -171,16 +226,24 @@ public class ChartControlPane extends Pane {
 		}
 	}
 
+	public boolean getMoveable() {
+		return moveable.get();
+	}
+
+	public void setResizable(boolean val) {
+		resizable.set(val);
+	}
+
+	public boolean getResizable() {
+		return resizable.get();
+	}
+
 	public void refreshCharts() {
 		for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 			if(chart.getValue().getScrollProperty()!=null)
 				chart.getValue().getScrollProperty().set(1);
 			chart.getValue().refreshChart();
 		}
-	}
-
-	public boolean getMoveable() {
-		return moveable.get();
 	}
 
 	public void setInitialWidth(double val) {
@@ -192,11 +255,43 @@ public class ChartControlPane extends Pane {
 	}
 
 	public double getInitialWidth() {
-		return getWidth();
+		return initWidth;
 	}
 
 	public double getInitialHeight() {
-		return getHeight();
+		return initHeight;
 	}
+
+	private boolean isResizeEvent(MouseEvent event) {
+
+		if(!resizable.get()) {
+			setCursor(Cursor.DEFAULT);
+			return false;
+		}
+
+		if(event.getY() > (getHeight() - RESIZE_MARGIN)) {
+			if(event.getX() > (getWidth() - RESIZE_MARGIN)) {
+				setCursor(Cursor.SE_RESIZE);
+				return true;
+			}
+			//        	if(event.getX() < RESIZE_MARGIN) {
+			//        		setCursor(Cursor.SW_RESIZE);
+			//        		return true;
+			//        	}
+		} 
+		//        if(event.getY() < RESIZE_MARGIN) {
+		//        	if(event.getX() > (initWidth - RESIZE_MARGIN)) {
+		//        		setCursor(Cursor.NE_RESIZE);
+		//        		return true;
+		//        	}
+		//        	if(event.getX() < RESIZE_MARGIN) {
+		//        		setCursor(Cursor.NW_RESIZE);
+		//        		return true;
+		//        	}
+		//        }
+		setCursor(Cursor.DEFAULT);
+		return false;
+	}
+
 
 }

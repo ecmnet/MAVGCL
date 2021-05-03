@@ -4,9 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
-<fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+     moveable="true" resizable="true">
      <children>
       <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0"
-           pickOnBounds="false" preserveRatio="true" styleClass="glass" />
+           pickOnBounds="true" preserveRatio="true" styleClass="glass" />
      </children>
 </fx:root>
