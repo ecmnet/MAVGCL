@@ -56,7 +56,6 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 
@@ -107,25 +106,19 @@ public class CameraWidget extends ChartControlPane  {
 			}
 		});
 
-	//	resize(false,X,Y);
-
-		//	imfx = new WritableImage(X,Y);
-		
 		image.setOnMouseClicked(event -> {
-			
 
-			if(event.getButton().compareTo(MouseButton.PRIMARY)==0) {
-				
+			if(event.getButton().compareTo(MouseButton.SECONDARY)==0) {
+				if(!big_size)
+					big_size=true;
+				else
+					big_size=false;
+				resize(big_size,X,Y);
+
+			} else {
+
 				if(event.getClickCount()!=2)
 					return;
-				
-					if(!big_size)
-						big_size=true;
-					else
-						big_size=false;
-					resize(big_size,X,Y);
-					
-			} else {
 
 				if(state.getStreamProperty().get() == 0)
 					state.getStreamProperty().set(1);
@@ -135,7 +128,7 @@ public class CameraWidget extends ChartControlPane  {
 			}
 			event.consume();
 		});
-		
+
 
 		state.getStreamProperty().addListener((o,ov,nv) -> {
 
@@ -181,14 +174,6 @@ public class CameraWidget extends ChartControlPane  {
 			}
 
 		});
-
-		//		CloseButton close = new CloseButton();
-		//		close.setOnMouseClicked(e -> {
-		//			this.visibleProperty().set(false);
-		//		});
-		//
-		//		this.getChildren().add(close);
-
 	}
 
 	public FloatProperty getScrollProperty() {
@@ -259,7 +244,7 @@ public class CameraWidget extends ChartControlPane  {
 			e.printStackTrace();
 			return false;
 		}
-	//	resize(big_size,X,Y);
+	
 		isConnected = true;
 		return true;
 	}
