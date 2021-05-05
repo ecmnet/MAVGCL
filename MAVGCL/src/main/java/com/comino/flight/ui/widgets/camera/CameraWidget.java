@@ -229,10 +229,10 @@ public class CameraWidget extends ChartControlPane  {
 				source = new RTSPMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
 			}
 			else {
-				System.out.println("Wrong video protocol");
+				System.out.println("Streaming protocol not supported");
 				return false;
 			}
-			source.addProcessListener((im, fps) -> {
+			source.addProcessListener((im, fps, tms) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
 						image.setImage(im);

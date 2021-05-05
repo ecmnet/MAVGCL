@@ -235,11 +235,12 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 							}
 							try {
 								if(System.currentTimeMillis() >= trigger) {
+									tms = System.currentTimeMillis();
 									image = new Image(new ByteArrayInputStream(img));
 								//	image = ImageIO.read(new ByteArrayInputStream(img));
 									listener.forEach((l) -> {
 										try {
-										l.process(image, fps);
+										l.process(image, fps, tms);
 										} catch (Exception e) {
 											e.printStackTrace();
 											System.err.println(e.getMessage());
@@ -248,7 +249,6 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 									fps = (int)(1000 / (System.currentTimeMillis() - tms));
-									tms = System.currentTimeMillis();
 									trigger = System.currentTimeMillis()+RATE;
 								}
 								else

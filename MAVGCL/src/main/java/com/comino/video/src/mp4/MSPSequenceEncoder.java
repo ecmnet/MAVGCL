@@ -88,10 +88,10 @@ public class MSPSequenceEncoder {
 		muxer = new MP4Muxer(ch, Brand.MP4);
 
 		// Add video track to muxer
-		outTrack = muxer.addTrack(TrackType.VIDEO, 14);
+		outTrack = muxer.addTrack(TrackType.VIDEO, 15);
 
 		// Allocate a buffer big enough to hold output frames
-		_out = ByteBuffer.allocate(640*480 * 12);
+		_out = ByteBuffer.allocate(640*480 * 25);
 
 		// Create an instance of encoder
 		encoder = new H264Encoder();

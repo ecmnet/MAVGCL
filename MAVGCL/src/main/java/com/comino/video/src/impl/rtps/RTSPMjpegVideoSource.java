@@ -1,8 +1,7 @@
 package com.comino.video.src.impl.rtps;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -24,22 +23,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
-import javax.swing.Timer;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.mavutils.rtps.RTCPpacket;
 import com.comino.mavutils.rtps.RTPpacket;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
+import com.comino.video.src.impl.proxy.MSPVideoProxy;
 
 import javafx.scene.image.Image;
 
-public class RTPSMjpegVideoSource implements IMWVideoSource {
+public class RTSPMjpegVideoSource implements IMWVideoSource {
+	
+	private static final boolean PROXY = true;
 
-
-	private DatagramSocket RTCPsocket;          //UDP socket for sending RTCP packets
-	private static int RTCP_RCV_PORT = 19001;   //port where the client will receive private static int RTCP_PERIOD  = 400;      //How often to send RTCP packets
-	private RtcpSender rtcpSender;
 
 	private DatagramPacket rcvdp;            //UDP packet received from the server
 	private DatagramSocket RTPsocket;        //socket to be used to send and receive UDP packets
@@ -50,14 +46,13 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 	static int MJPEG_TYPE = 26; 			//RTP payload type for MJPEG video
 
 	private boolean isRunning;
-	private int     fps;
+	private float   fps;
 	private long    tms;
 
 	private static BufferedReader RTSPBufferedReader;
 	private static BufferedWriter RTSPBufferedWriter;
 
 	private Socket RTSPsocket;           //socket used to send/receive RTSP messages
-	private Timer timer;                 //timer used to receive data from the UDP socket
 
 	private InetAddress ServerIPAddr;
 	private int ServerPort = 1051;
@@ -66,6 +61,9 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 	private String RTSPid;              // ID of the RTSP session (given by the RTSP Server)
 
 	//	private byte[] buf;                 //buffer used to store data received from the server 
+	
+	private boolean proxy_enabled = PROXY;
+	private MSPVideoProxy proxy = new MSPVideoProxy();
 
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
@@ -79,18 +77,13 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 
 	private final static String CRLF = "\r\n";
 
-	public RTPSMjpegVideoSource(URI uri, AnalysisDataModel model) {
+	public RTSPMjpegVideoSource(URI uri, AnalysisDataModel model) {
 
-		timer = new Timer(40, new ReceiveTimer());
-		timer.setInitialDelay(0);
-		timer.setCoalesce(true);
-
-		//init RTCP packet sender
-		rtcpSender = new RtcpSender(400);
-
-		//create the frame synchronizer
-	//	fsynch = new FrameSynchronizer(100);
+		ImageIO.setUseCache(false);
 		
+		//create the frame synchronizer
+		//	fsynch = new FrameSynchronizer(100);
+
 		try {
 			ServerIPAddr = InetAddress.getByName(uri.getHost());
 			ServerPort   = uri.getPort();
@@ -123,8 +116,7 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 
 		RTSPSeqNb++;
 		sendRequest("TEARDOWN");
-		rtcpSender.stopSend();
-		timer.stop();
+		isRunning = false;
 
 		if(parseServerResponse() == 200) {
 			closeStream();	
@@ -143,7 +135,7 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 
 	@Override
 	public int getFPS() {
-		return fps;
+		return (int)(fps+0.5f);
 	}
 
 
@@ -160,16 +152,14 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 			try {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
-				RTPsocket.setSoTimeout(5);
-				
-				//UDP socket for sending QoS RTCP packets
-				RTCPsocket = new DatagramSocket();
-				RTCPsocket.setSoTimeout(1000);
+				RTPsocket.setReceiveBufferSize(512*1024);
+				RTPsocket.setSoTimeout(40);
+			
 			}
 			catch (SocketException se) {
 				closeStream();
-			    isRunning = false;
-			    return;
+				isRunning = false;
+				return;
 			}
 
 			//Set input and output stream filters:
@@ -193,127 +183,80 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 			return;
 		}
 
+		isRunning = true;
+		new Thread(new Receiver()).start();
+
 		//increase RTSP sequence number
 		RTSPSeqNb++;
 		//Send PLAY message to the server
 		sendRequest("PLAY");
-		timer.start();
-		rtcpSender.startSend();
-		System.out.println("Video stream started");
-		isRunning = true;
+
 	}
 
 
-	private class ReceiveTimer implements ActionListener {
+	private class Receiver implements Runnable {
 
 		private Image next;
-		private byte [] payload = new byte[32768];
-		private byte [] buf     = new byte[32768];    
+		private final byte [] payload = new byte[30000];
+		private final byte [] buf     = new byte[30000];    
 
-		public void actionPerformed(ActionEvent e) {
+		public void run() {
+			System.out.println("Video stream started");
 
-			//Construct a DatagramPacket to receive data from the UDP socket
+			int seqNb = 0; int payload_length;
+
 			rcvdp = new DatagramPacket(buf, buf.length);
 
-			try {
-				//receive the DP from the socket, save time for stats
-				RTPsocket.receive(rcvdp);
+			while(isRunning) {
+				try {
+					//receive the DP from the socket, save time for stats
+					RTPsocket.receive(rcvdp);
 
-				//create an RTPpacket object from the DP
-				RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
-				int seqNb = rtp_packet.getsequencenumber();
+					//create an RTPpacket object from the DP
+					RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
+					seqNb = rtp_packet.getsequencenumber();
 
-				//get the payload bitstream from the RTPpacket object
-				int payload_length = rtp_packet.getpayload_length();
-				rtp_packet.getpayload(payload);
+					//get the payload bitstream from the RTPpacket object
+					payload_length = rtp_packet.getpayload_length();
+					rtp_packet.getpayload(payload);
 
-				statExpRtpNb++;
-				if (seqNb > statHighSeqNb) {
-					statHighSeqNb = seqNb;
+					statExpRtpNb++;
+					if (seqNb > statHighSeqNb) {
+						statHighSeqNb = seqNb;
+					}
+					if (statExpRtpNb != seqNb) {
+						statCumLost++;
+					}
+					
+
+					//get an Image object from the payload bitstream
+					//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
+					fps = (fps * 0.9f + (1000 / (System.currentTimeMillis() - tms)) * 0.1f);
+					tms = System.currentTimeMillis();
+				//	System.out.println(fps+ " => "+rcvdp.getLength());
+					//call image receivers
+					//		next = fsynch.nextFrame();
+					if(proxy_enabled)
+					  proxy.process(payload, payload_length);
+					next = new Image(new BufferedInputStream(new ByteArrayInputStream(payload,0,payload_length)), 0, 0, false, true);
+					if(next!=null) {
+						listeners.forEach((listener) -> {
+							try {
+								listener.process(next, (int)(fps+0.5), tms);
+							} catch (Exception ex) { ex.printStackTrace(); }
+						} );
+					}
+
 				}
-				if (statExpRtpNb != seqNb) {
-					statCumLost++;
+				catch (InterruptedIOException iioe) { //System.err.println(iioe.getLocalizedMessage());
 				}
-
-				//get an Image object from the payload bitstream
-		//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
-				fps = (int) (fps * 0.7f + (1000 / (System.currentTimeMillis() - tms)) * 0.3f);
-				tms = System.currentTimeMillis();
-
-				//call image receivers
-		//		next = fsynch.nextFrame();
-				next = new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true);
-				if(next!=null) {
-					listeners.forEach((listener) -> {
-						try {
-							listener.process(next, fps);
-						} catch (Exception ex) { ex.printStackTrace(); }
-					} );
+				catch (Exception ioe) {	
+					System.err.println(ioe.getLocalizedMessage());
 				}
-			}
-			catch (InterruptedIOException iioe) {
-			}
-			catch (IOException ioe) {	
 			}
 		}
 	}
 
-	private class RtcpSender implements ActionListener {
-
-		private Timer rtcpTimer;
-
-		// Stats variables
-		private int numPktsExpected;    // Number of RTP packets expected since the last RTCP packet
-		private int numPktsLost;        // Number of RTP packets lost since the last RTCP packet
-		private int lastHighSeqNb;      // The last highest Seq number received
-		private int lastCumLost;        // The last cumulative packets lost
-		private float lastFractionLost; // The last fraction lost
-
-		public RtcpSender(int interval) {
-			rtcpTimer = new Timer(interval, this);
-			rtcpTimer.setInitialDelay(0);
-			rtcpTimer.setCoalesce(true);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			// Calculate the stats for this period
-			numPktsExpected = statHighSeqNb - lastHighSeqNb;
-			numPktsLost = statCumLost - lastCumLost;
-			lastFractionLost = numPktsExpected == 0 ? 0f : (float)numPktsLost / numPktsExpected;
-			lastHighSeqNb = statHighSeqNb;
-			lastCumLost = statCumLost;
-
-			//To test lost feedback on lost packets
-			// lastFractionLost = randomGenerator.nextInt(10)/10.0f;
-
-			RTCPpacket rtcp_packet = new RTCPpacket(lastFractionLost, statCumLost, statHighSeqNb);
-			int packet_length = rtcp_packet.getlength();
-			byte[] packet_bits = new byte[packet_length];
-			rtcp_packet.getpacket(packet_bits);
-
-			try {
-				DatagramPacket dp = new DatagramPacket(packet_bits, packet_length, ServerIPAddr, RTCP_RCV_PORT);
-				RTCPsocket.send(dp);
-			} catch (InterruptedIOException iioe) {
-
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-
-		// Start sending RTCP packets
-		public void startSend() {
-			rtcpTimer.start();
-		}
-
-		// Stop sending RTCP packets
-		public void stopSend() {
-			rtcpTimer.stop();
-			lastHighSeqNb = 0;
-			lastCumLost = 0;
-		}
-	}
 
 	private int parseServerResponse() {
 		int reply_code = 0;
@@ -351,7 +294,7 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 			//Use the RTSPBufferedWriter to write to the RTSP socket
 
 			//write the request line:
-			RTSPBufferedWriter.write(request_type + " " + "movie.mjpeg"+ " RTSP/1.0" + CRLF);
+			RTSPBufferedWriter.write(request_type + " RTSP/1.0" + CRLF);
 
 			//write the CSeq line: 
 			RTSPBufferedWriter.write("CSeq: " + RTSPSeqNb + CRLF);
@@ -381,17 +324,17 @@ public class RTPSMjpegVideoSource implements IMWVideoSource {
 		System.out.println("Closing video stream");
 
 		isRunning = false;	
+		fps = 0;
 
 		RTSPSeqNb = 0;
 		statExpRtpNb = 0;          
 		statHighSeqNb = 0;
 		statCumLost = 0;
-//		fsynch.reset();
+		//		fsynch.reset();
 
 		try { RTSPsocket.close(); } catch (IOException e) { }
 
 		RTPsocket.close(); 
-		RTCPsocket.close();
 
 		try { 
 			RTSPBufferedReader.close();

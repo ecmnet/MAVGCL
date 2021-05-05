@@ -108,7 +108,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 				if(next!=null) {
 					listeners.forEach((listener) -> {
 						try {
-							listener.process(next, fps);
+							listener.process(next, fps, System.currentTimeMillis());
 						} catch (Exception e) { e.printStackTrace(); }
 					} );
 				} 

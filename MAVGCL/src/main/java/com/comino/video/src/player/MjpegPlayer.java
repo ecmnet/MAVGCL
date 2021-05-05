@@ -1,4 +1,4 @@
-package com.comino.video.dev;
+package com.comino.video.src.player;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -42,7 +42,7 @@ public class MjpegPlayer extends Application {
       createControls(timeline)
     );
 
-    stage.setScene(new Scene(layout, 400, 400));
+    stage.setScene(new Scene(layout, 640, 480));
     stage.show();
 
     timeline.play();
@@ -50,7 +50,7 @@ public class MjpegPlayer extends Application {
 
   private Timeline createTimeline(final ImageView viewer) {
     final Timeline timeline = new Timeline();
-    final byte[] buf = new byte[15000];
+    final byte[] buf = new byte[15000000];
 
     timeline.getKeyFrames().setAll(
       new KeyFrame(Duration.ZERO, new EventHandler<ActionEvent>() {
@@ -140,10 +140,10 @@ class VideoStream {
   {
     int length = 0;
     String length_string;
-    byte[] frame_length = new byte[5];
+    byte[] frame_length = new byte[2];
 
     //read current frame length
-    fis.read(frame_length,0,5);
+    fis.read(frame_length,0,2);
 
     ByteBuffer wrapped = ByteBuffer.wrap(frame_length); // big-endian by default
     length= wrapped.getShort();
@@ -153,9 +153,10 @@ class VideoStream {
 
     try {
 
- //     length = Integer.parseInt(length_string);
+      length = Integer.parseInt(length_string);
     } catch (Exception e) {
-    System.out.println(length_string);
+      e.printStackTrace();
+      System.out.println(length_string);
       return -1;
     }
 
