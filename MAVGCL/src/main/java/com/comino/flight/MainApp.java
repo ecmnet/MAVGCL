@@ -73,6 +73,7 @@ import com.comino.mavcom.control.impl.MAVSimController;
 import com.comino.mavcom.control.impl.MAVUdpController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 
@@ -677,15 +678,15 @@ public class MainApp extends Application  {
 
 	private void showAboutDialog() {
 		StringBuilder version_txt = new StringBuilder();
-		VBox box = new VBox(); DataModel model = control.getCurrentModel();
+		VBox box = new VBox(); 
 		ImageView splash = new ImageView(new Image(getClass().getResource("splash082.png").toExternalForm()));
 		Label version = new Label();
 
 
-		if(!model.sys.version.isEmpty())
-			version_txt.append("  PX4 Firmware Version: "+model.sys.version);
-		if(!model.sys.build.isEmpty() && !model.sys.build.contains("tmp"))
-			version_txt.append("  MSP build: " + model.sys.build);
+		if(!Status.version.isEmpty())
+			version_txt.append("  PX4 Firmware Version: "+Status.version+" ("+Status.fw_build+")");
+		if(!Status.build.isEmpty() && !Status.build.contains("tmp"))
+			version_txt.append("  MSP build: " + Status.build);
 		version_txt.append("  MAVGCL ("+getBuildInfo().getProperty("build")+")");
 		version_txt.append(" runs on Java "+System.getProperty("java.version"));
 		version_txt.append(" (Resolution: "+AnalysisModelService.getInstance().getCollectorInterval_ms()+"ms)");
