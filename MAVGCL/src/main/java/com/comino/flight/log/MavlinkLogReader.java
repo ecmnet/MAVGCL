@@ -163,7 +163,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("NP",5,() -> {
+		timeout = wq.addCyclicTask("NP",3,() -> {
 
 			switch (state) {
 			case IDLE:

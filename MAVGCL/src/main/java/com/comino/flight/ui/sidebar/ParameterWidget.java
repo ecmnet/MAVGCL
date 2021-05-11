@@ -328,7 +328,9 @@ public class ParameterWidget extends ChartControlPane  {
 					cb.setConverter(new StringConverter<Entry<Integer,String>>() {
 						@Override
 						public String toString(Entry<Integer, String> o) {
-							return o.getValue();
+							if(o!=null)
+								return o.getValue();
+							return "";
 						}
 						@Override
 						public Entry<Integer, String> fromString(String o) {

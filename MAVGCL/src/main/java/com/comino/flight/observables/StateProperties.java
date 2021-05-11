@@ -101,6 +101,7 @@ public class StateProperties {
 	private MSPLogger logger;
 	
 	private final WorkQueue wq = WorkQueue.getInstance();
+	
 
 
 	public static StateProperties getInstance() {

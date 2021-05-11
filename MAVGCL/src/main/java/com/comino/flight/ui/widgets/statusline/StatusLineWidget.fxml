@@ -20,6 +20,7 @@
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />
 				<Badge fx:id="wp" prefHeight="16.0" prefWidth="40.0" text="-" color="#1c6478" />
+				<Badge fx:id="fps" prefHeight="16.0" prefWidth="30.0" text="-" color="#1c6478" />
 			</children>
 		</HBox>
 	</children>

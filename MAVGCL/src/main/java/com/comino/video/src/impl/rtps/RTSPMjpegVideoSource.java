@@ -104,7 +104,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 	@Override
 	public void removeListeners() {
-
+		this.listeners.clear();
 	}
 
 
@@ -167,7 +167,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 			RTSPBufferedWriter = new BufferedWriter(new OutputStreamWriter(RTSPsocket.getOutputStream()));
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			isRunning = false;
 			return;
 		}

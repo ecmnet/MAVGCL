@@ -93,6 +93,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge ekf;
+	
+	@FXML
+	private Badge fps;
 
 	@FXML
 	private Badge gpos;
@@ -138,8 +141,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			public void handle(long now) {
 
 				List<AnalysisDataModel> list = null;
-
-
+					
 				if(model.slam.wpcount > 0) {
 					wp.setText(String.format("WP %d", model.slam.wpcount));
 					wp.setMode(Badge.MODE_ON);

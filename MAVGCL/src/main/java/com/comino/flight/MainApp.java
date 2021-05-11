@@ -180,6 +180,13 @@ public class MainApp extends Application  {
 
 	public MainApp() {
 		super();
+		
+//		try {
+//			redirectConsole();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 
 		//		com.sun.glass.ui.Application glassApp = com.sun.glass.ui.Application.GetApplication();
@@ -231,7 +238,7 @@ public class MainApp extends Application  {
 			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
-
+			
 
 			if(args.size()>0) {
 				if(args.get("SITL")!=null) {
@@ -388,6 +395,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void start(Stage primaryStage) {
+		
 		Locale.setDefault(Locale.ENGLISH);
 		try {
 			this.primaryStage = primaryStage;
@@ -721,7 +729,7 @@ public class MainApp extends Application  {
 
 	private void redirectConsole() throws IOException {
 
-		File file = new File(System.getProperty("user.home")+"/MAVGCL/mavgcl.log");
+		File file = new File("mavgcl.log");
 
 		if(!file.exists())
 			file.createNewFile();

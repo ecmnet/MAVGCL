@@ -129,7 +129,7 @@ public class MJpegVideoSource  implements IMWVideoSource, Runnable {
 
 	@Override
 	public void removeListeners() {
-
+		this.listeners.clear();
 	}
 
 	@Override

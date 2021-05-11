@@ -7,3 +7,12 @@ requires Javafx-jmods 16
 jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules java.se,jdk.httpserver,javafx.controls,javafx.fxml --output ./custom_jre --module-path ./../jmods
 
 jpackage --input deploy/ --name MAVGAnalysis --main-jar MAVGCL-0.8.23.jar --main-class com.comino.flight.MainApp --type dmg --java-options '-Djava.library.path=./native  -XX:+UnlockExperimentalVMOptions -XX:+UseZGC' --icon deploy/MAVGAnalysis.icns --runtime-image ./custom_jre
+
+
+
+<exec dir="target/" executable="sh">
+		   <arg line="-c 'jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules java.se,jdk.httpserver,javafx.controls,javafx.fxml --output ./custom_jre --module-path ./../jmods'" />
+		</exec>
+		<exec dir="target/" executable="sh">
+	       <arg line="-c 'jpackage --input deploy/ --name MAVGAnalysis --main-jar MAVGCL-0.8.23.jar --main-class com.comino.flight.MainApp --type dmg --icon deploy/MAVGAnalysis.icns --runtime-image ./custom_jre'" />
+		</exec>
