@@ -1,14 +1,5 @@
 <project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
-
-
-	<!-- Works at least on OSX, to determine JDK -->
-
-	<script language="javascript">
-	  arr = project.getProperty('java.home').split('jre');
-	  project.setProperty('jdk.home', arr[0]);
-    </script>
-
-	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${jdk.home}lib/ant-javafx.jar" />
+	
 
 	<target name="metadata" >
 		<echo>JDK used: ${jdk.home}</echo>
@@ -25,17 +16,18 @@
 
 	<target name="mvn" depends="metadata">
 		<exec dir="./" executable="sh">
-			<arg line="-c 'JAVA_HOME=${jdk.home} /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
 		</exec>
 	</target>
 	
-	<target name="deploy_osx_14" depends="mvn">
-		<echo>Deploy JDk14 Version</echo>
+	<target name="deploy_osx_16" depends="mvn">
+		<echo>Deploy JDk16 Version</echo>
 		 <exec dir="./" executable="sh">
 			  <arg line="-c './package.sh'" />
 		</exec>
 	</target>
 	
+	<!--
 	<target name="deploy_osx" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
@@ -54,7 +46,7 @@
 		</fx:deploy>
 	</target>
 
-<!--
+
 	<target name="deploy_linux" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="deb">
 			<fx:application name="MAVGAnalysis" mainClass="com.comino.flight.MainApp" version="0.8">
