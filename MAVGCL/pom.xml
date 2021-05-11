@@ -9,6 +9,7 @@
 	<version>0.8.23</version>
 	<packaging>jar</packaging>
 
+
 	<name>MAVGCL2</name>
 
 	<repositories>
@@ -35,11 +36,6 @@
 			<groupId>mavbase</groupId>
 			<artifactId>mavbase</artifactId>
 			<version>0.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>jcodec</groupId>
-			<artifactId>jcodec-javase</artifactId>
-			<version>0.1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>com.comino</groupId>
@@ -82,6 +78,11 @@
 			<version>0.1.9</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jcodec</groupId>
+			<artifactId>jcodec-javase</artifactId>
+			<version>0.1.9</version>
+		</dependency>
+		<dependency>
 			<groupId>eu.hansolo</groupId>
 			<artifactId>Medusa</artifactId>
 			<version>7.4</version>
@@ -91,8 +92,21 @@
 			<artifactId>objimport</artifactId>
 			<version>0.8.0</version>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>16</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>16</version>
+		</dependency>
+         <dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>16</version>
+		</dependency>
 	</dependencies>
 
 	<build>
