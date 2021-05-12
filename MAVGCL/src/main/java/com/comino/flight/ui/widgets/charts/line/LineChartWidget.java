@@ -198,6 +198,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private long dashboard_update_tms = 0;
 	private long last_update_ms = 0;
+	
+	private long scroll_tms;
 
 	public LineChartWidget() {
 
@@ -541,6 +543,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		scroll.addListener((v, ov, nv) -> {
+			if((System.currentTimeMillis() - scroll_tms) < 33) {
+				return;
+			}
+			scroll_tms = System.currentTimeMillis();
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
 			if(!isDisabled() && !refreshRequest) {
 				refreshRequest = true;
