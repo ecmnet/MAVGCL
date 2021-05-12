@@ -41,7 +41,7 @@ import javafx.scene.chart.XYChart;
 
 public class XYDataPool {
 
-	private static final int INIT_CAPACITY = 1000;
+	private static final int INIT_CAPACITY = 20000;
 
 	private Hashtable<XYChart.Data<Number,Number>,Boolean> locked, unlocked;
 

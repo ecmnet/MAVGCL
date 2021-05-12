@@ -122,6 +122,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private AnimationTimer task = null;
 
 	int current_x0_pt = 0; int current_x1_pt = 0;
+	long last = 0;
 
 	private DataModel model;
 
@@ -139,6 +140,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				
+				if((now - last) < 200000000)
+					return;
+				last = now;
 
 				List<AnalysisDataModel> list = null;
 					
@@ -340,7 +345,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				current_x0_pt = collector.calculateX0Index(n.intValue());
 			}
 		});
-
 		task.start();
 	}
 
