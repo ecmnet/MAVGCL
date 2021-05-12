@@ -97,6 +97,9 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
+
+	private long scroll_tms;
+
 	public ChartControlWidget() {
 		super(300,true);
 		FXMLLoadHelper.load(this, "ChartControlWidget.fxml");
@@ -159,6 +162,10 @@ public class ChartControlWidget extends ChartControlPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if((System.currentTimeMillis() - scroll_tms) < 33) {
+				return;
+			}
+			scroll_tms = System.currentTimeMillis();
 			if(state.getReplayingProperty().get())
 				return;
 			charts.entrySet().forEach((chart) -> {
