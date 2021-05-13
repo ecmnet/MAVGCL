@@ -65,7 +65,7 @@ public class ProgressWidget extends Pane   {
 		}
 
 		out = new Timeline(new KeyFrame(
-				Duration.millis(250),
+				Duration.millis(100),
 				ae -> progress.setVisible(false)));
 
 	}

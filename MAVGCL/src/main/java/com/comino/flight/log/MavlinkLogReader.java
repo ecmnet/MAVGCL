@@ -112,6 +112,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	private final AnalysisModelService modelService;
 	private final FileHandler fh;
 	private final Preferences userPrefs;
+	private int speed=0;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
@@ -163,16 +164,16 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("NP",3,() -> {
+		timeout = wq.addCyclicTask("HP",5,() -> {
 
 			switch (state) {
 			case IDLE:
-				wq.removeTask("NP",timeout);
+				wq.removeTask("HP",timeout);
 				retry=0;
 				read_count = 0;
 				break;
 			case ENTRY:
-				if (++retry > 1000) {
+				if (++retry > 500) {
 					abortReadingLog();
 					return;
 				}
@@ -183,13 +184,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					abortReadingLog();
 					return;
 				}
-				for(int i = 0; i< 5; i++) {
-					if(searchForNextUnreadPackage()) {
-						requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
-						LockSupport.parkNanos(200000);
-					} else
-						break;
-				}
+				if(searchForNextUnreadPackage()) 
+					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
 				break;
 			}
 		});
@@ -202,6 +198,10 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		return isCollecting;
 	}
 
+	public int getTransferRateKb() {
+		return speed;
+	}
+
 	public void abortReadingLog() {
 		if(!isCollecting.get())
 			return;
@@ -209,7 +209,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		logger.writeLocalMsg("[mgc] Abort reading log");
-		wq.removeTask("NP",timeout);
+		wq.removeTask("HP",timeout);
 	}
 
 	@Override
@@ -225,8 +225,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			handleLogData((msg_log_data) o);
 	}
 
-	private synchronized void handleLogEntry(msg_log_entry entry) {
-	
+	private void handleLogEntry(msg_log_entry entry) {
+
 		last_log_id = entry.num_logs - 1;
 		if (last_log_id > -1) {
 			if (entry.id != last_log_id)
@@ -257,12 +257,12 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			stop();
 			props.getLogLoadedProperty().set(false);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-			wq.removeTask("NP",timeout);
+			wq.removeTask("HP",timeout);
 			logger.writeLocalMsg("[mgc] No log available.");
 		}
 	}
 
-	private synchronized void handleLogData(msg_log_data data) {
+	private void handleLogData(msg_log_data data) {
 
 		retry = 0;
 
@@ -281,18 +281,19 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		}
 
 		//	props.getLogLoadedProperty().set(true);
-		fh.setName("in progress");
 
 		unread_packages.set(p, (long) -1);
 		read_count++;
 
+		speed = (int)(data.ofs * 1000 / (1024 * (System.currentTimeMillis() - start)));
+
+		fh.setName("in progress ("+speed+"kb/s)");
 
 		int unread_count = unread_packages.size()-read_count; //getUnreadPackageCount();
 		//	 System.out.println("Package: "+p +" -> "+unread_packages.get(p)+"-> "+unread_count+" -> "+(unread_packages.size()-read_count));
 		props.getProgressProperty().set(1.0f - (float) unread_count / total_package_count);
 		if (unread_count == 0) {
 			stop();
-			long speed = data.ofs * 1000 / (1024 * (System.currentTimeMillis() - start));
 			sendEndNotice();
 			try {
 				modelService.getModelList().clear();
@@ -323,7 +324,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void stop() {
-		wq.removeTask("NP",timeout);
+		wq.removeTask("HP",timeout);
 		sendEndNotice();
 		state = IDLE;
 		isCollecting.set(false);
@@ -369,15 +370,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 		return true;
 	}
-
-	//	private int getUnreadPackageCount() {
-	//		int c = 0;
-	//		for (int i = 0; i < unread_packages.size(); i++) {
-	//			if (unread_packages.get(i) != -1)
-	//				c++;
-	//		}
-	//		return c;
-	//	}
 
 	private int prepareUnreadPackageList(long size) {
 		int count = getPackageNumber(size);
