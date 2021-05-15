@@ -1460,6 +1460,14 @@
 		</Groups>
 		<Validity min="0" max="0.85"/>
 	</KeyFigure>
+	
+	<KeyFigure desc="MSP Memory" uom="" mask="#0" key="MEMMSP">
+		<MSPSource class="sys" field="mem_m"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+		<Validity min="0" max="0.85"/>
+	</KeyFigure>
 
 	<KeyFigure desc="IMU Temperature" uom="°C" mask="#0" key="IMUTEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>

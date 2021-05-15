@@ -51,18 +51,18 @@ public class AnalysisDataModel implements Cloneable {
 	public float    dt_sec = 0;
 
 	private volatile Map<Integer,Double> data = null;
-	private volatile List<Long> grid = null;
+	private static List<Long> grid = new ArrayList<Long>();
 
 	public AnalysisDataModel() {
 		this.data = new HashMap<Integer,Double>();
-		this.grid = new ArrayList<Long>();
+//		this.grid = new ArrayList<Long>();
 	}
 
 	private AnalysisDataModel(Map<Integer,Double> d, List<Long> grid) {
 		this.data = new HashMap<Integer,Double>();
 		this.data.putAll(d);
-		this.grid = new ArrayList<Long>();
-		this.grid.addAll(grid);
+//		this.grid = new ArrayList<Long>();
+//		this.grid.addAll(grid);
 	}
 
 
@@ -80,8 +80,8 @@ public class AnalysisDataModel implements Cloneable {
 	public void set(AnalysisDataModel model) {
 		this.data.clear();
 		this.data.putAll(model.data);
-		this.grid.clear();
-		this.grid.addAll(model.grid);
+//		this.grid.clear();
+//		this.grid.addAll(model.grid);
 	}
 
 	public void clear()  {
@@ -98,14 +98,14 @@ public class AnalysisDataModel implements Cloneable {
 
 	public double getValue(String kf) {
 		int hash = kf.toLowerCase().hashCode();
-		if(data!=null && data.containsKey(hash))
+		if(data!=null && data.containsKey(hash) && data.get(hash)!=null)
 			return data.get(hash);
 		else
 			return 0;
 	}
 
 	public double getValue(KeyFigureMetaData m) {
-		if(data != null && m!=null && data.containsKey(m.hash))
+		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null)
 			return data.get(m.hash);
 		else
 			return Float.NaN;

@@ -383,10 +383,8 @@ public class AnalysisModelService  {
 
 			while(true) {
 
-
 				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
-
-					if(ulogger.isLogging())
+					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
 					state.getRecordingProperty().set(STOPPED);
@@ -400,6 +398,7 @@ public class AnalysisModelService  {
 						System.out.println("Combined Converter continued");
 					}
 					continue;
+
 				}
 
 
