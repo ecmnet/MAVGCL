@@ -164,28 +164,28 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("HP",5,() -> {
+		timeout = wq.addCyclicTask("LP",10,() -> {
 
 			switch (state) {
 			case IDLE:
-				wq.removeTask("HP",timeout);
+				wq.removeTask("LP",timeout);
 				retry=0;
 				read_count = 0;
 				break;
 			case ENTRY:
-				if (++retry > 500) {
+				if (++retry > 50) {
 					abortReadingLog();
 					return;
 				}
 				requestLogList(GET_LAST_LOG_ID);
 				break;
 			case DATA:
-				if (++retry > 500) {
+				if (++retry > 20) {
 					abortReadingLog();
 					return;
 				}
 				if(searchForNextUnreadPackage()) 
-					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size * LOG_PACKAG_DATA_LENGTH);
+					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 				break;
 			}
 		});
@@ -209,7 +209,6 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 		logger.writeLocalMsg("[mgc] Abort reading log");
-		wq.removeTask("HP",timeout);
 	}
 
 	@Override
@@ -250,14 +249,15 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				}
 				retry = 0;
 				state = DATA;
-				requestDataPackages(0, entry.size);
+				if(searchForNextUnreadPackage())
+				  requestDataPackages(0, chunk_size * LOG_PACKAG_DATA_LENGTH );
 
 			}
 		} else {
 			stop();
 			props.getLogLoadedProperty().set(false);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-			wq.removeTask("HP",timeout);
+			wq.removeTask("LP",timeout);
 			logger.writeLocalMsg("[mgc] No log available.");
 		}
 	}
@@ -320,11 +320,11 @@ public class MavlinkLogReader implements IMAVLinkListener {
 			copyFileToLogDir(path, name);
 			fh.setName(name);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-		}
+		} 		
 	}
 
 	private void stop() {
-		wq.removeTask("HP",timeout);
+		wq.removeTask("LP",timeout);
 		sendEndNotice();
 		state = IDLE;
 		isCollecting.set(false);
@@ -384,8 +384,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 	}
 
 	private void requestDataPackages(long offset, long len) {
-		// System.out.println("Request packages from: "+offset+ " ("+len+"
-		// bytes)");
+//		 System.out.println("Request packages from: "+offset+ " ("+len+" bytes) "+retry+"re-tries");
 		msg_log_request_data msg = new msg_log_request_data(255, 1);
 		msg.target_component = 1;
 		msg.target_system = 1;
