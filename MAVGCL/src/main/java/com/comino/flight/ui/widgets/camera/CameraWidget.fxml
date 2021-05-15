@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.media.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
@@ -10,4 +11,5 @@
       <ImageView fx:id="image" fitHeight="150.0" fitWidth="200.0"
            pickOnBounds="true" preserveRatio="true" styleClass="glass" />
      </children>
+     
 </fx:root>

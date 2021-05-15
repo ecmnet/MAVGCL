@@ -42,8 +42,10 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
@@ -53,13 +55,19 @@ import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
-public class CameraWidget extends ChartControlPane  {
+public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private int X = 640 ;
 	private int Y = 480 ;
@@ -67,6 +75,9 @@ public class CameraWidget extends ChartControlPane  {
 
 	@FXML
 	private ImageView        image;
+
+
+	private MediaView        media;
 
 	private IMWVideoSource 	source = null;
 	private boolean			big_size=false;
@@ -78,6 +89,8 @@ public class CameraWidget extends ChartControlPane  {
 	private MSPLogger       logger = null;
 	private Preferences     userPrefs;
 
+	private MediaPlayer     player;
+
 
 
 	public CameraWidget() {
@@ -87,8 +100,20 @@ public class CameraWidget extends ChartControlPane  {
 	}
 
 
+
 	@FXML
 	private void initialize() {
+
+//		media = new MediaView();
+//		this.getChildren().add(media);
+//		media.fitWidthProperty().bind(this.widthProperty());
+//		media.fitHeightProperty().bind(this.heightProperty());
+//
+//		Media m = new Media("file:///Users/ecmnet/Pixhawk/Logs/010521-160341.mp4");
+//		player = new MediaPlayer(m);
+//		media.setVisible(true);
+//		media.setMediaPlayer(player);
+
 
 		this.setFixedRatio((double)Y/X);
 
@@ -99,7 +124,18 @@ public class CameraWidget extends ChartControlPane  {
 			}
 
 			if(newvalue.booleanValue())
-				source.start();
+				if(state.getReplayingProperty().get()) {
+//					image.setVisible(false);
+//					media.setVisible(true);
+//					player.play();
+//					source.stop();
+				}
+				else  {
+					image.setVisible(true);
+//					media.setVisible(false);
+//					player.stop();
+					source.start();
+				}
 			else {
 				if(!recorder.getRecordMP4Property().get())
 					source.stop();
@@ -244,8 +280,44 @@ public class CameraWidget extends ChartControlPane  {
 			e.printStackTrace();
 			return false;
 		}
-	
+
 		isConnected = true;
 		return true;
+	}
+
+	@Override
+	public IntegerProperty getTimeFrameProperty() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public FloatProperty getReplayProperty() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BooleanProperty getIsScrollingProperty() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refreshChart() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public KeyFigurePreset getKeyFigureSelection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setKeyFigureSelection(KeyFigurePreset preset) {
+		// TODO Auto-generated method stub
+
 	}
 }
