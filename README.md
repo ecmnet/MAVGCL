@@ -12,10 +12,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	11/05/21 
+**Development Status:** Last updated 	19/05/21 
 
 * JDK 16 built
 * rtsp protocol for mjpeg
+* Camera proxy on port 8081
 * Camera view now resizable
 * EKF2 height mode annotation (ULOG only)
 * OctTree based 3D map representation visualized in 3DView and XYView (flat representation of the map according to relative altitude)
@@ -67,40 +68,8 @@ Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot12.png)
 
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot11.png)
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot11.png) 
 
-
-**How to build on OSX** *(other platforms may need adjustments in* `build.xml`*)*:
-
-- Clone repository
-- Goto main directory  `cd MAVGCL-master/MAVGCL`
-- Run `ant all`
-
-**How to start after build  (all platforms):**
-
-- Goto directory `/dist`
-
-- Start with `java -jar MAVGAnalysis.jar`
-
-- Set IP address and port in `File->Preferences` and restart (For local SITL use 127.0.0.1:14556 or start with `java -jar MAVGAnalysis.jar --SITL=true`)
-
-- Open `demo_data.mgc`, import PX4Log file or collect data directly from your vehicle
-
-- For video (mjpeg), setup  [uv4l](http://www.linux-projects.org) at port 8080 on your companion with :
-  ​
-  `uv4l --auto-video_nr --sched-rr --mem-lock --driver uvc --server-option '--port=8080'`
-
-  Set video URL in `File->Preferences`: e.g. `http://127.0.0.1:8080/stream/video.mjpeg`
-
-  or 
-
-  run [MAVSlam vision]( https://github.com/ecmnet/MAVSlam) based on Intel® RealSense™ R200 on your companion and point video to port 8080 of your companion.
-
-  
-
-**How to deploy on OSX:**
-
-- Run `ant_deploy`
 
 
 **How to define custom key-figure metadata files:**
