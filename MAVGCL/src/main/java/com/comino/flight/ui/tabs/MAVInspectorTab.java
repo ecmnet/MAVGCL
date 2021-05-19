@@ -105,7 +105,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		});
 
 		message_col.setCellValueFactory(param -> {
-			return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
+			if(param.getValue()!=null)
+			  return param.getValue().isLeaf() ? new SimpleStringProperty("") : param.getValue().getValue().strProperty();
+			return null;
 		});
 
 		message_col.setCellFactory(column -> {

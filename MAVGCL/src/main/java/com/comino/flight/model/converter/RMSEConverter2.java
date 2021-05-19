@@ -44,6 +44,7 @@ public class RMSEConverter2 extends SourceConverter {
 	String kf_sp  = null;
 	int    frame  = 0;
 	String kf_name = null;
+	
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
@@ -58,7 +59,7 @@ public class RMSEConverter2 extends SourceConverter {
 	public double convert(AnalysisDataModel data) {
 
 		double rmse = 0; double kf = 0; double sp = 0;
-
+		
 		List<AnalysisDataModel> list = AnalysisModelService.getInstance().getModelList();
 
 		if(list.size()<frame) {

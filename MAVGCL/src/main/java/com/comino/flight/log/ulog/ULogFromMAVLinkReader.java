@@ -104,6 +104,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
 			if(!control.isConnected())
 				return false;
+			
 
 			if(!MAVPreferences.getInstance().getBoolean(MAVPreferences.ULOGGER, false) && !debug) {
 				if(enable) {

@@ -407,7 +407,7 @@ public class AnalysisModelService  {
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					state.getRecordingProperty().set(READING_HEADER);
-
+//					ulogger.enableLogging(true);
 					state.getLogLoadedProperty().set(false);
 					state.getRecordingProperty().set(COLLECTING);
 					tms_start = System.nanoTime() / 1000;

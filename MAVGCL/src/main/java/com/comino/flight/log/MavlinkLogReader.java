@@ -164,7 +164,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("LP",10,() -> {
+		timeout = wq.addCyclicTask("LP",5,() -> {
 
 			switch (state) {
 			case IDLE:
@@ -173,14 +173,14 @@ public class MavlinkLogReader implements IMAVLinkListener {
 				read_count = 0;
 				break;
 			case ENTRY:
-				if (++retry > 50) {
+				if (++retry > 500) {
 					abortReadingLog();
 					return;
 				}
 				requestLogList(GET_LAST_LOG_ID);
 				break;
 			case DATA:
-				if (++retry > 20) {
+				if (++retry > 200) {
 					abortReadingLog();
 					return;
 				}
