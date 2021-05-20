@@ -41,6 +41,7 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.jfx.extensions.DashLabel;
 import com.comino.mavcom.control.IMAVController;
@@ -49,10 +50,13 @@ import com.comino.mavcom.model.segment.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -72,21 +76,71 @@ public class DetailsWidget extends ChartControlPane {
 
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
+	
+	private final static String[] views = { "Flight", "System" };
 
-	private final static String[] key_figures_details = { "ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
-			null, "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", null, "ALTSL", "ALTTR", "ALTGL", "ALTRE",null, "LIDAR",
-			"FLOWDI", null, "LPOSX", "LPOSY", "LPOSZ", null, 
-		//	"LPOSXYERR", "LPOSZERR", null,
-			"VISIONX", "VISIONY",
-			"VISIONZ", null, "VISIONH", "VISIONR", "VISIONP", null, "SLAMDTT", "SLAMDTO", null,
-		//	"PRECLOCKX", "PRECLOCKY","PRECLOCKW",null,
-			"VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",null, "BATC", "BATH",
-			"BATP", //"BATT", 
-			null, "IMUTEMP", "MSPTEMP",  null,  "CPUPX4", "CPUMSP", "SWIFI", "RSSI", null, "TARM","TBOOT",
-
+	private final static String[][] key_figures_details = { 
+			
+			// Default view
+			
+		    { 
+				"ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
+			    null, 
+			    "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", 
+			    null, 
+			    "ALTSL", "ALTTR", "ALTGL", "ALTRE",
+			    null, 
+			    "LIDAR", "FLOWDI", 
+			    null, 
+			    "LPOSX", "LPOSY", "LPOSZ", 
+			    null, 
+			    "VISIONX", "VISIONY", "VISIONZ", 
+			    null, 
+			    "VISIONH", "VISIONR", "VISIONP", 
+			    null, 
+			    "SLAMDTT", "SLAMDTO", 
+			    null,
+			    "VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",
+			    null, 
+			    "BATC", "BATH", "BATP", 
+			    null, 
+			    "IMUTEMP", "MSPTEMP",  
+			    null,  
+			    "SWIFI", "RSSI", 
+			    null, 
+			    "TARM","TBOOT"
+			},
+		    
+		   
+		    // System view
+		    
+		    {
+		    	"ROLL", "PITCH", "THRUST", 
+		    	null, 
+		    	"GNDV", "CLIMB", 
+		    	null, 
+			    "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", 
+			    null, 
+			    "LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
+		    	null,
+			    "VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",
+			    null, 
+			    "BATC", "BATH", "BATP",
+			    null, 
+			    "IMUTEMP", "MSPTEMP", "BAROTEMP", "BATT",
+			    null,  
+			    "CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
+			    null, 
+			    "MAVGCLNET", "MAVGCLACC",
+			    null,
+			    "TARM","TBOOT"
+		    }
+			
 	};
 	
-
+	@FXML
+	private ComboBox<String> view;
+	
 	@FXML
 	private ScrollPane scroll;
 
@@ -94,7 +148,7 @@ public class DetailsWidget extends ChartControlPane {
 	private GridPane grid;
 
 	private Timeline task = null;
-
+	
 	private List<KeyFigure> figures = null;
 
 	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
@@ -131,6 +185,24 @@ public class DetailsWidget extends ChartControlPane {
 
 	@FXML
 	private void initialize() {
+		
+		view.getItems().addAll(views);
+		view.setEditable(true);
+		view.getEditor().setDisable(true);
+		view.getSelectionModel().clearAndSelect(0);
+		view.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
+			figures.clear(); grid.getChildren().clear();
+			int i = 0;
+			for (String k : key_figures_details[n.intValue()]) {
+				figures.add(new KeyFigure(grid, k, i));
+				i++;
+			}
+//			state.getGPSAvailableProperty().addListener((e, op, np) -> {
+//				setBlockVisibility("RGPSNO",np.booleanValue());		  
+//			});
+		});
+
+		
 		this.setWidth(getPrefWidth());
 	}
 
@@ -145,14 +217,14 @@ public class DetailsWidget extends ChartControlPane {
 	
 
 		int i = 0;
-		for (String k : key_figures_details) {
+		for (String k : key_figures_details[0]) {
 			figures.add(new KeyFigure(grid, k, i));
 			i++;
 		}
 		
-		state.getGPSAvailableProperty().addListener((e, o, n) -> {
-			setBlockVisibility("RGPSNO",n.booleanValue());		  
-		});
+//		state.getGPSAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("RGPSNO",n.booleanValue());		  
+//		});
 		
 //		
 //		state.getCVAvailableProperty().addListener((e, o, n) -> {
@@ -163,10 +235,10 @@ public class DetailsWidget extends ChartControlPane {
 //			setBlockVisibility("VISIONFPS",n.booleanValue());		  
 //		});
 //		
-		state.getSLAMAvailableProperty().addListener((e, o, n) -> {
-			setBlockVisibility("SLAMDTT",n.booleanValue());		  
-		});
-		
+//		state.getSLAMAvailableProperty().addListener((e, o, n) -> {
+//			setBlockVisibility("SLAMDTT",n.booleanValue());		  
+//		});
+//		
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
 				for (KeyFigure figure : figures) {
@@ -184,25 +256,25 @@ public class DetailsWidget extends ChartControlPane {
 
 	}
 	
-	private void setBlockVisibility(String block, boolean visible) {
-		Platform.runLater(() -> {
-		    boolean found = false;
-			for (KeyFigure figure : figures) {
-			  if(block.equals(figure.key)) found = true;
-			  if(found == true ) {
-				  figure.p.setVisible(visible);
-				  grid.getRowConstraints().remove(figure.row);
-				  if(visible)
-					  grid.getRowConstraints().add(figure.row,new RowConstraints(ROWHEIGHT, ROWHEIGHT, ROWHEIGHT));
-				  else
-					  grid.getRowConstraints().add(figure.row,new RowConstraints(0, 0, 0));
-				 if(figure.key==null)
-					 found = false;
-			  }
-				  
-			}	  
-		});			
-	}
+//	private void setBlockVisibility(String block, boolean visible) {
+//		Platform.runLater(() -> {
+//		    boolean found = false;
+//			for (KeyFigure figure : figures) {
+//			  if(block.equals(figure.key)) found = true;
+//			  if(found == true ) {
+//				  figure.p.setVisible(visible);
+//				  grid.getRowConstraints().remove(figure.row);
+//				  if(visible)
+//					  grid.getRowConstraints().add(figure.row,new RowConstraints(ROWHEIGHT, ROWHEIGHT, ROWHEIGHT));
+//				  else
+//					  grid.getRowConstraints().add(figure.row,new RowConstraints(0, 0, 0));
+//				 if(figure.key==null)
+//					 found = false;
+//			  }
+//				  
+//			}	  
+//		});			
+//	}
 
 	private class KeyFigure {
 		String  key = null;
