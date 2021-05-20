@@ -927,7 +927,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Baro.Temp" uom="°C" mask="#0.00" key="BAROTEMP">
+	<KeyFigure desc="Baro Temperature" uom="°C" mask="#0.00" key="BAROTEMP">
 		<ULogSource field="sensor_combined_0.baro_temp_celcius"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
@@ -1417,7 +1417,7 @@
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Batt.Temp" uom="°C" mask="#0" key="BATT">
+	<KeyFigure desc="Batt. Temperature" uom="°C" mask="#0" key="BATT">
 		<MSPSource class="sys" field="bat_temp"></MSPSource>
 		<Groups>
 			<Group>Battery</Group>
@@ -1467,7 +1467,6 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="0" max="0.85"/>
 	</KeyFigure>
 
 	<KeyFigure desc="IMU Temperature" uom="°C" mask="#0" key="IMUTEMP">
@@ -1748,13 +1747,13 @@
 
 
 
-  <KeyFigure desc="MAVGCL Conversion cycle" uom="ms" mask="#0.00" key="MAVGCLACC">
+  <KeyFigure desc="MAVGCL Cycle" uom="ms" mask="#0" key="MAVGCLACC">
 		<Groups>
 			<Group>System</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="MAVGCL Network" uom="kb/s" mask="#0.00" key="MAVGCLNET">
+  <KeyFigure desc="MAVGCL Network" uom="kb/s" mask="#0.0" key="MAVGCLNET">
 		<Groups>
 			<Group>System</Group>
 		</Groups>
