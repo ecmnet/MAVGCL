@@ -222,23 +222,6 @@ public class DetailsWidget extends ChartControlPane {
 			i++;
 		}
 		
-//		state.getGPSAvailableProperty().addListener((e, o, n) -> {
-//			setBlockVisibility("RGPSNO",n.booleanValue());		  
-//		});
-		
-//		
-//		state.getCVAvailableProperty().addListener((e, o, n) -> {
-//			setBlockVisibility("VISIONH",n.booleanValue());		  
-//		});
-//		
-//		state.getCVAvailableProperty().addListener((e, o, n) -> {
-//			setBlockVisibility("VISIONFPS",n.booleanValue());		  
-//		});
-//		
-//		state.getSLAMAvailableProperty().addListener((e, o, n) -> {
-//			setBlockVisibility("SLAMDTT",n.booleanValue());		  
-//		});
-//		
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
 				for (KeyFigure figure : figures) {
@@ -249,6 +232,11 @@ public class DetailsWidget extends ChartControlPane {
 				}
 			});
 		});
+		
+		state.getArmedProperty().addListener((e, o, n) -> {
+			if(n.booleanValue())
+				view.getSelectionModel().clearAndSelect(0);	
+		});
 
 		task.play();
 
@@ -256,25 +244,7 @@ public class DetailsWidget extends ChartControlPane {
 
 	}
 	
-//	private void setBlockVisibility(String block, boolean visible) {
-//		Platform.runLater(() -> {
-//		    boolean found = false;
-//			for (KeyFigure figure : figures) {
-//			  if(block.equals(figure.key)) found = true;
-//			  if(found == true ) {
-//				  figure.p.setVisible(visible);
-//				  grid.getRowConstraints().remove(figure.row);
-//				  if(visible)
-//					  grid.getRowConstraints().add(figure.row,new RowConstraints(ROWHEIGHT, ROWHEIGHT, ROWHEIGHT));
-//				  else
-//					  grid.getRowConstraints().add(figure.row,new RowConstraints(0, 0, 0));
-//				 if(figure.key==null)
-//					 found = false;
-//			  }
-//				  
-//			}	  
-//		});			
-//	}
+
 
 	private class KeyFigure {
 		String  key = null;
