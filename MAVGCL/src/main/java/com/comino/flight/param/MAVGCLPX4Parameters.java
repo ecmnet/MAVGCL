@@ -105,16 +105,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
-		state.getLogLoadedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-				if(!newValue && control.isConnected()) {
-					is_reading = false;
-					wq.addSingleTask("LP",300, () -> refreshParameterList(true));
-				}
-			}
-		});
-
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
 				is_reading = false; 
@@ -125,13 +115,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 					state.getParamLoadedProperty().set(false);
 				}
 			} else {
-				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
 			}
 		});
 		
 		state.getArmedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
-				wq.addSingleTask("LP",300, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
 			}
 		});
 
