@@ -78,7 +78,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
-	private boolean is_reading = false;
+	private boolean is_reading   = false;
 
 	//	private ScheduledFuture<?> timeout = null;
 	private int timeout=0;
@@ -109,8 +109,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			@Override
 			public void changed(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 				if(!newValue && control.isConnected()) {
-					refreshParameterList(true);
 					is_reading = false;
+					wq.addSingleTask("LP",300, () -> refreshParameterList(true));
 				}
 			}
 		});
@@ -145,7 +145,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	}
 
 	public void refreshParameterList(boolean loaded) {
-		if(!is_reading && !control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) {
+		if(!is_reading && !control.getCurrentModel().sys.isStatus(Status.MSP_ARMED) && !state.getLogLoadedProperty().get()) {
+			is_reading = true;
 			property.setValue(null);
 			parameterList.clear();
 			msg_param_request_list msg = new msg_param_request_list(255,1);
@@ -155,7 +156,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			state.getParamLoadedProperty().set(!loaded);
 			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
-			is_reading = true;
 
 			wq.removeTask("LP", timeout);
 			timeout = wq.addSingleTask("LP", 10000, () -> {
@@ -176,7 +176,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	@Override
 	public void received(Object _msg) {
 
-		if( _msg instanceof msg_param_value && metadata != null && property != null) {
+		if( _msg instanceof msg_param_value && is_reading) {
 
 			long flight_time = 0; double val;
 
@@ -191,7 +191,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			if(attributes == null)
 				attributes = new ParameterAttributes(msg.getParam_id(),"Default Group");
 			
-			//System.out.println(attributes.value+"/"+val);
+			// System.out.println(msg.sysId+"/"+msg.param_index);
 
 			//if(attributes.value != val) {
 
