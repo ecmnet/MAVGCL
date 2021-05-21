@@ -133,7 +133,7 @@ public class DetailsWidget extends ChartControlPane {
 			    null,
 			    "DEBUGX","DEBUGY","DEBUGZ",
 			    null, 
-			    "MAVGCLNET", "MAVGCLACC",
+			    "MAVGCLNET", "MAVGCLACC", 
 			    null,
 			    "TARM","TBOOT"
 		    }
