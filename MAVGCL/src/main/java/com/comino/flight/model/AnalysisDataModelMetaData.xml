@@ -1735,18 +1735,6 @@
 		</Groups>
   </KeyFigure>
 
-<!--
-
-  <KeyFigure desc="UI ThreadTime" uom="ms" mask="#0.00" key="MAVGCLPERF">
-		<Groups>
-			<Group>_Debug</Group>
-		</Groups>
-  </KeyFigure>
- -->
-
-
-
-
   <KeyFigure desc="MAVGCL Cycle" uom="ms" mask="#0" key="MAVGCLACC">
 		<Groups>
 			<Group>System</Group>
