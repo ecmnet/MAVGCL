@@ -130,6 +130,8 @@ public class DetailsWidget extends ChartControlPane {
 			    "IMUTEMP", "MSPTEMP", "BAROTEMP", "BATT",
 			    null,  
 			    "CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
+			    null,
+			    "DEBUGX","DEBUGY","DEBUGZ",
 			    null, 
 			    "MAVGCLNET", "MAVGCLACC",
 			    null,
