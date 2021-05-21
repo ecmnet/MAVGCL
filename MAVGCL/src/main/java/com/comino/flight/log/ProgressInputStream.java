@@ -41,9 +41,9 @@ import java.util.List;
 
 public class ProgressInputStream extends FilterInputStream {
 
-	private final int size;
+	private final float size;
     private long bytesRead;
-    private int percent;
+    private float percent;
     private List<Listener> listeners = new ArrayList<>();
 
     public ProgressInputStream(InputStream in) {
@@ -107,7 +107,7 @@ public class ProgressInputStream extends FilterInputStream {
         if (numBytesRead.longValue() > 0) {
             bytesRead += numBytesRead.longValue();
             if (bytesRead * 100 / size > percent) {
-                percent = (int) (bytesRead * 100 / size);
+                percent = bytesRead  / size;
                 for (Listener listener : listeners) {
                     listener.onProgressChanged(percent);
                 }
@@ -117,6 +117,6 @@ public class ProgressInputStream extends FilterInputStream {
     }
 
     public interface Listener {
-        void onProgressChanged(int percentage);
+        void onProgressChanged(float percentage);
     }
 }

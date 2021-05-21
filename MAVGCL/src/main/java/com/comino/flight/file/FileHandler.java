@@ -77,6 +77,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
@@ -246,7 +247,7 @@ public class FileHandler {
 						ProgressInputStream raw = new ProgressInputStream(new FileInputStream(file));
 						raw.addListener(new ProgressInputStream.Listener() {
 							@Override
-							public void onProgressChanged(int percentage) {
+							public void onProgressChanged(float percentage) {
 								state.getProgressProperty().set(percentage);
 							}
 						});
@@ -261,7 +262,7 @@ public class FileHandler {
 							raw = new ProgressInputStream(new FileInputStream(file));
 							raw.addListener(new ProgressInputStream.Listener() {
 								@Override
-								public void onProgressChanged(int percentage) {
+								public void onProgressChanged(float percentage) {
 									state.getProgressProperty().set(percentage);
 								}
 							});
