@@ -67,6 +67,8 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class RecordControlWidget extends ChartControlPane implements IMSPStatusChangedListener {
+	
+	private static final int MIN_RECORDING_MS   = 5000;
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_LANDED		= 1;
@@ -250,7 +252,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 					blink.stop();
 
 					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
-							modelService.getTotalRecordingTimeMS() / 1000 > 30 ) {
+							modelService.getTotalRecordingTimeMS() > MIN_RECORDING_MS ) {
 						try {
 							FileHandler.getInstance().autoSave();
 						} catch (IOException e) {
