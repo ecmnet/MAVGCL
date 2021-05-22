@@ -36,6 +36,7 @@ package com.comino.flight.ui.sidebar;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -127,7 +128,7 @@ public class DetailsWidget extends ChartControlPane {
 			    null, 
 			    "BATV","BATC", "BATH", "BATP",
 			    null, 
-			    "IMUTEMP", "MSPTEMP", "BAROTEMP", "BATT",
+			    "IMUTEMP", "MSPTEMP",  "BATT",
 			    null,  
 			    "CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
 			    null,
@@ -154,8 +155,8 @@ public class DetailsWidget extends ChartControlPane {
 	private List<KeyFigure> figures = null;
 
 	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
-
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	private Preferences prefs = MAVPreferences.getInstance();
 	
 
 	public DetailsWidget() {
@@ -191,7 +192,7 @@ public class DetailsWidget extends ChartControlPane {
 		view.getItems().addAll(views);
 		view.setEditable(true);
 		view.getEditor().setDisable(true);
-		view.getSelectionModel().clearAndSelect(0);
+		
 		view.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			figures.clear(); grid.getChildren().clear();
 			int i = 0;
@@ -199,6 +200,7 @@ public class DetailsWidget extends ChartControlPane {
 				figures.add(new KeyFigure(grid, k, i));
 				i++;
 			}
+			prefs.putInt(MAVPreferences.VIEW, n.intValue());
 //			state.getGPSAvailableProperty().addListener((e, op, np) -> {
 //				setBlockVisibility("RGPSNO",np.booleanValue());		  
 //			});
@@ -216,10 +218,13 @@ public class DetailsWidget extends ChartControlPane {
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setBorder(Border.EMPTY);
+		
+		int init_view = prefs.getInt(MAVPreferences.VIEW, 0);
+		view.getSelectionModel().clearAndSelect(init_view);
 	
 
 		int i = 0;
-		for (String k : key_figures_details[0]) {
+		for (String k : key_figures_details[init_view]) {
 			figures.add(new KeyFigure(grid, k, i));
 			i++;
 		}
