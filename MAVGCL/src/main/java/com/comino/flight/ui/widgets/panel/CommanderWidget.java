@@ -52,6 +52,7 @@ import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
+import com.comino.mavutils.MSPMathUtils;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -147,7 +148,10 @@ public class CommanderWidget extends ChartControlPane  {
 		land_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
 		land_command.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, 0, 2, 0, Float.NaN );
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
+				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
+					logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+			}, 0, 0, 0, model.state.h );
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
