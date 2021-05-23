@@ -61,7 +61,7 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
-	public static final int DEFAULT_INTERVAL_US  = 20000;
+	public static final int DEFAULT_INTERVAL_US  = 25000;
 	public static final int MAVHIRES_INTERVAL_US = 10000;
 	public static final int HISPEED_INTERVAL_US  = 5000;
 
