@@ -160,8 +160,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private volatile int current_x_pt      = 0;
 
-	private volatile int current_x0_pt     = 0;
-	private volatile int current_x1_pt     = 0;
+	private volatile int current_x0_pt         = 0;
+	private volatile int current_x0_pt_scroll  = 0;
+	private volatile int current_x1_pt         = 0;
 
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
@@ -305,7 +306,20 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setStroke(Color.color(0.9,0.6,1.0,0.5));
 		chartArea.getChildren().add(measure);
 
+//		linechart.setOnScrollStarted((event) -> {
+//			current_x0_pt_scroll = current_x0_pt;
+//		});
+		
 
+//		linechart.setOnScroll((event) -> {
+//
+//			System.out.println(current_x0_pt_scroll+"/"+event.getTotalDeltaX());
+//			current_x0_pt =  current_x0_pt_scroll + (int)(event.getTotalDeltaX());
+//			if(current_x0_pt < 0) current_x0_pt = 0;
+//			updateRequest();
+//
+//		});
+		
 		linechart.setOnMouseExited(mouseEvent -> {
 			for(IChartSyncControl sync : syncCharts)
 				sync.setMarker(0,0);	
@@ -314,8 +328,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
 		});
+	
 
 		linechart.setOnMouseMoved(mouseEvent -> {
+			
 
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
 				for(IChartSyncControl sync : syncCharts)
@@ -449,6 +465,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			mouseEvent.consume();
 		});
+	
 
 		readRecentList();
 
@@ -805,17 +822,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void setXResolution(float frame) {
+		
+		int interval = dataService.getCollectorInterval_ms();
 
 		if(frame >= 200)
-			resolution_ms = dataService.isCollecting()  ? 500 : 500;
+			resolution_ms = dataService.isCollecting()  ? 500 : 10 * interval;
 		else if(frame >= 100)
-			resolution_ms = dataService.isCollecting()  ? 200 : 100;
+			resolution_ms = dataService.isCollecting()  ? 200 : 4 * interval;
 		else if(frame >= 60)
-			resolution_ms = dataService.isCollecting()  ? 100 : 50;
+			resolution_ms = dataService.isCollecting()  ? 100 : 2 * interval;
 		else if(frame >= 30)
-			resolution_ms = dataService.isCollecting()  ? 50 : 25;
+			resolution_ms = dataService.isCollecting()  ? 50  : interval;
 		else 
-			resolution_ms = dataService.isCollecting()  ? 50  : dataService.getCollectorInterval_ms();
+			resolution_ms = dataService.isCollecting()  ? 50  : interval;
 
 		timeframe = frame;
 
