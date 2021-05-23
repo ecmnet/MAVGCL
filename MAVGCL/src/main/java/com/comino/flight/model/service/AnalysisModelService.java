@@ -391,7 +391,9 @@ public class AnalysisModelService  {
 					if(!state.getReplayingProperty().get())
 						current.setValue("SWIFI", 0);
 					converter_running = false;
-
+					perf = 0;
+					current.setValue("MAVGCLNET", 0);
+					current.setValue("MAVGCLACC", perf);
 					synchronized(converter) {
 						System.out.println("Combined Converter is waiting");
 						try { 	this.wait(); } catch (InterruptedException e) { }
