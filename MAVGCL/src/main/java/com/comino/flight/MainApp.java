@@ -177,6 +177,8 @@ public class MainApp extends Application  {
 	private String command_line_options = null;
 	
 	private final WorkQueue wq = WorkQueue.getInstance();
+
+	private SimpleNTPServer ntp_server;
 	
 
 	public MainApp() {
@@ -227,7 +229,8 @@ public class MainApp extends Application  {
 			ExecutorService.create();
 			
 			
-			new SimpleNTPServer().start();
+			ntp_server = new SimpleNTPServer();
+			ntp_server.start();
 
 			FXMLLoadHelper.setApplication(this);
 
@@ -416,6 +419,7 @@ public class MainApp extends Application  {
 	@Override
 	public void stop() throws Exception {
 		System.out.println("[mgc] Closing...");
+		ntp_server.stop();
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.shutdown();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
