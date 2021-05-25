@@ -76,6 +76,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
+import com.comino.ntp.SimpleNTPServer;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -224,6 +225,9 @@ public class MainApp extends Application  {
 			System.out.println("Initializing application ( Java: "+Runtime.version()+")"); 
 
 			ExecutorService.create();
+			
+			
+			new SimpleNTPServer().start();
 
 			FXMLLoadHelper.setApplication(this);
 
