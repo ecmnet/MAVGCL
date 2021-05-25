@@ -145,7 +145,7 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 
-		groups.getItems().add("-none-");
+		groups.getItems().add("-select group-");
 		groups.setEditable(true);
 		groups.getSelectionModel().clearAndSelect(0);
 		groups.setVisibleRowCount(50);
