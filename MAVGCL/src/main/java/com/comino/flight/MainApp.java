@@ -230,7 +230,12 @@ public class MainApp extends Application  {
 			
 			
 			ntp_server = new SimpleNTPServer();
-			ntp_server.start();
+			
+			try {
+				ntp_server.start();
+			} catch (Exception e1) {
+				System.out.println("NTP time server not started.");
+			}
 
 			FXMLLoadHelper.setApplication(this);
 
