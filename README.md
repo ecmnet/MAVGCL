@@ -12,13 +12,11 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	19/05/21 
+**Development Status:** Last updated 	25/05/21 
 
+* ntp server functionality added
 * JDK 16 built
 * rtsp protocol for mjpeg
-* Camera proxy on port 8081
-* Camera view now resizable
-* EKF2 height mode annotation (ULOG only)
 * OctTree based 3D map representation visualized in 3DView and XYView (flat representation of the map according to relative altitude)
 * switched to maven based build
 
