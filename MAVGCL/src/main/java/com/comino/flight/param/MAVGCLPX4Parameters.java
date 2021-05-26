@@ -115,13 +115,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 					state.getParamLoadedProperty().set(false);
 				}
 			} else {
-				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",1500, () -> refreshParameterList(true));
 			}
 		});
 		
 		state.getArmedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
-				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",1500, () -> refreshParameterList(true));
 			}
 		});
 
@@ -148,7 +148,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 			wq.removeTask("LP", timeout);
-			timeout = wq.addSingleTask("LP", 10000, () -> {
+			timeout = wq.addSingleTask("LP", 20000, () -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				MSPLogger.getInstance().writeLocalMsg("Timeout reading parameters",
