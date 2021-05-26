@@ -424,7 +424,6 @@ public class MainApp extends Application  {
 	@Override
 	public void stop() throws Exception {
 		System.out.println("[mgc] Closing...");
-		ntp_server.stop();
 		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 		control.shutdown();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
@@ -432,6 +431,7 @@ public class MainApp extends Application  {
 		MAVPreferences.getInstance().putDouble("stage.width", primaryStage.getWidth());
 		MAVPreferences.getInstance().putDouble("stage.height", primaryStage.getHeight());
 		MAVPreferences.getInstance().flush();
+		ntp_server.stop();
 		try { Thread.sleep(200); } catch(Exception e) { }
 		System.exit(0);
 
