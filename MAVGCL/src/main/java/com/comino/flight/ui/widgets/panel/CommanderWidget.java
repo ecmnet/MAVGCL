@@ -151,7 +151,7 @@ public class CommanderWidget extends ChartControlPane  {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
 				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
 					logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
-			}, 0, 0, 0, model.state.h );
+			}, 0, 0, 0, model.attitude.y );
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
