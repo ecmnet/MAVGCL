@@ -63,7 +63,7 @@ public class AnalysisModelService  {
 
 	public static final int DEFAULT_INTERVAL_US  = 25000;
 	public static final int MAVHIRES_INTERVAL_US = 10000;
-	public static final int HISPEED_INTERVAL_US  = 5000;
+	public static final int HISPEED_INTERVAL_US  = 10000;
 
 	public static  final int STOPPED		 	= 0;
 	public static  final int PRE_COLLECTING 	= 1;
