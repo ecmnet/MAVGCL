@@ -46,7 +46,7 @@
 				prefWidth="125.0" />
 			<HBox fx:id="bckglegend" layoutX="785.0" prefHeight="19"
 				prefWidth="400" layoutY="2.0" spacing="10" />
-			<Button fx:id="export" layoutX="1350.0" prefHeight="19.0"
+			<Button fx:id="export" layoutX="815.0" prefHeight="20.0"
 				mnemonicParsing="false" text="PNG export" />
 		</Pane>
 	</bottom>

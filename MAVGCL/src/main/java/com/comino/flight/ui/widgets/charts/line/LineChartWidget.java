@@ -537,6 +537,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 		});
 
+		export.setVisible(false);
 		export.setOnAction((ActionEvent event)-> {
 			saveAsPng(System.getProperty("user.home"));
 			event.consume();
@@ -597,6 +598,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		annotations.setSelected(false);
 
 		bckgmode.getSelectionModel().selectedIndexProperty().addListener((observable, ov, nv) -> {
+			export.setVisible(nv.intValue() == 0);
 			mode.setModeType(nv.intValue());
 			updateRequest();
 		});
