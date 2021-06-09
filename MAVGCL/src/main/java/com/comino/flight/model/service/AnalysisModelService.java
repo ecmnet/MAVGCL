@@ -489,10 +489,10 @@ public class AnalysisModelService  {
 					tms_last = current.tms;
 
 					// Slow down conversion if not recording
-					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 1700000 );
+					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 3500000 );
 				}
 
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 1700000 );
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3500000 );
 			}
 		}
 	}
