@@ -42,6 +42,7 @@ import java.util.Map.Entry;
 
 import org.mavlink.messages.MAV_PARAM_TYPE;
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_param_request_read;
 import org.mavlink.messages.lquac.msg_param_set;
 
 import com.comino.flight.MainApp;
@@ -195,11 +196,11 @@ public class ParameterWidget extends ChartControlPane  {
 						// Issue: BAT parameters are always sent back when changing a parameter.
 						//System.out.println(wq.isInQueue("LP", timeout)+" P:"+p.name);
 						if(wq.isInQueue("LP", timeout)) {
+							wq.removeTask("LP", timeout);  timeout_count=0;
 							BigDecimal bd = new BigDecimal(p.value).setScale(p.decimals,BigDecimal.ROUND_HALF_UP);
 							MSPLogger.getInstance().writeLocalMsg("[mgc] "+p.name+" set to "+bd.toPlainString(),MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 							if(p.reboot_required)
 								MSPLogger.getInstance().writeLocalMsg("Change of "+p.name+" requires reboot",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-							wq.removeTask("LP", timeout);  timeout_count=0;
 						}
 
 					});
@@ -454,7 +455,7 @@ public class ParameterWidget extends ChartControlPane  {
 			control.sendMAVLinkMessage(msg);
 			timeout = wq.addCyclicTask("LP",300,() -> {
 				if(++timeout_count > 3) {
-					wq.removeTask("LP", timeout);
+					wq.removeTask("LP", timeout); timeout_count = 0;
 					MSPLogger.getInstance().writeLocalMsg(att.name+" was not set to "+val+" (timeout)",
 							MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 					setValueOf(editor,att.value);

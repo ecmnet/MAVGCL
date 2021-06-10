@@ -1890,6 +1890,14 @@
 		</Groups>
 	</KeyFigure>
 	
+	<KeyFigure desc="Depth.FrameRate" uom="fps" mask="#0" key="SLAMFPS">
+		<MSPSource class="slam" field="fps"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+	
 	<KeyFigure desc="Offboard.Flags" uom="m/s" mask="#0.0" key="SLAMFLG">
 		<MSPSource class="slam" field="flags"></MSPSource>
 		<Groups>

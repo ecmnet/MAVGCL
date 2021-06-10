@@ -153,7 +153,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 				RTPsocket.setReceiveBufferSize(512*1024);
-				RTPsocket.setSoTimeout(40);
+				RTPsocket.setSoTimeout(200);
 			
 			}
 			catch (SocketException se) {
