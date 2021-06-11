@@ -52,7 +52,7 @@ public class Badge extends Label {
 
 	private int     mode   = MODE_OFF;
 	private String  color  = null;
-	private String  textColor   = null;
+	private String  textColor   = "#F0F0F0";
 	private boolean toggle = false;
 	private Timeline timeline = null;
 
@@ -123,6 +123,11 @@ public class Badge extends Label {
 			this.textColor ="#F0F0F0";
 		else
 			this.textColor ="#"+Integer.toHexString(color.darker().darker().darker().darker().hashCode());
+	}
+	
+	public void setBackgroundColorWhiteText(Color color) {
+		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
+			this.textColor ="#F0F0F0";
 	}
 
 	public void setRate(String rate) {
