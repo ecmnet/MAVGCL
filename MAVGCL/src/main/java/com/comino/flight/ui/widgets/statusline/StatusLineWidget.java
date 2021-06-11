@@ -74,6 +74,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 
 	@FXML
+	private Badge ready;
+
+	@FXML
 	private Badge driver;
 
 	@FXML
@@ -93,7 +96,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge ekf;
-	
+
 	@FXML
 	private Badge fps;
 
@@ -140,13 +143,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				
+
 				if((now - last) < 200000000)
 					return;
 				last = now;
 
 				List<AnalysisDataModel> list = null;
-					
+
 				if(model.slam.wpcount > 0) {
 					wp.setText(String.format("WP %d", model.slam.wpcount));
 					wp.setMode(Badge.MODE_ON);
@@ -201,15 +204,24 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 				if(control.isConnected()) {
 					driver.setText(control.getCurrentModel().sys.getSensorString());
-					if(!control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
-						driver.setBackgroundColor(Color.DARKRED);
-					else {
+					if(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.web("#1c6478"));
-					}
 					driver.setMode(Badge.MODE_ON);
+					ready.setMode(Badge.MODE_ON);
+					if(model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY) && 
+					   model.sys.isStatus(Status.MSP_LPOS_VALID) &&
+					   getEKF2Status() != 4) {
+						ready.setText("READY");
+						ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
+					}
+					else {
+						ready.setText("NOT READY");
+						ready.setBackgroundColorWhiteText(Color.RED);
+					}
 				}
 				else {
-					driver.setText("Offline");
+					driver.setText("No driver information");
+					ready.setMode(Badge.MODE_OFF);
 				}
 
 				list = collector.getModelList();
@@ -281,7 +293,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 			}
-			
+
 		};
 
 
@@ -293,8 +305,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.control = control;
 		this.model = control.getCurrentModel();
 		this.state = StateProperties.getInstance();
-
-
+		
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			rc.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			gpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
@@ -302,6 +313,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			driver.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			controller.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 			ekf.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+			ready.setDisable(!n.isStatus(Status.MSP_CONNECTED));
 
 		});
 
@@ -346,6 +358,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			}
 		});
 		task.start();
+
 	}
 
 	@Override
