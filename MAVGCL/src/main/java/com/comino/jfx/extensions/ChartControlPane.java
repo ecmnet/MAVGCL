@@ -57,7 +57,7 @@ import javafx.util.Duration;
 
 public class ChartControlPane extends Pane {
 
-	private static final int RESIZE_MARGIN = 25;
+	private static final int ACTION_MARGIN = 25;
 
 	protected IMAVController control = null;
 
@@ -79,8 +79,11 @@ public class ChartControlPane extends Pane {
 	private BooleanProperty fade       = new SimpleBooleanProperty(false);
 	private BooleanProperty moveable   = new SimpleBooleanProperty(false);
 	private BooleanProperty resizable  = new SimpleBooleanProperty(false);
+	private BooleanProperty actionable = new SimpleBooleanProperty(false);
 
 	public boolean is_resizing = false;
+	public boolean is_action   = false;
+
 
 	private String prefKey = MAVPreferences.CTRLPOS+this.getClass().getSimpleName().toUpperCase();
 
@@ -148,6 +151,7 @@ public class ChartControlPane extends Pane {
 
 			if(moveable.get() || resizable.get()) {
 				is_resizing = isResizeEvent(event);
+				is_action   = isActionEvent(event);
 				mouseX = event.getSceneX() ;
 				mouseY = event.getSceneY() ;
 			}
@@ -196,6 +200,11 @@ public class ChartControlPane extends Pane {
 				MAVPreferences.getInstance().putDouble(prefKey+"SX",getWidth());
 				MAVPreferences.getInstance().putDouble(prefKey+"SY",getHeight());
 			}
+			
+			if(actionable.get() && is_action) {
+				perform_action();
+			}
+			
 			this.setCursor(Cursor.DEFAULT);
 			event.consume();
 		});
@@ -207,6 +216,11 @@ public class ChartControlPane extends Pane {
 				this.setCursor(Cursor.DEFAULT);
 		});
 
+	}
+	
+	protected void perform_action() {
+		// to be implemented in child classes
+		System.out.println("Action of "+this.getClass().getSimpleName());
 	}
 	
 	public void setFixedRatio(double val) {
@@ -237,6 +251,14 @@ public class ChartControlPane extends Pane {
 
 	public boolean getMoveable() {
 		return moveable.get();
+	}
+	
+	public void setActionable(boolean val) {
+		actionable.set(val);
+	}
+
+	public boolean getActionable() {
+		return actionable.get();
 	}
 
 	public void setResizable(boolean val) {
@@ -278,26 +300,31 @@ public class ChartControlPane extends Pane {
 			return false;
 		}
 
-		if(event.getY() > (getHeight() - RESIZE_MARGIN)) {
-			if(event.getX() > (getWidth() - RESIZE_MARGIN)) {
+		if(event.getY() > (getHeight() - ACTION_MARGIN)) {
+			if(event.getX() > (getWidth() - ACTION_MARGIN)) {
 				setCursor(Cursor.SE_RESIZE);
 				return true;
 			}
-			//        	if(event.getX() < RESIZE_MARGIN) {
-			//        		setCursor(Cursor.SW_RESIZE);
-			//        		return true;
-			//        	}
+		
 		} 
-		//        if(event.getY() < RESIZE_MARGIN) {
-		//        	if(event.getX() > (initWidth - RESIZE_MARGIN)) {
-		//        		setCursor(Cursor.NE_RESIZE);
-		//        		return true;
-		//        	}
-		//        	if(event.getX() < RESIZE_MARGIN) {
-		//        		setCursor(Cursor.NW_RESIZE);
-		//        		return true;
-		//        	}
-		//        }
+		setCursor(Cursor.DEFAULT);
+		return false;
+	}
+	
+	private boolean isActionEvent(MouseEvent event) {
+		
+		if(!actionable.get()) {
+			setCursor(Cursor.DEFAULT);
+			return false;
+		}
+
+		if(event.getY() < (ACTION_MARGIN)) {
+			if(event.getX() < (ACTION_MARGIN)) {
+				setCursor(Cursor.HAND);
+				return true;
+			}
+		
+		} 
 		setCursor(Cursor.DEFAULT);
 		return false;
 	}

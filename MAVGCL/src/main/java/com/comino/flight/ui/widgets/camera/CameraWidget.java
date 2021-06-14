@@ -45,7 +45,9 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.charts.IChartControl;
+import com.comino.flight.ui.widgets.panel.ControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
@@ -90,6 +92,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private Preferences     userPrefs;
 
 	private MediaPlayer     player;
+	private ControlWidget widget;
 
 
 
@@ -215,6 +218,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
+	
+	
 
 	private void resize(boolean big, int maxX, int maxY) {
 		Platform.runLater(() -> {
@@ -231,12 +236,22 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 	}
 
-	public void setup(IMAVController control) {
+	public void setup(IMAVController control,FlightControlPanel flightControl) {
 		this.control = control;
+		this.widget  = flightControl.getControl();
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 	}
+	
+	
+
+
+	@Override
+	protected void perform_action() {
+       widget.getVideoVisibility().setValue(false);
+	}       
+
 
 
 	private boolean connect() {
