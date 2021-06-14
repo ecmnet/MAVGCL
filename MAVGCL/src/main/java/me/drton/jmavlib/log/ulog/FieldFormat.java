@@ -12,7 +12,10 @@ public class FieldFormat {
 
     public FieldFormat(String formatStr) {
         String[] p = formatStr.split(" ");
-        name = p[1];
+        if(p.length > 1)
+           name = p[1];
+        else
+           name = "invalid";
         if (p[0].contains("[")) {
             // Array
             String[] q = p[0].split("\\[");
@@ -91,7 +94,8 @@ public class FieldFormat {
         } else if (type.equals("char")) {
             v = buffer.get();
         } else {
-            throw new RuntimeException("Unsupported type: " + type);
+        	v=0;
+         //   throw new RuntimeException("Unsupported type: " + type);
         }
         return v;
     }
