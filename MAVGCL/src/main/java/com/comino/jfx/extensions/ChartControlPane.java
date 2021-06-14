@@ -217,6 +217,9 @@ public class ChartControlPane extends Pane {
 			if(actionable.get()) {
 				is_action   = isActionEvent(event);
 			} 
+			
+			if(!is_action && !is_resizing)
+				setCursor(Cursor.DEFAULT);
 		});
 
 	}
@@ -310,7 +313,6 @@ public class ChartControlPane extends Pane {
 			}
 		
 		} 
-		setCursor(Cursor.DEFAULT);
 		return false;
 	}
 	
@@ -328,7 +330,6 @@ public class ChartControlPane extends Pane {
 			}
 		
 		} 
-		setCursor(Cursor.DEFAULT);
 		return false;
 	}
 
