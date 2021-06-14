@@ -208,15 +208,14 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						driver.setBackgroundColor(Color.web("#1c6478"));
 					driver.setMode(Badge.MODE_ON);
 					ready.setMode(Badge.MODE_ON);
-					if(model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY) && 
-					   model.sys.isStatus(Status.MSP_LPOS_VALID) &&
-					   getEKF2Status() != 4) {
-						ready.setText("READY");
+					if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 						ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
+						ready.setText("READY");
+						
 					}
 					else {
-						ready.setText("NOT READY");
 						ready.setBackgroundColorWhiteText(Color.RED);
+						ready.setText("NOT READY");
 					}
 				}
 				else {
