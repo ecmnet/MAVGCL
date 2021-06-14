@@ -212,8 +212,11 @@ public class ChartControlPane extends Pane {
 		setOnMouseMoved(event -> {
 			if(resizable.get()) {
 				is_resizing = isResizeEvent(event);
-			} else
-				this.setCursor(Cursor.DEFAULT);
+			} 
+			
+			if(actionable.get()) {
+				is_action   = isActionEvent(event);
+			} 
 		});
 
 	}
