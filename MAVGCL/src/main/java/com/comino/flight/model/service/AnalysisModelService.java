@@ -129,11 +129,16 @@ public class AnalysisModelService  {
 		this.ulogger = new ULogFromMAVLinkReader(control);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
+			
+			if(state.getLogLoadedProperty().get())
+				return;
+			
 			if(nv.booleanValue()) {
 
 				synchronized(converter) {
 					converter.notify();
 				}
+				
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				if(!model.sys.isStatus(Status.MSP_INAIR)) {
 					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);

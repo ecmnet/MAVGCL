@@ -239,6 +239,7 @@ public class FileHandler {
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());		
 						converter.doConversion();	
 						ulogFields = reader.getFieldList();
+						state.getLogLoadedProperty().set(true);
 					}
 
 					if(file.getName().endsWith("mgc")) {
@@ -271,12 +272,12 @@ public class FileHandler {
 							try {
 								modelService.clearModelList();
 								modelService.setModelList(gson.fromJson(reader,listType));
-
 							} catch(Exception e1) {
 								MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
 								reader.close();
 								name = "";
 								state.getProgressProperty().set(StateProperties.NO_PROGRESS);
+								state.getLogLoadedProperty().set(false);
 								return null;
 							}
 						}

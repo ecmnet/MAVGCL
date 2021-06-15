@@ -67,7 +67,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class RecordControlWidget extends ChartControlPane implements IMSPStatusChangedListener {
-	
+
 	private static final int MIN_RECORDING_MS   = 5000;
 
 	private static final int TRIG_ARMED 		= 0;
@@ -157,8 +157,8 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 				);
 
 		recording.setOnMousePressed(event -> {
-		   if(!modelService.isCollecting())
-			enablemodetrig.selectedProperty().set(false);
+			if(!modelService.isCollecting())
+				enablemodetrig.selectedProperty().set(false);
 		});
 
 		recording.selectedProperty().set(false);
@@ -306,10 +306,11 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
-				//			AnalysisModelService.getInstance().clearModelList();
-				FileHandler.getInstance().clear();
-				state.getLogLoadedProperty().set(false);
-				charts.refreshCharts();
+				if(!state.getLogLoadedProperty().get()) {
+					AnalysisModelService.getInstance().clearModelList();
+					FileHandler.getInstance().clear();
+					charts.refreshCharts();
+				}
 			} else {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
@@ -367,6 +368,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		}
 		else
 			modelService.stop(delay);
-		
+
 	}
 }
