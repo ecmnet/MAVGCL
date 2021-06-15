@@ -1650,7 +1650,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Yaw" uom="rad" mask="#0.0" key="VISIONYAW">
+  <KeyFigure desc="Vis.Yaw" uom="rad" mask="#0.00" key="VISIONYAW">
 		<MSPSource class="vision" field="h"/>
 		<Groups>
 			<Group>Vision</Group>
