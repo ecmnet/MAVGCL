@@ -61,7 +61,7 @@ public class AnalysisModelService  {
 
 	private static AnalysisModelService instance = null;
 
-	public static final int DEFAULT_INTERVAL_US  = 25000;
+	public static final int DEFAULT_INTERVAL_US  = 20000;
 	public static final int MAVHIRES_INTERVAL_US = 10000;
 	public static final int HISPEED_INTERVAL_US  = 10000;
 
@@ -489,10 +489,10 @@ public class AnalysisModelService  {
 					tms_last = current.tms;
 
 					// Slow down conversion if not recording
-					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 3500000 );
+					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
 				}
 
-				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3500000 );
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2500000 );
 			}
 		}
 	}
