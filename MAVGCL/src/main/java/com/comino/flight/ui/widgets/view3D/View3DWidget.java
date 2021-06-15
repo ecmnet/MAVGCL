@@ -147,7 +147,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		
 
 		state.getLandedProperty().addListener((v,o,n) -> {
-			if(n.booleanValue()) {
+			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
 				if(!Double.isNaN(model.getValue("ALTTR"))) {
 					camera.setTranslateY(model.getValue("ALTTR")*100);
 					world.setTranslateY(model.getValue("ALTTR")*100);
