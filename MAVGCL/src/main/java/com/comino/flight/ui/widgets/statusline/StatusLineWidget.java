@@ -305,14 +305,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.model = control.getCurrentModel();
 		this.state = StateProperties.getInstance();
 		
-		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-			rc.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			gpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			lpos.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			driver.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			controller.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			ekf.setDisable(!n.isStatus(Status.MSP_CONNECTED));
-			ready.setDisable(!n.isStatus(Status.MSP_CONNECTED));
+	//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
+		state.getConnectedProperty().addListener((v,o,n) -> {
+			rc.setDisable(!n.booleanValue());
+			gpos.setDisable(!n.booleanValue());
+			lpos.setDisable(!n.booleanValue());
+			driver.setDisable(!n.booleanValue());
+			controller.setDisable(!n.booleanValue());
+			ekf.setDisable(!n.booleanValue());
+			ready.setDisable(!n.booleanValue());
 
 		});
 
