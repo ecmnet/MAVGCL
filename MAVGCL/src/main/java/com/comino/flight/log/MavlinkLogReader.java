@@ -164,7 +164,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 		props.getProgressProperty().set(0);
 		props.getLogLoadedProperty().set(false);
 
-		timeout = wq.addCyclicTask("LP",5,() -> {
+		timeout = wq.addCyclicTask("LP",100,() -> {
 
 			switch (state) {
 			case IDLE:
@@ -184,7 +184,8 @@ public class MavlinkLogReader implements IMAVLinkListener {
 					abortReadingLog();
 					return;
 				}
-				if(searchForNextUnreadPackage()) 
+				int c = 0;
+				while(searchForNextUnreadPackage() && c++ < 7) 
 					requestDataPackages(chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 				break;
 			}
