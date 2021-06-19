@@ -251,13 +251,14 @@ public class MainApp extends Application  {
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 			
-
-			if(args.size()>0) {
+            boolean sitl = userPrefs.getBoolean("SITL", false);
+			
+			if(args.size()>0 || sitl) {
 				if(args.get("SITL")!=null) {
 					control = new MAVUdpController("127.0.0.1",14580,14540, true);
 					//new SITLController(control);
 				}
-				else  if(args.get("PROXY")!=null) {
+				else  if(args.get("PROXY")!=null || sitl) {
 					control = new MAVUdpController("127.0.0.1",14656,14650, true);
 					//new SITLController(control);
 				}
@@ -705,12 +706,12 @@ public class MainApp extends Application  {
 
 
 		if(!Status.version.isEmpty())
-			version_txt.append("  PX4 Firmware Version: "+Status.version+" ("+Status.fw_build+")");
+			version_txt.append("  PX4 FW Vers.: "+Status.version+" ("+Status.fw_build+")");
 		if(!Status.build.isEmpty() && !Status.build.contains("tmp"))
 			version_txt.append("  MSP build: " + Status.build);
 		version_txt.append("  MAVGCL ("+getBuildInfo().getProperty("build")+")");
-		version_txt.append(" runs on Java "+System.getProperty("java.version"));
-		version_txt.append(" (Resolution: "+AnalysisModelService.getInstance().getCollectorInterval_ms()+"ms)");
+		version_txt.append(" runs on Java "+Runtime.version());
+		version_txt.append(" (Cycle: "+AnalysisModelService.getInstance().getCollectorInterval_ms()+"ms)");
 
 		version.setText(version_txt.toString());
 
