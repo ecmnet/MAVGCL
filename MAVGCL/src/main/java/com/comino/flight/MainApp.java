@@ -224,7 +224,7 @@ public class MainApp extends Application  {
 			// To avoid MJPEG warnings
 			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
-			System.out.println("Initializing application ( Java: "+Runtime.version()+")"); 
+			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")); 
 
 			ExecutorService.create();
 			

@@ -178,8 +178,12 @@ public class View3DWidget extends SubScene implements IChartControl {
 		
 		
 		task = new AnimationTimer() {
+			long tms=0;
 			@Override
 			public void handle(long now) {
+				if((now - tms <66))
+					return;
+				tms = now;
 				target.updateState(model);
 				vehicle.updateState(model,offset);
 				switch(perspective) {
@@ -193,8 +197,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 				}
 			}		
 		};
-
-
 
 		scroll.addListener((v, ov, nv) -> {
 			if(StateProperties.getInstance().getRecordingProperty().get()==AnalysisModelService.STOPPED) {

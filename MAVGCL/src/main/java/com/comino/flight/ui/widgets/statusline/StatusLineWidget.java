@@ -219,8 +219,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					}
 				}
 				else {
-					driver.setText("No driver information");
 					ready.setMode(Badge.MODE_OFF);
+					driver.setMode(Badge.MODE_OFF);
+					ekf.setMode(Badge.MODE_OFF);
+					driver.setText("");
 				}
 
 				list = collector.getModelList();
@@ -307,10 +309,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		
 	//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 		state.getConnectedProperty().addListener((v,o,n) -> {
+			driver.setDisable(!n.booleanValue());
 			rc.setDisable(!n.booleanValue());
 			gpos.setDisable(!n.booleanValue());
 			lpos.setDisable(!n.booleanValue());
-			driver.setDisable(!n.booleanValue());
 			controller.setDisable(!n.booleanValue());
 			ekf.setDisable(!n.booleanValue());
 			ready.setDisable(!n.booleanValue());

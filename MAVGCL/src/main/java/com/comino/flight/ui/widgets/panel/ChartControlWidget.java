@@ -248,7 +248,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 				final int cycle_ms = modelService.getCollectorInterval_ms() < 25 ? 25 : modelService.getCollectorInterval_ms();
 
-				wq_id = wq.addCyclicTask("LP", cycle_ms, () -> {
+				wq_id = wq.addCyclicTask("HP", cycle_ms, () -> {
 
 					if(replay_index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
 
@@ -258,7 +258,9 @@ public class ChartControlWidget extends ChartControlPane  {
 						});
 
 						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
+						Platform.runLater(() -> {
 						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
+						});
 						modelService.setCurrent(replay_index);
 
 						replay_index = replay_index + ( cycle_ms / modelService.getCollectorInterval_ms());
