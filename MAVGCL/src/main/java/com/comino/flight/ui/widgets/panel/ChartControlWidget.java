@@ -37,7 +37,6 @@ package com.comino.flight.ui.widgets.panel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.Future;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
@@ -47,8 +46,8 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavutils.workqueue.WorkQueue;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -83,17 +82,16 @@ public class ChartControlWidget extends ChartControlPane  {
 	@FXML
 	private Button play;
 
-	private Future<?> replay = null;
-
 	protected int totalTime_sec = TOTAL_TIME[0];
 	private AnalysisModelService modelService;
 
 	private StateProperties state = StateProperties.getInstance();
 
-	private final WorkQueue wq = WorkQueue.getInstance();
+	private float replay_index = 0;
+	private long  replay_tms   = 0;
 
-	private int replay_index = 0;
-	private int wq_id        = 0;
+
+	private AnimationTimer task;
 
 	private Map<Integer,KeyFigurePreset> presets = new HashMap<Integer,KeyFigurePreset>();
 
@@ -130,13 +128,11 @@ public class ChartControlWidget extends ChartControlPane  {
 			//scroll.setValue(1.0);
 
 			if(state.getReplayingProperty().get()) {
-				replay_index = 0; scroll.setValue(1.0);
+				task.stop();
+				state.getProgressProperty().set(-1);
+				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
-				for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
-					if(chart.getValue().getReplayProperty()!=null) 
-						chart.getValue().getReplayProperty().set(0);
-					chart.getValue().refreshChart();
-				}
+				state.getCurrentUpToDate().set(true);
 			}
 
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
@@ -162,12 +158,13 @@ public class ChartControlWidget extends ChartControlPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
+			if(state.getReplayingProperty().get())
+				return;
 			if((System.currentTimeMillis() - scroll_tms) < 33) {
 				return;
 			}
 			scroll_tms = System.currentTimeMillis();
-			if(state.getReplayingProperty().get())
-				return;
+
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible())
 					chart.getValue().getScrollProperty().set(1f-newvalue.floatValue());
@@ -229,53 +226,42 @@ public class ChartControlWidget extends ChartControlPane  {
 				.or(state.getRecordingAvailableProperty().not()
 						.and(state.getLogLoadedProperty().not())));
 
+		task = new AnimationTimer() {
+			@Override public void handle(long now) {
+
+				if(replay_index < modelService.getModelList().size()) {
+
+					charts.entrySet().forEach((chart) -> { 
+						if(chart.getValue().getReplayProperty()!=null)
+							chart.getValue().getReplayProperty().set(replay_index);
+					});
+					replay_index = (System.currentTimeMillis() -  replay_tms) / modelService.getCollectorInterval_ms();
+					state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
+					scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
+					modelService.setCurrent(replay_index);
+					
+				}
+			}
+		};
+
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
+				
 				state.getReplayingProperty().set(true);
-
 				modelService.setReplaying(true);
-
+				replay_index = (float)(modelService.getModelList().size() * (1f - (scroll.getValue())));
 				if(modelService.getModelList().size() > 0) {
 					charts.entrySet().forEach((chart) -> { 
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(1);
 					});
 				}
-
-				if(scroll.getValue()<0.05) scroll.setValue(1);
-
-				replay_index = (int)(modelService.getModelList().size() * (1 - (scroll.getValue())));
-
-				final int cycle_ms = modelService.getCollectorInterval_ms() < 25 ? 25 : modelService.getCollectorInterval_ms();
-
-				wq_id = wq.addCyclicTask("HP", cycle_ms, () -> {
-
-					if(replay_index < modelService.getModelList().size() && state.getReplayingProperty().get()) {
-
-						charts.entrySet().forEach((chart) -> { 
-							if(chart.getValue().getReplayProperty()!=null)
-								chart.getValue().getReplayProperty().set(replay_index);
-						});
-
-						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
-						Platform.runLater(() -> {
-						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
-						});
-						modelService.setCurrent(replay_index);
-
-						replay_index = replay_index + ( cycle_ms / modelService.getCollectorInterval_ms());
-
-					} else {
-						wq.removeTask("LP", wq_id);
-						modelService.setReplaying(false);
-						state.getProgressProperty().set(-1);
-						state.getReplayingProperty().set(false);
-						state.getCurrentUpToDate().set(true);
-					}
-				});
-
-
+				replay_index = (float)(modelService.getModelList().size() * (1f - (scroll.getValue())));
+				replay_tms = System.currentTimeMillis() - (long)(replay_index * modelService.getCollectorInterval_ms());
+				
+				task.start();
 			} else {
+				task.stop();
 				state.getProgressProperty().set(-1);
 				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
@@ -293,7 +279,6 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setDisable(true);
 				}
 				else {
-					wq.removeTask("LP", wq_id);
 					state.getProgressProperty().set(-1);
 					replay_index = 0;
 					play.setText("\u25B6");
