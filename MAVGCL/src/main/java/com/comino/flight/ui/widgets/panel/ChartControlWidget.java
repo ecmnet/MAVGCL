@@ -89,6 +89,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	private float replay_index = 0;
 	private long  replay_tms   = 0;
+	private long  anim_tms = 0;
 
 
 	private AnimationTimer task;
@@ -228,6 +229,12 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
+				
+				if((System.currentTimeMillis() - anim_tms) < 40) {
+					return;
+				}
+				
+				anim_tms = System.currentTimeMillis();
 
 				if(replay_index < modelService.getModelList().size()) {
 
