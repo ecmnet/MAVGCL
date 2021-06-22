@@ -23,7 +23,6 @@
 						<Label text="Perspective:" />
 						<ChoiceBox fx:id="perspective" prefWidth="100.0"
 							maxHeight="17.0" />
-						<StoredCheckBox fx:id="aircontrol" text="Compass" />
 					</children>
 				</HBox>
 			</children>
@@ -31,7 +30,6 @@
 		<StackPane alignment="BOTTOM_LEFT">
 			<children>
 			  <Pane fx:id="main" />
-			  <AirWidget fx:id="air" moveable="true" maxWidth="160" maxHeight="160"/>
 			<!--    <MessageWidget fx:id="msg" moveable="true"/> -->
 			</children>
 		</StackPane>

@@ -61,14 +61,10 @@ public class MAV3DViewTab extends Pane  {
 	@FXML
 	private Pane main;
 
-	@FXML
-	private AirWidget air;
 
 //	@FXML
 //	private MessageWidget msg;
 
-	@FXML
-	private CheckBox aircontrol;
 
 	@FXML
 	private ChoiceBox<String> perspective;
@@ -89,8 +85,6 @@ public class MAV3DViewTab extends Pane  {
 		widget.heightProperty().bind(this.heightProperty().subtract(54));
 		widget.setLayoutX(10);  widget.setLayoutY(10);
 		main.getChildren().add(widget);
-
-		air.fadeProperty().bind(aircontrol.selectedProperty());
 
 		perspective.getItems().addAll(PERSPECTIVES);
 
@@ -122,7 +116,6 @@ public class MAV3DViewTab extends Pane  {
 
 	public MAV3DViewTab setup(IMAVController control) {
 		ChartControlPane.addChart(4,widget.setup(control));
-		air.setup(control);
 //		msg.setup(control);
 		perspective.getSelectionModel().selectFirst();
 		return this;
