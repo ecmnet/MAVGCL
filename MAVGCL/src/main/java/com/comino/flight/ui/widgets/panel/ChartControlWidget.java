@@ -229,8 +229,8 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				
-				if((System.currentTimeMillis() - anim_tms) < 40) {
+//				
+				if((System.currentTimeMillis() - anim_tms) < 33) {
 					return;
 				}
 				
@@ -256,7 +256,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
-				replay_index = (float)(modelService.getModelList().size() * (1f - (scroll.getValue())));
+		
 				if(modelService.getModelList().size() > 0) {
 					charts.entrySet().forEach((chart) -> { 
 						if(chart.getValue().getReplayProperty()!=null)
@@ -265,7 +265,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				}
 				replay_index = (float)(modelService.getModelList().size() * (1f - (scroll.getValue())));
 				replay_tms = System.currentTimeMillis() - (long)(replay_index * modelService.getCollectorInterval_ms());
-				
+				anim_tms = 0;
 				task.start();
 			} else {
 				task.stop();
