@@ -65,7 +65,6 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 	private long tms = 0;
 
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
-	private StateProperties state        = null;
 
 	public AirWidget() {
 		super(300,true);
@@ -86,9 +85,8 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 
 	@FXML
 	private void initialize() {
-		this.state = StateProperties.getInstance();
 		this.model = dataService.getCurrent();
-	//	this.disableProperty().bind(state.getConnectedProperty().not().and(state.getReplayingProperty().not()));
+		this.disableProperty().bind(this.visibleProperty().not());
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue())
 				task.start();
@@ -111,7 +109,6 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 			} else
 				model = dataService.getModelList().get(nv.intValue());
 		});
-
 	}
 
 
