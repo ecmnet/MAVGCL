@@ -78,8 +78,8 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 			@Override public void handle(long now) {
 				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50) {
 					tms = System.currentTimeMillis();
-						bearing = model.getValue("HEAD");
-						g_compass.setBearing(bearing);
+					bearing = model.getValue("HEAD");
+					g_compass.setBearing(bearing);
 				}
 			}
 		};
@@ -104,12 +104,11 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 		ChartControlPane.addChart(5,this);
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
-				if(nv.intValue()<=1) {
-					model = dataService.getModelList().get(1);
-				} else
-					model = dataService.getModelList().get(nv.intValue());
-			});
+
+			if(nv.intValue()<=1) {
+				model = dataService.getModelList().get(1); 
+			} else
+				model = dataService.getModelList().get(nv.intValue());
 		});
 
 	}

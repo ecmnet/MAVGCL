@@ -256,7 +256,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private BooleanProperty isScrolling = new SimpleBooleanProperty();
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public XYChartWidget() {
@@ -279,9 +279,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@Override
 	public void update(long now) {
 		if(isVisible() && !isDisabled()) {
-//			Platform.runLater(() -> {
-				updateGraph(refreshRequest,0);
-//			});
+			//			Platform.runLater(() -> {
+			updateGraph(refreshRequest,0);
+			//			});
 		}
 	}
 
@@ -602,13 +602,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
-				if(nv.intValue()<=5) {
-					current_x0_pt =  0;
-					updateGraph(true,1);
-				} else
-					updateGraph(false,nv.intValue());
-			});
+			if(isDisabled())
+				return;
+			refreshRequest = true; 
+			if(nv.intValue()<=5) {
+				current_x0_pt =  0;
+				Platform.runLater(() -> updateGraph(true, 1) );
+			} else
+				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
+			dataService.setCurrent(nv.intValue());
 		});
 
 		annotation.selectedProperty().addListener((v, ov, nv) -> {
@@ -945,13 +947,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} catch(NumberFormatException e) {
 
 		}
-		
+
 		// Used to update the grid when connected.
-//		ExecutorService.get().scheduleAtFixedRate(() -> {
-//			if(state.getRecordingProperty().get()==0 && !isDisabled()) {
-//				updateRequest();
-//			}
-//		}, 0, 1, TimeUnit.SECONDS);
+		//		ExecutorService.get().scheduleAtFixedRate(() -> {
+		//			if(state.getRecordingProperty().get()==0 && !isDisabled()) {
+		//				updateRequest();
+		//			}
+		//		}, 0, 1, TimeUnit.SECONDS);
 
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {

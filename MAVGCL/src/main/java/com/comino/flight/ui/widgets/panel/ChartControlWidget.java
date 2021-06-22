@@ -256,6 +256,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
+				state.getCurrentUpToDate().set(false);
 		
 				if(modelService.getModelList().size() > 0) {
 					charts.entrySet().forEach((chart) -> { 
