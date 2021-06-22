@@ -62,8 +62,6 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 
 	private AnalysisDataModel model;
 
-	private double bearing;
-
 	private long tms = 0;
 
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
@@ -78,8 +76,8 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 			@Override public void handle(long now) {
 				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50) {
 					tms = System.currentTimeMillis();
-					bearing = model.getValue("HEAD");
-					g_compass.setBearing(bearing);
+//					System.out.println(model.getValue("HEAD"));
+					g_compass.setBearing(model.getValue("HEAD"));
 				}
 			}
 		};
@@ -90,7 +88,7 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 	private void initialize() {
 		this.state = StateProperties.getInstance();
 		this.model = dataService.getCurrent();
-		this.disableProperty().bind(state.getConnectedProperty().not().and(state.getReplayingProperty().not()));
+	//	this.disableProperty().bind(state.getConnectedProperty().not().and(state.getReplayingProperty().not()));
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue())
 				task.start();
@@ -104,6 +102,9 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 		ChartControlPane.addChart(5,this);
 
 		replay.addListener((v, ov, nv) -> {
+			
+			if(isDisabled() || !isVisible())
+				return;
 
 			if(nv.intValue()<=1) {
 				model = dataService.getModelList().get(1); 
