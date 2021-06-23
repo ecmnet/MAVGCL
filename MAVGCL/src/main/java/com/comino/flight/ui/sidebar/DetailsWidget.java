@@ -156,14 +156,17 @@ public class DetailsWidget extends ChartControlPane {
 	
 	private List<KeyFigure> figures = null;
 
-	protected AnalysisDataModel model = AnalysisModelService.getInstance().getCurrent();
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private Preferences prefs = MAVPreferences.getInstance();
+	private final AnalysisDataModel model;
+	private final AnalysisDataModelMetaData meta;
+	private final Preferences prefs;
 	
 
 	public DetailsWidget() {
 
 		figures = new ArrayList<KeyFigure>();
+		model = AnalysisModelService.getInstance().getCurrent();
+		meta  = AnalysisDataModelMetaData.getInstance();
+		prefs = MAVPreferences.getInstance();
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DetailsWidget.fxml"));
 		fxmlLoader.setRoot(this);

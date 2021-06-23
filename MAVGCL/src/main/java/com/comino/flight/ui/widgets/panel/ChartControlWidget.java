@@ -238,14 +238,15 @@ public class ChartControlWidget extends ChartControlPane  {
 
 				if(replay_index < modelService.getModelList().size()) {
 
+					long replay_time_ms = System.currentTimeMillis() -  replay_tms;
 					charts.entrySet().forEach((chart) -> { 
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(replay_index);
 					});
-					replay_index = (System.currentTimeMillis() -  replay_tms) / modelService.getCollectorInterval_ms();
+					replay_index = replay_time_ms / modelService.getCollectorInterval_ms();
 					state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
 					scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
-					modelService.setCurrent(replay_index);
+					modelService.setCurrent(replay_time_ms/1000f);
 					
 				} else {
 					task.stop();
