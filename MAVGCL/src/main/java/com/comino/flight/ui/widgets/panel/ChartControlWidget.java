@@ -247,16 +247,24 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
 					modelService.setCurrent(replay_index);
 					
+				} else {
+					task.stop();
+					scroll.setValue(0);
+					state.getProgressProperty().set(-1);
+					modelService.setReplaying(false);
+					state.getReplayingProperty().set(false);
+					state.getCurrentUpToDate().set(true);
 				}
 			}
 		};
 
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get()) {
-				
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
 				state.getCurrentUpToDate().set(false);
+				if(scroll.getValue()<0.05)
+					scroll.setValue(1);
 		
 				if(modelService.getModelList().size() > 0) {
 					charts.entrySet().forEach((chart) -> { 
