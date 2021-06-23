@@ -1,5 +1,6 @@
 <project name="MAVGAnalysis" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
-	
+
+	<property name="workspace.dir" value="/Users/ecmnet/PixHawk/java/" />
 
 	<target name="metadata" >
 		<echo>JDK used: ${jdk.home}</echo>
@@ -14,19 +15,32 @@
 		</propertyfile>
 	</target>
 
-	<target name="mvn" depends="metadata">
+	<target name="com" depends="metadata" >
+		<exec dir="${workspace.dir}/MAVCom/mavcom" executable="sh">
+			<arg line="-c '/usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
+		</exec>
+	</target>
+
+	<target name="mvn" depends="com">
 		<exec dir="./" executable="sh">
 			<arg line="-c ' /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
 		</exec>
 	</target>
-	
+
 	<target name="deploy_osx_16" depends="mvn">
 		<echo>Deploy JDk16 Version</echo>
-		 <exec dir="./" executable="sh">
-			  <arg line="-c './package.sh'" />
+		<exec dir="./" executable="sh">
+			<arg line="-c './package.sh'" />
 		</exec>
 	</target>
-	
+
+	<target name="deploy_osx_16_graal" depends="mvn">
+		<echo>Deploy JDk16 Version</echo>
+		<exec dir="./" executable="sh">
+			<arg line="-c './package_graal.sh'" />
+		</exec>
+	</target>
+
 	<!--
 	<target name="deploy_osx" depends="mvn">
 		<fx:deploy width="1230" height="865" outdir="dist/deploy" outfile="MAVGAnalysis" nativeBundles="dmg">
