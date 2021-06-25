@@ -87,9 +87,9 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	private StateProperties state = StateProperties.getInstance();
 
-	private float replay_index = 0;
+	private int   replay_index = 0;
 	private long  replay_tms   = 0;
-	private long  anim_tms = 0;
+	private long  anim_tms     = 0;
 
 
 	private AnimationTimer task;
@@ -228,8 +228,9 @@ public class ChartControlWidget extends ChartControlPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		task = new AnimationTimer() {
+			long replay_time_ms;
 			@Override public void handle(long now) {
-				
+
 				if((System.currentTimeMillis() - anim_tms) <33) {
 					return;
 				}
@@ -237,16 +238,17 @@ public class ChartControlWidget extends ChartControlPane  {
 
 				if(replay_index < modelService.getModelList().size()) {
 
-					long replay_time_ms = System.currentTimeMillis() -  replay_tms;
+				    replay_time_ms = System.currentTimeMillis() -  replay_tms;
+					
 					charts.entrySet().forEach((chart) -> { 
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(replay_index);
 					});
-					replay_index = replay_time_ms / modelService.getCollectorInterval_ms();
+					replay_index = (int)(replay_time_ms / modelService.getCollectorInterval_ms());
 					state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
 					scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
 					modelService.setCurrent(replay_time_ms/1000f);
-					
+
 				} else {
 					task.stop();
 					scroll.setValue(0);
@@ -259,20 +261,21 @@ public class ChartControlWidget extends ChartControlPane  {
 		};
 
 		play.setOnAction((ActionEvent event)-> {
-			if(!state.getReplayingProperty().get()) {
+			if(!state.getReplayingProperty().get() && modelService.getModelList().size() > 0) {
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
 				state.getCurrentUpToDate().set(false);
+				
 				if(scroll.getValue()<0.05)
 					scroll.setValue(1);
-		
-				if(modelService.getModelList().size() > 0) {
-					charts.entrySet().forEach((chart) -> { 
-						if(chart.getValue().getReplayProperty()!=null)
-							chart.getValue().getReplayProperty().set(1);
-					});
-				}
-				replay_index = (float)(modelService.getModelList().size() * (1f - (scroll.getValue())));
+				
+				replay_index = ((int)(modelService.getModelList().size() * (1f - scroll.getValue())))+1;
+				
+				charts.entrySet().forEach((chart) -> { 
+					if(chart.getValue().getReplayProperty()!=null)
+						chart.getValue().getReplayProperty().set(-replay_index);
+				});
+				
 				replay_tms = System.currentTimeMillis() - (long)(replay_index * modelService.getCollectorInterval_ms());
 				anim_tms = 0;
 				task.start();
@@ -281,7 +284,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				state.getProgressProperty().set(-1);
 				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
-				state.getCurrentUpToDate().set(true);
+				state.getCurrentUpToDate().set(true);	
 			}
 			event.consume();
 		});

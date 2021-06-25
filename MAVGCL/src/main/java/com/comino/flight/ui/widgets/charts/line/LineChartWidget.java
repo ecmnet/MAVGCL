@@ -97,7 +97,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 40;
-	private final static int REFRESH_SLOT   = 20;
+	private final static int REFRESH_SLOT   = 10;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "PX4 Flight Mode","EKF2 Status", "Position Estimation", 
 			"GPS Fixtype", "Offboard Phases", "Vision Subsystem", "EKF2 Height mode" };
@@ -151,22 +151,21 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private StateProperties state = null;
 
-	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private FloatProperty   scroll       = new SimpleFloatProperty(0);
-	private FloatProperty   replay       = new SimpleFloatProperty(0);
-	private BooleanProperty isScrolling  = new SimpleBooleanProperty(false);
+	private final IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
+	private final FloatProperty   scroll       = new SimpleFloatProperty(0);
+	private final FloatProperty   replay       = new SimpleFloatProperty(0);
+	private final BooleanProperty isScrolling  = new SimpleBooleanProperty(false);
 
 	private int resolution_ms 	  = 100;
 
-	private volatile int current_x_pt      = 0;
-
-	private volatile int current_x0_pt         = 0;
-	private volatile int current_x0_pt_scroll  = 0;
-	private volatile int current_x1_pt         = 0;
+	private int current_x_pt      = 0;
+	private int current_x0_pt         = 0;
+	private int current_x1_pt         = 0;
 
 
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisModelService      dataService = AnalysisModelService.getInstance();
+	private final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+	private final AnalysisModelService      dataService = AnalysisModelService.getInstance();
+	private final Preferences               prefs = MAVPreferences.getInstance();
 
 	private ArrayList<KeyFigureMetaData> recent = null;
 
@@ -187,20 +186,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final Line  measure    = new Line();
 	private final Label time_label = new Label();
 
-	private List<IChartSyncControl> syncCharts = null;
+	private final List<IChartSyncControl> syncCharts;
 
 	private XYDataPool pool = null;
 	private Group chartArea = null;
-
-	private Preferences prefs = MAVPreferences.getInstance();
 
 	private boolean refreshRequest = false;
 	private boolean isRunning = false;
 
 	private long dashboard_update_tms = 0;
-	private long last_update_ms = 0;
-	
+
 	public LineChartWidget() {
+
+		this.state = StateProperties.getInstance();
 
 		this.syncCharts = new ArrayList<IChartSyncControl>();
 		syncCharts.add(this);
@@ -209,7 +207,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		FXMLLoadHelper.load(this, "LineChartWidget.fxml");
 
-		this.state = StateProperties.getInstance();
 		this.pool  = new XYDataPool();
 
 		dataService.registerListener(this);
@@ -306,20 +303,20 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setStroke(Color.color(0.9,0.6,1.0,0.5));
 		chartArea.getChildren().add(measure);
 
-//		linechart.setOnScrollStarted((event) -> {
-//			current_x0_pt_scroll = current_x0_pt;
-//		});
-		
+		//		linechart.setOnScrollStarted((event) -> {
+		//			current_x0_pt_scroll = current_x0_pt;
+		//		});
 
-//		linechart.setOnScroll((event) -> {
-//
-//			System.out.println(current_x0_pt_scroll+"/"+event.getTotalDeltaX());
-//			current_x0_pt =  current_x0_pt_scroll + (int)(event.getTotalDeltaX());
-//			if(current_x0_pt < 0) current_x0_pt = 0;
-//			updateRequest();
-//
-//		});
-		
+
+		//		linechart.setOnScroll((event) -> {
+		//
+		//			System.out.println(current_x0_pt_scroll+"/"+event.getTotalDeltaX());
+		//			current_x0_pt =  current_x0_pt_scroll + (int)(event.getTotalDeltaX());
+		//			if(current_x0_pt < 0) current_x0_pt = 0;
+		//			updateRequest();
+		//
+		//		});
+
 		linechart.setOnMouseExited(mouseEvent -> {
 			for(IChartSyncControl sync : syncCharts)
 				sync.setMarker(0,0);	
@@ -328,10 +325,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
 		});
-	
+
 
 		linechart.setOnMouseMoved(mouseEvent -> {
-			
+
 
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
 				for(IChartSyncControl sync : syncCharts)
@@ -465,7 +462,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			mouseEvent.consume();
 		});
-	
+
 
 		readRecentList();
 
@@ -574,17 +571,23 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(isDisabled())
 				return;
 			refreshRequest = true; 
-			if(nv.intValue()<=5) {
-				setXResolution(timeFrame.get());
-				current_x0_pt =  0;
-				dataService.setCurrent(0);
-				Platform.runLater(() -> updateGraph(true, 1) );
+			if(nv.intValue()<0) {
+				current_x0_pt =  dataService.calculateX0Index(-nv.intValue());
+				if(current_x0_pt>0)
+					current_x_pt =  dataService.calculateX1Index(-nv.intValue());
+				else {
+					current_x_pt = -nv.intValue();
+				}
+
+				dataService.setCurrent(-nv.intValue());
+				Platform.runLater(() -> updateGraph(true,  -nv.intValue()) );
 			} else {
-				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
-			    dataService.setCurrent(nv.intValue());
+				Platform.runLater(() -> updateGraph(false, nv.intValue()) );
+				dataService.setCurrent(nv.intValue());
 			}
-			
+
 		});
+
 
 		isScrolling.addListener((v, ov, nv) -> {
 			if(nv.booleanValue())
@@ -827,7 +830,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void setXResolution(float frame) {
-		
+
 		int interval = dataService.getCollectorInterval_ms();
 
 		if(frame >= 200) {
@@ -882,7 +885,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; int count =0;
+		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
 
 		if(isDisabled()) {
 			return;
@@ -893,7 +896,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(size==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
 			}
-
 
 			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
@@ -968,7 +970,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
-				count++;
+
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
