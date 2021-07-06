@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -197,7 +197,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		if(listview.getItems().size() == 0 ||
 				!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text) ||
-				System.currentTimeMillis() - tms_old > 1000	) {
+				System.currentTimeMillis() - tms_old > 500	) {
 			tms_old = System.currentTimeMillis();
 			listview.getItems().add(m);
 			if(listview.getItems().size()>MAX_ITEMS)

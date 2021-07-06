@@ -203,8 +203,12 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object msg) {
+		try {
 		if(!this.isDisabled())
 			parseMessageString(msg.toString().split("  "));	
+		} catch(NullPointerException e) {
+			System.err.println(msg);
+		}
 	}
 
 	private void parseMessageString(String[] msg) {

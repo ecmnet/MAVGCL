@@ -8,9 +8,9 @@
 
 <fx:root maxHeight="30.0" prefHeight="30.0" styleClass="status" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<HBox layoutY="6.0" layoutX="212" spacing="7.0">
+		<HBox layoutY="6.0" layoutX="6.0" spacing="7.0">
 			<children>
-			    <Badge fx:id="ready" prefHeight="16.0" prefWidth="60.0" text="NOT READY" color="RED" />
+			    <Badge fx:id="ready" prefHeight="16.0" prefWidth="100.0" text="NOT READY" color="RED" />
 				<Badge fx:id="driver" prefHeight="16.0" prefWidth="350.0" color="#1c6478" text="" />
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="#1c6478" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="50.0" text="GPOS" color="#1c6478" />
