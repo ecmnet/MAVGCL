@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -85,14 +85,6 @@ public class ControlWidget extends ChartControlPane  {
 
 		details.setSelected(true);
 
-		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
-			if(!n.booleanValue()) {
-			//	vehiclectl.setSelected(false);
-				video.setSelected(false);
-			//	parameters.setSelected(false);
-			}
-		});
-
 		stateProperties.getOffboardProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
 				vehiclectl.setSelected(true);
@@ -101,7 +93,6 @@ public class ControlWidget extends ChartControlPane  {
 
 		parameters.setDisable(true);
 
-		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
 
 		stateProperties.getParamLoadedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue())
@@ -110,14 +101,15 @@ public class ControlWidget extends ChartControlPane  {
 		});
 
 		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
+		video.setDisable(true);
+		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
+		this.details.selectedProperty().set(false);
 
 
 	}
 
 	public void setup(IMAVController control) {
-		if(!control.isSimulation())
-			video.disableProperty().bind(stateProperties.getConnectedProperty().not());
-		this.details.selectedProperty().set(false);
+        
 	}
 
 }
