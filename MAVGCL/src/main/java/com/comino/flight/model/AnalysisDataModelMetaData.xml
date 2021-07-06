@@ -1409,7 +1409,7 @@
 		<Validity min="0.0" max="30.0"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Consumed.Power" uom="mAh" mask="#0" key="BATH">
+	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0" key="BATH">
 		<MSPSource class="battery" field="a0"></MSPSource>
 		<ULogSource field="battery_status_0.discharged_mah"/>
 		<Groups>
@@ -1417,7 +1417,7 @@
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Batt. Temperature" uom="°C" mask="#0" key="BATT">
+	<KeyFigure desc="Batt.Temp." uom="°C" mask="#0" key="BATT">
 		<MSPSource class="sys" field="bat_temp"></MSPSource>
 		<Groups>
 			<Group>Battery</Group>
