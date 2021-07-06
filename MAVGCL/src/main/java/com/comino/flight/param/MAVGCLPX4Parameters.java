@@ -86,6 +86,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
+	private MSPLogger logger;
+
 	public static MAVGCLPX4Parameters getInstance(IMAVController control) {
 		if(px4params==null)
 			px4params = new MAVGCLPX4Parameters(control);
@@ -102,6 +104,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
+		this.logger = MSPLogger.getInstance();
 
 		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
@@ -144,14 +147,14 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			msg.target_system = 1;
 			control.sendMAVLinkMessage(msg);
 			state.getParamLoadedProperty().set(!loaded);
-			MSPLogger.getInstance().writeLocalMsg("Reading parameters...",
+			logger.writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 			wq.removeTask("LP", timeout);
 			timeout = wq.addSingleTask("LP", 20000, () -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-				MSPLogger.getInstance().writeLocalMsg("Timeout reading parameters",
+				logger.writeLocalMsg("Timeout reading parameters",
 						MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				is_reading = false;
 			});
@@ -209,13 +212,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				if(get("LND_FLIGHT_T_LO")!=null && get("LND_FLIGHT_T_HI") !=null ) {
 					flight_time = (((long)get("LND_FLIGHT_T_HI").value << 32 ) + (long)get("LND_FLIGHT_T_LO").value);
 					if(flight_time <1e10f && flight_time > 0)
-						MSPLogger.getInstance().writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
+						logger.writeLocalMsg(String.format("Total flight time: %5.2f min", flight_time/60e6f),
 								MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
 
 				// Baro QNH check
 //				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
-//					MSPLogger.getInstance().writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+//					logger.writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 //					sendParameter("SENS_BARO_QNH",qnh);
 //				}
 			}
