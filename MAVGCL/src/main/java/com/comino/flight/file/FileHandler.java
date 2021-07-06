@@ -113,6 +113,7 @@ public class FileHandler {
 
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
+	private MSPLogger logger = null;
 
 
 	public static FileHandler getInstance() {
@@ -134,6 +135,7 @@ public class FileHandler {
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
 		this.currentModel  = control.getCurrentModel();
+		this.logger = MSPLogger.getInstance();
 
 
 		readPresetFiles();
@@ -273,7 +275,7 @@ public class FileHandler {
 								modelService.clearModelList();
 								modelService.setModelList(gson.fromJson(reader,listType));
 							} catch(Exception e1) {
-								MSPLogger.getInstance().writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
+								logger.writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
 								reader.close();
 								name = "";
 								state.getProgressProperty().set(StateProperties.NO_PROGRESS);
@@ -375,7 +377,7 @@ public class FileHandler {
 			}
 			br.close();	
 		} catch (Exception e) {
-			MSPLogger.getInstance().writeLocalMsg("[mgc] ParameterFile could not be read.",MAV_SEVERITY.MAV_SEVERITY_ERROR);	
+			logger.writeLocalMsg("[mgc] ParameterFile could not be read.",MAV_SEVERITY.MAV_SEVERITY_ERROR);	
 			return;
 		}	
 
@@ -389,14 +391,14 @@ public class FileHandler {
 						if(paramHandler.sendParameter(n,Float.parseFloat(v))) 
 							valid++;
 						else
-							MSPLogger.getInstance().writeLocalMsg("[mgc] "+n+" could not be set to "+v,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+							logger.writeLocalMsg("[mgc] "+n+" could not be set to "+v,MAV_SEVERITY.MAV_SEVERITY_WARNING);
 						try { Thread.sleep(100); } catch (InterruptedException e) { }
 					});
 					state.getProgressProperty().set(0);
 					if(count == valid)
-						MSPLogger.getInstance().writeLocalMsg("[mgc] Parameters set successfully",MAV_SEVERITY.MAV_SEVERITY_INFO);
+						logger.writeLocalMsg("[mgc] Parameters set successfully",MAV_SEVERITY.MAV_SEVERITY_INFO);
 					else
-						MSPLogger.getInstance().writeLocalMsg("[mgc] Some parameters could not be set",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+						logger.writeLocalMsg("[mgc] Some parameters could not be set",MAV_SEVERITY.MAV_SEVERITY_WARNING);
 					return null;
 				}
 			}).start();
@@ -462,7 +464,7 @@ public class FileHandler {
 					return null;
 
 				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
-				MSPLogger.getInstance().writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				if(!createResultSet)
