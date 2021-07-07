@@ -81,6 +81,7 @@ import com.comino.ntp.SimpleNTPServer;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -478,6 +479,7 @@ public class MainApp extends Application  {
 					wq.printStatus();
 				}
 			});
+			
 
 
 		} catch (Exception e) {
@@ -688,6 +690,11 @@ public class MainApp extends Application  {
 
 			if(!control.isConnected())
 				control.connect();
+			
+			primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+				if(newValue.booleanValue())
+			       control.getStatusManager().reset();
+			});
 
 		} catch (IOException e) {
 			e.printStackTrace();
