@@ -128,7 +128,7 @@ public class DetailsWidget extends ChartControlPane {
 			    null,
 			    "SLAMFPS","SLAMQU",
 			    null, 
-			    "BATV","BATC", "BATH", "BATP",
+			    "BATV","BATC", "BATH", "BATP", "BATW",
 			    null, 
 			    "IMUTEMP", "MSPTEMP",  "BATT",
 			    null,  

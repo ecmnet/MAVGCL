@@ -713,7 +713,7 @@
 	<KeyFigure desc="Output 1" uom="" mask="#0.0" key="SERVO1">
 		<MSPSource class="servo" field="servo1"></MSPSource>
 		<PX4Source field="OUT0.Out0"></PX4Source>
-		<ULogSource field="actuator_outputs_1.output[0]"/>
+		<ULogSource field="actuator_outputs_0.output[0]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
@@ -722,7 +722,7 @@
 	<KeyFigure desc="Output 2" uom="" mask="#0.0" key="SERVO2">
 		<MSPSource class="servo" field="servo2"></MSPSource>
 		<PX4Source field="OUT0.Out1"></PX4Source>
-		<ULogSource field="actuator_outputs_1.output[1]"/>
+		<ULogSource field="actuator_outputs_0.output[1]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
@@ -731,7 +731,7 @@
 	<KeyFigure desc="Output 3" uom="" mask="#0.0" key="SERVO3">
 		<MSPSource class="servo" field="servo3"></MSPSource>
 		<PX4Source field="OUT0.Out2"></PX4Source>
-		<ULogSource field="actuator_outputs_1.output[2]"/>
+		<ULogSource field="actuator_outputs_0.output[2]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
@@ -740,7 +740,7 @@
 	<KeyFigure desc="Output 4" uom="" mask="#0.0" key="SERVO4">
 		<MSPSource class="servo" field="servo4"></MSPSource>
 		<PX4Source field="OUT0.Out3"></PX4Source>
-		<ULogSource field="actuator_outputs_1.output[3]"/>
+		<ULogSource field="actuator_outputs_0.output[3]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
@@ -1407,6 +1407,16 @@
 			<Group>Battery</Group>
 		</Groups>
 		<Validity min="0.0" max="30.0"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="Power" uom="W" mask="#0" key="BATW">
+		<VirtualSource>
+		    <Converter class="VirtualConverter" expression="BATC * BATV" var0="BATC" var1="BATV"/>
+		</VirtualSource>
+		<Groups>
+			<Group>Battery</Group>
+		</Groups>
+		<Validity min="0.0" max="300.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Cons.Power" uom="mAh" mask="#0" key="BATH">

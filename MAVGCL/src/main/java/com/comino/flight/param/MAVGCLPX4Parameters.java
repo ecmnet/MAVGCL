@@ -62,8 +62,6 @@ import com.comino.mavutils.workqueue.WorkQueue;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 
 public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListener {

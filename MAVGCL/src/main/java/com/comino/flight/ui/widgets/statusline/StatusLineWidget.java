@@ -72,7 +72,6 @@ import javafx.util.Duration;
 
 public class StatusLineWidget extends Pane implements IChartControl {
 
-
 	@FXML
 	private Badge ready;
 
