@@ -598,6 +598,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
+			System.out.println(current_x0_pt);
 			updateRequest();
 		});
 
@@ -996,17 +997,18 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 
 	private void updateRequest() {
-		if(!isDisabled() && !refreshRequest) {
-			center_x = 0; center_y = 0;
-			refreshRequest = true;
-			Platform.runLater(() -> {
+		Platform.runLater(() -> {
+			if(!isDisabled() && !refreshRequest) {
+				center_x = 0; center_y = 0;
+				refreshRequest = true;
+
 				if(!state.getReplayingProperty().get()) {
 					updateGraph(refreshRequest,0);
 				} else {
 					updateGraph(refreshRequest,replay.intValue());
 				}
-			});
-		}
+			}
+		});
 	}
 
 

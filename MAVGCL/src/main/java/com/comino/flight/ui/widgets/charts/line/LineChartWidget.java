@@ -557,10 +557,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
-			if(!isDisabled() && !refreshRequest) {
-				refreshRequest = true;
-				Platform.runLater(() -> updateGraph(refreshRequest,0) );
-			}
+//			if(!isDisabled() && !refreshRequest) {
+//				refreshRequest = true;
+//				Platform.runLater(() -> updateGraph(refreshRequest,0) );
+//				updateRequest();
+//			}
+			
+			updateRequest();
 
 			if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get()) {
 				dataService.setCurrent(dataService.calculateX1IndexByFactor(nv.floatValue())-1);
@@ -614,7 +617,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
-		Platform.runLater(() -> {
+	//	Platform.runLater(() -> {
 			if(preset!=null) {
 				type1 = setKeyFigure(cseries1,preset.getKeyFigure(0));
 				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
@@ -622,7 +625,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				group.getSelectionModel().select(preset.getGroup());
 				replay.set(0); updateRequest();
 			}
-		});
+	//	});
 	}
 
 
