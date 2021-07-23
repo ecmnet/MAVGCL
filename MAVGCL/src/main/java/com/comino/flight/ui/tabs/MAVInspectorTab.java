@@ -278,7 +278,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 							remData.put(k, d);
 						}
 					});
-				} catch(ConcurrentModificationException e) {return; }
+				} catch(ConcurrentModificationException e) { return; }
 				if(remData.size()>0) {
 					remData.forEach((k,d) -> {
 						d.removeFromTree(treetableview);

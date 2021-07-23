@@ -40,7 +40,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -50,10 +49,8 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
-import org.mavlink.messages.lquac.msg_ping;
 
 import com.comino.flight.base.UBXRTCM3Base;
-
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.MavlinkLogReader;
@@ -66,7 +63,6 @@ import com.comino.flight.prefs.dialog.PreferencesDialog;
 import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
-import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.control.impl.MAVSerialController;
 import com.comino.mavcom.control.impl.MAVSimController;
@@ -92,7 +88,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -181,7 +176,6 @@ public class MainApp extends Application  {
 
 	private SimpleNTPServer ntp_server;
 	
-
 	public MainApp() {
 		super();
 		
@@ -384,7 +378,6 @@ public class MainApp extends Application  {
 			});
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
-
 				if(n.booleanValue()) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
