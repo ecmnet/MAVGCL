@@ -931,7 +931,6 @@
 		<ULogSource field="sensor_combined_0.baro_temp_celcius"></ULogSource>
 		<Groups>
 			<Group>Raw data</Group>
-			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1050,7 +1049,6 @@
 
     <KeyFigure desc="GPS.Lat." uom="°" mask="#0.0000000" key="RGPSLAT">
 		<MSPSource class="gps" field="latitude"></MSPSource>
-		<PX4Source field="GPS.Lat"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lat">
 		  <Converter class="ExpressionConverter" expression="RGPSLAT/10000000" />
 		</ULogSource>
@@ -1061,7 +1059,6 @@
 
 	<KeyFigure desc="GPS.Lon." uom="°" mask="#0.0000000" key="RGPSLON">
 		<MSPSource class="gps" field="longitude"></MSPSource>
-		<PX4Source field="GPS.Lon"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.lon">
 		 <Converter class="ExpressionConverter" expression="RGPSLON/10000000" />
 		</ULogSource>
@@ -1069,6 +1066,22 @@
 			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="GPS.LocalX" uom="m" mask="#0.00" key="GPSLX">
+		<MSPSource class="gps" field="lx"></MSPSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="GPS.LocalY" uom="m" mask="#0.00" key="GPSLY">
+		<MSPSource class="gps" field="ly"></MSPSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+
+	
 
 	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
 		<MSPSource class="gps" field="numsat"></MSPSource>
@@ -1098,7 +1111,6 @@
 
 	<KeyFigure desc="GPS Eph" uom="m" mask="#0.00" key="RGPSEPH">
 	    <MSPSource class="gps" field="eph"></MSPSource>
-	    <PX4Source field="LPOS.EPH"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.eph"></ULogSource>
 		<Groups>
 			<Group>GPS</Group>
@@ -1107,7 +1119,6 @@
 
 	<KeyFigure desc="GPS Epv" uom="m" mask="#0.00" key="RGPSEPV">
 	    <MSPSource class="gps" field="epv"></MSPSource>
-	    <PX4Source field="LPOS.EPV"></PX4Source>
 		<ULogSource field="vehicle_gps_position_0.epv"></ULogSource>
 		<Groups>
 			<Group>GPS</Group>

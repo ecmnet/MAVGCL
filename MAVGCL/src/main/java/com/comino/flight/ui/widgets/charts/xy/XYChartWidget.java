@@ -114,6 +114,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			{ "SPLPOSX"	 , "SPLPOSY"   },
 			{ "GNDTRUTHX", "GNDTRUTHY" },
 			{ "PRECLOCKX", "PRECLOCKY" },
+			{ "GPSLX",         "GPSLY" },
 
 	};
 
@@ -124,7 +125,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			"Planned path",
 			"SP Loc.Position",
 			"Ground truth",
-			"Percision lock"
+			"Percision lock",
+			"Local GPS Positon"
 	};
 
 	private final static String[] SCALES = {
