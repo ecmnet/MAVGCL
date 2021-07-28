@@ -82,6 +82,7 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Border;
@@ -146,11 +147,28 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 
-		groups.getItems().add("-select group-");
+		groups.getItems().add("-search parameter-");
 		groups.setEditable(true);
 		groups.getSelectionModel().clearAndSelect(0);
 		groups.setVisibleRowCount(50);
-		groups.getEditor().setDisable(true);
+		groups.getEditor().setEditable(false);
+		groups.getEditor().setTextFormatter(new TextFormatter<>((change) -> {
+			if(groups.getEditor().isEditable())
+              change.setText(change.getText().toUpperCase());
+            return change;
+        }));
+
+		groups.getEditor().setOnMouseClicked((event) -> {
+				groups.getEditor().setText("");
+				groups.getEditor().setEditable(true);
+		});
+		
+		groups.getEditor().setOnKeyTyped((keyEvent) -> {
+			String search = groups.getEditor().getText();
+			if(search.length()>2)
+			   populateParameterListBySearch(search);
+		});
+		
 
 		scroll.setBorder(Border.EMPTY);
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -160,14 +178,14 @@ public class ParameterWidget extends ChartControlPane  {
 
 		this.visibleProperty().addListener((e,o,n) -> {
 			if(n.booleanValue() && state.getParamLoadedProperty().get()) {
-				String group = MAVPreferences.getInstance().get(MAVPreferences.TUNING_GROUP, "-None-");
+				int group = MAVPreferences.getInstance().getInt(MAVPreferences.TUNING_GROUP, 0);
 				groups.getSelectionModel().select(group);
 			} else
 				groups.getSelectionModel().select(0);
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
-			//	groups.getSelectionModel().clearAndSelect(0);
+			groups.getSelectionModel().clearAndSelect(0);
 			params.refreshParameterList(false);
 		});
 
@@ -214,12 +232,13 @@ public class ParameterWidget extends ChartControlPane  {
 	public void setup(IMAVController control) {
 		super.setup(control);
 
-		groups.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		groups.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(state.getParamLoadedProperty().get() && newValue!=null) {
-					prefs.put(MAVPreferences.TUNING_GROUP, newValue);
-					populateParameterList(newValue);
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				groups.getEditor().setEditable(false);
+				if(state.getParamLoadedProperty().get() && newValue.intValue()>0) {
+					prefs.putInt(MAVPreferences.TUNING_GROUP, newValue.intValue());
+					populateParameterList(newValue.intValue());
 				}
 			}
 		});
@@ -227,13 +246,32 @@ public class ParameterWidget extends ChartControlPane  {
 		grid.disableProperty().bind(state.getLogLoadedProperty().or(state.getConnectedProperty().not()));
 
 	}
-
-	private void populateParameterList(String group) {
+	
+	private void populateParameterListBySearch(String search) {
 		grid.setVisible(false);
 		grid.getChildren().clear();
 		int i = 0;
 		for(ParameterAttributes p : params.getList()) {
-			if(group.contains(p.group_name)) {
+			if(p.name.contains(search.toUpperCase())) {
+				Label unit = new Label(p.unit); unit.setPrefWidth(38);
+				Label name = new Label(p.name); name.setPrefWidth(95);
+				name.setTooltip(createParameterToolTip(p));
+				ParamItem item = createParamItem(p, true);
+				items.add(item);
+				grid.addRow(i++, name,item.editor,unit);
+			}
+		}
+		Platform.runLater(() -> {
+			grid.setVisible(true);
+		});
+	}
+
+	private void populateParameterList(int group) {
+		grid.setVisible(false);
+		grid.getChildren().clear();
+		int i = 0;
+		for(ParameterAttributes p : params.getList()) {
+			if(p.group_name.contains(groups.getItems().get(group))) {
 				Label unit = new Label(p.unit); unit.setPrefWidth(38);
 				Label name = new Label(p.name); name.setPrefWidth(95);
 				name.setTooltip(createParameterToolTip(p));
