@@ -96,9 +96,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 	private ChoiceBox<String> trigstop;
 
 	@FXML
-	private ChoiceBox<Integer> trigdelay;
-
-	@FXML
 	private Circle isrecording;
 
 	@FXML
@@ -108,7 +105,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 	private int triggerStartMode =0;
 	private int triggerStopMode  =0;
-	private int triggerDelay =0;
 
 	private boolean modetrigger  = false;
 	protected int totalTime_sec = 30;
@@ -147,9 +143,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		trigstop.getItems().addAll(TRIG_STOP_OPTIONS);
 		trigstop.getSelectionModel().select(0);
 		trigstop.setDisable(true);
-		trigdelay.getItems().addAll(TRIG_DELAY_OPTIONS);
-		trigdelay.getSelectionModel().select(1);
-		trigdelay.setDisable(true);
 
 		recording.disableProperty().bind(
 				state.getConnectedProperty().not()
@@ -206,7 +199,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 		enablemodetrig.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			modetrigger = newvalue;
-			trigdelay.setDisable(oldvalue);
 			trigstop.setDisable(oldvalue);
 			trigstart.setDisable(oldvalue);
 
@@ -223,11 +215,6 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 		trigstop.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
 			triggerStopMode = newvalue.intValue();
-		});
-
-
-		trigdelay.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
-			triggerDelay = newvalue.intValue();
 		});
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -348,13 +335,13 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			}
 		} else {
 			switch(triggerStopMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),triggerDelay);
+			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),1);
 			break;
-			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),triggerDelay);
+			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),1);
 			break;
-			case TRIG_ALTHOLD:		recording(newStat.nav_state == Status.NAVIGATION_STATE_ALTCTL || newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,triggerDelay);
+			case TRIG_ALTHOLD:		recording(newStat.nav_state == Status.NAVIGATION_STATE_ALTCTL || newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,1);
 			break;
-			case TRIG_POSHOLD:	    recording(newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,triggerDelay);
+			case TRIG_POSHOLD:	    recording(newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,1);
 			break;
 			}
 		}

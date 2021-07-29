@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<fx:root prefHeight="195.0" prefWidth="203.0" type="javafx.scene.layout.Pane"
+<fx:root prefHeight="172.0" prefWidth="203.0" type="javafx.scene.layout.Pane"
 	styleClass="widget" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<Label layoutX="12.0" layoutY="14.0" text="Control recording"
@@ -32,8 +32,5 @@
 		<ChoiceBox fx:id="trigstop" layoutX="85.0" layoutY="133.0"
 			prefHeight="22.0" prefWidth="102.0" />
 		<Label layoutX="14.0" layoutY="137.0" text="Stop when" />
-		<ChoiceBox fx:id="trigdelay" layoutX="140.0" layoutY="160.0"
-			prefHeight="19.0" prefWidth="47.0" />
-		<Label layoutX="13.0" layoutY="164.0" text="Stop with delay (sec)" />
 	</children>
 </fx:root>
