@@ -688,7 +688,7 @@ public class MainApp extends Application  {
 				control.connect();
 			
 			primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-				if(newValue.booleanValue()) {
+				if(newValue.booleanValue() && control.isConnected()) {
 			       control.getStatusManager().reset();   
 				}
 			});
