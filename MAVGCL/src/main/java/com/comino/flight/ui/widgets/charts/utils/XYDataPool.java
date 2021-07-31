@@ -37,6 +37,8 @@ package com.comino.flight.ui.widgets.charts.utils;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.comino.flight.observables.StateProperties;
+
 import javafx.scene.chart.XYChart;
 
 public class XYDataPool {
@@ -47,7 +49,17 @@ public class XYDataPool {
 	private final static Hashtable<XYChart.Data<Number,Number>,Boolean> unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
 
 	public XYDataPool() {
+		StateProperties.getInstance().getLogLoadedProperty().addListener((a,o,n) -> {
+			if(n.booleanValue() && locked.size() > 0) {
+				invalidateAll();
+			}
+		});
 		
+		XYChart.Data<Number,Number> o;
+		for(int i=0;i<unlocked.size();i++) {
+			o = new XYChart.Data<Number,Number>(0,0);
+			unlocked.put( o, true );
+		}
 	}
 
 	public  XYChart.Data<Number,Number> checkOut(double x, double y)

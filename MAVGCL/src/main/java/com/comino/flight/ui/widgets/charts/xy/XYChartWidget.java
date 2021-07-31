@@ -600,7 +600,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		scroll.addListener((v, ov, nv) -> {
 			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
-			System.out.println(current_x0_pt);
 			updateRequest();
 		});
 

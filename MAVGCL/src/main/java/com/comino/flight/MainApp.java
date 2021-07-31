@@ -379,6 +379,7 @@ public class MainApp extends Application  {
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
+					control.getStatusManager().reset(); 
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
 				Platform.runLater(() -> {
