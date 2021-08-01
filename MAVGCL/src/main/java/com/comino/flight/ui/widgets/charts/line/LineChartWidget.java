@@ -982,7 +982,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
 						&& display_annotations) {
 
-					if((current_x_pt - last_annotation_pos) > 150 || yoffset > 12)
+					if((current_x_pt - last_annotation_pos) > m.msg.text.length()*16 || yoffset > 12)
 						yoffset=0;
 
 					linechart.getAnnotations().add(new LineMessageAnnotation(this,dt_sec,yoffset++, m.msg,

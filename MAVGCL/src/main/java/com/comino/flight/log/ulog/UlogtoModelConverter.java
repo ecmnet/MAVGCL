@@ -55,6 +55,8 @@ public class UlogtoModelConverter {
 
 	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 	private StateProperties state;
+	
+	private LogMessage msg_old;
 
 
 	public UlogtoModelConverter(ULogReader reader, List<AnalysisDataModel> list) {
@@ -94,10 +96,12 @@ public class UlogtoModelConverter {
 
 			reader.loggedMessages.forEach(s -> {
 				LogMessage msg = new LogMessage(s.message,s.logLevel & 0x00FF - 56);
+				msg.tms = s.timestamp - reader.getStartMicroseconds();
 				int i = (int)((s.timestamp - reader.getStartMicroseconds())/interval_us);
-				if(i > 0) {
+				if(i > 0 && (msg_old == null || ( !msg.text.equals(msg_old.text) && (msg.tms - msg_old.tms) > 5 ))) {
 					AnalysisDataModel model = list.get(i);
 					model.msg = msg;
+					msg_old = msg;
 				}
 			});
 

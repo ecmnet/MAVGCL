@@ -97,8 +97,8 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		}
 		this.triangle.setStrokeType(StrokeType.INSIDE);
 
-		Tooltip tooltip = new Tooltip(message.text);
-		Tooltip.install(pane, tooltip);
+//		Tooltip tooltip = new Tooltip(message.text);
+//		Tooltip.install(pane, tooltip);
 
 
 		if(displayLabel) {
