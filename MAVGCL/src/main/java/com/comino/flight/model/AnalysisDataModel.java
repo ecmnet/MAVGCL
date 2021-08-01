@@ -44,9 +44,9 @@ import com.comino.mavcom.model.segment.Status;
 
 public class AnalysisDataModel implements Cloneable {
 
-	public long       tms  = 0;
-	public LogMessage msg  = null;
-	public Status   status = null;
+	public long             tms  = 0;
+	public LogMessage       msg  = null;
+	public Status         status = null;
 
 	public float    dt_sec = 0;
 
@@ -68,7 +68,6 @@ public class AnalysisDataModel implements Cloneable {
 
 	public Object clone() {
 	   AnalysisDataModel d = new AnalysisDataModel(data, grid);
-
 		d.tms = tms;
 		if(msg!=null)
 			d.msg = msg.clone();

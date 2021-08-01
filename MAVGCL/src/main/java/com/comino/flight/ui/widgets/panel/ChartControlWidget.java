@@ -115,12 +115,23 @@ public class ChartControlWidget extends ChartControlPane  {
 		buildKeyfigureModelSelection();
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
+			
+			if(nv.booleanValue()) {
+				state.getReplayingProperty().set(false);
+				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
+					scroll.setDisable(true);
+				else
+					scroll.setDisable(false);
+				scroll.setValue(1);
+			}
+			
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null) {
 					chart.getValue().getTimeFrameProperty().set(0);
 					chart.getValue().getTimeFrameProperty().set(totaltime.valueProperty().get());
 				}
 			}
+	
 		});
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -179,18 +190,6 @@ public class ChartControlWidget extends ChartControlPane  {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
 			});
-		});
-
-
-		state.getLogLoadedProperty().addListener((observable, oldValue, newValue) -> {
-			if(newValue.booleanValue()) {
-				state.getReplayingProperty().set(false);
-				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
-					scroll.setDisable(true);
-				else
-					scroll.setDisable(false);
-				scroll.setValue(1);
-			}
 		});
 
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {

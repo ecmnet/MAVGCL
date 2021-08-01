@@ -162,7 +162,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 //			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
 //			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
 			
-			lock_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("PRECLOCKW")));
+			lock_rotate.angleProperty().set(-90+MSPMathUtils.fromRad(model.getValue("PRECLOCKW")));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
 			lock.setVisible(true);
