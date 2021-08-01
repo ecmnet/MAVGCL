@@ -167,6 +167,7 @@ public class ParameterWidget extends ChartControlPane  {
 			String search = groups.getEditor().getText();
 			if(search.length()>2)
 			   populateParameterListBySearch(search);
+			keyEvent.consume();
 		});
 		
 
@@ -337,11 +338,11 @@ public class ParameterWidget extends ChartControlPane  {
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
 							setValueOf(editor,getValueOf(sp.getEditor()));
-							groups.requestFocus();
+							grid.requestFocus();
 						}
 						if(keyEvent.getCode() == KeyCode.ESCAPE) {
 							setValueOf(editor,att.value);
-							groups.requestFocus();
+							grid.requestFocus();
 						}
 					});
 				} else {
@@ -351,11 +352,11 @@ public class ParameterWidget extends ChartControlPane  {
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
 							setValueOf(editor,getValueOf(sp.getEditor()));
-							groups.requestFocus();
+							grid.requestFocus();
 						}
 						if(keyEvent.getCode() == KeyCode.ESCAPE) {
 							setValueOf(editor,att.value);
-							groups.requestFocus();
+							grid.requestFocus();
 						}
 					});
 				}
@@ -378,17 +379,18 @@ public class ParameterWidget extends ChartControlPane  {
 					});
 					cb.getSelectionModel().
 					selectedItemProperty().addListener((v,ov,nv) -> {
-						groups.requestFocus();
+						grid.requestFocus();
 					});
 				}
 				else {
 					this.editor = new TextField();
 					this.editor.setOnKeyPressed(keyEvent -> {
+						keyEvent.consume();
 						if(keyEvent.getCode() == KeyCode.ENTER)
-							groups.requestFocus();
+							grid.requestFocus();
 						if(keyEvent.getCode() == KeyCode.ESCAPE) {
 							setValueOf(editor,att.value);
-							groups.requestFocus();
+							grid.requestFocus();
 						}
 					});
 
@@ -398,7 +400,7 @@ public class ParameterWidget extends ChartControlPane  {
 						editor.setCursor(Cursor.DEFAULT);
 						((TextField)editor).setEditable(false);
 						editor.setOnMouseClicked((event) -> {
-							groups.requestFocus();
+							grid.requestFocus();
 							BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
 							bd.setValue((int)att.value);
 							int val = bd.show();
