@@ -69,6 +69,7 @@ import com.comino.mavcom.control.impl.MAVSimController;
 import com.comino.mavcom.control.impl.MAVUdpController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.GPS;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
@@ -332,7 +333,7 @@ public class MainApp extends Application  {
 						System.out.println("Global Position origin set to base position");
 					}
 				}
-				else if(model.gps.numsat > 6 && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
+				else if(model.gps.isFlagSet(GPS.GPS_SAT_FIX) && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
 					
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;

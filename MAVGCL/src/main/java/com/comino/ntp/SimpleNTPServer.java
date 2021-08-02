@@ -142,7 +142,7 @@ public class SimpleNTPServer implements Runnable {
                 socket.receive(request);
                 final long rcvTime = System.currentTimeMillis();
                 handlePacket(request, rcvTime);
-            } catch (final IOException e) {
+            } catch (final Exception e) {
                 if (running)
                 {
                     e.printStackTrace();
