@@ -806,7 +806,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
 		if(!isDisabled()) {
-			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			updateRequest();
 		}
 	}
