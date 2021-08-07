@@ -197,8 +197,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	private class Receiver implements Runnable {
 
 		private Image next;
-		private final byte [] payload = new byte[30000];
-		private final byte [] buf     = new byte[30000];    
+		private final byte [] payload = new byte[128*1024];
+		private final byte [] buf     = new byte[128*1024];    
 
 		public void run() {
 			System.out.println("Video stream started");
