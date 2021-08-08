@@ -980,7 +980,7 @@
 		<MSPSource class="est" field="haglRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.states[9]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -988,7 +988,7 @@
 		<MSPSource class="est" field="tasRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.states[10]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -996,35 +996,35 @@
 		<MSPSource class="est" field="magRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.states[11]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Vel.Ratio" uom="" mask="#0.00" key="VELRATIO">
 		<MSPSource class="est" field="velRatio"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="HorizPos.Ratio" uom="" mask="#0.00" key="HORIZRATIO">
 		<MSPSource class="est" field="horizRatio"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="VertPos.Ratio" uom="" mask="#0.00" key="VERTRATIO">
 		<MSPSource class="est" field="vertRatio"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="±#0.00" key="GPHACCUR">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 		<Validity min="0" max="5.0"/>
 	</KeyFigure>
@@ -1032,7 +1032,7 @@
 	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.00" key="GPVACCUR">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 		<Validity min="0" max="5.0"/>
 	</KeyFigure>
@@ -1040,7 +1040,7 @@
 	<KeyFigure desc="EstimatorFlags" uom="" mask="#0" key="ESTFLAGS">
 		<MSPSource class="est" field="flags"></MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1156,7 +1156,7 @@
 		<PX4Source field="EST0.s0"></PX4Source>
 		<ULogSource field="estimator_status_0.states[0]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1164,7 +1164,7 @@
 		<PX4Source field="EST0.s1"></PX4Source>
 		<ULogSource field="estimator_status_0.states[1]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1172,7 +1172,7 @@
 		<PX4Source field="EST0.s2"></PX4Source>
 		<ULogSource field="estimator_status_0.states[2]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1180,7 +1180,7 @@
 		<PX4Source field="EST0.s3"></PX4Source>
 		<ULogSource field="estimator_status_0.states[3]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1188,7 +1188,7 @@
 		<PX4Source field="EST0.s4"></PX4Source>
 		<ULogSource field="estimator_status_0.states[4]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1196,7 +1196,7 @@
 		<PX4Source field="EST0.s5"></PX4Source>
 		<ULogSource field="estimator_status_0.states[5]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1204,7 +1204,7 @@
 		<PX4Source field="EST0.s6"></PX4Source>
 		<ULogSource field="estimator_status_0.states[6]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1212,7 +1212,7 @@
 		<PX4Source field="EST0.s7"></PX4Source>
 		<ULogSource field="estimator_status_0.states[7]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1220,7 +1220,7 @@
 		<PX4Source field="EST0.s8"></PX4Source>
 		<ULogSource field="estimator_status_0.states[8]"></ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1248,7 +1248,7 @@
 		   <Converter class="BitMaskConverter" p1="0"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1260,7 +1260,7 @@
 		    <Converter class="BitMaskConverter" p1="1"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1272,7 +1272,7 @@
 		   <Converter class="BitMaskConverter" p1="2"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1284,7 +1284,7 @@
 		   <Converter class="BitMaskConverter" p1="3"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1296,7 +1296,7 @@
 		   <Converter class="BitMaskConverter" p1="4"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -1308,7 +1308,7 @@
 		   <Converter class="BitMaskConverter" p1="5"/>
 		</ULogSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 	
@@ -1317,7 +1317,7 @@
 		  <Converter class="BitMaskConverter" p1="9"/>
 		</MSPSource>
 		<Groups>
-			<Group>Estimator Status</Group>
+			<Group>EKF2</Group>
 		</Groups>
 	</KeyFigure>
 
