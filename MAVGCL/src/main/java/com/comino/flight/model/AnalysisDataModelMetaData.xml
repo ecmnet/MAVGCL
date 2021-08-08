@@ -1026,7 +1026,7 @@
 		<Groups>
 			<Group>EKF2</Group>
 		</Groups>
-		<Validity min="0" max="5.0"/>
+		<Validity min="0" max="0.5"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.00" key="GPVACCUR">
@@ -1034,7 +1034,7 @@
 		<Groups>
 			<Group>EKF2</Group>
 		</Groups>
-		<Validity min="0" max="5.0"/>
+		<Validity min="0" max="0.2"/>
 	</KeyFigure>
 
 	<KeyFigure desc="EstimatorFlags" uom="" mask="#0" key="ESTFLAGS">
@@ -1730,6 +1730,13 @@
 		   <Converter class="ExpressionConverter" expression="VISIONQUAL/100" />
 		 </MSPSource>
 		 <Validity min="0.1" max="1.0"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+  
+  <KeyFigure desc="VIO Errors" uom="" mask="#0" key="VISIONERRC">
+		<MSPSource class="vision" field="errors"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
