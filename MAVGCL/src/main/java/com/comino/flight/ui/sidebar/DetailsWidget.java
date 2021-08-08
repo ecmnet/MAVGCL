@@ -125,6 +125,8 @@ public class DetailsWidget extends ChartControlPane {
 			    "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV", 
 			    null, 
 			    "LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
+			    null,
+			    "GPHACCUR", "GPVACCUR", 
 		    	null,
 			    "VISIONFPS", "VISIONQUAL", "FLOWQL",
 			    null,
