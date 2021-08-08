@@ -96,7 +96,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
-
+		
+		
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -332,11 +333,15 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public void removeFromTree(TreeTableView<DataSet> view) {
 			view.getRoot().getChildren().remove(ti);
-			tms = 0;
+			tms = 0; rate = 0; count = 0;
 		}
 
 		public Map<String,DataSet> getData() {
 			return data;
+		}
+		
+		public void clear() {
+			tms = 0; rate = 0; count = 0;
 		}
 
 		public String getName() {
@@ -359,7 +364,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 			if(isDisabled()) {
 				last_update = System.currentTimeMillis(); 
-				tms = 0;
+				tms = 0; rate = 0; count = 0;
 				return false;
 			}
 
