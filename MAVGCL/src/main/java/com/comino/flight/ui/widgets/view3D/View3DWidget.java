@@ -181,15 +181,16 @@ public class View3DWidget extends SubScene implements IChartControl {
 			long tms=0;
 			@Override
 			public void handle(long now) {
-				if((now - tms <66))
+				if((now - tms < 33))
 					return;
 				tms = now;
-				target.updateState(model);
-				vehicle.updateState(model,offset);
+//				target.updateState(model);
+//				vehicle.updateState(model,offset);
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
+					if(!vehicle.isVisible())
+						  vehicle.setVisible(true);
 					vehicle.updateState(model,offset);
-					vehicle.setVisible(true);
 					break;
 				case Camera.VEHICLE_PERSPECTIVE:
 					camera.updateState(model);
