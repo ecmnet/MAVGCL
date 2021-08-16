@@ -139,7 +139,7 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
-			wq.addSingleTask("LP", 2000,() -> {
+			wq.addSingleTask("LP", 500,() -> {
 				
 				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				
@@ -154,9 +154,10 @@ public class StateProperties {
 			
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
+				reset();
 
 			} else {
-				  control.getStatusManager().reset();
+				control.getStatusManager().reset();
 			}
 		});
 
@@ -248,6 +249,19 @@ public class StateProperties {
 //					VoiceTTS.getInstance().talk(msg.text);
 			});
 		}
+	}
+	
+	public void reset() {
+		Platform.runLater(()-> {
+		isGPOSAvailable.set(false);
+		isLPOSAvailable.set(false);
+		rcProperty.set(false);
+		isSLAMAvailable.set(false);
+		isGPSAvailable.set(false);
+		isCVAvailable.set(false);
+		isIMUAvailable.set(false);
+		});
+		
 	}
 
 	public BooleanProperty getMSPProperty() {
