@@ -1021,7 +1021,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="±#0.00" key="GPHACCUR">
+	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="±#0.000" key="GPHACCUR">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
 		<Groups>
 			<Group>EKF2</Group>
@@ -1029,7 +1029,7 @@
 		<Validity min="0" max="0.5"/>
 	</KeyFigure>
 
-	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.00" key="GPVACCUR">
+	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.000" key="GPVACCUR">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
 		<Groups>
 			<Group>EKF2</Group>
