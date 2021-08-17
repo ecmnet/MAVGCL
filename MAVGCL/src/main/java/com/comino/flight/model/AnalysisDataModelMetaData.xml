@@ -748,10 +748,10 @@
 
 	
 
-	<!-- Raw data -->
+	<!-- Flow data -->
 
 	<KeyFigure desc="Flow.X" uom="rad/s" mask="#0.00" key="FLOWX">
-		<MSPSource class="raw" field="fX"></MSPSource>
+		<MSPSource class="flow" field="fX"></MSPSource>
 		<PX4Source field="FLOW.RawX"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_x_integral"/>
 		<Groups>
@@ -761,7 +761,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Y" uom="rad/s" mask="#0.00" key="FLOWY">
-		<MSPSource class="raw" field="fY"></MSPSource>
+		<MSPSource class="flow" field="fY"></MSPSource>
 		<PX4Source field="FLOW.RawY"></PX4Source>
 		<ULogSource field="optical_flow_0.pixel_flow_y_integral"/>
 		<Groups>
@@ -771,7 +771,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="FLow.Dist." uom="m" mask="#0.00" key="FLOWDI">
-		<MSPSource class="raw" field="fd">
+		<MSPSource class="flow" field="fd">
 		    <Converter class="SignConverter" expression="LIDAR" />
 		</MSPSource>
 		<PX4Source field="FLOW.Dist"></PX4Source>
@@ -783,7 +783,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Quality" mask="#0.0" uom="%" key="FLOWQL">
-		<MSPSource class="raw" field="fq">
+		<MSPSource class="flow" field="fq">
 		  <!--   <Converter class="ExpressionConverter" expression="FLOWQL/255" /> -->
 		   <Converter class="LowPassConverter" p1 ="255" p2 = "0.15"/>
 		</MSPSource>
@@ -801,7 +801,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.X" uom="m" mask="#0.00" key="FLOWGYX">
-	    <MSPSource class="raw" field="fgX"></MSPSource>
+	    <MSPSource class="flow" field="fgX"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_x_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -810,7 +810,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.Y" uom="m" mask="#0.00" key="FLOWGYY">
-	    <MSPSource class="raw" field="fgY"></MSPSource>
+	    <MSPSource class="flow" field="fgY"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_y_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -819,7 +819,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Gyro.Z" uom="m" mask="#0.00" key="FLOWGYZ">
-	    <MSPSource class="raw" field="fgZ"></MSPSource>
+	    <MSPSource class="flow" field="fgZ"></MSPSource>
 		<ULogSource field="optical_flow_0.gyro_z_rate_integral"/>
 		<Groups>
 			<Group>Raw data</Group>
@@ -828,7 +828,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="RangeFinder Dist." uom="m" mask="#0.00" key="LIDAR">
-		<MSPSource class="raw" field="di">
+		<MSPSource class="distance" field="di">
 		    <Converter class="SignConverter" expression="LIDAR" />
 		</MSPSource>
 		<PX4Source field="DIST.Distance"></PX4Source>
@@ -839,7 +839,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="RangeFinder Dist.Cov." uom="m" mask="#0.00" key="LIDARCOV">
-		<MSPSource class="raw" field="dicov"></MSPSource>
+		<MSPSource class="distance" field="dicov"></MSPSource>
 		<PX4Source field="DIST.Covariance"></PX4Source>
 		<ULogSource field="distance_sensor_0.covariance"/>
 		<Groups>
