@@ -64,7 +64,7 @@ public class XYStatistics {
 
 		x1 =  list.size() < x1 ? list.size()-1 : x1-1;
 
-		if(list.size() < 20 || fx.hash==0 || fy.hash==0)
+		if(list.size() < 20 || fx == null || fy == null || fx.hash==0 || fy.hash==0)
 			return;
 
 		for(i = x0; i<= x1;i++) {
