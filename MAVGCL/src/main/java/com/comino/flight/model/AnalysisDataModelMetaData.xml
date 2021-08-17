@@ -772,7 +772,7 @@
 
 	<KeyFigure desc="FLow.Dist." uom="m" mask="#0.00" key="FLOWDI">
 		<MSPSource class="flow" field="fd">
-		    <Converter class="SignConverter" expression="LIDAR" />
+		    <Converter class="SignConverter" expression="FLOWDI" />
 		</MSPSource>
 		<PX4Source field="FLOW.Dist"></PX4Source>
 		<ULogSource field="optical_flow_0.ground_distance_m"/>
