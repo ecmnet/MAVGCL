@@ -141,6 +141,7 @@ public class StateProperties {
 			
 			wq.addSingleTask("LP", 500,() -> {
 				
+
 				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				
 				isGPSAvailable.set(true);
@@ -154,10 +155,10 @@ public class StateProperties {
 			
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-				reset();
+				reset(); 
 
 			} else {
-				control.getStatusManager().reset();
+				
 			}
 		});
 
@@ -252,6 +253,7 @@ public class StateProperties {
 	}
 	
 	public void reset() {
+		control.getStatusManager().reset();
 		Platform.runLater(()-> {
 		isGPOSAvailable.set(false);
 		isLPOSAvailable.set(false);
