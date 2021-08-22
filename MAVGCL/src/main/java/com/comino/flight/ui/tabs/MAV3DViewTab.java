@@ -79,7 +79,7 @@ public class MAV3DViewTab extends Pane  {
 	@FXML
 	private void initialize() {
 
-		widget = new View3DWidget(new Xform(),0,0,true,javafx.scene.SceneAntialiasing.BALANCED);
+		widget = new View3DWidget(new Xform(),0,0,false,javafx.scene.SceneAntialiasing.BALANCED);
 		widget.fillProperty().set(Color.ALICEBLUE);
 		widget.widthProperty().bind(this.widthProperty().subtract(20));
 		widget.heightProperty().bind(this.heightProperty().subtract(54));
