@@ -34,6 +34,7 @@
 package com.comino.flight.ui.sidebar;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
@@ -43,6 +44,7 @@ import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.jfx.extensions.StateButton;
+import com.comino.flight.MainApp;
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
@@ -56,10 +58,14 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class MSPCtlWidget extends ChartControlPane   {
 
@@ -92,6 +98,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private CheckBox enable_precision_lock;
+
+	@FXML
+	private CheckBox enable_fcum_mode;
 
 	@FXML
 	private ChoiceBox<String> stream;
@@ -215,6 +224,24 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.param2 =  MSP_AUTOCONTROL_MODE.PRECISION_LOCK;
 			if(n.booleanValue())
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+
+		enable_fcum_mode.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.FCUM;
+			if(n.booleanValue()) {
+				if(confirmationDialog(AlertType.CONFIRMATION,"Is the FCU separated from vehicle?"))
+					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				else {
+					enable_fcum_mode.setSelected(false);
+					return;
+				}
+			}
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
@@ -452,7 +479,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
 		});
-
+		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
 			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));
 		});
@@ -472,11 +499,25 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
+			enable_fcum_mode.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM));
+		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES, Status.MSP_OPCV_AVAILABILITY,(n) -> {
 			if(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
 				enable_vision.setSelected(true);
 		});
 	}
+
+	public static boolean confirmationDialog(Alert.AlertType alertType, String statement) {
+		Alert alert = new Alert(alertType, statement);
+		alert.getDialogPane().getStylesheets().add(MainApp.class.getResource("application.css").toExternalForm());
+		alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
+		Optional<ButtonType> choose = alert.showAndWait();
+		return choose.get() == ButtonType.OK;
+	}
+
+
 
 }
