@@ -23,9 +23,15 @@ public class StateButton extends Button {
 				setStyle("-fx-background-color: #1a606e");
 			});
 		});
+		
+		this.disabledProperty().addListener((v,o,n) -> {
+			setStyle("-fx-background-color: #606060");
+		});
 	}
 
 	public void setState(boolean state) {
+		if(state == this.state || isDisabled())
+			return;
 		this.state = state;
 		Platform.runLater(() -> {
 			if(state)
@@ -34,6 +40,8 @@ public class StateButton extends Button {
 				setStyle("-fx-background-color: #606060");
 		});
 	}
+	
+	
 
 	public boolean getState() {
 		return state;

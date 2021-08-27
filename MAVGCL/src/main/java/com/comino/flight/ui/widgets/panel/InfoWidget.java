@@ -97,32 +97,34 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 				if(!empty) {
 					setPrefWidth(130);
 					setWrapText(true);
-					switch(m.severity) {
-					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
-						setStyle("-fx-text-fill:lightblue;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
-						setStyle("-fx-text-fill:lightgreen;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-						setStyle("-fx-text-fill:wheat;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-						setStyle("-fx-text-fill:salmon;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
-						setStyle("-fx-text-fill:tomato;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_ERROR:
-						setStyle("-fx-text-fill:yellow;");
-						break;
-					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
-						setStyle("-fx-text-fill:yellowgreen;");
-						break;
-					default:
-						setStyle("-fx-text-fill:white;");
-					}
-					setText(m.text);
+					Platform.runLater(() -> {
+						switch(m.severity) {
+						case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
+							setStyle("-fx-text-fill:lightblue;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
+							setStyle("-fx-text-fill:lightgreen;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_WARNING:
+							setStyle("-fx-text-fill:wheat;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
+							setStyle("-fx-text-fill:salmon;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
+							setStyle("-fx-text-fill:tomato;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_ERROR:
+							setStyle("-fx-text-fill:yellow;");
+							break;
+						case MAV_SEVERITY.MAV_SEVERITY_ALERT:
+							setStyle("-fx-text-fill:yellowgreen;");
+							break;
+						default:
+							setStyle("-fx-text-fill:white;");
+						}
+						setText(m.text);
+					});
 				} else
 					setText(null);
 			}

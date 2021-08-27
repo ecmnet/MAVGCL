@@ -37,6 +37,7 @@ package com.comino.jfx.extensions;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -96,7 +97,7 @@ public class DashLabelLED extends GridPane {
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())
-			   circle.setFill(Color.TRANSPARENT);
+				circle.setFill(Color.TRANSPARENT);
 			else {
 				switch (mode) {
 				case MODE_OFF:
@@ -131,30 +132,34 @@ public class DashLabelLED extends GridPane {
 		if(on) setMode(MODE_ON); else setMode(MODE_OFF);
 
 		if (timeline != null)
-		timeline.stop();
+			timeline.stop();
 	}
 
 	public void setMode(int mode) {
 
 		if (this.mode == mode)
 			return;
-
-		if (timeline != null)
-			timeline.stop();
-
-		switch (mode) {
-		case MODE_OFF:
-			circle.setFill(Color.TRANSPARENT);
-			break;
-		case MODE_ON:
-			circle.setFill(color);
-			break;
-		case MODE_BLINK:
-			if (timeline != null)
-				timeline.play();
-			break;
-		}
 		this.mode = mode;
+
+		Platform.runLater(() -> {
+
+			if (timeline != null)
+				timeline.stop();
+
+			switch (mode) {
+			case MODE_OFF:
+				circle.setFill(Color.TRANSPARENT);
+				break;
+			case MODE_ON:
+				circle.setFill(color);
+				break;
+			case MODE_BLINK:
+				if (timeline != null)
+					timeline.play();
+				break;
+			}
+		});
+
 	}
 
 	public int getMode() {

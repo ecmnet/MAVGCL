@@ -359,7 +359,7 @@ public class ModeAnnotation implements XYAnnotation {
 			this.setStroke(fillPaint);
 			this.setFill(fillPaint);
 			this.setY(0);
-			this.setHeight(1000);
+			this.setHeight(400);
 		}
 
 		public void layout(ValueAxis<Double> xAxis, ValueAxis<Double> yAxis) {
