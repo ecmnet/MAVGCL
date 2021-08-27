@@ -36,6 +36,7 @@ package com.comino.jfx.extensions;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -65,18 +66,20 @@ public class Badge extends Label {
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		this.setAlignment(Pos.CENTER);
 		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
-		
+
 		this.disabledProperty().addListener((v,o,n) -> {
 			if(n.booleanValue())
 				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 			else
 				setMode(mode);
-				
-			
+
+
 		});
 	}
 
 	public void setMode(int mode, Color color) {
+		if(this.mode == mode)
+			return;
 		this.mode = mode;
 		setBackgroundColor(color);
 	}
@@ -84,50 +87,56 @@ public class Badge extends Label {
 	public void setMode(int mode) {
 
 		if(timeline!=null)
-		  timeline.stop();
+			timeline.stop();
 
 		toggle=false;
-		setDisable(toggle);
 
 		if(this.mode == mode && color == oldcolor)
 			return;
 
-		oldcolor = color;
-
-		switch(mode) {
-		case MODE_OFF:
-			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
-			break;
-		case MODE_ON:
-			setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:"+textColor+";");
-			break;
-		case MODE_BLINK:
-			setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
-			if(timeline!=null) timeline.play();
-			break;
-		case MODE_ERROR:
-			setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
-			if(timeline!=null) timeline.play();
-			break;
-		default:
-			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
-			break;
-		}
+		this.oldcolor = color;
 		this.mode = mode;
+
+		Platform.runLater(() -> {
+
+			setDisable(toggle);
+
+			switch(mode) {
+			case MODE_OFF:
+				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+				break;
+			case MODE_ON:
+				setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:"+textColor+";");
+				break;
+			case MODE_BLINK:
+				setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
+				if(timeline!=null) timeline.play();
+				break;
+			case MODE_ERROR:
+				setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
+				if(timeline!=null) timeline.play();
+				break;
+			default:
+				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+				break;
+			}
+		});
+
 	}
 
 
 	public void setBackgroundColor(Color color) {
-		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
+
+		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());		
 		if(color.getBrightness()<0.7)
 			this.textColor ="#F0F0F0";
 		else
 			this.textColor ="#"+Integer.toHexString(color.darker().darker().darker().darker().hashCode());
 	}
-	
+
 	public void setBackgroundColorWhiteText(Color color) {
 		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
-			this.textColor ="#F0F0F0";
+		this.textColor ="#F0F0F0";
 	}
 
 	public void setRate(String rate) {
@@ -140,7 +149,7 @@ public class Badge extends Label {
 	}
 
 	public void clear() {
-	   this.setText("");
+		this.setText("");
 	}
 
 	public String getRate() {
