@@ -41,6 +41,7 @@ import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.mavcom.model.segment.Slam;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.model.segment.Vision;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -70,7 +71,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","SpeedUp","SlowDown","Move","Turn","Land" };
-	private final static String[]  VISION_TEXTS     = { "", "Reset","Pos.Valid","Locked" };
+	private final static String[]  VISION_TEXTS     = { "", "Reset","Pos.Valid","Speed.Valid","Locked" };
 	private final static String[]  EKFHGTMODE_TEXTS = { "", "Baro","GPS","Range","Vision" };
 
 
@@ -276,19 +277,17 @@ public class ModeAnnotation implements XYAnnotation {
 	
 	private void updateVisionData(double time, AnalysisDataModel m) {
 		int state = (int)m.getValue("VISIONFLAGS");
-		switch(state) {
-		case 0:
-			addAreaData(time,0); break;
-		case 1:
-			addAreaData(time,1); break;
-		case 4:
-			addAreaData(time,2); break;
-		case 20:
-			addAreaData(time,3); break;
-		default:
-			addAreaData(time,0); break;
-			
-		}
+		
+		if((state & (1 << Vision.RESETTING))!=0)
+          addAreaData(time,1);
+		else if((state & (1 << Vision.FIDUCIAL_LOCKED))!=0)
+            addAreaData(time,1);
+        else if((state & (1 << Vision.POS_VALID))!=0)
+            addAreaData(time,2);
+        else if((state & (1 << Vision.SPEED_VALID))!=0)
+	        addAreaData(time,3);
+        else 
+            addAreaData(time,0);
 	}
 	
 	private void updateHeightMode(double time, AnalysisDataModel m) {
