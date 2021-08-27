@@ -71,7 +71,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","SpeedUp","SlowDown","Move","Turn","Land" };
-	private final static String[]  VISION_TEXTS     = { "", "Reset","Pos.Valid","Speed.Valid","Locked" };
+	private final static String[]  VISION_TEXTS     = { "", "Reset","Speed.Valid","Pos.Valid","Locked" };
 	private final static String[]  EKFHGTMODE_TEXTS = { "", "Baro","GPS","Range","Vision" };
 
 
@@ -281,11 +281,11 @@ public class ModeAnnotation implements XYAnnotation {
 		if((state & (1 << Vision.RESETTING))!=0)
           addAreaData(time,1);
 		else if((state & (1 << Vision.FIDUCIAL_LOCKED))!=0)
-            addAreaData(time,1);
+            addAreaData(time,4);
         else if((state & (1 << Vision.POS_VALID))!=0)
-            addAreaData(time,2);
+            addAreaData(time,3);
         else if((state & (1 << Vision.SPEED_VALID))!=0)
-	        addAreaData(time,3);
+	        addAreaData(time,2);
         else 
             addAreaData(time,0);
 	}
