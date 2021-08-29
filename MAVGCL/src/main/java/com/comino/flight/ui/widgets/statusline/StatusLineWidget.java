@@ -119,7 +119,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private String filename;
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "ATT", "RPOS", "APOS", "FAULT", "OTHER"  };
+	private final static String[]  EKF2STATUS_TEXTS = { "", "ATT", "RPOS", "APOS", "FAULT", "VEL", "OTHER"  };
 
 	private AnimationTimer task = null;
 
@@ -407,10 +407,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			return 3;
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL )
 			return 2;
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ )
+			return 5;
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE )
 			return 1;
 		else
-			return 5;
+			return 6;
 
 	}
 
