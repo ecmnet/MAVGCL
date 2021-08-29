@@ -98,6 +98,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 40;
 	private final static int REFRESH_SLOT   = 10;
+	
+	private final static int DEFAULT_TIME_FRAME = 60;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "PX4 Flight Mode","EKF2 Status", "Position Estimation", 
 			"GPS Fixtype", "Offboard Phases", "Vision Subsystem", "EKF2 Height mode" };
@@ -151,7 +153,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private StateProperties state = null;
 
-	private final IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
+	private final IntegerProperty timeFrame    = new SimpleIntegerProperty(DEFAULT_TIME_FRAME);
 	private final FloatProperty   scroll       = new SimpleFloatProperty(0);
 	private final FloatProperty   replay       = new SimpleFloatProperty(0);
 	private final BooleanProperty isScrolling  = new SimpleBooleanProperty(false);
@@ -698,7 +700,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		this.id      = id;
 
-		timeFrame.set(30);
+		timeFrame.set(DEFAULT_TIME_FRAME);
 
 		switch(id) {
 		case 1:
@@ -848,7 +850,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				resolution_ms = 100;
 		}
 		else if(frame >= 60) {
-			resolution_ms = dataService.isCollecting()  ? 100 : 2 * interval;
+			resolution_ms = dataService.isCollecting()  ? 50 : 2 * interval;
 			if(resolution_ms < 50)
 				resolution_ms = 50;
 		}

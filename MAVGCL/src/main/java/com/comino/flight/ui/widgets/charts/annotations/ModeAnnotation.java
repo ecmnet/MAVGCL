@@ -66,7 +66,7 @@ public class ModeAnnotation implements XYAnnotation {
 
 
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Error", "Other"  };
+	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Error", "Velocity","Other"  };
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
@@ -212,10 +212,12 @@ public class ModeAnnotation implements XYAnnotation {
             addAreaData(time,3);
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL )
 			addAreaData(time,2);
+		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ )
+			addAreaData(time,5);
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE )
 			addAreaData(time,1);
 		else
-			addAreaData(time,5);
+			addAreaData(time,6);
 
 	}
 
