@@ -501,7 +501,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 		});
 		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
-			enable_fcum_mode.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM));
+			if(!n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM))
+			  enable_fcum_mode.setSelected(false);
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES, Status.MSP_OPCV_AVAILABILITY,(n) -> {
