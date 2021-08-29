@@ -110,7 +110,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		this.modelService =  AnalysisModelService.getInstance();
 		totaltime.getItems().addAll(TOTAL_TIME);
-		totaltime.getSelectionModel().select(1);
+		totaltime.getSelectionModel().select(2);
 
 		buildKeyfigureModelSelection();
 
