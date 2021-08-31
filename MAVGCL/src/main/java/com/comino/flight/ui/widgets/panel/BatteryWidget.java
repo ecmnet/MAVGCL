@@ -34,6 +34,7 @@
 package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.jfx.extensions.ChartControlPane;
@@ -75,7 +76,7 @@ public class BatteryWidget extends ChartControlPane  {
 		task = new AnimationTimer() {
 			private long tms;
 			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>1000) {
+				if((System.currentTimeMillis()-tms)>1000 && MainApp.getPrimaryStage().isFocused()) {
 					tms = System.currentTimeMillis();
 		            if(!Double.isFinite(model.getValue("BATV"))) {
 		            	g_voltage.setValue(0);

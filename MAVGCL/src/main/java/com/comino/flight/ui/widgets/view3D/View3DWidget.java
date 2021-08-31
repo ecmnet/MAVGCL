@@ -34,6 +34,7 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
+import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -181,7 +182,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			long tms=0;
 			@Override
 			public void handle(long now) {
-				if((now - tms < 33))
+				if((now - tms < 33) || !MainApp.getPrimaryStage().isFocused())
 					return;
 				tms = now;
 //				target.updateState(model);

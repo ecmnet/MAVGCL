@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
+import com.comino.flight.MainApp;
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
@@ -143,7 +144,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			@Override
 			public void handle(long now) {
 
-				if((now - last) < 200000000)
+				if((now - last) < 200000000 || !MainApp.getPrimaryStage().isFocused())
 					return;
 				last = now;
 

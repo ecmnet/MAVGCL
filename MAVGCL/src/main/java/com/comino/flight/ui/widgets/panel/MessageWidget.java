@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.panel;
 import org.mavlink.messages.lquac.msg_statustext;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -79,7 +80,7 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if(!isDisabled()) {
+				if(!isDisabled() && MainApp.getPrimaryStage().isFocused()) {
 					if(message != null && message.text!=null) {
 						g_message.setText(message.toString());
 						setVisible(true);

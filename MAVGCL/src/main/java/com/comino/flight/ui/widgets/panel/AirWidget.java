@@ -34,6 +34,7 @@
 package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -73,7 +74,7 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50) {
+				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50 && MainApp.getPrimaryStage().isFocused()) {
 					tms = System.currentTimeMillis();
 //					System.out.println(model.getValue("HEAD"));
 					g_compass.setBearing(model.getValue("HEAD"));
