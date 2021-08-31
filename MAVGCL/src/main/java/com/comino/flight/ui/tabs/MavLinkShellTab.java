@@ -185,7 +185,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())
 				reloadShell();
-			console.setDisable(!nv.booleanValue());
 		});
 
 	}
@@ -200,6 +199,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			if(!nv.booleanValue()) {
 				out.start();
 				scrollIntoView();
+				if(console.getText().isEmpty())
+				    writeToShell("\n"); 
 
 			} else {
 				out.stop();
@@ -207,14 +208,8 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			lastindex = last.size();
 		});
 		
-		console.disabledProperty().addListener((v,o,n) -> {
-			if(!n.booleanValue() && console.getText().isEmpty()) {
-				  writeToShell("\n");
-			}
-		});
-		
-
-
+		console.disableProperty().bind(this.disabledProperty());
+	
 		return this;
 	}
 
