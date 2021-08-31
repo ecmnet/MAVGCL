@@ -162,7 +162,7 @@ public class MainApp extends Application  {
 	private static IMAVController control = null;
 	private static FlightControlPanel controlpanel = null;
 
-	private Stage primaryStage;
+	private static Stage primaryStage;
 	private Scene scene;
 	private BorderPane rootLayout;
 	private AnchorPane flightPane;
@@ -310,7 +310,7 @@ public class MainApp extends Application  {
 			state.getLPOSAvailableProperty().addListener((v,o,n) -> {
 				
 				// should check for homepos 
-				if(!n.booleanValue() || state.getGPOSAvailableProperty().get())
+				if(!n.booleanValue() || state.getGPOSAvailableProperty().get() || control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 					return;
 				
 				DataModel model = control.getCurrentModel();
@@ -401,6 +401,7 @@ public class MainApp extends Application  {
 			e.printStackTrace();
 		}
 	}
+
 
 
 
@@ -702,6 +703,10 @@ public class MainApp extends Application  {
 
 		notifyPreloader(new StateChangeNotification(
 				StateChangeNotification.Type.BEFORE_START));
+	}
+	
+	public static Stage getPrimaryStage() {
+		return primaryStage;
 	}
 
 

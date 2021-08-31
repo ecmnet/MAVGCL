@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+import com.comino.flight.MainApp;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
@@ -184,6 +185,8 @@ public class DetailsWidget extends ChartControlPane {
 		}
 
 		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
+			if(!MainApp.getPrimaryStage().isFocused())
+				return;
 			int i = 0;
 			for (KeyFigure figure : figures)
 				figure.setValue(model, i++);

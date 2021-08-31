@@ -46,6 +46,7 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -280,7 +281,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	@Override
 	public void update(long now) {
-		if(isVisible() && !isDisabled()) {
+		if(isVisible() && !isDisabled() && MainApp.getPrimaryStage().isFocused()) {
 			//			Platform.runLater(() -> {
 			updateGraph(refreshRequest,0);
 			//			});

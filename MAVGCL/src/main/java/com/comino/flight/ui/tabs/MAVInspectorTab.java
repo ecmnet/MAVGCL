@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -89,7 +90,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@FXML
 	private void initialize() {
-
 
 
 		TreeItem<DataSet> root = new TreeItem<DataSet>(new DataSet("", ""));
@@ -204,8 +204,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object msg) {
+		
 		try {
-			if(!this.isDisabled())
+			if(!this.isDisabled() && MainApp.getPrimaryStage().isFocused())
 				parseMessageString(msg.toString().split("  "));	
 		} catch(NullPointerException e) {
 			System.err.println(msg);

@@ -42,6 +42,7 @@ import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -218,7 +219,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@Override
 	public void update(long now) {
 
-		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1 ) {
+		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1  || !MainApp.getPrimaryStage().isFocused()) {
 			return;
 		}
 		updateGraph(refreshRequest,0);
