@@ -206,6 +206,14 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			}
 			lastindex = last.size();
 		});
+		
+		console.disabledProperty().addListener((v,o,n) -> {
+			if(!n.booleanValue() && console.getText().isEmpty()) {
+				  writeToShell("\n");
+			}
+		});
+		
+
 
 		return this;
 	}
