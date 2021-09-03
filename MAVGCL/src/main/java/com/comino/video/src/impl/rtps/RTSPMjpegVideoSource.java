@@ -245,7 +245,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 								listener.process(next, (int)(fps+0.5), tms);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
-					}
+					} else
+						System.out.println("NO VIDEO");
 
 				}
 				catch (InterruptedIOException iioe) { //System.err.println(iioe.getLocalizedMessage());

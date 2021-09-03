@@ -144,7 +144,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			@Override
 			public void handle(long now) {
 
-				if((now - last) < 200000000 || !MainApp.getPrimaryStage().isFocused())
+				if((now - last) < 200000000)
 					return;
 				last = now;
 
@@ -201,9 +201,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 				filename = FileHandler.getInstance().getName();
+				driver.setText(control.getCurrentModel().sys.getSensorString());
 
 				if(control.isConnected()) {
-					driver.setText(control.getCurrentModel().sys.getSensorString());
 					if(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.web("#1c6478"));
 					driver.setMode(Badge.MODE_ON);
