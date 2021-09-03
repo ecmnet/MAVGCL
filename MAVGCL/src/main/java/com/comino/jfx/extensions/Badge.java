@@ -37,8 +37,10 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.NamedArg;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -59,13 +61,17 @@ public class Badge extends Label {
 
 	private String oldcolor;
 
-	public Badge() {
+	public Badge( @NamedArg("description") String description ) {
 		super();
 		this.setDisable(false);
 		this.setPrefWidth(999);
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		this.setAlignment(Pos.CENTER);
 		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+		
+		if(description!=null) {
+			this.setTooltip(new Tooltip(description));
+		}
 
 		this.disabledProperty().addListener((v,o,n) -> {
 			if(n.booleanValue())
