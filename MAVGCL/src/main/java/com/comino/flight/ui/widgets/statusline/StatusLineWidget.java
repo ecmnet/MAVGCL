@@ -52,6 +52,7 @@ import com.comino.jfx.extensions.Badge;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.model.segment.Vision;
 import com.comino.speech.VoiceTTS;
 
 import javafx.animation.AnimationTimer;
@@ -98,6 +99,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private Badge ekf;
 
 	@FXML
+	private Badge vision;
+
+	@FXML
 	private Badge fps;
 
 	@FXML
@@ -141,6 +145,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		}
 
 		task = new AnimationTimer() {
+			
+			
 			@Override
 			public void handle(long now) {
 
@@ -201,17 +207,22 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 				filename = FileHandler.getInstance().getName();
-				driver.setText(control.getCurrentModel().sys.getSensorString());
+				driver.setText(model.sys.getSensorString());
+				vision.setText(model.vision.getShortText());
 
 				if(control.isConnected()) {
-					if(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
+					if(model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.web("#1c6478"));
 					driver.setMode(Badge.MODE_ON);
+					if(model.vision.isStatus(Vision.AVAILABLE))
+						vision.setMode(Badge.MODE_ON);
+					else
+						vision.setMode(Badge.MODE_OFF);
 					ready.setMode(Badge.MODE_ON);
 					if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 						ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
 						ready.setText("READY");
-						
+
 					}
 					else {
 						ready.setBackgroundColorWhiteText(Color.RED);
@@ -222,6 +233,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					ready.setMode(Badge.MODE_OFF);
 					driver.setMode(Badge.MODE_OFF);
 					ekf.setMode(Badge.MODE_OFF);
+					vision.setMode(Badge.MODE_OFF);
 					driver.setText("");
 				}
 
@@ -306,8 +318,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.control = control;
 		this.model = control.getCurrentModel();
 		this.state = StateProperties.getInstance();
-		
-	//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
+
+		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 		state.getConnectedProperty().addListener((v,o,n) -> {
 			driver.setDisable(!n.booleanValue());
 			rc.setDisable(!n.booleanValue());
@@ -397,7 +409,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private int getEKF2Status() {
 		int flags = (int)model.est.flags;
-		
+
 
 		if(flags == 0
 				|| (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR
