@@ -87,6 +87,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		try {
 			ServerIPAddr = InetAddress.getByName(uri.getHost());
 			ServerPort   = uri.getPort();
+			System.out.println("Video: "+uri.getPath());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
