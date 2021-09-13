@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -36,7 +36,6 @@ package com.comino.flight.ui.widgets.charts.xy;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -68,7 +67,6 @@ import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
-import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
@@ -628,13 +626,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
-				endPosition1.setVisible(false);
-				sigma1.setVisible(false);
 
 			} else {
 				xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-				endPosition1.setVisible(true);
-				sigma1.setVisible(true);
 				grid.invalidate(false);
 			}
 
@@ -764,9 +758,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
+				endPosition1.setVisible(false);
+				sigma1.setVisible(false);
+				slam.clear();
+			} else {
+				xychart.getAnnotations().remove(slam, Layer.FOREGROUND);
+				endPosition1.setVisible(true);
+				sigma1.setVisible(true);
 			}
+				
 
-			slam.clear();
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -790,8 +791,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					rotateRad(p2,m.getValue(type2_x)-(s2.center_x-s1.center_x), m.getValue(type2_y)-(s2.center_y-s1.center_y),
 							rotation_rad);
 				else
-					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
-							rotation_rad);
+					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
+				
 				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				xychart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
 				xychart.getAnnotations().add(
@@ -896,6 +897,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 						rotateRad(p1,m.getValue(type1_x), m.getValue(type1_y),
 								rotation_rad);
 						series1.getData().add(pool.checkOut(p1[0],p1[1]));
+						endPosition1.setPosition(p1[0], p1[1]);
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
@@ -906,6 +908,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 							rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 									rotation_rad);
 						series2.getData().add(pool.checkOut(p2[0],p2[1]));
+						endPosition2.setPosition(p2[0], p2[1]);
 					}
 				}
 				current_x_pt++;
@@ -914,8 +917,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			sigma1.setPosition(p1[0], p1[1],s1.stddev_xy);
 			sigma2.setPosition(p2[0], p2[1],s2.stddev_xy);
 
-			endPosition1.setPosition(p1[0], p1[1]);
-			endPosition2.setPosition(p2[0], p2[1]);
+			
+	
 		}
 		refreshRequest = false;
 	}
