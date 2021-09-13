@@ -185,8 +185,6 @@ public class DetailsWidget extends ChartControlPane {
 		}
 
 		task = new Timeline(new KeyFrame(Duration.millis(333), ae -> {
-			if(!MainApp.getPrimaryStage().isFocused())
-				return;
 			int i = 0;
 			for (KeyFigure figure : figures)
 				figure.setValue(model, i++);

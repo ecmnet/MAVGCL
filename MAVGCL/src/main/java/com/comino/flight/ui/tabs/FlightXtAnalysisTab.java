@@ -34,6 +34,7 @@
 package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.MainApp;
 import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
@@ -69,6 +70,7 @@ public class FlightXtAnalysisTab extends Pane {
 
 		chart1.prefHeightProperty().bind(heightProperty().divide(2));
 		chart2.prefHeightProperty().bind(heightProperty().divide(2));
+		
 	}
 
 

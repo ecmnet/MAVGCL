@@ -219,7 +219,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@Override
 	public void update(long now) {
 
-		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1  || !MainApp.getPrimaryStage().isFocused()) {
+		if(!isRunning || isDisabled()  || !dataService.isCollecting() || id == -1) {
 			return;
 		}
 		updateGraph(refreshRequest,0);

@@ -806,7 +806,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			if(current_x_pt < 0) current_x_pt = 0;
-			refreshRequest = false;
 		}
 
 		if(mList.size()<1) {
@@ -918,7 +917,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			endPosition1.setPosition(p1[0], p1[1]);
 			endPosition2.setPosition(p2[0], p2[1]);
 		}
-
+		refreshRequest = false;
 	}
 
 
