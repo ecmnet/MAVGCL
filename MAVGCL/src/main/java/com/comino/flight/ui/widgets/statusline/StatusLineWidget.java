@@ -182,9 +182,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							gps.setMode(Badge.MODE_ON);
 							gps.setText("GPS");
 						case 3:
-						case 4:
 							gps.setMode(Badge.MODE_ON);
 							gps.setText("GPS Fix");
+							break;
+						case 4:
+							gps.setMode(Badge.MODE_ON);
+							gps.setText("GPS 3D");
 							break;
 						case 5:
 							gps.setMode(Badge.MODE_ON);
