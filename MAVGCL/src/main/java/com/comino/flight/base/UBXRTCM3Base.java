@@ -100,6 +100,8 @@ public class UBXRTCM3Base implements Runnable {
 
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
+		
+		System.out.println("UBX Base driver started...");
 
 		ubxtask = wq.addCyclicTask("LP", 5000, this);
 

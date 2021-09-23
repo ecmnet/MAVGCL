@@ -110,7 +110,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		this.modelService =  AnalysisModelService.getInstance();
 		totaltime.getItems().addAll(TOTAL_TIME);
-		totaltime.getSelectionModel().select(2);
+		totaltime.getSelectionModel().select(1);
 
 		buildKeyfigureModelSelection();
 
@@ -122,7 +122,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setDisable(true);
 				else
 					scroll.setDisable(false);
-				scroll.setValue(1);
+				scroll.setValue(0);
 			}
 			
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {

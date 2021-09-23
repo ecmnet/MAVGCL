@@ -100,7 +100,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final static int REFRESH_RATE   = 40;
 	private final static int REFRESH_SLOT   = 10;
 	
-	private final static int DEFAULT_TIME_FRAME = 60;
+	private final static int DEFAULT_TIME_FRAME = 30;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "PX4 Flight Mode","EKF2 Status", "Position Estimation", 
 			"GPS Fixtype", "Offboard Phases", "Vision Subsystem", "EKF2 Height mode" };
@@ -559,13 +559,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		scroll.addListener((v, ov, nv) -> {
-			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
-//			if(!isDisabled() && !refreshRequest) {
-//				refreshRequest = true;
-//				Platform.runLater(() -> updateGraph(refreshRequest,0) );
-//				updateRequest();
-//			}
-			
+			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());		
 			updateRequest();
 
 			if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get()) {
@@ -925,33 +919,38 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				series3.getData().clear();
 			}
 
-			//		pool.invalidateAll();
-
 
 			if(dash.isSelected() && size> 0) {
 				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
+				else  {
+					linechart.getData().remove(series1);
+					linechart.getData().add(series1);
+				}
 				if(type2.hash!=0)
 					linechart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
+				else {
+					linechart.getData().remove(series2);
+					linechart.getData().add(series2);
+				}
 				if(type3.hash!=0)
 					linechart.getAnnotations().add(dashboard3, Layer.FOREGROUND);
+				else {
+					linechart.getData().remove(series3);
+					linechart.getData().add(series3);
+				}
 			}
-
-			// Workaround to force chart refresh
-
-			linechart.getData().clear();
-			linechart.getData().add(series1);
-			linechart.getData().add(series2);
-			linechart.getData().add(series3);
 
 			yAxis.setUpperBound(1); yAxis.setLowerBound(0);
 
 		}
+		
+		if(size <=0)
+			return;
 
-
-		if(current_x_pt<size && size>0 ) {
+		if(current_x_pt<size ) {
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  || isPaused) {
 				if(max_x0 > 0) {
@@ -964,7 +963,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 
-			if(dash.isSelected() && size>0 	&& ( (System.currentTimeMillis()-dashboard_update_tms) > 500 )|| refresh ) {
+			if(dash.isSelected() && size > 0 && ( (System.currentTimeMillis()-dashboard_update_tms) > 500 )|| refresh ) {
 				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
 				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);
@@ -998,17 +997,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0 && current_x_pt > 0) {
 					if(current_x_pt > current_x1_pt) {
 						if(series1.getData().size()>0 && type1.hash!=0) {
-							pool.invalidate(series1.getData().get(0));
 							series1.getData().remove(0);
 						}
 
 						if(series2.getData().size()>0 && type2.hash!=0) {
-							pool.invalidate(series2.getData().get(0));
 							series2.getData().remove(0);
 						}
 
-						if(series3.getData().size()>0 && type3.hash!=0) {
-							pool.invalidate(series3.getData().get(0));
+						if(series3.getData().size()>0 && type3.hash!=0) {			
 							series3.getData().remove(0);
 						}
 					}
@@ -1021,7 +1017,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
 						series1.getData().add(pool.checkOut(dt_sec,v1));
 
-					}
+					} 
 					if(type2.hash!=0)  {
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
 						series2.getData().add(pool.checkOut(dt_sec,v2));

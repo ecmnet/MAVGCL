@@ -1,7 +1,7 @@
 #! /bin/bash
 
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java16-21.1.0/Contents/Home
-export PATH=/Library/Java/JavaVirtualMachines/graalvm-ce-java16-21.1.0/Contents/Home/bin:$PATH
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/graalvm-ce-java16-21.2.0/Contents/Home
+export PATH=/Library/Java/JavaVirtualMachines/graalvm-ce-java16-21.2.0/Contents/Home/bin:$PATH
 
 echo $JAVA_HOME
 

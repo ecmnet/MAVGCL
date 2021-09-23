@@ -15,9 +15,9 @@
 				<HBox layoutY="7.0" layoutX="10.0" spacing="10.0" alignment="CENTER_LEFT">
 					<children>
 					    <Label text="View:" />
-						<Slider fx:id="zoom" blockIncrement="5.0" majorTickUnit="1.0"
+						<Slider fx:id="zoom" blockIncrement="1.0" majorTickUnit="1.0"
 							max="20.76" min="15.0" prefHeight="15.0" prefWidth="161.0"
-							showTickMarks="true" value="18.2" />
+							showTickMarks="true" value="19.78" />
 						<ChoiceBox fx:id="gpssource" prefWidth="100.0" maxHeight="17.0"  />
 						<Label text="Center on" prefHeight="19.0" />
 						<ChoiceBox fx:id="center" maxHeight="17.0" prefWidth="60.0" />

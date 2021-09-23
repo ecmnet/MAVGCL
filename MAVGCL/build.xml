@@ -3,7 +3,6 @@
 	<property name="workspace.dir" value="/Users/ecmnet/PixHawk/java/" />
 
 	<target name="metadata" >
-		<echo>JDK used: ${jdk.home}</echo>
 		<tstamp>
 			<format property="current.time" pattern="dd.MM.yyyy" />
 		</tstamp>
