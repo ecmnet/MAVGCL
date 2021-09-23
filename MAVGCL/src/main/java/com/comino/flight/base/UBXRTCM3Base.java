@@ -103,7 +103,7 @@ public class UBXRTCM3Base implements Runnable {
 		
 		System.out.println("UBX Base driver started...");
 
-		ubxtask = wq.addCyclicTask("LP", 5000, this);
+		ubxtask = wq.addCyclicTask("LP", 2000, this);
 
 		svin.addListener((p,o,n) -> {
 			if(n.booleanValue())
@@ -160,6 +160,7 @@ public class UBXRTCM3Base implements Runnable {
 
 		this.ubx = new UBXSerialConnection(9600);
 		this.ubx.setMeasurementRate(1);
+	
 
 		try {
 			float accuracy = Float.parseFloat(MAVPreferences.getInstance().get(MAVPreferences.RTKSVINACC, "3.0"));
@@ -204,15 +205,20 @@ public class UBXRTCM3Base implements Runnable {
 
 
 			@Override
-			public void getPosition(double lat, double lon, double altitude, int fix, int sats) {
+			public void getPosition(double lat, double lon, double altitude, int fix, int sats, float hdop, float vdop) {
 				base.latitude   = (float)lat;
 				base.longitude  = (float)lon;
 				base.altitude   = (short)altitude;
+				base.eph        = hdop;
+				base.epv        = vdop;
 				base.numsat     = sats;
 				if(!control.isConnected() && !StateProperties.getInstance().getLogLoadedProperty().get()) {
 					analysisModelService.getCurrent().setValue("BASENO", sats);
 					analysisModelService.getCurrent().setValue("BASELAT", lat);
 					analysisModelService.getCurrent().setValue("BASELON", lon);
+					analysisModelService.getCurrent().setValue("BASEEPH", hdop);
+					analysisModelService.getCurrent().setValue("BASEEPV", vdop);
+					analysisModelService.getCurrent().setValue("BASEALT", altitude);
 				}
 		//		System.out.println("Base position: Lat: "+lat+" Lon: "+lon+ " Alt: "+altitude+" Sat: "+sats+" Acc: "+mean_acc);
 			}

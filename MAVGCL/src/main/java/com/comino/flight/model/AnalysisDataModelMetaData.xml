@@ -951,8 +951,24 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Base.Alt." uom="°" mask="#0" key="BASEALT">
+	<KeyFigure desc="Base.Alt." uom="m" mask="#0.0" key="BASEALT">
 	    <MSPSource class="base" field="altitude"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Base.Eph" uom="m" mask="#0.00" key="BASEEPH">
+	    <MSPSource class="base" field="eph"></MSPSource>
+		<Groups>
+			<Group>Raw data</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Base.Epv" uom="m" mask="#0.00" key="BASEEPV">
+	    <MSPSource class="base" field="epv"></MSPSource>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>Telemetry</Group>
