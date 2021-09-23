@@ -186,6 +186,9 @@ public class UBXRTCM3Base implements Runnable {
 					analysisModelService.getCurrent().setValue("BASENO",  Double.NaN);
 					analysisModelService.getCurrent().setValue("BASELAT", Double.NaN);
 					analysisModelService.getCurrent().setValue("BASELON", Double.NaN);
+					analysisModelService.getCurrent().setValue("BASEEPH", Double.NaN);
+					analysisModelService.getCurrent().setValue("BASEEPV", Double.NaN);
+					analysisModelService.getCurrent().setValue("BASEALT", Double.NaN);
 					ubx.release(false, 100);
 				} catch (Exception e) {
 					return;
