@@ -116,13 +116,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 					state.getParamLoadedProperty().set(false);
 				}
 			} else {
-				wq.addSingleTask("LP",1500, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",2500, () -> refreshParameterList(true));
 			}
 		});
 		
 		state.getArmedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
-				wq.addSingleTask("LP",1500, () -> refreshParameterList(true));
+				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
 			}
 		});
 
