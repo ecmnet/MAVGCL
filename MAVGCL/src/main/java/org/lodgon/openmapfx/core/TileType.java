@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -204,10 +205,13 @@ public class TileType implements MapTileType {
         }
 
         private void doCache(String urlString, int zoom, long i, long j) {
+        	HttpURLConnection con;
             try {
                 URL url = new URL(urlString);
                 if (debug) System.out.println("Loading tile from URL " + urlString);
-                try (InputStream inputStream = url.openConnection().getInputStream()) {
+                con = (HttpURLConnection)url.openConnection();
+				con.setRequestProperty("user-agent","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) ");
+                try (InputStream inputStream = con.getInputStream()) {
                     String enc = File.separator + zoom + File.separator + i + File.separator + j + ".png";
                     File candidate = new File(basePath, enc);
                     candidate.getParentFile().mkdirs();
