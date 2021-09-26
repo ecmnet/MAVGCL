@@ -36,21 +36,22 @@ import org.lodgon.openmapfx.core.TileType;
  *
  * @author Geoff Capper
  */
-public class StamenTileProvider implements TileProvider {
+public class WMFLabsTileProvider implements TileProvider {
 
-    private static final String providerName = "OpenTopoMap";
+    private static final String providerName = "WMFLabsMap";
 
-    private static final List<TileType> tileTypes = new LinkedList<>();;
+    private static final List<TileType> tileTypes = new LinkedList<>();
 
-    public StamenTileProvider(String fileStorage) {
+    public WMFLabsTileProvider(String fileStorage) {
 
-    	TileType tileType = new TileType("OpenTopoMap", "https://opentopomap.org/#map=", "© OpenTopoMap Design");
+    	TileType tileType = new TileType("WMFLabs", "https://tiles.wmflabs.org/hikebike/", "© WMFLabs contributors");
 
-   	 if (fileStorage != null) {
-            tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
-        }
+    	 if (fileStorage != null) {
+             tileType.setFileStorageBase(fileStorage+tileType.getTypeName());
+         }
 
-   	 tileTypes.add(tileType);
+    	 tileTypes.add(tileType);
+
     }
 
     @Override
@@ -70,8 +71,7 @@ public class StamenTileProvider implements TileProvider {
 
     @Override
     public String getAttributionNotice() {
-        //return "Map tiles by <a href=\"http://stamen.com\">Stamen Design</a>, under <a href=\"http://creativecommons.org/licenses/by/3.0\">CC BY 3.0</a>. Data by <a href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a href=\"http://creativecommons.org/licenses/by-sa/3.0\">CC BY SA</a>.";
-        return "Map tiles by OpenTopoMap.";
+        return "© WMFLabs contributors";
     }
 
     @Override

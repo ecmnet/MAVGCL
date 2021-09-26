@@ -46,6 +46,7 @@ import org.lodgon.openmapfx.core.Position;
 import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
+import org.lodgon.openmapfx.providers.WMFLabsTileProvider;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
@@ -107,7 +108,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static String[] GPS_SOURCES    	= { "Global Position", "Local Position", "Raw GPS data" };
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
-	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", "StreetMap","Terrain" };
+	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", 
+														"StreetMap"
+													  //"Terrain" 
+													  };
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -215,7 +219,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
 		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
-		terrain_provider = new DefaultBaseMapProvider(new GoogleMapsTileProvider(mapDirName));
+//		terrain_provider = new DefaultBaseMapProvider(new WMFLabsTileProvider(mapDirName));
 		//		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
