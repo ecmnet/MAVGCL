@@ -134,6 +134,7 @@ public class AnalysisModelService  {
 				return;
 			
 			if(nv.booleanValue()) {
+				
 
 				synchronized(converter) {
 					converter.notify();
@@ -145,7 +146,7 @@ public class AnalysisModelService  {
 					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
 			} else {
-
+				current.clear();
 			}
 		});
 
