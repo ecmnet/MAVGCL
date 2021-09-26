@@ -783,16 +783,9 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Flow.Quality" mask="#0.0" uom="%" key="FLOWQL">
-		<MSPSource class="flow" field="fq">
-		  <!--   <Converter class="ExpressionConverter" expression="FLOWQL/255" /> -->
-		   <Converter class="LowPassConverter" p1 ="255" p2 = "0.15"/>
-		</MSPSource>
-		<PX4Source field="FLOW.Qlty">
-		   <Converter class="LowPassConverter" p1 ="255" p2 = "0.15"/>
-		</PX4Source>
-		<ULogSource field="optical_flow_0.quality">
-		   <Converter class="LowPassConverter" p1 ="255" p2 = "0.15"/>
-		</ULogSource>
+		<MSPSource class="flow" field="fq"/>
+		<PX4Source field="FLOW.Qlty"/>
+		<ULogSource field="optical_flow_0.quality"/>
 		<Groups>
 			<Group>Raw data</Group>
 			<Group>Optical Flow</Group>
