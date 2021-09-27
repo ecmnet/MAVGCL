@@ -140,7 +140,6 @@ public class FlightTabs extends Pane {
 		mavtunetab.setDisable(true);
 		mavmaptab.setDisable(true);
 		mav3dviewtab.setDisable(true);
-		mavlinkshelltab.setDisable(true);
 
 
 		if(camera!=null) {
@@ -201,9 +200,7 @@ public class FlightTabs extends Pane {
 		});
 
 		xtanalysistab.setDisable(false);
-		mavtunetab.setDisable(true);
-		mavlinkshelltab.setDisable(true);
-
+		
 	}
 
 }
