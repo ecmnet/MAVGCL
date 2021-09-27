@@ -325,10 +325,11 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			if(!view.getRoot().getChildren().contains(ti)) {
 				this.tms = System.currentTimeMillis();
 				view.getRoot().getChildren().add(ti);
-				Platform.runLater(() -> {
+		//		Platform.runLater(() -> {
 					message_col.setSortType(SortType.ASCENDING);
+					variable_col.setSortType(SortType.ASCENDING);
 					treetableview.sort();
-				});
+		//		});
 			}
 		}
 
