@@ -286,12 +286,19 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						d.removeFromTree(treetableview);
 						allData.remove(k);
 					});
+					
+					Platform.runLater(() -> {
+						message_col.setSortType(SortType.ASCENDING);
+						variable_col.setSortType(SortType.ASCENDING);
+						treetableview.sort();
+					});
 				}
 
-				Platform.runLater(() -> {
-					message_col.setSortType(SortType.ASCENDING);
-					treetableview.sort();
-				});
+//				Platform.runLater(() -> {
+//					message_col.setSortType(SortType.ASCENDING);
+//					variable_col.setSortType(SortType.ASCENDING);
+//					treetableview.sort();
+//				});
 
 			}
 		}
