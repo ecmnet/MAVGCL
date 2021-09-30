@@ -133,7 +133,9 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		variable_col.setCellValueFactory(new Callback<CellDataFeatures<DataSet, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<DataSet, String> param) {
-				return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
+				if(param.getValue()!=null)
+				 return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
+				return new SimpleStringProperty("");
 			}
 		});
 
