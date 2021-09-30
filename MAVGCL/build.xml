@@ -15,13 +15,17 @@
 	</target>
 
 	<target name="com" depends="metadata" >
+	
 		<exec dir="${workspace.dir}/MAVCom/mavcom" executable="sh">
+		    <env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
 			<arg line="-c '/usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
 		</exec>
+		
 	</target>
 
 	<target name="mvn" depends="com">
 		<exec dir="./" executable="sh">
+			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
 			<arg line="-c ' /usr/local/Cellar/maven/3.6.3_1/bin/mvn clean install -amd'" />
 		</exec>
 	</target>
