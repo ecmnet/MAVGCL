@@ -72,7 +72,7 @@ public class MAVGCLMap  {
 				}
 
 				// TODO: Access AnalysisDatamodel
-				indicator.set(model.grid.ix, model.grid.iy, model.grid.iz);
+				indicator.setTo(model.grid.ix, model.grid.iy, model.grid.iz);
 				last_update  = System.currentTimeMillis();
 			}
 		});
