@@ -75,6 +75,7 @@ import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 import com.comino.ntp.SimpleNTPServer;
 
+import boofcv.BoofVersion;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader.StateChangeNotification;
@@ -220,7 +221,7 @@ public class MainApp extends Application  {
 			// To avoid MJPEG warnings
 			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
-			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")); 
+			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")+" build on BoofCV "+BoofVersion.VERSION); 
 
 			ExecutorService.create();
 			
