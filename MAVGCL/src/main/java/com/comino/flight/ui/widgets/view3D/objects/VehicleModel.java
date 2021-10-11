@@ -94,7 +94,7 @@ public class VehicleModel extends Group {
 //		 z_pos =   model.getValue("ALTRE") * 100  ;
 
 
-		this.setTranslateY(z_pos < 0 ? 0 : z_pos*2);
+		this.setTranslateY(z_pos < 0 ? 0 : z_pos);
 		this.setTranslateZ(model.getValue("LPOSX")*100);
 		
 
