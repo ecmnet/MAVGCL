@@ -69,6 +69,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
+import com.comino.openmapfx.ext.OpenTopoMapTileProvider;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -110,7 +111,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
 	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", 
 														"StreetMap"
-													  //"Terrain" 
+													  //  "Terrain" 
 													  };
 
 	@FXML
@@ -219,7 +220,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
 		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
-//		terrain_provider = new DefaultBaseMapProvider(new WMFLabsTileProvider(mapDirName));
+		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
 		//		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);

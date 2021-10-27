@@ -127,8 +127,8 @@ public class CommanderWidget extends ChartControlPane  {
 
 		});
 
-		arm_command.disableProperty().bind(state.getLandedProperty().not()
-				.and(state.getSimulationProperty().not()));
+		arm_command.disableProperty().bind((state.getLandedProperty().not()
+				.and(state.getSimulationProperty().not()).or(state.getParamLoadedProperty().not())));
 
 		arm_command.setOnAction((ActionEvent event)-> {
 
