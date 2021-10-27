@@ -30,8 +30,8 @@
 		</exec>
 	</target>
 
-	<target name="deploy_osx_16" depends="mvn">
-		<echo>Deploy JDk16 Version</echo>
+	<target name="deploy_osx_17" depends="mvn">
+		<echo>Deploy JDk17 Version</echo>
 		<exec dir="./" executable="sh">
 			<arg line="-c './package.sh'" />
 		</exec>
