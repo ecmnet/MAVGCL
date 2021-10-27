@@ -81,13 +81,12 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 		super(300, true);
 		FXMLLoadHelper.load(this, "InfoWidget.fxml");
 	}
-
 	@FXML
 	private void initialize() {
 
 		this.state = StateProperties.getInstance();
 
-		listview.prefHeightProperty().bind(this.heightProperty().subtract(13));
+		listview.prefHeightProperty().bind(this.heightProperty().subtract(15));
 
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
