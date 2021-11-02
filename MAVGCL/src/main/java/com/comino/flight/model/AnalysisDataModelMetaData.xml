@@ -1988,6 +1988,65 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<!-- Trajectory Note: Not displayed -->
+
+	<KeyFigure desc="LENGTH" uom="s" mask="#0.00" key="TRAJLEN">
+		<MSPSource class="traj" field="ls"/>
+		<Groups>
+			<Group>Trajectory</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="CURRENT" uom="s" mask="#0.00" key="TRAJCURRENT">
+		<MSPSource class="traj" field="fs"/>
+		<Groups>
+			<Group>Trajectory</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="ALPHA.X" uom="" mask="#" key="TRAJALPHAX">
+		<MSPSource class="traj" field="ax"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="ALPHA.Y" uom="" mask="#" key="TRAJALPHAY">
+		<MSPSource class="traj" field="ay"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="BETA.X" uom="" mask="#" key="TRAJBETAX">
+		<MSPSource class="traj" field="bx"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="BETA.Y" uom="" mask="#" key="TRAJBETAY">
+		<MSPSource class="traj" field="by"/>
+	</KeyFigure>
+	
+	
+	
+	<KeyFigure desc="GAMMA.X" uom="" mask="#" key="TRAJGAMMAX">
+		<MSPSource class="traj" field="gx"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="GAMMA.Y" uom="" mask="#" key="TRAJGAMMAY">
+		<MSPSource class="traj" field="gy"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="START.X" uom="" mask="#" key="TRAJSTARTX">
+		<MSPSource class="traj" field="sx"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="START.Y" uom="" mask="#" key="TRAJSTARTY">
+		<MSPSource class="traj" field="sy"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="START.VX" uom="" mask="#" key="TRAJSTARTVX">
+		<MSPSource class="traj" field="svx"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="START.VY" uom="" mask="#" key="TRAJSTARTVY">
+		<MSPSource class="traj" field="svy"/>
+	</KeyFigure>
+	
 
 	<!-- Status Flags  -->
 

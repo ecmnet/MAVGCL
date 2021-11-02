@@ -61,6 +61,7 @@ import com.comino.flight.ui.widgets.charts.annotations.XYDashBoardAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYGridAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSigmaAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSlamAnnotation;
+import com.comino.flight.ui.widgets.charts.annotations.XYTrajectoryAnnonation;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
 import com.comino.flight.ui.widgets.charts.utils.XYStatistics;
 import com.comino.jfx.extensions.SectionLineChart;
@@ -188,6 +189,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	@FXML
 	private CheckBox show_grid;
+	
+	@FXML
+	private CheckBox show_traj;
 
 
 
@@ -236,6 +240,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private XYGridAnnotation grid = null;
 	private XYSlamAnnotation slam = null;
+	
+	private XYTrajectoryAnnonation traj = null;
 
 	private XYDataPool pool = null;
 
@@ -291,6 +297,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.grid = new XYGridAnnotation();
 		this.slam = new XYSlamAnnotation(Color.DARKSLATEBLUE);
+		
+		this.traj = new XYTrajectoryAnnonation(Color.BROWN);
 
 		this.sigma1 = new XYSigmaAnnotation(Color.AZURE);
 		this.sigma2 = new XYSigmaAnnotation(Color.LINEN);
@@ -637,7 +645,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,show_grid.isSelected());
 		});
+		
+		show_traj.selectedProperty().addListener((v, ov, nv) -> {
+			
+			updateRequest();
+			
+		});
 
+
+		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
 
@@ -766,8 +782,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				endPosition1.setVisible(true);
 				sigma1.setVisible(true);
 			}
-				
-
+			
+			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
+				xychart.getAnnotations().add(traj, Layer.FOREGROUND);
+				traj.clear();
+			} else {
+				traj.clear();
+				xychart.getAnnotations().remove(traj, Layer.FOREGROUND);
+			}
 
 			s1.setKeyFigures(type1_x, type1_y);
 			if(type1_x.hash!=0 && type1_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
@@ -875,8 +897,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 					m = mList.get(current_x_pt);
 
-					if(series1.getData().size()>0 ||series2.getData().size()>0)
-						slam.setModel(m);
+					if(series1.getData().size()>0 ||series2.getData().size()>0) {
+						slam.setModel(m); traj.setModel(m);
+					}
 
 					if(current_x_pt > current_x1_pt) {
 
