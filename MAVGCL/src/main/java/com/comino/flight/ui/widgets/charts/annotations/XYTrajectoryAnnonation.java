@@ -145,7 +145,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 
 
 
-	public float getPosition(float t, float p0, float v0, float a0, float a, float b, float g) { 
+	private float getPosition(float t, float p0, float v0, float a0, float a, float b, float g) { 
 		return p0 + v0*t + (1.0f/2.0f)*a0*t*t + (1.0f/6.0f)*g*t*t*t + (1.0f/24.0f)*b*t*t*t*t + (1.0f/120.0f)*a*t*t*t*t*t; 
 	}
 
