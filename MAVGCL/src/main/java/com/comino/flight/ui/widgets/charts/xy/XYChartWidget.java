@@ -316,6 +316,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		zoom.setFill(Color.color(0,0.6,1.0,0.1));
 		zoom.setVisible(false);
 		zoom.setY(0);
+		
+		xychart.setAnimated(false);
 
 		xychart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {

@@ -45,14 +45,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class XYTrajectoryAnnonation  implements XYAnnotation {
-	
-	private static final int SIZE 		= 4;
+
+	private static final int   SIZE 		= 4;
+	private static final float STEP 		= 0.2f;
 
 
 	private Pane   	  			pane 	    = null;
-	private AnalysisDataModel   model;
-	private Color color;
-	private Circle              start   = null;
+	private AnalysisDataModel   model       = null;
+	private Color               color       = null;
+	private Circle              start       = null;
+	private Circle              projected   = null;
 
 	private float  p0x = 0;
 	private float  v0x = 0;
@@ -62,25 +64,33 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 
 	private float x= 0; 
 	private float y= 0;
-	
+
 	private float x0= 0; 
 	private float y0= 0;
+	
+	private boolean refresh = false;
 
-
-
-	public XYTrajectoryAnnonation(Color color) {
+	public XYTrajectoryAnnonation(final Color color) {
 
 		this.color = color;
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
-		
+
 		this.start = new Circle();
 		this.start.setCenterX(SIZE/2);
 		this.start.setCenterY(SIZE/2);
 		this.start.setRadius(SIZE/2);
 		this.start.setFill(Color.GREENYELLOW);
 		this.start.setVisible(false);
+
+		this.projected = new Circle();
+		this.projected.setCenterX(SIZE/2);
+		this.projected.setCenterY(SIZE/2);
+		this.projected.setRadius(SIZE/2);
+		this.projected.setFill(Color.CORAL);
+		this.projected.setVisible(false);
+
 
 	}
 
@@ -101,46 +111,55 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		if(model==null)
 			return;
 
-		pane.getChildren().clear();
-		pane.getChildren().add(start);
 
 		double current = model.getValue("TRAJCURRENT");
 		double length  = model.getValue("TRAJLEN");
-		
-		if(current > 0) {
-			
-			p0x = (float)model.getValue("TRAJSTARTX");
-			p0y = (float)model.getValue("TRAJSTARTY");
-			v0x = (float)model.getValue("TRAJSTARTVX");
-			v0y = (float)model.getValue("TRAJSTARTVY");
-			
-			
-			start.setLayoutX(xAxis.getDisplayPosition(p0y)-SIZE/2);
-			start.setLayoutY(yAxis.getDisplayPosition(p0x)-SIZE/2);
-			start.setVisible(true);
-			
-			x0 = getPosition((float)current, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-			y0 = getPosition((float)current, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 
-			for(double t = current; t < length; t = t + 0.1 ) {
-				x = getPosition((float)t, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-				y = getPosition((float)t, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
-				Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
-				l.setStroke(color);
-				pane.getChildren().add(l);
-				x0 = x;
-				y0 = y;
+		if(current >= 0 ) {
+
+			if(current < STEP || refresh) {
+				
+				pane.getChildren().clear();
+				pane.getChildren().addAll(start,projected);
+
+				p0x = (float)model.getValue("TRAJSTARTX");
+				p0y = (float)model.getValue("TRAJSTARTY");
+				v0x = (float)model.getValue("TRAJSTARTVX");
+				v0y = (float)model.getValue("TRAJSTARTVY");
+
+				projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
+				projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
+				projected.setVisible(true);
+
+				start.setLayoutX(xAxis.getDisplayPosition(p0y)-SIZE/2);
+				start.setLayoutY(yAxis.getDisplayPosition(p0x)-SIZE/2);
+				start.setVisible(true);
+
+				x0 = getPosition(0, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y0 = getPosition(0, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+
+				for(double t = 0; t < length; t = t + STEP ) {
+					x = getPosition((float)t, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+					y = getPosition((float)t, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+					Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
+					l.setStroke(color);
+					pane.getChildren().add(l);
+					x0 = x;
+					y0 = y;	
+				}
+				refresh = false;
 				
 			}
 
-		} else
-			start.setVisible(false);
+		} else {
+			clear();
+		}
 
 	}
 
 	public void clear() {
 		pane.getChildren().clear();
-		pane.getChildren().add(start);
+		refresh = true;
 	}
 
 

@@ -63,7 +63,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private  Rotate       		    lock_rotate = null;
 	private  Polygon  				vhc         = null;
 	private  Rotate  				vhc_rotate  = null;
-	private  Circle                 projected   = null;
 	private  Circle                 obstacle    = null;
 
 	private  AnalysisDataModel      model        = null;
@@ -100,13 +99,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		vhc.setFill(color.brighter().brighter().brighter());
 		vhc.setStrokeType(StrokeType.INSIDE);
 
-		this.projected = new Circle();
-		this.projected.setCenterX(SIZE/2);
-		this.projected.setCenterY(SIZE/2);
-		this.projected.setRadius(SIZE/2);
-		this.projected.setFill(Color.CORAL);
-		this.projected.setVisible(false);
-
 		this.obstacle = new Circle();
 		this.obstacle.setCenterX(SIZE_OBS/2);
 		this.obstacle.setCenterY(SIZE_OBS/2);
@@ -115,7 +107,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.obstacle.setStroke(Color.RED);
 		this.obstacle.setVisible(true);
 
-		pane.getChildren().addAll(act_dir,plan_dir, vhc, projected, obstacle, lock);
+		pane.getChildren().addAll(act_dir,plan_dir, vhc, obstacle, lock);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -147,14 +139,9 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
 			plan_dir.setVisible(true);
 
-			projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
-			projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
-			projected.setVisible(true);
-
 
 		} else {
 			plan_dir.setVisible(false);
-			projected.setVisible(false);
 
 		}
 		
