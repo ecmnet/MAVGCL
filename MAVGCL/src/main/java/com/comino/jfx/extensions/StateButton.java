@@ -14,7 +14,7 @@ public class StateButton extends Button {
 	public StateButton() {
 
 		Timeline timeline = new Timeline(new KeyFrame(
-				Duration.millis(1500),
+				Duration.millis(200),
 				ae ->  { setState(state); } ));
 
 		this.addEventHandler(ActionEvent.ACTION, event -> {
@@ -25,13 +25,14 @@ public class StateButton extends Button {
 		});
 		
 		this.disabledProperty().addListener((v,o,n) -> {
-			setStyle("-fx-background-color: #606060");
+			if(!state)
+			 setStyle("-fx-background-color: #606060");
 		});
 	}
 
 	public void setState(boolean state) {
-		if(state == this.state || isDisabled())
-			return;
+//		if(state == this.state || isDisabled())
+//			return;
 		this.state = state;
 		Platform.runLater(() -> {
 			if(state)

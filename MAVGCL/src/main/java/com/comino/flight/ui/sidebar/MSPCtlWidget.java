@@ -462,8 +462,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			}
 		});
 
-
-
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
 		});

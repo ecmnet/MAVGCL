@@ -122,7 +122,7 @@ public class StateProperties {
 
 		simulationProperty.set(control.isSimulation());
 		
-		wq.addSingleTask("LP", 5000, () ->  isInitializedProperty.set(true) );
+		wq.addSingleTask("LP", 2000, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			Platform.runLater(()-> {
@@ -139,10 +139,9 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
-			wq.addSingleTask("LP", 500,() -> {
+			wq.addSingleTask("LP", 250,() -> {
 				
-
-				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				control.getStatusManager().reset(); 
 				
 				isGPSAvailable.set(true);
 				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
@@ -150,6 +149,8 @@ public class StateProperties {
 				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
 				isSLAMAvailable.set(true);
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+				
+				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				
 			});
 			
