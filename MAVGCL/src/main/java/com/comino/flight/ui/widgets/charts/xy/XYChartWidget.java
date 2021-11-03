@@ -840,7 +840,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 			wq.addSingleTask("LP",() -> {
-				traj.refresh();
+				traj.refresh(); // To align trajectory if centered
 				dashboard_update_tms = System.currentTimeMillis();
 				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
 				s2.getStatistics(current_x0_pt,current_x1_pt,mList);
