@@ -773,6 +773,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			xychart.getData().add(series2);
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
@@ -786,11 +787,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 			
 			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
-				xychart.getAnnotations().add(traj, Layer.FOREGROUND);
-				traj.clear();
+				xychart.getAnnotations().add(traj, Layer.BACKGROUND);
+				traj.refresh();
 			} else {
 				traj.clear();
-				xychart.getAnnotations().remove(traj, Layer.FOREGROUND);
+				xychart.getAnnotations().remove(traj, Layer.BACKGROUND);
 			}
 
 			s1.setKeyFigures(type1_x, type1_y);
@@ -839,6 +840,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 			wq.addSingleTask("LP",() -> {
+				traj.refresh();
 				dashboard_update_tms = System.currentTimeMillis();
 				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
 				s2.getStatistics(current_x0_pt,current_x1_pt,mList);

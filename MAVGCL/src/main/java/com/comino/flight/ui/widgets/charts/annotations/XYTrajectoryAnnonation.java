@@ -161,6 +161,10 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		pane.getChildren().clear();
 		refresh = true;
 	}
+	
+	public void refresh() {
+		refresh = true;
+	}
 
 
 
