@@ -779,7 +779,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 				endPosition1.setVisible(false);
 				sigma1.setVisible(false);
-				slam.clear();
+//				slam.clear();
 			} else {
 				xychart.getAnnotations().remove(slam, Layer.FOREGROUND);
 				endPosition1.setVisible(true);
@@ -840,7 +840,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
 			wq.addSingleTask("LP",() -> {
-				traj.refresh(); // To align trajectory if centered
 				dashboard_update_tms = System.currentTimeMillis();
 				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
 				s2.getStatistics(current_x0_pt,current_x1_pt,mList);
@@ -967,6 +966,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				current_x0_pt = 0;
 				setXResolution(timeFrame.get());
 				scroll.setValue(0);
+				traj.clear();
 			}
 		});
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
@@ -1079,6 +1079,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			force_zero.setDisable(true);
 			force_zero.setSelected(false);
 		}
+		traj.refresh();
 
 	}
 

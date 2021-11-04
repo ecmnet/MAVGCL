@@ -55,6 +55,7 @@ import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 
 
 public class AnalysisModelService  {
@@ -414,10 +415,11 @@ public class AnalysisModelService  {
 				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
+					Platform.runLater(()->{
 					state.getRecordingProperty().set(READING_HEADER);
-//					ulogger.enableLogging(true);
 					state.getLogLoadedProperty().set(false);
 					state.getRecordingProperty().set(COLLECTING);
+					});
 					tms_start = System.nanoTime() / 1000;
 				}
 
