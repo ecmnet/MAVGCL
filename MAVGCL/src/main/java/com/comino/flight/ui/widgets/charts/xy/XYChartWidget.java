@@ -633,12 +633,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
 				grid.invalidate(true);
-				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
+			//	xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 				rotation_rad = 0;
 				rotation.setValue(0);
 
 			} else {
-				xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 				grid.invalidate(false);
 			}
 
@@ -651,12 +651,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_traj.selectedProperty().addListener((v, ov, nv) -> {
 			
 			updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_TRAJ,show_traj.isSelected());
 			
 		});
 
 
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
-		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
 		rotation.setDisable(show_grid.isSelected());
 
 		//
@@ -775,25 +776,27 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 			
-			xychart.getAnnotations().add(grid,Layer.BACKGROUND);
-
-			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
+			if(mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 				endPosition1.setVisible(false);
 				sigma1.setVisible(false);
-//				slam.clear();
 			} else {
-				xychart.getAnnotations().remove(slam, Layer.FOREGROUND);
+				slam.clear();
 				endPosition1.setVisible(true);
 				sigma1.setVisible(true);
 			}
+			
+
+			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
+				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
+			} else 
+				grid.clear();
 			
 			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(traj, Layer.BACKGROUND);
 				traj.refresh();
 			} else {
 				traj.clear();
-				xychart.getAnnotations().remove(traj, Layer.BACKGROUND);
 			}
 
 			s1.setKeyFigures(type1_x, type1_y);

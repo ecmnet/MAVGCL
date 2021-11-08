@@ -141,6 +141,11 @@ public class XYGridAnnotation  implements XYAnnotation {
 		}
 		enabled = enable;
 	}
+	
+	public void clear() {
+		pane.getChildren().clear();
+		blocks.clear();
+	}
 
 
 	private Pane addBlockPane(long block) {
