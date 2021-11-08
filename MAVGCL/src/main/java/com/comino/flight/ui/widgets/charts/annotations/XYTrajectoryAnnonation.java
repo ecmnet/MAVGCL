@@ -76,7 +76,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
-
+		
 		this.start = new Circle();
 		this.start.setCenterX(SIZE/2);
 		this.start.setCenterY(SIZE/2);
@@ -115,7 +115,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		double current = model.getValue("TRAJCURRENT");
 		double length  = model.getValue("TRAJLEN");
 
-		if(current >= 0 ) {
+		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 ) {
 
 			if(current < STEP || refresh) {
 				

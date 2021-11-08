@@ -108,6 +108,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 			return;
 		}
 		
+		
 		Set<Long> set = map.getLevelSet(blocks.isEmpty());
 		if(set.isEmpty())
 			return;

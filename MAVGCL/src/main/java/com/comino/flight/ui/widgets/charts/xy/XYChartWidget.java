@@ -774,6 +774,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+			
+			xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
