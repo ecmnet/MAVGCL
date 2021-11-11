@@ -185,7 +185,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			long tms=0;
 			@Override
 			public void handle(long now) {
-				if((now - tms < 20))
+				if(isDisabled())
 					return;
 				tms = now;
 //				target.updateState(model);
@@ -230,14 +230,17 @@ public class View3DWidget extends SubScene implements IChartControl {
 				task.start();
 			} else {
 				task.stop();
+				trajectory.clear();
 			}
 		});
+		
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				task.start();
 			} else {
 				task.stop();
+				trajectory.clear();
 			}
 		});
 
