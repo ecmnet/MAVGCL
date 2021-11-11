@@ -12,13 +12,14 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	25/05/21 
+**Development Status:** Last updated 	11/11/21 
 
-* ntp server functionality added
-* JDK 16 built
-* rtsp protocol for mjpeg
-* OctTree based 3D map representation visualized in 3DView and XYView (flat representation of the map according to relative altitude)
-* switched to maven based build
+* JDK 17 build
+* Trajectory visualization (XY and 3D)
+* EKF2 Status badge
+* Parameters searchable
+* Minor UI and responsiveness fixes
+
 
 Note: 3D map data can be transferred to MAVGCL using the custom MAVLink message [msg_msp_micro_grid](https://github.com/ecmnet/mavcom/blob/af3a826866d977b898170547d15e1ad334899682/mavcom/mavlink/lquac.xml#L231) - for encoding refer to [MAP3DSpacialInfo.java](https://github.com/ecmnet/mavmap/blob/aa739520e2de797cad3ba71da01f041c87445557/mavmap/src/main/java/com/comino/mavmap/map/map3D/Map3DSpacialInfo.java#L84)
 
