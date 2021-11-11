@@ -37,10 +37,13 @@ package com.comino.flight.ui.widgets.view3D.objects;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.TriangleMesh;
 
 public class Target extends Xform {
@@ -82,11 +85,13 @@ public class Target extends Xform {
 	}
 
 	public void updateState(AnalysisDataModel model) {
-		if(model.getValue("SLAMDIS") != 0 && !Double.isNaN(model.getValue("SLAMDIS"))) {
+		if(!Double.isNaN(model.getValue("SLAMPX"))) {
 			pyramid.setVisible(true);
 			this.setTranslate(-model.getValue("SLAMPY")*100f, model.getValue("SLAMPZ") > 0 ? 0 : -model.getValue("SLAMPZ")*100f, model.getValue("SLAMPX")*100f);
 		} else
 			pyramid.setVisible(false);
 	}
+	
+	
 
 }

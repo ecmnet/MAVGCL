@@ -36,6 +36,7 @@
 package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
@@ -68,6 +69,9 @@ public class MAV3DViewTab extends Pane  {
 
 	@FXML
 	private ChoiceBox<String> perspective;
+	
+	@FXML
+	private CheckBox     show_traj;
 
 	@FXML
 	private Slider zoom;
@@ -99,6 +103,10 @@ public class MAV3DViewTab extends Pane  {
 					Number old_val, Number new_val) {
 				widget.scale(new_val.floatValue());
 			}
+		});
+		
+		show_traj.selectedProperty().addListener((e,o,n) -> {
+			widget.enableTrajectoryView(n.booleanValue());
 		});
 
 		this.setOnMouseClicked((me) -> {

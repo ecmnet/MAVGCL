@@ -42,6 +42,7 @@ import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
+import com.comino.flight.ui.widgets.view3D.objects.Trajectory;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
@@ -81,6 +82,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private Map3DGroup      blocks      = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
+	private Trajectory   	trajectory  = null;
 	private Target			target      = null;
 
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
@@ -130,10 +132,12 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ground.setMaterial(groundMaterial);
 
 		vehicle = new VehicleModel(75);
-		world.getChildren().addAll(ground, vehicle,  target, pointLight, ambient,
+		trajectory = new Trajectory();
+		world.getChildren().addAll(ground, vehicle,  target, trajectory, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
+		trajectory.show(true);
 
 	}
 
@@ -181,7 +185,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			long tms=0;
 			@Override
 			public void handle(long now) {
-				if((now - tms < 33))
+				if((now - tms < 20))
 					return;
 				tms = now;
 //				target.updateState(model);
@@ -191,6 +195,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 					if(!vehicle.isVisible())
 						  vehicle.setVisible(true);
 					vehicle.updateState(model,offset);
+					trajectory.updateState(model,offset);
 					break;
 				case Camera.VEHICLE_PERSPECTIVE:
 					camera.updateState(model);
@@ -237,6 +242,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		});
 
 		return this;
+	}
+	
+	public void enableTrajectoryView(boolean enabled) {
+		trajectory.show(enabled);
 	}
 	
 

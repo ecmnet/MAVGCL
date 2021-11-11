@@ -2013,6 +2013,10 @@
 		<MSPSource class="traj" field="ay"/>
 	</KeyFigure>
 	
+	<KeyFigure desc="ALPHA.Z" uom="" mask="#" key="TRAJALPHAZ">
+		<MSPSource class="traj" field="az"/>
+	</KeyFigure>
+	
 	<KeyFigure desc="BETA.X" uom="" mask="#" key="TRAJBETAX">
 		<MSPSource class="traj" field="bx"/>
 	</KeyFigure>
@@ -2021,7 +2025,9 @@
 		<MSPSource class="traj" field="by"/>
 	</KeyFigure>
 	
-	
+	<KeyFigure desc="BETA.Z" uom="" mask="#" key="TRAJBETAZ">
+		<MSPSource class="traj" field="bz"/>
+	</KeyFigure>
 	
 	<KeyFigure desc="GAMMA.X" uom="" mask="#" key="TRAJGAMMAX">
 		<MSPSource class="traj" field="gx"/>
@@ -2029,6 +2035,10 @@
 	
 	<KeyFigure desc="GAMMA.Y" uom="" mask="#" key="TRAJGAMMAY">
 		<MSPSource class="traj" field="gy"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="GAMMA.Z" uom="" mask="#" key="TRAJGAMMAZ">
+		<MSPSource class="traj" field="gz"/>
 	</KeyFigure>
 	
 	<KeyFigure desc="START.X" uom="" mask="#" key="TRAJSTARTX">
@@ -2039,12 +2049,20 @@
 		<MSPSource class="traj" field="sy"/>
 	</KeyFigure>
 	
+	<KeyFigure desc="START.Z" uom="" mask="#" key="TRAJSTARTZ">
+		<MSPSource class="traj" field="sz"/>
+	</KeyFigure>
+	
 	<KeyFigure desc="START.VX" uom="" mask="#" key="TRAJSTARTVX">
 		<MSPSource class="traj" field="svx"/>
 	</KeyFigure>
 	
 	<KeyFigure desc="START.VY" uom="" mask="#" key="TRAJSTARTVY">
 		<MSPSource class="traj" field="svy"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="START.VZ" uom="" mask="#" key="TRAJSTARTVZ">
+		<MSPSource class="traj" field="svz"/>
 	</KeyFigure>
 	
 

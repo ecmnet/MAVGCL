@@ -632,15 +632,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
-				grid.invalidate(true);
-			//	xychart.getAnnotations().add(grid,Layer.BACKGROUND);
+		//		grid.invalidate(true);
 				rotation_rad = 0;
 				rotation.setValue(0);
 
-			} else {
-		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-				grid.invalidate(false);
-			}
+			} 
+//			else {
+//		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+//				grid.invalidate(false);
+//			}
 
 			rotation.setDisable(nv.booleanValue());
 
