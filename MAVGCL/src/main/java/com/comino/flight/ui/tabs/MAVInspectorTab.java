@@ -212,7 +212,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		try {
 			if(!this.isDisabled() && MainApp.getPrimaryStage().isFocused())
 				parseMessageString(msg.toString().split("  "));	
-		} catch(NullPointerException e) {
+		} catch(Exception e) {
 			System.err.println(msg);
 		}
 	}

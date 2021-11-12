@@ -93,7 +93,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 
 
 		if (url == null)
-			throw new NullPointerException();
+			return;
 
 		
 		try {
