@@ -243,6 +243,7 @@ public class AnalysisModelService  {
 
 		if(mode==STOPPED) {
 			setDefaultCollectorInterval();
+			model.reset();
 			modelList.clear();
 			task.start();
 			mode = COLLECTING;
