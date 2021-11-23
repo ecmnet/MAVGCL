@@ -285,7 +285,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	@Override
 	public void update(long now) {
-		if(isVisible() && !isDisabled() && MainApp.getPrimaryStage().isFocused()) {
+		if(isVisible() && !isDisabled()) {
 			//			Platform.runLater(() -> {
 			updateGraph(refreshRequest,0);
 			//			});
