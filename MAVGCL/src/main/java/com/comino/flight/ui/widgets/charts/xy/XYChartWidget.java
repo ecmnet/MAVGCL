@@ -836,8 +836,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 			} else {
-				current_x1_pt = mList.size();
-				current_x_pt  = current_x1_pt - timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+				current_x0_pt = dataService.calculateX0IndexByFactor(1);
+				current_x_pt  = dataService.calculateX0IndexByFactor(1);
+//				scroll.setValue(1);
+//				refreshChart();
+//			
+//				current_x1_pt = mList.size();
+//				current_x_pt  = current_x1_pt - timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+//			
 			}
 
 			if(current_x_pt < 0) current_x_pt = 0;
@@ -897,7 +903,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				if(max_x0 > 0)
 					max_x = max_x0;
 				else
-					max_x = current_x1_pt < dataService.getModelList().size() ?  current_x1_pt : dataService.getModelList().size() ;
+					max_x = current_x1_pt < mList.size() ?  current_x1_pt : mList.size()  ;
 			} else
 				max_x = mList.size();
 
@@ -907,7 +913,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
-					current_x_pt = current_x_pt > mList.size() ? mList.size() : current_x_pt;		
 					m = mList.get(current_x_pt);
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0) {
@@ -973,14 +978,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {
-				current_x0_pt = 0;
+		        current_x0_pt = 0;
+		    	scroll.setValue(0);
 				setXResolution(timeFrame.get());
-				scroll.setValue(0);
 				traj.clear();
 			}
 		});
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
-		current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+		current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
 		scale_select.getSelectionModel().select(prefs.getInt(MAVPreferences.XYCHART_SCALE,0));
 		try {
