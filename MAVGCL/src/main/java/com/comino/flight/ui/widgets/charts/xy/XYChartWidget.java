@@ -189,7 +189,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	@FXML
 	private CheckBox show_grid;
-	
+
 	@FXML
 	private CheckBox show_traj;
 
@@ -240,7 +240,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private XYGridAnnotation grid = null;
 	private XYSlamAnnotation slam = null;
-	
+
 	private XYTrajectoryAnnonation traj = null;
 
 	private XYDataPool pool = null;
@@ -297,7 +297,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		this.grid = new XYGridAnnotation();
 		this.slam = new XYSlamAnnotation(Color.DARKSLATEBLUE);
-		
+
 		this.traj = new XYTrajectoryAnnonation(Color.BROWN);
 
 		this.sigma1 = new XYSigmaAnnotation(Color.AZURE);
@@ -316,7 +316,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		zoom.setFill(Color.color(0,0.6,1.0,0.1));
 		zoom.setVisible(false);
 		zoom.setY(0);
-		
+
 		xychart.setAnimated(false);
 
 		xychart.setOnMouseClicked(click -> {
@@ -632,32 +632,30 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
-		//		grid.invalidate(true);
+				//		grid.invalidate(true);
 				rotation_rad = 0;
 				rotation.setValue(0);
 
 			} 
-//			else {
-//		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-//				grid.invalidate(false);
-//			}
+			//			else {
+			//		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
+			//				grid.invalidate(false);
+			//			}
 
 			rotation.setDisable(nv.booleanValue());
 
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,show_grid.isSelected());
 		});
-		
-		show_traj.selectedProperty().addListener((v, ov, nv) -> {
-			
+
+		show_traj.selectedProperty().addListener((v, ov, nv) -> {      
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_TRAJ,show_traj.isSelected());
-			
 		});
 
 
-		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
-		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
+		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
+		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
 
 		//
@@ -775,7 +773,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-			
+
 			if(mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 				endPosition1.setVisible(false);
@@ -785,13 +783,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				endPosition1.setVisible(true);
 				sigma1.setVisible(true);
 			}
-			
+
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
 			} else 
 				grid.clear();
-			
+
 			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(traj, Layer.BACKGROUND);
 				traj.refresh();
@@ -822,7 +820,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 							rotation_rad);
 				else
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
-				
+
 				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				xychart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
 				xychart.getAnnotations().add(
@@ -833,8 +831,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			}
 
-			current_x_pt = current_x0_pt;
-			current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED ) {
+				current_x_pt = current_x0_pt;
+				current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+
+			} else {
+				current_x1_pt = mList.size();
+				current_x_pt  = current_x1_pt - timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+			}
 
 			if(current_x_pt < 0) current_x_pt = 0;
 		}
@@ -903,6 +907,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
+					current_x_pt = current_x_pt > mList.size() ? mList.size() : current_x_pt;		
 					m = mList.get(current_x_pt);
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0) {
@@ -948,8 +953,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			sigma1.setPosition(p1[0], p1[1],s1.stddev_xy);
 			sigma2.setPosition(p2[0], p2[1],s2.stddev_xy);
 
-			
-	
+
+
 		}
 		refreshRequest = false;
 	}
