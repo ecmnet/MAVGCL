@@ -181,10 +181,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private boolean display_annotations = true;
 	private boolean isPaused            = false;
 
-	private DashBoardAnnotation dashboard1 = null;
-	private DashBoardAnnotation dashboard2 = null;
-	private DashBoardAnnotation dashboard3 = null;
-	private ModeAnnotation            mode = null;
+	private final DashBoardAnnotation dashboard1 = new DashBoardAnnotation(10);;
+	private final DashBoardAnnotation dashboard2 = new DashBoardAnnotation(90);
+	private final DashBoardAnnotation dashboard3 = new DashBoardAnnotation(170);
+	private final ModeAnnotation            mode = new ModeAnnotation(bckglegend);
 
 	private final Line  measure    = new Line();
 	private final Label time_label = new Label();
@@ -228,7 +228,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@FXML
 	private void initialize() {
 
-		mode       = new ModeAnnotation(bckglegend);
 
 		bckgmode.getItems().addAll(BCKGMODES);
 		bckgmode.getSelectionModel().select(0);
@@ -248,10 +247,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		annotations.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			updateRequest();
 		});
-
-		dashboard1 = new DashBoardAnnotation(10);
-		dashboard2 = new DashBoardAnnotation(90);
-		dashboard3 = new DashBoardAnnotation(170);
 
 		linechart.getAnnotations().add(mode, Layer.BACKGROUND);
 
