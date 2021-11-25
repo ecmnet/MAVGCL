@@ -193,8 +193,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@FXML
 	private CheckBox show_traj;
 
-
-
 	private  XYChart.Series<Number,Number> series1;
 	private  XYChart.Series<Number,Number> series2;
 
@@ -207,13 +205,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private KeyFigureMetaData type2_y=null;
 
 	private StateProperties state = null;
-	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 
 	private int resolution_ms 	= 50;
 	private float scale     = 5;
 
-	private Preferences prefs = MAVPreferences.getInstance();
+	private final Preferences prefs = MAVPreferences.getInstance();
 
 	private int current_x_pt=0;
 	private int current_x0_pt=0;
@@ -223,11 +219,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private float rotation_rad = 0;
 
-	private double[] p1 = new double[2];
-	private double[] p2 = new double[2];
+	private final double[] p1 = new double[2];
+	private final double[] p2 = new double[2];
 
-	private XYStatistics s1 = new XYStatistics();
-	private XYStatistics s2 = new XYStatistics();
+	private final XYStatistics s1 = new XYStatistics();
+	private final XYStatistics s2 = new XYStatistics();
 
 	private XYDashBoardAnnotation dashboard1 = null;
 	private XYDashBoardAnnotation dashboard2 = null;
@@ -246,23 +242,21 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYDataPool pool = null;
 
 	private boolean refreshRequest = false;
-	private MAVGCLPX4Parameters parameters = null;
-
-	//	private double  zoom_beg_x, zoom_beg_y;
 
 	private double center_x, center_y;
 	private double scale_rounding;
 	private double scale_factor;
 
 	private int id = 0;
+	private long dashboard_update_tms  = 0;
 
-	private long dashboard_update_tms = 0;
+	private final AnalysisDataModelMetaData meta  = AnalysisDataModelMetaData.getInstance();
+	private final AnalysisModelService      dataService = AnalysisModelService.getInstance();
 
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-	private AnalysisModelService  dataService = AnalysisModelService.getInstance();
-
-	private BooleanProperty isScrolling = new SimpleBooleanProperty();
-	private FloatProperty   replay       = new SimpleFloatProperty(0);
+	private final BooleanProperty           isScrolling = new SimpleBooleanProperty();
+	private final FloatProperty             replay      = new SimpleFloatProperty(0);
+	private final IntegerProperty           timeFrame   = new SimpleIntegerProperty(30);
+	private final FloatProperty             scroll      = new SimpleFloatProperty(0);
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
@@ -271,16 +265,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
 
 		this.state = StateProperties.getInstance();
-
-		pool = new XYDataPool();
+		this.pool = new XYDataPool();
 
 		dataService.registerListener(this);
 
-		state.getParamLoadedProperty().addListener((a,o,n) -> {
-			if(n.booleanValue()) {
-				this.parameters = MAVGCLPX4Parameters.getInstance();
-			}
-		});
 	}
 
 	@Override
@@ -953,8 +941,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			sigma1.setPosition(p1[0], p1[1],s1.stddev_xy);
 			sigma2.setPosition(p2[0], p2[1],s2.stddev_xy);
-
-
 
 		}
 		refreshRequest = false;
