@@ -184,7 +184,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private final DashBoardAnnotation dashboard1 = new DashBoardAnnotation(10);;
 	private final DashBoardAnnotation dashboard2 = new DashBoardAnnotation(90);
 	private final DashBoardAnnotation dashboard3 = new DashBoardAnnotation(170);
-	private final ModeAnnotation            mode = new ModeAnnotation(bckglegend);
+	private ModeAnnotation            mode;
 
 	private final Line  measure    = new Line();
 	private final Label time_label = new Label();
@@ -201,10 +201,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public LineChartWidget() {
 
-		this.state = StateProperties.getInstance();
-
+		this.state      = StateProperties.getInstance();
 		this.syncCharts = new ArrayList<IChartSyncControl>();
-		syncCharts.add(this);
 
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
 
@@ -213,6 +211,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.pool  = new XYDataPool();
 
 		dataService.registerListener(this);
+		syncCharts.add(this);
 	}
 
 
@@ -228,7 +227,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	@FXML
 	private void initialize() {
 
-
+		mode = new ModeAnnotation(bckglegend);
 		bckgmode.getItems().addAll(BCKGMODES);
 		bckgmode.getSelectionModel().select(0);
 
