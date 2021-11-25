@@ -879,6 +879,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				xAxis.setLowerBound(x-scale);
 				xAxis.setUpperBound(x+scale);
 				center_x = x;
+				traj.refresh();
 			}
 			if(Math.abs(y - center_y)> scale/4) {
 				//		y = (int)(y *  100) / (100f);
@@ -887,6 +888,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				yAxis.setLowerBound(y-scale_factor);
 				yAxis.setUpperBound(y+scale_factor);
 				center_y = y;
+				traj.refresh();
 			}
 
 		}
