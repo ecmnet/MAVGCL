@@ -56,7 +56,9 @@ import com.comino.flight.ui.widgets.charts.IChartSyncControl;
 import com.comino.flight.ui.widgets.charts.annotations.DashBoardAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.LineMessageAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.ModeAnnotation;
+import com.comino.flight.ui.widgets.charts.utils.XYCollections;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
+import com.comino.flight.ui.widgets.charts.utils.XYObservableListWrapper;
 import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
@@ -72,6 +74,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,6 +84,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.LineChart.SortingPolicy;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
@@ -98,7 +102,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private final static int MAXRECENT 	    = 20;
 	private final static int REFRESH_RATE   = 40;
-	private final static int REFRESH_SLOT   = 10;
+	private final static int REFRESH_SLOT   = 40;
 	
 	private final static int DEFAULT_TIME_FRAME = 30;
 
@@ -235,11 +239,11 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setBackground(null);
 		linechart.setCreateSymbols(false);
 
-		series1 = new XYChart.Series<Number,Number>();
+		series1 = new XYChart.Series<Number,Number>(XYCollections.<Data<Number,Number>>observableArrayList());
 		linechart.getData().add(series1);
-		series2 = new XYChart.Series<Number,Number>();
+		series2 = new XYChart.Series<Number,Number>(XYCollections.<Data<Number,Number>>observableArrayList());
 		linechart.getData().add(series2);
-		series3 = new XYChart.Series<Number,Number>();
+		series3 = new XYChart.Series<Number,Number>(XYCollections.<Data<Number,Number>>observableArrayList());
 		linechart.getData().add(series3);
 
 		annotations.setSelected(true);
@@ -966,8 +970,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			slot_tms = System.currentTimeMillis();
 
-			//int x_save = current_x_pt;
-
+			((XYObservableListWrapper<?>)series1.getData()).begin();
+			((XYObservableListWrapper<?>)series2.getData()).begin();
+			((XYObservableListWrapper<?>)series3.getData()).begin();
+			
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 
@@ -989,36 +995,35 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0 && current_x_pt > 0) {
-					if(current_x_pt > current_x1_pt) {
-						if(series1.getData().size()>0 && type1.hash!=0) {
-							series1.getData().remove(0);
-						}
-
-						if(series2.getData().size()>0 && type2.hash!=0) {
-							series2.getData().remove(0);
-						}
-
-						if(series3.getData().size()>0 && type3.hash!=0) {			
-							series3.getData().remove(0);
-						}
-					}
 
 					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 						mode.updateModeData(dt_sec, m);
 					}
 
 					if(type1.hash!=0)  {
+						
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
+						if(current_x_pt > current_x1_pt && series1.getData().size()>0 )
+							series1.getData().remove(0);
 						series1.getData().add(pool.checkOut(dt_sec,v1));
+						
 
 					} 
 					if(type2.hash!=0)  {
+						
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
+						if(current_x_pt > current_x1_pt && series2.getData().size()>0 )
+							series2.getData().remove(0);
 						series2.getData().add(pool.checkOut(dt_sec,v2));
+						
 					}
 					if(type3.hash!=0)  {
+						
 						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,false);
+						if(current_x_pt > current_x1_pt && series3.getData().size()>0 )
+							series3.getData().remove(0);
 						series3.getData().add(pool.checkOut(dt_sec,v3));
+			
 					}
 				}
 
@@ -1032,6 +1037,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 				current_x_pt++;
 			}
+			
+			((XYObservableListWrapper<?>)series1.getData()).end();
+			((XYObservableListWrapper<?>)series2.getData()).end();
+			((XYObservableListWrapper<?>)series3.getData()).end();
 
 			//			if(count > 2) System.out.println(count+" / "+current_x0_pt+" / "+x_save); count = 0;
 			if(set_bounds) {
