@@ -43,20 +43,11 @@ import javafx.scene.chart.XYChart;
 
 public class XYDataPool {
 
-//	private static final int INIT_CAPACITY = 20000;
-//
-//	private final static Hashtable<XYChart.Data<Number,Number>,Boolean> locked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(0);
-//	private final static Hashtable<XYChart.Data<Number,Number>,Boolean> unlocked = new Hashtable<XYChart.Data<Number,Number>,Boolean>(INIT_CAPACITY);
-//
+
 	public XYDataPool() {
-//		StateProperties.getInstance().getLogLoadedProperty().addListener((a,o,n) -> {
-//			if(n.booleanValue() && locked.size() > 0) {
-//				invalidateAll();
-//			}
-//		});
-//		
-//		XYChart.Data<Number,Number> o;
-		for(int i=0;i<10000;i++) {
+
+	    // Preallocate Data objects for JVM
+		for(int i=0;i<50000;i++) {
 			new XYChart.Data<Number,Number>(0,0);
 		}
 	}
@@ -64,46 +55,25 @@ public class XYDataPool {
 	public  XYChart.Data<Number,Number> checkOut(double x, double y)
 	{
 		XYChart.Data<Number,Number> o;
-//		if( unlocked.size() > 0 )
-//		{
-//			Enumeration<XYChart.Data<Number,Number>> e = unlocked.keys();
-//			o = e.nextElement();
-//			o.setXValue(x);
-//			if(!Double.isNaN(y))
-//				o.setYValue(y);
-//			else
-//				o.setYValue(0);
-//			unlocked.remove(o);
-//			locked.put(o, true);
-//			return(o);
-//		}
 		if(!Double.isNaN(y)) {
 			o = new XYChart.Data<Number,Number>(x,y);
-//			locked.put( o, true );
 			return o;
 		}
 
 		o = new XYChart.Data<Number,Number>(x,0);
-//		locked.put( o, true );
 		return o;
 
 	}
 
 	public void invalidate(XYChart.Data<Number,Number> o) {
-//		if(locked.size()>0) {
-//			locked.remove(o);
-//			unlocked.put(o, true);
-//		}
+
 	}
 
 	public  void invalidateAll() {
-//		unlocked.clear();
-//		unlocked.putAll(locked);
-//		locked.clear();
+
 	}
 
 	public int getLockedSize() {
-//		return locked.size();
 		return 0;
 	}
 

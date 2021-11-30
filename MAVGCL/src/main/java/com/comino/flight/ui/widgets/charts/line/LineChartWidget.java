@@ -463,7 +463,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			mouseEvent.consume();
 		});
-	
+
 		readRecentList();
 
 		type1 = new KeyFigureMetaData();
@@ -503,7 +503,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				type1 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_1+id,nv.hash);
 				updateGraph(true,0);
-			//	updateRequest();
+				//	updateRequest();
 			}
 		});
 
@@ -568,7 +568,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		replay.addListener((v, ov, nv) -> {
 			if(isDisabled())
 				return;
-			refreshRequest = true; 
+			//refreshRequest = true; 
 			if(nv.intValue()<0) {
 				current_x0_pt =  dataService.calculateX0Index(-nv.intValue());
 				if(current_x0_pt>0)
@@ -578,9 +578,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 
 				dataService.setCurrent(-nv.intValue());
-				Platform.runLater(() -> updateGraph(true,  -nv.intValue()) );
+				updateGraph(true,  -nv.intValue());
 			} else {
-				Platform.runLater(() -> updateGraph(false, nv.intValue()) );
+				updateGraph(false,  nv.intValue());
 				dataService.setCurrent(nv.intValue());
 			}
 
@@ -720,9 +720,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		state.getReplayingProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue())
-				refreshChart();
-
+			setXResolution(timeFrame.get());
+			updateGraph(true,0);
 		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
@@ -833,27 +832,27 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		int interval = dataService.getCollectorInterval_ms();
 
 		if(frame >= 200) {
-			resolution_ms = dataService.isCollecting()  ? 500 : 10 * interval;
+			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 500 : 10 * interval;
 			if(resolution_ms < 200)
 				resolution_ms = 200;
 		}
 		else if(frame >= 100) {
-			resolution_ms = dataService.isCollecting()  ? 200 : 4 * interval;
+			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 200 : 4 * interval;
 			if(resolution_ms < 100)
 				resolution_ms = 100;
 		}
 		else if(frame >= 60) {
-			resolution_ms = dataService.isCollecting()  ? 50 : 2 * interval;
+			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50 : 2 * interval;
 			if(resolution_ms < 50)
 				resolution_ms = 50;
 		}
 		else if(frame >= 30) { 
-			resolution_ms = dataService.isCollecting()  ? 50  : interval;
+			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50  : interval;
 			if(resolution_ms < 20)
 				resolution_ms = 20;
 		}
 		else 
-			resolution_ms = dataService.isCollecting()  ? 50  : interval;
+			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50  : interval;
 
 		timeframe = frame;
 
@@ -873,7 +872,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(state==null || id == -1 || isDisabled() || refreshRequest)
 				return;
-
+			refreshRequest = true;
 			if(!state.getReplayingProperty().get())
 				updateGraph(refreshRequest,0);
 			else
@@ -884,7 +883,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
-	
+
 		if(isDisabled()) {
 			return;
 		}
