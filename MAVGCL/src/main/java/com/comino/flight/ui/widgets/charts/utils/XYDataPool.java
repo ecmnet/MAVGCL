@@ -56,10 +56,9 @@ public class XYDataPool {
 //		});
 //		
 //		XYChart.Data<Number,Number> o;
-//		for(int i=0;i<unlocked.size();i++) {
-//			o = new XYChart.Data<Number,Number>(0,0);
-//			unlocked.put( o, true );
-//		}
+		for(int i=0;i<10000;i++) {
+			new XYChart.Data<Number,Number>(0,0);
+		}
 	}
 
 	public  XYChart.Data<Number,Number> checkOut(double x, double y)

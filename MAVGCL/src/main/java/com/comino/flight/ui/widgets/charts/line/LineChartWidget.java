@@ -463,8 +463,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 			mouseEvent.consume();
 		});
-
-
+	
 		readRecentList();
 
 		type1 = new KeyFigureMetaData();

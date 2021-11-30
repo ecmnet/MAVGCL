@@ -168,14 +168,11 @@ public class ChartControlWidget extends ChartControlPane  {
 		//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
 		//		});
 
+	
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get())
 				return;
-			if((System.currentTimeMillis() - scroll_tms) < 50) {
-				return;
-			}
-			scroll_tms = System.currentTimeMillis();
 
 			float v = (float)scroll.getValue();
 			charts.entrySet().forEach((chart) -> {
