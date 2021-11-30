@@ -885,9 +885,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
-		
-		final long start = System.nanoTime();
-
+	
 		if(isDisabled()) {
 			return;
 		}
@@ -963,7 +961,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 
-			if(dash.isSelected() && size > 0 && ( (System.currentTimeMillis()-dashboard_update_tms) > 500 )|| refresh ) {
+			if(dash.isSelected() && size > 0 && ( (System.currentTimeMillis()-dashboard_update_tms) > 1000 )|| refresh ) {
 				dashboard_update_tms = System.currentTimeMillis();
 				setDashboardData(dashboard1,type1, current_x0_pt,current_x1_pt);
 				setDashboardData(dashboard2,type2, current_x0_pt,current_x1_pt);

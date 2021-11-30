@@ -115,7 +115,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		buildKeyfigureModelSelection();
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
-			
+
 			if(nv.booleanValue()) {
 				state.getReplayingProperty().set(false);
 				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
@@ -124,14 +124,14 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setDisable(false);
 				scroll.setValue(0);
 			}
-			
+
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null) {
 					chart.getValue().getTimeFrameProperty().set(0);
 					chart.getValue().getTimeFrameProperty().set(totaltime.valueProperty().get());
 				}
 			}
-	
+
 		});
 
 		totaltime.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -188,14 +188,14 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get())
 				return;
-			
+
 			float v = (float)scroll.getValue();
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
 				}
 			});
-			
+
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
@@ -237,23 +237,28 @@ public class ChartControlWidget extends ChartControlPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		task = new AnimationTimer() {
-			long replay_time_ms;
+			long replay_time_ms; long replay_index_old;
 			@Override public void handle(long now) {
+
 
 				anim_tms = System.currentTimeMillis();
 
 				if(replay_index < modelService.getModelList().size()) {
 
-				    replay_time_ms = System.currentTimeMillis() -  replay_tms;
-					
+					replay_time_ms = System.currentTimeMillis() -  replay_tms;
+
 					charts.entrySet().forEach((chart) -> { 
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(replay_index);
 					});
 					replay_index = (int)(replay_time_ms / modelService.getCollectorInterval_ms());
-					state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
-					scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
+					if(replay_index > replay_index_old) {
+						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
+						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
+					} 
+					replay_index_old = replay_index;
 					modelService.setCurrent(replay_time_ms/1000f);
+
 
 				} else {
 					task.stop();
@@ -271,17 +276,17 @@ public class ChartControlWidget extends ChartControlPane  {
 				state.getReplayingProperty().set(true);
 				modelService.setReplaying(true);
 				state.getCurrentUpToDate().set(false);
-				
+
 				if(scroll.getValue()<0.05)
 					scroll.setValue(1);
-				
+
 				replay_index = ((int)(modelService.getModelList().size() * (1f - scroll.getValue())))+1;
-				
+
 				charts.entrySet().forEach((chart) -> { 
 					if(chart.getValue().getReplayProperty()!=null)
 						chart.getValue().getReplayProperty().set(-replay_index);
 				});
-				
+
 				replay_tms = System.currentTimeMillis() - (long)(replay_index * modelService.getCollectorInterval_ms());
 				anim_tms = 0;
 				task.start();
