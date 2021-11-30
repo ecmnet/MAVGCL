@@ -101,9 +101,9 @@ import javafx.scene.shape.Rectangle;
 public class LineChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener, IChartSyncControl {
 
 	private final static int MAXRECENT 	    = 20;
-	private final static int REFRESH_RATE   = 40;
-	private final static int REFRESH_SLOT   = 40;
-	
+	private final static int REFRESH_RATE   = 20;
+	private final static int REFRESH_SLOT   = 20;
+
 	private final static int DEFAULT_TIME_FRAME = 30;
 
 	private final static String[] BCKGMODES = { "No mode annotation ", "PX4 Flight Mode","EKF2 Status", "Position Estimation", 
@@ -612,15 +612,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
-	//	Platform.runLater(() -> {
-			if(preset!=null) {
-				type1 = setKeyFigure(cseries1,preset.getKeyFigure(0));
-				type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
-				type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
-				group.getSelectionModel().select(preset.getGroup());
-				replay.set(0); updateRequest();
-			}
-	//	});
+		//	Platform.runLater(() -> {
+		if(preset!=null) {
+			type1 = setKeyFigure(cseries1,preset.getKeyFigure(0));
+			type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
+			type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
+			group.getSelectionModel().select(preset.getGroup());
+			replay.set(0); updateRequest();
+		}
+		//	});
 	}
 
 
@@ -885,6 +885,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
+		
+		final long start = System.nanoTime();
 
 		if(isDisabled()) {
 			return;
@@ -944,7 +946,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			yAxis.setUpperBound(1); yAxis.setLowerBound(0);
 
 		}
-		
+
 		if(size <=0)
 			return;
 
@@ -973,7 +975,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			((XYObservableListWrapper<?>)series1.getData()).begin();
 			((XYObservableListWrapper<?>)series2.getData()).begin();
 			((XYObservableListWrapper<?>)series3.getData()).begin();
-			
+
+
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 
@@ -1000,30 +1003,25 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						mode.updateModeData(dt_sec, m);
 					}
 
-					if(type1.hash!=0)  {
-						
+					if(type1.hash!=0)  {						
 						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
 						if(current_x_pt > current_x1_pt && series1.getData().size()>0 )
 							series1.getData().remove(0);
 						series1.getData().add(pool.checkOut(dt_sec,v1));
-						
-
 					} 
 					if(type2.hash!=0)  {
-						
+
 						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
 						if(current_x_pt > current_x1_pt && series2.getData().size()>0 )
 							series2.getData().remove(0);
 						series2.getData().add(pool.checkOut(dt_sec,v2));
-						
+
 					}
 					if(type3.hash!=0)  {
-						
 						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,false);
 						if(current_x_pt > current_x1_pt && series3.getData().size()>0 )
 							series3.getData().remove(0);
 						series3.getData().add(pool.checkOut(dt_sec,v3));
-			
 					}
 				}
 
@@ -1037,7 +1035,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 				current_x_pt++;
 			}
-			
+
 			((XYObservableListWrapper<?>)series1.getData()).end();
 			((XYObservableListWrapper<?>)series2.getData()).end();
 			((XYObservableListWrapper<?>)series3.getData()).end();

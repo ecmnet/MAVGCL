@@ -240,9 +240,6 @@ public class ChartControlWidget extends ChartControlPane  {
 			long replay_time_ms;
 			@Override public void handle(long now) {
 
-				if((System.currentTimeMillis() - anim_tms) <33) {
-					return;
-				}
 				anim_tms = System.currentTimeMillis();
 
 				if(replay_index < modelService.getModelList().size()) {
