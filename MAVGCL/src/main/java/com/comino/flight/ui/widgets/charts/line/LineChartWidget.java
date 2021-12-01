@@ -691,6 +691,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.id      = id;
 
 		timeFrame.set(DEFAULT_TIME_FRAME);
+		setXResolution(timeFrame.get());
 
 		switch(id) {
 		case 1:
