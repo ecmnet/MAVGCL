@@ -568,7 +568,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		replay.addListener((v, ov, nv) -> {
 			if(isDisabled())
 				return;
-			
+
 			if(nv.intValue()<0) {
 				current_x0_pt =  dataService.calculateX0Index(-nv.intValue());
 				if(current_x0_pt>0)
@@ -588,11 +588,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		isScrolling.addListener((v, ov, nv) -> {
-			if(nv.booleanValue())
-				resolution_ms = resolution_ms < 50 ? 50 : resolution_ms * 2 ;
-			//setXResolution(timeFrame.get() * 2);
-			else
-				setXResolution(timeFrame.get());
+			setXResolution(timeFrame.get());
+			updateRequest();
 		});
 
 		dash.selectedProperty().addListener((v, ov, nv) -> {
@@ -720,7 +717,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		state.getReplayingProperty().addListener((o,ov,nv) -> {
-			updateGraph(true,1);
+			setXResolution(timeFrame.get());
+			if(nv.booleanValue())
+				updateGraph(true,1);
+			else
+				updateGraph(true,0);
+
 		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
@@ -798,7 +800,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void refreshChart() {
 		//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
-			updateRequest();
+		updateRequest();
 	}
 
 	public void saveAsPng(String path) {
@@ -826,37 +828,37 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private void setXResolution(float frame) {
 
-		int interval = dataService.getCollectorInterval_ms();
+		final int interval = dataService.getCollectorInterval_ms();
+		final boolean increaseResolution = dataService.isCollecting() || state.getReplayingProperty().get() || isScrolling.get();
 
 		if(frame >= 200) {
-			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 500 : 10 * interval;
+			resolution_ms = increaseResolution ? 500 : 10 * interval;
 			if(resolution_ms < 200)
 				resolution_ms = 200;
 		}
 		else if(frame >= 100) {
-			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 200 : 4 * interval;
+			resolution_ms = increaseResolution ? 200 : 4 * interval;
 			if(resolution_ms < 100)
 				resolution_ms = 100;
 		}
 		else if(frame >= 60) {
-			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50 : 2 * interval;
+			resolution_ms = increaseResolution ? 50 : 2 * interval;
 			if(resolution_ms < 50)
 				resolution_ms = 50;
 		}
 		else if(frame >= 30) { 
-			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50  : interval;
+			resolution_ms = increaseResolution ? 50  : interval;
 			if(resolution_ms < 20)
 				resolution_ms = 20;
 		}
 		else 
-			resolution_ms = dataService.isCollecting() || state.getReplayingProperty().get() ? 50  : interval;
+			resolution_ms = increaseResolution ? 50  : interval;
 
 		timeframe = frame;
 
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
 
 		if(!isDisabled()) {
-		//	updateRequest();
 			Platform.runLater(() -> {
 				xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 			});
@@ -869,7 +871,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(state==null || id == -1 || isDisabled() || refreshRequest)
 				return;
-			
+
 			refreshRequest = true;
 			if(!state.getReplayingProperty().get())
 				updateGraph(refreshRequest,0);
