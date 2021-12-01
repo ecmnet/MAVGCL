@@ -568,7 +568,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		replay.addListener((v, ov, nv) -> {
 			if(isDisabled())
 				return;
-			//refreshRequest = true; 
+			
 			if(nv.intValue()<0) {
 				current_x0_pt =  dataService.calculateX0Index(-nv.intValue());
 				if(current_x0_pt>0)
@@ -720,8 +720,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		state.getReplayingProperty().addListener((o,ov,nv) -> {
-			setXResolution(timeFrame.get());
-			updateGraph(true,0);
+			updateGraph(true,1);
 		});
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
@@ -799,9 +798,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void refreshChart() {
 		//	current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		setXResolution(timeFrame.get());
-		if(!isDisabled()) {
 			updateRequest();
-		}
 	}
 
 	public void saveAsPng(String path) {
@@ -859,7 +856,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		refresh_step = REFRESH_RATE / dataService.getCollectorInterval_ms();
 
 		if(!isDisabled()) {
-			updateRequest();
+		//	updateRequest();
 			Platform.runLater(() -> {
 				xAxis.setLabel("Seconds ("+resolution_ms+"ms)");
 			});
@@ -872,6 +869,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(state==null || id == -1 || isDisabled() || refreshRequest)
 				return;
+			
 			refreshRequest = true;
 			if(!state.getReplayingProperty().get())
 				updateGraph(refreshRequest,0);
