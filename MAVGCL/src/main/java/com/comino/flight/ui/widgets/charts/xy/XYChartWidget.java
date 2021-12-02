@@ -62,7 +62,9 @@ import com.comino.flight.ui.widgets.charts.annotations.XYGridAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSigmaAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSlamAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYTrajectoryAnnonation;
+import com.comino.flight.ui.widgets.charts.utils.XYCollections;
 import com.comino.flight.ui.widgets.charts.utils.XYDataPool;
+import com.comino.flight.ui.widgets.charts.utils.XYObservableListWrapper;
 import com.comino.flight.ui.widgets.charts.utils.XYStatistics;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
@@ -88,6 +90,7 @@ import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -613,15 +616,32 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 
 		replay.addListener((v, ov, nv) -> {
+//			if(isDisabled())
+//				return;
+//			refreshRequest = true; 
+//			if(nv.intValue()<=5) {
+//				current_x0_pt =  0;
+//				Platform.runLater(() -> updateGraph(true, 1) );
+//			} else
+//				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
+//			dataService.setCurrent(nv.intValue());
 			if(isDisabled())
 				return;
-			refreshRequest = true; 
-			if(nv.intValue()<=5) {
-				current_x0_pt =  0;
-				Platform.runLater(() -> updateGraph(true, 1) );
-			} else
-				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
-			dataService.setCurrent(nv.intValue());
+
+			if(nv.intValue()<0) {
+				current_x0_pt =  dataService.calculateX0Index(-nv.intValue());
+				if(current_x0_pt>0)
+					current_x_pt =  dataService.calculateX1Index(-nv.intValue());
+				else {
+					current_x_pt = -nv.intValue();
+				}
+
+				dataService.setCurrent(-nv.intValue());
+				updateGraph(true,  -nv.intValue());
+			} else {
+				updateGraph(false,  nv.intValue());
+				dataService.setCurrent(nv.intValue());
+			}
 		});
 
 		annotation.selectedProperty().addListener((v, ov, nv) -> {
@@ -904,6 +924,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				max_x = mList.size();
 
 			slot_tms = System.currentTimeMillis();
+			
+			((XYObservableListWrapper<?>)series1.getData()).begin();
+			((XYObservableListWrapper<?>)series2.getData()).begin();
 
 			while(current_x_pt<max_x && ((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
@@ -950,6 +973,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				}
 				current_x_pt++;
 			}
+			
+			((XYObservableListWrapper<?>)series1.getData()).end();
+			((XYObservableListWrapper<?>)series2.getData()).end();
 
 			sigma1.setPosition(p1[0], p1[1],s1.stddev_xy);
 			sigma2.setPosition(p2[0], p2[1],s2.stddev_xy);
@@ -960,10 +986,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 
 	public XYChartWidget setup(IMAVController control) {
-		series1 = new XYChart.Series<Number,Number>();
+		series1 = new XYChart.Series<Number,Number>(XYCollections.<Data<Number,Number>>observableArrayList());
 
 		xychart.getData().add(series1);
-		series2 = new XYChart.Series<Number,Number>();
+		series2 = new XYChart.Series<Number,Number>(XYCollections.<Data<Number,Number>>observableArrayList());
 		xychart.getData().add(series2);
 
 		this.control = control;
