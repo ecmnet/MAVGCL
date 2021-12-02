@@ -69,6 +69,8 @@ public class SectionLineChart<X,Y> extends LineChart<X, Y> {
         }
         return plotArea.getChildren().get(plotContentIndex);
 	}
+	
+	
 
 	public Group getPlotArea() {
 		Group plotArea = (Group) getChartChildren().get(1);

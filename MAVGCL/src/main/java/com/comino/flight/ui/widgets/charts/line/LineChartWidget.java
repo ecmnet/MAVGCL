@@ -269,6 +269,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		yAxis.setAnimated(false);
 		yAxis.setCache(true);
 		yAxis.setCacheHint(CacheHint.SPEED);
+		
+		mode.heightProperty().bind(yAxis.heightProperty());
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
@@ -279,15 +281,16 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-		this.chartArea = (Group)linechart.getAnnotationArea();
 
+		this.chartArea = (Group)linechart.getAnnotationArea();
+	
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
 		zoom.setFill(Color.color(0,0.6,1.0,0.1));
 		zoom.setVisible(false);
 		zoom.setY(0);
-		zoom.setHeight(1000);
+		zoom.heightProperty().bind(yAxis.heightProperty());
 
 		final Label zoom_label = new Label();
 		zoom_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #9090D0; -fx-padding:3;");
@@ -297,6 +300,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		time_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #E0E0D0; -fx-padding:3;");
 		time_label.setVisible(false);
 		chartArea.getChildren().add(time_label);
+		
 
 		measure.setVisible(false);
 		measure.setStartY(0);
@@ -893,6 +897,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
+		
+		final int collector_interval = dataService.getCollectorInterval_ms();
+		final int set_length         = resolution_ms/collector_interval;
 
 		if(isDisabled()) {
 			return;
@@ -988,7 +995,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 				m = dataService.getModelList().get(current_x_pt);
-				dt_sec = current_x_pt *  dataService.getCollectorInterval_ms() / 1000f;
+				dt_sec = current_x_pt *  collector_interval / 1000f;
 
 				if(m.msg!=null && current_x_pt > 0 && m.msg!=null && m.msg.text!=null
 						&& ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)
@@ -1003,28 +1010,28 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					last_annotation_pos = current_x_pt;
 				}
 
-				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0 && current_x_pt > 0) {
+				if(((current_x_pt * collector_interval) % resolution_ms) == 0 && current_x_pt > 0) {
 
 					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 						mode.updateModeData(dt_sec, m);
 					}
 
 					if(type1.hash!=0)  {						
-						v1 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type1,false);
+						v1 = determineValueFromRange(current_x_pt,set_length,type1,false);
 						if(current_x_pt > current_x1_pt && series1.getData().size()>0 )
 							series1.getData().remove(0);
 						series1.getData().add(pool.checkOut(dt_sec,v1));
 					} 
 					if(type2.hash!=0)  {
 
-						v2 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type2,false);
+						v2 = determineValueFromRange(current_x_pt,set_length,type2,false);
 						if(current_x_pt > current_x1_pt && series2.getData().size()>0 )
 							series2.getData().remove(0);
 						series2.getData().add(pool.checkOut(dt_sec,v2));
 
 					}
 					if(type3.hash!=0)  {
-						v3 = determineValueFromRange(current_x_pt,resolution_ms/dataService.getCollectorInterval_ms(),type3,false);
+						v3 = determineValueFromRange(current_x_pt,set_length,type3,false);
 						if(current_x_pt > current_x1_pt && series3.getData().size()>0 )
 							series3.getData().remove(0);
 						series3.getData().add(pool.checkOut(dt_sec,v3));
@@ -1173,9 +1180,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(dataService.getModelList().size() < length || Double.isNaN(v_current_x))
 				return Double.NaN;
 
-			if(length==1)
+			if(length < 3)
 				return v_current_x;
-
+			
 			double a = 0; double v;
 
 			if(average) {

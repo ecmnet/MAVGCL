@@ -44,6 +44,8 @@ import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
@@ -84,6 +86,8 @@ public class ModeAnnotation implements XYAnnotation {
 	private double 				highBound	 = 0;
 
 	private int					modeType  	 = MODE_ANNOTATION_NONE;
+	
+	private DoubleProperty height = new SimpleDoubleProperty(20);
 
 	private Area last = null;
 
@@ -97,6 +101,9 @@ public class ModeAnnotation implements XYAnnotation {
 		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","CYAN","GRAY");
 	}
 
+	public DoubleProperty heightProperty() {
+		return height;
+	}
 
 	@Override
 	public Node getNode() {
@@ -328,7 +335,8 @@ public class ModeAnnotation implements XYAnnotation {
 				last.to = time;
 				return;
 			}
-			last = new Area(mode, time,time, colors.get(mode));
+			last = new Area(mode, time, time, colors.get(mode));
+			
 			node.getChildren().add(last);
 		}
 	}
@@ -351,7 +359,6 @@ public class ModeAnnotation implements XYAnnotation {
 
 	private class Area extends Rectangle implements Comparable<Area> {
 
-
 		private double from;
 		private double to;
 		private int    mode;
@@ -365,7 +372,12 @@ public class ModeAnnotation implements XYAnnotation {
 			this.setStroke(fillPaint);
 			this.setFill(fillPaint);
 			this.setY(0);
-			this.setHeight(400);
+			this.setHeight(height.get());
+			this.toBack();
+			
+			height.addListener((s,o,n) -> {
+				this.setHeight(n.doubleValue());
+			});
 		}
 
 		public void layout(ValueAxis<Double> xAxis, ValueAxis<Double> yAxis) {
