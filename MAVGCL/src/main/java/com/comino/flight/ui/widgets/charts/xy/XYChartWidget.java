@@ -596,8 +596,20 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		corr_zero.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_OFFSET, false));
 
 		scroll.addListener((v, ov, nv) -> {
-			current_x0_pt =  dataService.calculateX0IndexByFactor(nv.floatValue());
-			updateRequest();
+			int x1 =  dataService.calculateIndexByFactor(nv.floatValue())+1;	
+			if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
+				current_x1_pt = x1;
+				current_x0_pt = 0;
+				updateGraph(true,x1);
+			}	 
+			else {
+				current_x0_pt = dataService.calculateX0Index(x1);
+				updateGraph(true,0);
+			}
+
+			if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get() ) {
+				dataService.setCurrent(x1);
+			}
 		});
 
 		replay.addListener((v, ov, nv) -> {
