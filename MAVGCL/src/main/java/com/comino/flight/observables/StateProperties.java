@@ -149,8 +149,9 @@ public class StateProperties {
 				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
 				isSLAMAvailable.set(true);
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
-				
-				connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				Platform.runLater(() -> {
+			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				});
 				
 			});
 			
