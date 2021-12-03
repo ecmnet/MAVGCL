@@ -275,14 +275,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
-		//		linechart.setCache(true);
-		//		linechart.setCacheHint(CacheHint.SPEED);
+//		linechart.setCache(true);
+//		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
-
-		this.chartArea = (Group)linechart.getAnnotationArea();
+		chartArea = (Group)linechart.getAnnotationArea();
 	
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
@@ -896,8 +895,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0; int size = dataService.getModelList().size(); long slot_tms = 0; 
+		int max_x = 0; long slot_tms = 0; 
 		
+		final int size               = dataService.getModelList().size();
 		final int collector_interval = dataService.getCollectorInterval_ms();
 		final int set_length         = resolution_ms/collector_interval;
 
@@ -966,15 +966,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(current_x_pt<size ) {
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  || isPaused) {
-				if(max_x0 > 0) {
-					max_x = max_x0;
-				}
+				
+				if(max_x0 > 0)
+					max_x = max_x0 < size ?  max_x0 : size;
 				else
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
+				
 			} else {
 				max_x = size;
 			}
-
 
 			if(dash.isSelected() && size > 0 && ( (System.currentTimeMillis()-dashboard_update_tms) > 1000 )|| refresh ) {
 				dashboard_update_tms = System.currentTimeMillis();
@@ -985,9 +985,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			slot_tms = System.currentTimeMillis();
 
-			((XYObservableListWrapper<?>)series1.getData()).begin();
-			((XYObservableListWrapper<?>)series2.getData()).begin();
-			((XYObservableListWrapper<?>)series3.getData()).begin();
+			if(type1.hash!=0) ((XYObservableListWrapper<?>)series1.getData()).begin();
+			if(type2.hash!=0) ((XYObservableListWrapper<?>)series2.getData()).begin();
+			if(type3.hash!=0) ((XYObservableListWrapper<?>)series3.getData()).begin();
 
 
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
@@ -1049,9 +1049,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				current_x_pt++;
 			}
 
-			((XYObservableListWrapper<?>)series1.getData()).end();
-			((XYObservableListWrapper<?>)series2.getData()).end();
-			((XYObservableListWrapper<?>)series3.getData()).end();
+			if(type1.hash!=0) ((XYObservableListWrapper<?>)series1.getData()).end();
+			if(type2.hash!=0) ((XYObservableListWrapper<?>)series2.getData()).end();
+			if(type3.hash!=0) ((XYObservableListWrapper<?>)series3.getData()).end();
 
 			//			if(count > 2) System.out.println(count+" / "+current_x0_pt+" / "+x_save); count = 0;
 			if(set_bounds) {

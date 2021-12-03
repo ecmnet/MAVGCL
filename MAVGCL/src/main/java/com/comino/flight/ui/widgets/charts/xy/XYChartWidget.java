@@ -917,7 +917,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED ) {
 				if(max_x0 > 0)
-					max_x = max_x0;
+					max_x = max_x0 < mList.size() ?  max_x0 : mList.size();
 				else
 					max_x = current_x1_pt < mList.size() ?  current_x1_pt : mList.size()  ;
 			} else
@@ -931,7 +931,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			while(current_x_pt<max_x && ((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
-
+					
 					m = mList.get(current_x_pt);
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0) {
