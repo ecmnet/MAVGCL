@@ -63,6 +63,8 @@ import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 public class MAVInspectorTab extends Pane implements IMAVLinkListener {
+	
+	private final int REFRESH_RATE = 100;
 
 	@FXML
 	private TreeTableView<DataSet> treetableview;
@@ -386,7 +388,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			tms = System.currentTimeMillis();
 
 
-			if((System.currentTimeMillis() - last_update) > 333  ) {
+			if((System.currentTimeMillis() - last_update) > REFRESH_RATE  ) {
 
 				this.name_set.setStr(name+" ("+(int)(rate+0.5f)+"Hz)");
 				last_update = System.currentTimeMillis();

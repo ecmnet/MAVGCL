@@ -163,12 +163,12 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.setSnapToTicks(false);
 		scroll.setSnapToPixel(false);
 		scroll.setDisable(true);
+		
 
 		//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
 		//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
 		//		});
 
-	
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get())
@@ -185,13 +185,6 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get())
 				return;
-
-			float v = (float)scroll.getValue();
-			charts.entrySet().forEach((chart) -> {
-				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
-					chart.getValue().getScrollProperty().set(1f-v);
-				}
-			});
 
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)

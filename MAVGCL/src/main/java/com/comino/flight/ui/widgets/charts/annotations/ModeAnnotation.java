@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,7 +39,6 @@ import java.util.Map;
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
 import com.comino.flight.model.AnalysisDataModel;
-import com.comino.mavcom.model.segment.Slam;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
 import com.emxsys.chart.extension.XYAnnotation;
@@ -336,12 +335,13 @@ public class ModeAnnotation implements XYAnnotation {
 				return;
 			}
 			last = new Area(mode, time, time, colors.get(mode));
-			
+	
 			node.getChildren().add(last);
 		}
 	}
 
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
