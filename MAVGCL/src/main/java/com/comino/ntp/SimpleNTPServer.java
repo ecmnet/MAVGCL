@@ -101,6 +101,7 @@ public class SimpleNTPServer implements Runnable {
         if (socket == null)
         {
             socket = new DatagramSocket(port);
+            socket.setSoTimeout(0);
             // port = 0 is bound to available free port
             if (port == 0) {
                 port = socket.getLocalPort();
