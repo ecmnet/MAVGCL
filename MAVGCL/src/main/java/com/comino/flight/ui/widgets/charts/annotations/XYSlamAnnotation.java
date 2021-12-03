@@ -34,6 +34,7 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavutils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -145,7 +146,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 		}
 		
-		if(Double.isFinite(model.getValue("PRECLOCKX")) && Double.isFinite(model.getValue("PRECLOCKY"))) {
+		if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
+			
 //			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
 //			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
 			
