@@ -264,25 +264,24 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		xAxis.setCacheHint(CacheHint.SPEED);
 
 		yAxis.setForceZeroInRange(false);
-		yAxis.setAutoRanging(true);
 		yAxis.setPrefWidth(40);
 		yAxis.setAnimated(false);
 		yAxis.setCache(true);
 		yAxis.setCacheHint(CacheHint.SPEED);
-		
+
 		mode.heightProperty().bind(yAxis.heightProperty());
 
 		linechart.setAnimated(false);
 		linechart.setLegendVisible(true);
 		linechart.setLegendSide(Side.TOP);
-//		linechart.setCache(true);
-//		linechart.setCacheHint(CacheHint.SPEED);
+		//		linechart.setCache(true);
+		//		linechart.setCacheHint(CacheHint.SPEED);
 
 		linechart.prefWidthProperty().bind(widthProperty());
 		linechart.prefHeightProperty().bind(heightProperty());
 
 		chartArea = (Group)linechart.getAnnotationArea();
-	
+
 		final Rectangle zoom = new Rectangle();
 		zoom.setStrokeWidth(0);
 		chartArea.getChildren().add(zoom);
@@ -299,7 +298,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		time_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #E0E0D0; -fx-padding:3;");
 		time_label.setVisible(false);
 		chartArea.getChildren().add(time_label);
-		
+
 
 		measure.setVisible(false);
 		measure.setStartY(0);
@@ -615,7 +614,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			mode.setModeType(nv.intValue());
 			updateRequest();
 		});
-
+		
+		yAxis.setAutoRanging(false);
+		yAxis.setLowerBound(0f);
+		yAxis.setUpperBound(10f);
 	}
 
 
@@ -896,7 +898,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private  void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; long slot_tms = 0; 
-		
+
 		final int size               = dataService.getModelList().size();
 		final int collector_interval = dataService.getCollectorInterval_ms();
 		final int set_length         = resolution_ms/collector_interval;
@@ -906,6 +908,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}
 
 		if(refresh) {
+
+			if(dataService.size()==0) {
+				yAxis.setAutoRanging(false);
+			}
+			else
+				yAxis.setAutoRanging(true);
 
 			if(size==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
@@ -956,8 +964,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 			}
 
-			yAxis.setUpperBound(1); yAxis.setLowerBound(0);
-
 		}
 
 		if(size <=0)
@@ -966,12 +972,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		if(current_x_pt<size ) {
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED  || isPaused) {
-				
+
 				if(max_x0 > 0)
 					max_x = max_x0 < size ?  max_x0 : size;
 				else
 					max_x = current_x1_pt < size ?  current_x1_pt : size ;
-				
+
 			} else {
 				max_x = size;
 			}
@@ -1182,7 +1188,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			if(length < 3)
 				return v_current_x;
-			
+
 			double a = 0; double v;
 
 			if(average) {

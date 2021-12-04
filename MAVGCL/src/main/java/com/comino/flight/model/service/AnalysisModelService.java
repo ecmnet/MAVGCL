@@ -202,6 +202,10 @@ public class AnalysisModelService  {
 	public List<AnalysisDataModel> getModelList() {
 		return modelList;
 	}
+	
+	public int size() {
+		return modelList.size();
+	}
 
 	public AnalysisDataModel getCurrent() {
 		return current;
