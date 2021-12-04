@@ -277,9 +277,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	@Override
 	public void update(long now) {
 		if(isVisible() && !isDisabled()) {
-			//			Platform.runLater(() -> {
 			updateGraph(refreshRequest,0);
-			//			});
 		}
 	}
 
@@ -998,12 +996,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {
-		        current_x0_pt = 0;
-		    	scroll.setValue(0);
-				setXResolution(timeFrame.get());
+		        setXResolution(timeFrame.get());
 				traj.clear();
 			}
 		});
+		
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
@@ -1054,7 +1051,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	public void refreshChart() {
 		if(frame_secs > 60)
 			frame_secs = 60;
-
 		current_x0_pt = dataService.calculateX0Index(1);
 		setScaling(scale);
 
@@ -1067,7 +1063,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(!isDisabled() && !refreshRequest) {
 				center_x = 0; center_y = 0;
 				refreshRequest = true;
-
 				if(!state.getReplayingProperty().get()) {
 					updateGraph(refreshRequest,0);
 				} else {

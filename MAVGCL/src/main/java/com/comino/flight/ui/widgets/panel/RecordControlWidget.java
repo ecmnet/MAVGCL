@@ -349,12 +349,13 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 
 	private void recording(boolean start, int delay) {
-		Platform.runLater(() -> {  charts.refreshCharts(); 	});
+
 		if(start) {
 			modelService.start();
 		}
 		else
 			modelService.stop(delay);
 
+		Platform.runLater(() -> {  charts.refreshCharts(); 	});
 	}
 }
