@@ -171,10 +171,11 @@ public class ChartControlWidget extends ChartControlPane  {
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(state.getReplayingProperty().get())
+			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
+			anim_tms = System.currentTimeMillis();
 
-			float v = (float)scroll.getValue();
+			final float v = (float)scroll.getValue();
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
@@ -183,9 +184,10 @@ public class ChartControlWidget extends ChartControlPane  {
 		});
 
 		scroll.valueChangingProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(state.getReplayingProperty().get())
+			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
-
+			anim_tms = System.currentTimeMillis();
+			
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
