@@ -110,9 +110,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private final static String[] GPS_SOURCES    	= { "Global Position", "Local Position", "Raw GPS data" };
 	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
 	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", 
-														"StreetMap"
-													  //  "Terrain" 
-													  };
+			"StreetMap"
+			//  "Terrain" 
+	};
 
 	@FXML
 	private BorderPane mapviewpane;
@@ -191,7 +191,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		FXMLLoadHelper.load(this, "MAVOpenMapTab.fxml");
 
 		this.state = StateProperties.getInstance();
-		
+
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -616,7 +616,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			else
 				positionLayer.getIcon().setImage(plane_invalid);
 
-			positionLayer.updatePosition(pos[0],pos[1],model.getValue("HEAD"));
+			if(Double.isFinite(model.getValue("HEAD")))
+				positionLayer.updatePosition(pos[0],pos[1],model.getValue("HEAD"));
+			else
+				positionLayer.updatePosition(pos[0],pos[1],0);
 
 		} catch(Exception e) { e.printStackTrace(); }
 	}
