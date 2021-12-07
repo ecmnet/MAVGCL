@@ -511,12 +511,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
-				if(nv.intValue()<=5) {
-					updateMap(true);
-				} else
-					updateMap(false);
-			});
+			if(isDisabled())
+				return;
+
+			int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
+
+			if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+				model = dataService.getModelList().get(current_x1_pt);
+			else
+				model = dataService.getCurrent();
 		});
 
 		return this;
