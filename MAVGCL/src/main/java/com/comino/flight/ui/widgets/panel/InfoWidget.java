@@ -86,7 +86,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		listview.prefHeightProperty().bind(this.heightProperty().subtract(15));
+		listview.prefHeightProperty().bind(this.heightProperty().subtract(20));
 
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
@@ -200,11 +200,12 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 				!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text) ||
 				System.currentTimeMillis() - tms_old > 500	) {
 			tms_old = System.currentTimeMillis();
-			listview.getItems().add(m);
+			
 			Platform.runLater(() -> {
+				listview.getItems().add(m);
 				if(listview.getItems().size()>MAX_ITEMS)
 					listview.getItems().remove(0);
-				listview.getSelectionModel().select(-1);
+				//listview.getSelectionModel().select(-1);
 				listview.scrollTo(listview.getItems().size()-1);
 			});
 		}
