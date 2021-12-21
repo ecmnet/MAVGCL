@@ -201,10 +201,12 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 				System.currentTimeMillis() - tms_old > 500	) {
 			tms_old = System.currentTimeMillis();
 			listview.getItems().add(m);
-			if(listview.getItems().size()>MAX_ITEMS)
-				listview.getItems().remove(0);
-			listview.scrollTo(listview.getItems().size()-1);
-			listview.getSelectionModel().select(-1);
+			Platform.runLater(() -> {
+				if(listview.getItems().size()>MAX_ITEMS)
+					listview.getItems().remove(0);
+				listview.getSelectionModel().select(-1);
+				listview.scrollTo(listview.getItems().size()-1);
+			});
 		}
 	}
 

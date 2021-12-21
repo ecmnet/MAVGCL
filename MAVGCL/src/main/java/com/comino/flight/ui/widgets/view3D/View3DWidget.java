@@ -182,12 +182,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		
 		
 		task = new AnimationTimer() {
-			long tms=0;
 			@Override
 			public void handle(long now) {
 				if(isDisabled())
 					return;
-				tms = now;
 //				target.updateState(model);
 //				vehicle.updateState(model,offset);
 				switch(perspective) {
