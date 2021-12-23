@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Separator?>
 <?import com.comino.jfx.extensions.*?>
 
-<fx:root  prefHeight="140" prefWidth="203.0"  type="javafx.scene.layout.Pane" styleClass="widget"
+<fx:root  prefHeight="130" prefWidth="203.0"  type="javafx.scene.layout.Pane" styleClass="widget"
 xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 	   <Button fx:id="arm_command" layoutX="15.0" layoutY="10" prefHeight="19" prefWidth="175.0"
@@ -22,11 +22,11 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
        <Button fx:id="hold_command" layoutX="105.0" layoutY="65" prefHeight="19" prefWidth="85.0" text="Hold"/>
 
 
-       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="100" prefWidth="175.0" />
+       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="92" prefWidth="175.0" />
 
-       <Button fx:id="emergency" layoutX="15.0" layoutY="110" prefHeight="19" prefWidth="175.0"
+       <Button fx:id="emergency" layoutX="15.0" layoutY="100" prefHeight="19" prefWidth="175.0"
                text="Emergency Stop [TAB]" styleClass="emergency" />
 
-       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="135" prefWidth="175.0" />
+       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="125" prefWidth="175.0" />
 	</children>
 </fx:root>
