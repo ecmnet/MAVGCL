@@ -33,6 +33,8 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
+import java.text.DecimalFormat;
+
 import com.comino.flight.model.KeyFigureMetaData;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -44,6 +46,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 public class DashBoardAnnotation  implements XYAnnotation {
+	
+	private static final DecimalFormat f1 = new DecimalFormat("#0.000");
 
 	private  GridPane   pane 		= null;
 
@@ -96,7 +100,11 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 	public void setMinMax(double min, double max) {
 		min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
-		delta_v.setValue(kf.getValueString(max-min));
+		double delta = max - min;
+		if(Math.abs(delta)>  0.5)
+		  delta_v.setValue(kf.getValueString(delta));
+		else
+		  delta_v.setValue(f1.format(delta));
 	}
 
 	public void setVal(double val, KeyFigureMetaData kfv, boolean show) {
