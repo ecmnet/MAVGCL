@@ -27,6 +27,5 @@ xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
        <Button fx:id="emergency" layoutX="15.0" layoutY="100" prefHeight="19" prefWidth="175.0"
                text="Emergency Stop [TAB]" styleClass="emergency" />
 
-       <Separator prefHeight="0.0" layoutX="15.0"  layoutY="125" prefWidth="175.0" />
 	</children>
 </fx:root>
