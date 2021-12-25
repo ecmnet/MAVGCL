@@ -142,7 +142,6 @@ public class ChartControlWidget extends ChartControlPane  {
 			if(state.getReplayingProperty().get()) {
 				task.stop();
 				state.getProgressProperty().set(-1);
-				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
 				state.getCurrentUpToDate().set(true);
 			}
@@ -256,7 +255,6 @@ public class ChartControlWidget extends ChartControlPane  {
 					task.stop();
 					scroll.setValue(0);
 					state.getProgressProperty().set(-1);
-					modelService.setReplaying(false);
 					state.getReplayingProperty().set(false);
 					state.getCurrentUpToDate().set(true);
 				}
@@ -266,7 +264,6 @@ public class ChartControlWidget extends ChartControlPane  {
 		play.setOnAction((ActionEvent event)-> {
 			if(!state.getReplayingProperty().get() && modelService.getModelList().size() > 0) {
 				state.getReplayingProperty().set(true);
-				modelService.setReplaying(true);
 				state.getCurrentUpToDate().set(false);
 
 				if(scroll.getValue()<0.05)
@@ -285,7 +282,6 @@ public class ChartControlWidget extends ChartControlPane  {
 			} else {
 				task.stop();
 				state.getProgressProperty().set(-1);
-				modelService.setReplaying(false);
 				state.getReplayingProperty().set(false);
 				state.getCurrentUpToDate().set(true);	
 			}

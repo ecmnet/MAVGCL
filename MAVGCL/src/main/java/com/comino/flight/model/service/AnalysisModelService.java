@@ -135,7 +135,6 @@ public class AnalysisModelService  {
 				return;
 			
 			if(nv.booleanValue()) {
-				
 
 				synchronized(converter) {
 					converter.notify();
@@ -157,6 +156,15 @@ public class AnalysisModelService  {
 					converter.notify();
 				}
 			}
+		});
+		
+		state.getReplayingProperty().addListener((o,ov,nv) -> {
+			if(ov.booleanValue() && !nv.booleanValue()) {
+				synchronized(converter) {
+					converter.notify();
+				}
+			}
+			isReplaying = nv.booleanValue();
 		});
 
 		task = new AnimationTimer() {
@@ -223,10 +231,6 @@ public class AnalysisModelService  {
 				return;
 			current.set(modelList.get(index));
 		}
-	}
-
-	public void setReplaying(boolean replay) {
-		this.isReplaying = replay;
 	}
 
 	public void setCurrent(double time) {
@@ -395,7 +399,7 @@ public class AnalysisModelService  {
 
 			while(true) {
 
-				if(!model.sys.isStatus(Status.MSP_CONNECTED)) {
+				if(!model.sys.isStatus(Status.MSP_CONNECTED) || isReplaying) {
 					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
