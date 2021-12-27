@@ -68,8 +68,6 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private ListView<LogMessage> listview;
 
-	private long tms_old = 0;
-
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 
 	private boolean debug_message_enabled = false;
@@ -88,15 +86,15 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		listview.prefHeightProperty().bind(this.heightProperty().subtract(10));
 
+
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
-				super.updateItem(m,empty);
-				if(!empty) {
+				super.updateItem(m,false);
+				if(!empty && m!=null) {
 					setPrefWidth(130);
-					setWrapText(true);
-					Platform.runLater(() -> {
+					setWrapText(false);
 						switch(m.severity) {
 						case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
 							setStyle("-fx-text-fill:lightblue;");
@@ -123,11 +121,10 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 							setStyle("-fx-text-fill:white;");
 						}
 						setText(m.text);
-					});
-				} else
-					setText(null);
+				}
 			}
 		});
+		
 
 		ContextMenu ctxm = new ContextMenu();
 		MenuItem cmItem1 = new MenuItem("Clear list");
@@ -145,6 +142,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 		Preferences userPrefs = MAVPreferences.getInstance();
 		this.debug_message_enabled = userPrefs.getBoolean(MAVPreferences.DEBUG_MSG, false);
 		ChartControlPane.addChart(7,this);
+
 		control.addMAVMessageListener( new IMAVMessageListener() {
 
 			@Override
@@ -153,14 +151,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 				if(message.severity ==  MAV_SEVERITY.MAV_SEVERITY_DEBUG && !debug_message_enabled)
 					return;
 
-				final LogMessage m = message;
-
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						addMessageToList(m);
-					}
-				});
+				addMessageToList(message);
 			}
 		});
 
@@ -186,30 +177,21 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	}
 
 	public void clear() {
-		Platform.runLater(() -> {
-			listview.getItems().clear();
-		});
+		listview.getItems().clear();
 	}
 
-	private void addMessageToList(LogMessage m) {
+	private void addMessageToList(final LogMessage m) {
+
 
 		if(m==null || m.text==null)
 			return;
 
-		if(listview.getItems().size() == 0 ||
-				!m.text.contentEquals(listview.getItems().get(listview.getItems().size()-1).text) ||
-				System.currentTimeMillis() - tms_old > 500	) {
-			tms_old = System.currentTimeMillis();
-
+		if(m.isNew()) {
 			Platform.runLater(() -> {
 				listview.getItems().add(m);
-				
-				//listview.getSelectionModel().select(-1);
-			});
-			Platform.runLater(() -> {
 				if(listview.getItems().size()>MAX_ITEMS)
 					listview.getItems().remove(0);
-				listview.scrollTo(listview.getItems().size());
+				listview.scrollTo(m);
 			});
 		}
 	}

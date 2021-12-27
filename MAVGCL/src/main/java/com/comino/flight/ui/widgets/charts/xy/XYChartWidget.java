@@ -100,7 +100,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 // TODO: Add planned path
@@ -246,6 +248,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private boolean refreshRequest = false;
 
+	private XYMeasurement measurement;
+
 	private double center_x, center_y;
 	private double scale_rounding;
 	private double scale_factor;
@@ -299,14 +303,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.endPosition2 = new PositionAnnotation("P",Color.DARKOLIVEGREEN);
 
 		final Group chartArea = (Group)xychart.getAnnotationArea();
-		final Rectangle zoom = new Rectangle();
-		zoom.setStrokeWidth(0);
-		chartArea.getChildren().add(zoom);
-		zoom.setFill(Color.color(0,0.6,1.0,0.1));
-		zoom.setVisible(false);
-		zoom.setY(0);
+		//		final Rectangle zoom = new Rectangle();
+		//		zoom.setStrokeWidth(0);
+		//		chartArea.getChildren().add(zoom);
+		//		zoom.setFill(Color.color(0,0.6,1.0,0.1));
+		//		zoom.setVisible(false);
+		//		zoom.setY(0);
 
 		xychart.setAnimated(false);
+
+		measurement = new XYMeasurement((Group)xychart.getPlotArea());
 
 		xychart.setOnMouseClicked(click -> {
 			if (click.getClickCount() == 2) {
@@ -316,28 +322,57 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				} catch(Exception e) { setScaling(0); };
 				updateGraph(true,0);
 			} else {
-				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
-					Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
-					float x = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
-					float y = yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue();
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
-					msp.param1 =  x;
-					msp.param2 =  y;
-					msp.param3 =  Float.NaN;
-					msp.param4 =  Float.NaN;
-					control.sendMAVLinkMessage(msp);
+				if(dataService.isCollecting()) {
+					// set target if collecting
+					if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+						Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
+						float x = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
+						float y = yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue();
+						msg_msp_command msp = new msg_msp_command(255,1);
+						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+						msp.param1 =  x;
+						msp.param2 =  y;
+						msp.param3 =  Float.NaN;
+						msp.param4 =  Float.NaN;
+						control.sendMAVLinkMessage(msp);
+					}
+				} else {
+
 				}
 			}
 			click.consume();
 		});
 
+		xychart.setOnMousePressed(mouseEvent -> {
+
+			if(dataService.isCollecting() || dataService.isReplaying()) {
+				mouseEvent.consume();
+				return;
+			}
+			measurement.start(mouseEvent.getX()-chartArea.getLayoutX(), mouseEvent.getY()-chartArea.getLayoutY());
+		});
+
+		xychart.setOnMouseReleased(mouseEvent -> {
+			if(dataService.isCollecting() || dataService.isReplaying()) {
+				mouseEvent.consume();
+				return;
+			}
+			measurement.end();
+		});
+
+		xychart.setOnMouseDragged(event -> {
+			if(dataService.isCollecting() || dataService.isReplaying()) {
+				return;
+			}
+			measurement.measure(event.getX()-chartArea.getLayoutX(), event.getY()-chartArea.getLayoutY());
+		});
 
 		xychart.setOnScroll(event -> {
+
 			force_zero.setSelected(false);
 			center_x += event.getDeltaY() * scale / 600.0 ;
 			center_y -= event.getDeltaX() * scale / 600.0 ;
-			event.consume();
+			//	event.consume();
 			setScaling(scale);
 			updateGraph(false,0);
 		});
@@ -614,15 +649,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		});
 
 		replay.addListener((v, ov, nv) -> {
-//			if(isDisabled())
-//				return;
-//			refreshRequest = true; 
-//			if(nv.intValue()<=5) {
-//				current_x0_pt =  0;
-//				Platform.runLater(() -> updateGraph(true, 1) );
-//			} else
-//				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
-//			dataService.setCurrent(nv.intValue());
+			//			if(isDisabled())
+			//				return;
+			//			refreshRequest = true; 
+			//			if(nv.intValue()<=5) {
+			//				current_x0_pt =  0;
+			//				Platform.runLater(() -> updateGraph(true, 1) );
+			//			} else
+			//				Platform.runLater(() -> updateGraph(false,nv.intValue()) );
+			//			dataService.setCurrent(nv.intValue());
 			if(isDisabled())
 				return;
 
@@ -922,14 +957,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				max_x = mList.size();
 
 			slot_tms = System.currentTimeMillis();
-			
+
 			((XYObservableListWrapper<?>)series1.getData()).begin();
 			((XYObservableListWrapper<?>)series2.getData()).begin();
 
 			while(current_x_pt<max_x && ((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
-					
+
 					m = mList.get(current_x_pt);
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0) {
@@ -971,7 +1006,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				}
 				current_x_pt++;
 			}
-			
+
 			((XYObservableListWrapper<?>)series1.getData()).end();
 			((XYObservableListWrapper<?>)series2.getData()).end();
 
@@ -996,11 +1031,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {
-		        setXResolution(timeFrame.get());
+				setXResolution(timeFrame.get());
 				traj.clear();
 			}
 		});
-		
+
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
@@ -1169,5 +1204,55 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		cseries1.getSelectionModel().select(0);
 		cseries2.getSelectionModel().select(0);
+	}
+
+	private class XYMeasurement {
+
+		private double centerx, centery;
+		private Group group;
+		private final Circle   circle  = new Circle();
+		private final Label zoom_label = new Label();
+		private final Pane       pane  = new Pane();
+
+		public XYMeasurement(Group g) {
+			this.pane.setVisible(false);
+			this.group = g;
+			this.circle.setStyle("");
+			this.circle.setStroke(Color.web("#1c6478").darker());
+			this.circle.setFill(Color.web("#1c6478",0.2).brighter());
+			this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF;");
+			this.pane.getChildren().addAll(circle, zoom_label);
+			this.group.getChildren().add(pane);
+		}
+
+		public void start(double x, double y) {
+
+			centerx = x;
+			centery = y;
+			this.circle.setCenterX(centerx-4);
+			this.circle.setCenterY(centery-4);
+			this.zoom_label.setLayoutX(centerx-20);
+			this.zoom_label.setLayoutY(centery-6-Math.sqrt((x-centerx)*(x-centerx)+(y-centery)*(y-centery)));
+			this.pane.setVisible(true);
+
+		}
+
+		public void end() {
+			this.circle.setRadius(0);
+			this.pane.setVisible(false);
+		}
+
+		public void measure (double x, double y) {
+			double radius = Math.sqrt((x-centerx)*(x-centerx)+(y-centery)*(y-centery));
+			this.circle.setRadius(radius);
+			double dx = (xAxis.getUpperBound())-xAxis.getValueForDisplay(radius).doubleValue();
+			if(dx>0) {
+				this.zoom_label.setVisible(true);
+				this.zoom_label.setLayoutY(centery-6-radius);
+				this.zoom_label.setText(String.format("%#.2fm",dx*2));	
+			} else
+				this.zoom_label.setVisible(false);
+		}
+
 	}
 }
