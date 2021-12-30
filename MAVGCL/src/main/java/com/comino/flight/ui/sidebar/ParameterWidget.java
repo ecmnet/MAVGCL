@@ -167,6 +167,8 @@ public class ParameterWidget extends ChartControlPane  {
 			String search = groups.getEditor().getText();
 			if(search.length()>2)
 			   populateParameterListBySearch(search);
+			else if(search.startsWith("?")) 
+				 populateChangedParameterList();		   
 			keyEvent.consume();
 		});
 		
@@ -244,7 +246,7 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 		});
 
-		grid.disableProperty().bind(state.getLogLoadedProperty().or(state.getConnectedProperty().not()));
+	//	grid.disableProperty().bind(state.getLogLoadedProperty().or(state.getConnectedProperty().not()));
 
 	}
 	
@@ -254,6 +256,25 @@ public class ParameterWidget extends ChartControlPane  {
 		int i = 0;
 		for(ParameterAttributes p : params.getList()) {
 			if(p.name.contains(search.toUpperCase())) {
+				Label unit = new Label(p.unit); unit.setPrefWidth(38);
+				Label name = new Label(p.name); name.setPrefWidth(95);
+				name.setTooltip(createParameterToolTip(p));
+				ParamItem item = createParamItem(p, true);
+				items.add(item);
+				grid.addRow(i++, name,item.editor,unit);
+			}
+		}
+		Platform.runLater(() -> {
+			grid.setVisible(true);
+		});
+	}
+	
+	private void populateChangedParameterList() {
+		grid.setVisible(false);
+		grid.getChildren().clear();
+		int i = 0;
+		for(ParameterAttributes p : params.getList()) {
+			if(isChanged(p)) {
 				Label unit = new Label(p.unit); unit.setPrefWidth(38);
 				Label name = new Label(p.name); name.setPrefWidth(95);
 				name.setTooltip(createParameterToolTip(p));
@@ -289,6 +310,17 @@ public class ParameterWidget extends ChartControlPane  {
 	private ParamItem createParamItem(ParameterAttributes p, boolean editable) {
 		ParamItem item = new ParamItem(p,editable);
 		return item;
+	}
+	
+	private boolean isChanged(ParameterAttributes p) {
+		return Double.isFinite( p.default_val) && p.default_val != p.value && 
+		      !(p.name.startsWith("PWM") || 
+			    p.name.startsWith("CAL") || 
+				p.name.startsWith("LND_FLIGHT_T")  ||
+				p.name.startsWith("COM_FLIGHT_UUID")  ||
+				p.name.startsWith("COM_FLT")  ||
+		        p.name.startsWith("RC")  || 
+		        p.name.startsWith("BAT"));
 	}
 
 	private Tooltip createParameterToolTip(ParameterAttributes att) {
@@ -364,6 +396,7 @@ public class ParameterWidget extends ChartControlPane  {
 				if(att.valueList.size()>0) {
 					ChoiceBox<Entry<Integer,String>> cb = new ChoiceBox<Entry<Integer,String>>();
 					this.editor = cb;
+					cb.setDisable(!isEditable());
 					cb.getItems().addAll(att.valueList.entrySet());
 					cb.setConverter(new StringConverter<Entry<Integer,String>>() {
 						@Override
@@ -377,8 +410,7 @@ public class ParameterWidget extends ChartControlPane  {
 							return null;
 						}
 					});
-					cb.getSelectionModel().
-					selectedItemProperty().addListener((v,ov,nv) -> {
+					cb.getSelectionModel().selectedItemProperty().addListener((v,ov,nv) -> {
 						grid.requestFocus();
 					});
 				}
@@ -393,15 +425,29 @@ public class ParameterWidget extends ChartControlPane  {
 							grid.requestFocus();
 						}
 					});
+					
+					state.getLandedProperty().addListener((v,ov,nv) -> {
+						if(att.reboot_required) {
+							editor.setDisable(!nv.booleanValue());
+						}
+					});
+
+					if(att.reboot_required)
+						editor.setDisable(!state.getLandedProperty().get());
+					
+					if(!isEditable()) {
+						editor.setDisable(true);
+					}
 
 					if(att.bitMask!=null && att.bitMask.size()>0) {
 						editor.setStyle("-fx-text-fill: #B0F0B0; -fx-control-inner-background: #606060;");
 						att.decimals = 0;
 						editor.setCursor(Cursor.DEFAULT);
+						editor.setDisable(false);
 						((TextField)editor).setEditable(false);
 						editor.setOnMouseClicked((event) -> {
 							grid.requestFocus();
-							BitSelectionDialog bd = new BitSelectionDialog(att.bitMask);
+							BitSelectionDialog bd = new BitSelectionDialog(att.bitMask, isEditable());
 							bd.setValue((int)att.value);
 							int val = bd.show();
 							if(val!=att.value) {
@@ -413,14 +459,6 @@ public class ParameterWidget extends ChartControlPane  {
 					}
 				}
 
-				state.getLandedProperty().addListener((v,ov,nv) -> {
-					if(att.reboot_required) {
-						editor.setDisable(!nv.booleanValue());
-					}
-				});
-
-				if(att.reboot_required)
-					editor.setDisable(!state.getLandedProperty().get());
 			}
 
 			this.editor.setPrefWidth(85);
@@ -482,8 +520,13 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 			return "NaN";
 		}
+		
+		private boolean isEditable() {
+			return state.getLogLoadedProperty().or(state.getConnectedProperty().not()).not().get();
+		}
 
 		private void sendParameter(ParameterAttributes att, float val) {
+			
 			System.out.println("Try to set "+att.name+" to "+val+"...");
 			att.value = val;
 			final msg_param_set msg = new msg_param_set(255,1);

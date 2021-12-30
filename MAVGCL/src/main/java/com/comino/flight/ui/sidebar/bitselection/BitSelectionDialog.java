@@ -53,7 +53,7 @@ public class BitSelectionDialog  {
 	private Dialog<Boolean> bitDialog;
 	private GridPane    pane;
 
-	public BitSelectionDialog(List<String> bitlist) {
+	public BitSelectionDialog(List<String> bitlist, boolean editable) {
 		int i=0;
 
 		this.pane = new GridPane();
@@ -70,6 +70,7 @@ public class BitSelectionDialog  {
 						bitmask = (int) (bitmask & ~(1<<k));
 				}
 			});
+			checkboxes[i].setDisable(!editable);
 			Label bit_label = new Label(bit);
 			pane.addRow(i, checkboxes[i++],bit_label);
 		}
@@ -85,10 +86,11 @@ public class BitSelectionDialog  {
 		ButtonType buttonTypeOk =  new ButtonType("Ok", ButtonData.OK_DONE);
 		dialogPane.getButtonTypes().add(buttonTypeOk);
 
+
 		bitDialog.setResultConverter(new Callback<ButtonType, Boolean>() {
 			@Override
 			public Boolean call(ButtonType b) {
-				if (b == buttonTypeOk)
+				if (b == buttonTypeOk && editable)
 					return true;
 				return false;
 			}
