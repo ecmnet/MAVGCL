@@ -746,13 +746,13 @@
 		</Groups>
 	</KeyFigure>
     <KeyFigure desc="Act.Roll" uom="" mask="#0.0" key="ACTROLL">
-		<ULogSource field="actuator_controls_0_0.control[0]"/>
+		<ULogSource field="actuator_controls_0_0.control[1]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
 	</KeyFigure>
      <KeyFigure desc="Act.Pitch" uom="" mask="#0.0" key="ACTPITCH">
-		<ULogSource field="actuator_controls_0_0.control[1]"/>
+		<ULogSource field="actuator_controls_0_0.control[0]"/>
 		<Groups>
 			<Group>PWM Output</Group>
 		</Groups>
