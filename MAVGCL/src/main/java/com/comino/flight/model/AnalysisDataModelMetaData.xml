@@ -464,7 +464,7 @@
 	<KeyFigure desc="RollRate" uom="rad/s" mask="#0.00" key="ROLLR">
 		<MSPSource class="attitude" field="rr"></MSPSource>
 		<PX4Source field="ATT.RollRate"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.rollspeed"/>
+		<ULogSource field="vehicle_angular_velocity_0.xyz[0]"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
@@ -472,7 +472,7 @@
 
 	<KeyFigure desc="PitchRate" uom="rad/s" mask="#0.00" key="PITCHR">
 		<MSPSource class="attitude" field="pr"></MSPSource>
-		<ULogSource field="vehicle_attitude_0.pitchspeed"/>
+		<ULogSource field="vehicle_angular_velocity_0.xyz[1]"/>
 		<PX4Source field="ATT.PitchRate"></PX4Source>
 		<Groups>
 			<Group>Attitude</Group>
@@ -482,7 +482,7 @@
 	<KeyFigure desc="YawRate" uom="rad/s" mask="#0.00" key="YAWR">
 		<MSPSource class="attitude" field="yr"></MSPSource>
 		<PX4Source field="ATT.YawRate"></PX4Source>
-		<ULogSource field="vehicle_attitude_0.yawspeed"/>
+		<ULogSource field="vehicle_angular_velocity_0.xyz[2]"/>
 		<Groups>
 			<Group>Attitude</Group>
 		</Groups>
