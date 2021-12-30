@@ -74,7 +74,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private static final float VIB_SCALE = 50;
 
 
-	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Gyro.Y+Gyro.X" };
+	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Gyro.Y+Gyro.X" , "Act.R+Act.P"};
 
 
 	@FXML
@@ -296,6 +296,10 @@ public class Vibration extends VBox implements IChartControl  {
 				data1[i] = (float)m.getValue("GYROY");	
 				data2[i] = (float)m.getValue("GYROX");	
 				break;
+			case 3:
+				data1[i] = (float)m.getValue("ACTROLL");	
+				data2[i] = (float)m.getValue("ACTPITCH");	
+				break;
 
 			}
 			//				data3[i] = (float)Math.sqrt(m.getValue("ACCX") * m.getValue("ACCX") + m.getValue("ACCY") * m.getValue("ACCY") );	
@@ -306,6 +310,7 @@ public class Vibration extends VBox implements IChartControl  {
 
 		case 0:
 		case 2:
+		case 3:
 
 			fft1.forward(data1); 
 			for(int i = 1; i < fft1.specSize(); i++ ) {
