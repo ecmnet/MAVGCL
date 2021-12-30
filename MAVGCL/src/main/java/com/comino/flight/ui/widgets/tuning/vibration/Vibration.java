@@ -60,6 +60,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -163,11 +164,12 @@ public class Vibration extends VBox implements IChartControl  {
 		sample_rate = 1000 / dataService.getCollectorInterval_ms();
 
 		xAxis.setAutoRanging(false);
-		xAxis.setLowerBound(1);
+		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
 
 		yAxis.setAutoRanging(true);
+		yAxis.setPrefWidth(30);
 
 		fft1 = new FFT( POINTS, sample_rate );
 		fft2 = new FFT( POINTS, sample_rate );
@@ -313,11 +315,13 @@ public class Vibration extends VBox implements IChartControl  {
 		case 3:
 
 			fft1.forward(data1); 
+			series1.getData().add(new Data<Number, Number>(0.0,0.0));
 			for(int i = 1; i < fft1.specSize(); i++ ) {
 				series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
 			}
 
 			fft2.forward(data2); 
+			series2.getData().add(new Data<Number, Number>(0.0,0.0));
 			for(int i = 1; i < fft2.specSize(); i++ ) {
 				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
 			}
@@ -327,6 +331,7 @@ public class Vibration extends VBox implements IChartControl  {
 		case 1:
 
 			fft3.forward(data3);
+			series3.getData().add(new Data<Number, Number>(0.0,0.0));
 			for(int i = 1; i < fft3.specSize(); i++ ) {
 				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
 			}
@@ -356,7 +361,7 @@ public class Vibration extends VBox implements IChartControl  {
 		sample_rate = 1000 / dataService.getCollectorInterval_ms();
 
 		xAxis.setAutoRanging(false);
-		xAxis.setLowerBound(1);
+		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(sample_rate/2);
 		xAxis.setLabel("Hz");
 
