@@ -61,6 +61,7 @@ import com.comino.mavutils.workqueue.WorkQueue;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -154,24 +155,24 @@ public class ParameterWidget extends ChartControlPane  {
 		groups.getEditor().setEditable(false);
 		groups.getEditor().setTextFormatter(new TextFormatter<>((change) -> {
 			if(groups.getEditor().isEditable())
-              change.setText(change.getText().toUpperCase());
-            return change;
-        }));
+				change.setText(change.getText().toUpperCase());
+			return change;
+		}));
 
 		groups.getEditor().setOnMouseClicked((event) -> {
-				groups.getEditor().setText("");
-				groups.getEditor().setEditable(true);
+			groups.getEditor().setText("");
+			groups.getEditor().setEditable(true);
 		});
-		
+
 		groups.getEditor().setOnKeyTyped((keyEvent) -> {
 			String search = groups.getEditor().getText();
 			if(search.length()>2)
-			   populateParameterListBySearch(search);
+				populateParameterListBySearch(search);
 			else if(search.startsWith("?")) 
-				 populateChangedParameterList();		   
+				populateChangedParameterList();		   
 			keyEvent.consume();
 		});
-		
+
 
 		scroll.setBorder(Border.EMPTY);
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
@@ -188,8 +189,12 @@ public class ParameterWidget extends ChartControlPane  {
 		});
 
 		reload.setOnAction((ActionEvent event)-> {
-			groups.getSelectionModel().clearAndSelect(0);
-			params.refreshParameterList(false);
+			if(reload.getText().startsWith("R")) {
+				groups.getSelectionModel().clearAndSelect(0);
+				params.refreshParameterList(false);
+			} else {
+				uploadChangedParameterList();
+			}
 		});
 
 		reload.disableProperty().bind(state.getArmedProperty()
@@ -245,11 +250,8 @@ public class ParameterWidget extends ChartControlPane  {
 				}
 			}
 		});
-
-	//	grid.disableProperty().bind(state.getLogLoadedProperty().or(state.getConnectedProperty().not()));
-
 	}
-	
+
 	private void populateParameterListBySearch(String search) {
 		grid.setVisible(false);
 		grid.getChildren().clear();
@@ -265,10 +267,11 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 		}
 		Platform.runLater(() -> {
+			reload.setText("Reload");
 			grid.setVisible(true);
 		});
 	}
-	
+
 	private void populateChangedParameterList() {
 		grid.setVisible(false);
 		grid.getChildren().clear();
@@ -284,7 +287,37 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 		}
 		Platform.runLater(() -> {
+			reload.setText("Upload");
 			grid.setVisible(true);
+		});
+	}
+
+	private void uploadChangedParameterList() {
+		System.out.println("Uploading changed parameters...");
+		new Thread(new Task<Void>() {
+			int count = 0; int valid = 0; int size = grid.getRowCount();
+			@Override protected Void call() throws Exception {
+				for(ParameterAttributes p : params.getList()) {
+					if(isChanged(p)) {
+						state.getProgressProperty().set(count++/(float)size);
+						if(params.sendParameter(p.name,(float)p.value)) 
+							valid++;
+						else
+							logger.writeLocalMsg("[mgc] "+p.name+" could not be set to "+p.value,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+						try { Thread.sleep(100); } catch (InterruptedException e) { }
+					}
+				}
+				state.getProgressProperty().set(0);
+				if(count == valid)
+					logger.writeLocalMsg("[mgc] Parameters set successfully",MAV_SEVERITY.MAV_SEVERITY_INFO);
+				else
+					logger.writeLocalMsg("[mgc] Some parameters could not be set",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				return null;
+			}
+		}).start();
+
+		Platform.runLater(() -> {
+			reload.setText("Reload");
 		});
 	}
 
@@ -303,6 +336,7 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 		}
 		Platform.runLater(() -> {
+			reload.setText("Reload");
 			grid.setVisible(true);
 		});
 	}
@@ -311,16 +345,17 @@ public class ParameterWidget extends ChartControlPane  {
 		ParamItem item = new ParamItem(p,editable);
 		return item;
 	}
-	
+
 	private boolean isChanged(ParameterAttributes p) {
 		return Double.isFinite( p.default_val) && p.default_val != p.value && 
-		      !(p.name.startsWith("PWM") || 
-			    p.name.startsWith("CAL") || 
-				p.name.startsWith("LND_FLIGHT_T")  ||
-				p.name.startsWith("COM_FLIGHT_UUID")  ||
-				p.name.startsWith("COM_FLT")  ||
-		        p.name.startsWith("RC")  || 
-		        p.name.startsWith("BAT"));
+				!(p.name.startsWith("PWM") || 
+						p.name.startsWith("CAL") || 
+						p.name.startsWith("LND_FLIGHT_T")  ||
+						p.name.startsWith("COM_FLIGHT_UUID")  ||
+						p.name.startsWith("COM_FLT")  ||
+						p.name.startsWith("RC")  || 
+						p.name.startsWith("SYS")  || 
+						p.name.startsWith("BAT"));
 	}
 
 	private Tooltip createParameterToolTip(ParameterAttributes att) {
@@ -380,6 +415,7 @@ public class ParameterWidget extends ChartControlPane  {
 				} else {
 					Spinner<Double> sp = new Spinner<Double>(new SpinnerAttributeFactory(att));
 					sp.setEditable(true);
+					sp.setDisable(!isEditable());
 					this.editor = sp;
 					sp.getEditor().setOnKeyPressed(keyEvent -> {
 						if(keyEvent.getCode() == KeyCode.ENTER) {
@@ -425,7 +461,7 @@ public class ParameterWidget extends ChartControlPane  {
 							grid.requestFocus();
 						}
 					});
-					
+
 					state.getLandedProperty().addListener((v,ov,nv) -> {
 						if(att.reboot_required) {
 							editor.setDisable(!nv.booleanValue());
@@ -434,7 +470,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 					if(att.reboot_required)
 						editor.setDisable(!state.getLandedProperty().get());
-					
+
 					if(!isEditable()) {
 						editor.setDisable(true);
 					}
@@ -520,13 +556,13 @@ public class ParameterWidget extends ChartControlPane  {
 			}
 			return "NaN";
 		}
-		
+
 		private boolean isEditable() {
 			return state.getLogLoadedProperty().or(state.getConnectedProperty().not()).not().get();
 		}
 
 		private void sendParameter(ParameterAttributes att, float val) {
-			
+
 			System.out.println("Try to set "+att.name+" to "+val+"...");
 			att.value = val;
 			final msg_param_set msg = new msg_param_set(255,1);
