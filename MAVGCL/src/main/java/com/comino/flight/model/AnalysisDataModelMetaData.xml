@@ -659,7 +659,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="SP.Global.Pos.VZ" uom="cm/s" mask="#0.00" key="SPGLOBVZ">
+	<KeyFigure desc="SP.Global.Pos.VZ" uom="m/s" mask="#0.00" key="SPGLOBVZ">
 		<ULogSource field="vehicle_global_velocity_setpoint_0.vz"/>
 		<Groups>
 			<Group>Global Position</Group>
@@ -1822,7 +1822,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Loc.Pos.VZ error" uom="m" mask="#0.00" key="LPOSVZERR">
+	<KeyFigure desc="Loc.Pos.VZ error" uom="m/s" mask="#0.00" key="LPOSVZERR">
 		<VirtualSource>
 		    <Converter class="VirtualConverter" expression="abs(LPOSVZ - SPLPOSVZ)" var0="LPOSVZ" var1="SPLPOSVZ"/>
 		</VirtualSource>
