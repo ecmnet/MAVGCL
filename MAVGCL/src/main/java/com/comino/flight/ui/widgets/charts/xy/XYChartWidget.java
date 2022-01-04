@@ -103,6 +103,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 // TODO: Add planned path
@@ -349,7 +350,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				mouseEvent.consume();
 				return;
 			}
-			measurement.start(mouseEvent.getX()-chartArea.getLayoutX(), mouseEvent.getY()-chartArea.getLayoutY());
+			measurement.start(mouseEvent.getSceneX()- chartArea.getLocalToSceneTransform().getTx(), mouseEvent.getSceneY()-chartArea.getLocalToSceneTransform().getTy());
 		});
 
 		xychart.setOnMouseReleased(mouseEvent -> {
@@ -364,7 +365,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			if(dataService.isCollecting() || dataService.isReplaying()) {
 				return;
 			}
-			measurement.measure(event.getX()-chartArea.getLayoutX(), event.getY()-chartArea.getLayoutY());
+			measurement.measure(event.getSceneX()- chartArea.getLocalToSceneTransform().getTx(), event.getSceneY()-chartArea.getLocalToSceneTransform().getTy());
 		});
 
 		xychart.setOnScroll(event -> {
@@ -1210,46 +1211,51 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		private double centerx, centery;
 		private Group group;
-		private final Circle   circle  = new Circle();
+		private final Line       line  = new Line();
+		private final Circle    start  = new Circle(2);
 		private final Label zoom_label = new Label();
 		private final Pane       pane  = new Pane();
 
 		public XYMeasurement(Group g) {
 			this.pane.setVisible(false);
 			this.group = g;
-			this.circle.setStyle("");
-			this.circle.setStroke(Color.web("#1c6478").darker());
-			this.circle.setFill(Color.web("#1c6478",0.2).brighter());
+			this.start.setStroke(Color.web("#1c6478").darker());
+			this.start.setFill(Color.web("#1c6478").brighter());
+			this.line.setStroke(Color.web("#1c6478").brighter());
 			this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF;");
-			this.pane.getChildren().addAll(circle, zoom_label);
+			this.pane.getChildren().addAll( start, zoom_label, line);
 			this.group.getChildren().add(pane);
 		}
 
 		public void start(double x, double y) {
-
+			this.zoom_label.setVisible(false);
 			centerx = x;
 			centery = y;
-			this.circle.setCenterX(centerx-4);
-			this.circle.setCenterY(centery-4);
-			this.zoom_label.setLayoutX(centerx-20);
-			this.zoom_label.setLayoutY(centery-6-Math.sqrt((x-centerx)*(x-centerx)+(y-centery)*(y-centery)));
+			this.start.setCenterX(centerx);
+			this.start.setCenterY(centery);
+			this.line.setEndX(centerx);
+			this.line.setEndY(centery);
+			this.line.setStartX(centerx);
+			this.line.setStartY(centery);
 			this.pane.setVisible(true);
 
 		}
 
 		public void end() {
-			this.circle.setRadius(0);
 			this.pane.setVisible(false);
+			this.zoom_label.setVisible(false);
 		}
 
 		public void measure (double x, double y) {
-			double radius = Math.sqrt((x-centerx)*(x-centerx)+(y-centery)*(y-centery));
-			this.circle.setRadius(radius);
-			double dx = (xAxis.getUpperBound())-xAxis.getValueForDisplay(radius).doubleValue();
-			if(dx>0) {
+			double radius   = Math.sqrt((x-centerx)*(x-centerx)+(y-centery)*(y-centery));
+			double distance = (xAxis.getUpperBound())-xAxis.getValueForDisplay(radius).doubleValue();
+			this.line.setEndX(x);
+			this.line.setEndY(y);
+			if(radius > 0.05) {
 				this.zoom_label.setVisible(true);
-				this.zoom_label.setLayoutY(centery-6-radius);
-				this.zoom_label.setText(String.format("%#.2fm",dx*2));	
+				this.zoom_label.setLayoutX(x+12);
+				this.zoom_label.setLayoutY(y+12);
+				this.zoom_label.setText(String.format("%#.3f m",distance));	
 			} else
 				this.zoom_label.setVisible(false);
 		}
