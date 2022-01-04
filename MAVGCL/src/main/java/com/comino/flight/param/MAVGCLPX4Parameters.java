@@ -167,7 +167,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	@Override
 	public void received(Object _msg) {
 
-		if( _msg instanceof msg_param_value ) { //&& is_reading) {
+		if( _msg instanceof msg_param_value && metadata != null ) { //&& is_reading) {
 
 			long flight_time = 0; double val;
 
