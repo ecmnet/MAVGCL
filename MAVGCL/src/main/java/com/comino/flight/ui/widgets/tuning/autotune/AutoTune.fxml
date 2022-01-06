@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns="http://javafx.com/javafx/8.0.51"
+	xmlns:fx="http://javafx.com/fxml/1" styleClass="widget" style="-fx-padding: 10 15 10 15;" >
+	<children>
+	   <Label layoutX="14.0" prefHeight="28.0" text="AutoTune" />
+	   <VBox spacing="10" >
+		<children>
+	          <ProgressBar fx:id="progress" prefHeight="4.5" />
+	          <HBox spacing="15">
+	     		<children>
+	      			<Button fx:id="roll"  prefWidth="120.0" text="Roll"   styleClass="arm" />
+	     			<Button fx:id="pitch" prefWidth="120.0" text="Pitch" styleClass="arm" />
+	      			<Button fx:id="yaw"   prefWidth="120.0" text="Yaw"   styleClass="arm" />
+	     		</children>
+	   		</HBox>
+	   	</children>
+	  </VBox>
+	</children>
+</fx:root>

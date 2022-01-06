@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2019 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,76 +31,49 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.tabs;
+package com.comino.flight.ui.widgets.tuning.autotune;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.file.KeyFigurePreset;
-import com.comino.flight.model.AnalysisDataModelMetaData;
-import com.comino.flight.ui.widgets.charts.line.LineChartWidget;
-import com.comino.flight.ui.widgets.tuning.attctl.AttCtlTune;
-import com.comino.flight.ui.widgets.tuning.autotune.AutoTune;
-import com.comino.flight.ui.widgets.tuning.motor.MotorTest;
-import com.comino.flight.ui.widgets.tuning.throttle.ThrottleTune;
-import com.comino.flight.ui.widgets.tuning.vibration.Vibration;
-import com.comino.jfx.extensions.ChartControlPane;
+import com.comino.flight.observables.StateProperties;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 
-public class MAVTuningTab extends Pane {
 
-	@FXML
-	private VBox vbox;
+public class AutoTune extends VBox  {
+
+
+	private StateProperties state = null;
+	private MAVGCLPX4Parameters parameters = null;
+	private IMAVController control;
 	
 	@FXML
-	private HBox hbox;
+	private ProgressBar progress;
 
 
-	@FXML
-	private AutoTune autotune;
+	public AutoTune() {
 
-	@FXML
-	private AttCtlTune attctl;
-	
-	@FXML
-	private MotorTest motor;
-	
-	
-	@FXML
-	private Vibration vibration;
-	
-	@FXML
-	private LineChartWidget chart1;
+		FXMLLoadHelper.load(this, "AutoTune.fxml");
 
-	private AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
-
-
-	public MAVTuningTab() {
-		FXMLLoadHelper.load(this, "MAVTuningTab.fxml");
 	}
+
 
 	@FXML
 	private void initialize() {
-		
-        vbox.prefWidthProperty().bind(widthProperty());  
-        hbox.prefWidthProperty().bind(widthProperty());    
-        chart1.prefWidthProperty().bind(widthProperty());
-        chart1.prefHeightProperty().bind(heightProperty().divide(2));
-        vibration.disableProperty().bind(this.disabledProperty());
-        chart1.disableProperty().bind(this.disabledProperty());
-        
-	}
+		progress.prefWidthProperty().bind(this.widthProperty());
+		state = StateProperties.getInstance();
+		parameters = MAVGCLPX4Parameters.getInstance();
 
+	}
 
 	public void setup(IMAVController control) {
-		autotune.setup(control);
-		attctl.setup(control);
-		motor.setup(control);
-		vibration.setup(control);
-		ChartControlPane.addChart(8,chart1.setup(control,8));
+		this.control = control;
+		this.setDisable(true);
+
 	}
+
 
 }
