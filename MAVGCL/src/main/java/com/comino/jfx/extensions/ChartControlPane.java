@@ -56,6 +56,8 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public class ChartControlPane extends Pane {
+	
+	public static final int XT_TUNING_CHART = 8;
 
 	private static final int ACTION_MARGIN = 25;
 
@@ -92,6 +94,10 @@ public class ChartControlPane extends Pane {
 	public static void addChart(int id,IChartControl chart) {
 		if(!charts.containsKey(id))
 			charts.put(id,chart);
+	}
+	
+	public static IChartControl getChart(int id) {
+		return charts.get(id);
 	}
 
 	public ChartControlPane() {

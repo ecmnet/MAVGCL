@@ -40,14 +40,15 @@
 										<MAV3DViewTab fx:id="mav3dviewtab" />
 									</content>
 								</Tab>
-								<Tab text="Map">
-									<content>
-										<MAVOpenMapTab fx:id="mavmaptab" />
-									</content>
-								</Tab>
+								
 								<Tab text="Setup">
 									<content>
 										<MAVTuningTab fx:id="mavtunetab" />
+									</content>
+								</Tab>
+								<Tab text="Map">
+									<content>
+										<MAVOpenMapTab fx:id="mavmaptab" />
 									</content>
 								</Tab>
 							    <Tab text="Inspector">

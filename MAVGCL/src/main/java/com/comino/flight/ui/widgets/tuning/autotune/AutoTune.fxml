@@ -11,11 +11,12 @@
 	   <VBox spacing="10" >
 		<children>
 	          <ProgressBar fx:id="progress" prefHeight="4.5" />
-	          <HBox spacing="15">
+	          <HBox spacing="10">
 	     		<children>
 	      			<Button fx:id="roll"  prefWidth="120.0" text="Roll"   styleClass="arm" />
-	     			<Button fx:id="pitch" prefWidth="120.0" text="Pitch" styleClass="arm" />
-	      			<Button fx:id="yaw"   prefWidth="120.0" text="Yaw"   styleClass="arm" />
+	     			<Button fx:id="pitch" prefWidth="120.0" text="Pitch"  styleClass="arm" />
+	      			<Button fx:id="yaw"   prefWidth="120.0" text="Yaw"    styleClass="arm" />
+	      			<Button fx:id="abort" prefWidth="150.0" text="Abort"  styleClass="arm" />
 	     		</children>
 	   		</HBox>
 	   	</children>
