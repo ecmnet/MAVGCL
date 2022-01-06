@@ -197,6 +197,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 					break;
 				case Camera.VEHICLE_PERSPECTIVE:
 					camera.updateState(model);
+					trajectory.clear();
 					break;
 				}
 			}		
