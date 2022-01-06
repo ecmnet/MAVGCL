@@ -63,7 +63,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 public class MAVInspectorTab extends Pane implements IMAVLinkListener {
-	
+
 	private final int REFRESH_RATE = 100;
 
 	@FXML
@@ -98,8 +98,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
-		
-		
+
+
 		treetableview.focusedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -136,7 +136,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<DataSet, String> param) {
 				if(param.getValue()!=null)
-				 return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
+					return param.getValue().isLeaf() ? param.getValue().getValue().strProperty() : new SimpleStringProperty("");
 				return new SimpleStringProperty("");
 			}
 		});
@@ -210,7 +210,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 	@Override
 	public void received(Object msg) {
-		
+
 		try {
 			if(!this.isDisabled() && MainApp.getPrimaryStage().isFocused())
 				parseMessageString(msg.toString().split("  "));	
@@ -222,10 +222,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	private void parseMessageString(String[] msg) {
 		String _msg = msg[0].replace(':', ' ').trim();
 
-		if(_msg.contains("DISTANCE")) {
-			for(int k = 0; k<msg.length;k++) {
-				if(msg[k].startsWith("id"))
-					_msg = _msg+"_"+msg[k].substring(3, 4);
+		for(int k = 0; k<msg.length;k++) {
+			if(msg[k].startsWith("id")) {
+				_msg = _msg+"_"+msg[k].substring(3, 4);
+				break;
 			}
 		}
 
@@ -292,7 +292,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						d.removeFromTree(treetableview);
 						allData.remove(k);
 					});
-					
+
 					Platform.runLater(() -> {
 						message_col.setSortType(SortType.ASCENDING);
 						variable_col.setSortType(SortType.ASCENDING);
@@ -300,11 +300,11 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					});
 				}
 
-//				Platform.runLater(() -> {
-//					message_col.setSortType(SortType.ASCENDING);
-//					variable_col.setSortType(SortType.ASCENDING);
-//					treetableview.sort();
-//				});
+				//				Platform.runLater(() -> {
+				//					message_col.setSortType(SortType.ASCENDING);
+				//					variable_col.setSortType(SortType.ASCENDING);
+				//					treetableview.sort();
+				//				});
 
 			}
 		}
@@ -338,11 +338,11 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			if(!view.getRoot().getChildren().contains(ti)) {
 				this.tms = System.currentTimeMillis();
 				view.getRoot().getChildren().add(ti);
-		//		Platform.runLater(() -> {
-					message_col.setSortType(SortType.ASCENDING);
-					variable_col.setSortType(SortType.ASCENDING);
-					treetableview.sort();
-		//		});
+				//		Platform.runLater(() -> {
+				message_col.setSortType(SortType.ASCENDING);
+				variable_col.setSortType(SortType.ASCENDING);
+				treetableview.sort();
+				//		});
 			}
 		}
 
@@ -354,7 +354,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		public Map<String,DataSet> getData() {
 			return data;
 		}
-		
+
 		public void clear() {
 			tms = 0; rate = 0; count = 0;
 		}
