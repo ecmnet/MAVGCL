@@ -40,27 +40,27 @@
 										<MAV3DViewTab fx:id="mav3dviewtab" />
 									</content>
 								</Tab>
-								<Tab text="Tuning">
-									<content>
-										<MAVTuningTab fx:id="mavtunetab" />
-									</content>
-								</Tab>
 								<Tab text="Map">
 									<content>
 										<MAVOpenMapTab fx:id="mavmaptab" />
 									</content>
 								</Tab>
+								<Tab text="Setup">
+									<content>
+										<MAVTuningTab fx:id="mavtunetab" />
+									</content>
+								</Tab>
+							    <Tab text="Inspector">
+								    <content>
+									    <MAVInspectorTab fx:id="mavinspectortab" />
+								    </content>
+							    </Tab>
+							    <Tab text="NuttShell">
+								    <content>
+										<MavLinkShellTab fx:id="mavlinkshelltab" />
+									</content>
+								</Tab>
 							</tabs>
-							<Tab text="Inspector">
-								<content>
-									<MAVInspectorTab fx:id="mavinspectortab" />
-								</content>
-							</Tab>
-							<Tab text="NuttShell">
-								<content>
-									<MavLinkShellTab fx:id="mavlinkshelltab" />
-								</content>
-							</Tab>
 						</TabPane>
 						<ParameterWidget fx:id="parameters" maxWidth="265"
 						    visible="false" styleClass="widget">
