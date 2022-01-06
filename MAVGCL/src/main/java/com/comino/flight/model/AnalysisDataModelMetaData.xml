@@ -1775,21 +1775,21 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug X" uom="" mask="#0.00" key="DEBUGX">
+  <KeyFigure desc="Debug X" uom="" mask="#0.000" key="DEBUGX">
 		<MSPSource class="debug" field="x"/>
 		<Groups>
 			<Group>Debug</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug Y" uom="" mask="#0.00" key="DEBUGY">
+  <KeyFigure desc="Debug Y" uom="" mask="#0.000" key="DEBUGY">
 		<MSPSource class="debug" field="y"/>
 		<Groups>
 			<Group>Debug</Group>
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Debug Z" uom="" mask="#0.00" key="DEBUGZ">
+  <KeyFigure desc="Debug Z" uom="" mask="#0.000" key="DEBUGZ">
 		<MSPSource class="debug" field="z"/>
 		<Groups>
 			<Group>Debug</Group>
