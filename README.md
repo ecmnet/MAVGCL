@@ -12,15 +12,13 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	31/12/21 
+**Development Status:** Last updated 	16/01/22
 
-* JDK 17 build
+* Autoselection of Serial, SITL and Vehicle during startup
 * Trajectory visualization (XY and 3D)
-* Parameter display enhanced (Search by name, Show changed params using '?', Upload changed params to vehicle from logs)
 * Up to 5ms resolution for ULOGs
-* 3D circle measurement
+* Autotune support (in prep)
 * FFT enhancments (UI, Actuator control FFT)
-* Keyfigure extension and fixes
 * UI and responsiveness fixes
 
 
