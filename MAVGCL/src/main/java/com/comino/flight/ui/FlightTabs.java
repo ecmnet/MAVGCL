@@ -167,7 +167,6 @@ public class FlightTabs extends Pane {
 		xtanalysistab.setup(control);
 		xyanalysistab.setup(control);
 		alert.setup(control);
-
 		mavlinkshelltab.setup(control);
 
 //		this.tabpane.getTabs().get(5).setDisable(true);

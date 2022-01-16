@@ -51,6 +51,7 @@ import com.comino.flight.ui.widgets.panel.ControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
@@ -122,7 +123,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
-			if(source==null && !connect()) {
+			if(source==null && !connect() || state.getSimulationProperty().get()) {
 				return;
 			}
 
@@ -191,7 +192,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get())
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || state.getSimulationProperty().get())
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
@@ -257,7 +258,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private boolean connect() {
 		String url_string = null;
 
-		if(isConnected)
+		if(isConnected || state.getSimulationProperty().get())
 			return true;
 
 		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);

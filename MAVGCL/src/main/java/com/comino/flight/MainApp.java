@@ -64,6 +64,7 @@ import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVAutoController;
 import com.comino.mavcom.control.impl.MAVSerialController;
 import com.comino.mavcom.control.impl.MAVSimController;
 import com.comino.mavcom.control.impl.MAVUdpController;
@@ -274,15 +275,19 @@ public class MainApp extends Application  {
 					peerAddress = args.get("ip");
 			}
 			else {
-				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-					control = new MAVUdpController("127.0.0.1",14557,14540, true);
-					//	new SITLController(control);
-				} else {
-					//	try { redirectConsole(); } catch (IOException e2) { }
-					control = new MAVUdpController(peerAddress,peerport,bindport, false);
-				}
+				control =new MAVAutoController(peerAddress,peerport,bindport); 
+//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+//					//	new SITLController(control);
+//				} else {
+//					//	try { redirectConsole(); } catch (IOException e2) { }
+//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+//				}
 			}
+			
+			if(!control.isConnected())
+				control.connect();
 			
 			
 			MAVGCLMap.getInstance(control);
@@ -688,8 +693,6 @@ public class MainApp extends Application  {
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
-			if(!control.isConnected())
-				control.connect();
 			
 			primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 				if(newValue.booleanValue() && control.isConnected()) {

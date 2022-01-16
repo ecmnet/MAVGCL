@@ -150,6 +150,7 @@ public class StateProperties {
 				isSLAMAvailable.set(true);
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
 				Platform.runLater(() -> {
+					simulationProperty.set(n.isStatus(Status.MSP_SITL));
 			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				});
 				

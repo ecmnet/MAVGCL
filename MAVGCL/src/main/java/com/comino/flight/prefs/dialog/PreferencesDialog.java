@@ -83,8 +83,6 @@ public class PreferencesDialog  {
 	@FXML
 	private TextField bind_port;
 
-	@FXML
-	private CheckBox sitl;
 
 	@FXML
 	private TextField video;
@@ -219,7 +217,6 @@ public class PreferencesDialog  {
 		prespath.getEditor().setText(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
-		sitl.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.PREFS_SITL, true));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
 		vidrec.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.VIDREC, false));
 		reflat.setText(userPrefs.get(MAVPreferences.REFLAT, "47.3977420"));
@@ -241,7 +238,6 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
-			userPrefs.putBoolean(MAVPreferences.PREFS_SITL,sitl.isSelected());
 			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
 			userPrefs.put(MAVPreferences.RTKSVINACC,svinacc.getText());
 			userPrefs.put(MAVPreferences.REFLAT, reflat.getText());
