@@ -91,7 +91,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
-				super.updateItem(m,false);
+				super.updateItem(m,empty);
 				if(!empty && m!=null) {
 					setPrefWidth(130);
 					setWrapText(false);
@@ -182,7 +182,6 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 	private void addMessageToList(final LogMessage m) {
 
-
 		if(m==null || m.text==null)
 			return;
 
@@ -190,7 +189,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 			Platform.runLater(() -> {
 				listview.getItems().add(m);
 				if(listview.getItems().size()>MAX_ITEMS)
-					listview.getItems().remove(0);
+					listview.getItems().remove(0,0);
 				listview.scrollTo(m);
 			});
 		}

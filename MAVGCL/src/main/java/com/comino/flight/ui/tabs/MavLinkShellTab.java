@@ -80,7 +80,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	private char[] bytes = new char[132];
 
-	private msg_serial_control msg = new msg_serial_control(1,1);
+	private msg_serial_control msg;
 
 
 	public MavLinkShellTab() {
@@ -106,9 +106,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				scrollIntoView();
 			}
 		};
-
-
-		state = StateProperties.getInstance();
 
 		console.prefHeightProperty().bind(heightProperty().subtract(2));
 		console.prefWidthProperty().bind(widthProperty());
@@ -182,18 +179,20 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 		console.setWrapText(true);
 
-		state.getConnectedProperty().addListener((v,ov,nv) -> {
-			if(nv.booleanValue())
-				reloadShell();
-		});
 
 	}
 
 
 	public MavLinkShellTab setup(IMAVController control) {
 		this.control = control;
+		this.msg     = new msg_serial_control(1,1);
 		this.state   = StateProperties.getInstance();
 		control.addMAVLinkListener(this);
+		
+		state.getConnectedProperty().addListener((v,ov,nv) -> {
+			if(nv.booleanValue())
+				reloadShell();
+		});
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue()) {
@@ -266,7 +265,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					for(int i =0;i<bytes.length && i<70;i++)
 						msg.data[i] = bytes[i];
 					msg.count = bytes.length;
-				}
+				}			
 				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
 				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
 

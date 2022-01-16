@@ -223,7 +223,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		String _msg = msg[0].replace(':', ' ').trim();
 
 		for(int k = 0; k<msg.length;k++) {
-			if(msg[k].startsWith("id")) {
+			if(msg[k].startsWith("id") && !msg[0].contains("TEXT")) {
 				_msg = _msg+"_"+msg[k].substring(3, 4);
 				break;
 			}

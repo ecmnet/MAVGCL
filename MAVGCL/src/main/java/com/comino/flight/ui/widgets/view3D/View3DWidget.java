@@ -70,7 +70,8 @@ import javafx.scene.text.Text;
 public class View3DWidget extends SubScene implements IChartControl {
 
 
-	private static final double PLANE_LENGTH = 2000.0;
+	private static final double PLANE_LENGTH  = 2000.0;
+	private static final float  VEHICLE_SCALE = 60.0f;
 	
 
 	private AnimationTimer 	task 		= null;
@@ -131,7 +132,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 
-		vehicle = new VehicleModel(75);
+		vehicle = new VehicleModel(VEHICLE_SCALE);
 		trajectory = new Trajectory();
 		world.getChildren().addAll(ground, vehicle,  target, trajectory, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
