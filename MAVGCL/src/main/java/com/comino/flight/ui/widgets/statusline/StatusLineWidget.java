@@ -145,8 +145,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		}
 
 		task = new AnimationTimer() {
-			
-			
+
+
 			@Override
 			public void handle(long now) {
 
@@ -214,6 +214,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				vision.setText(model.vision.getShortText());
 
 				if(control.isConnected()) {
+
 					if(model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.web("#1c6478"));
 					driver.setMode(Badge.MODE_ON);
@@ -221,16 +222,23 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						vision.setMode(Badge.MODE_ON);
 					else
 						vision.setMode(Badge.MODE_OFF);
-					ready.setMode(Badge.MODE_ON);
-					if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
-						ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
-						ready.setText("READY");
+					
+					if(model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
+						ready.setMode(Badge.MODE_ON);
+						if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
+							ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
+							ready.setText("READY");
 
+						}
+						else {
+							ready.setBackgroundColorWhiteText(Color.RED);
+							ready.setText("NOT READY");
+						}
+					} else {
+						ready.setText("READY");
+						ready.setMode(Badge.MODE_OFF);
 					}
-					else {
-						ready.setBackgroundColorWhiteText(Color.RED);
-						ready.setText("NOT READY");
-					}
+
 				}
 				else {
 					ready.setMode(Badge.MODE_OFF);
