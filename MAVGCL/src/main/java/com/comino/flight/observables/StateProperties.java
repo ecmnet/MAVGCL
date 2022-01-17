@@ -149,6 +149,8 @@ public class StateProperties {
 				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
 				isSLAMAvailable.set(true);
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+				isMSPAvailable.set(true);
+				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
 				Platform.runLater(() -> {
 					simulationProperty.set(n.isStatus(Status.MSP_SITL));
 			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
@@ -198,6 +200,12 @@ public class StateProperties {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_GPS_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
 			isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+			});
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_MSP_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
+			isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
 			});
 		});
 		
@@ -265,6 +273,7 @@ public class StateProperties {
 		isGPSAvailable.set(false);
 		isCVAvailable.set(false);
 		isIMUAvailable.set(false);
+		isMSPAvailable.set(false);
 		});
 		
 	}
