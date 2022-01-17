@@ -505,8 +505,9 @@ public class AnalysisModelService  {
 					perf = ( current.tms - tms_last ) / 1e3f;
 					tms_last = current.tms;
 
-					// Slow down conversion if not recording
-					LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
+					// Slow down conversion if not recording or armed
+					if(!state.getArmedProperty().get())
+					   LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
 				}
 
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2500000 );
