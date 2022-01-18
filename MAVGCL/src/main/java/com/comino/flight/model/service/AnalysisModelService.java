@@ -130,16 +130,16 @@ public class AnalysisModelService  {
 		this.ulogger = new ULogFromMAVLinkReader(control);
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			
+
 			if(state.getLogLoadedProperty().get())
 				return;
-			
+
 			if(nv.booleanValue()) {
 
 				synchronized(converter) {
 					converter.notify();
 				}
-				
+
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
 				if(!model.sys.isStatus(Status.MSP_INAIR)) {
 					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
@@ -157,7 +157,7 @@ public class AnalysisModelService  {
 				}
 			}
 		});
-		
+
 		state.getReplayingProperty().addListener((o,ov,nv) -> {
 			if(ov.booleanValue() && !nv.booleanValue()) {
 				synchronized(converter) {
@@ -210,7 +210,7 @@ public class AnalysisModelService  {
 	public List<AnalysisDataModel> getModelList() {
 		return modelList;
 	}
-	
+
 	public int size() {
 		return modelList.size();
 	}
@@ -425,9 +425,9 @@ public class AnalysisModelService  {
 
 				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
 					Platform.runLater(()->{
-					state.getRecordingProperty().set(READING_HEADER);
-					state.getLogLoadedProperty().set(false);
-					state.getRecordingProperty().set(COLLECTING);
+						state.getRecordingProperty().set(READING_HEADER);
+						state.getLogLoadedProperty().set(false);
+						state.getRecordingProperty().set(COLLECTING);
 					});
 					tms_start = System.nanoTime() / 1000;
 				}
@@ -506,8 +506,10 @@ public class AnalysisModelService  {
 					tms_last = current.tms;
 
 					// Slow down conversion if not recording or armed
-					if(!state.getArmedProperty().get())
-					   LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
+					if(!state.getArmedProperty().get()) {
+						LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
+						continue;
+					}
 				}
 
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 2500000 );
