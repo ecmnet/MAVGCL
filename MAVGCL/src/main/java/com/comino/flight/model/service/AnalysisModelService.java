@@ -507,19 +507,19 @@ public class AnalysisModelService  {
 
 					// Slow down conversion if not recording or armed
 					if(!state.getArmedProperty().get()) {
-						while((200000000  - (System.nanoTime()-wait)) > 0) {
-							LockSupport.parkNanos(1000000);
-						}
-				//		LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
+//						while((200000000  - (System.nanoTime()-wait)) > 0) {
+//							LockSupport.parkNanos(1000000);
+//						}
+						LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
 						continue;
 					}
 				}
 				
-				while((collector_interval_us*1000 - (System.nanoTime()-wait)) > 0) {
-					LockSupport.parkNanos(100000);
-				}
+//				while((collector_interval_us*1000 - (System.nanoTime()-wait)) > 0) {
+//					LockSupport.parkNanos(100000);
+//				}
 
-		//		LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3000000 );
+				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3000000 );
 			}
 		}
 	}
