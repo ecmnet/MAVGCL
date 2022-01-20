@@ -285,9 +285,10 @@ public class MainApp extends Application  {
 //				}
 			}
 			
+			wq.start();
+			
 			if(!control.isConnected())
 				control.connect();
-			
 			
 			MAVGCLMap.getInstance(control);
 
@@ -395,10 +396,6 @@ public class MainApp extends Application  {
 						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
-
-
-			wq.start();
-			wq.printStatus();
 
 
 		} catch(Exception e) {
