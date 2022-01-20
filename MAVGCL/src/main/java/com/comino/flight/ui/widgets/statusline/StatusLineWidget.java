@@ -298,6 +298,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					case MAVController.MODE_SITL:
 						mode.setText("SITL");
 						break;	
+					case MAVController.MODE_SITL_PROXY:
+						mode.setText("SITL PROXY");
+						break;	
 					}
 					mode.setBackgroundColor(Color.web("#1c6478"));
 					mode.setMode(Badge.MODE_ON);
