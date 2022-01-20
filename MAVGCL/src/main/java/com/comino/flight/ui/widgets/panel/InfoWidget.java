@@ -128,16 +128,18 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 					default:
 						setStyle("-fx-text-fill:white;");
 					}
-					Tooltip tooltip = new Tooltip();
-					tooltip.setMaxWidth(300);
-					tooltip.setWrapText(true);
-					tooltip.setText(m.text);
-					setTooltip(tooltip);
+					if(m.severity < MAV_SEVERITY.MAV_SEVERITY_WARNING) {
+						Tooltip tooltip = new Tooltip();
+						tooltip.setMaxWidth(300);
+						tooltip.setWrapText(true);
+						tooltip.setText(m.text);
+						setTooltip(tooltip);
+					}
 					setText(m.text);
 					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
 				} else {
 					setText(null);
-	                setGraphic(null);
+					setGraphic(null);
 				}
 			}
 		});
