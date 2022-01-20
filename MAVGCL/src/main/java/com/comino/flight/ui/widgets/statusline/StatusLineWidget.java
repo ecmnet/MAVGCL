@@ -50,6 +50,7 @@ import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.Badge;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
@@ -286,14 +287,19 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					mode.setText(filename);
 					mode.setMode(Badge.MODE_ON);
 				}
-				else if(control.isConnected() && model.sys.isStatus(Status.MSP_SITL)) {
-					mode.setBackgroundColor(Color.web("#2989a3"));
-					mode.setText("SITL");
-					mode.setMode(Badge.MODE_ON);
-				}
 				else if(control.isConnected()) {
+					switch(control.getMode()) {
+					case MAVController.MODE_NORMAL:
+						mode.setText("Connected");
+						break;
+					case MAVController.MODE_USB:
+						mode.setText("Serial");
+						break;
+					case MAVController.MODE_SITL:
+						mode.setText("SITL");
+						break;	
+					}
 					mode.setBackgroundColor(Color.web("#1c6478"));
-					mode.setText("Connected");
 					mode.setMode(Badge.MODE_ON);
 				} else {
 					mode.setMode(Badge.MODE_OFF);
