@@ -63,6 +63,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.Tooltip;
 
 public class InfoWidget extends ChartControlPane implements IChartControl {
 
@@ -126,7 +128,13 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 					default:
 						setStyle("-fx-text-fill:white;");
 					}
+					Tooltip tooltip = new Tooltip();
+					tooltip.setMaxWidth(300);
+					tooltip.setWrapText(true);
+					tooltip.setText(m.text);
+					setTooltip(tooltip);
 					setText(m.text);
+					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
 				} else {
 					setText(null);
 	                setGraphic(null);
