@@ -303,7 +303,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					mode.setMode(Badge.MODE_ON);
 				} else {
 					mode.setMode(Badge.MODE_OFF);
-					mode.setText("offline");
 				}
 
 				if(list.size()==0) {
