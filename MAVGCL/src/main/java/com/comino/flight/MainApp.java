@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -249,14 +249,13 @@ public class MainApp extends Application  {
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 			
-            boolean sitl = userPrefs.getBoolean("SITL", false);
-			
-			if(args.size()>0 || sitl) {
+           
+			if(args.size()>0 ) {
 				if(args.get("SITL")!=null) {
 					control = new MAVUdpController("127.0.0.1",14580,14540, true);
 					//new SITLController(control);
 				}
-				else  if(args.get("PROXY")!=null || sitl) {
+				else  if(args.get("PROXY")!=null) {
 					control = new MAVUdpController("127.0.0.1",14656,14650, true);
 					//new SITLController(control);
 				}
@@ -388,6 +387,7 @@ public class MainApp extends Application  {
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
+					control.getStatusManager().reset();
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 				}
 				Platform.runLater(() -> {
