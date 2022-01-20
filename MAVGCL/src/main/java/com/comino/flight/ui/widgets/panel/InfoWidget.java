@@ -47,12 +47,15 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.IMAVMessageListener;
 import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -74,6 +77,8 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
 	private StateProperties state        = null;
 
+	private final WorkQueue wq = WorkQueue.getInstance();
+
 
 	public InfoWidget() {
 		super(300, true);
@@ -85,52 +90,56 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 		this.state = StateProperties.getInstance();
 
 		listview.prefHeightProperty().bind(this.heightProperty().subtract(10));
+		listview.setCache(false);
 
 
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
-				super.updateItem(m,empty);
+				super.updateItem(m, empty);
 				if(!empty && m!=null) {
 					setPrefWidth(130);
 					setWrapText(false);
-						switch(m.severity) {
-						case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
-							setStyle("-fx-text-fill:lightblue;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
-							setStyle("-fx-text-fill:lightgreen;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-							setStyle("-fx-text-fill:wheat;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-							setStyle("-fx-text-fill:salmon;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
-							setStyle("-fx-text-fill:tomato;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_ERROR:
-							setStyle("-fx-text-fill:yellow;");
-							break;
-						case MAV_SEVERITY.MAV_SEVERITY_ALERT:
-							setStyle("-fx-text-fill:yellowgreen;");
-							break;
-						default:
-							setStyle("-fx-text-fill:white;");
-						}
-						setText(m.text);
+					switch(m.severity) {
+					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
+						setStyle("-fx-text-fill:lightblue;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
+						setStyle("-fx-text-fill:lightgreen;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_WARNING:
+						setStyle("-fx-text-fill:wheat;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
+						setStyle("-fx-text-fill:salmon;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
+						setStyle("-fx-text-fill:tomato;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_ERROR:
+						setStyle("-fx-text-fill:yellow;");
+						break;
+					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
+						setStyle("-fx-text-fill:yellowgreen;");
+						break;
+					default:
+						setStyle("-fx-text-fill:white;");
+					}
+					setText(m.text);
+				} else {
+					setText(null);
+	                setGraphic(null);
 				}
 			}
 		});
-		
+
 
 		ContextMenu ctxm = new ContextMenu();
 		MenuItem cmItem1 = new MenuItem("Clear list");
 		cmItem1.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				listview.getItems().clear();
+				clear();
 			}
 		});
 		ctxm.getItems().add(cmItem1);
@@ -158,9 +167,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue())
-				Platform.runLater(() -> {
-					listview.getItems().clear();
-				});
+				clear();
 		});
 
 		replay.addListener((v, ov, nv) -> {
@@ -177,7 +184,11 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	}
 
 	public void clear() {
-		listview.getItems().clear();
+
+		Platform.runLater(() -> {
+			listview.getItems().clear();
+		});
+
 	}
 
 	private void addMessageToList(final LogMessage m) {
