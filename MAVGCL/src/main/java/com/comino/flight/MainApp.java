@@ -287,13 +287,14 @@ public class MainApp extends Application  {
 			
 			wq.start();
 			
-			if(!control.isConnected())
-				control.connect();
 			
 			MAVGCLMap.getInstance(control);
 
 			state = StateProperties.getInstance(control);
 			MAVPreferences.init();
+			
+			if(!control.isConnected())
+				control.connect();
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
