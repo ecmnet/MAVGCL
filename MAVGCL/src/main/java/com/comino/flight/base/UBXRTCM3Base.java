@@ -46,6 +46,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavbase.ublox.reader.StreamEventListener;
 import com.comino.mavbase.ublox.reader.UBXSerialConnection;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.GPS;
 import com.comino.mavcom.model.segment.Status;
@@ -155,7 +156,7 @@ public class UBXRTCM3Base implements Runnable {
 	@Override
 	public void run() {
 
-		if(connected)
+		if(connected || control.getMode() != MAVController.MODE_NORMAL)
 			return;
 
 		this.ubx = new UBXSerialConnection(9600);
