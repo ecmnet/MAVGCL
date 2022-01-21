@@ -155,6 +155,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					return;
 				last = now;
 
+				int ekf_status = getEKF2Status();
 				List<AnalysisDataModel> list = null;
 
 				if(model.slam.wpcount > 0) {
@@ -223,7 +224,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						vision.setMode(Badge.MODE_ON);
 					else
 						vision.setMode(Badge.MODE_OFF);
-					
+
 					if(model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
 						ready.setMode(Badge.MODE_ON);
 						if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
@@ -236,8 +237,16 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							ready.setText("NOT READY");
 						}
 					} else {
-						ready.setText("READY");
-						ready.setMode(Badge.MODE_OFF);
+						
+						ready.setMode(Badge.MODE_ON);
+						if(ekf_status != 4) {
+							ready.setBackgroundColorWhiteText(Color.web("#1c6478"));
+							ready.setText("");
+
+						} else {
+							ready.setBackgroundColorWhiteText(Color.RED);
+							ready.setText("NOT READY");
+						}
 					}
 
 				}
@@ -299,7 +308,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						mode.setText("SITL");
 						break;	
 					case MAVController.MODE_SITL_PROXY:
-						mode.setText("SITL PROXY");
+						mode.setText("SITL Proxy");
 						break;	
 					}
 					mode.setBackgroundColor(Color.web("#1c6478"));
@@ -315,7 +324,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 				if(control.isConnected()) {
-					int ekf_status = getEKF2Status();
 					ekf.setText(EKF2STATUS_TEXTS[ekf_status]);
 					if(ekf_status != 4)
 						ekf.setBackgroundColor(Color.web("#1c6478"));
