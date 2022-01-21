@@ -205,7 +205,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							break;
 
 						default:
-							gps.setText("No GPS");
+							gps.setText("No Fix");
 							gps.setMode(Badge.MODE_OFF);
 						}
 					}
