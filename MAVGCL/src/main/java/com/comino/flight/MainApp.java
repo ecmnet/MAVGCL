@@ -397,7 +397,7 @@ public class MainApp extends Application  {
 						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
-
+			
 
 		} catch(Exception e) {
 			//	System.err.println(e.getMessage());

@@ -90,6 +90,7 @@ public class ControlWidget extends ChartControlPane  {
 				vehiclectl.setSelected(true);
 			}
 		});
+	
 
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
@@ -106,7 +107,7 @@ public class ControlWidget extends ChartControlPane  {
 			parameters.setDisable(!n.booleanValue());
 		});
 
-		vehiclectl.visibleProperty().bind(stateProperties.getMSPProperty());
+		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
 		video.setDisable(true);
 		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
 
