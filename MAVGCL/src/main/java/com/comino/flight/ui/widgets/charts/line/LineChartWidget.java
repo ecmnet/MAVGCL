@@ -471,7 +471,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		type1 = new KeyFigureMetaData();
 		type2 = new KeyFigureMetaData();
 		type3 = new KeyFigureMetaData();
-		
+
 		state.getLogULOGProperty().addListener((e,o,n) -> {
 			String nv = group.getSelectionModel().selectedItemProperty().get();
 			initKeyFigureSelection(cseries1, type1, meta.getGroupMap().get(nv));
@@ -622,7 +622,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			mode.setModeType(nv.intValue());
 			updateRequest();
 		});
-		
+
 		yAxis.setAutoRanging(false);
 		yAxis.setLowerBound(0f);
 		yAxis.setUpperBound(10f);
@@ -1126,21 +1126,30 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		final KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
 		final boolean ulog = state.getLogULOGProperty().get();
 		if(v!=null) {
-			if(!series.getItems().contains(v) && (ulog == v.isULOG || !ulog == v.isMSP)) {
-				series.getItems().add(v);
-			series.getSelectionModel().select(v);
+			if(!series.getItems().contains(v)) {
+				if(ulog == v.isULOG || !ulog == v.isMSP) 
+					series.getItems().add(v);
+
+			} else {
+				if((!ulog == v.isULOG && ulog == v.isMSP)) {
+					series.getItems().remove(v);
+					series.getSelectionModel().select(0);
+					return series.getItems().get(0);
+				}
 			}
+			series.getSelectionModel().select(v);
 			return v;
 		} else {
+
 			series.getSelectionModel().select(0);
 		}
-		return new KeyFigureMetaData();
+		return series.getItems().get(0);
 	}
 
 	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 
 		final KeyFigureMetaData none = new KeyFigureMetaData();
-		
+
 		if(kfl==null)
 			return;
 
@@ -1157,14 +1166,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			if(type!=null && type.hash!=0) {
-				if(!kfl.contains(type))
-					series.getItems().add(type);
-				
+				if(!kfl.contains(type)) {
+					if(ulog  && type.isULOG) series.getItems().add(type);
+					if(!ulog && type.isMSP)  series.getItems().add(type);
+				} else {
+					if(!ulog  && type.isULOG) series.getItems().remove(type);
+					if(ulog  && type.isMSP)  series.getItems().remove(type);
+				}
+
 				kfl.forEach(k -> { 
 					if(ulog  && k.isULOG) series.getItems().add(k);
 					if(!ulog && k.isMSP)  series.getItems().add(k);
 				});
-				
+
 				//series.getItems().addAll(kfl);
 				series.getSelectionModel().select(type);
 			} else {
@@ -1175,7 +1189,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				//series.getItems().addAll(kfl);
 				series.getSelectionModel().select(0);
 			}
-			
+
 			if(!series.getItems().contains(selected))
 				series.getSelectionModel().select(0);
 
