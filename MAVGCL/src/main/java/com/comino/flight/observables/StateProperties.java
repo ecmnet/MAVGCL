@@ -75,9 +75,10 @@ public class StateProperties {
 	private IntegerProperty streamProperty     		    	= new SimpleIntegerProperty();
 	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
 	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
+	private BooleanProperty isLogULOGProperty   	 		= new SimpleBooleanProperty();
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
-	private BooleanProperty isRecordingAvailableProperty	  = new SimpleBooleanProperty();
-	private BooleanProperty isReplayingProperty	              = new SimpleBooleanProperty();
+	private BooleanProperty isRecordingAvailableProperty	 = new SimpleBooleanProperty();
+	private BooleanProperty isReplayingProperty	             = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -336,6 +337,10 @@ public class StateProperties {
 
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
+	}
+	
+	public BooleanProperty getLogULOGProperty() {
+		return isLogULOGProperty;
 	}
 
 	public BooleanProperty getGPOSAvailableProperty() {

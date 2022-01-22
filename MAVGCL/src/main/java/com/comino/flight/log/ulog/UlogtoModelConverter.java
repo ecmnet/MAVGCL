@@ -105,6 +105,7 @@ public class UlogtoModelConverter {
 				}
 			});
 
+			state.getLogULOGProperty().set(true);
 			state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 

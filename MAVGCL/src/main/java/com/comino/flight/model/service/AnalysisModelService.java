@@ -240,7 +240,7 @@ public class AnalysisModelService  {
 	public int getCollectorInterval_ms() {
 		return collector_interval_us/1000;
 	}
-
+	
 	public boolean start() {
 
 		if(!control.isConnected()) {
@@ -252,7 +252,7 @@ public class AnalysisModelService  {
 		if(mode==STOPPED) {
 			setDefaultCollectorInterval();
 			model.reset();
-			modelList.clear();
+			clear();
 			task.start();
 			mode = COLLECTING;
 			return true;
@@ -277,7 +277,7 @@ public class AnalysisModelService  {
 
 	public void setModelList(List<AnalysisDataModel> list) {
 		mode = STOPPED;
-		modelList.clear();
+		clear();
 		list.forEach((e) -> {
 			e.calculateVirtualKeyFigures(meta);
 			modelList.add(e);
@@ -289,7 +289,7 @@ public class AnalysisModelService  {
 		//setDefaultCollectorInterval();
 		mode = STOPPED;
 		current.clear();
-		modelList.clear();
+		clear();
 	}
 
 	public void setTotalTimeSec(int totalTime) {
@@ -382,6 +382,11 @@ public class AnalysisModelService  {
 
 	public int getMode() {
 		return mode;
+	}
+	
+	private void clear() {
+		modelList.clear();
+		state.getLogULOGProperty().set(false);
 	}
 
 	private class CombinedConverter implements Runnable {
