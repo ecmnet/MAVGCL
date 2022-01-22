@@ -1114,7 +1114,13 @@
 		</Groups>
 	</KeyFigure>
 
-	
+    <KeyFigure desc="GPS Jamming" uom="" mask="#0" key="RGPSJAM">
+		<ULogSource field="vehicle_gps_position_0.jamming_indicator"/>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+		<Validity min="6" max="30"/>
+	</KeyFigure>
 
 	<KeyFigure desc="No.Sat." uom="" mask="#0" key="RGPSNO">
 		<MSPSource class="gps" field="numsat"></MSPSource>
