@@ -471,6 +471,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		type1 = new KeyFigureMetaData();
 		type2 = new KeyFigureMetaData();
 		type3 = new KeyFigureMetaData();
+		
+		state.getLogULOGProperty().addListener((e,o,n) -> {
+			String nv = group.getSelectionModel().selectedItemProperty().get();
+			initKeyFigureSelection(cseries1, type1, meta.getGroupMap().get(nv));
+			initKeyFigureSelection(cseries2, type2, meta.getGroupMap().get(nv));
+			initKeyFigureSelection(cseries3, type3, meta.getGroupMap().get(nv));	
+		});
+
 
 		group.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
@@ -1116,10 +1124,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private KeyFigureMetaData setKeyFigure(ChoiceBox<KeyFigureMetaData> series,int keyFigureHash) {
 		final KeyFigureMetaData v = meta.getKeyFigureMap().get(keyFigureHash);
+		final boolean ulog = state.getLogULOGProperty().get();
 		if(v!=null) {
-			if(!series.getItems().contains(v))
+			if(!series.getItems().contains(v) && (ulog == v.isULOG || !ulog == v.isMSP)) {
 				series.getItems().add(v);
 			series.getSelectionModel().select(v);
+			}
 			return v;
 		} else {
 			series.getSelectionModel().select(0);
@@ -1130,9 +1140,14 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private void initKeyFigureSelection(ChoiceBox<KeyFigureMetaData> series,KeyFigureMetaData type, List<KeyFigureMetaData> kfl) {
 
 		final KeyFigureMetaData none = new KeyFigureMetaData();
+		
+		if(kfl==null)
+			return;
 
 		Platform.runLater(() -> {
 
+			final boolean ulog = state.getLogULOGProperty().get();
+			final KeyFigureMetaData selected = series.getSelectionModel().getSelectedItem();
 			series.getItems().clear();
 			series.getItems().add(none);
 
@@ -1144,12 +1159,25 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if(type!=null && type.hash!=0) {
 				if(!kfl.contains(type))
 					series.getItems().add(type);
-				series.getItems().addAll(kfl);
+				
+				kfl.forEach(k -> { 
+					if(ulog  && k.isULOG) series.getItems().add(k);
+					if(!ulog && k.isMSP)  series.getItems().add(k);
+				});
+				
+				//series.getItems().addAll(kfl);
 				series.getSelectionModel().select(type);
 			} else {
-				series.getItems().addAll(kfl);
+				kfl.forEach(k -> { 
+					if(ulog  && k.isULOG) series.getItems().add(k);
+					if(!ulog && k.isMSP)  series.getItems().add(k);
+				});
+				//series.getItems().addAll(kfl);
 				series.getSelectionModel().select(0);
 			}
+			
+			if(!series.getItems().contains(selected))
+				series.getSelectionModel().select(0);
 
 		});
 	}

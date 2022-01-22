@@ -138,8 +138,8 @@ public class KeyFigureMetaData {
 	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
 
 		isVirtual = type==VIR_SOURCE;
-		isMSP     = type==MSP_SOURCE;
-		isULOG    = type==ULG_SOURCE;
+		if(type==MSP_SOURCE) isMSP = true;
+		if(type==ULG_SOURCE) isULOG = true;
 
 		if(class_c!=null) {
 			try {

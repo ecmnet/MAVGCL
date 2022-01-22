@@ -70,30 +70,30 @@ public class AnalysisDataModelMetaData extends Observable {
 	}
 
 	private AnalysisDataModelMetaData() {
-		this.meta    = new HashMap<Integer,KeyFigureMetaData>(500);
-		this.virt    = new HashMap<Integer,KeyFigureMetaData>(500);
-		this.groups  = new HashMap<String,List<KeyFigureMetaData>>(500);
+		this.meta       = new HashMap<Integer,KeyFigureMetaData>(500);
+		this.virt       = new HashMap<Integer,KeyFigureMetaData>(500);
+		this.groups     = new HashMap<String,List<KeyFigureMetaData>>(500);
 
 		loadModelMetaData(null);
 	}
 
 	public void loadModelMetaData(InputStream stream) {
 
-			InputStream is = stream;
-			meta.clear(); groups.clear(); virt.clear();
+		InputStream is = stream;
+		meta.clear(); groups.clear(); virt.clear();
 
-			if(is!=null) {
-				buildDocument(is);
-			} else {
-				is = AnalysisDataModelMetaData.class.getResourceAsStream("AnalysisDataModelMetaData.xml");
-				if(is==null) {
-					System.err.println("Path to resources cannot be found: AnalysisDataModelMetaData.xml.");
-					System.exit(0);
-				}
-				buildDocument(is);
+		if(is!=null) {
+			buildDocument(is);
+		} else {
+			is = AnalysisDataModelMetaData.class.getResourceAsStream("AnalysisDataModelMetaData.xml");
+			if(is==null) {
+				System.err.println("Path to resources cannot be found: AnalysisDataModelMetaData.xml.");
+				System.exit(0);
 			}
-			sortedMetaList = buildSortedList();
-			setChanged(); notifyObservers(null);
+			buildDocument(is);
+		}
+		sortedMetaList = buildSortedList();
+		setChanged(); notifyObservers(null);
 
 	}
 
@@ -218,17 +218,17 @@ public class AnalysisDataModelMetaData extends Observable {
 			if(node.getNodeName().equalsIgnoreCase("MSPSource")) {
 				buildDataSource(KeyFigureMetaData.MSP_SOURCE, keyfigure,node);
 			}
-//			if(node.getNodeName().equalsIgnoreCase("PX4Source")) {
-//				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
-//			}
+			//			if(node.getNodeName().equalsIgnoreCase("PX4Source")) {
+			//				buildDataSource(KeyFigureMetaData.PX4_SOURCE, keyfigure,node);
+			//			}
 
 			if(node.getNodeName().equalsIgnoreCase("ULogSource")) {
 				buildDataSource(KeyFigureMetaData.ULG_SOURCE, keyfigure,node);
 			}
 
-//			if(node.getNodeName().equalsIgnoreCase("MAVLinkSource")) {
-//				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
-//			}
+			//			if(node.getNodeName().equalsIgnoreCase("MAVLinkSource")) {
+			//				buildDataSource(KeyFigureMetaData.MAV_SOURCE, keyfigure,node);
+			//			}
 
 			if(node.getNodeName().equalsIgnoreCase("VirtualSource")) {
 				buildDataSource(KeyFigureMetaData.VIR_SOURCE, keyfigure,node);
