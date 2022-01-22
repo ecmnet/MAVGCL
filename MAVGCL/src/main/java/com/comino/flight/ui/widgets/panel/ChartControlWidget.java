@@ -61,7 +61,7 @@ import javafx.scene.input.MouseEvent;
 
 public class ChartControlWidget extends ChartControlPane  {
 
-	private static final Integer[] TOTAL_TIME = { 15, 30, 60, 120, 240, 480, 1200 };
+	private static final Integer[] TOTAL_TIME = { 15, 30, 60, 120, 240 };
 
 
 	@FXML

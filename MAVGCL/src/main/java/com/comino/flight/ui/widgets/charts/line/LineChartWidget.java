@@ -855,12 +855,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		final boolean increaseResolution = dataService.isCollecting() || state.getReplayingProperty().get() || isScrolling.get();
 
 		if(frame >= 200) {
-			resolution_ms = increaseResolution ? 500 : 10 * interval;
-			if(resolution_ms < 200)
-				resolution_ms = 200;
+			resolution_ms = increaseResolution ? 500 : 250;
 		}
 		else if(frame >= 100) {
-			resolution_ms = increaseResolution ? 200 : 4 * interval;
+			resolution_ms = increaseResolution ? 500 : 4 * interval;
 			if(resolution_ms < 100)
 				resolution_ms = 100;
 		}
