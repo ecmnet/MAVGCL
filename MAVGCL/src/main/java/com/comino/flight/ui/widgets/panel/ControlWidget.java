@@ -106,7 +106,7 @@ public class ControlWidget extends ChartControlPane  {
 			parameters.setDisable(!n.booleanValue());
 		});
 
-		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
+		vehiclectl.visibleProperty().bind(stateProperties.getMSPProperty());
 		video.setDisable(true);
 		video.disableProperty().bind(stateProperties.getConnectedProperty().not());
 

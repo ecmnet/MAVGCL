@@ -26,9 +26,9 @@
 					GridPane.columnIndex="0" text="Dashboard" />
 				<CheckBox fx:id="parameters" GridPane.rowIndex="1"
 					GridPane.columnIndex="0" text="Parameters" />
-				<CheckBox fx:id="video" GridPane.rowIndex="1"
+				<CheckBox fx:id="video" GridPane.rowIndex="0"
 					GridPane.columnIndex="1" text="Video" />
-				<CheckBox fx:id="vehiclectl" GridPane.rowIndex="0"
+				<CheckBox fx:id="vehiclectl" GridPane.rowIndex="1"
 					GridPane.columnIndex="1" text="MSP Control" />
 			</children>
 		</GridPane>
