@@ -856,8 +856,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		if(frame >= 200) {
 			resolution_ms = increaseResolution ? 500 : 10 * interval;
-			if(resolution_ms < 200)
-				resolution_ms = 200;
+			if(resolution_ms < 250)
+				resolution_ms = 250;
 		}
 		else if(frame >= 100) {
 			resolution_ms = increaseResolution ? 100 : 2 * interval;
@@ -865,9 +865,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				resolution_ms = 50;
 		}
 		else if(frame >= 60) {
-			resolution_ms = increaseResolution ? 50 : 2 * interval;
-			if(resolution_ms < 50)
-				resolution_ms = 50;
+			resolution_ms = increaseResolution ? 50 : interval;
+			if(resolution_ms < 20)
+				resolution_ms = 20;
 		}
 		else if(frame >= 30) { 
 			resolution_ms = increaseResolution ? 50  : interval;
