@@ -715,7 +715,7 @@
 		<PX4Source field="OUT0.Out0"></PX4Source>
 		<ULogSource field="actuator_outputs_0.output[0]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -724,7 +724,7 @@
 		<PX4Source field="OUT0.Out1"></PX4Source>
 		<ULogSource field="actuator_outputs_0.output[1]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -733,7 +733,7 @@
 		<PX4Source field="OUT0.Out2"></PX4Source>
 		<ULogSource field="actuator_outputs_0.output[2]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -742,31 +742,60 @@
 		<PX4Source field="OUT0.Out3"></PX4Source>
 		<ULogSource field="actuator_outputs_0.output[3]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
+
+   <KeyFigure desc="Output 1-2" uom="" mask="#0.0" key="SERVO12">
+		<ULogSource field="actuator_outputs_1.output[0]"/>
+		<Groups>
+			<Group>Actuators</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 2-2" uom="" mask="#0.0" key="SERVO22">
+		<ULogSource field="actuator_outputs_1.output[1]"/>
+		<Groups>
+			<Group>Actuators</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 3-2" uom="" mask="#0.0" key="SERVO32">
+		<ULogSource field="actuator_outputs_1.output[2]"/>
+		<Groups>
+			<Group>Actuators</Group>
+		</Groups>
+	</KeyFigure>
+
+	<KeyFigure desc="Output 4-2" uom="" mask="#0.0" key="SERVO42">
+		<ULogSource field="actuator_outputs_1.output[3]"/>
+		<Groups>
+			<Group>Actuators</Group>
+		</Groups>
+	</KeyFigure>
+
     <KeyFigure desc="Act.Roll" uom="" mask="#0.0" key="ACTROLL">
 		<ULogSource field="actuator_controls_0_0.control[1]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
      <KeyFigure desc="Act.Pitch" uom="" mask="#0.0" key="ACTPITCH">
 		<ULogSource field="actuator_controls_0_0.control[0]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
     <KeyFigure desc="Act.Yaw" uom="" mask="#0.0" key="ACTYAW">
 		<ULogSource field="actuator_controls_0_0.control[2]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
     <KeyFigure desc="Act.Thrust" uom="" mask="#0.0" key="ACTTHRUST">
 		<ULogSource field="actuator_controls_0_0.control[3]"/>
 		<Groups>
-			<Group>Act.Control</Group>
+			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
