@@ -917,7 +917,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		if(refresh) {
 
-			if(dataService.size()==0) {
+			if(dataService.size()==0 || (type1.hash == 0 && type2.hash == 0 && type3.hash == 0) ) {
 				yAxis.setAutoRanging(false);
 			}
 			else
