@@ -291,7 +291,12 @@ public class MainApp extends Application  {
 			MAVGCLMap.getInstance(control);
 
 			state = StateProperties.getInstance(control);
+			control.getStatusManager().start();
+			
 			MAVPreferences.init();
+			
+			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
+			analysisModelService.startConverter();
 			
 			if(!control.isConnected())
 				control.connect();
@@ -300,9 +305,7 @@ public class MainApp extends Application  {
 					System.getProperty("user.home"))+"/MAVGCL");
 
 			MSPLogger.getInstance(control);
-			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
-
-
+	
 			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
 				new Thread(base).start();
@@ -373,8 +376,6 @@ public class MainApp extends Application  {
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 					
-					control.getStatusManager().start();
-					analysisModelService.startConverter();
 					
 					new SITLController(control);
 					System.out.println("Initializing");
