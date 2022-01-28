@@ -252,6 +252,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYMeasurement measurement;
 
 	private double center_x, center_y;
+	private double offset_x, offset_y;
 	private double scale_rounding;
 	private double scale_factor;
 
@@ -785,7 +786,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	private void updateGraph(boolean refresh, int max_x0) {
 
-		AnalysisDataModel m =null; int max_x  = 0; long slot_tms;
+		AnalysisDataModel m =null, m0=null; int max_x  = 0; long slot_tms;
 
 
 		if(disabledProperty().get() || series1==null || series2==null) {
@@ -869,9 +870,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			s2.setKeyFigures(type2_x, type2_y);
 			if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
 				m = mList.get(0);
-				if(corr_zero.isSelected())
-					rotateRad(p2,m.getValue(type2_x)-(s2.center_x-s1.center_x), m.getValue(type2_y)-(s2.center_y-s1.center_y),
-							rotation_rad);
+				if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0 )
+				   rotateRad(p2,m.getValue(type1_x), 
+						        m.getValue(type1_y),
+						rotation_rad);
 				else
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
 
@@ -995,9 +997,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
-						if(corr_zero.isSelected())
-							rotateRad(p2,m.getValue(type2_x)-(s2.center_x-s1.center_x), m.getValue(type2_y)-(s2.center_y-s1.center_y),
+						if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0 ) {
+							m0 = mList.get(0);
+							rotateRad(p2,m.getValue(type2_x)-(m0.getValue(type2_x) - m0.getValue(type1_x)), 
+									     m.getValue(type2_y)-(m0.getValue(type2_y) - m0.getValue(type1_y)),
 									rotation_rad);
+						}
 						else
 							rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),
 									rotation_rad);
