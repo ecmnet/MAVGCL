@@ -869,13 +869,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			s2.setKeyFigures(type2_x, type2_y);
 			if(type2_x.hash!=0 && type2_y.hash!=0 && annotation.isSelected() && mList.size()>0)  {
-				m = mList.get(0);
-				if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0 )
-				   rotateRad(p2,m.getValue(type1_x), 
-						        m.getValue(type1_y),
-						rotation_rad);
-				else
+				if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0 ) {
+					rotateRad(p2,m.getValue(type1_x), 
+							m.getValue(type1_y),
+							rotation_rad);
+				}
+				else {
+					offset_x = 0;
+					offset_y = 0;
 					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
+				}
 
 				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);
 				xychart.getAnnotations().add(endPosition2, Layer.FOREGROUND);
@@ -949,6 +952,17 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		}
 
+		if(corr_zero.isSelected() && type2_x.hash!=0 && type2_y.hash!=0) {
+			// Search for an valid initial m0 within the first 200ms for offset correction
+			for(int i=0; i< 10 && i < mList.size();i++) {
+				m0 = mList.get(i);
+				if(mList.get(i).isValid(type2_x) && mList.get(i).isValid(type2_y)) {
+					m0 = mList.get(i);
+					break;
+				} 
+			}
+		}
+
 		if(current_x_pt<mList.size() && mList.size()>0 ) {
 
 			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED ) {
@@ -997,11 +1011,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					}
 
 					if(type2_x.hash!=0 && type2_y.hash!=0) {
-						if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0 ) {
-							m0 = mList.get(0);
+						if(corr_zero.isSelected() && type1_x.hash!=0 && type1_y.hash!=0  && m0 != null) {
+
 							rotateRad(p2,m.getValue(type2_x)-(m0.getValue(type2_x) - m0.getValue(type1_x)), 
-									     m.getValue(type2_y)-(m0.getValue(type2_y) - m0.getValue(type1_y)),
+									m.getValue(type2_y)-(m0.getValue(type2_y) - m0.getValue(type1_y)),
 									rotation_rad);
+
 						}
 						else
 							rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y),

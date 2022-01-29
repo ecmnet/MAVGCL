@@ -109,6 +109,14 @@ public class AnalysisDataModel implements Cloneable {
 		else
 			return Float.NaN;
 	}
+	
+	public boolean isValid(KeyFigureMetaData m) {
+		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null) {
+			return Double.isFinite(data.get(m.hash));
+		}
+		else
+			return false;
+	}
 
 	public void setValue(String kf,double value) {
 		if(data!=null)
