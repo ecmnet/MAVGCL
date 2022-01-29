@@ -169,12 +169,26 @@ public class ChartControlWidget extends ChartControlPane  {
 		//		});
 
 
+		scroll.setOnMouseReleased((o) -> {
+			state.getCurrentUpToDate().set(true);
+		});
+		
+		scroll.setOnMousePressed((o) -> {
+			int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
+			modelService.setCurrent(x1);
+			state.getCurrentUpToDate().set(false);
+		});
+		
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
 			anim_tms = System.currentTimeMillis();
 
 			final float v = (float)scroll.getValue();
+			int x1 =  modelService.calculateIndexByFactor(1f-v)+1;	
+			modelService.setCurrent(x1);
+			state.getCurrentUpToDate().set(false);
+			
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
@@ -192,6 +206,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
 			});
 		});
+		
 
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.intValue()!=AnalysisModelService.STOPPED) {
