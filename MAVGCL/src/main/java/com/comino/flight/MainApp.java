@@ -284,37 +284,65 @@ public class MainApp extends Application  {
 //					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 //				}
 			}
+			state = StateProperties.getInstance(control);
+			MSPLogger.getInstance(control);
+		
 			
 			wq.start();
-			
-			
-			MAVGCLMap.getInstance(control);
-
-			state = StateProperties.getInstance(control);
 			control.getStatusManager().start();
 			
+			
+			state.getInitializedProperty().addListener((v,o,n) -> {
+				if(n.booleanValue()) {
+					
+					
+					new SITLController(control);
+					System.out.println("Initializing");
+
+					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
+						FileHandler.getInstance().fileImport(new File(command_line_options));
+
+					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
+
+				}
+			});
+			
+			state.getConnectedProperty().addListener((e,o,n) -> {
+				if(n.booleanValue()) {
+					control.getStatusManager().reset();
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+				}
+				Platform.runLater(() -> {
+					if(r_px4log!=null)
+						r_px4log.setDisable(!n.booleanValue());
+				});
+			});
+			
+
 			MAVPreferences.init();
+			MAVGCLMap.getInstance(control);
+			MAVGCLPX4Parameters.getInstance(control);
+			
 			
 			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
 			
+			
 			if(!control.isConnected())
 				control.connect();
+			
+			
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
-
-			MSPLogger.getInstance(control);
 	
 			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
 				new Thread(base).start();
 			}
 			
-			
 
-			MAVGCLPX4Parameters.getInstance(control);
-			
+
 
 			state.getLPOSAvailableProperty().addListener((v,o,n) -> {
 				
@@ -372,32 +400,6 @@ public class MainApp extends Application  {
 			});
 			
 		
-
-			state.getInitializedProperty().addListener((v,o,n) -> {
-				if(n.booleanValue()) {
-					
-					
-					new SITLController(control);
-					System.out.println("Initializing");
-
-					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
-						FileHandler.getInstance().fileImport(new File(command_line_options));
-
-					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
-
-				}
-			});
-
-			state.getConnectedProperty().addListener((e,o,n) -> {
-				if(n.booleanValue()) {
-					control.getStatusManager().reset();
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
-				}
-				Platform.runLater(() -> {
-					if(r_px4log!=null)
-						r_px4log.setDisable(!n.booleanValue());
-				});
-			});
 			
 
 		} catch(Exception e) {
