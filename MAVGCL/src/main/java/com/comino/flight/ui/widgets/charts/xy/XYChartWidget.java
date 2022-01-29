@@ -644,10 +644,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				current_x0_pt = dataService.calculateX0Index(x1);
 				updateGraph(true,0);
 			}
-
-			if(!dataService.isCollecting() && !dataService.isReplaying() && !state.getConnectedProperty().get() ) {
-				dataService.setCurrent(x1);
-			}
 		});
 
 		replay.addListener((v, ov, nv) -> {

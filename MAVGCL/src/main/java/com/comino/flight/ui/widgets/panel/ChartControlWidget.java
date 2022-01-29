@@ -164,16 +164,23 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.setDisable(true);
 		
 
-		//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
-		//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
-		//		});
+		scroll.onMousePressedProperty().addListener((o,ov,nv) ->{
+			state.getCurrentUpToDate().set(false);
+		});
+		
+		scroll.onMouseReleasedProperty().addListener((o,ov,nv) ->{
+			state.getCurrentUpToDate().set(true);
+		});
 		
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
 			anim_tms = System.currentTimeMillis();
 
-			final float v = (float)scroll.getValue();		
+			final float v = (float)scroll.getValue();	
+			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
+				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+			}
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
@@ -185,7 +192,6 @@ public class ChartControlWidget extends ChartControlPane  {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
 			anim_tms = System.currentTimeMillis();
-			
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getIsScrollingProperty()!=null)
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
