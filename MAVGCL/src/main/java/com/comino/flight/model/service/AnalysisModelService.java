@@ -128,6 +128,7 @@ public class AnalysisModelService  {
 		this.state         = StateProperties.getInstance();
 
 		this.ulogger = new ULogFromMAVLinkReader(control);
+		
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 
@@ -227,8 +228,9 @@ public class AnalysisModelService  {
 
 	public void setCurrent(int index) {
 		if(modelList.size() > index) {
-			if(index < 0)
+			if(index < 0) {
 				return;
+			}
 			current.set(modelList.get(index));
 		}
 	}

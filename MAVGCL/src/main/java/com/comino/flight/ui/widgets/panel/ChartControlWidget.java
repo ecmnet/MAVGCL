@@ -167,28 +167,13 @@ public class ChartControlWidget extends ChartControlPane  {
 		//		StateProperties.getInstance().getRecordingProperty().addListener((e,o,n) -> {
 		//			keyfigures.setDisable(n.booleanValue()); save.setDisable(n.booleanValue());
 		//		});
-
-
-		scroll.setOnMouseReleased((o) -> {
-			state.getCurrentUpToDate().set(true);
-		});
-		
-		scroll.setOnMousePressed((o) -> {
-			int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
-			modelService.setCurrent(x1);
-			state.getCurrentUpToDate().set(false);
-		});
 		
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
 			anim_tms = System.currentTimeMillis();
 
-			final float v = (float)scroll.getValue();
-			int x1 =  modelService.calculateIndexByFactor(1f-v)+1;	
-			modelService.setCurrent(x1);
-			state.getCurrentUpToDate().set(false);
-			
+			final float v = (float)scroll.getValue();		
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
