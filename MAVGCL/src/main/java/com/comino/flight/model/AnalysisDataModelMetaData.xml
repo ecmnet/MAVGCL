@@ -143,6 +143,20 @@
 			 <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
+
+    <KeyFigure desc="Timeout.Flags" uom="" mask="#" key="EKFTOFLG">
+	    <ULogSource field="estimator_status_0.timeout_flags"/>
+		<Groups>
+			 <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+
+   <KeyFigure desc="Innov.Check.Flags" uom="" mask="#" key="EKFINNFLG">
+	    <ULogSource field="estimator_status_0.innovation_check_flags"/>
+		<Groups>
+			 <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
 	
 	<KeyFigure desc="Height.Mode.Rng" uom="" mask="#" key="CTLFLGH_RNG">
 	    <ULogSource field="estimator_status_flags_0.cs_rng_hgt"/>
