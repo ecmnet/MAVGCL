@@ -3,106 +3,120 @@
    <!-- EKF2 Innovations -->
 
     <KeyFigure desc="EKF.Inn.Flow.X" uom="" mask="#0.00" key="EKFINFLOWX">
-		<ULogSource field="ekf2_innovations_0.flow_innov[0]"/>
+		<ULogSource field="estimator_innovations_0.flow[0]"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
 	 <KeyFigure desc="EKF.Inn.Flow.Y" uom="" mask="#0.00" key="EKFINFLOWY">
-		<ULogSource field="ekf2_innovations_0.flow_innov[1]"/>
+		<ULogSource field="estimator_innovations_0.flow[1]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+    <KeyFigure desc="EKF.Inn.VisPos.X" uom="" mask="#0.00" key="EKFINVISPX">
+		<ULogSource field="estimator_innovations_0.ev_hpos[0]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="EKF.Inn.VisPos.Y" uom="" mask="#0.00" key="EKFINVISPY">
+		<ULogSource field="estimator_innovations_0.ev_hpos[1]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+    <KeyFigure desc="EKF.Inn.VisVel.X" uom="" mask="#0.00" key="EKFINVISVX">
+		<ULogSource field="estimator_innovations_0.ev_hvel[0]"/>
+		<Groups>
+			<Group>EKF2 Innovations</Group>
+		</Groups>
+	</KeyFigure>
+
+	 <KeyFigure desc="EKF.Inn.VisVel.Y" uom="" mask="#0.00" key="EKFINVISVY">
+		<ULogSource field="estimator_innovations_0.ev_hvel[1]"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
 	 <KeyFigure desc="EKF.Inn.HAGL" uom="" mask="#0.00" key="EKFINHAGL">
-		<ULogSource field="ekf2_innovations_0ALT.hagl_innov"/>
+		<ULogSource field="estimator_innovations_0.hagl"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
 	 <KeyFigure desc="EKF.Inn.Head" uom="" mask="#0.00" key="EKFINHEAD">
-		<ULogSource field="ekf2_innovations_0.heading_innov"/>
+		<ULogSource field="estimator_innovations_0.heading"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EKF.Inn.VelP0" uom="" mask="#0.00" key="EKFINVELP0">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[0]"/>
+	<KeyFigure desc="EKF.Inn.VisPos.Z" uom="" mask="#0.00" key="EKFINVELP0">
+		<ULogSource field="estimator_innovations_0.ev_vpos"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EKF.Inn.VelP1" uom="" mask="#0.00" key="EKFINVELP1">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[1]"/>
+	<KeyFigure desc="EKF.Inn.VisVel.Z" uom="" mask="#0.00" key="EKFINVELP1">
+		<ULogSource field="estimator_innovations_0.ev_vvel"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EKF.Inn.VelP2" uom="" mask="#0.00" key="EKFINVELP2">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[2]"/>
+	<KeyFigure desc="EKF.Inn.BaroPos" uom="" mask="#0.00" key="EKFINVELP2">
+		<ULogSource field="estimator_innovations_0.baro_vpos"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EKF.Inn.VelP3" uom="" mask="#0.00" key="EKFINVELP3">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[3]"/>
-		<Groups>
-			<Group>EKF2 Innovations</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EKF.Inn.VelP4" uom="" mask="#0.00" key="EKFINVELP4">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[4]"/>
-		<Groups>
-			<Group>EKF2 Innovations</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EKF.Inn.VelP5" uom="" mask="#0.00" key="EKFINVELP5">
-		<ULogSource field="ekf2_innovations_0.vel_pos_innov[5]"/>
+	<KeyFigure desc="EKF.Inn.RngPos" uom="" mask="#0.00" key="EKFINVELP3">
+		<ULogSource field="estimator_innovations_0.rng_vpos"/>
 		<Groups>
 			<Group>EKF2 Innovations</Group>
 		</Groups>
 	</KeyFigure>
 
 
-    <!-- EKF2 Innovation Status -->
+    <!-- EKF2 Analysis -->
 
-    <KeyFigure desc="Tst.Ratio Hgt." uom="" mask="#0.00" key="EKFHTR">
+    <KeyFigure desc="Tst.Ratio.Hagl." uom="" mask="#0.00" key="EKFHTR">
         <MSPSource class="est" field="haglRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.hgt_test_ratio"/>
+		<ULogSource field="estimator_innovation_test_ratios_0.hagl"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio Vel." uom="" mask="#0.00" key="EKFVTR">
+	<KeyFigure desc="Tst.Ratio.VisPos.Z" uom="" mask="#0.00" key="EKFVTR">
 	    <MSPSource class="est" field="velRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.vel_test_ratio"/>
+		<ULogSource field="estimator_innovation_test_ratios_0.ev_vpos"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio Pos." uom="" mask="#0.00" key="EKFPTR">
+	<KeyFigure desc="Tst.Ratio.VisVel.Z" uom="" mask="#0.00" key="EKFPTR">
 	 <MSPSource class="est" field="horiRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.pos_test_ratio"/>
+		<ULogSource field="estimator_innovation_test_ratios_0.ev_vvel"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio GPS" uom="" mask="#0.00" key="EKFGTR">
+	<KeyFigure desc="Tst.Ratio.RngPos" uom="" mask="#0.00" key="EKFGTR">
 		<ULogSource field="estimator_status_0.gps_test_ratio"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
@@ -110,50 +124,51 @@
 	    <MSPSource class="est" field="magRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.mag_test_ratio"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Est.Flags" uom="" mask="#" key="EKFFLG">
+	<KeyFigure desc="Solution.Status" uom="" mask="#" key="EKFFLG">
 	    <MSPSource class="est" field="flags"></MSPSource>
 	    <ULogSource field="estimator_status_0.solution_status_flags"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+	        <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
 	<KeyFigure desc="Control.Flags" uom="" mask="#" key="EKFCTLFLG">
 	    <ULogSource field="estimator_status_flags_0.control_mode_flags"/>
+        <MSPSource class="est" field="flags"></MSPSource>
 		<Groups>
-			<Group>EKF2 States</Group>
+			 <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Height.Mode.RNG" uom="" mask="#" key="CTLFLGH_RNG">
+	<KeyFigure desc="Height.Mode.Rng" uom="" mask="#" key="CTLFLGH_RNG">
 	    <ULogSource field="estimator_status_flags_0.cs_rng_hgt"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			 <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Height.Mode.EV" uom="" mask="#" key="CTLFLGH_EV">
+	<KeyFigure desc="Height.Mode.Ev" uom="" mask="#" key="CTLFLGH_EV">
 	    <ULogSource field="estimator_status_flags_0.cs_ev_hgt"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			 <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Height.Mode.BARO" uom="" mask="#" key="CTLFLGH_BARO">
+	<KeyFigure desc="Height.Mode.Baro" uom="" mask="#" key="CTLFLGH_BARO">
 	    <ULogSource field="estimator_status_flags_0.cs_baro_hgt"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+			 <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
 	<KeyFigure desc="Height.Mode.GPS" uom="" mask="#" key="CTLFLGH_GPS">
 	    <ULogSource field="estimator_status_flags_0.cs_gps_hgt"/>
 		<Groups>
-			<Group>EKF2 States</Group>
+		   <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 	
@@ -172,26 +187,6 @@
 	<!-- EKF2 state estimations -->
 
 
-    <KeyFigure desc="IMU X delta ang.state" uom="rad/s" mask="#0.0" key="EKFIXDA">
-		<ULogSource field="estimator_status.states[10]"/>
-		<Groups>
-			<Group>EKF2 States</Group>
-		</Groups>
-	</KeyFigure>
-
-	 <KeyFigure desc="IMU Y delta ang.state" uom="rad/s" mask="#0.0" key="EKFIYDA">
-		<ULogSource field="estimator_status.states[11]"/>
-		<Groups>
-			<Group>EKF2 States</Group>
-		</Groups>
-	</KeyFigure>
-
-	 <KeyFigure desc="IMU Z delta ang.state" uom="rad/s" mask="#0.0" key="EKFIZDA">
-		<ULogSource field="estimator_status.states[12]"/>
-		<Groups>
-			<Group>EKF2 States</Group>
-		</Groups>
-	</KeyFigure>
 
 
 
@@ -1038,72 +1033,25 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="EST0.s9" uom="m" mask="#0.0" key="HAGLRATIO">
-		<MSPSource class="est" field="haglRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.states[9]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s10" uom="m" mask="#0.00" key="TASRATIO">
-		<MSPSource class="est" field="tasRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.states[10]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s11" uom="m" mask="#0.0" key="MAGRATIO">
-		<MSPSource class="est" field="magRatio"></MSPSource>
-		<ULogSource field="estimator_status_0.states[11]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vel.Ratio" uom="" mask="#0.00" key="VELRATIO">
-		<MSPSource class="est" field="velRatio"></MSPSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="HorizPos.Ratio" uom="" mask="#0.00" key="HORIZRATIO">
-		<MSPSource class="est" field="horizRatio"></MSPSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="VertPos.Ratio" uom="" mask="#0.00" key="VERTRATIO">
-		<MSPSource class="est" field="vertRatio"></MSPSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
 
 	<KeyFigure desc="Horiz.Accurracy" uom="m" mask="±#0.000" key="GPHACCUR">
 		<MSPSource class="est" field="posHorizAccuracy"></MSPSource>
+        <ULogSource field="estimator_status_0.pos_horiz_accuracy"/>
 		<Groups>
-			<Group>EKF2</Group>
+			<Group>Local Position</Group>
+            <Group>Global Position</Group>
 		</Groups>
 		<Validity min="0" max="1.5"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.000" key="GPVACCUR">
 		<MSPSource class="est" field="posVertAccuracy"></MSPSource>
+        <ULogSource field="estimator_status_0.pos_vert_accuracy"/>
 		<Groups>
-			<Group>EKF2</Group>
+			<Group>Local Position</Group>
+            <Group>Global Position</Group>
 		</Groups>
 		<Validity min="0" max="0.2"/>
-	</KeyFigure>
-
-	<KeyFigure desc="EstimatorFlags" uom="" mask="#0" key="ESTFLAGS">
-		<MSPSource class="est" field="flags"></MSPSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
 	</KeyFigure>
 
 	<!-- GPS Data -->
@@ -1220,78 +1168,6 @@
 	<!-- Estimator data -->
 
 
-	<KeyFigure desc="EST0.s0" uom="" mask="#0.00" key="EST0S0">
-		<PX4Source field="EST0.s0"></PX4Source>
-		<ULogSource field="estimator_status_0.states[0]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s1" uom="" mask="#0.00" key="EST0S1">
-		<PX4Source field="EST0.s1"></PX4Source>
-		<ULogSource field="estimator_status_0.states[1]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s2" uom="" mask="#0.00" key="EST0S2">
-		<PX4Source field="EST0.s2"></PX4Source>
-		<ULogSource field="estimator_status_0.states[2]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s3" uom="" mask="#0.00" key="EST0S3">
-		<PX4Source field="EST0.s3"></PX4Source>
-		<ULogSource field="estimator_status_0.states[3]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s4" uom="" mask="#0.00" key="EST0S4">
-		<PX4Source field="EST0.s4"></PX4Source>
-		<ULogSource field="estimator_status_0.states[4]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s5" uom="" mask="#0.00" key="EST0S5">
-		<PX4Source field="EST0.s5"></PX4Source>
-		<ULogSource field="estimator_status_0.states[5]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s6" uom="" mask="#0.00" key="EST0S6">
-		<PX4Source field="EST0.s6"></PX4Source>
-		<ULogSource field="estimator_status_0.states[6]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s7" uom="" mask="#0.00" key="EST0S7">
-		<PX4Source field="EST0.s7"></PX4Source>
-		<ULogSource field="estimator_status_0.states[7]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="EST0.s8" uom="" mask="#0.00" key="EST0S8">
-		<PX4Source field="EST0.s8"></PX4Source>
-		<ULogSource field="estimator_status_0.states[8]"></ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
 	<KeyFigure desc="LPosXY valid" uom="" mask="#0" key="LPOSXYVAL">
 		<PX4Source field="LPOS.PFlg"></PX4Source>
 		<ULogSource field="vehicle_local_position_0.xy_valid"/>
@@ -1308,86 +1184,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Baro timeout" uom="" mask="#0" key="TOBARO">
-		<PX4Source field="EST2.fHealth">
-		   <Converter class="BitMaskConverter" p1="0"/>
-		</PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		   <Converter class="BitMaskConverter" p1="0"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="GPS timeout" uom="" mask="#0" key="TOGPS">
-		<PX4Source field="EST2.fHealth">
-		    <Converter class="BitMaskConverter" p1="1"/>
-		</PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		    <Converter class="BitMaskConverter" p1="1"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="RangeFinder timeout" uom="" mask="#0" key="TOLIDAR">
-		<PX4Source field="EST2.fHealth">
-		   <Converter class="BitMaskConverter" p1="2"/>
-		</PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		   <Converter class="BitMaskConverter" p1="2"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	 <KeyFigure desc="Flow timeout" uom="" mask="#0" key="TOFLOW">
-		<PX4Source field="EST2.fHealth">
-		   <Converter class="BitMaskConverter" p1="3"/>
-		</PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		   <Converter class="BitMaskConverter" p1="3"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Sonar timeout" uom="" mask="#0" key="TOSONAR">
-		<PX4Source field="EST2.fHealth">
-		   <Converter class="BitMaskConverter" p1="4"/>
-		</PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		   <Converter class="BitMaskConverter" p1="4"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Vision timeout" uom="" mask="#0" key="TOVIS">
-		<PX4Source field="EST2.fHealth">
-		    <Converter class="BitMaskConverter" p1="5"/>
-		 </PX4Source>
-		<ULogSource field="estimator_status_0.health_flags">
-		   <Converter class="BitMaskConverter" p1="5"/>
-		</ULogSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
-	
-	<KeyFigure desc="Landed" uom="" mask="#0" key="LANDED">
-	    <MSPSource class="sys" field="status">
-		  <Converter class="BitMaskConverter" p1="9"/>
-		</MSPSource>
-		<Groups>
-			<Group>EKF2</Group>
-		</Groups>
-	</KeyFigure>
 
 
 	<!-- Radio -->
