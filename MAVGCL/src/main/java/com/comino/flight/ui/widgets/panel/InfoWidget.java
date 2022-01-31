@@ -91,10 +91,9 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		this.state = StateProperties.getInstance();
 
-		listview.prefHeightProperty().bind(this.heightProperty().subtract(10));
-		listview.setCache(false);
-
-
+		listview.prefHeightProperty().bind(this.heightProperty().subtract(13));
+		listview.maxHeightProperty().bind(this.heightProperty().subtract(13));
+		
 		listview.setCellFactory(list -> new ListCell<LogMessage>() {
 
 			@Override
