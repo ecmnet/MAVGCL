@@ -104,7 +104,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		this.preferences = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
 		
-		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
+//		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {

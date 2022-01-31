@@ -141,11 +141,6 @@ public class AnalysisModelService  {
 					converter.notify();
 				}
 
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
-				if(!model.sys.isStatus(Status.MSP_INAIR)) {
-					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				}
 			} else {
 				current.clear();
 			}

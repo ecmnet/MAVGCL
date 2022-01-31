@@ -128,7 +128,7 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem r_px4log;
-	
+
 	@FXML
 	private MenuItem r_dellog;
 
@@ -137,7 +137,7 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_params;
-	
+
 	@FXML
 	private MenuItem m_map;
 
@@ -174,20 +174,20 @@ public class MainApp extends Application  {
 	private StateProperties state = null;
 
 	private String command_line_options = null;
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	private SimpleNTPServer ntp_server;
-	
+
 	public MainApp() {
 		super();
-		
-//		try {
-//			redirectConsole();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
+		//		try {
+		//			redirectConsole();
+		//		} catch (IOException e) {
+		//			// TODO Auto-generated catch block
+		//			e.printStackTrace();
+		//		}
 
 
 		//		com.sun.glass.ui.Application glassApp = com.sun.glass.ui.Application.GetApplication();
@@ -218,17 +218,17 @@ public class MainApp extends Application  {
 	@Override
 	public void init() throws Exception {
 		try {
-			
+
 			// To avoid MJPEG warnings
 			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
 			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")+" build on BoofCV "+BoofVersion.VERSION); 
 
 			ExecutorService.create();
-			
-			
+
+
 			ntp_server = new SimpleNTPServer();
-			
+
 			try {
 				ntp_server.start();
 			} catch (Exception e1) {
@@ -248,8 +248,8 @@ public class MainApp extends Application  {
 			peerAddress = userPrefs.get(MAVPreferences.PREFS_IP_ADDRESS, "127.0.0.1");
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
-			
-           
+
+
 			if(args.size()>0 ) {
 				if(args.get("SITL")!=null) {
 					control = new MAVUdpController("127.0.0.1",14580,14540, true);
@@ -275,27 +275,27 @@ public class MainApp extends Application  {
 			}
 			else {
 				control =new MAVAutoController(peerAddress,peerport,bindport); 
-//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
-//					//	new SITLController(control);
-//				} else {
-//					//	try { redirectConsole(); } catch (IOException e2) { }
-//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
-//				}
+				//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+				//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+				//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+				//					//	new SITLController(control);
+				//				} else {
+				//					//	try { redirectConsole(); } catch (IOException e2) { }
+				//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+				//				}
 			}
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
-		
-			
+
+
 			wq.start();
 			control.getStatusManager().start();
-			
-			
+
+
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
-					
-					
+
+
 					new SITLController(control);
 					System.out.println("Initializing");
 
@@ -306,53 +306,59 @@ public class MainApp extends Application  {
 
 				}
 			});
-			
+
+
+			MAVPreferences.init();
+
+
+			MAVGCLMap.getInstance(control);
+			MAVGCLPX4Parameters.getInstance(control);
+
+			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
+			analysisModelService.startConverter();
+
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
 					control.getStatusManager().reset();
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+					wq.addSingleTask("LP",200, () -> {
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
+							control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+							MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						}
+					});
 				}
 				Platform.runLater(() -> {
 					if(r_px4log!=null)
 						r_px4log.setDisable(!n.booleanValue());
 				});
 			});
-			
 
-			MAVPreferences.init();
-			MAVGCLMap.getInstance(control);
-			MAVGCLPX4Parameters.getInstance(control);
-			
-			
-			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
-			analysisModelService.startConverter();
-			
-			
 			if(!control.isConnected())
 				control.connect();
-			
-			
+
+
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
-	
+
 			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
 				new Thread(base).start();
 			}
-			
+
 
 
 
 			state.getLPOSAvailableProperty().addListener((v,o,n) -> {
-				
+
 				// should check for homepos 
 				if(!n.booleanValue() || state.getGPOSAvailableProperty().get() || control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 					return;
-				
+
 				DataModel model = control.getCurrentModel();
-				
-				
+
+
 				System.out.println("Detect base GPS");
 
 				if(base !=null && base.isConnected()) {
@@ -370,19 +376,19 @@ public class MainApp extends Application  {
 						System.out.println("Global Position origin set to base position");
 					}
 				}
-//				else 
-//					if(model.gps.isFlagSet(GPS.GPS_SAT_FIX) && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
-//					
-//					msg_msp_command msp = new msg_msp_command(255,1);
-//					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
-//
-//					msp.param1  = (long)(model.gps.latitude * 1e7);
-//					msp.param2  = (long)(model.gps.longitude * 1e7);
-//					msp.param3  = (int)(model.gps.altitude)*1000;
-//
-//					control.sendMAVLinkMessage(msp);
-//					System.out.println("Global Position origin set to vehicle position");
-//				}
+				//				else 
+				//					if(model.gps.isFlagSet(GPS.GPS_SAT_FIX) && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
+				//					
+				//					msg_msp_command msp = new msg_msp_command(255,1);
+				//					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+				//
+				//					msp.param1  = (long)(model.gps.latitude * 1e7);
+				//					msp.param2  = (long)(model.gps.longitude * 1e7);
+				//					msp.param3  = (int)(model.gps.altitude)*1000;
+				//
+				//					control.sendMAVLinkMessage(msp);
+				//					System.out.println("Global Position origin set to vehicle position");
+				//				}
 				else 
 				{
 
@@ -396,11 +402,11 @@ public class MainApp extends Application  {
 					control.sendMAVLinkMessage(msp);
 					System.out.println("Global Position origin set");
 				}
-				
+
 			});
-			
-		
-			
+
+
+
 
 		} catch(Exception e) {
 			//	System.err.println(e.getMessage());
@@ -413,7 +419,7 @@ public class MainApp extends Application  {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
+
 		Locale.setDefault(Locale.ENGLISH);
 		try {
 			this.primaryStage = primaryStage;
@@ -458,7 +464,7 @@ public class MainApp extends Application  {
 
 			//			ScenicView.show(scene);
 
-			
+
 			Preferences userPrefs = MAVPreferences.getInstance();
 			System.out.println("Preferences loaded");
 
@@ -483,7 +489,7 @@ public class MainApp extends Application  {
 					wq.printStatus();
 				}
 			});
-			
+
 
 
 		} catch (Exception e) {
@@ -542,7 +548,7 @@ public class MainApp extends Application  {
 			m_params.setOnAction(event -> {
 				FileHandler.getInstance().csvParameterImport();
 			});
-			
+
 
 			m_reload.setOnAction((ActionEvent event)-> {
 				MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
@@ -553,26 +559,26 @@ public class MainApp extends Application  {
 			m_pdoc.setOnAction(event -> {
 				this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
 			});
-			
+
 			r_dellog.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			r_dellog.setOnAction(event -> {
-				
+
 				Alert alert = new Alert(AlertType.CONFIRMATION,
-						         "Delete all local logs from device. Do you really want tod do this?",
-				                 ButtonType.OK, 
-				                 ButtonType.CANCEL);
+						"Delete all local logs from device. Do you really want tod do this?",
+						ButtonType.OK, 
+						ButtonType.CANCEL);
 				alert.getDialogPane().getStylesheets().add(
-				   getClass().getResource("application.css").toExternalForm());
+						getClass().getResource("application.css").toExternalForm());
 				alert.setTitle("Erase local log files");
 				alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
 				Optional<ButtonType> result = alert.showAndWait();
 
 				if (result.get() == ButtonType.OK) {
-				   control.sendMAVLinkMessage(new msg_log_erase(1,2));
-				   MSPLogger.getInstance().writeLocalMsg("[mgc] All PX4 logs have been erased",
+					control.sendMAVLinkMessage(new msg_log_erase(1,2));
+					MSPLogger.getInstance().writeLocalMsg("[mgc] All PX4 logs have been erased",
 							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
-				
+
 			});
 
 			r_px4log.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
@@ -669,35 +675,35 @@ public class MainApp extends Application  {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("ui/MAVGCL2.fxml"));
 			flightPane = (AnchorPane) loader.load();
-			
+
 
 			// Set person overview into the center of root layout.
 			rootLayout.setCenter(flightPane);
 			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);
 
 			StatusLineWidget statusline = new StatusLineWidget();
-			
-			
+
+
 			rootLayout.setBottom(statusline);
-			
-	
+
+
 
 			controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
 
 			statusline.setup(control);
-			
-			
+
+
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
-			
+
 			primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 				if(newValue.booleanValue() && control.isConnected()) {
-			       control.getStatusManager().reset(); 
+					control.getStatusManager().reset(); 
 				}
 			});
 
@@ -708,7 +714,7 @@ public class MainApp extends Application  {
 		notifyPreloader(new StateChangeNotification(
 				StateChangeNotification.Type.BEFORE_START));
 	}
-	
+
 	public static Stage getPrimaryStage() {
 		return primaryStage;
 	}
