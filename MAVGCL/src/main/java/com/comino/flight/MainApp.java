@@ -177,6 +177,7 @@ public class MainApp extends Application  {
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
+	private AnalysisModelService analysisModelService;
 	private SimpleNTPServer ntp_server;
 
 	public MainApp() {
@@ -314,7 +315,7 @@ public class MainApp extends Application  {
 			MAVGCLMap.getInstance(control);
 			MAVGCLPX4Parameters.getInstance(control);
 
-			AnalysisModelService analysisModelService = AnalysisModelService.getInstance(control);
+			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
@@ -437,7 +438,7 @@ public class MainApp extends Application  {
 	@Override
 	public void stop() throws Exception {
 		System.out.println("[mgc] Closing...");
-		control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+		analysisModelService.close();
 		control.shutdown();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
 		MAVPreferences.getInstance().putDouble("stage.y", primaryStage.getY());

@@ -188,6 +188,12 @@ public class AnalysisModelService  {
 		c.setPriority(Thread.NORM_PRIORITY+2);
 		c.start();
 	}
+	
+	public void close() {
+		stop();
+		if(ulogger.isLogging())
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_STOP);
+	}
 
 	public void registerListener(ICollectorRecordingListener l) {
 		listener.add(l);
