@@ -323,7 +323,7 @@ public class MainApp extends Application  {
 					wq.addSingleTask("LP",300, () -> {
 						control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
-						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR, Status.MSP_ACTIVE)) {
+						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
 							control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 							MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 						}
