@@ -653,6 +653,7 @@ public class MainApp extends Application  {
 
 			m_restart.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			m_restart.setOnAction((event) ->{
+				AnalysisModelService.getInstance().stop();
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_RESTART;
 				control.sendMAVLinkMessage(msp);
