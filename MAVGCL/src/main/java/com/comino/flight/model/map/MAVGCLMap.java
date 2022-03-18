@@ -33,7 +33,7 @@ public class MAVGCLMap  {
 	private final Map<Long,Long>  mapset      = new ConcurrentHashMap<Long,Long>(MAXMAPPOINTS);
 
 	private float last_altitude  = -Float.MAX_VALUE;
-	private long last_update = - 1;
+	private long  last_update = - 1;
 
 	private int num_of_items = 0;
 
@@ -62,13 +62,7 @@ public class MAVGCLMap  {
 				}
 				LinkedList<Long> list = model.grid.getTransfers();
 				while(!list.isEmpty()) {
-					Long entry = list.pop();
-					if(entry >= 0) {
-						if(!mapset.containsKey(entry) && mapset.size()<MAXMAPPOINTS)
-							mapset.put(entry, System.currentTimeMillis());
-					} else {
-						mapset.remove(-entry);
-					}
+					mapset.put(list.pop(), System.currentTimeMillis());
 				}
 
 				// TODO: Access AnalysisDatamodel
@@ -149,7 +143,7 @@ public class MAVGCLMap  {
 
 	private class MapSetIterator implements Iterator<CellProbability_F64> {
 
-		long tms; long next_tms;
+		long tms; long next_tms = 0;
 		Comparable<Integer> zfilter = null;
 
 		Iterator<Long> m = mapset.keySet().iterator();
@@ -172,25 +166,35 @@ public class MAVGCLMap  {
 
 		@Override
 		public CellProbability_F64 next() {
-			return searchNext();
+			CellProbability_F64 prev = new CellProbability_F64();
+			prev.probability = storage.probability;
+			prev.setTo(storage);
+			searchNext();
+			return prev;
 		}
 
 		protected CellProbability_F64 searchNext() {
-			next_tms = 0; 
-			if(mapset.isEmpty())
-				return storage;
 			
+			if(mapset.isEmpty()) {
+				next_tms = 0;
+				return storage;
+			}
+
 			while(m.hasNext()) {
 				long h = m.next(); next_tms = mapset.get(h);
 				storage.probability = info.decodeMapPoint(h, storage);
 				if(zfilter==null) {
-					if ( storage.probability != 0.5f && next_tms > tms) 
+					if ( next_tms > tms)  {
+						if(storage.probability == 0.5)
+							mapset.remove(h);
 						return storage;
+					}
 				} else {
 					if (storage.probability > 0.5f && next_tms > tms && zfilter.compareTo(storage.z) == 0) 
 						return storage;			
 				}
 			}
+			next_tms = 0;
 			return storage;
 		}
 
