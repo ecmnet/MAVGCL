@@ -50,7 +50,7 @@ public class MAVGCLMap  {
 
 	private MAVGCLMap(IMAVController control) {
 
-		this.info =  new Map3DSpacialInfo(0.10f,20.0f,20.0f,5.0f);
+		this.info =  new Map3DSpacialInfo(0.20f,40.0f,40.0f,10.0f);
 		this.model = control.getCurrentModel();
 
 		control.addMAVLinkListener((o) -> {
@@ -181,11 +181,12 @@ public class MAVGCLMap  {
 			}
 
 			while(m.hasNext()) {
-				long h = m.next(); next_tms = mapset.get(h);
+				long h = m.next(); 
+				next_tms = mapset.get(h);
 				storage.probability = info.decodeMapPoint(h, storage);
 				if(zfilter==null) {
 					if ( next_tms > tms)  {
-						if(storage.probability == 0.5)
+						if(storage.probability <= 0.5)
 							mapset.remove(h);
 						return storage;
 					}
