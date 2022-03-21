@@ -227,7 +227,6 @@ public class MainApp extends Application  {
 
 			ExecutorService.create();
 
-
 			ntp_server = new SimpleNTPServer();
 
 			try {
@@ -262,7 +261,7 @@ public class MainApp extends Application  {
 				}
 				else  if(args.get("SERVER")!=null) {
 					System.out.println("Server");
-					control = new MAVUdpController("172.168.178.22",14555,14550, true);
+					control = new MAVUdpController("10.211.55.6",14555,14550, true);
 					//new SITLController(control);
 				}
 				else  if(args.get("SERIAL")!=null) {
@@ -310,7 +309,7 @@ public class MainApp extends Application  {
 
 
 			MAVPreferences.init();
-
+		//	new SITLController(control);
 
 			MAVGCLMap.getInstance(control);
 			MAVGCLPX4Parameters.getInstance(control);

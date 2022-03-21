@@ -73,6 +73,7 @@ public class Map3DGroup {
 					}
 					return;
 				}
+			    size = info.getCellSize() * 100;
 				map.getLatestMapItems(tms).forEachRemaining((p) -> {  addBlock(p); });
 				setIndicator(map.getIndicator());
 				tms = System.currentTimeMillis();
