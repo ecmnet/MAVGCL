@@ -26,7 +26,7 @@ public class MAVGCLMap  {
 
 	private final DataModel  model;  // Todo: Get rid of the current model
 
-	private final Map3DSpacialInfo info;
+	private Map3DSpacialInfo info;
 	private final Point3D_F64 indicator       = new Point3D_F64();
 
 	private final HashSet<Long>      set      = new HashSet<Long>();
@@ -60,6 +60,15 @@ public class MAVGCLMap  {
 					clear();
 					return;
 				}
+				
+				// Adjust resolution
+				if(info.getCellSize() != model.grid.resolution) {
+					clear();
+					info.adjustResolution(model.grid.resolution);
+					System.out.println("Map resolution adjusted to "+model.grid.resolution+"m");
+					
+				}
+				
 				LinkedList<Long> list = model.grid.getTransfers();
 				while(!list.isEmpty()) {
 					mapset.put(list.pop(), System.currentTimeMillis());
