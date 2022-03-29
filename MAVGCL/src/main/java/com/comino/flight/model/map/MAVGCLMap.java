@@ -104,7 +104,8 @@ public class MAVGCLMap  {
 		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
 		while(i.hasNext()) {
 			CellProbability_F64 p = i.next();
-			set.add(info.encodeMapPoint(p, p.probability));
+			  set.add(info.encodeMapPoint(p, p.probability));
+			
 		}
 
 		last_altitude = current_altitude;
@@ -193,15 +194,16 @@ public class MAVGCLMap  {
 				long h = m.next(); 
 				next_tms = mapset.get(h);
 				storage.probability = info.decodeMapPoint(h, storage);
+				if(storage.probability <= 0.5)
+					mapset.remove(h);
 				if(zfilter==null) {
 					if ( next_tms > tms)  {
-						if(storage.probability <= 0.5)
-							mapset.remove(h);
 						return storage;
 					}
 				} else {
-					if (storage.probability > 0.5f && next_tms > tms && zfilter.compareTo(storage.z) == 0) 
+					if (zfilter.compareTo(storage.z) == 0) {
 						return storage;			
+					}
 				}
 			}
 			next_tms = 0;

@@ -80,14 +80,9 @@ public class Map3DGroup {
 			}
 		};
 
+		// Always rung grid update
+		task.start();
 
-		root.disabledProperty().addListener((l,o,n) -> {
-			if(!n.booleanValue()) {
-				task.start();
-			} else {
-				task.stop();
-			}
-		});
 	}
 
 	public void addBlock(CellProbability_F64 pos) {
