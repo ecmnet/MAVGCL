@@ -63,8 +63,8 @@ public class Map3DGroup {
 			@Override
 			public void handle(long now) {
 
-				if((tms - map.getLastUpdate()) > 200 && map.getLastUpdate() != -1)
-					return;
+//				if((tms - map.getLastUpdate()) > 200 && map.getLastUpdate() != -1)
+//					return;
 
 				if(map.isEmpty()) {
 					if(!boxes.isEmpty()) {

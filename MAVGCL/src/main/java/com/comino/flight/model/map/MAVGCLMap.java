@@ -20,7 +20,7 @@ import georegression.struct.point.Point3D_F64;
 
 public class MAVGCLMap  {
 
-	private static int MAXMAPPOINTS   = 10000;
+	private static int MAXMAPPOINTS   = 20000;
 
 	private static MAVGCLMap mav2dmap = null;
 
@@ -69,9 +69,9 @@ public class MAVGCLMap  {
 					
 				}
 				
-				LinkedList<Long> list = model.grid.getTransfers();
-				while(!list.isEmpty()) {
-					mapset.put(list.pop(), System.currentTimeMillis());
+				long tms = System.currentTimeMillis()+500;
+				while(model.grid.hasTransfers()) {
+					mapset.put(model.grid.pop(), tms);
 				}
 
 				// TODO: Access AnalysisDatamodel
