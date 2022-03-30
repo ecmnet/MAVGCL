@@ -69,7 +69,7 @@ public class MAVGCLMap  {
 					
 				}
 				
-				long tms = System.currentTimeMillis()+500;
+				long tms = System.currentTimeMillis()+100;
 				while(model.grid.hasTransfers()) {
 					mapset.put(model.grid.pop(), tms);
 				}
@@ -104,8 +104,7 @@ public class MAVGCLMap  {
 		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
 		while(i.hasNext()) {
 			CellProbability_F64 p = i.next();
-			  set.add(info.encodeMapPoint(p, p.probability));
-			
+			set.add(info.encodeMapPoint(p, p.probability));
 		}
 
 		last_altitude = current_altitude;
