@@ -132,7 +132,7 @@ public class DetailsWidget extends ChartControlPane {
 		    	null,
 			    "VISIONFPS", "VISIONQUAL", "FLOWQL","VISIONERRC",
 			    null,
-			    "SLAMFPS","SLAMQU", 
+			    "SLAMFPS","SLAMQU","SLAMMPS", 
 			    null, 
 			    "BATV","BATC", "BATH", "BATP", "BATW",
 			    null, 
