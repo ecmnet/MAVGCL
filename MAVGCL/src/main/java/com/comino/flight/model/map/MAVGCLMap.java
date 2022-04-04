@@ -20,7 +20,7 @@ import georegression.struct.point.Point3D_F64;
 
 public class MAVGCLMap  {
 
-	private static int MAXMAPPOINTS   = 20000;
+	private static int MAXMAPPOINTS   = 30000;
 
 	private static MAVGCLMap mav2dmap = null;
 
