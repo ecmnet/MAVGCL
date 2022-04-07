@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.mavcom.model.DataModel;
@@ -13,7 +14,6 @@ import bubo.maps.d3.grid.CellProbability_F64;
 import georegression.struct.point.Point3D_F64;
 import georegression.struct.point.Point3D_I32;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -35,11 +35,11 @@ public class Map3DGroup {
 	private final Map3DSpacialInfo      info;
 	private double                      size = 0;
 
-	private final Point3D_I32           local =  new Point3D_I32();
 	private final Point3D_F64           global = new Point3D_F64();
-	private long  tms = 0;
 
 	private Marker currentMarker = new Marker();
+
+	private CellProbability_F64 point = new CellProbability_F64();
 
 
 	public Map3DGroup(Group root, DataModel model) {
@@ -60,23 +60,28 @@ public class Map3DGroup {
 
 
 		task = new AnimationTimer() {
+			long entry=0;
 			@Override
 			public void handle(long now) {
 
-//				if((tms - map.getLastUpdate()) > 200 && map.getLastUpdate() != -1)
-//					return;
+				BlockingQueue<Long> list = map.getList();
 
-				if(map.isEmpty()) {
-					if(!boxes.isEmpty()) {
-						root.getChildren().removeAll(boxes.values());
-						boxes.clear();
+				if(!list.isEmpty()) {
+					
+					size = info.getCellSize() * 100;
+					
+					while(!list.isEmpty()) {
+						entry = list.poll();
+						if(entry < 0) {
+							root.getChildren().removeAll(boxes.values());
+							boxes.clear();
+							return;
+						}
+						info.decodeMapPoint(entry, point);
+						addBlock(point);
 					}
-					return;
+					setIndicator(map.getIndicator());
 				}
-			    size = info.getCellSize() * 100;
-				map.getLatestMapItems(tms).forEachRemaining((p) -> {  addBlock(p); });
-				setIndicator(map.getIndicator());
-				tms = System.currentTimeMillis();
 			}
 		};
 
@@ -88,6 +93,7 @@ public class Map3DGroup {
 	public void addBlock(CellProbability_F64 pos) {
 
 		long h = info.encodeMapPoint(pos,0);
+		
 
 		if(pos.probability > 0.5) {
 
@@ -120,67 +126,33 @@ public class Map3DGroup {
 				root.getChildren().remove(box);	
 			} 
 		}
-	}
-	
-	public void addBlock(Long h) {
 
-        double p = info.decodeMapPoint(h, local);
-		
-		if(p > 0.5) {
-
-			if(boxes.containsKey(h))
-				return;
-
-			info.mapToGlobal(local, global);
-
-			// TODO: Fix rotation
-			final Box box = new Box(size, size, size);
-			box.setTranslateZ(global.x*100);
-			box.setTranslateX(-global.y*100);
-			box.setTranslateY((-global.z+info.getCellSize()/2)*100);
-			box.setMaterial(blocked.get((int)(p*5)-1));
-			box.setCullFace(CullFace.BACK);
-			root.getChildren().add(box);
-			boxes.put(h, box);
-			return;
-
-		} 
-
-		else {
-
-			if(!boxes.containsKey(h))
-				return;
-
-			//	if(pos.probability < 0.1f || pos.probability == 0.5f) {
-			Box box = boxes.remove(h);
-			if(box!=null) {
-				root.getChildren().remove(box);	
-			} 
-		}
 	}
 
-	//	public void clear() {
-	//		root.getChildren().clear();
-	//		boxes.clear();
-	//		
-	//	}
+
+
+	public void clear() {
+		root.getChildren().clear();
+		boxes.clear();
+
+	}
 
 	public Map3DSpacialInfo getMapInfo() {
 		return info;
 	}
 
 	public void invalidate() {
-		Platform.runLater(() -> {
-			root.getChildren().removeAll(boxes.values());
-			boxes.clear();
-			map.getLatestMapItems(0).forEachRemaining((p) -> { addBlock(p); });
-		});
+		//		Platform.runLater(() -> {
+		//			root.getChildren().removeAll(boxes.values());
+		//			boxes.clear();
+		//			map.getLatestMapItems(0).forEachRemaining((p) -> { addBlock(p); });
+		//		});
 	}
 
 	public void setIndicator(Point3D_F64 p) {
-		
+
 		boolean visible = !(Double.isNaN(p.x) || Double.isNaN(p.y) || Double.isNaN(p.z));
-		
+
 		Box box; Point3D_I32 local = new Point3D_I32();
 		info.globalToMap(p, local);
 		long h = info.encodeMapPoint(local, 0);
