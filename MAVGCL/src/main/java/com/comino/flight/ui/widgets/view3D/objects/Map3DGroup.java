@@ -27,7 +27,7 @@ public class Map3DGroup {
 
 	private AnimationTimer              task    = null;
 	private final List<PhongMaterial>  	blocked = new ArrayList<PhongMaterial>();
-	private final Map<Long,Box>         boxes   = new HashMap<Long,Box>();
+	private final Map<Long,Box>         boxes;
 
 	private final PhongMaterial markerMaterial  = new PhongMaterial();
 
@@ -44,10 +44,11 @@ public class Map3DGroup {
 
 	public Map3DGroup(Group root, DataModel model) {
 
-		this.root = root;
-		this.map  = MAVGCLMap.getInstance();
-		this.info = map.getInfo();
-		this.size = info.getCellSize() * 100;
+		this.root  = root;
+		this.map   = MAVGCLMap.getInstance();
+		this.boxes = map.getMap();
+		this.info  = map.getInfo();
+		this.size  = info.getCellSize() * 100;
 
 		for(int i = 0; i < 5; i++) {
 			PhongMaterial m = new PhongMaterial();

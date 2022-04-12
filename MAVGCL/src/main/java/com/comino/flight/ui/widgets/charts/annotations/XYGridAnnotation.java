@@ -109,36 +109,37 @@ public class XYGridAnnotation  implements XYAnnotation {
 		}
 		
 		
-//		Set<Long> set = map.getLevelSet(blocks.isEmpty());
-//		if(set.isEmpty())
-//			return;
-//		
-//		blocks.keySet().retainAll(set);	
-//		
-//		set.forEach((i) -> {
-//			
-//			Pane p = null;
-//			if(!blocks.containsKey(i))
-//				p = addBlockPane(i);
-//			else
-//				p = blocks.get(i);
-//			
-//			map.getInfo().decodeMapPoint(i, mapp);
-//			map.getInfo().mapToGlobal(mapp, mapo);
-//			
-//			p.setLayoutX(xAxis.getDisplayPosition(mapo.y));
-//			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getInfo().getCellSize()));
-//			p.setPrefWidth(xAxis.getDisplayPosition(map.getInfo().getCellSize())-xAxis.getDisplayPosition(0));
-//			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getInfo().getCellSize()));
-//		
-//			
-//		});
+		Set<Long> set = map.getLevelSet(blocks.isEmpty());
+		if(set.isEmpty())
+			return;
+	
+		
+		blocks.keySet().retainAll(set);	
+		
+		set.forEach((i) -> {
+			
+			Pane p = null;
+			if(!blocks.containsKey(i))
+				p = addBlockPane(i);
+			else
+				p = blocks.get(i);
+			
+			map.getInfo().decodeMapPoint(i, mapp);
+			map.getInfo().mapToGlobal(mapp, mapo);
+			
+			p.setLayoutX(xAxis.getDisplayPosition(mapo.y));
+			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getInfo().getCellSize()));
+			p.setPrefWidth(xAxis.getDisplayPosition(map.getInfo().getCellSize())-xAxis.getDisplayPosition(0));
+			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getInfo().getCellSize()));
+		
+			
+		});
 	}
 
 	public  void invalidate(boolean enable) {
-//		if(map!=null) {
-//		    blocks.keySet().retainAll(map.getLevelSet(true));	
-//		}
+		if(map!=null) {
+		    blocks.keySet().retainAll(map.getLevelSet(true));	
+		}
 		enabled = enable;
 	}
 	

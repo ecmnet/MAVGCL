@@ -1,16 +1,23 @@
 package com.comino.flight.model.map;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
 
+import bubo.maps.d3.grid.CellProbability_F64;
 import georegression.struct.point.Point3D_F64;
+import javafx.scene.shape.Box;
 
 public class MAVGCLMap  {
 
@@ -24,10 +31,12 @@ public class MAVGCLMap  {
 	private Map3DSpacialInfo info;
 	private final Point3D_F64 indicator       = new Point3D_F64();
 
-	private final HashSet<Long>      set      = new HashSet<Long>();
+	private final HashSet<Long>        set    = new HashSet<Long>();
 	private final BlockingQueue<Long>  list   = new ArrayBlockingQueue<Long>(MAXMAPPOINTS);
+	private final Map<Long,Box>       boxes   = new HashMap<Long,Box>();
 
 	private long  last_update = - 1;
+	private float last_altitude  = -Float.MAX_VALUE;
 
 
 	public static MAVGCLMap getInstance(IMAVController control) {
@@ -39,7 +48,7 @@ public class MAVGCLMap  {
 	public static MAVGCLMap getInstance() {
 		return mav2dmap;
 	}
-	
+
 	private MAVGCLMap(IMAVController control) {
 
 		this.info =  new Map3DSpacialInfo(0.10f,20.0f,20.0f,5.0f);
@@ -47,7 +56,7 @@ public class MAVGCLMap  {
 
 		control.addMAVLinkListener((o) -> {
 			if(o instanceof msg_msp_micro_grid) {
-				
+
 				if(model.grid.count == 0) {
 					clear();
 					return;
@@ -71,9 +80,13 @@ public class MAVGCLMap  {
 		});
 
 	}
-	
+
 	public BlockingQueue<Long> getList() {
 		return list;
+	}
+
+	public Map<Long,Box> getMap() {
+		return boxes;
 	}
 
 
@@ -105,97 +118,106 @@ public class MAVGCLMap  {
 	}
 
 	public int size() {
-		return list.size();
+		return boxes.size();
 	}
 
-	
+	public Iterator<CellProbability_F64> getMapLevelItems(float current_altitude) {
+		float delta = 2.0f*info.getCellSize();
+		return new MapSetIterator( new ZFilter(current_altitude-delta,current_altitude+delta));
+	}
 
-//	private class MapSetIterator implements Iterator<CellProbability_F64> {
+	public Set<Long> getLevelSet(boolean enforce) {
+
+		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
+		
+//      TODO: Does not work	
 //
-//		long tms; long next_tms = 0;
-//		Comparable<Integer> zfilter = null;
-//
-//		Iterator<Long> m = mapset.keySet().iterator();
-//
-//		CellProbability_F64 storage = new CellProbability_F64();
-//
-//		public MapSetIterator(long tms) {
-//			this.tms = tms;
-//			searchNext();
-//		}
-//
-//		public MapSetIterator(Comparable<Integer> zfilter) {
-//			this.zfilter = zfilter;
-//			searchNext();
-//		}
-//
-//		@Override
-//		public boolean hasNext() {
-//			return next_tms != 0;
-//		}
-//
-//		@Override
-//		public CellProbability_F64 next() {
-//			CellProbability_F64 prev = new CellProbability_F64();
-//			prev.probability = storage.probability;
-//			prev.setTo(storage);
-//			searchNext();
-//			return prev;
-//		}
-//
-//		protected CellProbability_F64 searchNext() {
-//
-//			if(mapset.isEmpty()) {
-//				next_tms = 0;
-//				return storage;
-//			}
-//
-//			while(m.hasNext()) {
-//				long h = m.next(); 
-//				if(!mapset.containsKey(h))
-//					continue;
-//				next_tms = mapset.get(h);
-//				info.decodeMapPoint(h, storage);
-//				if(zfilter==null) {
-//					if ( next_tms >= tms)  {
-//						if(storage.probability<=0.5) {
-//							mapset.remove(h);
-//						}
-//						return storage;
-//					}
-//				} else {
-//					if (zfilter.compareTo(storage.z) == 0) {
-//						return storage;			
-//					}
-//				}
-//			}
-//			next_tms = 0;
-//
-//
-//			return storage;
-//		}
-//
-//		@Override
-//		public void remove() {
-//			throw new RuntimeException("Remove is not supported");
-//		}
-//	}
-//
-//	private class ZFilter implements Comparable<Integer> {
-//
-//		int from;
-//		int to;
-//
-//		public ZFilter(float from,float to) {
-//
-//			this.from = (int)(from * info.getBlocksPerM());
-//			this.to   = (int)(to   * info.getBlocksPerM());
-//		}
-//
-//		@Override
-//		public int compareTo(Integer z) {
-//			if( from < z &&  to > z) return 0; else return 1;
-//
-//		}
-//	}
+//		if(set.size()> 0 && Math.abs(current_altitude - last_altitude) < info.getCellSize() && !enforce)
+//			return set;
+		
+
+		set.clear();
+		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
+		while(i.hasNext()) {
+			CellProbability_F64 p = i.next();
+			set.add(info.encodeMapPoint(p,p.probability));
+		}
+
+		last_altitude = current_altitude;
+		return set;	
+	}
+
+
+
+	private class MapSetIterator implements Iterator<CellProbability_F64> {
+
+		Comparable<Integer> zfilter = null;
+		boolean has_next = true;
+
+		Iterator<Long> m = boxes.keySet().iterator();
+
+		CellProbability_F64 storage = new CellProbability_F64();
+
+		public MapSetIterator(Comparable<Integer> zfilter) {
+			this.zfilter = zfilter;
+			searchNext();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return has_next;
+		}
+
+		@Override
+		public CellProbability_F64 next() {
+			CellProbability_F64 prev = new CellProbability_F64();
+			prev.probability = storage.probability;
+			prev.setTo(storage);
+			searchNext();
+			return prev;
+		}
+
+		protected void searchNext() {
+
+			if(boxes.isEmpty()) {
+				has_next = false;
+			}
+
+			while(m.hasNext()) {
+				long h = m.next(); 
+				if(!boxes.containsKey(h))
+					continue;
+				info.decodeMapPoint(h, storage);
+				if (zfilter.compareTo(storage.z) == 0) {
+					has_next = true;
+					return;
+				}
+			}
+			has_next = false;
+			return;
+		}
+
+		@Override
+		public void remove() {
+			throw new RuntimeException("Remove is not supported");
+		}
+	}
+
+	private class ZFilter implements Comparable<Integer> {
+
+		int from;
+		int to;
+
+		public ZFilter(float from,float to) {
+
+			this.from = (int)(from * info.getBlocksPerM());
+			this.to   = (int)(to   * info.getBlocksPerM());
+		}
+
+		@Override
+		public int compareTo(Integer z) {
+			if( from < z &&  to > z) return 0; else return 1;
+
+		}
+	}
 }

@@ -681,6 +681,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		annotation.selectedProperty().set(true);
 
+		// TODO: handle grid annotation properly
+//		show_grid.setDisable(true);
+
+		
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
 				//		grid.invalidate(true);
@@ -706,7 +710,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
-		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		//show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
 
 		//
