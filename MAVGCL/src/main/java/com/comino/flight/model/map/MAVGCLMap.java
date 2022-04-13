@@ -36,7 +36,6 @@ public class MAVGCLMap  {
 	private final Map<Long,Box>       boxes   = new HashMap<Long,Box>();
 
 	private long  last_update = - 1;
-	private float last_altitude  = -Float.MAX_VALUE;
 
 
 	public static MAVGCLMap getInstance(IMAVController control) {
@@ -129,12 +128,6 @@ public class MAVGCLMap  {
 	public Set<Long> getLevelSet(boolean enforce) {
 
 		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
-		
-//      TODO: Does not work	
-//
-//		if(set.size()> 0 && Math.abs(current_altitude - last_altitude) < info.getCellSize() && !enforce)
-//			return set;
-		
 
 		set.clear();
 		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
@@ -142,8 +135,6 @@ public class MAVGCLMap  {
 			CellProbability_F64 p = i.next();
 			set.add(info.encodeMapPoint(p,p.probability));
 		}
-
-		last_altitude = current_altitude;
 		return set;	
 	}
 
