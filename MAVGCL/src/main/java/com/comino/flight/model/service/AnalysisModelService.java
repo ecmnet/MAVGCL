@@ -406,7 +406,7 @@ public class AnalysisModelService  {
 
 
 			while(true) {
-
+				
 				if(!model.sys.isStatus(Status.MSP_CONNECTED) || isReplaying) {
 					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
@@ -424,7 +424,6 @@ public class AnalysisModelService  {
 						System.out.println("Combined Converter continued");
 					}
 					continue;
-
 				}
 
 
