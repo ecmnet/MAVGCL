@@ -20,6 +20,7 @@ import georegression.struct.point.Point3D_F64;
 import javafx.scene.shape.Box;
 
 public class MAVGCLMap  {
+	
 
 	private static final long CLEARING      = -1L;      // A key -1 clears map
 	private static final int MAXMAPPOINTS   = 30000;

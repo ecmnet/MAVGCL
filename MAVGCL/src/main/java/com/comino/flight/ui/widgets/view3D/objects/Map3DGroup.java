@@ -95,6 +95,7 @@ public class Map3DGroup {
 
 		long h = info.encodeMapPoint(pos,0);
 		
+		
 		if(pos.probability > 0.5) {
 
 			if(boxes.containsKey(h))
