@@ -23,7 +23,7 @@ public class MAVGCLMap  {
 	
 
 	private static final long CLEARING      = -1L;      // A key -1 clears map
-	private static final int MAXMAPPOINTS   = 3000000;
+	private static final int MAXMAPPOINTS   = 30000;
 
 	private static MAVGCLMap mav2dmap = null;
 
