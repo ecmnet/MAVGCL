@@ -71,11 +71,15 @@ public class Map3DGroup {
 					
 					size = info.getCellSize() * 100;
 					
+					
 					while(!list.isEmpty()) {
+
 						entry = list.poll();
 						if(entry < 0) {
 							root.getChildren().removeAll(boxes.values());
 							boxes.clear();
+							list.clear();
+							System.out.println("Clearing");
 							return;
 						}
 						info.decodeMapPoint(entry, point);
