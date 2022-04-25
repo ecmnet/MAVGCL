@@ -120,6 +120,7 @@ public class MainApp extends Application  {
 	@FXML
 	private MenuItem m_reload;
 
+
 	@FXML
 	private MenuItem m_restart;
 
@@ -532,8 +533,15 @@ public class MainApp extends Application  {
 					controlpanel.getChartControl().refreshCharts();
 				}
 			});
-
-
+			
+			m_map.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				}
+			});
+			
 			m_log.setDisable(!System.getProperty("os.name").toUpperCase().contains("MAC"));
 			m_log.setOnAction(event -> {
 				try {

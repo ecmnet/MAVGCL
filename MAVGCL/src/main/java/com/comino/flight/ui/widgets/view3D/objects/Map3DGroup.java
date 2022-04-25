@@ -40,6 +40,9 @@ public class Map3DGroup {
 	private Marker currentMarker = new Marker();
 
 	private CellProbability_F64 point = new CellProbability_F64();
+	
+	private int added = 0;
+	private int removed=0;
 
 
 	public Map3DGroup(Group root, DataModel model) {
@@ -64,13 +67,12 @@ public class Map3DGroup {
 			long entry=0;
 			@Override
 			public void handle(long now) {
-
+				
 				BlockingQueue<Long> list = map.getList();
 
 				if(!list.isEmpty()) {
 					
 					size = info.getCellSize() * 100;
-					
 					
 					while(!list.isEmpty()) {
 
@@ -87,7 +89,8 @@ public class Map3DGroup {
 					}
 					setIndicator(map.getIndicator());
 				}
-			}
+			//	System.out.println("Added: "+added+" Removed: "+removed+" Total: "+(added+removed));
+			}	
 		};
 
 		// Always rung grid update
@@ -99,11 +102,14 @@ public class Map3DGroup {
 
 		long h = info.encodeMapPoint(pos,0);
 		
+		added++;
 		
 		if(pos.probability > 0.5) {
 
 			if(boxes.containsKey(h))
 				return;
+			
+			
 
 			info.mapToGlobal(pos, global);
 
@@ -121,13 +127,13 @@ public class Map3DGroup {
 		} 
 
 		else {
-
-			if(!boxes.containsKey(h))
-				return;
+			
+			removed++;
 
 			//	if(pos.probability < 0.1f || pos.probability == 0.5f) {
 			Box box = boxes.remove(h);
 			if(box!=null) {
+				
 				root.getChildren().remove(box);	
 			} 
 		}
@@ -137,6 +143,7 @@ public class Map3DGroup {
 
 
 	public void clear() {
+		added = 0; removed=0;
 		root.getChildren().clear();
 		boxes.clear();
 
