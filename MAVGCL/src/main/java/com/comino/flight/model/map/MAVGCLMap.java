@@ -13,10 +13,12 @@ import org.mavlink.messages.lquac.msg_msp_micro_grid;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
 
 import bubo.maps.d3.grid.CellProbability_F64;
 import georegression.struct.point.Point3D_F64;
+import javafx.application.Platform;
 import javafx.scene.shape.Box;
 
 public class MAVGCLMap  {
@@ -37,6 +39,7 @@ public class MAVGCLMap  {
 	private final Map<Long,Box>       boxes   = new HashMap<Long,Box>();
 
 	private long  last_update = - 1;
+	private int   transfer_count=0;
 
 
 	public static MAVGCLMap getInstance(IMAVController control) {
