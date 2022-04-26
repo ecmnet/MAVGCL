@@ -37,6 +37,7 @@ public class MAVGCLMap  {
 	private final HashSet<Long>        set    = new HashSet<Long>();
 	private final BlockingQueue<Long>  list   = new ArrayBlockingQueue<Long>(MAXMAPPOINTS);
 	private final Map<Long,Box>       boxes   = new HashMap<Long,Box>();
+	private final Point3D_F64        origin   = new Point3D_F64();
 
 	private long  last_update = - 1;
 	private int   transfer_count=0;
@@ -62,6 +63,7 @@ public class MAVGCLMap  {
 
 				if(model.grid.count == 0) {
 					clear();
+					origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
 					return;
 				}
 
@@ -77,7 +79,7 @@ public class MAVGCLMap  {
 				}
 
 				// TODO: Access AnalysisDatamodel
-				indicator.setTo(model.grid.ix, model.grid.iy, model.grid.iz);
+				origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
 				last_update  = System.currentTimeMillis();
 			}
 		});
@@ -98,6 +100,10 @@ public class MAVGCLMap  {
 	}
 
 	public Point3D_F64 getIndicator() {
+		return indicator;
+	}
+	
+	public Point3D_F64 getOrigin() {
 		return indicator;
 	}
 
