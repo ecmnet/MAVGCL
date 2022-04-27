@@ -70,7 +70,7 @@ import javafx.scene.text.Text;
 public class View3DWidget extends SubScene implements IChartControl {
 
 
-	private static final double PLANE_LENGTH  = 2000.0;
+	private static final double PLANE_LENGTH  = 5000.0;
 	private static final float  VEHICLE_SCALE = 50.0f;
 	
 
