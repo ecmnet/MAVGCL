@@ -90,6 +90,12 @@ public class ControlWidget extends ChartControlPane  {
 				vehiclectl.setSelected(true);
 			}
 		});
+		
+		stateProperties.getCVAvailableProperty().addListener((e,o,n) -> {
+			if(!n.booleanValue()) {
+				video.setSelected(false);
+			}
+		});
 	
 
 		stateProperties.getConnectedProperty().addListener((e,o,n) -> {
