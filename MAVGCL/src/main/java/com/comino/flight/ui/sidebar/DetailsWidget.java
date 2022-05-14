@@ -120,7 +120,7 @@ public class DetailsWidget extends ChartControlPane {
 		    
 		    {
 		    
-				"ROLL", "PITCH", 
+				"ROLL", "PITCH", "YAW",
 			    null, 
 			    "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  
 //			    null,
