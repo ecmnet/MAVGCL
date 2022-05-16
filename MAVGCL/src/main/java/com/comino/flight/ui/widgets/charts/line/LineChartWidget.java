@@ -405,6 +405,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		linechart.setOnMouseClicked(click -> {
 
 			if (click.getClickCount() == 2) {
+				if(dataService.isReplaying()) {
+					return;
+				}				
 				measure.setVisible(isPaused);
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalTimeScale();
