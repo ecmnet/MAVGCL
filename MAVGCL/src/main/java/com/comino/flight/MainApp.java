@@ -275,15 +275,19 @@ public class MainApp extends Application  {
 					peerAddress = args.get("ip");
 			}
 			else {
-//				control =new MAVAutoController(peerAddress,peerport,bindport); 
-								if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-										||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-									control = new MAVUdpController("127.0.0.1",14557,14540, true);
-									//	new SITLController(control);
-								} else {
-									//	try { redirectConsole(); } catch (IOException e2) { }
-									control = new MAVUdpController(peerAddress,peerport,bindport, false);
-								}
+
+
+				//				control =new MAVAutoController(peerAddress,peerport,bindport); 
+
+
+				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+					//	new SITLController(control);
+				} else {
+					//	try { redirectConsole(); } catch (IOException e2) { }
+					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+				}
 			}
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
@@ -310,7 +314,7 @@ public class MainApp extends Application  {
 
 
 			MAVPreferences.init();
-		//	new SITLController(control);
+			//	new SITLController(control);
 
 			MAVGCLMap.getInstance(control);
 			MAVGCLPX4Parameters.getInstance(control);
@@ -533,7 +537,7 @@ public class MainApp extends Application  {
 					controlpanel.getChartControl().refreshCharts();
 				}
 			});
-			
+
 			m_map.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
@@ -541,7 +545,7 @@ public class MainApp extends Application  {
 					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 				}
 			});
-			
+
 			m_log.setDisable(!System.getProperty("os.name").toUpperCase().contains("MAC"));
 			m_log.setOnAction(event -> {
 				try {
