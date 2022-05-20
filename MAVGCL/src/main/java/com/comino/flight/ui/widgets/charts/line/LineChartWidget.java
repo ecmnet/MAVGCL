@@ -515,7 +515,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					series1.setName(nv.desc1+"   ");
 				type1 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_1+id,nv.hash);
-				updateGraph(true,0);
+				updateRequest();
 				//	updateRequest();
 			}
 		});
@@ -530,7 +530,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					series2.setName(nv.desc1+"   ");
 				type2 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_2+id,nv.hash);
-				updateGraph(true,0);
+				updateRequest();
 			}
 		});
 
@@ -544,7 +544,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					series3.setName(nv.desc1+"   ");
 				type3 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_3+id,nv.hash);
-				updateGraph(true,0);
+				updateRequest();
+				//updateGraph(true,0);
 			}
 		});
 
