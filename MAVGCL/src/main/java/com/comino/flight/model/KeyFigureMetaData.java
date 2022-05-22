@@ -204,6 +204,8 @@ public class KeyFigureMetaData {
 		if(source!=null && source.field!=null) {  // source field specified
 			Object o = data.get(source.field);
 			if(o!=null) {
+				if(o instanceof Long)
+					value = (double)(Long)o;
 				if(o instanceof Integer)
 					value = (double)(Integer)o;
 				else if(o instanceof Double)

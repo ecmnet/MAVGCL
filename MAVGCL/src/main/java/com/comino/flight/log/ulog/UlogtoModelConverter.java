@@ -68,7 +68,7 @@ public class UlogtoModelConverter {
 
 	public void doConversion() throws FormatErrorException {
 
-		long tms_slot = 0; long tms = 0; boolean errorFlag = false;
+		long tms_slot = 0; long tms = 0; long tms_old=0; boolean errorFlag = false;
 		
 
 		Map<String,Object> data = new HashMap<String,Object>();
@@ -76,14 +76,13 @@ public class UlogtoModelConverter {
 		list.clear();
 		
 		int interval_us = AnalysisModelService.getInstance().setCollectorInterval(AnalysisModelService.HISPEED_INTERVAL_US);
+		int interval_us2 = interval_us/2;
 		
 		try {
 
-			System.out.println(reader.getStartMicroseconds()+"/"+interval_us);
-
 			while(tms < reader.getSizeMicroseconds()) {
 				tms = reader.readUpdate(data) - reader.getStartMicroseconds();
-				if(tms > tms_slot) {
+				if(tms > (tms_slot-interval_us2)) {
 					state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
 					AnalysisDataModel model = new AnalysisDataModel();
 					model.tms = tms;

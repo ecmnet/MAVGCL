@@ -39,13 +39,16 @@ public class ULOGDifferenceConverter extends SourceConverter {
 
 	private String ulogKeyFigure1 = null;
 	private String ulogKeyFigure2 = null;
-	
+
+	private double v1=0;
+	private double v2=0;
+
 
 	@Override
 	public void setParameter(String kfname, String[] params) {
 		this.ulogKeyFigure1 = params[0];
 		this.ulogKeyFigure2 = params[1];
-		
+
 	}
 
 	public ULOGDifferenceConverter() {
@@ -54,12 +57,40 @@ public class ULOGDifferenceConverter extends SourceConverter {
 
 	@Override
 	public double convert(Map<String,Object> ulogdata) {
+
+		Object o1; Object o2;
+
 		try {
-			if(ulogdata.get(ulogKeyFigure1)!=null && ulogdata.get(ulogKeyFigure2)!=null)
-		return (Long)ulogdata.get(ulogKeyFigure1)/1000f - (Long)ulogdata.get(ulogKeyFigure2)/1000f;
-			return 0;
+
+			o1 = ulogdata.get(ulogKeyFigure1);
+			o2 = ulogdata.get(ulogKeyFigure2);
+
+			if(o1!=null) {
+				if(o1 instanceof Long)
+					v1 = (double)(Long)o1 / 1000.0d;
+				if(o1 instanceof Integer)
+					v1 = (double)(Integer)o1;
+				else if(o1 instanceof Double)
+					v1 = ((Double)o1).doubleValue();
+				else if(o1 instanceof Float)
+					v1 = ((Float)o1).doubleValue();
+			}
+			
+
+			if(o2!=null) {
+				if(o2 instanceof Long)
+					v2 = (double)(Long)o2 / 1000.0d;
+				if(o2 instanceof Integer)
+					v2 = (double)(Integer)o2;
+				else if(o2 instanceof Double)
+					v2 = ((Double)o2).doubleValue();
+				else if(o2 instanceof Float)
+					v2 = ((Float)o2).doubleValue();
+			}
+
+			return v1 - v2;
+
 		} catch( Exception e) {
-			e.printStackTrace();
 			return 0;
 		}
 	}
