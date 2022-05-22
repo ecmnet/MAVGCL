@@ -80,7 +80,8 @@ public class UlogtoModelConverter {
 		
 		try {
 
-			while(tms < reader.getSizeMicroseconds()) {
+			while(tms_slot < reader.getSizeMicroseconds()) {
+				//reader.seek(tms_slot+reader.getStartMicroseconds());
 				tms = reader.readUpdate(data) - reader.getStartMicroseconds();
 				if(tms > (tms_slot-interval_us2)) {
 					state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
