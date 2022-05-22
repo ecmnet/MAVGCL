@@ -1577,6 +1577,16 @@
 			<Group>Attitude</Group>
 		</Groups>
   </KeyFigure>
+  
+  <KeyFigure desc="Vis.Latency" uom="ms" mask="#0.0" key="VISIONL">
+		<ULogSource>
+		  <Converter class="ULOGDifferenceConverter" p1="estimator_visual_odometry_aligned_0.timestamp" p2="estimator_visual_odometry_aligned_0.timestamp_sample"/>
+		</ULogSource>
+		<Groups>
+			<Group>Vision</Group>
+			<Group>Attitude</Group>
+		</Groups>
+  </KeyFigure>
 
   <KeyFigure desc="Vis.Roll" uom="rad" mask="#0.00" key="VISIONR">
 		<MSPSource class="vision" field="r"/>
