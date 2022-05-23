@@ -1410,7 +1410,8 @@
 
   <KeyFigure desc="Vis.X" uom="m" mask="#0.00" key="VISIONX">
 		<MSPSource class="vision" field="x"/>
-		<ULogSource field="vehicle_vision_position_0.x"/>
+	<!--	<ULogSource field="vehicle_vision_position_0.x"/> -->
+	    <ULogSource field="estimator_visual_odometry_aligned_0.x"/>
 		<Groups>
 				<Group>Vision</Group>
 		</Groups>
@@ -1418,7 +1419,7 @@
 
   <KeyFigure desc="Vis.Y" uom="m" mask="#0.00" key="VISIONY">
 		<MSPSource class="vision" field="y"/>
-		<ULogSource field="vehicle_vision_position_0.y"/>
+		 <ULogSource field="estimator_visual_odometry_aligned_0.y"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
@@ -1426,7 +1427,7 @@
 
   <KeyFigure desc="Vis.Z" uom="m" mask="#0.00" key="VISIONZ">
 		<MSPSource class="vision" field="z"/>
-		<ULogSource field="vehicle_vision_position_0.z"/>
+		 <ULogSource field="estimator_visual_odometry_aligned_0.z"/>
 		<Groups>
 				<Group>Vision</Group>
 		</Groups>
@@ -1478,7 +1479,7 @@
 
   <KeyFigure desc="Vis.VX" uom="m/s" mask="#0.00" key="VISIONVX">
 		<MSPSource class="vision" field="vx"/>
-		<ULogSource field="vehicle_vision_position_0.vx"/>
+		<ULogSource field="estimator_visual_odometry_aligned_0.vx"/>
 		<Groups>
 				<Group>Vision</Group>
 		</Groups>
@@ -1486,7 +1487,7 @@
 
   <KeyFigure desc="Vis.VY" uom="m/s" mask="#0.00" key="VISIONVY">
 		<MSPSource class="vision" field="vy"/>
-		<ULogSource field="vehicle_vision_position_0.vy"/>
+		<ULogSource field="estimator_visual_odometry_aligned_0.vy"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
@@ -1494,7 +1495,7 @@
 
   <KeyFigure desc="Vis.VZ" uom="m/s" mask="#0.00" key="VISIONVZ">
 		<MSPSource class="vision" field="vz"/>
-		<ULogSource field="vehicle_vision_position_0.vz"/>
+	<ULogSource field="estimator_visual_odometry_aligned_0.vz"/>
 		<Groups>
 				<Group>Vision</Group>
 		</Groups>
@@ -1570,7 +1571,7 @@
   <KeyFigure desc="Vis.Pitch" uom="rad" mask="#0.00" key="VISIONP">
 		<MSPSource class="vision" field="p"/>
 		<ULogSource>
-		  <Converter class="QuaternionConverter" p1="vehicle_vision_attitude_0.q" p2="1"/>
+		  <Converter class="QuaternionConverter" p1="estimator_visual_odometry_aligned_0.q" p2="1"/>
 		</ULogSource>
 		<Groups>
 			<Group>Vision</Group>
@@ -1591,7 +1592,7 @@
   <KeyFigure desc="Vis.Roll" uom="rad" mask="#0.00" key="VISIONR">
 		<MSPSource class="vision" field="r"/>
 		<ULogSource>
-		  <Converter class="QuaternionConverter" p1="vehicle_vision_attitude_0.q" p2="0"/>
+		  <Converter class="QuaternionConverter" p1="estimator_visual_odometry_aligned_0.q" p2="0"/>
 		</ULogSource>
 		<Groups>
 			<Group>Vision</Group>
