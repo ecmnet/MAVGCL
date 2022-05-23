@@ -1552,6 +1552,9 @@
 
   <KeyFigure desc="Vis.Yaw" uom="rad" mask="#0.00" key="VISIONYAW">
 		<MSPSource class="vision" field="h"/>
+		<ULogSource>
+		  <Converter class="QuaternionConverter" p1="estimator_visual_odometry_aligned_0.q" p2="2"/>
+		</ULogSource>
 		<Groups>
 			<Group>Vision</Group>
 			<Group>Attitude</Group>
