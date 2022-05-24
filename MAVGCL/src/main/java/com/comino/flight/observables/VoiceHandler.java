@@ -14,11 +14,12 @@ public class VoiceHandler {
 	
 	private static VoiceHandler instance;
 
-	private final WorkQueue wq = WorkQueue.getInstance();
+	private final WorkQueue         wq = WorkQueue.getInstance();
 	private final AnalysisDataModel model;
-	private final StateProperties properties;
-	private final VoiceTTS voice;
-	private final boolean  enabled;
+	private final StateProperties   properties;
+	private final VoiceTTS          voice;
+	
+	private final boolean           enabled;
 
 	public static VoiceHandler getInstance(IMAVController control) {
 		if(instance==null)
@@ -28,10 +29,10 @@ public class VoiceHandler {
 
 	private VoiceHandler(IMAVController control) {
 
-		this.model = AnalysisModelService.getInstance().getCurrent();
+		this.model      = AnalysisModelService.getInstance().getCurrent();
 		this.properties = StateProperties.getInstance();
-		this.voice = VoiceTTS.getInstance();
-		this.enabled = MAVPreferences.getInstance().getBoolean("SPEECH", false);
+		this.voice      = VoiceTTS.getInstance();
+		this.enabled    = MAVPreferences.getInstance().getBoolean("SPEECH", false);
 
 		if(enabled) {
 			control.addMAVMessageListener(msg -> {
@@ -42,22 +43,42 @@ public class VoiceHandler {
 			});
 		}
 		
-		
-
-		// report battery status every 60 seconds if armed
-		wq.addCyclicTask("LP", 60000, () -> {
+		// Report takeoff and landed state if armed
+		properties.getLandedProperty().addListener((s,o,n) -> {
+			
 			if(!properties.getArmedProperty().get())
 				return;
-			String s = String.format("Battery is at %.0f percent.",model.getValue("BATP")*100f);
+			
+			if(o.booleanValue() && !n.booleanValue()) {
+				if(enabled)
+					voice.talk("Takeoff");
+			}
+			
+			if(!o.booleanValue() && n.booleanValue()) {
+				if(enabled)
+					voice.talk("Landed");
+			}
+		});
+		
+	
+		// report battery status every 30 seconds if armed and below 60%
+		wq.addCyclicTask("LP", 30000, () -> {
+			if(!properties.getArmedProperty().get())
+				return;
+			float v = (float)model.getValue("BATP")*100f;
+			if(v > 60.0f)
+				return;
+			String s = String.format("Battery is at %.0f percent.",v);
 			System.out.println(s);
 			if(enabled)
 				voice.talk(s);
 		});
 		
+		// report altitude every 45 seconds
 		wq.addCyclicTask("LP", 45000, () -> {
-			if(!properties.getArmedProperty().get())
+			if(!properties.getArmedProperty().get() || properties.getLandedProperty().get())
 				return;
-			String s = String.format("Relative altitude is %.1f meters",model.getValue("ALTRE"));
+			String s = String.format("Relative altitude is %.1f meters.",model.getValue("ALTRE"));
 			System.out.println(s);
 			if(enabled)
 				voice.talk(s);
