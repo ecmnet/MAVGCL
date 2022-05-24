@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import javazoom.jl.player.Player;
 
 public class VoiceTTS implements Runnable {
+	
 
 
 	private static final String request  = "http://translate.google.com.vn/translate_tts?e=UTF-8&&tl=en&client=tw-ob&q=";
@@ -123,6 +124,8 @@ public class VoiceTTS implements Runnable {
 		}
 
 	}
+	
+	
 
 
 	public static void main(String[] args)  {

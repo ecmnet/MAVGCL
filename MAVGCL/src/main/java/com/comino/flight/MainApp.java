@@ -57,6 +57,7 @@ import com.comino.flight.log.MavlinkLogReader;
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.observables.VoiceHandler;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.prefs.dialog.PreferencesDialog;
@@ -321,6 +322,8 @@ public class MainApp extends Application  {
 
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
+			
+			VoiceHandler.getInstance(control);
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
