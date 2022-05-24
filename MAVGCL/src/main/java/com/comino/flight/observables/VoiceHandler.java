@@ -48,7 +48,7 @@ public class VoiceHandler {
 
 	private static VoiceHandler instance;
 	
-	private static final float BATTERY_CAPACITY_LIMT = 60.0f;
+	private static final float BATTERY_CAPACITY_LIMT = 40.0f;
 
 	private final WorkQueue         wq = WorkQueue.getInstance();
 	private final AnalysisDataModel model;
@@ -71,6 +71,10 @@ public class VoiceHandler {
 			return;
 
 		control.addMAVMessageListener(msg -> {
+			
+			if(!properties.getArmedProperty().get())
+				return;
+			
 			if(msg.severity != MAV_SEVERITY.MAV_SEVERITY_EMERGENCY && msg.severity != MAV_SEVERITY.MAV_SEVERITY_CRITICAL)
 				return;
 			if(msg.text.contains("]"))
@@ -102,8 +106,8 @@ public class VoiceHandler {
 				voice.talk(String.format("Battery is at %.0f percent.",v));
 		});
 
-		// report altitude every 45 seconds
-		wq.addCyclicTask("LP", 45000, () -> {
+		// report altitude every 50 seconds
+		wq.addCyclicTask("LP", 50000, () -> {
 			if(!properties.getArmedProperty().get() || properties.getLandedProperty().get())
 				return;
 			voice.talk(String.format("Relative altitude is %.1f meters.",model.getValue("ALTRE")));
