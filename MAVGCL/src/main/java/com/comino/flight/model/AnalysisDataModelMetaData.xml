@@ -1329,6 +1329,7 @@
 		<MSPSource class="battery" field="p">
 		   <Converter class="ExpressionConverter" expression="BATP/100" />
 		</MSPSource>
+		<ULogSource field="battery_status_0.remaining"/>
 		<Groups>
 			<Group>Battery</Group>
 		</Groups>
@@ -1419,7 +1420,7 @@
 
   <KeyFigure desc="Vis.Y" uom="m" mask="#0.00" key="VISIONY">
 		<MSPSource class="vision" field="y"/>
-		 <ULogSource field="estimator_visual_odometry_aligned_0.y"/>
+		<ULogSource field="estimator_visual_odometry_aligned_0.y"/>
 		<Groups>
 			<Group>Vision</Group>
 		</Groups>
@@ -1427,7 +1428,7 @@
 
   <KeyFigure desc="Vis.Z" uom="m" mask="#0.00" key="VISIONZ">
 		<MSPSource class="vision" field="z"/>
-		 <ULogSource field="estimator_visual_odometry_aligned_0.z"/>
+	    <ULogSource field="estimator_visual_odometry_aligned_0.z"/>
 		<Groups>
 				<Group>Vision</Group>
 		</Groups>
