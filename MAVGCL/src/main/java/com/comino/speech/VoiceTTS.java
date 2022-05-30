@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import javazoom.jl.player.Player;
 
 public class VoiceTTS implements Runnable {
-	
+
 
 
 	private static final String request  = "http://translate.google.com.vn/translate_tts?e=UTF-8&&tl=en&client=tw-ob&q=";
@@ -42,7 +42,7 @@ public class VoiceTTS implements Runnable {
 	}
 
 	public VoiceTTS()  {
-		
+
 		Locale.setDefault(Locale.ENGLISH);
 
 		try {
@@ -61,7 +61,7 @@ public class VoiceTTS implements Runnable {
 	public void talk(String text) {
 		this.text = text;
 		if(thread!=null && thread.isAlive()) {
-			  return;
+			return;
 		}
 		thread = new Thread(this);
 		thread.start();
@@ -75,13 +75,12 @@ public class VoiceTTS implements Runnable {
 
 		Iterator<VoiceCacheEntry> i = cache.iterator();
 		while(i.hasNext()) {
-			
-				VoiceCacheEntry e = i.next();
-				buffer = e.get(text);
-				if(buffer!=null) {
-					System.out.println(e+" found");
-					break;
-				}
+
+			VoiceCacheEntry e = i.next();
+			buffer = e.get(text);
+			if(buffer!=null) {
+				break;
+			}
 		}
 
 		if(buffer==null) {
@@ -131,13 +130,14 @@ public class VoiceTTS implements Runnable {
 
 		}
 	}
-	
+
 
 
 	public static void main(String[] args)  {
-		VoiceTTS.getInstance().talk(String.format("Relative altitude is %.1f meters.",2f));
-	//	VoiceTTS.getInstance().talk("Takeoff");
-		
+	//	VoiceTTS.getInstance().talk(String.format("Relative altitude is %.1f meters.",2f));
+		VoiceTTS.getInstance().talk(String.format("Battery is %.0f percent.",0.19f*100f));
+		//	VoiceTTS.getInstance().talk("Takeoff");
+
 
 	}
 

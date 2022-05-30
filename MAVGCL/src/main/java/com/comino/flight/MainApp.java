@@ -323,7 +323,6 @@ public class MainApp extends Application  {
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
 			
-			VoiceHandler.getInstance(control);
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
@@ -345,7 +344,6 @@ public class MainApp extends Application  {
 
 			if(!control.isConnected())
 				control.connect();
-
 
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
@@ -434,6 +432,7 @@ public class MainApp extends Application  {
 			this.primaryStage = primaryStage;
 			this.primaryStage.setTitle("MAVGCL Analysis");
 			FileHandler.getInstance(primaryStage,control);
+			VoiceHandler.getInstance(control);
 			initRootLayout();
 			showMAVGCLApplication();
 		} catch(Exception e) {

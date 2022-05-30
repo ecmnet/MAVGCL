@@ -117,8 +117,6 @@ public class FileHandler {
 
 
 	public static FileHandler getInstance() {
-		if(handler==null)
-			handler = new FileHandler(null,null);
 		return handler;
 	}
 

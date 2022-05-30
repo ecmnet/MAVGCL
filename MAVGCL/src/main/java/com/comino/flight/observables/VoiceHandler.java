@@ -102,9 +102,11 @@ public class VoiceHandler {
 			int v = (int)(model.getValue("BATP")*10f);			
 			switch(v) {
 			case 0:
-				voice.talk("Battery is below 10 percent."); break;
+				voice.talk(String.format("Battery is %.0f percent.",model.getValue("BATP")*100f));
+				break;
 			case 1:
-				voice.talk("Battery is below 20 percent."); break;
+				voice.talk(String.format("Battery is %.0f percent.",model.getValue("BATP")*100f));
+				break;
 			case 2:
 				voice.talk("Battery is below 30 percent."); break;
 			case 3:
