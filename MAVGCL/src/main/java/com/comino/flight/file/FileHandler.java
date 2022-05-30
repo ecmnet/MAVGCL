@@ -117,6 +117,8 @@ public class FileHandler {
 
 
 	public static FileHandler getInstance() {
+		if(handler==null)
+			handler = new FileHandler(null,null);
 		return handler;
 	}
 
@@ -134,7 +136,8 @@ public class FileHandler {
 		this.control = control;
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
-		this.currentModel  = control.getCurrentModel();
+		if(control!=null)
+	    	this.currentModel  = control.getCurrentModel();
 		this.logger = MSPLogger.getInstance();
 
 

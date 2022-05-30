@@ -21,8 +21,9 @@ public class VoiceCacheEntry {
 		else
 			return null;
 	}
-
-
-
+	
+	public String toString() {
+		return text;
+	}
 
 }

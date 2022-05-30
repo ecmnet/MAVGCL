@@ -47,8 +47,6 @@ import com.comino.speech.VoiceTTS;
 public class VoiceHandler {
 
 	private static VoiceHandler instance;
-	
-	private static final float BATTERY_CAPACITY_LIMT = 40.0f;
 
 	private final WorkQueue         wq = WorkQueue.getInstance();
 	private final AnalysisDataModel model;
@@ -101,9 +99,20 @@ public class VoiceHandler {
 		wq.addCyclicTask("LP", 30000, () -> {
 			if(!properties.getArmedProperty().get())
 				return;
-			float v = (float)model.getValue("BATP")*100f;
-			if(v < BATTERY_CAPACITY_LIMT)
-				voice.talk(String.format("Battery is at %.0f percent.",v));
+			int v = (int)(model.getValue("BATP")*10f);			
+			switch(v) {
+			case 0:
+				voice.talk("Battery is below 10 percent."); break;
+			case 1:
+				voice.talk("Battery is below 20 percent."); break;
+			case 2:
+				voice.talk("Battery is below 30 percent."); break;
+			case 3:
+				voice.talk("Battery is below 40 percent."); break;
+			case 4:
+				voice.talk("Battery is below 50 percent."); break;
+			}
+				
 		});
 
 		// report altitude every 50 seconds

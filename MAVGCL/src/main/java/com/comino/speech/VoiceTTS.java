@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import com.comino.flight.file.FileHandler;
 import com.google.gson.Gson;
@@ -41,6 +42,8 @@ public class VoiceTTS implements Runnable {
 	}
 
 	public VoiceTTS()  {
+		
+		Locale.setDefault(Locale.ENGLISH);
 
 		try {
 			this.path = FileHandler.getInstance().getBasePath()+"/SpeechCache";
@@ -50,6 +53,7 @@ public class VoiceTTS implements Runnable {
 			cache = gson.fromJson(f, listType);
 			System.out.println("Speech cache loaded with "+cache.size()+" entries");
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.cache = new ArrayList<VoiceCacheEntry>();
 		}
 	}
@@ -70,10 +74,14 @@ public class VoiceTTS implements Runnable {
 		byte[] buffer = null;
 
 		Iterator<VoiceCacheEntry> i = cache.iterator();
-		while(i.hasNext() && buffer==null) {
-			try {
-				buffer = i.next().get(URLEncoder.encode(text, "utf-8").toLowerCase());
-			} catch (UnsupportedEncodingException e) { }
+		while(i.hasNext()) {
+			
+				VoiceCacheEntry e = i.next();
+				buffer = e.get(text);
+				if(buffer!=null) {
+					System.out.println(e+" found");
+					break;
+				}
 		}
 
 		if(buffer==null) {
@@ -109,7 +117,7 @@ public class VoiceTTS implements Runnable {
 
 				}
 
-			} catch(Exception e) { System.err.println(e.getMessage()); e.printStackTrace(); }
+			} catch(Exception e) { System.err.println(e.getMessage()); e.printStackTrace(); System.out.println(text); }
 		}
 
 		try {
@@ -122,15 +130,14 @@ public class VoiceTTS implements Runnable {
 		} catch (Exception e) {
 
 		}
-
 	}
-	
 	
 
 
 	public static void main(String[] args)  {
-        VoiceTTS.getInstance().talk("Landed");
-        VoiceTTS.getInstance().talk("Takeoff");
+		VoiceTTS.getInstance().talk(String.format("Relative altitude is %.1f meters.",2f));
+	//	VoiceTTS.getInstance().talk("Takeoff");
+		
 
 	}
 
