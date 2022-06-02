@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -38,13 +38,11 @@ import java.util.List;
 
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
-import com.comino.flight.MainApp;
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
@@ -54,24 +52,17 @@ import com.comino.mavcom.control.impl.MAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
-import com.comino.speech.VoiceTTS;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 public class StatusLineWidget extends Pane implements IChartControl {
 
@@ -132,7 +123,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	int current_x0_pt = 0; int current_x1_pt = 0;
 	long last = 0;
 
-	private DataModel model;
+	private DataModel msp_model;
+	private AnalysisDataModel model;
 
 	public StatusLineWidget() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StatusLineWidget.fxml"));
@@ -158,12 +150,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				int ekf_status = getEKF2Status();
 				List<AnalysisDataModel> list = null;
 
-				if(model.slam.wpcount > 0) {
-					wp.setText(String.format("WP %d", model.slam.wpcount));
+				if(msp_model.slam.wpcount > 0) {
+					wp.setText(String.format("WP %d", msp_model.slam.wpcount));
 					wp.setMode(Badge.MODE_ON);
 				}
-				else if(model.sys.t_takeoff_ms < 0 ) {
-					wp.setText(String.format("T % d", (int)(model.sys.t_takeoff_ms/1000-0.5f)));
+				else if(msp_model.sys.t_takeoff_ms < 0 ) {
+					wp.setText(String.format("T % d", (int)(msp_model.sys.t_takeoff_ms/1000-0.5f)));
 					wp.setMode(Badge.MODE_ON);
 				}
 				else {
@@ -175,10 +167,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					gps.setMode(Badge.MODE_ON);
 					gps.setText("SVIN");
 				} else {
-					if(!control.isConnected() || !model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
+					if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 						gps.setMode(Badge.MODE_OFF);
 					else {
-						switch(model.gps.fixtype & 0xF) {
+						switch(msp_model.gps.fixtype & 0xF) {
 
 						case 2:
 							gps.setMode(Badge.MODE_ON);
@@ -212,22 +204,22 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 
 				filename = FileHandler.getInstance().getName();
-				driver.setText(model.sys.getSensorString());
-				vision.setText(model.vision.getShortText());
+				driver.setText(msp_model.sys.getSensorString());
+				vision.setText(msp_model.vision.getShortText());
 
 				if(control.isConnected()) {
 
-					if(model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
+					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 						driver.setBackgroundColor(Color.web("#1c6478"));
 					driver.setMode(Badge.MODE_ON);
-					if(model.vision.isStatus(Vision.PUBLISHED))
+					if(msp_model.vision.isStatus(Vision.PUBLISHED))
 						vision.setMode(Badge.MODE_ON);
 					else
 						vision.setMode(Badge.MODE_OFF);
 
-					if(model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
+					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
 						ready.setMode(Badge.MODE_ON);
-						if(model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
+						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 							ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
 							ready.setText("READY");
 
@@ -343,7 +335,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	public void setup(IMAVController control) {
 		ChartControlWidget.addChart(99,this);
 		this.control = control;
-		this.model = control.getCurrentModel();
+		this.msp_model = control.getCurrentModel();
+		this.model = AnalysisModelService.getInstance().getCurrent();
 		this.state = StateProperties.getInstance();
 
 		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
@@ -435,7 +428,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	}
 
 	private int getEKF2Status() {
-		int flags = (int)model.est.flags;
+		int flags = (int)msp_model.est.flags;
 
 
 		if(flags == 0
