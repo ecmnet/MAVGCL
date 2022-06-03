@@ -136,11 +136,32 @@
 		</Groups>
 	</KeyFigure>
 	
-	<KeyFigure desc="Control.Flags" uom="" mask="#" key="EKFCTLFLG">
-	    <ULogSource field="estimator_status_flags_0.control_mode_flags"/>
-        <MSPSource class="est" field="flags"></MSPSource>
+	  <KeyFigure desc="Fuse.Vis.Pos" uom="" mask="#" key="EKFEVPOS">
+	    <ULogSource field="estimator_status_flags_0.cs_ev_pos"/>
 		<Groups>
-			 <Group>EKF2 Status</Group>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	 <KeyFigure desc="Fuse.GPS" uom="" mask="#" key="EKFGPS">
+	    <ULogSource field="estimator_status_flags_0.cs_gps"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	 <KeyFigure desc="Fuse.Flow" uom="" mask="#" key="EKFFLOW">
+	    <ULogSource field="estimator_status_flags_0.cs_opt_flow"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	
+	  <KeyFigure desc="Fuse.Vis.Vel" uom="" mask="#" key="EKFEVVEL">
+	    <ULogSource field="estimator_status_flags_0.cs_ev_vel"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
 
