@@ -61,6 +61,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -229,7 +231,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							ready.setText("NOT READY");
 						}
 					} else {
-						
+
 						ready.setMode(Badge.MODE_ON);
 						if(ekf_status != 4) {
 							ready.setBackgroundColorWhiteText(Color.web("#1c6478"));
@@ -285,7 +287,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				}
 				else if(!filename.isEmpty()) {
 					mode.setBackgroundColor(Color.web("#2989a3"));
-					mode.setText(filename);
+					if(filename.indexOf(".") > 0)
+						mode.setText(filename.substring(0,filename.indexOf(".")));
+					else
+						mode.setText(filename);
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(control.isConnected()) {
@@ -328,6 +333,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 		};
 
+		mode.setOnMouseClicked((e) -> {
+			final Clipboard clipboard = Clipboard.getSystemClipboard();
+			final ClipboardContent content = new ClipboardContent();
+			content.putString(mode.getText());
+			clipboard.setContent(content);
+		});
 
 		driver.setAlignment(Pos.CENTER_LEFT);
 	}
