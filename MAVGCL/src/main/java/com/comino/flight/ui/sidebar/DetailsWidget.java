@@ -166,6 +166,8 @@ public class DetailsWidget extends ChartControlPane {
 	private final AnalysisDataModelMetaData meta;
 	private final Preferences prefs;
 	
+	private int last_view = 0;
+	
 
 	public DetailsWidget() {
 
@@ -252,8 +254,12 @@ public class DetailsWidget extends ChartControlPane {
 		});
 		
 		state.getArmedProperty().addListener((e, o, n) -> {
-			if(n.booleanValue())
+			if(n.booleanValue()) {
+				last_view = view.getSelectionModel().getSelectedIndex();
 				view.getSelectionModel().clearAndSelect(0);	
+			} else {
+				view.getSelectionModel().clearAndSelect(last_view);	
+			}
 		});
 
 		task.play();
