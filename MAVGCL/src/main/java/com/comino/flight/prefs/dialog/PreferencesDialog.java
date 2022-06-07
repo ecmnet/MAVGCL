@@ -67,6 +67,8 @@ public class PreferencesDialog  {
 	private static final String DEF_IP_PORT 		= "14555";
 	private static final String DEF_BIND_PORT 		= "14550";
 	private static final String DEF_VIDEO_URL       =  "http://camera1.mairie-brest.fr/mjpg/video.mjpg?resolution=320x240";
+	
+	private static final String[] THEMES            = { "Dark (Indoor)", "Light (Outdoor)" };
 
 
 	private Dialog<Boolean> prefDialog;
@@ -89,6 +91,9 @@ public class PreferencesDialog  {
 
 	@FXML
 	private ComboBox<?> path;
+	
+	@FXML
+	private ComboBox<String> theme;
 
 	@FXML
 	private ComboBox<?> prespath;
@@ -202,6 +207,8 @@ public class PreferencesDialog  {
 				return false;
 			}
 		});
+		
+		theme.getItems().addAll(THEMES);
 	}
 
 	public void show() {
@@ -227,6 +234,7 @@ public class PreferencesDialog  {
 		download.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.DOWNLOAD, true));
 		alert.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ALERT, false));
 		icao.setText(userPrefs.get(MAVPreferences.ICAO, "EDDM"));
+		theme.getSelectionModel().select(userPrefs.get(MAVPreferences.PREFS_THEME,THEMES[0]));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -248,6 +256,7 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.DOWNLOAD,download.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ALERT,alert.isSelected());
 			userPrefs.put(MAVPreferences.ICAO, icao.getText());
+			userPrefs.put(MAVPreferences.PREFS_THEME,theme.getSelectionModel().getSelectedItem());
 
 			StateProperties.getInstance().preferencesChangedProperty().set(true);
 

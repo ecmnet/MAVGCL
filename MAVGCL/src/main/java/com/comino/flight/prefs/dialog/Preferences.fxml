@@ -46,5 +46,8 @@
 	    <Label prefHeight="19.0" prefWidth="158.0" text="Local ICAO code for QNH" 	    GridPane.rowIndex="20" GridPane.columnIndex="0" />
 		<TextField fx:id="icao" prefHeight="19.0" maxWidth="50.0"       			    GridPane.rowIndex="20" GridPane.columnIndex="1" />
 	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="21" GridPane.columnSpan="5" />
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Theme:"                        GridPane.rowIndex="22" GridPane.columnIndex="0"/>
+		<ComboBox fx:id="theme" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="22" GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="23" GridPane.columnSpan="5" />
 	</children>
 </GridPane>

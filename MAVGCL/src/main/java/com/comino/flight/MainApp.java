@@ -468,7 +468,15 @@ public class MainApp extends Application  {
 			// Show the scene containing the root layout.
 			scene = new Scene(rootLayout);
 			scene.setFill(Color.rgb(32,32,32));
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+				System.out.println("Loading light theme");
+				scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
+			}
+			else {
+				System.out.println("Loading dark theme");
+			   scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
+			}
 
 			//			ScenicView.show(scene);
 

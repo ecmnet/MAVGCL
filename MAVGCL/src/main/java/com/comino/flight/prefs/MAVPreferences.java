@@ -41,6 +41,7 @@ import com.comino.flight.observables.StateProperties;
 
 public class MAVPreferences {
 
+	public final static String PREFS_THEME      = "THEME";
 	public final static String PREFS_IP_ADDRESS = "IP_ADDRESS";
 	public final static String PREFS_IP_PORT    = "IP_PORT";
 	public final static String PREFS_BIND_PORT  = "BIND_PORT";
