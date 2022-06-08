@@ -267,7 +267,7 @@ public class PreferencesDialog  {
 				e.printStackTrace();
 			}
 			
-			MSPLogger.getInstance().writeLocalMsg("MAVGCL preferences saved");
+			MSPLogger.getInstance().writeLocalMsg("Preferences saved. Please restart.");
 		}
 	}
 
