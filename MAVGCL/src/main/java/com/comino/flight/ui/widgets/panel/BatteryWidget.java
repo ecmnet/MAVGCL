@@ -37,6 +37,7 @@ import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.MainApp;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
@@ -45,6 +46,7 @@ import eu.hansolo.medusa.Gauge.SkinType;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Control;
 import javafx.scene.paint.Color;
 
 public class BatteryWidget extends ChartControlPane  {
@@ -67,12 +69,51 @@ public class BatteryWidget extends ChartControlPane  {
 
 	private double voltage = 0;
 	private double capacity = 0;
+	
+	private Color  color_bar;
+	private Color  color_text;
 
 	public BatteryWidget() {
 		super(300,true);
 
 		FXMLLoadHelper.load(this, "BatteryWidget.fxml");
+		
+	}
 
+
+	@FXML
+	private void initialize() {
+		
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			color_bar = Color.BLACK;
+			color_text = Color.BLACK;
+			
+		} else {
+			color_bar = Color.web("#2e9fbf");
+			color_text = Color.WHITE;
+			
+		}
+		
+		
+		setupGauge(g_voltage,"V");
+		setupGauge(g_capacity,"%");
+		
+		g_voltage.setDecimals(1);
+		g_capacity.setDecimals(0);
+
+		state.getCurrentUpToDate().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
+				if(n.booleanValue()) {
+					setColor(g_voltage,color_text);
+					setColor(g_capacity,color_text);
+				}
+				else {
+					setColor(g_voltage,Color.DARKGRAY);
+					setColor(g_capacity,Color.DARKGRAY);
+				}
+			});
+		});
+		
 		task = new AnimationTimer() {
 			private long tms;
 			@Override public void handle(long now) {
@@ -89,7 +130,7 @@ public class BatteryWidget extends ChartControlPane  {
 						if(voltage < 10.5 && voltage > 0)
 							g_voltage.setBarColor(Color.RED);
 						if(voltage > 11.0)
-							g_voltage.setBarColor(Color.web("#2e9fbf"));
+							g_voltage.setBarColor(color_bar);
 					}
 					 if(!Double.isFinite(model.getValue("BATP"))) {
 			            	g_capacity.setValue(0);
@@ -102,49 +143,26 @@ public class BatteryWidget extends ChartControlPane  {
 						if(capacity < 0.15 && capacity > 0)
 							g_capacity.setBarColor(Color.RED);
 						if(capacity > 0.20)
-							g_capacity.setBarColor(Color.web("#2e9fbf"));
+							g_capacity.setBarColor(color_bar);
 					}
 				}
 			}
 		};
-	}
-
-
-	@FXML
-	private void initialize() {
-		
-		setupGauge(g_voltage,"V",Color.DARKCYAN);
-		g_voltage.setDecimals(1);
-		setupGauge(g_capacity,"%",Color.DARKCYAN);
-		g_capacity.setDecimals(0);
-
-		state.getCurrentUpToDate().addListener((e,o,n) -> {
-			Platform.runLater(() -> {
-				if(n.booleanValue()) {
-					setColor(g_voltage,Color.WHITE);
-					setColor(g_capacity,Color.WHITE);
-				}
-				else {
-					setColor(g_voltage,Color.LIGHTGRAY);
-					setColor(g_capacity,Color.LIGHTGRAY);
-				}
-			});
-		});
 
 	}
 
 
-	private void setupGauge(Gauge gauge, String unit, Color color) {
+	private void setupGauge(Gauge gauge, String unit) {
 		gauge.animatedProperty().set(false);
 		gauge.setSkinType(SkinType.SLIM);
-		gauge.setBarColor(color);
+		gauge.setBarColor(color_bar);
 		gauge.setDecimals(1);
 		gauge.setTitle(unit);
 		gauge.setUnit("Battery");
 		gauge.disableProperty().bind(state.getConnectedProperty().not());
-		gauge.setValueColor(Color.WHITE);
-		gauge.setTitleColor(Color.WHITE);
-		gauge.setUnitColor(Color.WHITE);
+		gauge.setValueColor(color_text);
+		gauge.setTitleColor(color_text);
+		gauge.setUnitColor(color_text);
 	}
 
 	private void setColor(Gauge gauge, Color color) {
