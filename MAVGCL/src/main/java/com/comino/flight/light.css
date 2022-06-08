@@ -1,5 +1,5 @@
 .root{
-    -fx-font-size: 8.0pt;
+    -fx-font-size: 9.0pt;
     -fx-background-color: #F0F0F0;
     -fx-accent: #000000;
 }
@@ -95,7 +95,7 @@
 	-fx-background-color: #F0F0F0;
     -fx-control-inner-background: #E0E0E0;
     -fx-font-size: 9pt;
-    -fx-text-inner-color: white;
+    -fx-text-inner-color: black;
     -fx-border-color: #303030;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
@@ -121,9 +121,9 @@
 
 .glass  {
 	-fx-font-size: 7.0pt;
-	-fx-background-color: rgba(0.0, 50.0, 50.0, 0.5);
+	-fx-background-color: #C0C0C0;
     -fx-background-radius: 5.0;
-    -fx-border-color: #303030;
+    -fx-border-color: #A0A0A0;
     -fx-border-width: 0.5px;
     -fx-border-radius: 5.0px;
     -fx-border-insets: -2.0px;
@@ -146,7 +146,7 @@
 
 .messages  {
     -fx-background-radius: 10.0;
-    -fx-background-color: rgba(130, 120, 0, 0.8);
+    -fx-background-color: #C0C0C0;
     -fx-control-inner-background: rgba(130, 120, 0, 0.0);
     -fx-box-border: #D0D0D0;
     -fx-border-radius: 10.0px;
@@ -274,7 +274,7 @@
 }
 
 .slider .track  {
-  -fx-background-color:#F0F0F0;
+  -fx-background-color:#A0A0A0;
 }
 
 .progress-bar  {
@@ -292,7 +292,7 @@
 .tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
 	 -fx-background-color:#F0F0F0;
 	 -fx-border-style: none;
-	 -fx-font-size: 8.0pt;
+	 -fx-font-size: 9.0pt;
 }
 
 .tree-table-view {
@@ -476,6 +476,11 @@
 
 .text-area .content {
     -fx-cursor: default ;
+}
+
+.battery {
+   -gauge-color: #A00000;
+   -fx-background-color: #00E000;
 }
 
 
