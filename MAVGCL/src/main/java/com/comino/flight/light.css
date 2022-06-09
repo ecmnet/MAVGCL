@@ -2,6 +2,7 @@
     -fx-font-size: 9.0pt;
     -fx-background-color: #F0F0F0;
     -fx-accent: #000000;
+    -fx-text-fill: #202020;
 }
 
 
@@ -359,7 +360,7 @@
 .tree-table-row-cell {
   -fx-background: -fx-control-inner-background ;
   -fx-background-color: -fx-control-inner-background  ;
-  -fx-border-color: #232323;
+  -fx-border-color: #E0E0E0;
   -fx-border-style: solid;
 }
 

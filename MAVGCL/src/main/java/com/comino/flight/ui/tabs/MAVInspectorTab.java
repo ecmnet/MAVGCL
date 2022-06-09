@@ -40,6 +40,7 @@ import java.util.Map;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.MainApp;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavutils.workqueue.WorkQueue;
@@ -83,10 +84,14 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
 	private final WorkQueue wq = WorkQueue.getInstance();
+	
+	private boolean is_light = false;
 
 
 	public MAVInspectorTab() {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light"))
+			is_light = true;
 	}
 
 
@@ -120,7 +125,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						setStyle("-fx-text-fill: #D0D0F0;");
+						if(is_light) setStyle("-fx-text-fill: #202020;"); else setStyle("-fx-text-fill: #D0D0F0;");
 					} else
 						setText("");
 				}
@@ -148,7 +153,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						setStyle("-fx-text-fill: #80F080;");
+						if(is_light) setStyle("-fx-text-fill: #202020;"); else setStyle("-fx-text-fill: #80F080;");
 					} else
 						setText("");
 				}
@@ -175,7 +180,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						setStyle("-fx-text-fill: #F0F080;-fx-alignment: CENTER-RIGHT;");
+						if(is_light) 
+							setStyle("-fx-text-fill: #202020; fx-alignment: CENTER-RIGHT;"); 
+						else 
+							setStyle("-fx-text-fill: #80F080; fx-alignment: CENTER-RIGHT;");
 					} else
 						setText("");
 				}
