@@ -80,11 +80,15 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	private StateProperties state        = null;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
+	private boolean is_light = false;
 
 
 	public InfoWidget() {
 		super(300, true);
 		FXMLLoadHelper.load(this, "InfoWidget.fxml");
+		
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light"))
+			is_light = true;
 	}
 	@FXML
 	private void initialize() {
@@ -104,28 +108,28 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 					setWrapText(false);
 					switch(m.severity) {
 					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
-						setStyle("-fx-text-fill:lightblue;");
+						if(is_light) setStyle("-fx-text-fill:black;"); else setStyle("-fx-text-fill:lightblue;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
-						setStyle("-fx-text-fill:lightgreen;");
+						if(is_light) setStyle("-fx-text-fill:green;"); else setStyle("-fx-text-fill:lightgreen;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-						setStyle("-fx-text-fill:wheat;");
+						if(is_light) setStyle("-fx-text-fill:blue;"); else setStyle("-fx-text-fill:wheat;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-						setStyle("-fx-text-fill:salmon;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:salmon;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
-						setStyle("-fx-text-fill:tomato;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:tomato;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ERROR:
-						setStyle("-fx-text-fill:yellow;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:yellow;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
-						setStyle("-fx-text-fill:yellowgreen;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:yellowgreen;");
 						break;
 					default:
-						setStyle("-fx-text-fill:white;");
+						if(is_light) setStyle("-fx-text-fill:black;"); else setStyle("-fx-text-fill:white;");
 					}
 					setText(m.text);
 					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
