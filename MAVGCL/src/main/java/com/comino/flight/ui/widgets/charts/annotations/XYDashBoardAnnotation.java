@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.utils.XYStatistics;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -72,8 +73,13 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
         this.statistics = statistics;
         this.posy = posy;
 		this.pane = new GridPane();
-		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
-		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			pane.setStyle("-fx-background-color: rgba(230.0, 230.0, 230.0, 0.85); -fx-padding:2;");
+			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #202020; -fx-padding:2;");
+		} else {
+			pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
+			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
+		}
         this.pane.setHgap(5);
         this.pane.setMinWidth(150);
 		this.pane.add(header,0,0);
@@ -112,7 +118,11 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 			super();
 			setAlignment(Pos.CENTER_RIGHT);
 			setMinWidth(35);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:3;");
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #101010; -fx-padding:2;");
+			else
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+		
 		}
 
 		public void setValue(double val) {
@@ -130,7 +140,10 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
 			super(text);
 			setAlignment(Pos.CENTER_LEFT);
 			setMinWidth(30);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:3;");
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #101010; -fx-padding:2;");
+			else
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
 		}
 
 	}
