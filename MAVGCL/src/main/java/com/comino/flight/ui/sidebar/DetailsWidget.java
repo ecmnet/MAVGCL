@@ -75,8 +75,8 @@ public class DetailsWidget extends ChartControlPane {
 
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 18;
-
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
+	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#C0C0C0;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent;";
 	
 	private final static String[] views = { "Flight", "System" };
@@ -167,9 +167,16 @@ public class DetailsWidget extends ChartControlPane {
 	private final Preferences prefs;
 	
 	private int last_view = 0;
+	private final String style_outofbounds;
 	
 
 	public DetailsWidget() {
+		
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+			style_outofbounds = STYLE_OUTOFBOUNDS_LIGHT;
+		else
+			style_outofbounds = STYLE_OUTOFBOUNDS;
+
 
 		figures = new ArrayList<KeyFigure>();
 		model = AnalysisModelService.getInstance().getCurrent();
@@ -337,7 +344,7 @@ public class DetailsWidget extends ChartControlPane {
 				if (kf.min != kf.max) {
 					if ((val < kf.min || val > kf.max) && state.getConnectedProperty().get()) {
 						label.setDashColor(Color.WHITE);
-						p.setStyle(STYLE_OUTOFBOUNDS);
+						p.setStyle(style_outofbounds);
 					} else {
 						label.setDashColor(null);
 						p.setStyle(STYLE_VALIDDATA);

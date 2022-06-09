@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.text.DecimalFormat;
 
 import com.comino.flight.model.KeyFigureMetaData;
+import com.comino.flight.prefs.MAVPreferences;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.application.Platform;
@@ -46,7 +47,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 public class DashBoardAnnotation  implements XYAnnotation {
-	
+
 	private static final DecimalFormat f1 = new DecimalFormat("#0.000");
 
 	private  GridPane   pane 		= null;
@@ -73,8 +74,13 @@ public class DashBoardAnnotation  implements XYAnnotation {
 
 		this.posy = posy;
 		this.pane = new GridPane();
-		pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
-		header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #32b5db; -fx-padding:2;");
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			pane.setStyle("-fx-background-color: rgba(230.0, 230.0, 230.0, 0.85); -fx-padding:2;");
+			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #202020; -fx-padding:2;");
+		} else {
+			pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
+			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #32b5db; -fx-padding:2;");
+		}
 		this.pane.setHgap(5);
 		this.pane.setMinWidth(150);
 		this.pane.add(header,0,0);
@@ -102,9 +108,9 @@ public class DashBoardAnnotation  implements XYAnnotation {
 		min_v.setValue(kf.getValueString(min)); max_v.setValue(kf.getValueString(max));
 		double delta = max - min;
 		if(Math.abs(delta)>  0.5)
-		  delta_v.setValue(kf.getValueString(delta));
+			delta_v.setValue(kf.getValueString(delta));
 		else
-		  delta_v.setValue(f1.format(delta));
+			delta_v.setValue(f1.format(delta));
 	}
 
 	public void setVal(double val, KeyFigureMetaData kfv, boolean show) {
@@ -136,12 +142,16 @@ public class DashBoardAnnotation  implements XYAnnotation {
 	private class VLabel extends Label {
 
 		private String old_text;
+		
 
 		public VLabel() {
 			super();
 			setAlignment(Pos.CENTER_RIGHT);
 			setMinWidth(35);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #101010; -fx-padding:2;");
+			else
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
 		}
 
 		public void setValue(String s) {
@@ -158,7 +168,10 @@ public class DashBoardAnnotation  implements XYAnnotation {
 			super(text);
 			setAlignment(Pos.CENTER_LEFT);
 			setMinWidth(30);
-			setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #101010; -fx-padding:2;");
+			else
+				setStyle("-fx-font-size: 8pt;-fx-text-fill: #D0D0D0; -fx-padding:2;");
 		}
 
 	}

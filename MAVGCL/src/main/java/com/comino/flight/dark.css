@@ -460,7 +460,7 @@
 
 .combo-box-popup .list-view {
     -fx-background-color: #606060;
-     -fx-background-radius: 0;
+    -fx-background-radius: 0;
     -fx-border-radius: 0.0px;
     -fx-border-insets: 0.0px;
     -fx-padding: 4;
@@ -477,6 +477,22 @@
 
 .text-area .content {
     -fx-cursor: default ;
+}
+
+#badge_disabled {
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 2;
+    -fx-background-color: #404040;
+    -fx-text-fill:#808080;
+}
+
+#badge_enabled {
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 2;
+    -fx-background-color: #404040;
+    -fx-text-fill:#F0F0F0;
 }
 
 

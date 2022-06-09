@@ -34,6 +34,8 @@
 package com.comino.jfx.extensions;
 
 
+import com.comino.flight.prefs.MAVPreferences;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -63,11 +65,18 @@ public class DashLabelLED extends GridPane {
 	private int mode = -1;
 	private boolean toggle = false;
 	private Timeline timeline;
+	private boolean is_light = false;
 
 
 	public DashLabelLED() {
 		super();
-		this.color = Color.WHITE;
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			is_light = true;
+		}
+		if(is_light)
+			this.color = Color.BLACK;
+		else
+		    this.color = Color.WHITE;
 		this.setPadding(new Insets(3, 0, 3, 0));
 		this.setHgap(4);
 
@@ -85,7 +94,10 @@ public class DashLabelLED extends GridPane {
 		this.circle = new Circle(4);
 		this.circle.setFill(Color.TRANSPARENT);
 		this.circle.setStrokeType(StrokeType.INSIDE);
-		this.circle.setStroke(Color.ANTIQUEWHITE);
+		if(is_light)
+			this.circle.setStroke(Color.DARKGRAY);
+		else
+		  this.circle.setStroke(Color.ANTIQUEWHITE);
 		this.addColumn(2, circle);
 
 		this.label.widthProperty().addListener((v,ov,nv) -> {

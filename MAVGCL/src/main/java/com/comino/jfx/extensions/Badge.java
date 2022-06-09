@@ -33,6 +33,8 @@
 
 package com.comino.jfx.extensions;
 
+import com.comino.flight.prefs.MAVPreferences;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -58,6 +60,7 @@ public class Badge extends Label {
 	private String  textColor   = "#F0F0F0";
 	private boolean toggle = false;
 	private Timeline timeline = null;
+	private boolean  is_light = false;
 
 	private String oldcolor;
 
@@ -67,15 +70,27 @@ public class Badge extends Label {
 		this.setPrefWidth(999);
 		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		this.setAlignment(Pos.CENTER);
-		setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
-		
+
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			is_light = true;
+		}
+
+		if(is_light)
+			setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+		else
+			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+
 		if(description!=null) {
 			this.setTooltip(new Tooltip(description));
 		}
 
 		this.disabledProperty().addListener((v,o,n) -> {
-			if(n.booleanValue())
-				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+			if(n.booleanValue()) {
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+				else
+					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+			}
 			else
 				setMode(mode);
 
@@ -87,7 +102,8 @@ public class Badge extends Label {
 		if(this.mode == mode)
 			return;
 		this.mode = mode;
-		setBackgroundColor(color);
+		if(!is_light)
+			setBackgroundColor(color);
 	}
 
 	public void setMode(int mode) {
@@ -109,21 +125,36 @@ public class Badge extends Label {
 
 			switch(mode) {
 			case MODE_OFF:
-				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+				else
+					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 				break;
 			case MODE_ON:
-				setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:"+textColor+";");
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
+				else	 
+					setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:"+textColor+";");
 				break;
 			case MODE_BLINK:
-				setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
+				else	
+					setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
 				if(timeline!=null) timeline.play();
 				break;
 			case MODE_ERROR:
-				setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
+				else	
+					setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
 				if(timeline!=null) timeline.play();
 				break;
 			default:
-				setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
+				if(is_light)
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
+				else	
+					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 				break;
 			}
 		});
@@ -132,17 +163,20 @@ public class Badge extends Label {
 
 
 	public void setBackgroundColor(Color color) {
-
+		
 		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());		
 		if(color.getBrightness()<0.7)
 			this.textColor ="#F0F0F0";
 		else
 			this.textColor ="#"+Integer.toHexString(color.darker().darker().darker().darker().hashCode());
+		
 	}
 
 	public void setBackgroundColorWhiteText(Color color) {
+		if(!is_light) {
 		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
 		this.textColor ="#F0F0F0";
+		}
 	}
 
 	public void setRate(String rate) {
