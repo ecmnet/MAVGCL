@@ -198,22 +198,22 @@
 
 
 .button {
-	 -fx-background-color: #C0C0C0;
+	 -fx-background-color: #D0D0D0;
 	 -fx-text-fill: #202020;
 }
 
 .button:default {
-	 -fx-background-color: #C0A0A0;
+	 -fx-background-color: #D0D0D0;
 	 -fx-text-fill: #202020;
 }
 
 .button:default:hover {
-	 -fx-background-color: #A06060;
+	 -fx-background-color: #C0C0C0;
 	 -fx-text-fill: #202020;
 }
 
 .button:hover {
-	-fx-background-color: #A0A0A0;
+	-fx-background-color: #C0C0C0;
 }
 
 .button:pressed {
@@ -229,6 +229,7 @@
     -fx-background-insets: 1 0 -1 0, 0;
     -fx-padding: 0.333333em; /* 4 -- this is half the size of the mark */
     -fx-shape: "M0,4H2L3,6L6,0H8L4,8H2Z";
+   
 }
 
 .check-box:selected .mark {
@@ -236,7 +237,7 @@
 }
 
 .toggle-button {
-	 -fx-background-color: #606060;
+	 -fx-background-color: #D0D0D0;
 	 -fx-text-fill: #202020;
 }
 
@@ -249,11 +250,11 @@
 }
 
 .toggle-button:selected {
-	 -fx-background-color: #B0B0B0;
+	 -fx-background-color: #C0C0C0;
 }
 
 .emergency   {
-	 -fx-background-color: #C0C0C0;
+	 -fx-background-color: #D0D0D0;
 	 -fx-text-fill: #F01010;
 }
 
@@ -262,7 +263,7 @@
 }
 
 .emergency:pressed   {
-	-fx-background-color: #C0C0C0;
+	-fx-background-color: #B0B0B0;
 }
 
 .check-box *.box {
@@ -270,7 +271,7 @@
 }
 
 .choice-box:hover {
-	-fx-background-color: #A0A0A0;
+	-fx-background-color: #C0C0C0;
 }
 
 .slider .track  {
@@ -466,7 +467,7 @@
  }
 
 .combo-box-popup .list-view .list-cell {
-     -fx-background-color: #E0E0E0;
+     -fx-background-color: #C0C0C0;
      -fx-text-fill: #202020;
  }
 
