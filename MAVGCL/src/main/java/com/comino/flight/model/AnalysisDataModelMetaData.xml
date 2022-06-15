@@ -1076,7 +1076,7 @@
 			<Group>Local Position</Group>
             <Group>Global Position</Group>
 		</Groups>
-		<Validity min="0" max="1.5"/>
+		<Validity min="0" max="0.3"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Vert.Accurracy" uom="m" mask="±#0.000" key="GPVACCUR">
