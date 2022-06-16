@@ -842,8 +842,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			if(show_grid.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(grid,Layer.BACKGROUND);
-			} else 
+				slam.enableSLAM(true);
+			} else {
+				slam.enableSLAM(false);
 				grid.clear();
+			}
 
 			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(traj, Layer.BACKGROUND);

@@ -67,6 +67,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	private  Circle                 obstacle    = null;
 
 	private  AnalysisDataModel      model        = null;
+	private boolean enable_slam = true;
 
 	public XYSlamAnnotation(Color color) {
 
@@ -106,7 +107,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.obstacle.setRadius(SIZE_OBS);
 		this.obstacle.setFill(Color.TRANSPARENT);
 		this.obstacle.setStroke(Color.RED);
-		this.obstacle.setVisible(true);
+		this.obstacle.setVisible(enable_slam);
 
 		pane.getChildren().addAll(act_dir,plan_dir, vhc, obstacle, lock);
 	}
@@ -154,7 +155,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			lock_rotate.angleProperty().set(180+model.getValue("PRECLOCKW"));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
-			lock.setVisible(true);
+			lock.setVisible(enable_slam);
 		} else
 			lock.setVisible(false);
 			
@@ -163,7 +164,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 			obstacle.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMOBY"))-SIZE_OBS/2f);
 			obstacle.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMOBX"))-SIZE_OBS/2f);
-			obstacle.setVisible(true);
+			obstacle.setVisible(enable_slam);
 		} else
 			obstacle.setVisible(false);
 
@@ -174,6 +175,11 @@ public class XYSlamAnnotation  implements XYAnnotation {
 //		act_dir.setVisible(true);
 
 
+	}
+	
+	public void enableSLAM(boolean enable) {
+		this.enable_slam  = enable;
+		
 	}
 
 	public void clear() {
