@@ -443,6 +443,8 @@
 
 .combo-box {
 	 -fx-background-color: #404040;
+	 -fx-text-fill: #F0F0F0;
+	 -fx-font-size: 10.0px;
 }
 
 .combo-box .text-field{
