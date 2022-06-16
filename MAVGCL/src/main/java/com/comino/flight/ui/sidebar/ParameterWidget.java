@@ -113,12 +113,31 @@ public class ParameterWidget extends ChartControlPane  {
 
 	private int timeout;
 	private int timeout_count=0;
+	
+	private final String style;
+	private final String style_default;
+	
+	private final static String STYLE_DARK          = "-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;";
+	private final static String STYLE_DARK_DEFAULT  = "-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;";
+	private final static String STYLE_LIGHT         = "-fx-text-fill: #202020; -fx-control-inner-background: #C0C0C0;";
+	private final static String STYLE_LIGHT_DEFAULT = "-fx-text-fill: #202020; -fx-control-inner-background: #E0E0E0;";
 
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public ParameterWidget() {
+		
 		super();
+		
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			style = STYLE_LIGHT;
+			style_default = STYLE_LIGHT_DEFAULT;
+		}
+		else {
+			style = STYLE_DARK;
+			style_default = STYLE_DARK_DEFAULT;
+		}
+		
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -476,7 +495,7 @@ public class ParameterWidget extends ChartControlPane  {
 					}
 
 					if(att.bitMask!=null && att.bitMask.size()>0) {
-						editor.setStyle("-fx-text-fill: #B0F0B0; -fx-control-inner-background: #606060;");
+						editor.setStyle(style);
 						att.decimals = 0;
 						editor.setCursor(Cursor.DEFAULT);
 						editor.setDisable(false);
@@ -644,9 +663,9 @@ public class ParameterWidget extends ChartControlPane  {
 				return;
 			}
 			if(v==att.default_val)
-				e.setStyle("-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;");
+				e.setStyle(style_default);
 			else
-				e.setStyle("-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;");
+				e.setStyle(style);
 		}
 
 
