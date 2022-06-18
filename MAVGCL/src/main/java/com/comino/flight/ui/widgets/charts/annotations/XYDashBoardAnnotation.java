@@ -73,13 +73,15 @@ public class XYDashBoardAnnotation  implements XYAnnotation {
         this.statistics = statistics;
         this.posy = posy;
 		this.pane = new GridPane();
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+		
+		if(MAVPreferences.isLightTheme()) {
 			pane.setStyle("-fx-background-color: rgba(230.0, 230.0, 230.0, 0.85); -fx-padding:2;");
 			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #202020; -fx-padding:2;");
 		} else {
 			pane.setStyle("-fx-background-color: rgba(60.0, 60.0, 60.0, 0.85); -fx-padding:2;");
 			header.setStyle("-fx-font-size: 8pt;-fx-text-fill: #A0F0A0; -fx-padding:2;");
 		}
+		
         this.pane.setHgap(5);
         this.pane.setMinWidth(150);
 		this.pane.add(header,0,0);

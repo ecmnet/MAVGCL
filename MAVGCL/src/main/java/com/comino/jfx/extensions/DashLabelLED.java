@@ -77,6 +77,7 @@ public class DashLabelLED extends GridPane {
 			this.color = Color.BLACK;
 		else
 		    this.color = Color.WHITE;
+		
 		this.setPadding(new Insets(3, 0, 3, 0));
 		this.setHgap(4);
 

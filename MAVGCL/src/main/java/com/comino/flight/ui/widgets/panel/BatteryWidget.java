@@ -84,12 +84,12 @@ public class BatteryWidget extends ChartControlPane  {
 	@FXML
 	private void initialize() {
 		
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
-			color_bar = Color.BLACK;
+		if(MAVPreferences.isLightTheme()) {
+			color_bar  = Color.DARKGREEN;
 			color_text = Color.BLACK;
 			
 		} else {
-			color_bar = Color.web("#2e9fbf");
+			color_bar  = Color.web("#2e9fbf");
 			color_text = Color.WHITE;
 			
 		}

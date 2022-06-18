@@ -60,7 +60,6 @@ public class Badge extends Label {
 	private String  textColor   = "#F0F0F0";
 	private boolean toggle = false;
 	private Timeline timeline = null;
-	private boolean  is_light = false;
 
 	private String oldcolor;
 
@@ -68,14 +67,15 @@ public class Badge extends Label {
 		super();
 		this.setDisable(false);
 		this.setPrefWidth(999);
-		this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
 		this.setAlignment(Pos.CENTER);
 
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
-			is_light = true;
-		}
+		if(MAVPreferences.isLightTheme()) 
+			this.color   = "#C0C0C0";
+		 else
+			this.color   = "#"+Integer.toHexString(Color.DARKGRAY.hashCode());
+			
 
-		if(is_light)
+		if(MAVPreferences.isLightTheme())
 			setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
 		else
 			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
@@ -86,7 +86,7 @@ public class Badge extends Label {
 
 		this.disabledProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				if(is_light)
+				if(MAVPreferences.isLightTheme()) 
 					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
 				else
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
@@ -102,7 +102,7 @@ public class Badge extends Label {
 		if(this.mode == mode)
 			return;
 		this.mode = mode;
-		if(!is_light)
+		if(!MAVPreferences.isLightTheme()) 
 			setBackgroundColor(color);
 	}
 
@@ -125,33 +125,33 @@ public class Badge extends Label {
 
 			switch(mode) {
 			case MODE_OFF:
-				if(is_light)
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+				if(MAVPreferences.isLightTheme()) 
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#C0C0C0;");
 				else
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 				break;
 			case MODE_ON:
-				if(is_light)
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
+				if(MAVPreferences.isLightTheme()) 
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#101010;");
 				else	 
 					setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:"+textColor+";");
 				break;
 			case MODE_BLINK:
-				if(is_light)
+				if(MAVPreferences.isLightTheme()) 
 					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
 				else	
 					setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
 				if(timeline!=null) timeline.play();
 				break;
 			case MODE_ERROR:
-				if(is_light)
+				if(MAVPreferences.isLightTheme()) 
 					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
 				else	
 					setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
 				if(timeline!=null) timeline.play();
 				break;
 			default:
-				if(is_light)
+				if(MAVPreferences.isLightTheme()) 
 					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
 				else	
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
@@ -173,10 +173,10 @@ public class Badge extends Label {
 	}
 
 	public void setBackgroundColorWhiteText(Color color) {
-		if(!is_light) {
+	//	if(MAVPreferences.isLightTheme()) {
 		this.color = "#"+Integer.toHexString(color.darker().desaturate().hashCode());
 		this.textColor ="#F0F0F0";
-		}
+	//	}
 	}
 
 	public void setRate(String rate) {

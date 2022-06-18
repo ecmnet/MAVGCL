@@ -33,6 +33,7 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -61,8 +62,10 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 		this.circle.setRadius(0);
 		this.circle.setFill(color);
 
-
-		circle.setStyle("-fx-fill: rgba(20.0, 60.0, 60.0, 0.25);");
+		if(MAVPreferences.isLightTheme()) 
+			circle.setStyle("-fx-fill: rgba(40.0, 60.0, 60.0, 0.25);");
+		else
+			circle.setStyle("-fx-fill: rgba(20.0, 60.0, 60.0, 0.25);");
 
 		this.pane.getChildren().addAll(circle);
 	}
@@ -82,7 +85,7 @@ public class XYSigmaAnnotation  implements XYAnnotation {
 		return pane;
 	}
 
-	
+
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 		float size = (float)(xAxis.getDisplayPosition(3*sigma) - xAxis.getDisplayPosition(0));

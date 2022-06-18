@@ -60,7 +60,7 @@ public class DashLabel extends GridPane {
 		this.setCache(true);
 		this.setCacheHint(CacheHint.SPEED);
 
-		label = new Label(); label.setTextFill(Color.web("#1c6478").brighter());
+		label = new Label(); //label.setTextFill(Color.web("#1c6478").brighter());
 		line = new Line(); line.setStroke(Color.web("#1c6478").darker());
 
 		this.addColumn(0, label);

@@ -82,6 +82,7 @@ public class MAVPreferences {
 	public static final String USER_PREC_LOCK   = "USER_PRECISION_LOCK";
 
 	private static Preferences prefs = null;
+	private static boolean is_lighttheme;
 
 
 	public static Preferences getInstance() {
@@ -93,6 +94,7 @@ public class MAVPreferences {
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
+		is_lighttheme = prefs.get(MAVPreferences.PREFS_THEME,"").contains("Light");
 		return prefs;
 	}
 
@@ -108,6 +110,10 @@ public class MAVPreferences {
 			}
 		});
 
+	}
+	
+	public static boolean isLightTheme() {
+		return is_lighttheme;
 	}
 
 }
