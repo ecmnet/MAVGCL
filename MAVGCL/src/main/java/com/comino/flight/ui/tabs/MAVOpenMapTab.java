@@ -215,7 +215,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		center.getSelectionModel().select(0);
 
 		provider.getItems().addAll(PROVIDER_OPTIONS);
-		provider.getSelectionModel().select(0);
+
 
 		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
@@ -473,6 +473,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setup(control);
 		ChartControlPane.addChart(3,this);
 		air.setup(control);
+
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+			provider.getSelectionModel().select(1);
+		else
+			provider.getSelectionModel().select(0);
 
 		properties.getLandedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {
