@@ -143,8 +143,6 @@ public class StateProperties {
 			
 			wq.addSingleTask("LP", 250,() -> {
 				
-				MSPMathUtils.reset_map_projection();
-				
 				control.getStatusManager().reset(); 
 				
 				isGPSAvailable.set(true);
@@ -246,6 +244,8 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
 			Platform.runLater(()-> {
 			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
+			if(n.isStatus(Status.MSP_GPOS_VALID))
+				MSPMathUtils.reset_map_projection();
 			});
 		});
 
