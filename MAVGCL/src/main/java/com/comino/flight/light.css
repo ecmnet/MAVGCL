@@ -3,7 +3,7 @@
     -fx-background-color: #F0F0F0;
     -fx-accent: #000000;
     -fx-text-fill: #202020;
-     -fx-font-smoothing-type: LCD;
+    -fx-font-smoothing-type: LCD;
 }
 
 
@@ -23,21 +23,21 @@
 }
 
 .progress-bar {
-    -fx-background-color: #F0F0F0;
+    -fx-background-color: #606060;
 }
 
 .tooltip {
-	-fx-text-fill: rgb(255,248,182);
+	-fx-text-fill: #202020;
 	-fx-font-size: 8.0pt;
-	-fx-background-color: #F0F0F0;
+	-fx-background-color: #C0C0C0;
 }
 
 
 .label {
-	-fx-text-fill: #202020;
-	-fx-font-size: 10.0px;
+	-fx-text-fill: #606060;
+	-fx-font-size: 9.0px;
 	-fx-accent: #000000;
-     -fx-font-smoothing-type: LCD;
+    -fx-font-smoothing-type: LCD;
 }
 
 .tab
@@ -189,7 +189,7 @@
 
 
 .inspector {
-	 -fx-font-size: 7.0pt;
+	 -fx-font-size: 8.0pt;
 }
 
 .choice-box .context-menu  {
@@ -471,7 +471,7 @@
  }
 
 .combo-box-popup .list-view .list-cell {
-     -fx-background-color: #C0C0C0;
+     -fx-background-color: #E0E0E0;
      -fx-text-fill: #202020;
  }
 

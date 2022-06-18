@@ -682,9 +682,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		annotation.selectedProperty().set(true);
 
 		// TODO: handle grid annotation properly
-//		show_grid.setDisable(true);
+		//		show_grid.setDisable(true);
 
-		
+
 		show_grid.selectedProperty().addListener((v, ov, nv) -> {
 			if(nv.booleanValue()) {
 				//		grid.invalidate(true);
@@ -1245,7 +1245,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			this.start.setStroke(Color.web("#1c6478").darker());
 			this.start.setFill(Color.web("#1c6478").brighter());
 			this.line.setStroke(Color.web("#1c6478").brighter());
-			this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF;");
+			if(MAVPreferences.isLightTheme()) 
+				this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #F202020;");
+			else
+				this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF;");
 			this.pane.getChildren().addAll( start, zoom_label, line);
 			this.group.getChildren().add(pane);
 		}

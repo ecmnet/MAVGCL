@@ -78,80 +78,80 @@ public class DetailsWidget extends ChartControlPane {
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
 	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#C0C0C0;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent; ";
-	
+
 	private final static String[] views = { "Flight", "System" };
 
 	private final static String[][] key_figures_details = { 
-			
+
 			// Default view
-			
-		    { 
+
+			{ 
 				"ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
-			    null, 
-			    "HEAD", "RGPSNO", 
-			    null, 
-			    "ALTSL", "ALTTR", "ALTGL", "ALTRE",
-			    null, 
-			    "LIDAR", "FLOWDI", 
-			    null, 
-			    "LPOSX", "LPOSY", "LPOSZ", 
-			    null,
-			    "GPHACCUR", "GPVACCUR", 
-			    null, 
-			    "VISIONX", "VISIONY", "VISIONZ", 
-			    null, 
-			    "VISIONH", "VISIONR", "VISIONP", 
-			    null, 
-			    "SLAMDTT", "SLAMDTO", 
-			    null,
-			    "VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",
-			    null, 
-			    "BATC", "BATH", "BATP", 
-			    null, 
-			    "IMUTEMP", "MSPTEMP",  
-			    null,  
-			    "SWIFI", "RSSI", 
-			    null, 
-			    "TARM","TBOOT"
+				null, 
+				"HEAD", "RGPSNO", 
+				null, 
+				"ALTSL", "ALTTR", "ALTGL", "ALTRE",
+				null, 
+				"LIDAR", "FLOWDI", 
+				null, 
+				"LPOSX", "LPOSY", "LPOSZ", 
+				null,
+				"GPHACCUR", "GPVACCUR", 
+				null, 
+				"VISIONX", "VISIONY", "VISIONZ", 
+				null, 
+				"VISIONH", "VISIONR", "VISIONP", 
+				null, 
+				"SLAMDTT", "SLAMDTO", 
+				null,
+				"VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",
+				null, 
+				"BATC", "BATH", "BATP", 
+				null, 
+				"IMUTEMP", "MSPTEMP",  
+				null,  
+				"SWIFI", "RSSI", 
+				null, 
+				"TARM","TBOOT"
 			},
-		    
-		   
-		    // System view
-		    
-		    {
-		    
+
+
+			// System view
+
+			{
+
 				"ROLL", "PITCH", "YAW",
-			    null, 
-			    "HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  
-//			    null,
-//			    "BASENO","BASEEPH","BASEEPV",
-			    null, 
-			    "LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
-			    null,
-			    "GPHACCUR", "GPVACCUR", 
-		    	null,
-			    "VISIONFPS", "VISIONQUAL", "FLOWQL","VISIONERRC",
-			    null,
-			    "SLAMFPS","SLAMQU","SLAMMPS", 
-			    null, 
-			    "BATV","BATC", "BATH", "BATP", "BATW",
-			    null, 
-			    "IMUTEMP", "MSPTEMP",  "BATT",
-			    null,  
-			    "CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
-			    null,
-			    "DEBUGX","DEBUGY","DEBUGZ",
-			    null, 
-			    "MAVGCLNET", "MAVGCLACC", 
-			    null,
-			    "TARM","TBOOT"
-		    }
-			
+				null, 
+				"HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  
+				//			    null,
+				//			    "BASENO","BASEEPH","BASEEPV",
+				null, 
+				"LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
+				null,
+				"GPHACCUR", "GPVACCUR", 
+				null,
+				"VISIONFPS", "VISIONQUAL", "FLOWQL","VISIONERRC",
+				null,
+				"SLAMFPS","SLAMQU","SLAMMPS", 
+				null, 
+				"BATV","BATC", "BATH", "BATP", "BATW",
+				null, 
+				"IMUTEMP", "MSPTEMP",  "BATT",
+				null,  
+				"CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
+				null,
+				"DEBUGX","DEBUGY","DEBUGZ",
+				null, 
+				"MAVGCLNET", "MAVGCLACC", 
+				null,
+				"TARM","TBOOT"
+			}
+
 	};
-	
+
 	@FXML
 	private ComboBox<String> view;
-	
+
 	@FXML
 	private ScrollPane scroll;
 
@@ -159,19 +159,19 @@ public class DetailsWidget extends ChartControlPane {
 	private GridPane grid;
 
 	private Timeline task = null;
-	
+
 	private List<KeyFigure> figures = null;
 
 	private final AnalysisDataModel model;
 	private final AnalysisDataModelMetaData meta;
 	private final Preferences prefs;
-	
+
 	private int last_view = 0;
 	private final String style_outofbounds;
-	
+
 
 	public DetailsWidget() {
-		
+
 		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
 			style_outofbounds = STYLE_OUTOFBOUNDS_LIGHT;
 		else
@@ -200,7 +200,7 @@ public class DetailsWidget extends ChartControlPane {
 				figure.setValue(model, i++);
 			// Workaround to display GPS data whenever GPS is available
 			if(control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
-			   state.getGPSAvailableProperty().set(true);
+				state.getGPSAvailableProperty().set(true);
 		}));
 
 		task.setCycleCount(Timeline.INDEFINITE);
@@ -208,11 +208,11 @@ public class DetailsWidget extends ChartControlPane {
 
 	@FXML
 	private void initialize() {
-		
+
 		view.getItems().addAll(views);
 		view.setEditable(true);
 		view.getEditor().setDisable(true);
-		
+
 		view.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			figures.clear(); grid.getChildren().clear();
 			int i = 0;
@@ -221,45 +221,56 @@ public class DetailsWidget extends ChartControlPane {
 				i++;
 			}
 			prefs.putInt(MAVPreferences.VIEW, n.intValue());
-//			state.getGPSAvailableProperty().addListener((e, op, np) -> {
-//				setBlockVisibility("RGPSNO",np.booleanValue());		  
-//			});
+			//			state.getGPSAvailableProperty().addListener((e, op, np) -> {
+			//				setBlockVisibility("RGPSNO",np.booleanValue());		  
+			//			});
 		});
 
-		
+
 		this.setWidth(getPrefWidth());
 	}
 
 	public void setup(IMAVController control) {
-		
+
 		this.control = control;
 
 		scroll.prefHeightProperty().bind(this.heightProperty().subtract(18));
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
 		scroll.setBorder(Border.EMPTY);
-		
+
 		int init_view = prefs.getInt(MAVPreferences.VIEW, 0);
 		view.getSelectionModel().clearAndSelect(init_view);
-	
+
 
 		int i = 0;
 		for (String k : key_figures_details[init_view]) {
 			figures.add(new KeyFigure(grid, k, i));
 			i++;
 		}
-		
+
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
-				for (KeyFigure figure : figures) {
-					if (n.booleanValue())
-						figure.setColor(Color.WHITE);
-					else
-						figure.setColor(Color.LIGHTGRAY);
+				if(MAVPreferences.isLightTheme()) {
+					
+					for (KeyFigure figure : figures) {	
+						if (n.booleanValue())
+							figure.setColor(Color.web("#404040"));
+						else
+							figure.setColor(Color.web("#707070"));
+					}
+
+				} else {
+					for (KeyFigure figure : figures) {	
+						if (n.booleanValue())
+							figure.setColor(Color.WHITE);
+						else
+							figure.setColor(Color.LIGHTGRAY);
+					}
 				}
 			});
 		});
-		
+
 		state.getArmedProperty().addListener((e, o, n) -> {
 			if(n.booleanValue()) {
 				last_view = view.getSelectionModel().getSelectedIndex();
@@ -271,10 +282,10 @@ public class DetailsWidget extends ChartControlPane {
 
 		task.play();
 
-   //     this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
+		//     this.disableProperty().bind(state.getLogLoadedProperty().not().and(state.getConnectedProperty().not()));
 
 	}
-	
+
 
 
 	private class KeyFigure {

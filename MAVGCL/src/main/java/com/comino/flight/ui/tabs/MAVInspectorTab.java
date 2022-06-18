@@ -84,14 +84,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
 	private final WorkQueue wq = WorkQueue.getInstance();
-	
-	private boolean is_light = false;
 
 
 	public MAVInspectorTab() {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light"))
-			is_light = true;
 	}
 
 
@@ -125,7 +121,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						if(is_light) setStyle("-fx-text-fill: #202020;"); else setStyle("-fx-text-fill: #D0D0F0;");
+						if(MAVPreferences.isLightTheme())
+							setStyle("-fx-text-fill: #202020;"); 
+						else 
+							setStyle("-fx-text-fill: #D0D0F0;");
 					} else
 						setText("");
 				}
@@ -153,7 +152,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						if(is_light) setStyle("-fx-text-fill: #202020;"); else setStyle("-fx-text-fill: #80F080;");
+						if(MAVPreferences.isLightTheme()) 
+							setStyle("-fx-text-fill: #202020;"); 
+						else 
+							setStyle("-fx-text-fill: #80F080;");
 					} else
 						setText("");
 				}
@@ -180,7 +182,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				protected void updateItem(String item, boolean empty) {
 					if(!empty) {
 						setText(item);
-						if(is_light) 
+						if(MAVPreferences.isLightTheme()) 
 							setStyle("-fx-text-fill: #202020; fx-alignment: CENTER-RIGHT;"); 
 						else 
 							setStyle("-fx-text-fill: #80F080; fx-alignment: CENTER-RIGHT;");

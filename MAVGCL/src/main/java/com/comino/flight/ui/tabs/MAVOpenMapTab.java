@@ -521,7 +521,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
 
-			if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+			if(dataService.getModelList().size()>0 && current_x1_pt > 0 )
 				model = dataService.getModelList().get(current_x1_pt);
 			else
 				model = dataService.getCurrent();
