@@ -255,9 +255,9 @@ public class DetailsWidget extends ChartControlPane {
 					
 					for (KeyFigure figure : figures) {	
 						if (n.booleanValue())
-							figure.setColor(Color.web("#404040"));
+							figure.setColor(Color.web("#606060"));
 						else
-							figure.setColor(Color.web("#707070"));
+							figure.setColor(Color.web("#808080"));
 					}
 
 				} else {

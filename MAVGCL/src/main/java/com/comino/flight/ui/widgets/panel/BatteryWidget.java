@@ -85,7 +85,7 @@ public class BatteryWidget extends ChartControlPane  {
 	private void initialize() {
 		
 		if(MAVPreferences.isLightTheme()) {
-			color_bar  = Color.DARKGREEN;
+			color_bar  = Color.web("#0000FF");
 			color_text = Color.BLACK;
 			
 		} else {

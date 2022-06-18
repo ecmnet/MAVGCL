@@ -285,7 +285,7 @@
 .progress-bar  {
   -fx-control-inner-background: #303030;
   -fx-text-box-border: #C0C0C0;
-  -fx-accent: #0000B0;
+  -fx-accent: #0000FF;
   -fx-shadow-highlight-color: #F0F0F0;
 }
 
