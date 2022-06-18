@@ -33,6 +33,7 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import javafx.scene.Node;
@@ -69,7 +70,11 @@ public class PositionAnnotation  implements XYAnnotation {
 
 		this.label = new Label(text);
 		this.label.setLayoutX(4);
-		this.label.setLayoutY(1);
+		this.label.setLayoutY(0);
+		
+		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+			label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF; ");
+		}
 
 		this.pane.getChildren().addAll(circle, label);
 	}
