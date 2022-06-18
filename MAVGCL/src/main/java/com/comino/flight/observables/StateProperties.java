@@ -41,6 +41,7 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
+import com.comino.mavutils.MSPMathUtils;
 import com.comino.mavutils.workqueue.WorkQueue;
 import com.comino.speech.VoiceTTS;
 
@@ -141,6 +142,8 @@ public class StateProperties {
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
 			wq.addSingleTask("LP", 250,() -> {
+				
+				MSPMathUtils.reset_map_projection();
 				
 				control.getStatusManager().reset(); 
 				
