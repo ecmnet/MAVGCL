@@ -169,8 +169,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					gps.setMode(Badge.MODE_ON);
 					gps.setText("SVIN");
 				} else {
-					if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
+					if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY)) {
 						gps.setMode(Badge.MODE_OFF);
+						gps.setText("");
+					}
 					else {
 						switch(msp_model.gps.fixtype & 0xF) {
 
@@ -199,7 +201,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							break;
 
 						default:
-							gps.setText("No Fix");
+						
 							gps.setMode(Badge.MODE_OFF);
 						}
 					}
@@ -212,7 +214,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				if(control.isConnected()) {
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
-						driver.setBackgroundColor(Color.web("#1c6478"));
+
 					driver.setMode(Badge.MODE_ON);
 					if(msp_model.vision.isStatus(Vision.PUBLISHED))
 						vision.setMode(Badge.MODE_ON);
@@ -294,6 +296,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(control.isConnected()) {
+					
 					switch(control.getMode()) {
 					case MAVController.MODE_NORMAL:
 						mode.setText("Connected");

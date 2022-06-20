@@ -127,7 +127,7 @@ public class Badge extends Label {
 			switch(mode) {
 			case MODE_OFF:
 				if(MAVPreferences.isLightTheme()) 
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#80800;");
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#808080;");
 				else
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 				break;
