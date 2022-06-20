@@ -35,6 +35,7 @@ package com.comino.flight.ui.widgets.charts.annotations;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -108,7 +109,10 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			});
 			label.setLayoutY(15+ypos*18);
 			label.setLayoutX(-30);
-			label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:2;");
+			if(MAVPreferences.isLightTheme()) 
+				label.setStyle("-fx-border-color: #C0C0C0; -fx-background-color: #F0F0F0; -fx-textfill: #202020; -fx-padding:3;");
+			else
+		    	label.setStyle("-fx-border-color: #707070; -fx-background-color: rgba(40.0, 40.0, 40.0, 0.65); -fx-padding:3;");
 			this.pane.getChildren().addAll(triangle, label);
 		} else {
 			this.pane.getChildren().addAll(triangle);
