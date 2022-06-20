@@ -36,6 +36,7 @@ package com.comino.flight.ui.widgets.progress;
 import java.io.IOException;
 
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -75,22 +76,26 @@ public class ProgressWidget extends Pane   {
 
 	@FXML
 	private void initialize() {
-		
+
 		progress.prefWidthProperty().bind(this.widthProperty());
 		progress.setVisible(false);
-		progress.setStyle("-fx-accent: white;");
-		
+
+		if(MAVPreferences.isLightTheme()) 
+			progress.setStyle("-fx-accent: darkblue;");
+		else
+			progress.setStyle("-fx-accent: white;");
+
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
-			
+
 			Platform.runLater(() -> {
 				if(nv.floatValue() > -1) {
-					
+
 					if(!progress.isVisible())
-					  progress.setVisible(true);
-					
+						progress.setVisible(true);
+
 					if(nv.floatValue() < progress.getProgress())
 						return;
-					
+
 					progress.setProgress(nv.floatValue());
 					if(progress.getProgress()>0.99f)
 						progress.setProgress(1);
@@ -98,7 +103,7 @@ public class ProgressWidget extends Pane   {
 					out.play();
 				}
 			});
-			
+
 		});
 	}
 
