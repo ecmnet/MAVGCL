@@ -52,8 +52,9 @@ public class Badge extends Label {
 
 	public final static int MODE_OFF 		=  0;
 	public final static int MODE_ON 		=  1;
-	public final static int MODE_BLINK  	=  2;
-	public final static int MODE_ERROR  	=  3;
+	public final static int MODE_OK 		=  2;
+	public final static int MODE_BLINK  	=  3;
+	public final static int MODE_ERROR  	=  4;
 
 	private int     mode   = MODE_OFF;
 	private String  color  = null;
@@ -76,7 +77,7 @@ public class Badge extends Label {
 			
 
 		if(MAVPreferences.isLightTheme())
-			setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+			setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#808080;");
 		else
 			setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 
@@ -87,7 +88,7 @@ public class Badge extends Label {
 		this.disabledProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
 				if(MAVPreferences.isLightTheme()) 
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#606060;");
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#808080;");
 				else
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 			}
@@ -126,7 +127,7 @@ public class Badge extends Label {
 			switch(mode) {
 			case MODE_OFF:
 				if(MAVPreferences.isLightTheme()) 
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#C0C0C0;");
+					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:#80800;");
 				else
 					setStyle(DEFAULT_CSS+"-fx-background-color: #404040;-fx-text-fill:#808080;");
 				break;
@@ -143,12 +144,11 @@ public class Badge extends Label {
 					setStyle(DEFAULT_CSS+"-fx-background-color:"+color+";-fx-text-fill:#F0F0F0;");
 				if(timeline!=null) timeline.play();
 				break;
-			case MODE_ERROR:
-				if(MAVPreferences.isLightTheme()) 
-					setStyle(DEFAULT_CSS+"-fx-background-color: #C0C0C0;-fx-text-fill:"+color+";");
-				else	
-					setStyle(DEFAULT_CSS+"-fx-background-color: #804040;-fx-text-fill:#F0F0F0;");
-				if(timeline!=null) timeline.play();
+			case MODE_OK:		
+				setStyle(DEFAULT_CSS+"-fx-background-color: #32Bd32;-fx-text-fill:#F0F0F0;");
+				break;
+			case MODE_ERROR:		
+				setStyle(DEFAULT_CSS+"-fx-background-color: #C02020;-fx-text-fill:#F0F0F0;");
 				break;
 			default:
 				if(MAVPreferences.isLightTheme()) 

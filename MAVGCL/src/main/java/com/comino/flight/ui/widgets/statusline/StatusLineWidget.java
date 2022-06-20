@@ -220,25 +220,25 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						vision.setMode(Badge.MODE_OFF);
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
-						ready.setMode(Badge.MODE_ON);
+						
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
-							ready.setBackgroundColorWhiteText(Color.LIMEGREEN);
+							ready.setMode(Badge.MODE_OK);
 							ready.setText("READY");
 
 						}
 						else {
-							ready.setBackgroundColorWhiteText(Color.RED);
+							ready.setMode(Badge.MODE_ERROR);
 							ready.setText("NOT READY");
 						}
 					} else {
 
 						ready.setMode(Badge.MODE_ON);
 						if(ekf_status != 4) {
-							ready.setBackgroundColorWhiteText(Color.web("#1c6478"));
+							ready.setMode(Badge.MODE_OFF);
 							ready.setText("");
 
 						} else {
-							ready.setBackgroundColorWhiteText(Color.RED);
+							ready.setMode(Badge.MODE_ERROR);
 							ready.setText("NOT READY");
 						}
 					}
@@ -274,10 +274,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 										list.get(current_x1_pt).tms/1000)
 								);
 
-					time.setBackgroundColor(Color.web("#1c6478"));
+//					time.setBackgroundColor(Color.web("#1c6478"));
 				} else {
 					time.setText("00:00 - 00:00");
-					time.setBackgroundColor(Color.GRAY);
+//					time.setBackgroundColor(Color.GRAY);
 				}
 
 				if(state.getReplayingProperty().get()) {
@@ -308,7 +308,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						mode.setText("SITL Proxy");
 						break;	
 					}
-					mode.setBackgroundColor(Color.web("#1c6478"));
 					mode.setMode(Badge.MODE_ON);
 				} else {
 					mode.setMode(Badge.MODE_OFF);
@@ -323,10 +322,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				if(control.isConnected()) {
 					ekf.setText(EKF2STATUS_TEXTS[ekf_status]);
 					if(ekf_status != 4)
-						ekf.setBackgroundColor(Color.web("#1c6478"));
+						ekf.setMode(Badge.MODE_ON);
 					else
-						ekf.setBackgroundColor(Color.DARKRED);
-					ekf.setMode(Badge.MODE_ON);
+						ekf.setMode(Badge.MODE_ERROR);
 				}
 
 			}
