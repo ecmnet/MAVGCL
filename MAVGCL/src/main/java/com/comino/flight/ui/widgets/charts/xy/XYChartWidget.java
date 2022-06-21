@@ -1246,7 +1246,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			this.start.setFill(Color.web("#1c6478").brighter());
 			this.line.setStroke(Color.web("#1c6478").brighter());
 			if(MAVPreferences.isLightTheme()) 
-				this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #F202020;");
+				this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #202020;");
 			else
 				this.zoom_label.setStyle("-fx-font-size: 8pt;-fx-text-fill: #FFFFFF;");
 			this.pane.getChildren().addAll( start, zoom_label, line);
