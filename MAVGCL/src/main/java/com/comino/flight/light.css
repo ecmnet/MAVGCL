@@ -35,7 +35,7 @@
 
 .label {
 	-fx-text-fill: #606060;
-	-fx-font-size: 9.0px;
+	-fx-font-size: 10px;
 	-fx-accent: #000000;
     -fx-font-smoothing-type: LCD;
 }
@@ -489,6 +489,7 @@
    -gauge-color: #A00000;
    -fx-background-color: #00E000;
 }
+
 
 
 

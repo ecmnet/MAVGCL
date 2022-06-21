@@ -74,7 +74,7 @@ public class AirCompass extends Region {
         getStyleClass().add("air-compass");
         bearing          = new SimpleDoubleProperty(this, "bearing", 0);
         bearingAngle     = new SimpleDoubleProperty(this, "bearingAngle", 0);
-        planeColor       = new SimpleObjectProperty<>(this, "planeColor", Color.CYAN.darker());
+        planeColor       = new SimpleObjectProperty<>(this, "planeColor", Color.CYAN);
         orientationColor = new SimpleObjectProperty<>(this, "orientationColor", Color.CYAN.darker());
         timeline         = new Timeline();
         init();
