@@ -74,6 +74,8 @@ public class KeyFigureMetaData {
 
 	private DecimalFormat formatting = null;
 
+	private static final HashMap<String,Object> msp_class_cache = new HashMap<String,Object>();
+
 	private double value = 0;
 	private DataSource source = null;
 
@@ -163,8 +165,12 @@ public class KeyFigureMetaData {
 		value = Double.NaN;
 		source = sources.get(MSP_SOURCE);
 		if(source.field!=null) {
-			Field mclass_field = m.getClass().getField(source.class_n);
-			Object mclass = mclass_field.get(m);
+			Object mclass = msp_class_cache.get(source.class_n);
+			if(mclass == null) {
+				Field mclass_field = m.getClass().getField(source.class_n);
+				mclass = mclass_field.get(m);
+				msp_class_cache.put(source.class_n, mclass);
+			}
 			try {
 				Field mfield_field = mclass.getClass().getField(source.field);
 				value = mfield_field.getDouble(mclass);
@@ -180,22 +186,22 @@ public class KeyFigureMetaData {
 	}
 
 
-//	public Double getValueFromPX4Model(Map<String,Object> data) {
-//		value = Double.NaN;
-//		source = sources.get(PX4_SOURCE);
-//		if(source.field!=null) {
-//			Object o = data.get(source.field);
-//			if(o instanceof Integer)
-//				value = (float)(Integer)o;
-//			else if(o instanceof Double)
-//				value = ((Double)o).doubleValue();
-//			else
-//				value = (float)(Float)o;
-//		}
-//		if(source.converter != null)
-//			return checkClipping(source.converter.convert(value));
-//		return checkClipping(value);
-//	}
+	//	public Double getValueFromPX4Model(Map<String,Object> data) {
+	//		value = Double.NaN;
+	//		source = sources.get(PX4_SOURCE);
+	//		if(source.field!=null) {
+	//			Object o = data.get(source.field);
+	//			if(o instanceof Integer)
+	//				value = (float)(Integer)o;
+	//			else if(o instanceof Double)
+	//				value = ((Double)o).doubleValue();
+	//			else
+	//				value = (float)(Float)o;
+	//		}
+	//		if(source.converter != null)
+	//			return checkClipping(source.converter.convert(value));
+	//		return checkClipping(value);
+	//	}
 
 	public Double getValueFromULogModel(Map<String,Object> data) {
 		value = Double.NaN;
@@ -225,20 +231,20 @@ public class KeyFigureMetaData {
 		return checkClipping(value);
 	}
 
-//	public Double getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
-//		value = Double.NaN;
-//		source = sources.get(MAV_SOURCE);
-//		if(source.field!=null) {
-//			if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
-//				Field mfield_field = mavlink_message.getClass().getField(source.field);
-//				value = mfield_field.getDouble(mavlink_message);
-//			}
-//			if(source.converter != null)
-//				return checkClipping(source.converter.convert(value));
-//			return checkClipping(value);
-//		}
-//		return null;
-//	}
+	//	public Double getValueFromMAVLinkMessage(Object mavlink_message) throws Exception {
+	//		value = Double.NaN;
+	//		source = sources.get(MAV_SOURCE);
+	//		if(source.field!=null) {
+	//			if(mavlink_message.getClass().getSimpleName().equals(source.class_n)) {
+	//				Field mfield_field = mavlink_message.getClass().getField(source.field);
+	//				value = mfield_field.getDouble(mavlink_message);
+	//			}
+	//			if(source.converter != null)
+	//				return checkClipping(source.converter.convert(value));
+	//			return checkClipping(value);
+	//		}
+	//		return null;
+	//	}
 
 	public double calculateVirtualValue(AnalysisDataModel data) {
 		source = sources.get(VIR_SOURCE);
