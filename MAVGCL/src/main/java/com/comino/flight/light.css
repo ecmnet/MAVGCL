@@ -261,6 +261,7 @@
 .emergency   {
 	 -fx-background-color: #D0D0D0;
 	 -fx-text-fill: #F01010;
+	 -fx-font-weight: bold;
 }
 
 .emergency:hover  {
@@ -280,14 +281,14 @@
 }
 
 .slider .track  {
-  -fx-background-color:#A0A0A0;
+  -fx-background-color:#C0C0C0;
 }
 
 .progress-bar  {
-  -fx-control-inner-background: #303030;
-  -fx-text-box-border: #C0C0C0;
-  -fx-accent: #0000FF;
-  -fx-shadow-highlight-color: #F0F0F0;
+  -fx-control-inner-background: #E0E0E0;
+  -fx-text-box-border: #E0E0E0;
+  -fx-accent: #0000C0;
+  -fx-shadow-highlight-color: #E0E0E0;
 }
 
 .progress-bar > .bar {

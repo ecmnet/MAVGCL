@@ -85,7 +85,7 @@ public class BatteryWidget extends ChartControlPane  {
 	private void initialize() {
 		
 		if(MAVPreferences.isLightTheme()) {
-			color_bar  = Color.web("#0000FF");
+			color_bar  = Color.web("#0000C0");
 			color_text = Color.BLACK;
 			
 		} else {
@@ -156,6 +156,8 @@ public class BatteryWidget extends ChartControlPane  {
 		gauge.animatedProperty().set(false);
 		gauge.setSkinType(SkinType.SLIM);
 		gauge.setBarColor(color_bar);
+		if(MAVPreferences.isLightTheme())
+		 gauge.setBarBackgroundColor(Color.LIGHTGRAY);
 		gauge.setDecimals(1);
 		gauge.setTitle(unit);
 		gauge.setUnit("Battery");

@@ -179,17 +179,19 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 
-		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
-				image.setImage(null);
-				if(fadeProperty().getValue() && !source.isRunning()) {
-					connect(); source.start(); image.setImage(null);
-				}
-			} else
-				if(source!=null)
-					source.stop();
-
-		});
+//		state.getConnectedProperty().addListener((o,ov,nv) -> {
+//			if(control.isSimulation()) {
+//				return;
+//			}
+//			if(nv.booleanValue()) {
+//				image.setImage(null);
+//				if(fadeProperty().getValue() && !source.isRunning()) {
+//					connect(); source.start(); image.setImage(null);
+//				}
+//			} else
+//				if(source!=null)
+//					source.stop();
+//		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || state.getSimulationProperty().get())
@@ -261,7 +263,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		if(isConnected || state.getSimulationProperty().get())
 			return true;
 
-		logger.writeLocalMsg("[mgc] Videosource connected",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
 
 		if(userPrefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").contains("%"))
 			url_string = userPrefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").replace("%", control.getConnectedAddress());
@@ -296,7 +297,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			e.printStackTrace();
 			return false;
 		}
-
+		
 		isConnected = true;
 		return true;
 	}
