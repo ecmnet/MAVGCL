@@ -118,6 +118,7 @@ public class AirCompass extends Region {
         centerKnob.setPrefSize(32, 32);
 
         airplaneCanvas = new Canvas(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+        airplaneCanvas.getStyleClass().add("plane");
         airplaneCtx    = airplaneCanvas.getGraphicsContext2D();
 
         pane = new Pane(background, bearingCanvas, centerKnob, airplaneCanvas);
@@ -163,6 +164,10 @@ public class AirCompass extends Region {
 
     private Font getRegularFontAt(final double SIZE) { return Font.font(fontName, FontWeight.NORMAL, SIZE); }
     private Font getBoldFontAt(final double SIZE) { return Font.font(fontName, FontWeight.BOLD, SIZE); }
+    
+    public final Pane getPane() {
+    	return pane;
+    }
 
 
     // ******************** Resizing ******************************************
@@ -176,7 +181,7 @@ public class AirCompass extends Region {
         double   cosValue;
         double   offset = 180;
         boolean  toggle = true;
-        Point2D  center = new Point2D(size * 0.5, size * 0.5);
+        Point2D  center = new Point2D(size * 0.5+1, size * 0.5+1);
 
         for (double angle = 0, counter = 0 ; Double.compare(counter, 360) < 0 ; angle -= 1, counter++) {
             sinValue = Math.sin(Math.toRadians(angle + offset));
@@ -266,7 +271,7 @@ public class AirCompass extends Region {
         airplaneCtx.closePath();
         airplaneCtx.setLineCap(StrokeLineCap.ROUND);
         airplaneCtx.setLineJoin(StrokeLineJoin.MITER);
-        airplaneCtx.setLineWidth(0.01 * size);
+        airplaneCtx.setLineWidth(0.005 * size);
         airplaneCtx.setStroke(getPlaneColor());
         airplaneCtx.stroke();
         airplaneCtx.restore();

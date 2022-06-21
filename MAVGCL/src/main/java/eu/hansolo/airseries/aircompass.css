@@ -15,15 +15,17 @@
  */
 
 .air-compass {
-    -outer-frame-color: gray;
+    -ouker-frame-color: gray; 
 }
 .air-compass .frame {
-    -fx-background-radius: 1024;
-    -fx-background-color : rgba(20.0, 30.0, 30.0, 0.75);
+    -fx-background-radius: 1100;
+ /*   -fx-background-color : rgba(20.0, 30.0, 30.0, 0.75); */
 
 }
+
+
 .air-compass .background {
-    -fx-background-radius: 1024;
+    -fx-background-radius: 1100;
 
 }
 

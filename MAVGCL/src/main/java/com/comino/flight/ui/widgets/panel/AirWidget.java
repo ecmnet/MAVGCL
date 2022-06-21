@@ -39,6 +39,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
@@ -51,6 +52,8 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 
 public class AirWidget extends ChartControlPane implements IChartControl {
 
@@ -91,6 +94,15 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private void initialize() {
 		this.model = dataService.getCurrent();
+		
+		if(MAVPreferences.isLightTheme()) {
+			this.g_compass.setPlaneColor(Color.BLACK);
+			this.g_compass.setOrientationColor(Color.BLACK);
+		} else {
+			this.g_compass.setPlaneColor(Color.CYAN.darker());
+			this.g_compass.setOrientationColor(Color.CYAN.darker());
+			this.g_compass.getPane().setStyle(" -fx-background-color: rgba(20.0, 30.0, 30.0, 0.75); ");
+		}
 		this.disableProperty().bind(this.visibleProperty().not());
 		this.disabledProperty().addListener((v,ov,nv) -> {
 			if(!nv.booleanValue())
