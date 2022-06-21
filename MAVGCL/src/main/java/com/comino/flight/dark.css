@@ -101,7 +101,7 @@
     -fx-border-radius: 5px;
     -fx-border-insets: 2 ,0 ,0 ,0 ;
     -fx-padding: 10.0px;
-    -fx-font-family: "Courier New";
+    -fx-font-family: "SF Mono Regular";
 }
 
 .console .scroll-bar:vertical {
