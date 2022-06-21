@@ -1,0 +1,65 @@
+.bitDialog {
+    -fx-font-size: 8.0pt;
+    -fx-background-color: #E0E0E0;
+    -fx-accent: #000000;
+    -fx-border-color: #909090;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-border-insets: 0,0,0,0 ;
+ }
+
+.bitDialog > *.button-bar > *.container{
+     -fx-background-color: #E0E0E0;
+}
+.bitDialog > *.label.content{
+   -fx-font-size: 10.0px;
+}
+.bitDialog:header *.header-panel{
+     -fx-background-color: #E0E0E0;
+}
+.bitDialog:header *.header-panel *.label{
+    -fx-text-fill: #202020;
+	-fx-font-size: 10.0px;
+}
+
+.label {
+	-fx-text-fill: #202020;
+	-fx-font-size: 10.0px;
+}
+
+.text{
+    -fx-font-smoothing-type: LCD;
+}
+
+
+.button {
+	 -fx-background-color: #C0C0C0;
+	 -fx-text-fill: #303030;
+}
+
+.button:pressed {
+	-fx-background-color: #A0A0A0;
+}
+
+.button:hover {
+	-fx-background-color: #B0B0B0;
+}
+
+.check-box {
+	-fx-text-fill: #202020;
+}
+
+.check-box .mark {
+    -fx-background-color: transparent;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.333333em; /* 4 -- this is half the size of the mark */
+    -fx-shape: "M0,4H2L3,6L6,0H8L4,8H2Z";
+   
+}
+
+.check-box:selected .mark {
+	-fx-background-color: #202020;
+}
+
+
+

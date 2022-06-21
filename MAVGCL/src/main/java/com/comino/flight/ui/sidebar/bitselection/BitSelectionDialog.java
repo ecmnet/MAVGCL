@@ -35,6 +35,8 @@ package com.comino.flight.ui.sidebar.bitselection;
 
 import java.util.List;
 
+import com.comino.flight.prefs.MAVPreferences;
+
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -78,7 +80,10 @@ public class BitSelectionDialog  {
 		bitDialog = new Dialog<Boolean>();
 		bitDialog.initStyle(StageStyle.TRANSPARENT);
 		DialogPane dialogPane = bitDialog.getDialogPane();
-		dialogPane.getStylesheets().add(getClass().getResource("bitdialog.css").toExternalForm());
+		if(MAVPreferences.isLightTheme()) 
+			dialogPane.getStylesheets().add(getClass().getResource("bitdialog_light.css").toExternalForm());
+		else
+			dialogPane.getStylesheets().add(getClass().getResource("bitdialog_dark.css").toExternalForm());	
 		dialogPane.getStyleClass().add("bitDialog");
 		dialogPane.setContent(pane);
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);

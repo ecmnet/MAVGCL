@@ -172,7 +172,7 @@ public class DetailsWidget extends ChartControlPane {
 
 	public DetailsWidget() {
 
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+		if(MAVPreferences.isLightTheme()) 
 			style_outofbounds = STYLE_OUTOFBOUNDS_LIGHT;
 		else
 			style_outofbounds = STYLE_OUTOFBOUNDS;
