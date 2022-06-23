@@ -93,6 +93,13 @@ public class VoiceHandler {
 				voice.talk("Landed");
 			}
 		});
+		
+		properties.getRCProperty().addListener((s,o,n) -> {
+			if(o.booleanValue() && !n.booleanValue()) {
+				voice.talk("Radio Lost.");
+			}
+			
+		});
 
 
 		// report battery status every 30 seconds if armed and below 60%
