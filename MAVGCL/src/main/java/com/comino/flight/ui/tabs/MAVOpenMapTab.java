@@ -184,6 +184,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private  double zoom_start=0;
 
 	protected int centermode;
+	private long tms_old=0;
 
 	private IMAVController control;
 
@@ -195,7 +196,10 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				if((now - tms_old)>66) {
+				tms_old = now;
 				updateMap(true);
+				}
 			}		
 		};
 
