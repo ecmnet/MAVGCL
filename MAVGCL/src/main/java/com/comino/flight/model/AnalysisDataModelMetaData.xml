@@ -1392,6 +1392,13 @@
 			<Group>System</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Sensor.health" uom="" mask="#0" key="HEALTH">
+		<MSPSource class="sys" field="health"/>
+		<Groups>
+			<Group>System</Group>
+		</Groups>
+	</KeyFigure>
 
 	<KeyFigure desc="IMU Temperature" uom="°C" mask="#0" key="IMUTEMP">
 		<MSPSource class="sys" field="imu_temp"></MSPSource>
