@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -47,7 +47,6 @@ import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
-import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -103,8 +102,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
-		
-//		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
+
+		//		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
@@ -117,11 +116,11 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 			} 
 			else {
-				
+
 				wq.addSingleTask("LP",500, () -> refreshParameterList(true));
 			}
 		});
-		
+
 		state.getArmedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
 				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
@@ -143,15 +142,16 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			property.setValue(null);
 			parameterList.clear();
 			msg_param_request_list msg = new msg_param_request_list(255,1);
-			msg.target_component = 1;
 			msg.target_system = 1;
+			msg.target_component = 1;
 			control.sendMAVLinkMessage(msg);
+
 			state.getParamLoadedProperty().set(!loaded);
 			logger.writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 
 			wq.removeTask("LP", timeout);
-			timeout = wq.addSingleTask("LP", 20000, () -> {
+			timeout = wq.addSingleTask("LP", 30000, () -> {
 				state.getParamLoadedProperty().set(false);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 				logger.writeLocalMsg("Timeout reading parameters",
@@ -168,7 +168,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	@Override
 	public void received(Object _msg) {
-
+		
 		if( _msg instanceof msg_param_value && metadata != null ) { //&& is_reading) {
 
 			long flight_time = 0; double val;
@@ -183,16 +183,16 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			ParameterAttributes attributes = metadata.getMetaData(msg.getParam_id());
 			if(attributes == null)
 				attributes = new ParameterAttributes(msg.getParam_id(),"Default Group");
-			
+
 
 			//if(attributes.value != val) {
 
-				property.setValue(null);
-				attributes.value = val;
-				attributes.vtype = msg.param_type;
+			property.setValue(null);
+			attributes.value = val;
+			attributes.vtype = msg.param_type;
 
-				parameterList.put(attributes.name,attributes);
-				property.setValue(attributes);
+			parameterList.put(attributes.name,attributes);
+			property.setValue(attributes);
 
 			//}
 
@@ -217,10 +217,10 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 
 				// Baro QNH check
-//				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
-//					logger.writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-//					sendParameter("SENS_BARO_QNH",qnh);
-//				}
+				//				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
+				//					logger.writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				//					sendParameter("SENS_BARO_QNH",qnh);
+				//				}
 			}
 		}
 	}
