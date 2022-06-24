@@ -9,11 +9,11 @@
 
 <fx:root  type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 		<children>
-		<TreeTableView fx:id="treetableview" layoutX="2.0" layoutY="5.0"  styleClass="widget">
+		<TreeTableView fx:id="treetableview" layoutX="2.0" layoutY="0.0" styleClass="widget">
 			<columns>
 				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="320.0" text="Message" />
 				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
-				<TreeTableColumn fx:id="value_col" editable="false" prefWidth="350.0" sortable="false" text="Value" />
+				<TreeTableColumn fx:id="value_col" editable="false"  sortable="false" text="Value" />
 			</columns>
 		</TreeTableView>
 		</children>

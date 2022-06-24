@@ -15,8 +15,6 @@
 	 -fx-background-color: #F0F0F0;
 }
 
-
-
 .separator:horizontal .line {
     -fx-background-color: null;
     -fx-border-color: #A0A0A0;
@@ -122,6 +120,11 @@
     -fx-border-radius: 5px;
     -fx-border-insets: 2 ,0 ,0 ,0 ;
 
+}
+
+.widget .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-padding: 0;
 }
 
 .glass  {
@@ -304,7 +307,7 @@
 }
 
 .tree-table-view {
-    -fx-base: #1d1d1d;
+    -fx-base: #F0F0F0;
     -fx-control-inner-background: #F0F0F0;
     -fx-background-color: #F0F0F0;
     -fx-border-style: none;
