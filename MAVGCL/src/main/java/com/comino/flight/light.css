@@ -199,6 +199,7 @@
 
 .choice-box {
 	 -fx-background-color: #E0E0E0;
+	  -fx-border-color: #808080;
 }
 
 
@@ -408,34 +409,43 @@
 }
 
 .spinner {
-    -fx-border-insets: 0.0px;
+    -fx-border-insets: 0px;
     -fx-control-inner-background: #E0E0E0;
-    -fx-border-width: 5px;
+    -fx-padding: 1px;
 }
 
 .spinner > .increment-arrow-button {
-	-fx-background-color: #E0E0E0;
-	-fx-padding: 2;
+	-fx-background-color: #C0C0C0;
+	-fx-padding: 2px;
 	-fx-background-radius: 2.0;
+	
+	
 }
 
 .spinner > .decrement-arrow-button {
-	-fx-background-color: #E0E0E0;
-    -fx-padding: 2;
+	-fx-background-color: #C0C0C0;
+    -fx-padding: 2px;
     -fx-background-radius: 2.0;
+   
 }
 
 .spinner > .increment-arrow-button > .increment-arrow {
-	-fx-background-color: #F0F0F0;
+	-fx-background-color: #202020;
 }
 
 .spinner > .decrement-arrow-button > .decrement-arrow {
-	-fx-background-color: #F0F0F0;
+	-fx-background-color: #202020;
 }
 
 .spinner > .selected .focus-indicator {
     -fx-border-color: #00A0A0;
   }
+  
+ .spinner .text-field{
+	 -fx-background-color: #E0E0E0;
+	 -fx-text-fill: #202020;
+	
+}
 
 
 .dialog-pane:header *.header-panel{
@@ -449,12 +459,15 @@
 
 .combo-box {
 	 -fx-background-color: #E0E0E0;
+	 -fx-border-color: #808080;
 }
 
 .combo-box .text-field{
 	 -fx-background-color: #E0E0E0;
 	 -fx-text-fill: #202020;
 	 -fx-font-size: 10.0px;
+	 
+	
 }
 
 .combo-box .arrow-button {
