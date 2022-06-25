@@ -33,6 +33,7 @@
 
 package com.comino.flight.ui.tabs;
 
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,18 +85,23 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
 	private final WorkQueue wq = WorkQueue.getInstance();
+	
+	private final Comparator<TreeItem<DataSet>> lexicalComperator 
+	     = Comparator.comparing(TreeItem<DataSet>::getValue,(s1,s2) -> { return s1.str.get().compareTo(s2.str.get()); });
 
 
+	private TreeItem<DataSet> root;
+			
 	public MAVInspectorTab() {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
+		
 	}
 
 
 	@FXML
 	private void initialize() {
 
-
-		TreeItem<DataSet> root = new TreeItem<DataSet>(new DataSet("", ""));
+		root = new TreeItem<DataSet>(new DataSet("", ""));
 		treetableview.setRoot(root);
 		treetableview.setShowRoot(false);
 		root.setExpanded(true);
@@ -107,6 +113,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				treetableview.getSelectionModel().clearSelection();
 			}
 		});
+		
+		
 
 		message_col.setCellValueFactory(param -> {
 			if(param.getValue()!=null)
@@ -131,8 +139,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			};
 		});
 
-		message_col.setSortType(SortType.ASCENDING);
-		message_col.setSortable(true);
+		message_col.setSortable(false);
 
 
 
@@ -162,8 +169,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			};
 		});
 
-		variable_col.setSortType(SortType.ASCENDING);
-		variable_col.setSortable(true);
+		variable_col.setSortable(false);
 
 
 		value_col.setCellValueFactory(new Callback<CellDataFeatures<DataSet, String>, ObservableValue<String>>() {
@@ -196,8 +202,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		treetableview.prefHeightProperty().bind(heightProperty().subtract(2));
 		treetableview.prefWidthProperty().bind(widthProperty().subtract(2));
-
-		treetableview.getSortOrder().addAll(message_col,variable_col);
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((v,ov,nv) -> {
@@ -258,10 +262,13 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			for (DataSet dataset : data.getData().values()) {
 				TreeItem<DataSet> treeItem = new TreeItem<DataSet>(dataset);
 				data.ti.getChildren().add(treeItem);
+				data.ti.getChildren().sort(lexicalComperator);
 			}
 
 			data.addToTree(treetableview);
 			allData.put(_msg,data);
+			
+			root.getChildren().sort(lexicalComperator);
 
 			return;
 
@@ -277,6 +284,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					} catch(Exception k) {   }
 				}
 			}
+			
 		}
 	}
 
@@ -303,18 +311,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 						allData.remove(k);
 					});
 
-					Platform.runLater(() -> {
-						message_col.setSortType(SortType.ASCENDING);
-						variable_col.setSortType(SortType.ASCENDING);
-						treetableview.sort();
-					});
 				}
 
-				//				Platform.runLater(() -> {
-				//					message_col.setSortType(SortType.ASCENDING);
-				//					variable_col.setSortType(SortType.ASCENDING);
-				//					treetableview.sort();
-				//				});
 
 			}
 		}
@@ -348,11 +346,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			if(!view.getRoot().getChildren().contains(ti)) {
 				this.tms = System.currentTimeMillis();
 				view.getRoot().getChildren().add(ti);
-				//		Platform.runLater(() -> {
-				message_col.setSortType(SortType.ASCENDING);
-				variable_col.setSortType(SortType.ASCENDING);
-				treetableview.sort();
-				//		});
+				view.getRoot().getChildren().sort(lexicalComperator);
 			}
 		}
 
@@ -360,6 +354,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			view.getRoot().getChildren().remove(ti);
 			tms = 0; rate = 0; count = 0;
 		}
+		
 
 		public Map<String,DataSet> getData() {
 			return data;
@@ -429,9 +424,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			this.value.set(no);
 		}
 
-		public String getStr() {
-			return str.get();
-		}
 
 		public StringProperty strProperty() {
 			return str;

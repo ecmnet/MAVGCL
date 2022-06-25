@@ -13,7 +13,7 @@
 			<columns>
 				<TreeTableColumn fx:id="message_col" editable="false" prefWidth="320.0" text="Message" />
 				<TreeTableColumn fx:id="variable_col" editable="false" prefWidth="200.0" text="Variable" />
-				<TreeTableColumn fx:id="value_col" editable="false"  sortable="false" text="Value" />
+				<TreeTableColumn fx:id="value_col" editable="false"  prefWidth="320.0" sortable="false" text="Value" />
 			</columns>
 		</TreeTableView>
 		</children>
