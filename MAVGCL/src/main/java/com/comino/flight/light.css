@@ -50,7 +50,7 @@
 }
 
 .chart-series-line {
-    -fx-stroke-width: 1.0px;
+    -fx-stroke-width: 1.5px;
 }
 
 .chart-plot-background {
