@@ -33,11 +33,14 @@
 
 package com.comino.flight.log.ulog.dialog;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.mavlink.messages.lquac.msg_log_entry;
 
@@ -67,10 +70,13 @@ public class ULogSelectionDialog  {
 	private TableView<TabData>    table  = new TableView<TabData>() ;
 	private ObservableList<TabData> data = FXCollections.observableArrayList();
 	
-	private DateFormat date_f = new SimpleDateFormat("YYYYMMdd-HHmmss");
+	private DateFormat date_f = null;
 
 	@SuppressWarnings("unchecked")
 	public ULogSelectionDialog(Map<Integer,msg_log_entry> list) {
+		
+		date_f = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		date_f.setTimeZone(TimeZone.getDefault());
 		
 		pane.setPrefWidth(300);
 		dialog.initStyle(StageStyle.TRANSPARENT);
@@ -91,10 +97,6 @@ public class ULogSelectionDialog  {
 		
 		table.prefWidthProperty().bind(pane.widthProperty());
 		
-		list.values().forEach((m) -> {
-			data.add(new TabData(m));
-		});
-		
 		TableColumn<TabData, Integer> colId= new TableColumn<TabData, Integer>("Id");
 		colId.setMinWidth(15); 
 		colId.setCellValueFactory( new PropertyValueFactory<TabData, Integer>("id"));
@@ -111,7 +113,13 @@ public class ULogSelectionDialog  {
 		
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		table.setItems(data);
+		
 		pane.getChildren().add(table);
+		
+
+		list.values().forEach((m) -> {
+			data.add(new TabData(m));
+		});
 		
 		table.setRowFactory( tv -> {
 		    TableRow<TabData> row = new TableRow<>();
@@ -152,7 +160,7 @@ public class ULogSelectionDialog  {
 		
 		public TabData(msg_log_entry e) {
 			id   = e.id;
-			name = date_f.format(e.time_utc);
+			name = date_f.format(e.time_utc*1000);
 			size = (int)(e.size / 1024);
 		}
 		

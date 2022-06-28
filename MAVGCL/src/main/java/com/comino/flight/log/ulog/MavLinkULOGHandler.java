@@ -151,6 +151,10 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 	public void getLog(int mode) {
 		
+		if(!props.getConnectedProperty().get()) {
+			return;
+		}
+		
 		this.mode = mode;
 
 		try {
@@ -243,7 +247,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 3) 
+			while(searchForNextUnreadPackage() && c++ < 7) 
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 
 		});
