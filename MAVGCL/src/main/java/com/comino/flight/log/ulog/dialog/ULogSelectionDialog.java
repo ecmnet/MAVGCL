@@ -80,13 +80,13 @@ public class ULogSelectionDialog  {
 		
 		pane.setPrefWidth(300);
 		dialog.initStyle(StageStyle.TRANSPARENT);
-		dialog.setTitle("Select ULOG data file");
+		
 		DialogPane dialogPane = dialog.getDialogPane();
 		
 		if(MAVPreferences.isLightTheme()) 
-			dialogPane.getStylesheets().add(getClass().getResource("ULogSelection_light.css").toExternalForm());
+			dialogPane.getStylesheets().add(ULogSelectionDialog.class.getResource("ulogsel_light.css").toExternalForm());
 		else
-			dialogPane.getStylesheets().add(getClass().getResource("ULogSelection_dark.css").toExternalForm());	
+			dialogPane.getStylesheets().add(ULogSelectionDialog.class.getResource("ulogsel_dark.css").toExternalForm());	
 		
 		dialogPane.getStyleClass().add("UlogDialog");
 		dialogPane.setContent(pane);
