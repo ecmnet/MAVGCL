@@ -74,7 +74,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
-public class MavlinkLogReader implements IMAVLinkListener {
+public class MavlinkLogReader_DEPR implements IMAVLinkListener {
 
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 	private static final int GET_LAST_LOG_ID = 99999;
@@ -116,7 +116,7 @@ public class MavlinkLogReader implements IMAVLinkListener {
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
-	public MavlinkLogReader(IMAVController control) {
+	public MavlinkLogReader_DEPR(IMAVController control) {
 		this.control = control;
 		this.props = StateProperties.getInstance();
 		this.userPrefs = MAVPreferences.getInstance();

@@ -53,7 +53,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
-import com.comino.flight.log.MavlinkLogReader;
+import com.comino.flight.log.ulog.MavLinkULOGHandler;
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -65,13 +65,11 @@ import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavcom.control.impl.MAVAutoController;
 import com.comino.mavcom.control.impl.MAVSerialController;
 import com.comino.mavcom.control.impl.MAVSimController;
 import com.comino.mavcom.control.impl.MAVUdpController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavcom.model.segment.GPS;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
@@ -130,6 +128,10 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem r_px4log;
+
+	@FXML
+	private MenuItem r_px4log_s;
+
 
 	@FXML
 	private MenuItem r_dellog;
@@ -603,39 +605,51 @@ public class MainApp extends Application  {
 				}
 
 			});
+			
+			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
+			
+			final String m_text = r_px4log.getText();
+			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
+				if(!newvalue.booleanValue()) {
+					Platform.runLater(() -> {
+						r_px4log.setText(m_text);
+						controlpanel.getChartControl().refreshCharts();
+					});
+				} else {
+					Platform.runLater(() -> {
+						r_px4log.setText("Cancel import from vehicle...");
+					});
+				}
+			});
 
 			r_px4log.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
 			r_px4log.setOnAction(new EventHandler<ActionEvent>() {
 
-				String m_text = r_px4log.getText();
-				MavlinkLogReader log = new MavlinkLogReader(control);
-
 				@Override
 				public void handle(ActionEvent event) {
-					//				if(state.getArmedProperty().get()) {
-					//					MSPLogger.getInstance().writeLocalMsg("Unarm device before accessing log.");
-					//					return;
-					//				}
 
 					AnalysisModelService.getInstance().stop();
 
-					//	r_px4log.setText("Cancel import from device...");
-
-					log.isCollecting().addListener((observable, oldvalue, newvalue) -> {
-						if(!newvalue.booleanValue()) {
-							Platform.runLater(() -> {
-								r_px4log.setText(m_text);
-								controlpanel.getChartControl().refreshCharts();
-							});
-						} else {
-							r_px4log.setText("Cancel import from device...");
-						}
-					});
-
-					if(log.isCollecting().get())
-						log.abortReadingLog();
+					if(log.isLoading().get())
+						log.cancelLoading();
 					else
-						log.requestLastLog();
+						log.getLog(MavLinkULOGHandler.MODE_LAST);
+				}
+			});
+
+
+			r_px4log_s.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
+			r_px4log_s.setOnAction(new EventHandler<ActionEvent>() {
+
+
+				@Override
+				public void handle(ActionEvent event) {
+
+					AnalysisModelService.getInstance().stop();
+
+					if(!log.isLoading().get())
+						log.getLog(MavLinkULOGHandler.MODE_SELECT);
+
 				}
 			});
 
