@@ -80,7 +80,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 	private int read_count = 0;
 	private List<Long> unread_packages = null;
-	
+
 	private long last_package_tms = 0;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
@@ -106,6 +106,12 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				System.out.println(directory.size()+" log entries found");
 				switch(mode) {
 				case MODE_SELECT:
+					
+					if(directory.size() < 1) {
+						cancelLoading();
+						return;
+					}
+
 					filehandler.setName("select log");
 					ULogSelectionDialog d = new ULogSelectionDialog(directory);
 					int id = d.selectLogId();
@@ -114,6 +120,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 						return;
 					}
 					requestLog(id);
+
 					break;
 				case MODE_LAST:
 					requestLog(directory.get(directory.size()-1).id);
@@ -135,7 +142,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				converter.doConversion();
 				reader.close();
 			} catch (Exception e) {
-//				e.printStackTrace();
+				//				e.printStackTrace();
 			}
 
 			logger.writeLocalMsg("[mgc] Import completed (" + speed + " kb/sec)");
@@ -150,11 +157,11 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	}
 
 	public void getLog(int mode) {
-		
+
 		if(!props.getConnectedProperty().get()) {
 			return;
 		}
-		
+
 		this.mode = mode;
 
 		try {
@@ -174,22 +181,22 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		filehandler.setName("Connected");
 		props.getLogLoadedProperty().set(false);
 		props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-		
+
 
 		try {
 			file.close();
 		} catch (IOException e) {
 		}
-		
+
 		if(!is_loading.get())
 			return;
 
 		log_count = 0;
 		is_loading.set(false);
-		
+
 		wq.removeTask("LP", worker);
 		sendEndNotice();
-		
+
 	}
 
 	public BooleanProperty isLogLoaded() {
@@ -224,25 +231,25 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		System.out.println("Expected packages: " + unread_packages.size()+"/"+entry.size);
 		logger.writeLocalMsg("[mgc] Importing Log (" + id + ") - " + (entry.size / 1024) + " kb");
 
-		
+
 		start = System.currentTimeMillis();
 		retry = 0;
 		chunk_offset = 0;
 		read_count = 0;
 
-	
-	    requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
+
+		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
 
 		worker = wq.addCyclicTask("LP",10,() -> {
-			
+
 			if((System.currentTimeMillis() - last_package_tms) <10 )
 				return;
-			
+
 			if (++retry > 1000) {
 				cancelLoading();
 				return;
 			}
-		
+
 
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
@@ -255,9 +262,11 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 
 	private void handleLogEntry(msg_log_entry entry) {
+		
+		if(entry.size == 0)
+			return;
 
 		directory.put(entry.id,entry);
-
 
 		if(entry.id == 0) {
 			log_count = entry.num_logs;	
@@ -268,7 +277,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		if(entry.id == entry.last_log_num) {
 			Platform.runLater(() -> {
-			is_directory_loaded.set(true);
+				is_directory_loaded.set(true);
 			});
 		}
 	}
@@ -276,7 +285,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	private void handleLogData(msg_log_data data) {
 
 		retry = 0;
-		
+
 
 		int p = getPackageNumber(data.ofs);
 
@@ -302,12 +311,12 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		int unread_count = unread_packages.size()-read_count; //getUnreadPackageCount();
 		last_package_tms = System.currentTimeMillis();
-		
+
 		// System.out.println("Package: "+p +" -> "+unread_packages.get(p)+"-> "+unread_count+" -> "+(unread_packages.size()-read_count));
 		// System.out.println(unread_count +" - " + total_package_count);
-		
+
 		props.getProgressProperty().set(1.0f - (float) unread_count / total_package_count);
-		
+
 		if (unread_count == 0) {
 			sendEndNotice();
 			wq.removeTask("LP", worker);
