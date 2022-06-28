@@ -84,6 +84,8 @@ public class ControlWidget extends ChartControlPane  {
 	private void initialize() {
 
 		details.setSelected(true);
+		
+		vehiclectl.visibleProperty().bind(stateProperties.getMSPProperty());
 
 		stateProperties.getOffboardProperty().addListener((e,o,n) -> {
 			if(n.booleanValue()) {

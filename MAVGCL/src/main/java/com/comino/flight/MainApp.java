@@ -517,192 +517,8 @@ public class MainApp extends Application  {
 
 	@FXML
 	private void initialize() {
-
-		try {
-
-			menubar.setUseSystemMenuBar(true);
-
-			String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
-			if(name!=null) {
-				m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
-			}
-
-			m_import.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					AnalysisModelService.getInstance().stop();
-					FileHandler.getInstance().fileImport();
-					controlpanel.getChartControl().refreshCharts();
-
-					String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
-					if(name!=null) {
-						m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
-					}
-				}
-			});
-
-			m_import_last.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					AnalysisModelService.getInstance().stop();
-					FileHandler.getInstance().fileImportLast();
-					controlpanel.getChartControl().refreshCharts();
-				}
-			});
-
-			m_map.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-				}
-			});
-
-			m_log.setDisable(!System.getProperty("os.name").toUpperCase().contains("MAC"));
-			m_log.setOnAction(event -> {
-				try {
-					Runtime.getRuntime().exec("open "+log_filename);
-				} catch (IOException e) { }
-			});
-
-			m_def.setOnAction(event -> {
-				FileHandler.getInstance().openKeyFigureMetaDataDefinition();
-			});
-
-			m_params.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			m_params.setOnAction(event -> {
-				FileHandler.getInstance().csvParameterImport();
-			});
-
-
-			m_reload.setOnAction((ActionEvent event)-> {
-				MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
-				if(params!=null)
-					params.refreshParameterList(false);
-			});
-
-			m_pdoc.setOnAction(event -> {
-				this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
-			});
-
-			r_dellog.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			r_dellog.setOnAction(event -> {
-
-				Alert alert = new Alert(AlertType.CONFIRMATION,
-						"Delete all local logs from device. Do you really want tod do this?",
-						ButtonType.OK, 
-						ButtonType.CANCEL);
-				alert.getDialogPane().getStylesheets().add(
-						getClass().getResource("application.css").toExternalForm());
-				alert.setTitle("Erase local log files");
-				alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
-				Optional<ButtonType> result = alert.showAndWait();
-
-				if (result.get() == ButtonType.OK) {
-					control.sendMAVLinkMessage(new msg_log_erase(1,2));
-					MSPLogger.getInstance().writeLocalMsg("[mgc] All PX4 logs have been erased",
-							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				}
-
-			});
-			
-			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
-			
-			final String m_text = r_px4log.getText();
-			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
-				if(!newvalue.booleanValue()) {
-					Platform.runLater(() -> {
-						r_px4log.setText(m_text);
-						controlpanel.getChartControl().refreshCharts();
-					});
-				} else {
-					Platform.runLater(() -> {
-						r_px4log.setText("Cancel import from vehicle...");
-					});
-				}
-			});
-
-			r_px4log.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			r_px4log.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent event) {
-
-					AnalysisModelService.getInstance().stop();
-
-					if(log.isLoading().get())
-						log.cancelLoading();
-					else
-						log.getLog(MavLinkULOGHandler.MODE_LAST);
-				}
-			});
-
-
-			r_px4log_s.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			r_px4log_s.setOnAction(new EventHandler<ActionEvent>() {
-
-
-				@Override
-				public void handle(ActionEvent event) {
-
-					AnalysisModelService.getInstance().stop();
-
-					if(!log.isLoading().get())
-						log.getLog(MavLinkULOGHandler.MODE_SELECT);
-
-				}
-			});
-
-			m_export.setOnAction(event -> {
-				AnalysisModelService.getInstance().stop();
-				if(AnalysisModelService.getInstance().getModelList().size()>0)
-					FileHandler.getInstance().fileExport();
-			});
-
-			m_csv.setOnAction(event -> {
-				AnalysisModelService.getInstance().stop();
-				if(AnalysisModelService.getInstance().getModelList().size()>0)
-					FileHandler.getInstance().csvExport();
-			});
-
-			m_prefs.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			m_prefs.setOnAction(event -> {
-				new PreferencesDialog(control).show();
-			});
-
-			//	m_dump.disableProperty().bind(StateProperties.getInstance().getLogLoadedProperty().not());
-			m_dump.setOnAction(event -> {
-				FileHandler.getInstance().dumpUlogFields();
-				//			try {
-				//				FileHandler.getInstance().autoSave();
-				//			} catch (IOException e1) {
-				//
-				//				e1.printStackTrace();
-				//			}
-			});
-
-			m_about.setOnAction(event -> {
-				showAboutDialog();
-			});
-
-
-			m_restart.disableProperty().bind(StateProperties.getInstance().getArmedProperty());
-			m_restart.setOnAction((event) ->{
-				AnalysisModelService.getInstance().stop();
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_RESTART;
-				control.sendMAVLinkMessage(msp);
-
-			});
-
-			m_about.setVisible(true);
-
-			//		notifyPreloader(new StateChangeNotification(
-			//				StateChangeNotification.Type.BEFORE_START));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		menubar.setUseSystemMenuBar(true);
+		setupMenuBar();
 	}
 
 
@@ -793,6 +609,194 @@ public class MainApp extends Application  {
 		Platform.runLater(() -> {
 			alert.showAndWait();
 		});
+	}
+	
+	private void setupMenuBar() {
+		try {
+
+			state = StateProperties.getInstance();
+
+			String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+			if(name!=null) {
+				m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
+			}
+
+			m_import.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					AnalysisModelService.getInstance().stop();
+					FileHandler.getInstance().fileImport();
+					controlpanel.getChartControl().refreshCharts();
+
+					String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+					if(name!=null) {
+						m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
+					}
+				}
+			});
+
+			m_import_last.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					AnalysisModelService.getInstance().stop();
+					FileHandler.getInstance().fileImportLast();
+					controlpanel.getChartControl().refreshCharts();
+				}
+			});
+
+			m_map.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
+				}
+			});
+
+			m_log.setDisable(!System.getProperty("os.name").toUpperCase().contains("MAC"));
+			m_log.setOnAction(event -> {
+				try {
+					Runtime.getRuntime().exec("open "+log_filename);
+				} catch (IOException e) { }
+			});
+
+			m_def.setOnAction(event -> {
+				FileHandler.getInstance().openKeyFigureMetaDataDefinition();
+			});
+
+			m_params.disableProperty().bind(state.getArmedProperty());
+			m_params.setOnAction(event -> {
+				FileHandler.getInstance().csvParameterImport();
+			});
+
+
+			m_reload.setOnAction((ActionEvent event)-> {
+				MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
+				if(params!=null)
+					params.refreshParameterList(false);
+			});
+
+			m_pdoc.setOnAction(event -> {
+				this.getHostServices().showDocument("https://docs.px4.io/en/advanced_config/parameter_reference.html");
+			});
+
+			r_dellog.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
+			r_dellog.setOnAction(event -> {
+
+				Alert alert = new Alert(AlertType.CONFIRMATION,
+						"Delete all local logs from device. Do you really want tod do this?",
+						ButtonType.OK, 
+						ButtonType.CANCEL);
+				alert.getDialogPane().getStylesheets().add(
+						getClass().getResource("application.css").toExternalForm());
+				alert.setTitle("Erase local log files");
+				alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
+				Optional<ButtonType> result = alert.showAndWait();
+
+				if (result.get() == ButtonType.OK) {
+					control.sendMAVLinkMessage(new msg_log_erase(1,2));
+					MSPLogger.getInstance().writeLocalMsg("[mgc] All PX4 logs have been erased",
+							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				}
+
+			});
+			
+			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
+			
+			final String m_text = r_px4log.getText();
+			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
+				if(!newvalue.booleanValue()) {
+					Platform.runLater(() -> {
+						r_px4log.setText(m_text);
+						controlpanel.getChartControl().refreshCharts();
+					});
+				} else {
+					Platform.runLater(() -> {
+						r_px4log.setText("Cancel import from vehicle...");
+					});
+				}
+			});
+
+			r_px4log.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
+			r_px4log.setOnAction(new EventHandler<ActionEvent>() {
+
+				@Override
+				public void handle(ActionEvent event) {
+
+					AnalysisModelService.getInstance().stop();
+
+					if(log.isLoading().get())
+						log.cancelLoading();
+					else
+						log.getLog(MavLinkULOGHandler.MODE_LAST);
+				}
+			});
+
+
+			r_px4log_s.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
+			r_px4log_s.setOnAction(new EventHandler<ActionEvent>() {
+
+
+				@Override
+				public void handle(ActionEvent event) {
+
+					AnalysisModelService.getInstance().stop();
+
+					if(!log.isLoading().get())
+						log.getLog(MavLinkULOGHandler.MODE_SELECT);
+
+				}
+			});
+
+			m_export.setOnAction(event -> {
+				AnalysisModelService.getInstance().stop();
+				if(AnalysisModelService.getInstance().getModelList().size()>0)
+					FileHandler.getInstance().fileExport();
+			});
+
+			m_csv.setOnAction(event -> {
+				AnalysisModelService.getInstance().stop();
+				if(AnalysisModelService.getInstance().getModelList().size()>0)
+					FileHandler.getInstance().csvExport();
+			});
+
+			m_prefs.disableProperty().bind(state.getArmedProperty());
+			m_prefs.setOnAction(event -> {
+				new PreferencesDialog(control).show();
+			});
+
+			//	m_dump.disableProperty().bind(state.getLogLoadedProperty().not());
+			m_dump.setOnAction(event -> {
+				FileHandler.getInstance().dumpUlogFields();
+				//			try {
+				//				FileHandler.getInstance().autoSave();
+				//			} catch (IOException e1) {
+				//
+				//				e1.printStackTrace();
+				//			}
+			});
+
+			m_about.setOnAction(event -> {
+				showAboutDialog();
+			});
+
+
+			m_restart.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
+			m_restart.setOnAction((event) ->{
+				AnalysisModelService.getInstance().stop();
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_RESTART;
+				control.sendMAVLinkMessage(msp);
+
+			});
+
+			m_about.setVisible(true);
+
+			//		notifyPreloader(new StateChangeNotification(
+			//				StateChangeNotification.Type.BEFORE_START));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Properties getBuildInfo() {

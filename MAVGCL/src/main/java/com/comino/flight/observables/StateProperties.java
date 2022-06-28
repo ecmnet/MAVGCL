@@ -141,7 +141,7 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
-			wq.addSingleTask("LP", 250,() -> {
+			wq.addSingleTask("LP", 500,() -> {
 				
 				control.getStatusManager().reset(); 
 				
@@ -157,6 +157,7 @@ public class StateProperties {
 					simulationProperty.set(n.isStatus(Status.MSP_SITL));
 			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
 				});
+				
 				
 			});
 			
