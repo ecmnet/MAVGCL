@@ -57,7 +57,7 @@ See MAVGCL XY view in some action: <https://youtu.be/jOWNSIwIA9k>
 
 Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases).
 
-**Screenshots**:
+Screenshots (Light Theme):
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/image0.png)
 
@@ -67,7 +67,9 @@ Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/image3.png) 
 
+Screenshot (Dark Theme):
 
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/image4.png) 
 
 **How to define custom key-figure metadata files:**
 
