@@ -108,9 +108,9 @@ public class ULogSelectionDialog  {
 		colName.setCellValueFactory( new PropertyValueFactory<TabData, String>("name"));
 		colName.setSortType(TableColumn.SortType.DESCENDING);
 		
-		TableColumn<TabData, Integer> colSize= new TableColumn<TabData, Integer>("Size");
+		TableColumn<TabData, String> colSize= new TableColumn<TabData, String>("Size");
 		colSize.setMinWidth(25); 
-		colSize.setCellValueFactory( new PropertyValueFactory<TabData, Integer>("size"));
+		colSize.setCellValueFactory( new PropertyValueFactory<TabData, String>("size"));
 		
 		table.getColumns().addAll(colId,colName,colSize);
 		
@@ -165,12 +165,20 @@ public class ULogSelectionDialog  {
 		
 		private int    id;
 		private String name;
-		private int    size;
+		private String size;
 		
 		public TabData(msg_log_entry e) {
+			
 			id   = e.id;
 			name = date_f.format(e.time_utc*1000);
-			size = (int)(e.size / 1024);
+			
+			float s = e.size / 1024f;
+			if(s < 1024)
+			    size = String.format("%#.0fkb", s);
+			else
+				size = String.format("%#.1fMb", s/1024f);
+				
+
 		}
 		
 		public int getId() {
@@ -179,7 +187,7 @@ public class ULogSelectionDialog  {
 		public String getName() {
 			return name;
 		}
-		public int getSize() {
+		public String getSize() {
 			return size;
 		}
 		public void setId(int id) {
@@ -188,7 +196,7 @@ public class ULogSelectionDialog  {
 		public void setName(String name) {
 			this.name = name;
 		}
-		public void setSize(int size) {
+		public void setSize(String size) {
 			this.size = size;
 		}
 			
