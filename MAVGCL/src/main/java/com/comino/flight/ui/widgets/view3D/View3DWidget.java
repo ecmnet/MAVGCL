@@ -90,6 +90,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
 
 	private AnalysisDataModel model      = null;
+	private AnalysisDataModel takeoff    = null;
 	private StateProperties state        = null;
 
 	private float           offset       = 0;
@@ -161,12 +162,30 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
+		state.getLogLoadedProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				takeoff = dataService.getModelList().get(dataService.getModelList().size()-1);
+				for(int i = 0; i < dataService.getModelList().size();i++) {
+					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
+						takeoff = dataService.getModelList().get(i);
+						System.out.println("Takeoff found at: "+i);
+						break;
+					}
+				}
+
+			}
+		});
+
 
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				if(!Double.isNaN(model.getValue("ALTTR"))) {
-					camera.setTranslateY(model.getValue("ALTTR")*100);
-					world.setTranslateY(model.getValue("ALTTR")*100);
+				takeoff = dataService.getModelList().get(dataService.getModelList().size()-1);
+				for(int i = 0; i < dataService.getModelList().size();i++) {
+					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
+						takeoff = dataService.getModelList().get(i);
+						System.out.println("Takeoff found at: "+i);
+						break;
+					}
 				}
 			}
 		});
@@ -185,16 +204,29 @@ public class View3DWidget extends SubScene implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+
+
+
 				if(isDisabled())
 					return;
 
-				if(state.getLandedProperty().get() && !state.getLogLoadedProperty().get()) {
-					if(!Double.isNaN(model.getValue("ALTTR"))) {
-						camera.setTranslateY(model.getValue("ALTTR")*100);
-						world.setTranslateY(model.getValue("ALTTR")*100);
-						offset = -(float)model.getValue("LPOSZ");
-						
+				if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get()) {
+
+					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
+						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
+						world.setTranslateY(takeoff.getValue("ALTTR")*100);
 					}
+					offset = -(float)takeoff.getValue("LPOSZ");
+					
+				} else {
+
+					if(state.getLandedProperty().get()) {
+						if(!Double.isNaN(model.getValue("ALTTR"))) {
+							camera.setTranslateY(model.getValue("ALTTR")*100);
+							world.setTranslateY(model.getValue("ALTTR")*100);
+							offset = -(float)model.getValue("LPOSZ");
+						}
+					} 
 				}
 
 				//				target.updateState(model);
