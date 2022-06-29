@@ -603,7 +603,7 @@ public class MainApp extends Application  {
 			alert.showAndWait();
 		});
 	}
-	
+
 	private void setupMenuBar() {
 		try {
 
@@ -679,8 +679,12 @@ public class MainApp extends Application  {
 						"Delete all local logs from device. Do you really want tod do this?",
 						ButtonType.OK, 
 						ButtonType.CANCEL);
-				alert.getDialogPane().getStylesheets().add(
-						getClass().getResource("application.css").toExternalForm());
+				if(MAVPreferences.isLightTheme())
+					alert.getDialogPane().getStylesheets().add(
+							getClass().getResource("light.css").toExternalForm());
+				else
+					alert.getDialogPane().getStylesheets().add(
+							getClass().getResource("dark.css").toExternalForm());
 				alert.setTitle("Erase local log files");
 				alert.getDialogPane().getScene().setFill(Color.rgb(32,32,32));
 				Optional<ButtonType> result = alert.showAndWait();
@@ -692,9 +696,9 @@ public class MainApp extends Application  {
 				}
 
 			});
-			
+
 			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
-			
+
 			final String m_text = r_px4log_s.getText();
 			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
 				if(!newvalue.booleanValue()) {
