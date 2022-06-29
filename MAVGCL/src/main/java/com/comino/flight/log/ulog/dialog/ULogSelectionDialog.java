@@ -48,6 +48,7 @@ import com.comino.flight.prefs.MAVPreferences;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -97,6 +98,7 @@ public class ULogSelectionDialog  {
 		
 		table.prefWidthProperty().bind(pane.widthProperty());
 		
+		
 		TableColumn<TabData, Integer> colId= new TableColumn<TabData, Integer>("Id");
 		colId.setMinWidth(15); 
 		colId.setCellValueFactory( new PropertyValueFactory<TabData, Integer>("id"));
@@ -104,6 +106,7 @@ public class ULogSelectionDialog  {
 		TableColumn<TabData, String> colName = new TableColumn<TabData, String>("Timestamp");
 		colName.setMinWidth(200); 
 		colName.setCellValueFactory( new PropertyValueFactory<TabData, String>("name"));
+		colName.setSortType(TableColumn.SortType.DESCENDING);
 		
 		TableColumn<TabData, Integer> colSize= new TableColumn<TabData, Integer>("Size");
 		colSize.setMinWidth(25); 
@@ -112,9 +115,15 @@ public class ULogSelectionDialog  {
 		table.getColumns().addAll(colId,colName,colSize);
 		
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		table.setItems(data);
 		
+		SortedList<TabData> sortedData = new SortedList<>(data);
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
+		
+		table.setItems(sortedData);
+		
+		table.getSortOrder().addAll(colName);
 		pane.getChildren().add(table);
+		
 		
 
 		list.values().forEach((m) -> {

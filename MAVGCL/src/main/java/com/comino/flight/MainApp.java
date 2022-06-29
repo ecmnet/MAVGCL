@@ -127,9 +127,6 @@ public class MainApp extends Application  {
 	private MenuItem m_csv;
 
 	@FXML
-	private MenuItem r_px4log;
-
-	@FXML
 	private MenuItem r_px4log_s;
 
 
@@ -338,10 +335,6 @@ public class MainApp extends Application  {
 						}
 					});
 				}
-				Platform.runLater(() -> {
-					if(r_px4log!=null)
-						r_px4log.setDisable(!n.booleanValue());
-				});
 			});
 
 			if(!control.isConnected())
@@ -702,35 +695,19 @@ public class MainApp extends Application  {
 			
 			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
 			
-			final String m_text = r_px4log.getText();
+			final String m_text = r_px4log_s.getText();
 			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
 				if(!newvalue.booleanValue()) {
 					Platform.runLater(() -> {
-						r_px4log.setText(m_text);
+						r_px4log_s.setText(m_text);
 						controlpanel.getChartControl().refreshCharts();
 					});
 				} else {
 					Platform.runLater(() -> {
-						r_px4log.setText("Cancel import from vehicle...");
+						r_px4log_s.setText("Cancel import from vehicle");
 					});
 				}
 			});
-
-			r_px4log.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
-			r_px4log.setOnAction(new EventHandler<ActionEvent>() {
-
-				@Override
-				public void handle(ActionEvent event) {
-
-					AnalysisModelService.getInstance().stop();
-
-					if(log.isLoading().get())
-						log.cancelLoading();
-					else
-						log.getLog(MavLinkULOGHandler.MODE_LAST);
-				}
-			});
-
 
 			r_px4log_s.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
 			r_px4log_s.setOnAction(new EventHandler<ActionEvent>() {
@@ -741,7 +718,9 @@ public class MainApp extends Application  {
 
 					AnalysisModelService.getInstance().stop();
 
-					if(!log.isLoading().get())
+					if(log.isLoading().get())
+						log.cancelLoading();
+					else
 						log.getLog(MavLinkULOGHandler.MODE_SELECT);
 
 				}

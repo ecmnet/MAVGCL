@@ -240,9 +240,9 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
 
-		worker = wq.addCyclicTask("LP",10,() -> {
+		worker = wq.addCyclicTask("LP",15,() -> {
 
-			if((System.currentTimeMillis() - last_package_tms) <10 )
+			if((System.currentTimeMillis() - last_package_tms) < 5 )
 				return;
 
 			if (++retry > 1000) {
@@ -254,7 +254,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 7) 
+			while(searchForNextUnreadPackage() && c++ < 5) 
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 
 		});

@@ -37,17 +37,14 @@
 						</MenuItem>
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="r_px4log_s" mnemonicParsing="false"
-							text="Import Ulog from vehicle...">
-						</MenuItem>
-						<MenuItem fx:id="r_px4log" mnemonicParsing="false"
-							text="Get latest Ulog from vehicle">
+							text="Import log from vehicle...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="D"
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
 						<MenuItem fx:id="r_dellog" mnemonicParsing="false"
-							text="Erase all local logs stored">
+							text="Erase all logs on vehicle">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="L"
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
