@@ -162,9 +162,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
+		// search for takeoff 
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				takeoff = dataService.getModelList().get(dataService.getModelList().size()-1);
+				takeoff = dataService.getModelList().get(0);
 				for(int i = 0; i < dataService.getModelList().size();i++) {
 					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
 						takeoff = dataService.getModelList().get(i);
@@ -172,14 +173,17 @@ public class View3DWidget extends SubScene implements IChartControl {
 						break;
 					}
 				}
-
-			}
+				model = dataService.getModelList().get(dataService.getModelList().size()-1);
+			} 
+			else
+				model = dataService.getCurrent();
 		});
 
 
+		// search for takeoff
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				takeoff = dataService.getModelList().get(dataService.getModelList().size()-1);
+				takeoff = dataService.getModelList().get(0);
 				for(int i = 0; i < dataService.getModelList().size();i++) {
 					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
 						takeoff = dataService.getModelList().get(i);
@@ -205,8 +209,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 			@Override
 			public void handle(long now) {
 
-
-
 				if(isDisabled())
 					return;
 
@@ -215,8 +217,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
 						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
 						world.setTranslateY(takeoff.getValue("ALTTR")*100);
-					}
+					} 
 					offset = -(float)takeoff.getValue("LPOSZ");
+					
 					
 				} else {
 
@@ -225,7 +228,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 							camera.setTranslateY(model.getValue("ALTTR")*100);
 							world.setTranslateY(model.getValue("ALTTR")*100);
 							offset = -(float)model.getValue("LPOSZ");
-						}
+						} 
 					} 
 				}
 
@@ -252,8 +255,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 				if(dataService.getModelList().size()>0 && current_x1_pt >= 0 && current_x1_pt< dataService.getModelList().size())
 					model = dataService.getModelList().get(current_x1_pt);
-				else
-					model = dataService.getCurrent();
+//				else
+//					model = dataService.getCurrent();
 
 			}
 		});
