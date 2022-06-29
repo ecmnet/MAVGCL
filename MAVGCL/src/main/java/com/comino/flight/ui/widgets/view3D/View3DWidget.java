@@ -72,14 +72,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private static final double PLANE_LENGTH  = 5000.0;
 	private static final float  VEHICLE_SCALE = 50.0f;
-	
+
 
 	private AnimationTimer 	task 		= null;
 	private Xform 			world 		= new Xform();
 
 	private Box             ground;
 
-//	private MapGroup 		blocks		= null;
+	//	private MapGroup 		blocks		= null;
 	private Map3DGroup      blocks      = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
@@ -91,7 +91,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private AnalysisDataModel model      = null;
 	private StateProperties state        = null;
-	
+
 	private float           offset       = 0;
 
 	private int				perspective = Camera.OBSERVER_PERSPECTIVE;
@@ -109,19 +109,19 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("DARKGRAY", 0.1));
-		
+
 
 		PhongMaterial groundMaterial = new PhongMaterial();
 		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
 		groundMaterial.setDiffuseMap(new Image
 				(getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
-		
+
 		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
-	    pointLight.setTranslateX(100);
-	    pointLight.setTranslateY(800);
-	    pointLight.setRotate(45);
-	    pointLight.setTranslateZ(-800);
-	   
+		pointLight.setTranslateX(100);
+		pointLight.setTranslateY(800);
+		pointLight.setRotate(45);
+		pointLight.setTranslateZ(-800);
+
 
 
 		PhongMaterial northMaterial = new PhongMaterial();
@@ -147,9 +147,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.model = dataService.getCurrent();
 
 		this.blocks   = new Map3DGroup(world,control.getCurrentModel());
-		
-//		this.map   = new Map3DGroup(world,control.getCurrentModel());
-		
+
+		//		this.map   = new Map3DGroup(world,control.getCurrentModel());
+
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
@@ -180,19 +180,29 @@ public class View3DWidget extends SubScene implements IChartControl {
 				this.model = dataService.getCurrent();
 			}
 		});
-		
-		
+
+
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
 				if(isDisabled())
 					return;
-//				target.updateState(model);
-//				vehicle.updateState(model,offset);
+
+				if(state.getLandedProperty().get() && !state.getLogLoadedProperty().get()) {
+					if(!Double.isNaN(model.getValue("ALTTR"))) {
+						camera.setTranslateY(model.getValue("ALTTR")*100);
+						world.setTranslateY(model.getValue("ALTTR")*100);
+						offset = -(float)model.getValue("LPOSZ");
+						
+					}
+				}
+
+				//				target.updateState(model);
+				//				vehicle.updateState(model,offset);
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
 					if(!vehicle.isVisible())
-						  vehicle.setVisible(true);
+						vehicle.setVisible(true);
 					vehicle.updateState(model,offset);
 					trajectory.updateState(model,offset);
 					break;
@@ -233,7 +243,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				trajectory.clear();
 			}
 		});
-		
+
 
 		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
@@ -246,11 +256,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		return this;
 	}
-	
+
 	public void enableTrajectoryView(boolean enabled) {
 		trajectory.show(enabled);
 	}
-	
+
 
 	public void setPerspective(int perspective) {
 		this.perspective = perspective;
@@ -259,11 +269,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 			switch(perspective) {
 			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.show(true);
-//				map.setMode2D(false);
+				//				map.setMode2D(false);
 				break;
 			case Camera.VEHICLE_PERSPECTIVE:
 				vehicle.show(false);
-//				map.setMode2D(true);
+				//				map.setMode2D(true);
 				break;
 			}
 		});
@@ -283,9 +293,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 	}
 
 
-//	public void clear() {
-//		blocks.clear();
-//	}
+	//	public void clear() {
+	//		blocks.clear();
+	//	}
 
 	private Group addPole(char orientation) {
 
@@ -357,6 +367,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 	}
-	
-	
+
+
 }
