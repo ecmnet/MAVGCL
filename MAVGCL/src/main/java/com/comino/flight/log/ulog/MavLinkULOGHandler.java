@@ -145,7 +145,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				//				e.printStackTrace();
 			}
 
-			logger.writeLocalMsg("[mgc] Import completed (" + speed + " kb/sec)");
+			logger.writeLocalMsg("[mgc] Import completed in "+((System.currentTimeMillis()-start)/1000)+"secs");
 			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
 			String name = "Log-" + log_id + "-" + formatter.format(directory.get(log_id).time_utc);
 			copyFileToLogDir(path, name);
@@ -230,7 +230,6 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		total_package_count = prepareUnreadPackageList(entry.size);
 		System.out.println("Expected packages: " + unread_packages.size()+"/"+entry.size);
 		logger.writeLocalMsg("[mgc] Importing Log (" + id + ") - " + (entry.size / 1024) + " kb");
-
 
 		start = System.currentTimeMillis();
 		retry = 0;
