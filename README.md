@@ -65,12 +65,7 @@ Available binaries can be found [here](https://github.com/ecmnet/MAVGCL/releases
 
 ![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/image2.png)
 
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot11.png) 
-
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot14.png) 
-
-![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/screenshot13.png) 
-
+![alt tag](https://raw.github.com/ecmnet/MAVGCL/master/MAVGCL/image3.png) 
 
 
 
