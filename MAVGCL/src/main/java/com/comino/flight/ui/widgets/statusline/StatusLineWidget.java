@@ -217,7 +217,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 				if(control.isConnected()) {
 					
-					if(MSPMathUtils.is_projection_initialized())
+					if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) 
 						home.setMode(Badge.MODE_ON);
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
