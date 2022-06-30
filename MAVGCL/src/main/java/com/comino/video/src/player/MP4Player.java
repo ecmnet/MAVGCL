@@ -55,31 +55,31 @@ public class MP4Player implements IMWVideoSource {
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
+	
 		
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public boolean isAvailable() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public boolean isRunning() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public int getFPS() {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 	

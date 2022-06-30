@@ -144,7 +144,6 @@ public class MjpegPlayer extends Application {
 			ch = NIOUtils.readableFileChannel(file);
 			return ((FrameGrab) new FrameGrab(ch).seekToFramePrecise(1)).getFrame();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			NIOUtils.closeQuietly(ch);
