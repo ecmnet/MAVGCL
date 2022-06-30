@@ -96,6 +96,9 @@ public class LineMessageAnnotation  implements XYAnnotation {
 		default:
 			triangle.setFill(Color.LIGHTGREY);
 		}
+		if(MAVPreferences.isLightTheme())
+			triangle.setFill(Color.valueOf(triangle.getFill().toString()).darker());
+		
 		this.triangle.setStrokeType(StrokeType.INSIDE);
 
 //		Tooltip tooltip = new Tooltip(message.text);
