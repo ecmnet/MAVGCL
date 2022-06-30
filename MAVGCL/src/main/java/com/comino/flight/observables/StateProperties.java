@@ -258,7 +258,7 @@ public class StateProperties {
 	}
 	
 	public void reset() {
-		control.getStatusManager().reset();
+    	control.getStatusManager().reset();
 		Platform.runLater(()-> {
 		isGPOSAvailable.set(false);
 		isLPOSAvailable.set(false);
