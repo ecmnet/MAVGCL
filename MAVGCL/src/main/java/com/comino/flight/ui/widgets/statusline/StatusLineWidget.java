@@ -52,6 +52,7 @@ import com.comino.mavcom.control.impl.MAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
+import com.comino.mavutils.MSPMathUtils;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
@@ -103,6 +104,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge lpos;
+	
+	@FXML
+	private Badge home;
 
 	@FXML
 	private Badge wp;
@@ -212,6 +216,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				vision.setText(msp_model.vision.getShortText());
 
 				if(control.isConnected()) {
+					
+					if(MSPMathUtils.is_projection_initialized())
+						home.setMode(Badge.MODE_ON);
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 
@@ -251,6 +258,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					driver.setMode(Badge.MODE_OFF);
 					ekf.setMode(Badge.MODE_OFF);
 					vision.setMode(Badge.MODE_OFF);
+					home.setMode(Badge.MODE_OFF);
 					driver.setText("");
 				}
 
@@ -362,6 +370,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			ready.setDisable(!n.booleanValue());
 
 		});
+		
 
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			if((n.isStatus(Status.MSP_RC_ATTACHED)))
