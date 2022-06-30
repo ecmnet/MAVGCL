@@ -82,7 +82,7 @@ public class LineMessageAnnotation  implements XYAnnotation {
 			triangle.setFill(Color.LIGHTGREEN);
 			break;
 		case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-			triangle.setFill(Color.WHEAT);
+			triangle.setFill(Color.GOLD);
 			break;
 		case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
 			triangle.setFill(Color.SALMON);
