@@ -101,36 +101,42 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		this.modelService = AnalysisModelService.getInstance();
 
 		is_directory_loaded.addListener((b,o,n) -> {
-			if(n.booleanValue()) {
-				props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-				System.out.println(directory.size()+" log entries found");
-				switch(mode) {
-				case MODE_SELECT:
-					
-					if(directory.size() < 1) {
-						cancelLoading();
-						return;
-					}
 
-					filehandler.setName("select log");
-					ULogSelectionDialog d = new ULogSelectionDialog(directory);
-					int id = d.selectLogId();
-					if(id <0) {
-						cancelLoading();
-						return;
-					}
-					requestLog(id);
+			if(!n.booleanValue())
+				return;
 
-					break;
-				case MODE_LAST:
-					requestLog(directory.get(directory.size()-1).id);
-					break;	
-				}	
-				props.getLogLoadedProperty().set(false);
-			}
+			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
+			System.out.println(directory.size()+" log entries found");
+			switch(mode) {
+			case MODE_SELECT:
+
+				if(directory.size() < 1) {
+					cancelLoading();
+					return;
+				}
+
+				filehandler.setName("select log");
+				ULogSelectionDialog d = new ULogSelectionDialog(directory);
+				int id = d.selectLogId();
+				if(id <0) {
+					cancelLoading();
+					return;
+				}
+				requestLog(id);
+
+				break;
+			case MODE_LAST:
+				requestLog(directory.get(directory.size()-1).id);
+				break;	
+			}	
+			props.getLogLoadedProperty().set(false);
+
 		});
 
 		is_log_loaded.addListener((b,o,n) -> {
+
+			if(!n.booleanValue())
+				return;
 
 			System.out.println("Log loaded");
 			is_loading.set(false);
@@ -260,7 +266,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 
 	private void handleLogEntry(msg_log_entry entry) {
-		
+
 		if(entry.size == 0)
 			return;
 
@@ -342,6 +348,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		directory.clear(); 
 		is_directory_loaded.set(false); 
+		is_log_loaded.set(false); 
 		log_count = 0;
 
 		msg_log_request_list msg = new msg_log_request_list(255, 1);
