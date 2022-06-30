@@ -65,6 +65,7 @@ import com.comino.flight.ui.FlightTabs;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.statusline.StatusLineWidget;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.control.impl.MAVAutoController;
 import com.comino.mavcom.control.impl.MAVSerialController;
 import com.comino.mavcom.control.impl.MAVSimController;
 import com.comino.mavcom.control.impl.MAVUdpController;
@@ -187,7 +188,7 @@ public class MainApp extends Application  {
 		//		try {
 		//			redirectConsole();
 		//		} catch (IOException e) {
-		//			// TODO Auto-generated catch block
+		//			
 		//			e.printStackTrace();
 		//		}
 
@@ -207,7 +208,7 @@ public class MainApp extends Application  {
 		//
 		//			@Override
 		//			public void handleQuitAction(com.sun.glass.ui.Application app, long time) {
-		//				// TODO Auto-generated method stub
+		//				
 		//				super.handleQuitAction(app, time);
 		//				control.close();
 		//				System.exit(0);
@@ -277,18 +278,19 @@ public class MainApp extends Application  {
 			else {
 
 
-				//				control =new MAVAutoController(peerAddress,peerport,bindport); 
+   			control =new MAVAutoController(peerAddress,peerport,bindport); 
 
 
-				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-					control = new MAVUdpController("127.0.0.1",14557,14540, true);
-					//	new SITLController(control);
-				} else {
-					//	try { redirectConsole(); } catch (IOException e2) { }
-					control = new MAVUdpController(peerAddress,peerport,bindport, false);
-				}
+//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+//					//	new SITLController(control);
+//				} else {
+//					//	try { redirectConsole(); } catch (IOException e2) { }
+//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+//				}
 			}
+			
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
 
@@ -327,7 +329,7 @@ public class MainApp extends Application  {
 				if(n.booleanValue()) {
 					//control.getStatusManager().reset();
 					wq.addSingleTask("LP",300, () -> {
-						control.getStatusManager().reset();
+					//	control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
 							control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
