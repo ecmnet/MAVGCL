@@ -141,25 +141,30 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
-			wq.addSingleTask("LP", 500,() -> {
-				
-				control.getStatusManager().reset(); 
-				
-				isGPSAvailable.set(true);
-				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
-				isCVAvailable.set(true);
-				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
-				isSLAMAvailable.set(true);
-				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
-				isMSPAvailable.set(true);
-				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
-				Platform.runLater(() -> {
-					simulationProperty.set(n.isStatus(Status.MSP_SITL));
-			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
-				});
-				
-				
-			});
+//			wq.addSingleTask("LP", 500,() -> {
+//				
+//				control.getStatusManager().reset(); 
+//				
+//				isGPSAvailable.set(true);
+//				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+//				isCVAvailable.set(true);
+//				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+//				isSLAMAvailable.set(true);
+//				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+//				isMSPAvailable.set(true);
+//				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
+//				Platform.runLater(() -> {
+//					simulationProperty.set(n.isStatus(Status.MSP_SITL));
+//			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+//				});
+//				
+//				
+//			});
+			
+			Platform.runLater(() -> {
+			simulationProperty.set(n.isStatus(Status.MSP_SITL));
+	    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+		});
 			
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
