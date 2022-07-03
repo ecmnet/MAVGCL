@@ -68,6 +68,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	private int speed     = 0;
 	private int retry     = 0;
 	private int worker    = 0;
+	private int timeout   = 0;
 	private int log_id    = 0;
 
 	private int total_package_count = 0;
@@ -189,6 +190,10 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		sendDirectoryRequest();
 		filehandler.setName("getting log entries");
+		timeout = wq.addSingleTask("LP", 2000, () -> {
+			logger.writeLocalMsg("[mgc] No logs found on vehicle.");
+			filehandler.setName("Connected");
+		});
 	}
 
 	public void cancelLoading() {
@@ -265,7 +270,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				return;
 			}
 
-			filehandler.setName("loading log "+log_id+" ("+retry+"kb/s)");
+			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
 			while(searchForNextUnreadPackage() && c++ < 10) 
@@ -279,6 +284,8 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		if(entry.size == 0)
 			return;
+		
+		wq.removeTask("LP", timeout);
 
 		directory.put(entry.id,entry);
 
