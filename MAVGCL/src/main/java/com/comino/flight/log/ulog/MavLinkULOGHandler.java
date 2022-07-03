@@ -99,6 +99,15 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		this.control.addMAVLinkListener(this);
 		this.filehandler = FileHandler.getInstance();
 		this.modelService = AnalysisModelService.getInstance();
+		
+		
+		props.getArmedProperty().addListener((v,o,n) -> {
+			if(n.booleanValue() && is_loading.get()) {
+				cancelLoading();
+				logger.writeLocalMsg("[mgc] Vehicle armed. Import of log cancelled.");
+			}
+			
+		});
 
 		is_directory_loaded.addListener((b,o,n) -> {
 
@@ -246,6 +255,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
 
 		worker = wq.addCyclicTask("LP",100,() -> {
+				
 
 			if((System.currentTimeMillis() - last_package_tms) < 10 )
 				return;
@@ -255,7 +265,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				return;
 			}
 
-			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
+			filehandler.setName("loading log "+log_id+" ("+retry+"kb/s)");
 
 			int c = 0;
 			while(searchForNextUnreadPackage() && c++ < 10) 
