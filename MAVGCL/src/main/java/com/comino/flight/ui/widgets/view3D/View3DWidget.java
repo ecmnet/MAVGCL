@@ -163,13 +163,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 		});
 
 		// search for takeoff 
+		// TODO: What if no takeoff found
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
 				takeoff = dataService.getModelList().get(0);
 				for(int i = 0; i < dataService.getModelList().size();i++) {
 					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
 						takeoff = dataService.getModelList().get(i);
-						System.out.println("Takeoff found at: "+i);
+						//System.out.println("Takeoff found at: "+i);
 						break;
 					}
 				}
@@ -187,7 +188,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				for(int i = 0; i < dataService.getModelList().size();i++) {
 					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
 						takeoff = dataService.getModelList().get(i);
-						System.out.println("Takeoff found at: "+i);
+						//System.out.println("Takeoff found at: "+i);
 						break;
 					}
 				}
