@@ -108,15 +108,15 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
-//		media = new MediaView();
-//		this.getChildren().add(media);
-//		media.fitWidthProperty().bind(this.widthProperty());
-//		media.fitHeightProperty().bind(this.heightProperty());
-//
-//		Media m = new Media("file:///Users/ecmnet/Pixhawk/Logs/010521-160341.mp4");
-//		player = new MediaPlayer(m);
-//		media.setVisible(true);
-//		media.setMediaPlayer(player);
+		//		media = new MediaView();
+		//		this.getChildren().add(media);
+		//		media.fitWidthProperty().bind(this.widthProperty());
+		//		media.fitHeightProperty().bind(this.heightProperty());
+		//
+		//		Media m = new Media("file:///Users/ecmnet/Pixhawk/Logs/010521-160341.mp4");
+		//		player = new MediaPlayer(m);
+		//		media.setVisible(true);
+		//		media.setMediaPlayer(player);
 
 
 		this.setFixedRatio((double)Y/X);
@@ -129,15 +129,15 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			if(newvalue.booleanValue())
 				if(state.getReplayingProperty().get()) {
-//					image.setVisible(false);
-//					media.setVisible(true);
-//					player.play();
-//					source.stop();
+					//					image.setVisible(false);
+					//					media.setVisible(true);
+					//					player.play();
+					//					source.stop();
 				}
 				else  {
 					image.setVisible(true);
-//					media.setVisible(false);
-//					player.stop();
+					//					media.setVisible(false);
+					//					player.stop();
 					source.start();
 				}
 			else {
@@ -179,19 +179,19 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 
-//		state.getConnectedProperty().addListener((o,ov,nv) -> {
-//			if(control.isSimulation()) {
-//				return;
-//			}
-//			if(nv.booleanValue()) {
-//				image.setImage(null);
-//				if(fadeProperty().getValue() && !source.isRunning()) {
-//					connect(); source.start(); image.setImage(null);
-//				}
-//			} else
-//				if(source!=null)
-//					source.stop();
-//		});
+		//		state.getConnectedProperty().addListener((o,ov,nv) -> {
+		//			if(control.isSimulation()) {
+		//				return;
+		//			}
+		//			if(nv.booleanValue()) {
+		//				image.setImage(null);
+		//				if(fadeProperty().getValue() && !source.isRunning()) {
+		//					connect(); source.start(); image.setImage(null);
+		//				}
+		//			} else
+		//				if(source!=null)
+		//					source.stop();
+		//		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || state.getSimulationProperty().get())
@@ -204,14 +204,18 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					return;
 				if(!source.isRunning())
 					source.start();
-				recorder.getRecordMP4Property().set(true);
-				logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				Platform.runLater(() -> {
+					recorder.getRecordMP4Property().set(true);
+					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				});
 			} else {
 				if(recorder.getRecordMP4Property().get()) {
-					recorder.getRecordMP4Property().set(false);
-					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-					if(!fadeProperty().getValue())
-						source.stop();
+					Platform.runLater(() -> {
+						recorder.getRecordMP4Property().set(false);
+						logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+						if(!fadeProperty().getValue())
+							source.stop();
+					});
 				}
 			}
 
@@ -221,8 +225,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	public FloatProperty getScrollProperty() {
 		return scroll;
 	}
-	
-	
+
+
 
 	private void resize(boolean big, int maxX, int maxY) {
 		Platform.runLater(() -> {
@@ -246,13 +250,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 	}
-	
-	
+
+
 
 
 	@Override
 	protected void perform_action() {
-       widget.getVideoVisibility().setValue(false);
+		widget.getVideoVisibility().setValue(false);
 	}       
 
 
@@ -297,7 +301,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		isConnected = true;
 		return true;
 	}

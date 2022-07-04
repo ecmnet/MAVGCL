@@ -37,6 +37,7 @@ package com.comino.video.src.mp4;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import com.comino.flight.observables.StateProperties;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 
 import javafx.beans.property.BooleanProperty;
@@ -54,6 +55,8 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 	public MP4Recorder(String path, int width, int height) {
 
 		recording.addListener((c,o,n) -> {
+			if(StateProperties.getInstance().getSimulationProperty().get())
+				return;
 			try {
 				if(n.booleanValue()) {
 					System.out.println("MP4 recording started");
@@ -74,7 +77,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 		if(recording.get() && image!=null && encoder!=null) {
 			bimg = SwingFXUtils.fromFXImage(image, bimg);
 			encoder.encodeImage(bimg, fps);
-	//		encoder.encodeImage(image, fps);
+			//		encoder.encodeImage(image, fps);
 		}
 	}
 
