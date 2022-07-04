@@ -185,7 +185,7 @@ public class CommanderWidget extends ChartControlPane  {
 				}
 				else {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
-					takeoff_command.setState(false);
+					Platform.runLater(() -> takeoff_command.setState(false));
 				}
 			}
 			else {
