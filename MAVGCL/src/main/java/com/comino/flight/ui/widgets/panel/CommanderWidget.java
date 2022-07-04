@@ -172,6 +172,7 @@ public class CommanderWidget extends ChartControlPane  {
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
 				if(state.getMSPProperty().get()) {
+					
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 					msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
@@ -213,7 +214,7 @@ public class CommanderWidget extends ChartControlPane  {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.TAKEOFF,(n) -> {
 			if(state.getMSPProperty().get())
-				takeoff_command.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF));
+				Platform.runLater(() -> takeoff_command.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF)));
 		});
 	}
 
