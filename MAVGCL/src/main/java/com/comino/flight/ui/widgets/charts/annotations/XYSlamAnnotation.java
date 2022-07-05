@@ -34,6 +34,7 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavutils.MSPMathUtils;
 import com.emxsys.chart.extension.XYAnnotation;
@@ -78,6 +79,8 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		plan_rotate = Rotate.rotate(0, 0, 0);
 		plan_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
 		plan_dir.setFill(Color.rgb(230, 230, 20, 0.6));
+		if(MAVPreferences.isLightTheme())
+			plan_dir.setFill(Color.valueOf(plan_dir.getFill().toString()).darker());
 		plan_dir.getTransforms().add(plan_rotate);
 		plan_dir.setStrokeType(StrokeType.INSIDE);
 		plan_dir.setVisible(false);
