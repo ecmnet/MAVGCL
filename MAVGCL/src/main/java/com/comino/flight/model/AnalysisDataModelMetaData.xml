@@ -1309,7 +1309,7 @@
 			<Group>Battery</Group>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="10.5" max="15.0"/>
+		<Validity min="10.5" max="999.0"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Current" uom="A" mask="#0.0" key="BATC">
