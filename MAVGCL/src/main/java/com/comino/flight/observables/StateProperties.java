@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -35,7 +35,6 @@ package com.comino.flight.observables;
 
 import org.mavlink.messages.MAV_SEVERITY;
 
-import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.LogMessage;
@@ -43,7 +42,6 @@ import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.mavutils.workqueue.WorkQueue;
-import com.comino.speech.VoiceTTS;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -149,11 +147,8 @@ public class StateProperties {
 
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-				//	reset(); 
 
-			} else {
-
-			}
+			} 
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (n) -> {
