@@ -59,7 +59,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 				return;
 			try {
 				if(n.booleanValue()) {
-					System.out.println("MP4 recording started");
+					System.out.println("MP4 recording started - MP4");
 					encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
 				}
 				else {

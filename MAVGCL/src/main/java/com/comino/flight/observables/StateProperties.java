@@ -121,8 +121,6 @@ public class StateProperties {
 	private StateProperties(IMAVController control) {
 		this.control = control;
 		this.logger = MSPLogger.getInstance();
-
-		simulationProperty.set(control.isSimulation());
 		
 		wq.addSingleTask("LP", 2000, () ->  isInitializedProperty.set(true) );
 

@@ -327,8 +327,10 @@ public class MainApp extends Application  {
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
+				
 					//control.getStatusManager().reset();
-					wq.addSingleTask("LP",300, () -> {
+					wq.addSingleTask("LP",300, () -> {			
+						System.out.println("Is simulation: "+control.isSimulation());
 					//	control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
@@ -350,8 +352,6 @@ public class MainApp extends Application  {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
 				new Thread(base).start();
 			}
-
-
 
 
 			state.getLPOSAvailableProperty().addListener((v,o,n) -> {

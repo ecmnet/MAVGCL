@@ -194,7 +194,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		//		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || state.getSimulationProperty().get())
+			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || control.isSimulation())
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
@@ -264,7 +264,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private boolean connect() {
 		String url_string = null;
 
-		if(isConnected || state.getSimulationProperty().get())
+		if(isConnected)
 			return true;
 
 
