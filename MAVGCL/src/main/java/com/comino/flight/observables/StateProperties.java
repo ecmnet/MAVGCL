@@ -101,9 +101,9 @@ public class StateProperties {
 	private IMAVController control;
 
 	private MSPLogger logger;
-	
+
 	private final WorkQueue wq = WorkQueue.getInstance();
-	
+
 
 
 	public static StateProperties getInstance() {
@@ -121,158 +121,141 @@ public class StateProperties {
 	private StateProperties(IMAVController control) {
 		this.control = control;
 		this.logger = MSPLogger.getInstance();
-		
+
 		wq.addSingleTask("LP", 2000, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			Platform.runLater(()-> {
-			isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
+				isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
 			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_ARMED, (n) -> {
 			Platform.runLater(()-> {
-			  armedProperty.set(n.isStatus(Status.MSP_ARMED));
+				armedProperty.set(n.isStatus(Status.MSP_ARMED));
 			});
 
 		});
 
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
-//			wq.addSingleTask("LP", 500,() -> {
-//				
-//				control.getStatusManager().reset(); 
-//				
-//				isGPSAvailable.set(true);
-//				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
-//				isCVAvailable.set(true);
-//				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
-//				isSLAMAvailable.set(true);
-//				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
-//				isMSPAvailable.set(true);
-//				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
-//				Platform.runLater(() -> {
-//					simulationProperty.set(n.isStatus(Status.MSP_SITL));
-//			    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
-//				});
-//				
-//				
-//			});
-			
-			Platform.runLater(() -> {
 			simulationProperty.set(n.isStatus(Status.MSP_SITL));
-	    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
-		});
 			
+			wq.addSingleTask("LP", 100,() -> {
+				Platform.runLater(() -> {
+					connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				});
+			});
+
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-			//	reset(); 
+				//	reset(); 
 
 			} else {
-				
+
 			}
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LANDED, (n) -> {
 			Platform.runLater(()-> {
-		    	landedProperty.set(n.isStatus(Status.MSP_LANDED));
+				landedProperty.set(n.isStatus(Status.MSP_LANDED));
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL,  (n) -> {
 			Platform.runLater(()-> {
-			altholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
+				altholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, (n) -> {
 			Platform.runLater(()-> {
-			posholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
+				posholdProperty.set(n.nav_state == Status.NAVIGATION_STATE_POSCTL);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_OFFBOARD, (n) -> {
 			Platform.runLater(()-> {
-			offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+				offboardProperty.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
 			Platform.runLater(()-> {
-			holdProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
+				holdProperty.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_GPS_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
-			isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
+				isGPSAvailable.set(n.isSensorAvailable(Status.MSP_GPS_AVAILABILITY));
 			});
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_MSP_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
-			isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
+				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
 			});
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_OPCV_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
-			isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
 			});
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_SLAM_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
-			isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
 			});
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_FIDUCIAL_LOCKED, (n) -> {
 			Platform.runLater(()-> {
-			isFiducialLocked.set(n.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED));
+				isFiducialLocked.set(n.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED));
 			});
 		});
-		
+
 		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
 			Platform.runLater(()-> {
-			rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
+				rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_IMU_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
-			isIMUAvailable.set(n.isStatus(Status.MSP_IMU_AVAILABILITY));
+				isIMUAvailable.set(n.isStatus(Status.MSP_IMU_AVAILABILITY));
 			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
 			Platform.runLater(()-> {
-			isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
-			if(n.isStatus(Status.MSP_GPOS_VALID))
-				MSPMathUtils.reset_map_projection();
+				isGPOSAvailable.set(n.isStatus(Status.MSP_GPOS_VALID));
+				if(n.isStatus(Status.MSP_GPOS_VALID))
+					MSPMathUtils.reset_map_projection();
 			});
 		});
 
 		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
 			Platform.runLater(()-> {
-			isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
+				isLPOSAvailable.set(n.isStatus(Status.MSP_LPOS_VALID));
 			});
 		});
 	}
-	
+
 	public void reset() {
-    	control.getStatusManager().reset();
+		control.getStatusManager().reset();
 		Platform.runLater(()-> {
-		isGPOSAvailable.set(false);
-		isLPOSAvailable.set(false);
-		rcProperty.set(false);
-		isSLAMAvailable.set(false);
-		isGPSAvailable.set(false);
-		isCVAvailable.set(false);
-		isIMUAvailable.set(false);
-		isMSPAvailable.set(false);
+			isGPOSAvailable.set(false);
+			isLPOSAvailable.set(false);
+			rcProperty.set(false);
+			isSLAMAvailable.set(false);
+			isGPSAvailable.set(false);
+			isCVAvailable.set(false);
+			isIMUAvailable.set(false);
+			isMSPAvailable.set(false);
 		});
-		
+
 	}
 
 	public BooleanProperty getMSPProperty() {
@@ -290,7 +273,7 @@ public class StateProperties {
 	public BooleanProperty getArmedProperty() {
 		return armedProperty;
 	}
-	
+
 	public IntegerProperty getStreamProperty() {
 		return streamProperty;
 	}
@@ -334,7 +317,7 @@ public class StateProperties {
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
 	}
-	
+
 	public BooleanProperty getLogULOGProperty() {
 		return isLogULOGProperty;
 	}
@@ -342,7 +325,7 @@ public class StateProperties {
 	public BooleanProperty getGPOSAvailableProperty() {
 		return isGPOSAvailable;
 	}
-	
+
 	public BooleanProperty getFiducialLockedProperty() {
 		return isFiducialLocked;
 	}
@@ -354,15 +337,15 @@ public class StateProperties {
 	public BooleanProperty getBaseAvailableProperty() {
 		return isBaseAvailable;
 	}
-	
+
 	public BooleanProperty getGPSAvailableProperty() {
 		return isGPSAvailable;
 	}
-	
+
 	public BooleanProperty getCVAvailableProperty() {
 		return isCVAvailable;
 	}
-	
+
 	public BooleanProperty getSLAMAvailableProperty() {
 		return isSLAMAvailable;
 	}
