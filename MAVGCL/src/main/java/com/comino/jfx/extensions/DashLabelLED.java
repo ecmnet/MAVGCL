@@ -74,7 +74,7 @@ public class DashLabelLED extends GridPane {
 			is_light = true;
 		}
 		if(is_light)
-			this.color = Color.BLACK;
+			this.color = Color.BLUE;
 		else
 		    this.color = Color.WHITE;
 		
