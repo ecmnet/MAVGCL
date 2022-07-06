@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -74,7 +74,7 @@ public class DashLabelLED extends GridPane {
 			is_light = true;
 		}
 		if(is_light)
-			this.color = Color.BLUE;
+			this.color = Color.web("#0000C0");
 		else
 		    this.color = Color.WHITE;
 		

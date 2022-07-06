@@ -152,7 +152,10 @@ public class PreferencesDialog  {
 
 			throw new RuntimeException(exception);
 		}
-		prefDialog.getDialogPane().getStylesheets().add(getClass().getResource("preferences.css").toExternalForm());
+		if(MAVPreferences.isLightTheme())
+			prefDialog.getDialogPane().getStylesheets().add(getClass().getResource("pref_light.css").toExternalForm());
+		else
+		    prefDialog.getDialogPane().getStylesheets().add(getClass().getResource("pref_dark.css").toExternalForm());
 		prefDialog.setHeight(500);
 
 		prefDialog.getDialogPane().setContent(dialog);

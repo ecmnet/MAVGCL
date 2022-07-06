@@ -1,0 +1,186 @@
+.root{
+    -fx-font-size: 8.0pt;
+    -fx-background-color: #E0E0E0;
+    -fx-text-fill: #202020;
+}
+
+.tab-pane {
+	 -fx-background-color: #E0E0E0;
+}
+
+.tab-header-background {
+	 -fx-background-color: #303030;
+}
+
+.combo-box {
+	 -fx-background-color: #D0D0D0;
+	 -fx-text-fill: #202020;
+	 -fx-font-size: 10.0px;
+}
+
+.combo-box-popup .list-view .list-cell 
+{
+     -fx-background-color: #E0E0E0;
+	 -fx-text-fill: #202020;
+	 -fx-font-size: 10.0px;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover 
+{
+    -fx-background: -fx-accent;
+    -fx-background-color: #B0B0B0;
+    -fx-text-fill: #202020;
+}
+
+
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-padding: 20.0px;
+}
+
+.separator:horizontal .line {
+    -fx-background-color: null;
+    -fx-border-color: #404040;
+}
+
+.progress-bar {
+    -fx-background-color: #303030;
+}
+
+.label {
+	-fx-text-fill: #202020;
+	-fx-font-size: 10.0px;
+}
+
+.tab
+{
+-fx-background-color: #C0C0C0;
+-fx-alignment: CENTER;
+-fx-text-fill: #202020;
+}
+
+.tab-label {
+ -fx-text-fill: #202020;
+}
+
+.seprator {
+	 -fx-fill: #B0B0B0;
+}
+
+.status-cmd .label {
+	-fx-text-fill: #00fFf0;
+}
+
+
+.text{
+    -fx-font-smoothing-type: LCD;
+}
+
+.widget {
+    -fx-font-size: 7.0pt;
+     -fx-border-color: #B0B0B0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-border-insets: 2px;
+
+}
+
+.glass  {
+	-fx-font-size: 7.0pt;
+    -fx-background-color: rgba(0.0, 100.0, 100.0, 0.7); -fx-background-radius: 10.0;
+    -fx-border-color: #B0B0B0;
+    -fx-border-width: 1.0px;
+    -fx-border-radius: 5.0px;
+    -fx-border-insets: 2.0px;
+}
+
+.list-view  {
+    -fx-background-radius: 10.0;
+    -fx-background-color: rgba(100.0, 0.0, 0.0, 0.6);
+    -fx-control-inner-background: rgba(100.0, 0.0, 0.0, 0.0);
+    -fx-box-border: #B0B0B0;
+    -fx-border-radius: 10.0px;
+    -fx-border-insets: 0.0px;
+    -fx-padding: 4;
+}
+
+.list-view .scroll-bar:vertical {
+    -fx-opacity: 0;
+    -fx-padding:-7;
+}
+
+.glass .label {
+	-fx-text-fill: #202020F;
+}
+
+
+.inspector {
+	 -fx-font-size: 7.0pt;
+}
+
+.choice-box .context-menu  {
+	 -fx-background-color: #606060;
+}
+
+.choice-box {
+	 -fx-background-color: #C0C0C0;
+}
+
+.button {
+	 -fx-background-color: #B0B0B0;
+	 -fx-text-fill: #202020;
+}
+
+.button:pressed {
+	-fx-background-color: #D0D0D0;
+}
+
+.button:hover {
+	-fx-background-color: #C0C0C0;
+}
+
+.check-box {
+	-fx-background-color: #E0E0E0;
+	-fx-text-fill: #202020;
+}
+
+
+.check-box .mark {
+    -fx-background-color: transparent;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.333333em; /* 4 -- this is half the size of the mark */
+    -fx-shape: "M0,4H2L3,6L6,0H8L4,8H2Z";
+}
+
+.check-box:selected .mark {
+	-fx-background-color: BLACK;
+}
+
+.toggle-button {
+	 -fx-background-color: #606060;
+}
+
+.toggle-button:pressed {
+	-fx-background-color: #505050;
+}
+
+.toggle-button:hover {
+	-fx-background-color: #505058;
+}
+
+.check-box *.box {
+  -fx-background-color:#C0C0C0;
+}
+
+.choice-box:hover {
+	-fx-background-color: #505058;
+}
+
+.slider .track  {
+  -fx-background-color:#404040;
+}
+
+
+
+
+
