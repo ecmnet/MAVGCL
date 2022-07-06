@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2020 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2022 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -40,8 +40,6 @@ import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_SEVERITY;
-import org.mavlink.messages.MSP_CMD;
 
 import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
@@ -49,7 +47,6 @@ import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.workqueue.WorkQueue;

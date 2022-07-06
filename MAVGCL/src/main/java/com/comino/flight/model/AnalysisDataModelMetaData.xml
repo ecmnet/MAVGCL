@@ -1346,7 +1346,7 @@
 			<Group>Battery</Group>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="0" max="80"/>
+		<Validity min="-20" max="80"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Capacity" uom="%" mask="#0" key="BATP">
@@ -1407,12 +1407,12 @@
 		<Groups>
 			<Group>System</Group>
 		</Groups>
-		<Validity min="10" max="70"/>
+		<Validity min="-10" max="70"/>
 	</KeyFigure>
 
 	<KeyFigure desc="MSP Temperature" uom="°C" mask="#0" key="MSPTEMP">
 		<MSPSource class="sys" field="msp_temp"/>
-		<Validity min="0" max="70"/>
+		<Validity min="-10" max="70"/>
 		<Groups>
 			<Group>System</Group>
 		</Groups>
