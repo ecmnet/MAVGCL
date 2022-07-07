@@ -162,16 +162,16 @@ public class ChartControlWidget extends ChartControlPane  {
 		scroll.setSnapToTicks(false);
 		scroll.setSnapToPixel(false);
 		scroll.setDisable(true);
-		
+
 
 		scroll.onMousePressedProperty().addListener((o,ov,nv) ->{
 			state.getCurrentUpToDate().set(false);
 		});
-		
+
 		scroll.onMouseReleasedProperty().addListener((o,ov,nv) ->{
 			state.getCurrentUpToDate().set(true);
 		});
-		
+
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
 				return;
@@ -197,7 +197,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					chart.getValue().getIsScrollingProperty().set(newvalue.booleanValue());
 			});
 		});
-		
+
 
 		state.getRecordingProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(newvalue.intValue()!=AnalysisModelService.STOPPED) {
@@ -332,7 +332,8 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	public void refreshCharts() {
 		super.refreshCharts();
-		scroll.setValue(0);
+		if(state.getConnectedProperty().get() && !state.getLogLoadedProperty().get())
+			scroll.setValue(0);
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}

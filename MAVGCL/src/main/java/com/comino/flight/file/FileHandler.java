@@ -114,6 +114,8 @@ public class FileHandler {
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
 	private MSPLogger logger = null;
+	
+	final StateProperties state = StateProperties.getInstance();
 
 
 	public static FileHandler getInstance() {
@@ -224,8 +226,6 @@ public class FileHandler {
 	}
 
 	public void fileImport(File file) {
-
-		final StateProperties state = StateProperties.getInstance();
 
 		if(file!=null) {
 			state.getLogLoadedProperty().set(false);
@@ -465,6 +465,8 @@ public class FileHandler {
 
 				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				state.getLogLoadedProperty().set(true);
+				
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				if(!createResultSet)
