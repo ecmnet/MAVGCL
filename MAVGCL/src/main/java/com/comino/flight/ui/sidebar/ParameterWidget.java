@@ -397,11 +397,12 @@ public class ParameterWidget extends ChartControlPane  {
 			if(att.valueList.size()==0 && att.min_val > -Double.MAX_VALUE && att.max_val < Double.MAX_VALUE )
 				sb.append(String.format("\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
 
-			if(att.valueList.size()>0)
-				sb.append(String.format("\nDefault: %s",att.valueList.get((int)att.default_val)));
-			else
-				sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
 		}
+		
+		if(att.valueList.size()>0)
+			sb.append(String.format("\nDefault: %s",att.valueList.get((int)att.default_val)));
+		else
+			sb.append(String.format("\nDefault: %."+att.decimals+"f",att.default_val));
 
 		tooltip.setText(sb.toString());
 		return tooltip;
