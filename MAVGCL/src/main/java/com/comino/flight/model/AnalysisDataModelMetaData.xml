@@ -210,9 +210,17 @@
 	 <!-- Vibration -->
 
 	
-	<KeyFigure desc="Vibr.Metrics" uom="rad/s" mask="#0.000" key="VIBMET">
+	<KeyFigure desc="Vibr.Metrics.Acc" uom="rad/s" mask="#0.00" key="VIBMETA">
 	    <MSPSource class="vibration" field="vibz"></MSPSource>
-		<ULogSource field="estimator_status_0.vibe[2]"/>
+		<ULogSource field="vehicle_imu_status_0.accel_vibration_metric"/>
+		<Groups>
+			<Group>Vibration</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Vibr.Metrics.Gyro" uom="rad/s" mask="#0.00" key="VIBMETG">
+	<MSPSource class="vibration" field="viby"></MSPSource>
+		<ULogSource field="vehicle_imu_status_0.gyro_vibration_metric"/>
 		<Groups>
 			<Group>Vibration</Group>
 		</Groups>

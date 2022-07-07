@@ -72,7 +72,7 @@ import javafx.util.Duration;
 public class Vibration extends VBox implements IChartControl  {
 
 	private static final int      POINTS = 512;
-	private static final float VIB_SCALE = 50;
+	private static final float VIB_SCALE = 0.2f;
 
 
 	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Gyro.Y+Gyro.X" , "Act.R+Act.P"};
@@ -268,11 +268,11 @@ public class Vibration extends VBox implements IChartControl  {
 
 		m = dataService.getModelList().get(max_pt);
 
-		vib = (float)m.getValue("VIBMET");
+		vib = (float)m.getValue("VIBMETA");
 
-		if(vib > 0.015)
+		if(vib > 4.0)
 			vz.setStyle("-fx-accent: #ed3118;");
-		else if ( vib > 0.010)
+		else if ( vib > 3.0)
 			vz.setStyle("-fx-accent: #e3b34b;");
 		else
 			vz.setStyle("-fx-accent: #1b8233;");
