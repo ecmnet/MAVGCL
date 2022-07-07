@@ -18,7 +18,7 @@
 	
 		<exec dir="${workspace.dir}/MAVCom/mavcom" executable="sh">
 		    <env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
-			<arg line="-c '/usr/local/Cellar/maven/3.8.4/bin/mvn clean install -amd'" />
+			<arg line="-c '/usr/local/Cellar/maven/3.8.6/bin/mvn clean install -amd'" />
 		</exec>
 		
 	</target>
@@ -26,12 +26,12 @@
 	<target name="mvn" depends="com">
 		<exec dir="./" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
-			<arg line="-c ' /usr/local/Cellar/maven/3.8.4/bin/mvn clean install -amd'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.8.6/bin/mvn clean install -amd'" />
 		</exec>
 	</target>
 
 	<target name="deploy_osx_17" depends="mvn">
-		<echo>Deploy JDk17 Version</echo>
+		<echo>Deploying MAVGCL...</echo>
 		<exec dir="./" executable="sh">
 			<arg line="-c './package.sh'" />
 		</exec>
