@@ -465,7 +465,6 @@ public class FileHandler {
 
 				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
-				state.getLogLoadedProperty().set(true);
 				
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));

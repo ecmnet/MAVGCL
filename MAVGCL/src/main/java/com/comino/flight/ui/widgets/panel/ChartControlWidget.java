@@ -332,8 +332,11 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	public void refreshCharts() {
 		super.refreshCharts();
-		if(state.getConnectedProperty().get() && !state.getLogLoadedProperty().get())
-			scroll.setValue(0);
+		
+//      Disabled due to issue 49 => check other sideeffects
+//		if(state.getConnectedProperty().get())
+//			scroll.setValue(0);
+		
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
