@@ -72,6 +72,7 @@ public class BatteryWidget extends ChartControlPane  {
 	
 	private Color  color_bar;
 	private Color  color_text;
+	private Color  color_text_off;
 
 	public BatteryWidget() {
 		super(300,true);
@@ -85,13 +86,14 @@ public class BatteryWidget extends ChartControlPane  {
 	private void initialize() {
 		
 		if(MAVPreferences.isLightTheme()) {
-			color_bar  = Color.web("#0000C0");
-			color_text = Color.BLACK;
+			color_bar        = Color.web("#0000C0");
+			color_text        = Color.BLACK;
+			color_text_off = Color.web("#606060");
 			
 		} else {
-			color_bar  = Color.web("#2e9fbf");
-			color_text = Color.WHITE;
-			
+			color_bar         = Color.web("#2e9fbf");
+			color_text        = Color.WHITE;
+			color_text_off = Color.DARKGRAY;
 		}
 		
 		
@@ -108,8 +110,8 @@ public class BatteryWidget extends ChartControlPane  {
 					setColor(g_capacity,color_text);
 				}
 				else {
-					setColor(g_voltage,Color.DARKGRAY);
-					setColor(g_capacity,Color.DARKGRAY);
+					setColor(g_voltage,color_text_off);
+					setColor(g_capacity,color_text_off);
 				}
 			});
 		});
