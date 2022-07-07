@@ -340,8 +340,24 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						ekf.setMode(Badge.MODE_ERROR);
 				}
 
-			}
+			
+			
+				if((msp_model.sys.isStatus(Status.MSP_RC_ATTACHED)))
+					rc.setMode(Badge.MODE_ON);
+				else
+					rc.setMode(Badge.MODE_OFF);
 
+				if((msp_model.sys.isStatus(Status.MSP_GPOS_VALID)))
+					gpos.setMode(Badge.MODE_ON);
+				else
+					gpos.setMode(Badge.MODE_OFF);
+			
+				if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
+					lpos.setMode(Badge.MODE_ON);
+				else
+					lpos.setMode(Badge.MODE_OFF);
+			}
+	
 		};
 
 		mode.setOnMouseClicked((e) -> {
@@ -382,28 +398,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			else
 				lpos.setMode(Badge.MODE_OFF);
 
-		});
-		
-
-		control.getStatusManager().addListener(Status.MSP_RC_ATTACHED, (n) -> {
-			if((n.isStatus(Status.MSP_RC_ATTACHED)))
-				rc.setMode(Badge.MODE_ON);
-			else
-				rc.setMode(Badge.MODE_OFF);
-		});
-
-		control.getStatusManager().addListener(Status.MSP_GPOS_VALID, (n) -> {
-			if((n.isStatus(Status.MSP_GPOS_VALID)))
-				gpos.setMode(Badge.MODE_ON);
-			else
-				gpos.setMode(Badge.MODE_OFF);
-		});
-
-		control.getStatusManager().addListener(Status.MSP_LPOS_VALID, (n) -> {
-			if((n.isStatus(Status.MSP_LPOS_VALID)))
-				lpos.setMode(Badge.MODE_ON);
-			else
-				lpos.setMode(Badge.MODE_OFF);
 		});
 
 		state.getControllerConnectedProperty().addListener((e,o,n) -> {
