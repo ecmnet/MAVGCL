@@ -8,9 +8,9 @@
 
 <fx:root prefWidth="390.0" type="javafx.scene.layout.Pane"
 	xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
-	<ComboBox fx:id="groups" prefHeight="19.0" prefWidth="170.0"
+	<ComboBox fx:id="groups" prefHeight="19.0" prefWidth="193.0"
 		layoutX="10" layoutY="14" />
-	<Button fx:id="reload" layoutX="185" layoutY="14" prefHeight="20" prefWidth="60.0" text="Reload"/>
+	<Button fx:id="reload" layoutX="208" layoutY="14" prefHeight="20" prefWidth="40.0" text="Reload"/>
 	<ScrollPane fx:id="scroll" layoutX="15.0" layoutY="50.0">
 		<GridPane fx:id="grid" layoutX="15.0" layoutY="0" prefWidth="240.0" />
 	</ScrollPane>
