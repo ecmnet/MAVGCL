@@ -100,14 +100,14 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		this.control.addMAVLinkListener(this);
 		this.filehandler = FileHandler.getInstance();
 		this.modelService = AnalysisModelService.getInstance();
-		
-		
+
+
 		props.getArmedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && is_loading.get()) {
 				cancelLoading();
 				logger.writeLocalMsg("[mgc] Vehicle armed. Import of log cancelled.");
 			}
-			
+
 		});
 
 		is_directory_loaded.addListener((b,o,n) -> {
@@ -260,7 +260,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
 
 		worker = wq.addCyclicTask("LP",100,() -> {
-				
+
 
 			if((System.currentTimeMillis() - last_package_tms) < 10 )
 				return;
@@ -284,7 +284,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		if(entry.size == 0)
 			return;
-		
+
 		wq.removeTask("LP", timeout);
 
 		directory.put(entry.id,entry);
@@ -415,7 +415,8 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	}
 
 	private void copyFileToLogDir(String path, String targetname) {
-		Path src  = Paths.get(path);
+
+		final Path src  = Paths.get(path);
 
 		String dir = System.getProperty("user.home")+"/Downloads";
 		File f = new File(dir);
@@ -423,13 +424,16 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		if(!f.exists() || !MAVPreferences.getInstance().getBoolean(MAVPreferences.DOWNLOAD, true)) {
 			return;
 		}
-		Path dest = Paths.get(dir+"/"+targetname+".ulg");
-		try {
-			Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-		logger.writeLocalMsg("[mgc] Imported file copied to Downloads");
+		final Path dest = Paths.get(dir+"/"+targetname+".ulg");
+		new Thread(() -> {
+			try {
+
+				Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			logger.writeLocalMsg("[mgc] Imported file copied to Downloads");
+		}).start();
 	}
 }
