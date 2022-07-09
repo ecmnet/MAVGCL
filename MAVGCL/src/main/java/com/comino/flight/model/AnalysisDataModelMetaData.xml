@@ -136,6 +136,52 @@
 		</Groups>
 	</KeyFigure>
 	
+	<KeyFigure desc="Reset.Count" uom="" mask="#" key="EKFRESETS">
+	    <MSPSource class="est" field="reset_counter"></MSPSource>
+	    <ULogSource>
+		  <Converter class="ULOGSumConverter" 
+		     p1="estimator_status_0.reset_count_vel_ne" 
+		     p2="estimator_status_0.reset_count_vel_d"
+		     p3="estimator_status_0.reset_count_pos_ne"
+		     p4="estimator_status_0.reset_count_pos_d"
+		     p5="estimator_status_0.reset_count_quat"
+		   />
+		</ULogSource>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	
+	<KeyFigure desc="Fault.Status" uom="" mask="#" key="EKFFAULT">
+	    <ULogSource field="estimator_status_flags_0.fault_status_changes"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Reject.Vel.Hor." uom="" mask="#" key="EKFREJHV">
+	    <ULogSource field="estimator_status_flags_0.reject_hor_vel"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Reject.Pos.Hor." uom="" mask="#" key="EKFREJHP">
+	    <ULogSource field="estimator_status_flags_0.reject_hor_pos"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Mag.Field.Error" uom="" mask="#" key="EKFMAGFERR">
+	    <ULogSource field="estimator_status_flags_0.cs_mag_field_disturbed"/>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
+	
 	  <KeyFigure desc="Fuse.Vis.Pos" uom="" mask="#" key="EKFEVPOS">
 	    <ULogSource field="estimator_status_flags_0.cs_ev_pos"/>
 		<Groups>
@@ -158,7 +204,7 @@
 	</KeyFigure>
 	
 	
-	  <KeyFigure desc="Fuse.Vis.Vel" uom="" mask="#" key="EKFEVVEL">
+	 <KeyFigure desc="Fuse.Vis.Vel" uom="" mask="#" key="EKFEVVEL">
 	    <ULogSource field="estimator_status_flags_0.cs_ev_vel"/>
 		<Groups>
 	        <Group>EKF2 Status</Group>
