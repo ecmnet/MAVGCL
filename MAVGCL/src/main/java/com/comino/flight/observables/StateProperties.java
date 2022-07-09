@@ -139,7 +139,7 @@ public class StateProperties {
 			
 			simulationProperty.set(n.isStatus(Status.MSP_SITL));
 			
-			wq.addSingleTask("LP", 200,() -> {
+			wq.addSingleTask("LP", 500,() -> {
 				Platform.runLater(() -> {
 					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 				    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));

@@ -225,6 +225,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 
 					driver.setMode(Badge.MODE_ON);
+					
 					if(msp_model.vision.isStatus(Vision.PUBLISHED))
 						vision.setMode(Badge.MODE_ON);
 					else
@@ -378,27 +379,27 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.state = StateProperties.getInstance();
 
 		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-		state.getConnectedProperty().addListener((v,o,n) -> {
-			
-			driver.setDisable(!n.booleanValue());
-			rc.setDisable(!n.booleanValue());
-			gpos.setDisable(!n.booleanValue());
-			lpos.setDisable(!n.booleanValue());
-			controller.setDisable(!n.booleanValue());
-			ekf.setDisable(!n.booleanValue());
-			ready.setDisable(!n.booleanValue());
-			
-			if((msp_model.sys.isStatus(Status.MSP_GPOS_VALID)))
-				gpos.setMode(Badge.MODE_ON);
-			else
-				gpos.setMode(Badge.MODE_OFF);
-			
-			if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
-				lpos.setMode(Badge.MODE_ON);
-			else
-				lpos.setMode(Badge.MODE_OFF);
-
-		});
+//		state.getConnectedProperty().addListener((v,o,n) -> {
+//			
+//			driver.setDisable(!n.booleanValue());
+//			rc.setDisable(!n.booleanValue());
+//			gpos.setDisable(!n.booleanValue());
+//			lpos.setDisable(!n.booleanValue());
+//			controller.setDisable(!n.booleanValue());
+//			ekf.setDisable(!n.booleanValue());
+//			ready.setDisable(!n.booleanValue());
+//			
+//			if((msp_model.sys.isStatus(Status.MSP_GPOS_VALID)))
+//				gpos.setMode(Badge.MODE_ON);
+//			else
+//				gpos.setMode(Badge.MODE_OFF);
+//			
+//			if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
+//				lpos.setMode(Badge.MODE_ON);
+//			else
+//				lpos.setMode(Badge.MODE_OFF);
+//
+//		});
 
 		state.getControllerConnectedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue())
