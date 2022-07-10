@@ -581,8 +581,10 @@ public class FileHandler {
 			File[] paths = f.listFiles();
 			for(int i=0; i<paths.length;i++) {
 				try {
-				if(paths[i].getAbsolutePath().endsWith("xml"))
+				if(paths[i].getName().endsWith("xml") && !paths[i].getName().startsWith("_")) {
+				  System.out.println("Loading keyfigure definitions of "+paths[i].getName());
 				  meta.loadModelMetaData(new FileInputStream(paths[i]), true);
+				}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
