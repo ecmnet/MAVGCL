@@ -59,6 +59,8 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Callback;
 
 public class PreferencesDialog  {
@@ -97,6 +99,9 @@ public class PreferencesDialog  {
 
 	@FXML
 	private ComboBox<?> prespath;
+	
+	@FXML
+	private ComboBox<?> definition;
 
 	@FXML
 	private CheckBox autosave;
@@ -186,6 +191,19 @@ public class PreferencesDialog  {
 				prespath.hide();
 			});
 		});
+		
+		definition.setEditable(true);
+		definition.setOnShowing(event -> {
+			DirectoryChooser dir = new DirectoryChooser();
+			if(!definition.getEditor().getText().isEmpty())
+				dir.setInitialDirectory(new File(definition.getEditor().getText()));
+			File file = dir.showDialog(null);
+			Platform.runLater(() -> {
+				if(file!=null)
+					definition.getEditor().setText(file.getAbsolutePath());
+				definition.hide();
+			});
+		});
 
 		svinacc.textProperty().addListener(new ChangeListener<String>() {
 			@Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -225,6 +243,7 @@ public class PreferencesDialog  {
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 		prespath.getEditor().setText(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
+		definition.getEditor().setText(userPrefs.get(MAVPreferences.DEFINITION_DIR,""));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
 		svinacc.setText(userPrefs.get(MAVPreferences.RTKSVINACC, "3.5"));
@@ -247,6 +266,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
+			userPrefs.put(MAVPreferences.DEFINITION_DIR,prespath.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
@@ -272,6 +292,15 @@ public class PreferencesDialog  {
 			
 			MSPLogger.getInstance().writeLocalMsg("Preferences saved. Please restart.");
 		}
+	}
+	
+	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle(title);
+		fileChooser.getExtensionFilters().addAll(filter);
+		fileChooser.setInitialDirectory(
+				new File(initDir));
+		return fileChooser;
 	}
 
 

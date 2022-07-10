@@ -21,33 +21,35 @@
 		<ComboBox fx:id="path" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="5"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
 		<Label prefHeight="19.0" prefWidth="158.0" text="Path to store presets:"        GridPane.rowIndex="6"  GridPane.columnIndex="0"/>
 		<ComboBox fx:id="prespath" prefHeight="19.0" prefWidth="380.0"  		        GridPane.rowIndex="6"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
-		<CheckBox fx:id="autosave" text="Save automatically when recording is stopped"  GridPane.rowIndex="7"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
-	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="8"  GridPane.columnSpan="5" />
-		<CheckBox fx:id="ulog" text="Use ULOG over MAVLINK for data recording"          GridPane.rowIndex="9"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
-		<CheckBox fx:id="download" text="Copy last imported file to Downloads        "  GridPane.rowIndex="10" GridPane.columnIndex="0" GridPane.columnSpan="3"/>
-		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="11" GridPane.columnSpan="5"/>
-		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:" 	GridPane.rowIndex="12" GridPane.columnIndex="0"/>
-		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"        			GridPane.rowIndex="12" GridPane.columnIndex="1" />
-		<Label prefHeight="19.0" prefWidth="20.0" text="[m]"              			    GridPane.rowIndex="12" GridPane.columnIndex="2" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference latitude"		GridPane.rowIndex="13" GridPane.columnIndex="0" />
-		<TextField fx:id="reflat" prefHeight="19.0" prefWidth="80.0"   			        GridPane.rowIndex="13" GridPane.columnIndex="1" />
-		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"                 			GridPane.rowIndex="13" GridPane.columnIndex="2" />
-		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference longitude" 	GridPane.rowIndex="14" GridPane.columnIndex="0" />
-		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"       			    GridPane.rowIndex="14" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Custom keyfigures directory:"  GridPane.rowIndex="7"  GridPane.columnIndex="0"/>
+		<ComboBox fx:id="definition" prefHeight="19.0" prefWidth="380.0"   			    GridPane.rowIndex="7"  GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+		<CheckBox fx:id="autosave" text="Save automatically when recording is stopped"  GridPane.rowIndex="8"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="9"  GridPane.columnSpan="5" />
+		<CheckBox fx:id="ulog" text="Use ULOG over MAVLINK for data recording"          GridPane.rowIndex="10"  GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+		<CheckBox fx:id="download" text="Copy last imported file to Downloads        "  GridPane.rowIndex="11" GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="12" GridPane.columnSpan="5"/>
+		<Label prefHeight="19.0" prefWidth="158.0" text="Min. RTK survey-in accuracy:" 	GridPane.rowIndex="13" GridPane.columnIndex="0"/>
+		<TextField fx:id="svinacc" prefHeight="19.0" maxWidth="40.0"        			GridPane.rowIndex="13" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="20.0" text="[m]"              			    GridPane.rowIndex="13" GridPane.columnIndex="2" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference latitude"		GridPane.rowIndex="14" GridPane.columnIndex="0" />
+		<TextField fx:id="reflat" prefHeight="19.0" prefWidth="80.0"   			        GridPane.rowIndex="14" GridPane.columnIndex="1" />
 		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"                 			GridPane.rowIndex="14" GridPane.columnIndex="2" />
-		<Label prefHeight="10.0" prefWidth="80.0" text="Ref. Altitude (m)"              GridPane.rowIndex="14" GridPane.columnIndex="3" />
-		<TextField fx:id="refalt" prefHeight="19.0" maxWidth="40.0"       			    GridPane.rowIndex="14" GridPane.columnIndex="4" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="Local reference longitude" 	GridPane.rowIndex="15" GridPane.columnIndex="0" />
+		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"       			    GridPane.rowIndex="15" GridPane.columnIndex="1" />
+		<Label prefHeight="19.0" prefWidth="15.0" text="[°]"                 			GridPane.rowIndex="15" GridPane.columnIndex="2" />
+		<Label prefHeight="10.0" prefWidth="80.0" text="Ref. Altitude (m)"              GridPane.rowIndex="15" GridPane.columnIndex="3" />
+		<TextField fx:id="refalt" prefHeight="19.0" maxWidth="40.0"       			    GridPane.rowIndex="15" GridPane.columnIndex="4" />
 		
-		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="15" GridPane.columnSpan="5" />
-		<CheckBox fx:id="speech" text="Speech output (Emergency level)"                 GridPane.rowIndex="16" GridPane.columnIndex="0" GridPane.columnSpan="4"  />
-	    <CheckBox fx:id="debug" text="Enable debug messages"                            GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="4" />
-	    <CheckBox fx:id="alert" text="Show PopUp for critical messages "                GridPane.rowIndex="18" GridPane.columnIndex="0" GridPane.columnSpan="4" />
-	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="19" GridPane.columnSpan="5" />
-	    <Label prefHeight="19.0" prefWidth="158.0" text="Local ICAO code for QNH" 	    GridPane.rowIndex="20" GridPane.columnIndex="0" />
-		<TextField fx:id="icao" prefHeight="19.0" maxWidth="50.0"       			    GridPane.rowIndex="20" GridPane.columnIndex="1" />
-	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="21" GridPane.columnSpan="5" />
-	    <Label prefHeight="19.0" prefWidth="158.0" text="Theme:"                        GridPane.rowIndex="22" GridPane.columnIndex="0"/>
-		<ComboBox fx:id="theme" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="22" GridPane.columnIndex="1" GridPane.columnSpan="4"/>
-		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="23" GridPane.columnSpan="5" />
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="16" GridPane.columnSpan="5" />
+		<CheckBox fx:id="speech" text="Speech output (Emergency level)"                 GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="4"  />
+	    <CheckBox fx:id="debug" text="Enable debug messages"                            GridPane.rowIndex="18" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+	    <CheckBox fx:id="alert" text="Show PopUp for critical messages "                GridPane.rowIndex="19" GridPane.columnIndex="0" GridPane.columnSpan="4" />
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="20" GridPane.columnSpan="5" />
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Local ICAO code for QNH" 	    GridPane.rowIndex="21" GridPane.columnIndex="0" />
+		<TextField fx:id="icao" prefHeight="19.0" maxWidth="50.0"       			    GridPane.rowIndex="21" GridPane.columnIndex="1" />
+	    <Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="22" GridPane.columnSpan="5" />
+	    <Label prefHeight="19.0" prefWidth="158.0" text="Theme:"                        GridPane.rowIndex="23" GridPane.columnIndex="0"/>
+		<ComboBox fx:id="theme" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="23" GridPane.columnIndex="1" GridPane.columnSpan="4"/>
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="24" GridPane.columnSpan="5" />
 	</children>
 </GridPane>

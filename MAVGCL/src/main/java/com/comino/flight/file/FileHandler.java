@@ -140,8 +140,8 @@ public class FileHandler {
 	    	this.currentModel  = control.getCurrentModel();
 		this.logger = MSPLogger.getInstance();
 
-
 		readPresetFiles();
+		autoLoadKeyfigures();
 
 	}
 
@@ -570,6 +570,22 @@ public class FileHandler {
 				userPrefs.put(MAVPreferences.DEFINITION_DIR,f.getParent());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void autoLoadKeyfigures() {
+		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
+		File f = new File(userPrefs.get(MAVPreferences.DEFINITION_DIR,""));
+		if(f.isDirectory()) {
+			File[] paths = f.listFiles();
+			for(int i=0; i<paths.length;i++) {
+				try {
+				if(paths[i].getAbsolutePath().endsWith("xml"))
+				  meta.loadModelMetaData(new FileInputStream(paths[i]), true);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
