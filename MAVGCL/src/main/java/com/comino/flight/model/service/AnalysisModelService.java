@@ -516,7 +516,7 @@ public class AnalysisModelService  {
 //						while((200000000  - (System.nanoTime()-wait)) > 0) {
 //							LockSupport.parkNanos(1000000);
 //						}
-						LockSupport.parkNanos(200000000 - (System.nanoTime()-wait) - 2500000 );
+						LockSupport.parkNanos(300000000 - (System.nanoTime()-wait) - 2500000 );
 						continue;
 					}
 				}
