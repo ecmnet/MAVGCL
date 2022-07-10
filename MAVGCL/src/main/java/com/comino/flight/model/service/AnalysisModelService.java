@@ -314,6 +314,8 @@ public class AnalysisModelService  {
 
 		if(current_x0_pt<0)
 			current_x0_pt = 0;
+		
+		
 
 		return current_x0_pt;
 	}
@@ -327,7 +329,7 @@ public class AnalysisModelService  {
 
 		if(current_x1_pt<0)
 			current_x1_pt = 0;
-
+		
 		return (int)(current_x1_pt);
 	}
 
