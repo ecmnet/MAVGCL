@@ -74,13 +74,16 @@ public class AnalysisDataModelMetaData extends Observable {
 		this.virt       = new HashMap<Integer,KeyFigureMetaData>(500);
 		this.groups     = new HashMap<String,List<KeyFigureMetaData>>(500);
 
-		loadModelMetaData(null);
+		loadModelMetaData(null, false);
 	}
 
-	public void loadModelMetaData(InputStream stream) {
+	public void loadModelMetaData(InputStream stream, boolean add) {
 
 		InputStream is = stream;
-		meta.clear(); groups.clear(); virt.clear();
+		
+		if(!add) {
+		  meta.clear(); groups.clear(); virt.clear();
+		}
 
 		if(is!=null) {
 			buildDocument(is);

@@ -558,14 +558,16 @@ public class FileHandler {
 	public void openKeyFigureMetaDataDefinition() {
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 
-		FileChooser metaFile = new FileChooser();
-		metaFile.getExtensionFilters().addAll(new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
+		FileChooser metaFile = getFileDialog("Select custom keyfigure definition file...",
+				userPrefs.get(MAVPreferences.DEFINITION_DIR,System.getProperty("user.home")),
+				new ExtensionFilter("Custom KeyFigure Definition File..", "*.xml"));
 		File f = metaFile.showOpenDialog(stage);
 		if(f!=null) {
 			try {
-				meta.loadModelMetaData(new FileInputStream(f));
+				meta.loadModelMetaData(new FileInputStream(f), true);
 				clear();
 				modelService.clearModelList();
+				userPrefs.put(MAVPreferences.DEFINITION_DIR,f.getParent());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
