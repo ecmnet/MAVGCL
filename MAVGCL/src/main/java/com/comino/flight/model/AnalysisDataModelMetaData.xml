@@ -1586,6 +1586,27 @@
 				<Group>Vision</Group>
 		</Groups>
   </KeyFigure>
+  
+  <KeyFigure desc="Vis.AX Body" uom="m/s" mask="#0.00" key="VISIONAX">
+		<MSPSource class="vision" field="ax"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+
+  <KeyFigure desc="Vis.AY Body" uom="m/s" mask="#0.00" key="VISIONAY">
+		<MSPSource class="vision" field="ay"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+  
+  <KeyFigure desc="Vis.AZ Body" uom="m/s" mask="#0.00" key="VISIONAZ">
+		<MSPSource class="vision" field="az"/>
+		<Groups>
+				<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
 
   <KeyFigure desc="Vis.Cov.X" uom="m" mask="#0.00" key="VISIONCOVX">
 		<MSPSource class="vision" field="cov_px"/>
