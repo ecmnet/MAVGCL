@@ -1870,24 +1870,6 @@
 			<Group>Virtual keyfigures</Group>
 		</Groups>
 	</KeyFigure>
-	
-	<KeyFigure desc="VPitch.Cov" uom="rad" mask="#0.00" key="VPITCHCOV">
-		<VirtualSource>
-		    <Converter class="COV2Converter" var0="PITCH" var1="VISIONP" var2="10" var3="100.0"/>
-		</VirtualSource>
-		<Groups>
-			<Group>Virtual keyfigures</Group>
-		</Groups>
-	</KeyFigure>
-	
-	<KeyFigure desc="VRoll.Cov" uom="rad" mask="#0.00" key="VROLLCOV">
-		<VirtualSource>
-		    <Converter class="COV2Converter" var0="ROLL" var1="VISIONR" var2="10" var3="100.0"/>
-		</VirtualSource>
-		<Groups>
-			<Group>Virtual keyfigures</Group>
-		</Groups>
-	</KeyFigure>
 
 	<!-- SLAM data -->
 
