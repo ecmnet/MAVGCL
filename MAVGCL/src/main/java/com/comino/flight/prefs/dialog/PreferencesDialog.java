@@ -266,7 +266,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
-			userPrefs.put(MAVPreferences.DEFINITION_DIR,prespath.getEditor().getText());
+			userPrefs.put(MAVPreferences.DEFINITION_DIR,definition.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());
 			userPrefs.putBoolean(MAVPreferences.VIDREC,vidrec.isSelected());
