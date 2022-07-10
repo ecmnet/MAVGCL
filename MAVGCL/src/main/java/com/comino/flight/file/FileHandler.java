@@ -114,7 +114,7 @@ public class FileHandler {
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
 	private MSPLogger logger = null;
-	
+
 	final StateProperties state = StateProperties.getInstance();
 
 
@@ -137,7 +137,7 @@ public class FileHandler {
 		this.modelService = AnalysisModelService.getInstance();
 		this.paramService = MAVGCLPX4Parameters.getInstance();
 		if(control!=null)
-	    	this.currentModel  = control.getCurrentModel();
+			this.currentModel  = control.getCurrentModel();
 		this.logger = MSPLogger.getInstance();
 
 		readPresetFiles();
@@ -213,7 +213,7 @@ public class FileHandler {
 		} else
 			state.getLogLoadedProperty().set(true);
 	}
-	
+
 
 	public void fileImportLast() {
 		final StateProperties state = StateProperties.getInstance();
@@ -345,15 +345,15 @@ public class FileHandler {
 	}
 
 	public void csvParameterImport() {
-		
+
 		final StateProperties state = StateProperties.getInstance();
 
 		String dir = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 		String line = null;
-		
+
 		if(!state.getConnectedProperty().get()) 
 			return;
-		
+
 
 		FileChooser fileChooser = getFileDialog("Open CSV parameter file...",dir,
 				new ExtensionFilter("Parameter Files", "*.csv","*.txt"));
@@ -368,10 +368,10 @@ public class FileHandler {
 			Reader reader = new FileReader(file);
 			BufferedReader br = new BufferedReader(reader);
 			while ((line = br.readLine()) != null)   {
-        
+
 				String[] tokens = line.toUpperCase().replaceAll("^ +| +$|( )+", "$1").split(" ",3);
 				if(!tokens[0].contains("_ID")) {
-				  params.put(tokens[0], tokens[1]);
+					params.put(tokens[0], tokens[1]);
 				}
 
 			}
@@ -465,7 +465,7 @@ public class FileHandler {
 
 				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
-				
+
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				if(!createResultSet)
@@ -573,7 +573,7 @@ public class FileHandler {
 			}
 		}
 	}
-	
+
 	public void autoLoadKeyfigures() {
 		final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
 		File f = new File(userPrefs.get(MAVPreferences.DEFINITION_DIR,""));
@@ -581,10 +581,10 @@ public class FileHandler {
 			File[] paths = f.listFiles();
 			for(int i=0; i<paths.length;i++) {
 				try {
-				if(paths[i].getName().endsWith("xml") && !paths[i].getName().startsWith("_")) {
-				  System.out.println("Loading keyfigure definitions of "+paths[i].getName());
-				  meta.loadModelMetaData(new FileInputStream(paths[i]), true);
-				}
+					if(paths[i].getName().endsWith("xml") && !paths[i].getName().startsWith("_")) {
+						System.out.println("Loading keyfigure definitions of "+paths[i].getName());
+						meta.loadModelMetaData(new FileInputStream(paths[i]), true);
+					}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
