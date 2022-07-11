@@ -210,7 +210,10 @@ public class ModeAnnotation implements XYAnnotation {
 
 		if(flags == 0
 		   || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR
-	       || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==0) {
+	       || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==0
+		   || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) == ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH
+		   
+		   ) {
 					addAreaData(time,4);
 					return;
 		}
