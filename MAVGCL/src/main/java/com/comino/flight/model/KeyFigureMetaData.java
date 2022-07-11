@@ -83,7 +83,7 @@ public class KeyFigureMetaData {
 	public boolean isMSP     = false;
 	public boolean isULOG    = false;
 
-	private String key;
+	public String key;
 
 	public Map<Integer,DataSource> sources = new HashMap<Integer,DataSource>();
 

@@ -91,6 +91,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -504,15 +505,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 		});
 
+		cseries1.setTooltip(new Tooltip("none"));
 		cseries1.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
+					cseries1.getTooltip().setText(nv.key);
 					addToRecent(nv);
 					series1.setName(nv.desc1+" ["+nv.uom+"]   ");
 				}
-				else
+				else {
+					cseries1.getTooltip().setText("none");
 					series1.setName(nv.desc1+"   ");
+				}
 				type1 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_1+id,nv.hash);
 				updateRequest();
@@ -520,28 +525,36 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 		});
 
+		cseries2.setTooltip(new Tooltip("none"));
 		cseries2.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
+					cseries2.getTooltip().setText(nv.key);
 					addToRecent(nv);
 					series2.setName(nv.desc1+" ["+nv.uom+"]   ");
 				}
-				else
+				else {
+					cseries2.getTooltip().setText("none");
 					series2.setName(nv.desc1+"   ");
+				}
 				type2 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_2+id,nv.hash);
 				updateRequest();
 			}
 		});
 
+		cseries3.setTooltip(new Tooltip("none"));
 		cseries3.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
 			if(nv!=null && ov != nv) {
 				if(nv.hash!=0) {
+					cseries3.getTooltip().setText(nv.key);
 					addToRecent(nv);
 					series3.setName(nv.desc1+" ["+nv.uom+"]   ");
 				}
-				else
+				else {
+					cseries3.getTooltip().setText("none");
 					series3.setName(nv.desc1+"   ");
+				}
 				type3 = nv;
 				prefs.putInt(MAVPreferences.LINECHART_FIG_3+id,nv.hash);
 				updateRequest();
