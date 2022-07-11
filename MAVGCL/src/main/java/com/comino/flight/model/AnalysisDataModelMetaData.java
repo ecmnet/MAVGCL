@@ -54,10 +54,10 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	private static AnalysisDataModelMetaData instance = null;
 
-	private Map<Integer,KeyFigureMetaData>        meta   = null;
-	private Map<Integer,KeyFigureMetaData>        virt   = null;
+	private Map<Integer,KeyFigureMetaData>               meta   = null;
+	private Map<Integer,KeyFigureMetaData>               virt   = null;
 	private Map<String,List<KeyFigureMetaData>> groups   = null;
-	private List<KeyFigureMetaData>     sortedMetaList   = null;
+	private List<KeyFigureMetaData>            sortedMetaList   = null;
 
 	private int count = 0;
 	private String version = "0.0";
@@ -72,7 +72,7 @@ public class AnalysisDataModelMetaData extends Observable {
 	private AnalysisDataModelMetaData() {
 		this.meta       = new HashMap<Integer,KeyFigureMetaData>(500);
 		this.virt       = new HashMap<Integer,KeyFigureMetaData>(500);
-		this.groups     = new HashMap<String,List<KeyFigureMetaData>>(500);
+		this.groups     = new HashMap<String,List<KeyFigureMetaData>>(100);
 
 		loadModelMetaData(null, false);
 	}
@@ -201,6 +201,7 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	private void buildKeyFigureList(NodeList keyfigures) {
 		for (count = 0; count < keyfigures.getLength(); count++) {
+			
 			KeyFigureMetaData keyfigure = buildKeyFigure(keyfigures.item(count));
 			meta.put(keyfigure.hash,keyfigure);
 			if(keyfigure.isVirtual)
@@ -211,6 +212,7 @@ public class AnalysisDataModelMetaData extends Observable {
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {
 		KeyFigureMetaData keyfigure = new KeyFigureMetaData(
+				
 				kf_node.getAttributes().getNamedItem("key" ).getTextContent(),
 				kf_node.getAttributes().getNamedItem("desc").getTextContent(),
 				kf_node.getAttributes().getNamedItem("uom" ).getTextContent(),
@@ -264,13 +266,22 @@ public class AnalysisDataModelMetaData extends Observable {
 							group = new ArrayList<KeyFigureMetaData>();
 							groups.put(groupname, group);
 						}
-						group.add(keyfigure);
+						
+						boolean found = false;
+						for(KeyFigureMetaData m : group) {
+							if(m.hash == keyfigure.hash) {
+								found = true; break;
+							}
+						}
+						if(!found)
+						  group.add(keyfigure);
 					}
 				}
 			}
 		}
 		return keyfigure;
 	}
+	
 
 	private void buildDataSource(int type,KeyFigureMetaData keyfigure, Node node) {
 		String[] params = null; String class_c = null;

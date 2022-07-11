@@ -136,6 +136,10 @@ public class KeyFigureMetaData {
 		setSource(type,null,field,class_c,params);
 
 	}
+	
+	public int hashCode() {
+		return hash;
+	}
 
 	public void setSource(int type, String class_n, String field, String class_c, String[] params) {
 

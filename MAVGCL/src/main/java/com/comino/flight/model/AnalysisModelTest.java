@@ -69,9 +69,9 @@ public class AnalysisModelTest {
 
 		 md.getGroupMap().forEach((g,p) -> {
 			 System.out.println(g);
-			 p.forEach(k -> {
-				 System.out.println("---> "+k.desc1);
-			 });
+//			 p.forEach(k -> {
+//				 System.out.println("---> "+k.desc1);
+//			 });
 		 });
 
 	}
