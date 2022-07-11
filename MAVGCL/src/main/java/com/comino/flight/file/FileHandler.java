@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_serial_control;
 
 import com.comino.flight.log.ProgressInputStream;
 import com.comino.flight.log.ulog.UlogtoModelConverter;
@@ -114,6 +115,7 @@ public class FileHandler {
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
 	private MSPLogger logger = null;
+	
 
 	final StateProperties state = StateProperties.getInstance();
 
@@ -142,6 +144,8 @@ public class FileHandler {
 
 		readPresetFiles();
 		autoLoadKeyfigures();
+
+
 
 	}
 
@@ -503,6 +507,7 @@ public class FileHandler {
 					}
 
 				}
+
 
 
 				return null;
