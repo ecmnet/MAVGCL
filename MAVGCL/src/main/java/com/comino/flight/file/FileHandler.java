@@ -115,7 +115,9 @@ public class FileHandler {
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
 	private MSPLogger logger = null;
-	
+
+	private DumpNutshellToFile nutshell;
+
 
 	final StateProperties state = StateProperties.getInstance();
 
@@ -141,6 +143,7 @@ public class FileHandler {
 		if(control!=null)
 			this.currentModel  = control.getCurrentModel();
 		this.logger = MSPLogger.getInstance();
+		this.nutshell = new DumpNutshellToFile(control);
 
 		readPresetFiles();
 		autoLoadKeyfigures();
@@ -483,6 +486,9 @@ public class FileHandler {
 
 					saveLog(path_result,name);
 
+					if(!control.isSimulation())
+						nutshell.dump("dmesg", path_result);
+
 					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
 					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
 					writer.println("Notes for flight: "+name);
@@ -507,8 +513,6 @@ public class FileHandler {
 					}
 
 				}
-
-
 
 				return null;
 			}
