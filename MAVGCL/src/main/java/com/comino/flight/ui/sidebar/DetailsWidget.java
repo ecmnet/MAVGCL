@@ -76,7 +76,7 @@ public class DetailsWidget extends ChartControlPane {
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 18;
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
-	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#E0B0B0;";
+	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#D0D0E8;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent; ";
 
 	private final static String[] views = { "Flight", "System" };
