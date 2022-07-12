@@ -1394,6 +1394,14 @@
 		</Groups>
 	</KeyFigure>
 	
+	<KeyFigure desc="Time.remaining" uom="sec" mask="#" key="BATTR">
+		<MSPSource class="battery" field="tr"></MSPSource>
+		<Groups>
+			<Group>Battery</Group>
+		</Groups>
+		<Validity min="20" max="999999"/>
+	</KeyFigure>
+	
 	<KeyFigure desc="Batt.Temp." uom="°C" mask="#0" key="BATT">
 		<MSPSource class="sys" field="bat_temp"></MSPSource>
 		<Groups>

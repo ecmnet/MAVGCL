@@ -76,7 +76,7 @@ public class DetailsWidget extends ChartControlPane {
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 18;
 	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
-	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#C0C0C0;";
+	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#E0B0B0;";
 	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent; ";
 
 	private final static String[] views = { "Flight", "System" };
@@ -104,7 +104,7 @@ public class DetailsWidget extends ChartControlPane {
 				null, 
 				"SLAMDTT", "SLAMDTO", 
 				null,
-				"VISIONFPS", "VISIONQUAL", "FLOWQL","SLAMQU",
+				"VISIONQUAL", "FLOWQL","SLAMQU",
 				null, 
 				"BATC", "BATH", "BATP", 
 				null, 
@@ -112,7 +112,7 @@ public class DetailsWidget extends ChartControlPane {
 				null,  
 				"SWIFI", "RSSI", 
 				null, 
-				"TARM","TBOOT"
+				"BATTR","TARM","TBOOT"
 			},
 
 
