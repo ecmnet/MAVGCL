@@ -35,6 +35,7 @@
 package com.comino.flight.model.service;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.LockSupport;
@@ -125,7 +126,7 @@ public class AnalysisModelService  {
 		this.state         = StateProperties.getInstance();
 
 		this.ulogger = new ULogFromMAVLinkReader(control);
-		
+
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
 
@@ -185,7 +186,7 @@ public class AnalysisModelService  {
 		c.setPriority(Thread.NORM_PRIORITY+2);
 		c.start();
 	}
-	
+
 	public void close() {
 		stop();
 		if(ulogger.isLogging())
@@ -240,7 +241,7 @@ public class AnalysisModelService  {
 	public int getCollectorInterval_ms() {
 		return collector_interval_us/1000;
 	}
-	
+
 	public boolean start() {
 
 		if(!control.isConnected()) {
@@ -314,8 +315,8 @@ public class AnalysisModelService  {
 
 		if(current_x0_pt<0)
 			current_x0_pt = 0;
-		
-		
+
+
 
 		return current_x0_pt;
 	}
@@ -329,7 +330,7 @@ public class AnalysisModelService  {
 
 		if(current_x1_pt<0)
 			current_x1_pt = 0;
-		
+
 		return (int)(current_x1_pt);
 	}
 
@@ -385,7 +386,7 @@ public class AnalysisModelService  {
 	public int getMode() {
 		return mode;
 	}
-	
+
 	private void clear() {
 		modelList.clear();
 		state.getLogULOGProperty().set(false);
@@ -405,7 +406,7 @@ public class AnalysisModelService  {
 
 
 			while(true) {
-				
+
 				if(!model.sys.isStatus(Status.MSP_CONNECTED) || isReplaying) {
 					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
@@ -455,20 +456,18 @@ public class AnalysisModelService  {
 				if(!state.getInitializedProperty().get())
 					continue;
 
-				synchronized(this) {
-					if(state.getCurrentUpToDate().getValue()) {
-						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						current.calculateVirtualKeyFigures(meta);
-					}
+				if(state.getCurrentUpToDate().getValue()) {
+					try {
+					  current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					  current.calculateVirtualKeyFigures(meta);
+					} catch(ConcurrentModificationException c) { }
 				}
 
 
 				if(ulogger.isLogging()) {
-					synchronized(this) {
 						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
 						record.calculateVirtualKeyFigures(meta);
-					}
 				}
 
 				if(model.msg != null && model.msg.text!=null) {
@@ -497,7 +496,7 @@ public class AnalysisModelService  {
 						modelList.add(m);
 
 
-						state.getRecordingAvailableProperty().set(modelList.size()>0);
+						state.getRecordingAvailableProperty().set(false);
 
 						perf = ( m.tms - tms_last ) / 1e3f;
 						tms_last = m.tms;
@@ -506,6 +505,8 @@ public class AnalysisModelService  {
 						tms_last = System.nanoTime() / 1000 - tms_start;
 					isFirst = false;
 				} else {
+					
+					state.getRecordingAvailableProperty().set(modelList.size()>0);
 
 					current.tms = System.nanoTime() / 1000 ;
 					perf = ( current.tms - tms_last ) / 1e3f;
@@ -513,17 +514,17 @@ public class AnalysisModelService  {
 
 					// Slow down conversion if not recording or armed
 					if(!state.getArmedProperty().get()) {
-//						while((200000000  - (System.nanoTime()-wait)) > 0) {
-//							LockSupport.parkNanos(1000000);
-//						}
+						//						while((200000000  - (System.nanoTime()-wait)) > 0) {
+						//							LockSupport.parkNanos(1000000);
+						//						}
 						LockSupport.parkNanos(300000000 - (System.nanoTime()-wait) - 2500000 );
 						continue;
 					}
 				}
-				
-//				while((collector_interval_us*1000 - (System.nanoTime()-wait)) > 0) {
-//					LockSupport.parkNanos(100000);
-//				}
+
+				//				while((collector_interval_us*1000 - (System.nanoTime()-wait)) > 0) {
+				//					LockSupport.parkNanos(100000);
+				//				}
 
 				LockSupport.parkNanos(collector_interval_us*1000 - (System.nanoTime()-wait) - 3000000 );
 			}

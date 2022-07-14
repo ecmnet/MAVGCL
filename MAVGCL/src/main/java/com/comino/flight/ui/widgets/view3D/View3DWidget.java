@@ -161,19 +161,23 @@ public class View3DWidget extends SubScene implements IChartControl {
 				}
 			}
 		});
+		
 
 		// search for takeoff 
 		// TODO: What if no takeoff found
+		//
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				takeoff = dataService.getModelList().get(0);
-				for(int i = 0; i < dataService.getModelList().size();i++) {
-					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
-						takeoff = dataService.getModelList().get(i);
-						//System.out.println("Takeoff found at: "+i);
-						break;
-					}
-				}
+				takeoff = findTakeOff();
+				model = dataService.getModelList().get(dataService.getModelList().size()-1);
+			} 
+			else
+				model = dataService.getCurrent();
+		});
+		
+		state.getRecordingAvailableProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				takeoff = findTakeOff();
 				model = dataService.getModelList().get(dataService.getModelList().size()-1);
 			} 
 			else
@@ -184,14 +188,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		// search for takeoff
 		state.getReplayingProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				takeoff = dataService.getModelList().get(0);
-				for(int i = 0; i < dataService.getModelList().size();i++) {
-					if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
-						takeoff = dataService.getModelList().get(i);
-						//System.out.println("Takeoff found at: "+i);
-						break;
-					}
-				}
+				takeoff = findTakeOff();
 			}
 		});
 
@@ -201,7 +198,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		state.getArmedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				this.model = dataService.getCurrent();
+				model = dataService.getCurrent();
 			}
 		});
 
@@ -213,7 +210,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				if(isDisabled())
 					return;
 
-				if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get()) {
+				if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
 
 					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
 						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
@@ -225,11 +222,12 @@ public class View3DWidget extends SubScene implements IChartControl {
 				} else {
 
 					if(state.getLandedProperty().get()) {
+					
 						if(!Double.isNaN(model.getValue("ALTTR"))) {
 							camera.setTranslateY(model.getValue("ALTTR")*100);
 							world.setTranslateY(model.getValue("ALTTR")*100);
-							offset = -(float)model.getValue("LPOSZ");
 						} 
+						offset = -(float)model.getValue("LPOSZ");
 					} 
 				}
 
@@ -402,6 +400,19 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
+	}
+	
+	private AnalysisDataModel findTakeOff() {
+		
+		AnalysisDataModel to = dataService.getModelList().get(0);
+		for(int i = 0; i < dataService.getModelList().size();i++) {
+			if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
+				to = dataService.getModelList().get(i);
+				System.out.println("Takeoff found at "+i);
+				break;
+			}
+		}
+		return to;
 	}
 
 

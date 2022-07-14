@@ -120,7 +120,7 @@ public class StateProperties {
 		this.control = control;
 		this.logger = MSPLogger.getInstance();
 
-		wq.addSingleTask("LP", 2000, () ->  isInitializedProperty.set(true) );
+		wq.addSingleTask("LP", 500, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			Platform.runLater(()-> {
@@ -139,7 +139,7 @@ public class StateProperties {
 			
 			simulationProperty.set(n.isStatus(Status.MSP_SITL));
 			
-			wq.addSingleTask("LP", 500,() -> {
+			wq.addSingleTask("LP", 250,() -> {
 				Platform.runLater(() -> {
 					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
 				    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));

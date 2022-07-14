@@ -55,19 +55,19 @@ public class AnalysisDataModel implements Cloneable {
 
 	public AnalysisDataModel() {
 		this.data = new HashMap<Integer,Double>();
-//		this.grid = new ArrayList<Long>();
+		//		this.grid = new ArrayList<Long>();
 	}
 
 	private AnalysisDataModel(Map<Integer,Double> d, List<Long> grid) {
 		this.data = new HashMap<Integer,Double>();
 		this.data.putAll(d);
-//		this.grid = new ArrayList<Long>();
-//		this.grid.addAll(grid);
+		//		this.grid = new ArrayList<Long>();
+		//		this.grid.addAll(grid);
 	}
 
 
 	public Object clone() {
-	   AnalysisDataModel d = new AnalysisDataModel(data, grid);
+		AnalysisDataModel d = new AnalysisDataModel(data, grid);
 		d.tms = tms;
 		if(msg!=null)
 			d.msg = msg.clone();
@@ -79,8 +79,8 @@ public class AnalysisDataModel implements Cloneable {
 	public void set(AnalysisDataModel model) {
 		this.data.clear();
 		this.data.putAll(model.data);
-//		this.grid.clear();
-//		this.grid.addAll(model.grid);
+		//		this.grid.clear();
+		//		this.grid.addAll(model.grid);
 	}
 
 	public void clear()  {
@@ -90,7 +90,7 @@ public class AnalysisDataModel implements Cloneable {
 		msg = null;
 		status = null;
 	}
-	
+
 	public List<Long> getGrid() {
 		return grid;
 	}
@@ -109,7 +109,7 @@ public class AnalysisDataModel implements Cloneable {
 		else
 			return Float.NaN;
 	}
-	
+
 	public boolean isValid(KeyFigureMetaData m) {
 		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null) {
 			return Double.isFinite(data.get(m.hash));
@@ -120,7 +120,7 @@ public class AnalysisDataModel implements Cloneable {
 
 	public void setValue(String kf,double value) {
 		if(data!=null)
-		  data.put(kf.toLowerCase().hashCode(), value);
+			data.put(kf.toLowerCase().hashCode(), value);
 	}
 
 	public void reset(AnalysisDataModelMetaData md) {
@@ -133,12 +133,13 @@ public class AnalysisDataModel implements Cloneable {
 
 	private Double val = null;
 
-	
+
 
 	public  void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 
-		synchronized(this) {
-			md.getKeyFigureMap().forEach((i,e) -> {
+
+		md.getKeyFigureMap().forEach((i,e) -> {
+
 				val = Double.NaN;
 				try {
 					if(!e.isVirtual) {
@@ -149,12 +150,12 @@ public class AnalysisDataModel implements Cloneable {
 
 						if( type == KeyFigureMetaData.MSP_SOURCE)
 							val = e.getValueFromMSPModel((DataModel)source);
-//						if( type == KeyFigureMetaData.PX4_SOURCE)
-//							val = e.getValueFromPX4Model((Map<String,Object>)source);
+						//						if( type == KeyFigureMetaData.PX4_SOURCE)
+						//							val = e.getValueFromPX4Model((Map<String,Object>)source);
 						if( type == KeyFigureMetaData.ULG_SOURCE)
 							val = e.getValueFromULogModel((Map<String,Object>)source);
-//						if( type == KeyFigureMetaData.MAV_SOURCE)
-//							val = e.getValueFromMAVLinkMessage(source);
+						//						if( type == KeyFigureMetaData.MAV_SOURCE)
+						//							val = e.getValueFromMAVLinkMessage(source);
 
 						if(val!=null)
 							data.put(e.hash,val);
@@ -163,8 +164,9 @@ public class AnalysisDataModel implements Cloneable {
 					e1.printStackTrace();
 					//				data.put(e.hash, Double.NaN);
 				}
-			});
-		}
+	
+		});
+
 	}
 
 	public void calculateVirtualKeyFigures(AnalysisDataModelMetaData md) {
@@ -178,6 +180,6 @@ public class AnalysisDataModel implements Cloneable {
 			}
 		});
 	}
-	
+
 
 }
