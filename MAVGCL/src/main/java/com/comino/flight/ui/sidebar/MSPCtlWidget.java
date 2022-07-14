@@ -477,7 +477,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
 			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));
 		});
@@ -497,16 +497,14 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
 			if(!n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM))
-			  enable_fcum_mode.setSelected(false);
+				enable_fcum_mode.setSelected(false);
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES, Status.MSP_OPCV_AVAILABILITY,(n) -> {
-			if(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
-				enable_vision.setSelected(true);
-		});
+		enable_vision.setSelected(true);
+
 	}
 
 	public static boolean confirmationDialog(Alert.AlertType alertType, String statement) {
