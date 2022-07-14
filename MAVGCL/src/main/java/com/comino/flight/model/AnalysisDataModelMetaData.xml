@@ -1244,6 +1244,13 @@
 			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="GPS Heading" uom="°" mask="#0.0" key="RGPSHEAD">
+	    <MSPSource class="gps" field="heading"></MSPSource>
+	    <Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
 
 	<KeyFigure desc="GPS Noise" uom="pms" mask="#0" key="RGPSNOISE">
 		<ULogSource field="vehicle_gps_position_0.noise_per_ms"></ULogSource>
