@@ -91,38 +91,46 @@
 
     <KeyFigure desc="Tst.Ratio.Hagl." uom="" mask="#0.00" key="EKFHTR">
         <MSPSource class="est" field="haglRatio"></MSPSource>
-		<ULogSource field="estimator_innovation_test_ratios_0.hagl"/>
+		<ULogSource field="estimator_status_0.hagl_test_ratio"/>
 		<Groups>
 			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio.VisPos.Z" uom="" mask="#0.00" key="EKFVTR">
+	<KeyFigure desc="Tst.Ratio.Vel." uom="" mask="#0.00" key="EKFVTR">
 	    <MSPSource class="est" field="velRatio"></MSPSource>
-		<ULogSource field="estimator_innovation_test_ratios_0.ev_vpos"/>
+	    <ULogSource field="estimator_status_0.vel_test_ratio"/>
 		<Groups>
 			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio.VisVel.Z" uom="" mask="#0.00" key="EKFPTR">
+	<KeyFigure desc="Tst.Ratio.Hor.Pos." uom="" mask="#0.00" key="EKFPTR">
 	 <MSPSource class="est" field="horiRatio"></MSPSource>
-		<ULogSource field="estimator_innovation_test_ratios_0.ev_vvel"/>
+	 <ULogSource field="estimator_status_0.pos_test_ratio"/>
+		<Groups>
+			<Group>EKF2 TestRatios</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Tst.Ratio.Vert.Pos." uom="" mask="#0.00" key="EKFPVTR">
+	 <MSPSource class="est" field="vertRatio"></MSPSource>
 		<Groups>
 			<Group>EKF2 TestRatios</Group>
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Tst.Ratio.RngPos" uom="" mask="#0.00" key="EKFGTR">
-		<ULogSource field="estimator_status_0.gps_test_ratio"/>
-		<Groups>
-			<Group>EKF2 TestRatios</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Tst.Ratio Mag." uom="" mask="#0.00" key="EKFMTR">
+	<KeyFigure desc="Tst.Ratio.Mag." uom="" mask="#0.00" key="EKFMTR">
 	    <MSPSource class="est" field="magRatio"></MSPSource>
 		<ULogSource field="estimator_status_0.mag_test_ratio"/>
+		<Groups>
+			<Group>EKF2 TestRatios</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Tst.Ratio.Tas." uom="" mask="#0.00" key="EKFTATR">
+	    <MSPSource class="est" field="tasRatio"></MSPSource>
+	    <ULogSource field="estimator_status_0.tas_test_ratio"/>
 		<Groups>
 			<Group>EKF2 TestRatios</Group>
 		</Groups>
@@ -702,7 +710,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global.Speed.N" uom="cm/s" mask="#0.00" key="GLOBVN">
+	<KeyFigure desc="Global.Speed.N" uom="m/s" mask="#0.00" key="GLOBVN">
 		<MSPSource class="state" field="g_vx"></MSPSource>
 		<PX4Source field="GPOS.VelN"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_n"/>
@@ -711,7 +719,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global.Speed.E" uom="cm/s" mask="#0.00" key="GLOBVE">
+	<KeyFigure desc="Global.Speed.E" uom="m/s" mask="#0.00" key="GLOBVE">
 		<MSPSource class="state" field="g_vy"></MSPSource>
 		<PX4Source field="GPOS.VelE"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_e"/>
@@ -720,7 +728,7 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global.Speed.D" uom="cm/s" mask="#0.00" key="GLOBVD">
+	<KeyFigure desc="Global.Speed.D" uom="m/s" mask="#0.00" key="GLOBVD">
 		<MSPSource class="state" field="g_vz"></MSPSource>
 		<PX4Source field="GPOS.VelD"></PX4Source>
 		<ULogSource field="vehicle_global_position_0.vel_d"/>
