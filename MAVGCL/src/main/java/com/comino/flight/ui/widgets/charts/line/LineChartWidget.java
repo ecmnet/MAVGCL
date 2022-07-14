@@ -1018,6 +1018,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			while(current_x_pt<max_x && size>0 && current_x_pt< dataService.getModelList().size() &&
 					((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
 
+				if(current_x_pt >= dataService.getModelList().size())
+					continue;
 
 				m = dataService.getModelList().get(current_x_pt);
 				dt_sec = current_x_pt *  collector_interval / 1000f;
