@@ -550,6 +550,13 @@
 			<Group>Telemetry</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="Yaw estimate" uom="rad" mask="#0.00" key="YAWEST">
+	    <ULogSource field="yaw_estimator_status_0.yaw_composite"></ULogSource>
+	    <Groups>
+			<Group>Attitude</Group>
+		</Groups>
+	</KeyFigure>
 
 	<!-- Attitude rates -->
 
@@ -1247,6 +1254,7 @@
 	
 	<KeyFigure desc="GPS Heading" uom="°" mask="#0.0" key="RGPSHEAD">
 	    <MSPSource class="gps" field="heading"></MSPSource>
+	    <ULogSource field="sensor_gps_0.heading"></ULogSource>
 	    <Groups>
 			<Group>GPS</Group>
 		</Groups>
