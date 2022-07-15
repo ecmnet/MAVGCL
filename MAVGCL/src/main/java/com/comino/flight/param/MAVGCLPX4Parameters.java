@@ -47,6 +47,7 @@ import org.mavlink.messages.lquac.msg_param_value;
 
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
+import com.comino.flight.weather.MetarQNHService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
@@ -79,7 +80,6 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	//	private ScheduledFuture<?> timeout = null;
 	private int timeout=0;
-	private float qnh;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
@@ -102,8 +102,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
-
-		//		this.qnh = new MetarQNHService(MAVPreferences.getInstance().get(MAVPreferences.ICAO, "EDDM")).getQNH();
+	
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
 			if(!n.booleanValue()) {
@@ -196,19 +195,19 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 			//}
 
-
-			if(!is_reading)
-				return;
-
-			state.getProgressProperty().set((float)msg.param_index/msg.param_count);
+			if(is_reading)
+				state.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
 				wq.removeTask("LP", timeout);
 				state.getParamLoadedProperty().set(true);
 				state.getProgressProperty().set(StateProperties.NO_PROGRESS);
+
+				if(!is_reading)
+					return;
+
 				for(IPX4ParameterRefresh l : refreshListeners)
 					l.refresh();
-				is_reading = false;
 
 				// Flight time
 				if(get("LND_FLIGHT_T_LO")!=null && get("LND_FLIGHT_T_HI") !=null ) {
@@ -219,10 +218,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 				}
 
 				// Baro QNH check
-				//				if(qnh>0 && get("SENS_BARO_QNH").value!=qnh) {
-				//					logger.writeLocalMsg("Baro QNH updated with "+qnh+", requires reboot.",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				//					sendParameter("SENS_BARO_QNH",qnh);
-				//				}
+				
+				String qnh_source = MAVPreferences.getInstance().get(MAVPreferences.ICAO, "");
+				if(!qnh_source.isEmpty())
+					new MetarQNHService(qnh_source, this).updateQNH();
+				
+				
+				is_reading = false;
 			}
 		}
 	}
