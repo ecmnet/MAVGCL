@@ -168,7 +168,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	@Override
 	public void received(Object _msg) {
-		
+
 		if( _msg instanceof msg_param_value && metadata != null ) { //&& is_reading) {
 
 			long flight_time = 0; double val;
@@ -197,8 +197,10 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			//}
 
 
-			if(is_reading)
-				state.getProgressProperty().set((float)msg.param_index/msg.param_count);
+			if(!is_reading)
+				return;
+
+			state.getProgressProperty().set((float)msg.param_index/msg.param_count);
 
 			if(msg.param_index >= msg.param_count-1) {
 				wq.removeTask("LP", timeout);
