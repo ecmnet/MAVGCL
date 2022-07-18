@@ -113,10 +113,10 @@ public class ParameterWidget extends ChartControlPane  {
 
 	private int timeout;
 	private int timeout_count=0;
-	
+
 	private final String style;
 	private final String style_default;
-	
+
 	private final static String STYLE_DARK          = "-fx-text-fill: #F0D080; -fx-control-inner-background: #606060;";
 	private final static String STYLE_DARK_DEFAULT  = "-fx-text-fill: #F0F0F0; -fx-control-inner-background: #606060;";
 	private final static String STYLE_LIGHT         = "-fx-text-fill: #202020; -fx-control-inner-background: #C0C0C0;";
@@ -126,9 +126,9 @@ public class ParameterWidget extends ChartControlPane  {
 	private final WorkQueue wq = WorkQueue.getInstance();
 
 	public ParameterWidget() {
-		
+
 		super();
-		
+
 		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
 			style = STYLE_LIGHT;
 			style_default = STYLE_LIGHT_DEFAULT;
@@ -137,7 +137,7 @@ public class ParameterWidget extends ChartControlPane  {
 			style = STYLE_DARK;
 			style_default = STYLE_DARK_DEFAULT;
 		}
-		
+
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ParameterWidget.fxml"));
 		fxmlLoader.setRoot(this);
@@ -182,7 +182,7 @@ public class ParameterWidget extends ChartControlPane  {
 			groups.getEditor().setText("");
 			groups.getEditor().setEditable(true);
 		});
-		
+
 		groups.getEditor().setOnMouseExited((event) -> {
 			groups.getEditor().setCursor(Cursor.DEFAULT);
 		});
@@ -402,7 +402,7 @@ public class ParameterWidget extends ChartControlPane  {
 				sb.append(String.format("\nMin: %."+att.decimals+"f Max: %."+att.decimals+"f",att.min_val, att.max_val));
 
 		}
-		
+
 		if(att.valueList.size()>0)
 			sb.append(String.format("\nDefault: %s",att.valueList.get((int)att.default_val)));
 		else
@@ -417,6 +417,8 @@ public class ParameterWidget extends ChartControlPane  {
 
 		public Control editor = null;
 		private ParameterAttributes att = null;
+		private float old_val = Float.NaN;
+		private MenuItem cmPrevVal;
 
 		public ParamItem(ParameterAttributes att, boolean editable) {
 			this.att= att;
@@ -574,7 +576,7 @@ public class ParameterWidget extends ChartControlPane  {
 		}
 
 		private String format(double value, int decimals) {
-			if(value!=Double.MAX_VALUE && value!= -Double.MAX_VALUE) {
+			if(value!=Double.MAX_VALUE && value!= -Double.MAX_VALUE && Double.isFinite(value)) {
 				BigDecimal bd = new BigDecimal(value).setScale(decimals,BigDecimal.ROUND_HALF_UP);
 				return bd.toPlainString();
 			}
@@ -588,6 +590,13 @@ public class ParameterWidget extends ChartControlPane  {
 		private void sendParameter(ParameterAttributes att, float val) {
 
 			System.out.println("Try to set "+att.name+" to "+val+"...");
+			old_val = (float)att.value;
+			if(old_val != att.default_val) {
+				cmPrevVal.setText("Prev.Val: "+format(old_val, att.decimals));
+				cmPrevVal.setVisible(true);
+			}
+			else
+				cmPrevVal.setVisible(false);
 			att.value = val;
 			final msg_param_set msg = new msg_param_set(255,1);
 			msg.target_component = 1;
@@ -676,6 +685,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 		private void setContextMenu(Control p) {
 			ContextMenu ctxm = new ContextMenu();
+
 			MenuItem cmItem1 = new MenuItem("Set default");
 			cmItem1.setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent e) {
@@ -683,6 +693,17 @@ public class ParameterWidget extends ChartControlPane  {
 				}
 			});
 			ctxm.getItems().add(cmItem1);
+
+			cmPrevVal = new MenuItem("Prev.Val: "+format(old_val, att.decimals));
+			cmPrevVal.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent e) {
+					setValueOf(p,old_val);
+				}
+			});
+
+			ctxm.getItems().add(cmPrevVal);
+			cmPrevVal.setVisible(false);
+
 			if(p instanceof Spinner)
 				((Spinner<Double>)p).getEditor().setContextMenu(ctxm);
 			else
