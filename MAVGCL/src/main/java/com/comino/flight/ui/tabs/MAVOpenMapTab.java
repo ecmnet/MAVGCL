@@ -352,6 +352,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
 						msp.param1 =  xy[0];
 						msp.param2 =  xy[1];
+						msp.param3 =  Float.NaN;
+						msp.param4 =  Float.NaN;
 						control.sendMAVLinkMessage(msp);
 					}
 				}

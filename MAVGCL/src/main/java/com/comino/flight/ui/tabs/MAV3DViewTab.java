@@ -120,7 +120,7 @@ public class MAV3DViewTab extends Pane  {
 			zoom.setValue(z);
 		});
 		
-		widget.disableProperty().bind(this.disabledProperty());
+		//widget.disableProperty().bind(this.disabledProperty());
 
 
 	}

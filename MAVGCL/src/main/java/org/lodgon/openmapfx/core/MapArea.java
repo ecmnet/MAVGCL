@@ -251,7 +251,7 @@ public class MapArea extends Pane implements BaseMap {
 
         double n = Math.pow(2,zoom);
         double lat_rad = Math.PI * lat / 180;
-        double id = n / 360. * (180 + lon);
+        double id = n / 360. * (180. + lon);
         double jd = n * (1 - (Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI)) / 2;
         double mex = (double) id * 256;
         double mey = (double) jd * 256;
