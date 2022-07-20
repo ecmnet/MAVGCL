@@ -169,7 +169,7 @@ public class FileHandler {
 				}
 			});
 			System.out.println(list.length+" presets found");
-			for(int i=0;i<list.length && i< MAX_PRESETS;i++)
+			for(int i=0;i<list.length;i++)
 				presetfiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
 			Collections.sort(presetfiles);
 		}

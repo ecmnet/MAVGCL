@@ -36,6 +36,7 @@ public class KeyFigurePreset {
     private int group;
     private int id;
     private int[] keyFigures;
+    private int annotation;
     private String name;
 
     public KeyFigurePreset() {
@@ -46,19 +47,22 @@ public class KeyFigurePreset {
     	this.name = name;
     }
 
-    public KeyFigurePreset(int id, int group, int...hash) {
+    public KeyFigurePreset(int id, int group, int annotation, int...hash) {
     	this.keyFigures = new int[4];
     	for(int i=0; i< 4 && i< hash.length;i++)
     		keyFigures[i] = hash[i];
     	this.id = id;
     	this.group = group;
+    	this.annotation = annotation;
+    	
     }
 
-    public void set(int id, int group, int...hash) {
+    public void set(int id, int group, int annotation, int...hash) {
     	for(int i=0; i< 4 && i< hash.length;i++)
     		keyFigures[i] = hash[i];
     	this.id = id;
     	this.group = group;
+    	this.annotation = annotation;
     }
 
     public int getId() {
@@ -71,6 +75,10 @@ public class KeyFigurePreset {
 
     public int getGroup() {
     	return this.group;
+    }
+    
+    public int getAnnotation() {
+    	return this.annotation;
     }
 
     public String getName() {

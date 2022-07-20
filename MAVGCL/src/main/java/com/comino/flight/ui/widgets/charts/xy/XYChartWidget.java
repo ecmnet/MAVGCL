@@ -774,7 +774,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	}
 
 	public KeyFigurePreset getKeyFigureSelection() {
-		KeyFigurePreset preset = new KeyFigurePreset(id,0,type1_x.hash,type1_y.hash,type2_x.hash, type2_y.hash);
+		KeyFigurePreset preset = new KeyFigurePreset(id,0,0,type1_x.hash,type1_y.hash,type2_x.hash, type2_y.hash);
 		return preset;
 	}
 
@@ -880,7 +880,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				else {
 					offset_x = 0;
 					offset_y = 0;
-					rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
+					if(m!=null)
+					  rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
 				}
 
 				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);

@@ -353,8 +353,9 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		keyfigures.getItems().add("Select presets...");
 		keyfigures.getItems().add("Open...");
+		
 
-		keyfigures.setVisibleRowCount(FileHandler.getInstance().getPresetList().size()+2);
+		//keyfigures.setVisibleRowCount(FileHandler.getInstance().getPresetList().size()+2);
 
 		for(String p : FileHandler.getInstance().getPresetList())
 			keyfigures.getItems().add(p);

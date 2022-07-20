@@ -328,6 +328,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
+			duration_label.setVisible(false);
 		});
 
 
@@ -340,6 +341,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				mouseEvent.consume();
 				return;
 			}
+			
 
 			x = mouseEvent.getX();
 			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue());
@@ -357,7 +359,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			measure.setVisible(false);
-			duration_label.setVisible(false);
+			
 
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
@@ -650,6 +652,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			type2 = setKeyFigure(cseries2,preset.getKeyFigure(1));
 			type3 = setKeyFigure(cseries3,preset.getKeyFigure(2));
 			group.getSelectionModel().select(preset.getGroup());
+			bckgmode.getSelectionModel().select(preset.getAnnotation());
 			replay.set(0); updateRequest();
 		}
 		//	});
@@ -657,8 +660,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 	public KeyFigurePreset getKeyFigureSelection() {
-		final KeyFigurePreset preset = new KeyFigurePreset(id,group.getSelectionModel().getSelectedIndex(),
-				type1.hash,type2.hash,type3.hash);
+		final KeyFigurePreset preset = new KeyFigurePreset(id,
+				                             group.getSelectionModel().getSelectedIndex(), 
+				                             bckgmode.getSelectionModel().getSelectedIndex(),
+				                             type1.hash,type2.hash,type3.hash);
 		return preset;
 	}
 
