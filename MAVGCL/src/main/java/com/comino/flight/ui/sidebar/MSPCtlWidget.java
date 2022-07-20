@@ -69,7 +69,7 @@ import javafx.scene.paint.Color;
 
 public class MSPCtlWidget extends ChartControlPane   {
 
-	private static final String[]  STREAMS = { "Foreward", "Downward" };
+	private static final String[]  STREAMS = { "Foreward", "Downward", "Depth", "Combined" };
 
 
 	@FXML
