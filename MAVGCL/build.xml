@@ -13,8 +13,17 @@
 			<entry key="build_date" value="${current.time}" />
 		</propertyfile>
 	</target>
+	
+	<target name="utils" depends="metadata" >
+		
+			<exec dir="${workspace.dir}/MAVUtils/mavutils" executable="sh">
+			    <env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
+				<arg line="-c '/usr/local/Cellar/maven/3.8.6/bin/mvn clean install -amd'" />
+			</exec>
+			
+		</target>
 
-	<target name="com" depends="metadata" >
+	<target name="com" depends="utils" >
 	
 		<exec dir="${workspace.dir}/MAVCom/mavcom" executable="sh">
 		    <env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
