@@ -83,11 +83,12 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		
 		//create the frame synchronizer
 		//	fsynch = new FrameSynchronizer(100);
+		
 
 		try {
 			ServerIPAddr = InetAddress.getByName(uri.getHost());
 			ServerPort   = uri.getPort();
-			System.out.println("Video: "+uri.getPath());
+			System.out.println("Video: "+ServerIPAddr);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -293,6 +294,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	}
 
 	private void sendRequest(String request_type) {
+		
 		try {
 			//Use the RTSPBufferedWriter to write to the RTSP socket
 

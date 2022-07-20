@@ -123,7 +123,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
-			if(source==null && !connect() || state.getSimulationProperty().get()) {
+			if(source==null && !connect() ) {
 				return;
 			}
 
