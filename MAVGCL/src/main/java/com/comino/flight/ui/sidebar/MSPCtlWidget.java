@@ -69,7 +69,7 @@ import javafx.scene.paint.Color;
 
 public class MSPCtlWidget extends ChartControlPane   {
 
-	private static final String[]  STREAMS = { "FPV+Down", "Downw", "Depth", "FPV+Depth", "FPV" };
+	private static final String[]  STREAMS = { "FPV+Down", "Down", "Depth", "FPV+Depth", "FPV" };
 
 
 	@FXML
