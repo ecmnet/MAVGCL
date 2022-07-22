@@ -177,6 +177,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
 		stream.getItems().addAll(STREAMS);
+		stream.getSelectionModel().select(0);
 
 		state.getFiducialLockedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue())
@@ -450,13 +451,15 @@ public class MSPCtlWidget extends ChartControlPane   {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
 
+		
 		state.getConnectedProperty().addListener((c,o,n) -> {
+			
 			if(n.booleanValue()) {
 				Platform.runLater(() -> {
 					stream.getSelectionModel().select(0);
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-					msp.param1  = stream.getSelectionModel().getSelectedIndex();
+					msp.param1  = 0;
 					control.sendMAVLinkMessage(msp);	
 				}); 
 			}

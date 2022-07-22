@@ -68,13 +68,13 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 	private static MAVGCLPX4Parameters px4params = null;
 
-	private ObjectProperty<ParameterAttributes> property = new SimpleObjectProperty<ParameterAttributes>();
+	private final ObjectProperty<ParameterAttributes> property;
 
 	private Preferences preferences = null;
 
 	private StateProperties state =  null;
 
-	private List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
+	private final List<IPX4ParameterRefresh> refreshListeners = new ArrayList<IPX4ParameterRefresh>();
 
 	private boolean is_reading   = false;
 
@@ -102,6 +102,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 		this.state = StateProperties.getInstance();
 		this.preferences = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
+		this.property = new SimpleObjectProperty<ParameterAttributes>();
 	
 
 		state.getConnectedProperty().addListener((e,o,n) -> {
@@ -186,7 +187,8 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 
 			//if(attributes.value != val) {
 
-			property.setValue(null);
+			if(property!=null)
+			  property.setValue(null);
 			attributes.value = val;
 			attributes.vtype = msg.param_type;
 
