@@ -94,6 +94,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -229,14 +230,6 @@ public class MainApp extends Application  {
 
 			ExecutorService.create();
 
-			ntp_server = new SimpleNTPServer();
-
-			try {
-				ntp_server.start();
-			} catch (Exception e1) {
-				System.out.println("NTP time server not started.");
-			}
-
 			FXMLLoadHelper.setApplication(this);
 
 			String peerAddress = null;
@@ -278,19 +271,19 @@ public class MainApp extends Application  {
 			else {
 
 
-   			control =new MAVAutoController(peerAddress,peerport,bindport); 
+				control =new MAVAutoController(peerAddress,peerport,bindport); 
 
 
-//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
-//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
-//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
-//					//	new SITLController(control);
-//				} else {
-//					//	try { redirectConsole(); } catch (IOException e2) { }
-//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
-//				}
+				//				if(peerAddress.contains("127.0") || peerAddress.contains("localhost")
+				//						||  userPrefs.getBoolean(MAVPreferences.PREFS_SITL, false)) {
+				//					control = new MAVUdpController("127.0.0.1",14557,14540, true);
+				//					//	new SITLController(control);
+				//				} else {
+				//					//	try { redirectConsole(); } catch (IOException e2) { }
+				//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
+				//				}
 			}
-			
+
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
 
@@ -302,7 +295,6 @@ public class MainApp extends Application  {
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 
-
 					new SITLController(control);
 					System.out.println("Initializing");
 
@@ -310,6 +302,14 @@ public class MainApp extends Application  {
 						FileHandler.getInstance().fileImport(new File(command_line_options));
 
 					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
+					
+					ntp_server = new SimpleNTPServer();
+
+					try {
+						ntp_server.start();
+					} catch (Exception e1) {
+						System.out.println("NTP time server not started.");
+					}
 
 				}
 			});
@@ -324,14 +324,13 @@ public class MainApp extends Application  {
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
 
-
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
-				
+
 					//control.getStatusManager().reset();
 					wq.addSingleTask("LP",300, () -> {			
 						System.out.println("Is simulation: "+control.isSimulation());
-					//	control.getStatusManager().reset();
+						//	control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
 							control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
@@ -449,7 +448,7 @@ public class MainApp extends Application  {
 		MAVPreferences.getInstance().putDouble("stage.height", primaryStage.getHeight());
 		MAVPreferences.getInstance().flush();
 		ntp_server.stop();
-		try { Thread.sleep(200); } catch(Exception e) { }
+		try { Thread.sleep(100); } catch(Exception e) { }
 		System.exit(0);
 
 	}
@@ -461,10 +460,12 @@ public class MainApp extends Application  {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
+			
+			rootLayout.setCenter(new Label("Initializing MAVGCL application components..."));
 
 			// Show the scene containing the root layout.
 			scene = new Scene(rootLayout);
-			scene.setFill(Color.rgb(32,32,32));
+
 
 			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
 				System.out.println("Loading light theme");
@@ -472,6 +473,7 @@ public class MainApp extends Application  {
 			}
 			else {
 				System.out.println("Loading dark theme");
+				scene.setFill(Color.rgb(32,32,32));
 				scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
 			}
 
@@ -519,49 +521,48 @@ public class MainApp extends Application  {
 
 	public void showMAVGCLApplication() {
 
-		try {
-			// Load person overview.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("ui/MAVGCL2.fxml"));
-			flightPane = (AnchorPane) loader.load();
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(MainApp.class.getResource("ui/MAVGCL2.fxml"));
 
+		Platform.runLater(() -> {
 
-			// Set person overview into the center of root layout.
+			try {
+				flightPane = (AnchorPane) loader.load();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 			rootLayout.setCenter(flightPane);
 			BorderPane.setAlignment(flightPane, Pos.TOP_LEFT);
 
 			StatusLineWidget statusline = new StatusLineWidget();
-
+			statusline.setup(control);
 
 			rootLayout.setBottom(statusline);
-
-
 
 			controlpanel = new FlightControlPanel();
 			rootLayout.setLeft(controlpanel);
 			controlpanel.setup(control);
-
-			statusline.setup(control);
-
 
 
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
+		});
 
-			primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-				if(newValue.booleanValue() && control.isConnected()) {
-					control.getStatusManager().reset(); 
-				}
-			});
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		primaryStage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+			if(newValue.booleanValue() && control.isConnected()) {
+				control.getStatusManager().reset(); 
+			}
+		});
 
-		notifyPreloader(new StateChangeNotification(
-				StateChangeNotification.Type.BEFORE_START));
+
+
+		//		notifyPreloader(new StateChangeNotification(
+		//				StateChangeNotification.Type.BEFORE_START));
 	}
 
 	public static Stage getPrimaryStage() {
