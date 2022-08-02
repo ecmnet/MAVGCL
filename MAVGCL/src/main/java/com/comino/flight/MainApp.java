@@ -79,7 +79,6 @@ import com.comino.ntp.SimpleNTPServer;
 import boofcv.BoofVersion;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.application.Preloader.StateChangeNotification;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -94,7 +93,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -179,12 +177,15 @@ public class MainApp extends Application  {
 	private String command_line_options = null;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
-
+	
 	private AnalysisModelService analysisModelService;
 	private SimpleNTPServer ntp_server;
+	
+	private long startup;
 
 	public MainApp() {
 		super();
+		startup = System.currentTimeMillis();
 
 		//		try {
 		//			redirectConsole();
@@ -283,6 +284,8 @@ public class MainApp extends Application  {
 				//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 				//				}
 			}
+			
+			System.out.println("ControL: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
@@ -316,19 +319,22 @@ public class MainApp extends Application  {
 
 
 			MAVPreferences.init();
-			//	new SITLController(control);
-
 			MAVGCLMap.getInstance(control);
+			
+			System.out.println("Preferences: "+(System.currentTimeMillis()-startup)+"ms");
+			
 			MAVGCLPX4Parameters.getInstance(control);
 
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
+			
+			System.out.println("Model: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
 
 					//control.getStatusManager().reset();
-					wq.addSingleTask("LP",300, () -> {			
+					wq.addSingleTask("LP",500, () -> {			
 						System.out.println("Is simulation: "+control.isSimulation());
 						//	control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
@@ -343,6 +349,7 @@ public class MainApp extends Application  {
 			if(!control.isConnected())
 				control.connect();
 
+			System.out.println("Connect: "+(System.currentTimeMillis()-startup)+"ms");
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
@@ -428,7 +435,6 @@ public class MainApp extends Application  {
 			this.primaryStage = primaryStage;
 			this.primaryStage.setTitle("MAVGCL Analysis");
 			FileHandler.getInstance(primaryStage,control);
-			VoiceHandler.getInstance(control);
 			initRootLayout();
 			showMAVGCLApplication();
 		} catch(Exception e) {
@@ -460,6 +466,8 @@ public class MainApp extends Application  {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
+			
+			System.out.println("Root: "+(System.currentTimeMillis()-startup)+"ms");
 			
 			rootLayout.setCenter(new Label("Initializing MAVGCL application components..."));
 
@@ -549,7 +557,12 @@ public class MainApp extends Application  {
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
+			
 
+		});
+		
+		wq.addSingleTask("LP", 1000, () -> {
+			VoiceHandler.getInstance(control);
 		});
 
 
