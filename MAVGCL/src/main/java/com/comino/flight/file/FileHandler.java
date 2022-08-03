@@ -657,10 +657,6 @@ public class FileHandler {
 			userPrefs.put(MAVPreferences.LAST_FILE2,s1);
 
 		userPrefs.put(MAVPreferences.LAST_FILE,name);
-		
-		System.out.println(name);
-		System.out.println(s1);
-		System.out.println(s2);
 
 	}
 
