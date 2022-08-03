@@ -216,15 +216,26 @@ public class FileHandler {
 		File file = fileChooser.showOpenDialog(stage);
 		if(file!=null) {
 			fileImport(file);
-			userPrefs.put(MAVPreferences.LAST_FILE,file.getAbsolutePath());
+			addToLastFile(file.getAbsolutePath());
 		} else
 			state.getLogLoadedProperty().set(true);
 	}
 
 
-	public void fileImportLast() {
+	public void fileImportLast(int index) {
 		final StateProperties state = StateProperties.getInstance();
-		String name = userPrefs.get(MAVPreferences.LAST_FILE,null);
+		String name = null;
+		switch(index) {
+		case 0:
+			 name = userPrefs.get(MAVPreferences.LAST_FILE,null);
+			 break;
+		case 1:
+			 name = userPrefs.get(MAVPreferences.LAST_FILE2,null);
+			 break;
+		case 2:
+			 name = userPrefs.get(MAVPreferences.LAST_FILE3,null);
+			 break;
+		}
 		state.getReplayingProperty().set(false);
 		if(name!=null) {
 			File file = new File(name);
@@ -628,6 +639,28 @@ public class FileHandler {
 			f.delete();
 		f.createNewFile();
 		return f;
+
+	}
+
+	private void addToLastFile(String name) {
+
+		String s3 = userPrefs.get(MAVPreferences.LAST_FILE, null);
+		if(s3 != null && s3.equals(name))
+			return;
+
+		String s2 = userPrefs.get(MAVPreferences.LAST_FILE2, null);
+		if(s2!=null)
+			userPrefs.put(MAVPreferences.LAST_FILE3,s2);
+
+		String s1 = userPrefs.get(MAVPreferences.LAST_FILE, null);
+		if(s1!=null)
+			userPrefs.put(MAVPreferences.LAST_FILE2,s1);
+
+		userPrefs.put(MAVPreferences.LAST_FILE,name);
+		
+		System.out.println(name);
+		System.out.println(s1);
+		System.out.println(s2);
 
 	}
 

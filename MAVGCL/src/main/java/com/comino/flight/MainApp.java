@@ -110,8 +110,15 @@ public class MainApp extends Application  {
 	@FXML
 	private MenuItem m_import;
 
+	
 	@FXML
-	private MenuItem m_import_last;
+	private MenuItem m_recent1;
+	
+	@FXML
+	private MenuItem m_recent2;
+	
+	@FXML
+	private MenuItem m_recent3;
 
 	@FXML
 	private MenuItem m_export;
@@ -624,11 +631,9 @@ public class MainApp extends Application  {
 		try {
 
 			state = StateProperties.getInstance();
+			
+			setupLastFiles();
 
-			String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
-			if(name!=null) {
-				m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
-			}
 
 			m_import.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -636,19 +641,33 @@ public class MainApp extends Application  {
 					AnalysisModelService.getInstance().stop();
 					FileHandler.getInstance().fileImport();
 					controlpanel.getChartControl().refreshCharts();
-
-					String name = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
-					if(name!=null) {
-						m_import_last.setText("Open '"+name.substring(name.lastIndexOf("/")+1,name.length())+"'");
-					}
+					setupLastFiles();
 				}
 			});
-
-			m_import_last.setOnAction(new EventHandler<ActionEvent>() {
+			
+			m_recent1.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
 					AnalysisModelService.getInstance().stop();
-					FileHandler.getInstance().fileImportLast();
+					FileHandler.getInstance().fileImportLast(0);
+					controlpanel.getChartControl().refreshCharts();
+				}
+			});
+			
+			m_recent2.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					AnalysisModelService.getInstance().stop();
+					FileHandler.getInstance().fileImportLast(1);
+					controlpanel.getChartControl().refreshCharts();
+				}
+			});
+			
+			m_recent3.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					AnalysisModelService.getInstance().stop();
+					FileHandler.getInstance().fileImportLast(2);
 					controlpanel.getChartControl().refreshCharts();
 				}
 			});
@@ -796,6 +815,37 @@ public class MainApp extends Application  {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void setupLastFiles() {
+		
+		int li; String d;
+		
+		String s1 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+		if(s1!=null) {
+			li = s1.lastIndexOf("/")+1;
+			d = s1.substring(0,li-1); d = d.substring(d.lastIndexOf("/")+1, d.length());
+			m_recent1.setText(s1.substring(li,s1.length())+" ["+d+"]");	
+		} 
+		
+		String s2 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE2,null);
+		if(s2!=null) {
+			li = s2.lastIndexOf("/")+1;
+			d = s2.substring(0,li-1); d = d.substring(d.lastIndexOf("/")+1, d.length());
+			m_recent2.setText(s2.substring(li,s2.length())+" ["+d+"]");	
+		} else {
+			m_recent2.setVisible(false);
+		}
+		
+		String s3 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE3,null);
+		if(s3!=null) {
+			li = s3.lastIndexOf("/")+1;
+			d = s3.substring(0,li-1); d = d.substring(d.lastIndexOf("/")+1, d.length());
+			m_recent3.setText(s3.substring(li,s3.length())+" ["+d+"]");	
+		} else {
+			m_recent3.setVisible(false);
+		}
+		
 	}
 
 	private Properties getBuildInfo() {

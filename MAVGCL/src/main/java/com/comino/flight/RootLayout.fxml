@@ -26,7 +26,13 @@
 									control="UP" meta="UP" shift="UP" shortcut="DOWN" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem fx:id="m_import_last" mnemonicParsing="false" text="Open recent file"/>
+						<Menu mnemonicParsing="false" text="Recent files..">
+						   <items>
+						     <MenuItem fx:id="m_recent1" mnemonicParsing="false" text="None"/>
+						     <MenuItem fx:id="m_recent2" mnemonicParsing="false" text="None"/>
+						     <MenuItem fx:id="m_recent3" mnemonicParsing="false" text="None"/>
+						   </items>
+						</Menu>
 						<MenuItem fx:id="m_export" mnemonicParsing="false" text="Save as...">
 							<accelerator>
 								<KeyCodeCombination alt="UP" code="S"
@@ -63,6 +69,13 @@
 							text="Show local log...">
 						</MenuItem>
 					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Mission">
+				   <items>
+				    <MenuItem mnemonicParsing="false" disable="true" text="Upload QGC mission from file..."/>
+				    <SeparatorMenuItem mnemonicParsing="false" />
+				    <MenuItem mnemonicParsing="false" disable="true" text="Remove mission from vehicle"/>
+				   </items>
 				</Menu>
 				<Menu mnemonicParsing="false" text="System">
 					<items>
