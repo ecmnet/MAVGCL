@@ -64,9 +64,13 @@ public class Map3DGroup {
 
 
 		task = new AnimationTimer() {
-			long entry=0;
+			long entry=0; long tms_old;
 			@Override
 			public void handle(long now) {
+				
+				if((now - tms_old)<20000000)
+					return;
+				tms_old = now;
 				
 				BlockingQueue<Long> list = map.getList();
 

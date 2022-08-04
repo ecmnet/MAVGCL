@@ -74,6 +74,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	private int lastindex = 0;
 
 	private int index = 0;
+	private long tms_old=0;
 
 	private AnimationTimer out = null;
 	private ConcurrentLinkedQueue<String> buffer = new ConcurrentLinkedQueue<String>();
@@ -97,6 +98,9 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.out = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				if((now - tms_old)<30000000)
+					return;
+				tms_old = now;
 				if(buffer.isEmpty())
 					return;
 

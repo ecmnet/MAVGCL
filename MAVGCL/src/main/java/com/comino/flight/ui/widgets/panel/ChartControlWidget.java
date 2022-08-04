@@ -234,8 +234,12 @@ public class ChartControlWidget extends ChartControlPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		task = new AnimationTimer() {
-			long replay_time_ms; long replay_index_old;
+			long replay_time_ms; long replay_index_old; long tms_old = 0;
 			@Override public void handle(long now) {
+				
+				if((now - tms_old)<20000000)
+					return;
+				tms_old = now;
 
 
 				anim_tms = System.currentTimeMillis();

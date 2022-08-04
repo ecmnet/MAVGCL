@@ -125,6 +125,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private int max_pt = 0;
 	private int sample_rate = 0;
 	private int source_id = 2;
+	private long tms_old=0;
 
 	private StateProperties state = null;
 
@@ -136,6 +137,9 @@ public class Vibration extends VBox implements IChartControl  {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+				if((now - tms_old)<20000000)
+					return;
+				tms_old = now;
 				if(dataService.isCollecting() && !isDisabled()) {
 					max_pt = dataService.getModelList().size() - 1;
 					updateGraph();
