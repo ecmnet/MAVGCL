@@ -149,7 +149,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			@Override
 			public void handle(long now) {
 
-				if((now - last) < 200000000)
+				if((now - last) < 200_000_000)
 					return;
 				last = now;
 

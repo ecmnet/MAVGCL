@@ -98,7 +98,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.out = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if((now - tms_old)<30000000)
+				if((now - tms_old)<50_000_000)
 					return;
 				tms_old = now;
 				if(buffer.isEmpty())

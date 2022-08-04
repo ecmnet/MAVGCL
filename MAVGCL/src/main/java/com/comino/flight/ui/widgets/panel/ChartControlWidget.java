@@ -237,7 +237,7 @@ public class ChartControlWidget extends ChartControlPane  {
 			long replay_time_ms; long replay_index_old; long tms_old = 0;
 			@Override public void handle(long now) {
 				
-				if((now - tms_old)<20000000)
+				if((now - tms_old)<20_000_000)
 					return;
 				tms_old = now;
 
