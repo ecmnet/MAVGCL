@@ -146,7 +146,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			msg.target_component = 1;
 			control.sendMAVLinkMessage(msg);
 
-			state.getParamLoadedProperty().set(!loaded);
+			state.getParamLoadedProperty().set(false);
 			logger.writeLocalMsg("Reading parameters...",
 					MAV_SEVERITY.MAV_SEVERITY_INFO);
 

@@ -162,8 +162,12 @@ public class AnalysisModelService  {
 		});
 
 		task = new AnimationTimer() {
+			long tms_old=0;
 			@Override
 			public void handle(long now) {
+				if((now - tms_old)<5000000)
+					return;
+				tms_old = now;
 				try {
 					for(ICollectorRecordingListener updater : listener)
 						updater.update(System.nanoTime());

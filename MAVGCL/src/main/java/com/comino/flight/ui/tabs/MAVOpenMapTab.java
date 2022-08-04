@@ -196,7 +196,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if((now - tms_old)<100000000)
+				if((now - tms_old)<66_000_000)
 					return;
 				tms_old = now;
 				updateMap(true);
