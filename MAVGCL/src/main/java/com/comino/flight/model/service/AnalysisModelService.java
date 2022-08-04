@@ -165,7 +165,7 @@ public class AnalysisModelService  {
 			long tms_old=0;
 			@Override
 			public void handle(long now) {
-				if((now - tms_old)<5000000)
+				if((now - tms_old)<5_000_000)
 					return;
 				tms_old = now;
 				try {
