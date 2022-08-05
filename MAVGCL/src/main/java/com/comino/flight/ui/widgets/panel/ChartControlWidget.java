@@ -368,6 +368,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		keyfigures.getEditor().setEditable(false);
 		keyfigures.getEditor().setCursor(Cursor.DEFAULT);
 		keyfigures.getSelectionModel().select(0);
+		keyfigures.setVisibleRowCount(15);
 
 		keyfigures.getSelectionModel().selectedIndexProperty().addListener((o,ov,nv) -> {
 			Map<Integer,KeyFigurePreset> pr = null;
