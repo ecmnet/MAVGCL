@@ -295,8 +295,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 		@Override
 		public void run() {
 
-
-
 			if(!MainApp.getPrimaryStage().isFocused() || isDisabled()) {
 				if(++cnt % 10 == 0) {
 					allData.forEach((k,d) -> {
@@ -323,8 +321,6 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				});
 
 			}
-
-
 		}
 
 	}
