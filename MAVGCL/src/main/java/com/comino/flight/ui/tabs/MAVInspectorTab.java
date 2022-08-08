@@ -85,16 +85,16 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 	final ObservableMap<String,Data> remData = FXCollections.observableHashMap();
 
 	private final WorkQueue wq = WorkQueue.getInstance();
-	
+
 	private final Comparator<TreeItem<DataSet>> lexicalComperator 
-	     = Comparator.comparing(TreeItem<DataSet>::getValue,(s1,s2) -> { return s1.str.get().compareTo(s2.str.get()); });
+	= Comparator.comparing(TreeItem<DataSet>::getValue,(s1,s2) -> { return s1.str.get().compareTo(s2.str.get()); });
 
 
 	private TreeItem<DataSet> root;
-			
+
 	public MAVInspectorTab() {
 		FXMLLoadHelper.load(this, "MAVInspectorTab.fxml");
-		
+
 	}
 
 
@@ -113,8 +113,8 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 				treetableview.getSelectionModel().clearSelection();
 			}
 		});
-		
-		
+
+
 
 		message_col.setCellValueFactory(param -> {
 			if(param.getValue()!=null)
@@ -267,7 +267,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 			data.addToTree(treetableview);
 			allData.put(_msg,data);
-			
+
 			root.getChildren().sort(lexicalComperator);
 
 			return;
@@ -284,38 +284,49 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 					} catch(Exception k) {   }
 				}
 			}
-			
+
 		}
 	}
 
 	class Update implements Runnable {
 
+		long cnt=0;
+
 		@Override
 		public void run() {
 
-			if(!isDisabled()) {
 
-				remData.clear();
-				try {
+
+			if(!MainApp.getPrimaryStage().isFocused() || isDisabled()) {
+				if(++cnt % 10 == 0) {
 					allData.forEach((k,d) -> {
-						if(d.getLastUpdate() == 0 || d.ti.isExpanded())
-							return;
-						if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
-							remData.put(k, d);
-						}
+						d.setLastUpdate(System.currentTimeMillis());
 					});
-				} catch(ConcurrentModificationException e) { return; }
-				if(remData.size()>0) {
-					remData.forEach((k,d) -> {
-						d.removeFromTree(treetableview);
-						allData.remove(k);
-					});
-
 				}
+				return;
+			}
 
+			remData.clear();
+			try {
+				allData.forEach((k,d) -> {
+					if(d.getLastUpdate() == 0 || d.ti.isExpanded())
+						return;
+					if(System.currentTimeMillis() - d.getLastUpdate() > 10000) {
+						remData.put(k, d);
+					}
+				});
+			} catch(ConcurrentModificationException e) { return; }
+			if(remData.size()>0) {
+				remData.forEach((k,d) -> {
+					d.removeFromTree(treetableview);
+					allData.remove(k);
+				});
 
 			}
+
+
 		}
+
 	}
 
 
@@ -354,7 +365,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			view.getRoot().getChildren().remove(ti);
 			tms = 0; rate = 0; count = 0;
 		}
-		
+
 
 		public Map<String,DataSet> getData() {
 			return data;
@@ -378,6 +389,10 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
 		public long getLastUpdate() {
 			return tms;
+		}
+
+		public void setLastUpdate(long tms) {
+			this.tms = tms;
 		}
 
 		public boolean updateRate() {
