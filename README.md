@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	09/87/22
+**Development Status:** Last updated 	09/08/22
 
 - Auto loading of custom keyfigure definition files from a dedicated directory at startup
 - Autosave into result directory requests and saves DMESG output
