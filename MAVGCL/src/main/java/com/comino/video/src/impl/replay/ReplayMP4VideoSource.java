@@ -83,7 +83,7 @@ public class ReplayMP4VideoSource  {
 		if(stream_idx < 0)
 			return null;
 		
-		long time=(long)((fmt_ctx.duration()*percentage*15)/1000_000)+8;
+		long time=(long)((fmt_ctx.duration()*percentage*15)/1000_000)+2;
 		if(percentage >= 1)
 			time = (long)(fmt_ctx.duration()*15/1000_000)-5;
 
