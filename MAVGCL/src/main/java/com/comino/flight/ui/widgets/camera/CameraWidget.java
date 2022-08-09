@@ -181,6 +181,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			msp.param1  = nv.intValue();
 			control.sendMAVLinkMessage(msp);
 		});
+		
 
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
@@ -285,7 +286,16 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
-		ChartControlPane.addChart(8,this);
+		ChartControlPane.addChart(91,this);
+		
+//		widget.getVideoVisibility().addListener((o,ov,nv) -> {
+//			if(nv.booleanValue()) {
+//				msg_msp_command msp = new msg_msp_command(255,1);
+//				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+//				msp.param1  = state.getStreamProperty().intValue();
+//				control.sendMAVLinkMessage(msp);
+//			}
+//		});
 	}
 
 

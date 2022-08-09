@@ -451,17 +451,15 @@ public class MSPCtlWidget extends ChartControlPane   {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
 
-		
-		state.getConnectedProperty().addListener((c,o,n) -> {
-			
+
+		state.getCVAvailableProperty().addListener((c,o,n) -> {
+
 			if(n.booleanValue()) {
-				Platform.runLater(() -> {
-					stream.getSelectionModel().select(0);
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-					msp.param1  = 0;
-					control.sendMAVLinkMessage(msp);	
-				}); 
+				
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
+				msp.param1  = state.getStreamProperty().intValue();
+				control.sendMAVLinkMessage(msp);	
 			}
 		});
 
