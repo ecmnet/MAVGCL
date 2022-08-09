@@ -128,8 +128,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 							image.setImage(replay_video.playAt(1.0f));
 						});
 					} else {
-						image.setVisible(false);
-						widget.getVideoVisibility().setValue(false);
+						if(!replay_video.open()) {
+							image.setVisible(false);
+							widget.getVideoVisibility().setValue(false);
+						}
 					}
 
 
@@ -186,10 +188,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
-				
+
 				if(replay_video.isOpen()) 
 					replay_video.close();
-				
+
 				if(source==null)
 					connect();
 				if(!isConnected)
@@ -229,8 +231,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				});
 			}
 		});
-		
-		
+
+
 
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
