@@ -25,6 +25,8 @@ import static org.bytedeco.ffmpeg.global.swscale.SWS_BILINEAR;
 import static org.bytedeco.ffmpeg.global.swscale.sws_getContext;
 import static org.bytedeco.ffmpeg.global.swscale.sws_scale;
 
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
@@ -53,6 +55,7 @@ public class ReplayMP4VideoSource  {
 	private final AVPacket pkt;
 
 	private BufferedImage frame;
+	private Graphics ctx;
 	private Image image;
 	private SwsContext sws_ctx;
 	private AVCodecContext codec_ctx;
@@ -105,6 +108,7 @@ public class ReplayMP4VideoSource  {
 					);
 
 			buffer.get(frame_buffer.getData());
+			ctx.drawString("Replay",60,20);
 			image = SwingFXUtils.toFXImage(frame, null);
 			av_packet_unref(pkt);
 			return image;
@@ -188,6 +192,8 @@ public class ReplayMP4VideoSource  {
 				);
 
 		frame = new BufferedImage(codec_ctx.width(), codec_ctx.height(), BufferedImage.TYPE_3BYTE_BGR);
+		ctx   = frame.getGraphics();
+		ctx.setFont(new Font("SansSerif", Font.PLAIN, 9));
 		frame_buffer = (DataBufferByte)frame.getRaster().getDataBuffer();
 		
 		System.out.println(vf+" opened");
