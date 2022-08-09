@@ -135,7 +135,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 				}
 				else  {
-					if(!connect())
+					if(!state.getConnectedProperty().get() || !connect())
 						return;
 					if(source!=null) {
 						image.setVisible(true);
@@ -225,6 +225,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				});
 			}
 		});
+		
+		
 
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
@@ -238,7 +240,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			} else {
 				replay_video.close();
-				if(isConnected)
+				if(isConnected && state.getConnectedProperty().get())
 					source.start();
 				else
 					image.setVisible(false);
