@@ -199,8 +199,8 @@ public class ReplayMP4VideoSource  {
 
 
 	private String getVideoFileName() {
-		
-		if(fh==null)
+		String fn = fh.getFileDirectory();
+		if(fn==null)
 			return null;
 		File dir = new File(fh.getFileDirectory());
 		
