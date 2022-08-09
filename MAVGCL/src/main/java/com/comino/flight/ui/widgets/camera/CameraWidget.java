@@ -54,6 +54,7 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
+import com.comino.video.src.impl.replay.ReplayMP4VideoSource;
 import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
 import com.comino.video.src.mp4.MP4Recorder;
 
@@ -80,11 +81,12 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private ImageView        image;
 
 
-	private MediaView        media;
 
 	private IMWVideoSource 	source = null;
 	private boolean			big_size=false;
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
+	private FloatProperty  	replay= new SimpleFloatProperty(0);
+
 
 	private MP4Recorder     recorder = null;
 	private boolean         isConnected = false;
@@ -92,8 +94,9 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private MSPLogger       logger = null;
 	private Preferences     userPrefs;
 
-	private MediaPlayer     player;
-	private ControlWidget widget;
+	private ControlWidget   widget;
+	
+	private ReplayMP4VideoSource replay_video;
 
 
 
@@ -101,6 +104,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 		image.fitWidthProperty().bind(this.widthProperty());
 		image.fitHeightProperty().bind(this.heightProperty());
+		
+		replay_video = new ReplayMP4VideoSource();
 	}
 
 
@@ -108,40 +113,30 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private void initialize() {
 
-		//		media = new MediaView();
-		//		this.getChildren().add(media);
-		//		media.fitWidthProperty().bind(this.widthProperty());
-		//		media.fitHeightProperty().bind(this.heightProperty());
-		//
-		//		Media m = new Media("file:///Users/ecmnet/Pixhawk/Logs/010521-160341.mp4");
-		//		player = new MediaPlayer(m);
-		//		media.setVisible(true);
-		//		media.setMediaPlayer(player);
-
 
 		this.setFixedRatio((double)Y/X);
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
-			if(source==null && !connect() ) {
-				return;
-			}
-
 			if(newvalue.booleanValue())
-				if(state.getReplayingProperty().get()) {
-					//					image.setVisible(false);
-					//					media.setVisible(true);
-					//					player.play();
-					//					source.stop();
+				if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get()) {
+					image.setVisible(true);
+					if(replay_video.isOpen()) {
+						Platform.runLater(() -> {
+							image.setImage(replay_video.playAt(1.0f));
+						});
+					}
+					
 				}
 				else  {
+					if(source!=null) {
 					image.setVisible(true);
-					//					media.setVisible(false);
-					//					player.stop();
 					source.start();
+					}
 				}
 			else {
 				if(!recorder.getRecordMP4Property().get())
+					if(source!=null) 
 					source.stop();
 			}
 		});
@@ -179,20 +174,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 
-		//		state.getConnectedProperty().addListener((o,ov,nv) -> {
-		//			if(control.isSimulation()) {
-		//				return;
-		//			}
-		//			if(nv.booleanValue()) {
-		//				image.setImage(null);
-		//				if(fadeProperty().getValue() && !source.isRunning()) {
-		//					connect(); source.start(); image.setImage(null);
-		//				}
-		//			} else
-		//				if(source!=null)
-		//					source.stop();
-		//		});
-
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || control.isSimulation())
 				return;
@@ -219,6 +200,35 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				}
 			}
 
+		});
+		
+		scroll.addListener((v, ov, nv) -> {
+			if(replay_video.isOpen() && image.isVisible()) {
+				Platform.runLater(() -> {
+					image.setImage(replay_video.playAt(nv.floatValue()));
+				});
+			}
+		});
+		
+		replay.addListener((v, ov, nv) -> {
+			int data_size = AnalysisModelService.getInstance().getModelList().size();
+			if(replay_video.isOpen() && image.isVisible()) {
+				Platform.runLater(() -> {
+					image.setImage(replay_video.playAt(nv.floatValue()/data_size));
+				});
+			}
+		});
+		
+		state.getLogLoadedProperty().addListener((v,o,n) -> {
+			if(n.booleanValue()) {
+				replay_video.open();
+				
+			} else {
+				image.setVisible(false);
+				replay_video.close();
+				widget.getVideoVisibility().setValue(false);
+			}
+			
 		});
 	}
 
@@ -249,6 +259,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
+		ChartControlPane.addChart(8,this);
 	}
 
 
@@ -313,7 +324,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public FloatProperty getReplayProperty() {
-		return null;
+		return replay;
 	}
 
 	@Override

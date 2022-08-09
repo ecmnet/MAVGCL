@@ -183,6 +183,10 @@ public class FileHandler {
 	public String getName() {
 		return name;
 	}
+	
+	public String getFileDirectory() {
+		return lastDir;
+	}
 
 	public void clear() {
 		name = "";
@@ -312,8 +316,8 @@ public class FileHandler {
 					//						converter.doConversion();
 					//					}
 					name = file.getName();
+					lastDir = file.getParentFile().getAbsolutePath();
 					state.getLogLoadedProperty().set(true);
-					lastDir = file.getParent();
 					return null;
 				}
 			}).start();
@@ -525,6 +529,7 @@ public class FileHandler {
 
 				}
 
+				state.getLogLoadedProperty().set(true);
 				return null;
 			}
 		}).start();
