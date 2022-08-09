@@ -251,10 +251,12 @@ public class FileHandler {
 
 		if(file!=null) {
 			state.getLogLoadedProperty().set(false);
+			lastDir = null;
 			new Thread(new Task<Void>() {
 				@Override protected Void call() throws Exception {
 
 					Type listType = null;
+					
 
 
 					if(file.getName().endsWith("ulg")) {

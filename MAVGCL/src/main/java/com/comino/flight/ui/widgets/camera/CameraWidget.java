@@ -119,25 +119,33 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 
 			if(newvalue.booleanValue())
+				
 				if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get()) {
-					image.setVisible(true);
+					
 					if(replay_video.isOpen()) {
+						image.setVisible(true);
 						Platform.runLater(() -> {
 							image.setImage(replay_video.playAt(1.0f));
 						});
+					} else {
+						image.setVisible(false);
+						widget.getVideoVisibility().setValue(false);
 					}
+						
 					
 				}
 				else  {
+					if(!connect())
+						return;
 					if(source!=null) {
-					image.setVisible(true);
-					source.start();
+					  image.setVisible(true);
+					  source.start();
 					}
 				}
 			else {
 				if(!recorder.getRecordMP4Property().get())
 					if(source!=null) 
-					source.stop();
+					  source.stop();
 			}
 		});
 
@@ -221,7 +229,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
-				replay_video.open();
+				if(source!=null)
+					source.stop();
+				if(replay_video.open()) {
+					Platform.runLater(() -> {
+						image.setImage(replay_video.playAt(1.0f));
+					});
+				}
 				
 			} else {
 				image.setVisible(false);
