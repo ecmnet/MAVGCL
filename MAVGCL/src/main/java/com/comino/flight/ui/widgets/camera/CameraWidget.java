@@ -186,6 +186,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
+				
+				if(replay_video.isOpen()) 
+					replay_video.close();
+				
 				if(source==null)
 					connect();
 				if(!isConnected)
@@ -240,8 +244,11 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			} else {
 				replay_video.close();
-				if(isConnected && state.getConnectedProperty().get())
+				if(state.getConnectedProperty().get()) {
+					if(!connect())
+						return;
 					source.start();
+				}
 				else
 					image.setVisible(false);
 			}
