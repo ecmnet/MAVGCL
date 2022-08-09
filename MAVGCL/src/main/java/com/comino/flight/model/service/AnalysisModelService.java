@@ -229,12 +229,20 @@ public class AnalysisModelService  {
 		return current;
 	}
 
+	public AnalysisDataModel getLast() {
+		if(modelList.size()>0)
+			return modelList.get(modelList.size()-1);
+		return current;
+	}
+
 	public void setCurrent(int index) {
 		if(modelList.size() > index) {
 			if(index < 0) {
 				return;
 			}
+			
 			current.set(modelList.get(index));
+			
 		}
 	}
 
@@ -319,8 +327,6 @@ public class AnalysisModelService  {
 
 		if(current_x0_pt<0)
 			current_x0_pt = 0;
-
-
 
 		return current_x0_pt;
 	}
@@ -462,16 +468,16 @@ public class AnalysisModelService  {
 
 				if(state.getCurrentUpToDate().getValue()) {
 					try {
-					  current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-					  current.calculateVirtualKeyFigures(meta);
+						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+						current.calculateVirtualKeyFigures(meta);
 					} catch(ConcurrentModificationException c) { }
 				}
 
 
 				if(ulogger.isLogging()) {
-						//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
-						record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
-						record.calculateVirtualKeyFigures(meta);
+					//	record.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
+					record.setValues(KeyFigureMetaData.ULG_SOURCE,ulogger.getData(), meta);
+					record.calculateVirtualKeyFigures(meta);
 				}
 
 				if(model.msg != null && model.msg.text!=null) {
@@ -509,7 +515,7 @@ public class AnalysisModelService  {
 						tms_last = System.nanoTime() / 1000 - tms_start;
 					isFirst = false;
 				} else {
-					
+
 					state.getRecordingAvailableProperty().set(modelList.size()>0);
 
 					current.tms = System.nanoTime() / 1000 ;

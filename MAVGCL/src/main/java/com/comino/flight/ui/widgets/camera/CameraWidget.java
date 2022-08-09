@@ -64,6 +64,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.media.Media;
@@ -97,6 +98,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private ControlWidget   widget;
 
 	private ReplayMP4VideoSource replay_video;
+	private final AnalysisModelService model ;
 
 
 
@@ -106,6 +108,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		image.fitHeightProperty().bind(this.heightProperty());
 
 		replay_video = new ReplayMP4VideoSource();
+		model = AnalysisModelService.getInstance();
 	}
 
 
@@ -225,7 +228,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			int data_size = AnalysisModelService.getInstance().getModelList().size();
+			int data_size = model.getModelList().size();
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
 					image.setImage(replay_video.playAt(nv.floatValue()/data_size));
@@ -288,14 +291,22 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 		ChartControlPane.addChart(91,this);
 		
-//		widget.getVideoVisibility().addListener((o,ov,nv) -> {
-//			if(nv.booleanValue()) {
-//				msg_msp_command msp = new msg_msp_command(255,1);
-//				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
-//				msp.param1  = state.getStreamProperty().intValue();
-//				control.sendMAVLinkMessage(msp);
+		state.getCurrentUpToDate().addListener((v,o,n) -> {
+			float p = 0; 
+		//	if(!n.booleanValue()) {
+				p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
+//			} else {
+//				p = 1-scroll.floatValue()/100;
 //			}
-//		});
+			if(!replay_video.isOpen())
+				return;
+//			System.out.println(p+"/"+scroll.floatValue());
+			final Image img = replay_video.playAt(p);
+			Platform.runLater(() -> {
+				image.setImage(img);
+			});
+		});
+
 	}
 
 
@@ -332,7 +343,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			if(url.toString().startsWith("http")) {
 				//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
-				source = new MJpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+				source = new MJpegVideoSource(url,model.getCurrent());
 			} 
 			else if(url.toString().startsWith("rtsp")) {
 				source = new RTSPMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
