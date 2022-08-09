@@ -478,6 +478,8 @@ public class FileHandler {
 	}
 
 	public void autoSave() throws IOException {
+		
+		lastDir = null;
 
 		new Thread(new Task<Void>() {
 			@Override protected Void call() throws Exception {
