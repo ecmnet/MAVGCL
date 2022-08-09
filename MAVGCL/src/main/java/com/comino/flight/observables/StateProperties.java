@@ -120,7 +120,7 @@ public class StateProperties {
 		this.control = control;
 		this.logger = MSPLogger.getInstance();
 
-		wq.addSingleTask("LP", 500, () ->  isInitializedProperty.set(true) );
+		wq.addSingleTask("LP", 600, () ->  isInitializedProperty.set(true) );
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			Platform.runLater(()-> {
