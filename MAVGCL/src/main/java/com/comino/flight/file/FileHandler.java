@@ -500,7 +500,8 @@ public class FileHandler {
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
-
+                    
+					lastDir = directory.getAbsolutePath();
 					saveLog(path_result,name);
 
 					if(!control.isSimulation())
