@@ -112,6 +112,12 @@ public class ControlWidget extends ChartControlPane  {
 				parameters.setSelected(false);
 		});
 		
+		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				video.setSelected(false);
+			}
+		});
+		
 		parameters.disableProperty().bind(stateProperties.getParamLoadedProperty().not());
 	
 

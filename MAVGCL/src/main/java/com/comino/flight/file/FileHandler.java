@@ -495,6 +495,7 @@ public class FileHandler {
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				lastDir = path;
+				
 				if(!createResultSet)
 					saveLog(path,name);
 				else {
