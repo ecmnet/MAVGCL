@@ -441,11 +441,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 					state.getCurrentUpToDate().set(false);
 				}
 
+				state.getTimeSelectProperty().set((float)dtx);
 				if((mouseEvent.getX()-x)>0) {
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
 					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
 
+						
 						if((mouseEvent.getX() - x)> 30) {
 							zoom_label.setVisible(true);
 							zoom_label.setText(String.format("%#.2fs", dtx));

@@ -95,6 +95,7 @@ public class StateProperties {
 	private BooleanProperty preferencesChangedProperty       = new SimpleBooleanProperty();
 
 	private FloatProperty  progress 						 = new SimpleFloatProperty(-1);
+	private FloatProperty  timeSelect 						 = new SimpleFloatProperty(0);
 
 	private IMAVController control;
 
@@ -364,6 +365,10 @@ public class StateProperties {
 
 	public FloatProperty getProgressProperty() {
 		return progress;
+	}
+	
+	public FloatProperty getTimeSelectProperty() {
+		return timeSelect;
 	}
 
 	public BooleanProperty getRecordingAvailableProperty() {
