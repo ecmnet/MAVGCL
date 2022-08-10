@@ -315,7 +315,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 		
 		state.getTimeSelectProperty().addListener((e,o,n) -> {
-			float p = (float)(model.getCurrent().dt_sec + n.floatValue()) / (float)(model.getLast().dt_sec);	
+			
+			float p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
 			
 			if(!replay_video.isOpen())
 				return;

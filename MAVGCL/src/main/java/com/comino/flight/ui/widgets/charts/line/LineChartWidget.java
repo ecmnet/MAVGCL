@@ -304,7 +304,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setVisible(false);
 		measure.setStartY(0);
 		measure.setEndY(1000);
-		measure.setStroke(Color.color(0.9,0.6,1.0,0.5));
+		measure.setStroke(Color.color(0.9,0.6,1.0,0.8));
 		chartArea.getChildren().add(measure);
 
 		//		linechart.setOnScrollStarted((event) -> {
@@ -445,15 +445,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				if((mouseEvent.getX()-x)>0) {
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
-					if((System.currentTimeMillis()-dashboard_update_tms)>200) {
+					
 
 						
-						if((mouseEvent.getX() - x)> 30) {
+						if((mouseEvent.getX() - x)> 5) {
 							zoom_label.setVisible(true);
 							zoom_label.setText(String.format("%#.2fs", dtx));
 							zoom_label.setLayoutX(x-xAxis.getLayoutX());
 						} else
 							zoom_label.setVisible(false);
+						
+						if((System.currentTimeMillis()-dashboard_update_tms)>100) {
 
 						setDashboardData(dashboard1,type1,x0,x1);
 						setDashboardData(dashboard2,type2,x0,x1);
