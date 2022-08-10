@@ -61,7 +61,8 @@ import javafx.util.Duration;
 public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 
-	private final static String[] defaults = { "reboot", "gps status", "work_queue status", "listener estimator_status", "sensors status", "dmesg" };
+	private final static String[] defaults = { "reboot", "listener vehicle_odometry", "gps status", "work_queue status", "listener estimator_status", 
+			                                   "sensors status", "dmesg" };
 
 
 	private IMAVController control;
@@ -196,6 +197,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())
 				reloadShell();
+			
 		});
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
@@ -212,6 +214,10 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		});
 		
 		console.disableProperty().bind(this.disabledProperty());
+		
+		this.setOnMouseEntered((ev) -> {
+			this.requestFocus();
+		});
 	
 		return this;
 	}
