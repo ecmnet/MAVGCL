@@ -91,12 +91,12 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private MP4Recorder     recorder = null;
 	private boolean         isConnected = false;
+	private float           prev;
 
 	private MSPLogger       logger = null;
 	private Preferences     userPrefs;
 
 	private ControlWidget   widget;
-	private float           prev;
 
 	private ReplayMP4VideoSource replay_video;
 	private final AnalysisModelService model ;
@@ -185,7 +185,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			msp.param1  = nv.intValue();
 			control.sendMAVLinkMessage(msp);
 		});
-		
+
 
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
@@ -291,29 +291,29 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
 		ChartControlPane.addChart(91,this);
-		
+
 		state.getCurrentUpToDate().addListener((v,o,n) -> {
 			float p = 0; 
-		
-		if(!n.booleanValue()) {
-			    prev = replay_video.getPrevPercentage();
+
+			if(state.getReplayingProperty().get())
+				return;
+
+			if(!n.booleanValue()) {
+				prev = replay_video.getPrevPercentage(); 
 				p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
-			} else {
+			} else 
 				p = prev;
-			}
+
 			if(!replay_video.isOpen())
 				return;
-//			System.out.println(p+"/"+scroll.floatValue());
+		
 			final Image img = replay_video.playAt(p);
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
+
 		});
-
 	}
-
-
-
 
 	@Override
 	protected void perform_action() {
