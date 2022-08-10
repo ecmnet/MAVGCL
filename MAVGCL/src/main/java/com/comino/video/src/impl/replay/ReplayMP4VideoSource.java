@@ -67,6 +67,7 @@ public class ReplayMP4VideoSource  {
 	private BytePointer buffer;
 	private DataBufferByte frame_buffer;
 	private int stream_idx;
+	private float old_val;
 	
 	private boolean is_opened = false;
 
@@ -112,10 +113,15 @@ public class ReplayMP4VideoSource  {
 			ctx.drawRect(8,35,37,13);
 			image = SwingFXUtils.toFXImage(frame, null);
 			av_packet_unref(pkt);
+			old_val = percentage;
 			return image;
 		}
 
 		return null;
+	}
+	
+	public float getPrevPercentage() {
+		return old_val;
 	}
 
 	public void close() {

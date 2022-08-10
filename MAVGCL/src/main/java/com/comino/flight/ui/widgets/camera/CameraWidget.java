@@ -96,6 +96,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private Preferences     userPrefs;
 
 	private ControlWidget   widget;
+	private float           prev;
 
 	private ReplayMP4VideoSource replay_video;
 	private final AnalysisModelService model ;
@@ -293,11 +294,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		
 		state.getCurrentUpToDate().addListener((v,o,n) -> {
 			float p = 0; 
-		//	if(!n.booleanValue()) {
+		
+		if(!n.booleanValue()) {
+			    prev = replay_video.getPrevPercentage();
 				p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
-//			} else {
-//				p = 1-scroll.floatValue()/100;
-//			}
+			} else {
+				p = prev;
+			}
 			if(!replay_video.isOpen())
 				return;
 //			System.out.println(p+"/"+scroll.floatValue());
