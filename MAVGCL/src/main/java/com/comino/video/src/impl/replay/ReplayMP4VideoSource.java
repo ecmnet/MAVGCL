@@ -216,6 +216,8 @@ public class ReplayMP4VideoSource  {
 		String dirname  = fh.getFileDirectory();
 		String filename = fh.getName();
 		
+		System.out.println("Search for video "+filename+" in "+dirname);
+		
 		if(dirname==null)
 			return null;
 		File dir = new File(fh.getFileDirectory());

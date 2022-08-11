@@ -489,7 +489,7 @@ public class FileHandler {
 				if(control.isSimulation())
 					return null;
 
-				name = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
+				String logname = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
 
 
@@ -497,16 +497,16 @@ public class FileHandler {
 				lastDir = path;
 				
 				if(!createResultSet)
-					saveLog(path,name);
+					saveLog(path,logname);
 				else {
 
-					String path_result = path+"/"+name;
+					String path_result = path+"/"+logname;
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
                     
 					lastDir = directory.getAbsolutePath();
-					saveLog(path_result,name);
+					saveLog(path_result,logname);
 
 					if(!control.isSimulation())
 						nutshell.dump("dmesg", path_result);
@@ -531,11 +531,12 @@ public class FileHandler {
 
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {
-						video.renameTo(new File(path_result+"/"+name+".mp4"));
+						video.renameTo(new File(path_result+"/"+logname+".mp4"));
+						Thread.sleep(100);
 					}
 
 				}
-
+				name = logname+".mgc";
 				state.getLogLoadedProperty().set(true);
 				return null;
 			}
