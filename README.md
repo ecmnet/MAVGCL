@@ -12,7 +12,7 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	09/08/22
+**Development Status:** Last updated 	11/08/22
 
 - Auto loading of custom keyfigure definition files from a dedicated directory at startup
 - Autosave into result directory requests and saves DMESG output
@@ -46,7 +46,9 @@ Note: maven build currently requires mavcom, mavmap, mavodometry and mavutils bu
 
 **Note** that some features (MSP) are only available if you run a companion on your vehicle using MAVComm .
 
-See MAVGCL XY view in some action: <https://youtu.be/jOWNSIwIA9k>
+See MAVGCL some action: 
+- XY View: <https://youtu.be/jOWNSIwIA9k>
+- Video replay: <https://www.youtube.com/watch?v=liEKiAzEZ5Y>
 
 **Requirements:**
 
