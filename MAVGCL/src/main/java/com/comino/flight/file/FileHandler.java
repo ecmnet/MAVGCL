@@ -532,7 +532,6 @@ public class FileHandler {
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {
 						video.renameTo(new File(path_result+"/"+logname+".mp4"));
-						Thread.sleep(100);
 					}
 
 				}
@@ -684,6 +683,7 @@ public class FileHandler {
 		gson.toJson(data, writer);
 		writer.flush();
 		writer.close();
+		addToLastFile(f.getAbsolutePath());
 	}
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {

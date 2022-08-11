@@ -531,6 +531,12 @@ public class MainApp extends Application  {
 	private void initialize() {
 		menubar.setUseSystemMenuBar(true);
 		setupMenuBar();
+		
+		state.getLogLoadedProperty().addListener((e,o,n) -> {
+			Platform.runLater(() -> {
+			setupMenuBar();
+			});
+		});
 	}
 
 
@@ -633,7 +639,6 @@ public class MainApp extends Application  {
 			state = StateProperties.getInstance();
 			
 			setupLastFiles();
-
 
 			m_import.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
