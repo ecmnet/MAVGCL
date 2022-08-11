@@ -21,7 +21,10 @@ Any feedback, comments and contributions are very welcome.
 
 Note: 3D map data can be transferred to MAVGCL using the custom MAVLink message [msg_msp_micro_grid](https://github.com/ecmnet/mavcom/blob/af3a826866d977b898170547d15e1ad334899682/mavcom/mavlink/lquac.xml#L231) - for encoding refer to [MAP3DSpacialInfo.java](https://github.com/ecmnet/mavmap/blob/aa739520e2de797cad3ba71da01f041c87445557/mavmap/src/main/java/com/comino/mavmap/map/map3D/Map3DSpacialInfo.java#L84)
 
-Note: maven build currently requires mavcom, mavmap, mavodometry and mavutils built locally
+See MAVGCL some action: 
+- XY View: <https://youtu.be/jOWNSIwIA9k>
+- Video replay: <https://www.youtube.com/watch?v=liEKiAzEZ5Y>
+
 
 **Features:**
 
@@ -47,14 +50,16 @@ Note: maven build currently requires mavcom, mavmap, mavodometry and mavutils bu
 **Note** that some features (MSP) are only available if you run a companion on your vehicle using MAVComm .
 
 See MAVGCL some action: 
-- XY View: <https://youtu.be/jOWNSIwIA9k>
-- Video replay: <https://www.youtube.com/watch?v=liEKiAzEZ5Y>
+- XY View: <https://youtu.be/jOWNSIwIA9k> (2018)
+- Video replay: <https://www.youtube.com/watch?v=liEKiAzEZ5Y> (2022)
 
 **Requirements:**
 
-- requires minimum  **Java 8** JRE (Java 9/10 compatible)
+- requires minimum  **Java 11** JRE 
 - A companion running a serial-to-udp-proxy (either MAVComm or MAVROS, not required for PIXRacer)
-- Video streaming from the vehicle requires an mjpeg streaming service (e.g.  [uv4l](http://www.linux-projects.org)) running on companion 
+- Video streaming from the vehicle requires an rtps mjpeg streaming service running on companion 
+
+Note: maven building currently requires local mavcom, mavmap, mavbase and mavutils in local repository
 
 **Binaries:**
 
