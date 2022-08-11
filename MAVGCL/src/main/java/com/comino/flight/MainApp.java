@@ -804,6 +804,11 @@ public class MainApp extends Application  {
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_RESTART;
 				control.sendMAVLinkMessage(msp);
+				
+				AnalysisModelService.getInstance().clearModelList();
+				FileHandler.getInstance().clear();
+				MAVGCLPX4Parameters.getInstance().clear();
+				state.getLogLoadedProperty().set(false);
 
 			});
 
