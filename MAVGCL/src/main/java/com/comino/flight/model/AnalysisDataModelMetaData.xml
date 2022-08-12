@@ -509,6 +509,24 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
+	<KeyFigure desc="LPos.Reset.X" uom="m" mask="auto" key="LPOSRX">
+		<MSPSource class="state" field="l_rx"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="LPos.Reset.Y" uom="m" mask="auto" key="LPOSRY">
+		<MSPSource class="state" field="l_ry"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="LPos.Reset.Z" uom="m" mask="auto" key="LPOSRZ">
+		<MSPSource class="state" field="l_rz"></MSPSource>
+		<Groups>
+			<Group>Local Position</Group>
+		</Groups>
+	</KeyFigure>
 
 
 	<!-- Attitude  -->
