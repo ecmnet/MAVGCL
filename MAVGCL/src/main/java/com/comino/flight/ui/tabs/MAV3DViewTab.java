@@ -36,12 +36,14 @@
 package com.comino.flight.ui.tabs;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.view3D.View3DWidget;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Status;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -75,6 +77,8 @@ public class MAV3DViewTab extends Pane  {
 
 	@FXML
 	private Slider zoom;
+	
+	private StateProperties stateProperties = StateProperties.getInstance();
 
 	public MAV3DViewTab() {
 		FXMLLoadHelper.load(this, "MAV3DViewTab.fxml");
@@ -82,6 +86,7 @@ public class MAV3DViewTab extends Pane  {
 
 	@FXML
 	private void initialize() {
+		
 
 		widget = new View3DWidget(new Xform(),0,0,false,javafx.scene.SceneAntialiasing.BALANCED);
 		widget.fillProperty().set(Color.ALICEBLUE);
@@ -108,6 +113,7 @@ public class MAV3DViewTab extends Pane  {
 		show_traj.selectedProperty().addListener((e,o,n) -> {
 			widget.enableTrajectoryView(n.booleanValue());
 		});
+		
 
 		this.setOnMouseClicked((me) -> {
 			if(me.getClickCount()==2) {
@@ -129,6 +135,8 @@ public class MAV3DViewTab extends Pane  {
 		ChartControlPane.addChart(4,widget.setup(control));
 //		msg.setup(control);
 		perspective.getSelectionModel().selectFirst();
+		
+		
 		return this;
 	}
 

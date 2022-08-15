@@ -118,7 +118,10 @@ public class Camera extends Xform {
 	}
 
 	public void updateState(AnalysisDataModel model) {
-		this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
+		if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX")))
+			this.setTranslate(-model.getValue("LPOSRY")*100, model.getValue("LPOSRZ") > -0.05 ? 5 : -model.getValue("LPOSRZ") *100, model.getValue("LPOSRX")*100);
+		else
+			this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
 		this.ry.setAngle(MSPMathUtils.fromRad(model.getValue("YAW")));
 
 		if(perspective==VEHICLE_PERSPECTIVE) {

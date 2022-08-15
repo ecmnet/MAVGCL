@@ -67,16 +67,6 @@ public class VehicleModel extends Group {
 	}
 
 	public void updateState(AnalysisDataModel model, double z_offset) {
-		
-
-
-		//		model.setValue("LPOSZ", -2.0);
-		//		model.setValue("LPOSX", 1.0);
-		//		model.setValue("LPOSY", 1.0);
-		//		model.setValue("YAW", MSPMathUtils.toRad(45));
-		//		model.setValue("ROLL", MSPMathUtils.toRad(10));
-		//		model.setValue("PITCH", MSPMathUtils.toRad(0));
-
 
 		this.getTransforms().clear();
 
@@ -84,26 +74,18 @@ public class VehicleModel extends Group {
 		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
 		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
 
-		this.setTranslateX(-model.getValue("LPOSY")*100);
-//		
-//		if(Double.isFinite(z_offset))
-		     z_pos =    ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
-//		else
-//			 z_pos =  - model.getValue("LPOSZ") * 100  ;
-		
-//		 z_pos =   model.getValue("ALTRE") * 100  ;
-
-
-		this.setTranslateY(z_pos < 0 ? 0 : z_pos);
-		this.setTranslateZ(model.getValue("LPOSX")*100);
-		
-
-
-
-		//	this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > 0 ? 0 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
-		//	this.ry.setAngle(180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
-
-
+		if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX"))) {
+			this.setTranslateX(-model.getValue("LPOSRY")*100);
+			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
+			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			this.setTranslateZ(model.getValue("LPOSRX")*100);
+		}
+		else {
+			this.setTranslateX(-model.getValue("LPOSY")*100);
+			z_pos = ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
+			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			this.setTranslateZ(model.getValue("LPOSX")*100);
+		}
 	}
 
 	public void show(boolean show) {
@@ -116,17 +98,17 @@ public class VehicleModel extends Group {
 	private void addRotate(Group node, Rotate rotate, double angle) {
 
 		Affine affine = node.getTransforms().isEmpty() ? new Affine() : (Affine)(node.getTransforms().get(0));
-		
+
 		double A11 = affine.getMxx(), A12 = affine.getMxy(), A13 = affine.getMxz();
 		double A21 = affine.getMyx(), A22 = affine.getMyy(), A23 = affine.getMyz();
 		double A31 = affine.getMzx(), A32 = affine.getMzy(), A33 = affine.getMzz();
-		
+
 
 		// rotations over local axis
 		Rotate newRotateX = new Rotate(angle, new Point3D(A11, A21, A31));
 		Rotate newRotateY = new Rotate(angle, new Point3D(A12, A22, A32));
 		Rotate newRotateZ = new Rotate(angle, new Point3D(A13, A23, A33));
-		
+
 
 		// apply rotation
 		affine.prepend(rotate.getAxis() == Rotate.X_AXIS ? newRotateX :

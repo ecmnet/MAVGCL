@@ -161,7 +161,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				}
 			}
 		});
-		
+
 
 		// search for takeoff 
 		// TODO: What if no takeoff found
@@ -174,7 +174,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			else
 				model = dataService.getCurrent();
 		});
-		
+
 		state.getRecordingAvailableProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
 				takeoff = findTakeOff();
@@ -210,24 +210,31 @@ public class View3DWidget extends SubScene implements IChartControl {
 				if(isDisabled())
 					return;
 
+
 				if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
 
 					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
 						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
 						world.setTranslateY(takeoff.getValue("ALTTR")*100);
 					} 
-					offset = -(float)takeoff.getValue("LPOSZ");
-					
-					
+					if(Double.isFinite(model.getValue("LPOSRZ")))
+						offset = -(float)takeoff.getValue("LPOSRZ");
+					else
+						offset = -(float)takeoff.getValue("LPOSZ");
+
+
 				} else {
 
 					if(state.getLandedProperty().get()) {
-					
+
 						if(!Double.isNaN(model.getValue("ALTTR"))) {
 							camera.setTranslateY(model.getValue("ALTTR")*100);
 							world.setTranslateY(model.getValue("ALTTR")*100);
 						} 
-						offset = -(float)model.getValue("LPOSZ");
+						if(Double.isFinite(model.getValue("LPOSRZ")))
+							offset = -(float)model.getValue("LPOSRZ");
+						else
+							offset = -(float)model.getValue("LPOSZ");
 					} 
 				}
 
@@ -254,8 +261,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 				if(dataService.getModelList().size()>0 && current_x1_pt >= 0 && current_x1_pt< dataService.getModelList().size())
 					model = dataService.getModelList().get(current_x1_pt);
-//				else
-//					model = dataService.getCurrent();
+				//				else
+				//					model = dataService.getCurrent();
 
 			}
 		});
@@ -401,9 +408,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 	@Override
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 	}
-	
+
 	private AnalysisDataModel findTakeOff() {
-		
+
 		AnalysisDataModel to = dataService.getModelList().get(0);
 		for(int i = 0; i < dataService.getModelList().size();i++) {
 			if(dataService.getModelList().get(i).msg!=null && dataService.getModelList().get(i).msg.text.contains("akeoff")) {
@@ -414,6 +421,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 		}
 		return to;
 	}
+
+
 
 
 }

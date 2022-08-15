@@ -160,6 +160,25 @@
 		</Groups>
 	</KeyFigure>
 	
+	<KeyFigure desc="LPos.Offset.X" uom="" mask="#" key="EKF2OFFSX">
+	    <MSPSource class="est" field="l_x_reset"></MSPSource>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="LPos.Offset.Y" uom="" mask="#" key="EKF2OFFSY">
+	    <MSPSource class="est" field="l_y_reset"></MSPSource>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	<KeyFigure desc="LPos.Offset.Z" uom="" mask="#" key="EKF2OFFSZ">
+	    <MSPSource class="est" field="l_z_reset"></MSPSource>
+		<Groups>
+	        <Group>EKF2 Status</Group>
+		</Groups>
+	</KeyFigure>
+	
 	
 	<KeyFigure desc="Fault.Status" uom="" mask="#" key="EKFFAULT">
 	    <ULogSource field="estimator_status_flags_0.fault_status_changes"/>
@@ -509,19 +528,19 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="LPos.Reset.X" uom="m" mask="auto" key="LPOSRX">
+	<KeyFigure desc="LPos.X.Corr." uom="m" mask="auto" key="LPOSRX">
 		<MSPSource class="state" field="l_rx"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="LPos.Reset.Y" uom="m" mask="auto" key="LPOSRY">
+	<KeyFigure desc="LPos.Y.Corr." uom="m" mask="auto" key="LPOSRY">
 		<MSPSource class="state" field="l_ry"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="LPos.Reset.Z" uom="m" mask="auto" key="LPOSRZ">
+	<KeyFigure desc="LPos.R.Corr." uom="m" mask="auto" key="LPOSRZ">
 		<MSPSource class="state" field="l_rz"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
