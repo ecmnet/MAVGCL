@@ -157,7 +157,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 				if(!Double.isNaN(model.getValue("ALTTR"))) {
 					camera.setTranslateY(model.getValue("ALTTR")*100);
 					world.setTranslateY(model.getValue("ALTTR")*100);
-					this.offset = -(float)model.getValue("LPOSZ");
+					if(Double.isFinite(model.getValue("LPOSRZ")))
+						offset = -(float)model.getValue("LPOSRZ");
+					else
+						offset = -(float)model.getValue("LPOSZ");
 				}
 			}
 		});

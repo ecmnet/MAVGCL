@@ -578,9 +578,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		case 1:
 			MSPMathUtils.map_projection_init(preferences.getDouble(MAVPreferences.REFLAT, 0),
 					preferences.getDouble(MAVPreferences.REFLON, 0));
-			MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
-					(float)model.getValue("LPOSY"),
-					(float)model.getValue("LPOSZ"), pos);
+			if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX"))) {
+				MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSRX"),
+						(float)model.getValue("LPOSRY"),
+						(float)model.getValue("LPOSRZ"), pos);
+			} else {
+				MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
+						(float)model.getValue("LPOSY"),
+						(float)model.getValue("LPOSZ"), pos);
+			}
 
 			break;
 		case 2:
