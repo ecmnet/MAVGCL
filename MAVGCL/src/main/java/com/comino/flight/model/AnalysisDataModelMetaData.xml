@@ -160,6 +160,7 @@
 		</Groups>
 	</KeyFigure>
 	
+<!--
 	<KeyFigure desc="LPos.Offset.X" uom="" mask="#" key="EKF2OFFSX">
 	    <MSPSource class="est" field="l_x_reset"></MSPSource>
 		<Groups>
@@ -178,7 +179,7 @@
 	        <Group>EKF2 Status</Group>
 		</Groups>
 	</KeyFigure>
-	
+-->
 	
 	<KeyFigure desc="Fault.Status" uom="" mask="#" key="EKFFAULT">
 	    <ULogSource field="estimator_status_flags_0.fault_status_changes"/>
