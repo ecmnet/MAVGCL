@@ -231,12 +231,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					else
 						vision.setMode(Badge.MODE_OFF);
 					
-					if(state.getLogLoadedProperty().get()) {	
-						ready.setMode(Badge.MODE_ON);
-						ready.setText("LOG LOADED");		
-					} 
-
-					else if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
+					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
 						
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 							ready.setMode(Badge.MODE_OK);
