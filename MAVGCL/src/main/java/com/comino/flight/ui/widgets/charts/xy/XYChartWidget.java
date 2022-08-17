@@ -71,6 +71,7 @@ import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.mavutils.workqueue.WorkQueue;
+import com.sun.tools.javac.Main;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -94,10 +95,16 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -120,7 +127,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			{ "SPLPOSX"	 , "SPLPOSY"   },
 			{ "GNDTRUTHX", "GNDTRUTHY" },
 			{ "PRECLOCKX", "PRECLOCKY" },
-			{ "GPSLX",         "GPSLY" },
+			{ "GPSLX"    , "GPSLY"     },
 			{ "LPOSRX"	 , "LPOSRY"    },
 
 	};
@@ -315,7 +322,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		//		zoom.setY(0);
 
 		xychart.setAnimated(false);
-
+		
+		ContextMenu contextMenu = new ContextMenu();
+        MenuItem imageCopy = new MenuItem("Copy image to clipboard");
+        imageCopy.setOnAction((e) -> copyToClipboardImage());
+        contextMenu.getItems().add(imageCopy);
+        xychart.setOnContextMenuRequested((event) -> {
+               contextMenu.show(xychart, event.getScreenX(), event.getScreenY());
+            
+        });
+		
 		measurement = new XYMeasurement((Group)xychart.getPlotArea());
 
 		xychart.setOnMouseClicked(click -> {
@@ -341,7 +357,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 						control.sendMAVLinkMessage(msp);
 					}
 				} else {
-
+					if(click.getButton().compareTo(MouseButton.SECONDARY)==0)
+					  this.copyToClipboardImage();
 				}
 			}
 			click.consume();
@@ -748,7 +765,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	public void saveAsPng(String path) {
 		SnapshotParameters param = new SnapshotParameters();
-		param.setFill(Color.BLACK);
+		System.out.println(MAVPreferences.isLightTheme());
+		if(!MAVPreferences.isLightTheme())
+			param.setFill(Color.BLACK);
 		WritableImage image = xychart.snapshot(param, null);
 		File file = new File(path+"/xychart.png");
 		try {
@@ -756,6 +775,21 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		} catch (IOException e) {
 
 		}
+	}
+
+	public void copyToClipboardImage() {
+
+		final SnapshotParameters param = new SnapshotParameters();
+		if(!MAVPreferences.isLightTheme())
+			param.setFill(Color.BLACK);
+
+		WritableImage snapshot = xychart.snapshot(param, null);
+		final Clipboard clipboard = Clipboard.getSystemClipboard();
+		final ClipboardContent content = new ClipboardContent();
+
+		content.putImage(snapshot);
+		clipboard.setContent(content);
+
 	}
 
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
@@ -883,7 +917,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					offset_x = 0;
 					offset_y = 0;
 					if(m!=null)
-					  rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
+						rotateRad(p2,m.getValue(type2_x), m.getValue(type2_y), rotation_rad);
 				}
 
 				xychart.getAnnotations().add(dashboard2, Layer.FOREGROUND);

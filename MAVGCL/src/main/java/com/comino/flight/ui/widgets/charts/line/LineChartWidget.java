@@ -90,9 +90,14 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -306,6 +311,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setEndY(1000);
 		measure.setStroke(Color.color(0.9,0.6,1.0,0.8));
 		chartArea.getChildren().add(measure);
+		
+		ContextMenu contextMenu = new ContextMenu();
+        MenuItem imageCopy = new MenuItem("Copy image to clipboard");
+        imageCopy.setOnAction((e) -> copyToClipboardImage());
+        contextMenu.getItems().add(imageCopy);
+        linechart.setOnContextMenuRequested((event) -> {
+               contextMenu.show(linechart, event.getScreenX(), event.getScreenY());
+            
+        });
 
 		//		linechart.setOnScrollStarted((event) -> {
 		//			current_x0_pt_scroll = current_x0_pt;
@@ -415,8 +429,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalTimeScale();
 				click.consume();
-			}
-
+			} 
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
@@ -850,12 +863,28 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public void saveAsPng(String path) {
 		final SnapshotParameters param = new SnapshotParameters();
-		param.setFill(Color.BLACK);
+		if(!MAVPreferences.isLightTheme())
+			  param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/chart_"+id+".png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (IOException e) {  }
+	}
+	
+	public void copyToClipboardImage() {
+		
+		final SnapshotParameters param = new SnapshotParameters();
+		if(!MAVPreferences.isLightTheme())
+			  param.setFill(Color.BLACK);
+
+		WritableImage snapshot = linechart.snapshot(param, null);
+		final Clipboard clipboard = Clipboard.getSystemClipboard();
+		final ClipboardContent content = new ClipboardContent();
+
+		content.putImage(snapshot);
+		clipboard.setContent(content);
+
 	}
 
 	private void addToRecent(KeyFigureMetaData nv) {
