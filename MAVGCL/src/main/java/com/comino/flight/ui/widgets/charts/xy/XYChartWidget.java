@@ -324,7 +324,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		xychart.setAnimated(false);
 		
 		ContextMenu contextMenu = new ContextMenu();
-        MenuItem imageCopy = new MenuItem("Copy image to clipboard");
+        MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
         imageCopy.setOnAction((e) -> copyToClipboardImage());
         contextMenu.getItems().add(imageCopy);
         xychart.setOnContextMenuRequested((event) -> {

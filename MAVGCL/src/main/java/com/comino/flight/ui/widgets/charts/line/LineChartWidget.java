@@ -313,7 +313,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		chartArea.getChildren().add(measure);
 		
 		ContextMenu contextMenu = new ContextMenu();
-        MenuItem imageCopy = new MenuItem("Copy image to clipboard");
+        MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
         imageCopy.setOnAction((e) -> copyToClipboardImage());
         contextMenu.getItems().add(imageCopy);
         linechart.setOnContextMenuRequested((event) -> {
