@@ -119,10 +119,10 @@ public class ChartControlWidget extends ChartControlPane  {
 			if(nv.booleanValue()) {
 				state.getReplayingProperty().set(false);
 				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
-					scroll.setDisable(true);
+					Platform.runLater(() -> scroll.setDisable(true));
 				else
-					scroll.setDisable(false);
-				scroll.setValue(0);
+					Platform.runLater(() -> scroll.setDisable(false));
+				Platform.runLater(() -> scroll.setValue(0));
 			}
 
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
