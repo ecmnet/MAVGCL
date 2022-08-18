@@ -68,12 +68,12 @@ public class ModeAnnotation implements XYAnnotation {
 
 
 
-	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Error", "Velocity","Other"  };
+	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Velocity", "Error", "GPS.Err."};
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","Move","Speed","Turn","Land" };
-	private final static String[]  VISION_TEXTS     = { "", "Reset","Speed","Position","Error","Locked","Experimental" };
+	private final static String[]  VISION_TEXTS     = { "", "Reset","Speed","Position","Locked","Error","Experimental" };
 	private final static String[]  EKFHGTMODE_TEXTS = { "", "Baro","GPS","Range","Vision" };
 
 
@@ -98,7 +98,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","ORANGERED","VIOLET","CYAN","GRAY");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","SIENNA","ORANGERED","VIOLET","GRAY");
 	}
 
 	public DoubleProperty heightProperty() {
@@ -211,14 +211,15 @@ public class ModeAnnotation implements XYAnnotation {
 		if(flags == 0
 		   || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ACCEL_ERROR
 	       || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==0
-		   || (flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) == ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH
 		   
 		   ) {
-					addAreaData(time,4);
+					addAreaData(time,5);
 					return;
 		}
 		
-		if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_POS_HORIZ_ABS)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS )
+		if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) == ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) 
+			addAreaData(time,6);
+		else if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_POS_HORIZ_ABS)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS )
             addAreaData(time,3);
 		else if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_ABS )
             addAreaData(time,3);
@@ -227,11 +228,11 @@ public class ModeAnnotation implements XYAnnotation {
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_PRED_POS_HORIZ_REL )
 			addAreaData(time,2);
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_VELOCITY_HORIZ )
-			addAreaData(time,5);
+			addAreaData(time,4);
 		else if ((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE)==ESTIMATOR_STATUS_FLAGS.ESTIMATOR_ATTITUDE )
 			addAreaData(time,1);
 		else
-			addAreaData(time,6);
+			addAreaData(time,7);
 
 	}
 
@@ -298,11 +299,11 @@ public class ModeAnnotation implements XYAnnotation {
           addAreaData(time,1);
 		
 		else if((state & (1 << Vision.ERROR))!=0)
-		     addAreaData(time,4);
+		     addAreaData(time,5);
 		else if((state & (1 << Vision.EXPERIMENTAL))!=0)
 	        addAreaData(time,6);
 		else if((state & (1 << Vision.FIDUCIAL_LOCKED))!=0)
-            addAreaData(time,5);
+            addAreaData(time,4);
         else if((state & (1 << Vision.POS_VALID))!=0)
             addAreaData(time,3);
         else if((state & (1 << Vision.SPEED_VALID))!=0)
