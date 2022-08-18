@@ -45,7 +45,7 @@
 			<ChoiceBox fx:id="bckgmode" layoutX="665.0" prefHeight="19.0"
 				prefWidth="125.0" />
 			<HBox fx:id="bckglegend" layoutX="785.0" prefHeight="19"
-				prefWidth="400" layoutY="2.0" spacing="10" />
+				prefWidth="450" layoutY="2.0" spacing="10" />
 			<Button fx:id="export" layoutX="815.0" prefHeight="20.0"
 				mnemonicParsing="false" text="PNG export" />
 		</Pane>
