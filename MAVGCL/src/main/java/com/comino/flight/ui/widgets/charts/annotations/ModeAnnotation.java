@@ -98,7 +98,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","SIENNA","ORANGERED","VIOLET","GRAY");
+		setModeColors("YELLOW","DODGERBLUE","GREEN","MEDIUMSLATEBLUE","ORANGERED","VIOLET","GRAY");
 	}
 
 	public DoubleProperty heightProperty() {
