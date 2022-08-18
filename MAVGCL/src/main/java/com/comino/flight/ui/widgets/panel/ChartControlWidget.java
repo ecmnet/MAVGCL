@@ -178,9 +178,9 @@ public class ChartControlWidget extends ChartControlPane  {
 			anim_tms = System.currentTimeMillis();
 
 			final float v = (float)scroll.getValue();	
-			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
-				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
-			}
+//			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
+//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+//			}
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
@@ -218,8 +218,18 @@ public class ChartControlWidget extends ChartControlPane  {
 			public void handle(MouseEvent click) {
 				if(state.getReplayingProperty().get())
 					return;
-				if (click.getClickCount() == 2)
+				if (click.getClickCount() == 2) {
 					scroll.setValue(scroll.getValue() == 1 ? 0 : 1);
+					final float v = (float)scroll.getValue();	
+					if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
+					modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+					charts.entrySet().forEach((chart) -> {
+						if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
+							chart.getValue().getScrollProperty().set(1f-v);
+						}
+					});
+				}
+				}
 
 			}
 		});
