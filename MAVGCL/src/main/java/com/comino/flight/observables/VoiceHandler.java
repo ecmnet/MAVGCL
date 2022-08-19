@@ -105,7 +105,7 @@ public class VoiceHandler {
 		});
 		
 		properties.getReadyProperty().addListener((s,o,n) -> {
-			if(!o.booleanValue() && n.booleanValue()) {
+			if(!o.booleanValue() && n.booleanValue() && !properties.getArmedProperty().get()) {
 				voice.talk("Ready for flight.");
 			}
 		});
