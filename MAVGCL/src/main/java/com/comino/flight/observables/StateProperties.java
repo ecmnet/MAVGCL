@@ -78,6 +78,7 @@ public class StateProperties {
 	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
 	private BooleanProperty isRecordingAvailableProperty	 = new SimpleBooleanProperty();
 	private BooleanProperty isReplayingProperty	             = new SimpleBooleanProperty();
+	private BooleanProperty isReadyProperty	                 = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -218,6 +219,12 @@ public class StateProperties {
 				rcProperty.set(n.isStatus(Status.MSP_RC_ATTACHED));
 			});
 		});
+		
+		control.getStatusManager().addListener(Status.MSP_READY_FOR_FLIGHT, (n) -> {
+			Platform.runLater(()-> {
+				isReadyProperty.set(n.isStatus(Status.MSP_READY_FOR_FLIGHT));
+			});
+		});
 
 		control.getStatusManager().addListener(Status.MSP_IMU_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
@@ -333,6 +340,10 @@ public class StateProperties {
 
 	public BooleanProperty getBaseAvailableProperty() {
 		return isBaseAvailable;
+	}
+	
+	public BooleanProperty getReadyProperty() {
+		return isReadyProperty;
 	}
 
 	public BooleanProperty getGPSAvailableProperty() {

@@ -103,7 +103,12 @@ public class VoiceHandler {
 			}
 
 		});
-
+		
+		properties.getReadyProperty().addListener((s,o,n) -> {
+			if(!o.booleanValue() && n.booleanValue()) {
+				voice.talk("Ready for flight.");
+			}
+		});
 
 		// report battery status every 30 seconds if armed and below 60%
 		wq.addCyclicTask("LP", 30000, () -> {
