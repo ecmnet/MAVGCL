@@ -118,7 +118,8 @@ public class Camera extends Xform {
 	}
 
 	public void updateState(AnalysisDataModel model) {
-		if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX")))
+		if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX")) &&
+	        	   model.getValue("LPOSRX") != 0 && model.getValue("LPOSRY") != 0	) 
 			this.setTranslate(-model.getValue("LPOSRY")*100, model.getValue("LPOSRZ") > -0.05 ? 5 : -model.getValue("LPOSRZ") *100, model.getValue("LPOSRX")*100);
 		else
 			this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);

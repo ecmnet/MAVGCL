@@ -73,12 +73,22 @@ public class VehicleModel extends Group {
 		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))-90);
 		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
 		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
-
-		if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX"))) {
+		
+//		if(Double.isFinite(model.getValue("GNDTRUTHY")) && Double.isFinite(model.getValue("GNDTRUTHX"))) {
+//			this.setTranslateX(-model.getValue("GNDTRUTHY")*100);
+//			z_pos = ( - model.getValue("GNDTRUTHZ")  ) * 100 - 12 ;
+//			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+//			this.setTranslateZ(model.getValue("GNDTRUTHX")*100);
+//			
+//		}
+//        else 
+        	if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX")) &&
+        	   model.getValue("LPOSRX") != 0 && model.getValue("LPOSRY") != 0	) {
 			this.setTranslateX(-model.getValue("LPOSRY")*100);
 			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
 			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
 			this.setTranslateZ(model.getValue("LPOSRX")*100);
+			
 		}
 		else {
 			this.setTranslateX(-model.getValue("LPOSY")*100);
