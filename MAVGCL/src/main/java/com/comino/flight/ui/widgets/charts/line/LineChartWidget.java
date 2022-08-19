@@ -311,15 +311,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setEndY(1000);
 		measure.setStroke(Color.color(0.9,0.6,1.0,0.8));
 		chartArea.getChildren().add(measure);
-		
+
 		ContextMenu contextMenu = new ContextMenu();
-        MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
-        imageCopy.setOnAction((e) -> copyToClipboardImage());
-        contextMenu.getItems().add(imageCopy);
-        linechart.setOnContextMenuRequested((event) -> {
-               contextMenu.show(linechart, event.getScreenX(), event.getScreenY());
-            
-        });
+		MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
+		imageCopy.setOnAction((e) -> copyToClipboardImage());
+		contextMenu.getItems().add(imageCopy);
+		linechart.setOnContextMenuRequested((event) -> {
+			contextMenu.show(linechart, event.getScreenX(), event.getScreenY());
+
+		});
 
 		//		linechart.setOnScrollStarted((event) -> {
 		//			current_x0_pt_scroll = current_x0_pt;
@@ -355,7 +355,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				mouseEvent.consume();
 				return;
 			}
-			
+
 
 			x = mouseEvent.getX();
 			int x1 = dataService.calculateXIndexByTime(xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue());
@@ -373,7 +373,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			measure.setVisible(false);
-			
+
 
 			x = mouseEvent.getX();
 			zoom.setX(x-chartArea.getLayoutX()-7);
@@ -458,17 +458,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				if((mouseEvent.getX()-x)>0) {
 					linechart.setCursor(Cursor.H_RESIZE);
 					zoom.setWidth(mouseEvent.getX()-x);
-					
 
-						
-						if((mouseEvent.getX() - x)> 5) {
-							zoom_label.setVisible(true);
-							zoom_label.setText(String.format("%#.2fs", dtx));
-							zoom_label.setLayoutX(x-xAxis.getLayoutX());
-						} else
-							zoom_label.setVisible(false);
-						
-						if((System.currentTimeMillis()-dashboard_update_tms)>100) {
+
+
+					if((mouseEvent.getX() - x)> 5) {
+						zoom_label.setVisible(true);
+						zoom_label.setText(String.format("%#.2fs", dtx));
+						zoom_label.setLayoutX(x-xAxis.getLayoutX());
+					} else
+						zoom_label.setVisible(false);
+
+					if((System.currentTimeMillis()-dashboard_update_tms)>100) {
 
 						setDashboardData(dashboard1,type1,x0,x1);
 						setDashboardData(dashboard2,type2,x0,x1);
@@ -678,9 +678,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	public KeyFigurePreset getKeyFigureSelection() {
 		final KeyFigurePreset preset = new KeyFigurePreset(id,
-				                             group.getSelectionModel().getSelectedIndex(), 
-				                             bckgmode.getSelectionModel().getSelectedIndex(),
-				                             type1.hash,type2.hash,type3.hash);
+				group.getSelectionModel().getSelectedIndex(), 
+				bckgmode.getSelectionModel().getSelectedIndex(),
+				type1.hash,type2.hash,type3.hash);
 		return preset;
 	}
 
@@ -821,8 +821,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				if(!state.getReplayingProperty().get()) {
-					if(state.getRecordingProperty().getValue().intValue() != AnalysisModelService.COLLECTING)
-						current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
+					if(state.getRecordingProperty().getValue().intValue() != AnalysisModelService.COLLECTING) {
+						int x1 =  dataService.calculateIndexByFactor(scroll.get());	
+						current_x0_pt = dataService.calculateX0Index(x1);
+					}
 					Platform.runLater(() -> {
 						refreshRequest = true;
 						updateGraph(refreshRequest,0);
@@ -864,19 +866,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	public void saveAsPng(String path) {
 		final SnapshotParameters param = new SnapshotParameters();
 		if(!MAVPreferences.isLightTheme())
-			  param.setFill(Color.BLACK);
+			param.setFill(Color.BLACK);
 		WritableImage image = linechart.snapshot(param, null);
 		File file = new File(path+"/chart_"+id+".png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (IOException e) {  }
 	}
-	
+
 	public void copyToClipboardImage() {
-		
+
 		final SnapshotParameters param = new SnapshotParameters();
 		if(!MAVPreferences.isLightTheme())
-			  param.setFill(Color.BLACK);
+			param.setFill(Color.BLACK);
 
 		WritableImage snapshot = linechart.snapshot(param, null);
 		final Clipboard clipboard = Clipboard.getSystemClipboard();

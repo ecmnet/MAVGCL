@@ -322,16 +322,16 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		//		zoom.setY(0);
 
 		xychart.setAnimated(false);
-		
+
 		ContextMenu contextMenu = new ContextMenu();
-        MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
-        imageCopy.setOnAction((e) -> copyToClipboardImage());
-        contextMenu.getItems().add(imageCopy);
-        xychart.setOnContextMenuRequested((event) -> {
-               contextMenu.show(xychart, event.getScreenX(), event.getScreenY());
-            
-        });
-		
+		MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
+		imageCopy.setOnAction((e) -> copyToClipboardImage());
+		contextMenu.getItems().add(imageCopy);
+		xychart.setOnContextMenuRequested((event) -> {
+			contextMenu.show(xychart, event.getScreenX(), event.getScreenY());
+
+		});
+
 		measurement = new XYMeasurement((Group)xychart.getPlotArea());
 
 		xychart.setOnMouseClicked(click -> {
@@ -358,7 +358,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					}
 				} else {
 					if(click.getButton().compareTo(MouseButton.SECONDARY)==0)
-					  this.copyToClipboardImage();
+						this.copyToClipboardImage();
 				}
 			}
 			click.consume();
@@ -1118,8 +1118,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.getParent().disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
 				if(!state.getReplayingProperty().get()) {
-					current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
-					current_x1_pt =  current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
+					int x1 =  dataService.calculateIndexByFactor(scroll.get());	
+					current_x0_pt = dataService.calculateX0Index(x1);
 					updateRequest();
 				} else {
 					updateGraph(true,replay.intValue());
