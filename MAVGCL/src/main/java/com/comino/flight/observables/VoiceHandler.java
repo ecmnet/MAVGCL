@@ -133,7 +133,7 @@ public class VoiceHandler {
 		});
 
 		// report altitude every 50 seconds
-		wq.addCyclicTask("LP", 50000, () -> {
+		wq.addCyclicTask("LP", 45000, () -> {
 			if(!properties.getArmedProperty().get() || properties.getLandedProperty().get())
 				return;
 			voice.talk(String.format("Relative altitude is %.1f meters.",model.getValue("ALTRE")));
