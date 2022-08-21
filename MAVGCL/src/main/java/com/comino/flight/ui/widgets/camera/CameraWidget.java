@@ -189,8 +189,11 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			if(!userPrefs.getBoolean(MAVPreferences.VIDREC, false) || !state.isAutoRecording().get() || control.isSimulation())
-				return;
+			
+			if(  !userPrefs.getBoolean(MAVPreferences.VIDREC, false) ||
+			//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
+				 control.isSimulation())
+			return;
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
 

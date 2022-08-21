@@ -48,6 +48,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	private boolean isRunning;
 	private float   fps;
 	private long    tms;
+	private float   fps_tms;
+	private float   fps_tms_old;
 
 	private static BufferedReader RTSPBufferedReader;
 	private static BufferedWriter RTSPBufferedWriter;
@@ -201,12 +203,12 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 		private Image next;
 		private final byte [] payload = new byte[128*1024];
-		private final byte [] buf     = new byte[128*1024];    
-
+		private final byte [] buf     = new byte[128*1024]; 
+		
 		public void run() {
 			System.out.println("Video stream started");
 
-			int seqNb = 0; int payload_length;
+			int seqNb = 0; int payload_length; 
 
 			rcvdp = new DatagramPacket(buf, buf.length);
 
@@ -218,7 +220,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					//create an RTPpacket object from the DP
 					RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
 					seqNb = rtp_packet.getsequencenumber();
-
+					
 					//get the payload bitstream from the RTPpacket object
 					payload_length = rtp_packet.getpayload_length();
 					rtp_packet.getpayload(payload);
@@ -234,25 +236,26 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 					//get an Image object from the payload bitstream
 					//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
-					fps = (fps * 0.9f + (1000 / (System.currentTimeMillis() - tms)) * 0.1f);
+				//	fps = (fps * 0.9f + (1000 / (System.currentTimeMillis() - tms)) * 0.1f);
+					fps = 1000 / (System.currentTimeMillis() - tms);
 					tms = System.currentTimeMillis();
-				//	System.out.println(fps+ " => "+rcvdp.getLength());
-					//call image receivers
-					//		next = fsynch.nextFrame();
+					
 					if(proxy_enabled)
 					  proxy.process(payload, payload_length);
 					next = new Image(new BufferedInputStream(new ByteArrayInputStream(payload,0,payload_length)), 0, 0, false, true);
 					if(next!=null) {
 						listeners.forEach((listener) -> {
 							try {
-								listener.process(next, (int)(fps+0.5), tms);
+								listener.process(next, (int)(fps), tms);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else
 						System.out.println("NO VIDEO");
 
 				}
-				catch (InterruptedIOException iioe) { //System.err.println(iioe.getLocalizedMessage());
+				catch (InterruptedIOException iioe) { 
+//					System.err.println(iioe.getLocalizedMessage());
+//					isRunning = false;
 				}
 				catch (Exception ioe) {	
 					System.err.println(ioe.getLocalizedMessage());

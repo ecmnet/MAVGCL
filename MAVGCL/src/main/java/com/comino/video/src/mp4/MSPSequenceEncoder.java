@@ -36,6 +36,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,7 @@ import org.jcodec.common.NIOUtils;
 import org.jcodec.common.SeekableByteChannel;
 import org.jcodec.common.model.ColorSpace;
 import org.jcodec.common.model.Picture;
+import org.jcodec.common.model.TapeTimecode;
 import org.jcodec.containers.mp4.Brand;
 import org.jcodec.containers.mp4.MP4Packet;
 import org.jcodec.containers.mp4.TrackType;
@@ -106,7 +108,7 @@ public class MSPSequenceEncoder {
 
 	}
 
-	public void encodeNativeFrame(Picture pic, int fps) throws IOException {
+	public void encodeNativeFrame(Picture pic, int fps, long tms) throws IOException {
 		if (toEncode == null) {
 			toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
 		}
@@ -123,10 +125,13 @@ public class MSPSequenceEncoder {
 		ppsList.clear();
 		H264Utils.wipePS(result, spsList, ppsList);
 		H264Utils.encodeMOVPacket(result);
+		
+		// Put timestamp in
+		
 
 		// Add packet to video track
 		try {
-			outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
+	    	outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
 		} catch(IllegalStateException e) {
 			return;
 		}
@@ -143,8 +148,8 @@ public class MSPSequenceEncoder {
 		NIOUtils.closeQuietly(ch);
 	}
 
-	public void encodeImage(BufferedImage bi, int fps) throws IOException {
-		encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps);
+	public void encodeImage(BufferedImage bi, int fps, long tms) throws IOException {
+		encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms);
 	}
 
 //	public void encodeImage(Image bi, int fps) throws IOException {

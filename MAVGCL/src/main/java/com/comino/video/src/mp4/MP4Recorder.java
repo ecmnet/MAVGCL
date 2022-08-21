@@ -55,6 +55,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 	public MP4Recorder(String path, int width, int height) {
 
 		recording.addListener((c,o,n) -> {
+	
 			if(StateProperties.getInstance().getSimulationProperty().get())
 				return;
 			try {
@@ -76,7 +77,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 	public void process(Image image,  int fps, long tms) throws Exception {
 		if(recording.get() && image!=null && encoder!=null) {
 			bimg = SwingFXUtils.fromFXImage(image, bimg);
-			encoder.encodeImage(bimg, fps);
+			encoder.encodeImage(bimg, fps, tms);
 			//		encoder.encodeImage(image, fps);
 		}
 	}

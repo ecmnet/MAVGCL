@@ -178,9 +178,9 @@ public class ChartControlWidget extends ChartControlPane  {
 			anim_tms = System.currentTimeMillis();
 
 			final float v = (float)scroll.getValue();	
-//			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
-//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
-//			}
+			//			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
+			//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+			//			}
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
@@ -222,13 +222,13 @@ public class ChartControlWidget extends ChartControlPane  {
 					scroll.setValue(scroll.getValue() == 1 ? 0 : 1);
 					final float v = (float)scroll.getValue();	
 					if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
-					modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
-					charts.entrySet().forEach((chart) -> {
-						if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
-							chart.getValue().getScrollProperty().set(1f-v);
-						}
-					});
-				}
+						modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+						charts.entrySet().forEach((chart) -> {
+							if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
+								chart.getValue().getScrollProperty().set(1f-v);
+							}
+						});
+					}
 				}
 
 			}
@@ -246,7 +246,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		task = new AnimationTimer() {
 			long replay_time_ms; long replay_index_old; long tms_old = 0;
 			@Override public void handle(long now) {
-				
+
 				if((now - tms_old)<20_000_000)
 					return;
 				tms_old = now;
@@ -346,11 +346,11 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	public void refreshCharts() {
 		super.refreshCharts();
-		
-//      Disabled due to issue 49 => check other sideeffects
-//		if(state.getConnectedProperty().get())
-//			scroll.setValue(0);
-		
+
+		//      Disabled due to issue 49 => check other sideeffects
+		//		if(state.getConnectedProperty().get())
+		//			scroll.setValue(0);
+
 		if(modelService.getModelList().size() > totalTime_sec * 1000 /  modelService.getCollectorInterval_ms())
 			scroll.setDisable(false);
 	}
@@ -367,7 +367,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		keyfigures.getItems().add("Select presets...");
 		keyfigures.getItems().add("Open...");
-		
+
 
 		//keyfigures.setVisibleRowCount(FileHandler.getInstance().getPresetList().size()+2);
 
