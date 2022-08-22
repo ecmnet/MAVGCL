@@ -170,14 +170,14 @@ public class FlightTabs extends Pane {
 		mavlinkshelltab.setup(control);
 
 //		this.tabpane.getTabs().get(5).setDisable(true);
-		this.tabpane.getTabs().get(6).setDisable(true);
+//		this.tabpane.getTabs().get(6).setDisable(true);
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 		//	this.tabpane.getTabs().get(3).setDisable(!newvalue.booleanValue());
 		//	this.tabpane.getTabs().get(4).setDisable(!newvalue.booleanValue());
 		//	this.tabpane.getTabs().get(5).setDisable(!newvalue.booleanValue());
-			this.tabpane.getTabs().get(6).setDisable(!newvalue.booleanValue() || control.isSimulation());
+			this.tabpane.getTabs().get(6).setDisable(!newvalue.booleanValue());
 
 			// Workaround: Enable Tab but disable tab content if not selected
 			if(tabpane.getSelectionModel().selectedIndexProperty().intValue()!=5)
