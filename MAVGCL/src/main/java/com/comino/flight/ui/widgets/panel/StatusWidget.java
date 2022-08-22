@@ -74,45 +74,11 @@ public class StatusWidget extends ChartControlPane  {
 	public void setup(IMAVController control) {
 		super.setup(control);
 
-		final Status status = control.getCurrentModel().sys;
-
+		
 		this.disableProperty().bind(state.getConnectedProperty().not());
 
-
-		state.getConnectedProperty().addListener((v,o,n) -> {
+		state.getConnectedProperty().addListener((v,o,n) -> refresh());
 			
-			Platform.runLater(() ->  {
-				armed.set(status.isStatus(Status.MSP_ARMED));
-				
-				landed.set(status.isStatus(Status.MSP_LANDED));
-				althold.set(status.nav_state == Status.NAVIGATION_STATE_ALTCTL);
-				poshold.set(status.nav_state == Status.NAVIGATION_STATE_POSCTL);
-				
-				if(status.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
-					offboard.setMode(DashLabelLED.MODE_BLINK);
-				else
-					offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
-				
-				if(status.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !status.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
-				else
-					mission.set(status.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
-			});	
-		});
-
-		//		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-		//			if(!n.isStatus(Status.MSP_CONNECTED)) {
-		//				Platform.runLater(() -> {
-		//					armed.setMode(DashLabelLED.MODE_OFF);
-		//					althold.setMode(DashLabelLED.MODE_OFF);
-		//					poshold.setMode(DashLabelLED.MODE_OFF);
-		//					mission.setMode(DashLabelLED.MODE_OFF);
-		//					offboard.setMode(DashLabelLED.MODE_OFF);
-		//					landed.setMode(DashLabelLED.MODE_OFF);
-		//				});
-		//			}
-		//		});
-
 		control.getStatusManager().addListener(Status.MSP_ARMED, (n) -> {
 			Platform.runLater(() -> {
 				armed.set(n.isStatus(Status.MSP_ARMED));
@@ -205,9 +171,34 @@ public class StatusWidget extends ChartControlPane  {
 					offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 			});
 		});
+		
+	
+        refresh();
 
 
-
+	}
+	
+	private void refresh() {
+		
+		final Status status = control.getCurrentModel().sys;
+		
+		Platform.runLater(() ->  {
+			armed.set(status.isStatus(Status.MSP_ARMED));
+			
+			landed.set(status.isStatus(Status.MSP_LANDED));
+			althold.set(status.nav_state == Status.NAVIGATION_STATE_ALTCTL);
+			poshold.set(status.nav_state == Status.NAVIGATION_STATE_POSCTL);
+			
+			if(status.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
+				offboard.setMode(DashLabelLED.MODE_BLINK);
+			else
+				offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+			
+			if(status.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !status.isStatus(Status.MSP_LANDED))
+				mission.setMode(DashLabelLED.MODE_BLINK);
+			else
+				mission.set(status.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+		});	
 	}
 
 }
