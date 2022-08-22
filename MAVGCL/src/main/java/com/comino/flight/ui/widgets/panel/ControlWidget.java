@@ -125,7 +125,6 @@ public class ControlWidget extends ChartControlPane  {
 //		video.setDisable(true);
 		video.disableProperty().bind(stateProperties.isLogLoading());
 		
-	
 
 	}
 
