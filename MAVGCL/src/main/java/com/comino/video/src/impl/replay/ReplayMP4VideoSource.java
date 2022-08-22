@@ -211,13 +211,13 @@ public class ReplayMP4VideoSource  {
 
 	private String getVideoFileName() {
 		
-		String dirname  = fh.getFileDirectory();
+		String dirname  = fh.getCurrentPath();
 		String filename = fh.getName();
 		
 		
 		if(dirname==null)
 			return null;
-		File dir = new File(fh.getFileDirectory());
+		File dir = new File(fh.getCurrentPath());
 		
 		File[] videos = dir.listFiles(new FilenameFilter() {
 			public boolean accept(File directory, String fn) {

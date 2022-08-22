@@ -110,7 +110,7 @@ public class FileHandler {
 	private List<String> presetfiles = null;
 
 	private String lastDir = null;
-	private String lastFile = null;
+	private String currDir = null;
 
 	private boolean createResultSet = false;
 	private DataModel currentModel = null;
@@ -184,7 +184,7 @@ public class FileHandler {
 		return name;
 	}
 	
-	public String getFileDirectory() {
+	public String getCurrentPath() {
 		return lastDir;
 	}
 
@@ -266,7 +266,6 @@ public class FileHandler {
 						converter.doConversion();	
 						ulogFields = reader.getFieldList();
 						state.getLogLoadedProperty().set(true);
-						state.isLogLoading().set(false);
 					}
 
 					if(file.getName().endsWith("mgc")) {
@@ -310,7 +309,6 @@ public class FileHandler {
 							}
 						}
 						reader.close();
-						state.isLogLoading().set(false);
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
 
@@ -322,6 +320,7 @@ public class FileHandler {
 					//					}
 					name = file.getName();
 					lastDir = file.getParentFile().getAbsolutePath();
+					state.isLogLoading().set(false);
 					state.getLogLoadedProperty().set(true);
 					return null;
 				}
