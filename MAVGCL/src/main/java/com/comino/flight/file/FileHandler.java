@@ -257,7 +257,7 @@ public class FileHandler {
 
 					Type listType = null;
 					
-
+					state.isLogLoading().set(true);
 
 					if(file.getName().endsWith("ulg")) {
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
@@ -304,10 +304,12 @@ public class FileHandler {
 								name = "";
 								state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 								state.getLogLoadedProperty().set(false);
+								state.isLogLoading().set(false);
 								return null;
 							}
 						}
 						reader.close();
+						state.isLogLoading().set(false);
 						state.getProgressProperty().set(StateProperties.NO_PROGRESS);
 					}
 
