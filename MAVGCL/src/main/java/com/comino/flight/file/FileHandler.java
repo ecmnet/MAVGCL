@@ -266,6 +266,7 @@ public class FileHandler {
 						converter.doConversion();	
 						ulogFields = reader.getFieldList();
 						state.getLogLoadedProperty().set(true);
+						state.isLogLoading().set(false);
 					}
 
 					if(file.getName().endsWith("mgc")) {
