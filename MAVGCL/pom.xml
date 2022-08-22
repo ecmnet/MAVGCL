@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>org.jcodec</groupId>
 			<artifactId>jcodec-javase</artifactId>
-			<version>0.1.9</version> 
+			<version>0.1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.hansolo</groupId>
@@ -116,10 +116,10 @@
 			<version>3.6</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.5</version>
-        </dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.5</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fazecast</groupId>
 			<artifactId>jSerialComm</artifactId>
@@ -131,10 +131,10 @@
 			<version>0.5.4</version>
 		</dependency>
 		<dependency>
-	        <groupId>org.bytedeco</groupId>
-	        <artifactId>ffmpeg-platform</artifactId>
-	        <version>5.1-1.5.8-SNAPSHOT</version>
-	    </dependency>
+			<groupId>org.bytedeco</groupId>
+			<artifactId>ffmpeg-platform</artifactId>
+			<version>5.1-1.5.8-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
