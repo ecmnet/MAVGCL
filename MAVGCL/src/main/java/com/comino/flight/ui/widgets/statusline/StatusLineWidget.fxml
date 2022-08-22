@@ -8,10 +8,10 @@
 
 <fx:root maxHeight="30.0" prefHeight="30.0" styleClass="status" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<HBox layoutY="6.0" layoutX="6.0" spacing="7.0">
+		<HBox layoutY="6.0" layoutX="6.0" spacing="2.0">
 			<children>
 			    <Badge fx:id="ready" prefHeight="16.0" prefWidth="200.0" text="NOT READY" color="RED" description="MSP Preflight check result"/>
-			    <Badge fx:id="mode" prefHeight="16.0" prefWidth="150.0" text="offline" color="GRAY" />
+			    <Badge fx:id="mode" prefHeight="16.0" prefWidth="230.0" text="offline" color="GRAY" />
 				<Badge fx:id="driver" prefHeight="16.0" prefWidth="350.0" color="#1c6478" text="" description="Enabled hardware modules"/>
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="#1c6478" description="GPS mode" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="60.0" text="GPOS" color="#1c6478" description="Global position valid" />
@@ -23,7 +23,6 @@
 				<Badge fx:id="controller" prefHeight="16.0" prefWidth="30.0" text="PS4" color="#1c6478" />
 				<Badge fx:id="time" prefHeight="16.0" prefWidth="160" text="" color="GRAY"/>
 				<Badge fx:id="wp" prefHeight="16.0" prefWidth="40.0" text="-" color="#1c6478" />
-				<Badge fx:id="fps" prefHeight="16.0" prefWidth="30.0" text="-" color="#1c6478" />
 			</children>
 		</HBox>
 	</children>

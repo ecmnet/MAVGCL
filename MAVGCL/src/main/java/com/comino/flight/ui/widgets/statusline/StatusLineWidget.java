@@ -97,9 +97,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	private Badge vision;
 
 	@FXML
-	private Badge fps;
-
-	@FXML
 	private Badge gpos;
 
 	@FXML
