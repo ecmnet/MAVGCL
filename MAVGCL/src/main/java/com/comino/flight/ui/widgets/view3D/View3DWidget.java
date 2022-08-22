@@ -207,9 +207,17 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		task = new AnimationTimer() {
+			
+			private long tms_old=0;
+			
 			@Override
 			public void handle(long now) {
-
+				
+				if((now - tms_old) < 50)
+					return;
+				
+				tms_old = now;
+				
 				if(isDisabled())
 					return;
 
