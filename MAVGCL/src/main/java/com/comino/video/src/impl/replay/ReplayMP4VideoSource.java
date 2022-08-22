@@ -203,8 +203,6 @@ public class ReplayMP4VideoSource  {
 		ctx.setFont(new Font("SansSerif", Font.PLAIN, 9));
 		frame_buffer = (DataBufferByte)frame.getRaster().getDataBuffer();
 		
-		System.out.println(vf+" opened");
-		
 		is_opened = true;
 
 		return true;
@@ -216,21 +214,22 @@ public class ReplayMP4VideoSource  {
 		String dirname  = fh.getFileDirectory();
 		String filename = fh.getName();
 		
-		System.out.println("Search for video "+filename+" in "+dirname);
 		
 		if(dirname==null)
 			return null;
 		File dir = new File(fh.getFileDirectory());
 		
 		File[] videos = dir.listFiles(new FilenameFilter() {
-			public boolean accept(File directory, String fileName) {
-				return fileName.endsWith(filename.substring(0,filename.indexOf("."))+".mp4");
+			public boolean accept(File directory, String fn) {
+				return fn.endsWith(filename.substring(0,filename.indexOf("."))+".mp4") || fn.equals("video.mp4") ;
 			}
 		});
 		if(videos.length < 1)
 			return null;
-		else
+		else {
+			System.out.println(videos[0].getName()+" found in "+dirname);
 			return videos[0].getAbsolutePath();
+		}
 	}
 
 }
