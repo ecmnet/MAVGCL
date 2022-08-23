@@ -98,7 +98,7 @@ public class VoiceHandler {
 		});
 
 		properties.getRCProperty().addListener((s,o,n) -> {
-			if(o.booleanValue() && !n.booleanValue() && properties.getArmedProperty().get()) {
+			if((o.booleanValue() && !n.booleanValue()) && properties.getArmedProperty().get()) {
 				voice.talk("Radio Lost.");
 			}
 
