@@ -84,6 +84,7 @@ import javafx.scene.Cursor;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.ULogReader;
 
 
@@ -183,7 +184,7 @@ public class FileHandler {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getCurrentPath() {
 		return lastDir;
 	}
@@ -231,14 +232,14 @@ public class FileHandler {
 		String name = null;
 		switch(index) {
 		case 0:
-			 name = userPrefs.get(MAVPreferences.LAST_FILE,null);
-			 break;
+			name = userPrefs.get(MAVPreferences.LAST_FILE,null);
+			break;
 		case 1:
-			 name = userPrefs.get(MAVPreferences.LAST_FILE2,null);
-			 break;
+			name = userPrefs.get(MAVPreferences.LAST_FILE2,null);
+			break;
 		case 2:
-			 name = userPrefs.get(MAVPreferences.LAST_FILE3,null);
-			 break;
+			name = userPrefs.get(MAVPreferences.LAST_FILE3,null);
+			break;
 		}
 		state.getReplayingProperty().set(false);
 		if(name!=null) {
@@ -256,18 +257,23 @@ public class FileHandler {
 				@Override protected Void call() throws Exception {
 
 					Type listType = null;
-					
+
 					state.isLogLoading().set(true);
 
 					if(file.getName().endsWith("ulg")) {
+						try {
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
 						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());	
-						converter = new UlogtoModelConverter(reader,modelService.getModelList());		
-						if(converter.doConversion()) {
-						ulogFields = reader.getFieldList();
-						state.getLogLoadedProperty().set(true);
-						} else {
+						converter = new UlogtoModelConverter(reader,modelService.getModelList());	
+							converter.doConversion();
+							ulogFields = reader.getFieldList();
+							state.getLogLoadedProperty().set(true);
+						}
+						catch(FormatErrorException f) {
+							logger.writeLocalMsg("[mgc] "+f.getMessage(),MAV_SEVERITY.MAV_SEVERITY_ERROR);
+							state.isLogLoading().set(false);
 							state.getLogLoadedProperty().set(false);
+							return null;
 						}
 						state.isLogLoading().set(false);
 					}
@@ -329,6 +335,8 @@ public class FileHandler {
 					return null;
 				}
 			}).start();
+		} else {
+			state.getLogLoadedProperty().set(false);
 		}
 
 	}
@@ -484,7 +492,7 @@ public class FileHandler {
 	}
 
 	public void autoSave() throws IOException {
-		
+
 		lastDir = null;
 
 		new Thread(new Task<Void>() {
@@ -501,7 +509,7 @@ public class FileHandler {
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
 				lastDir = path;
-				
+
 				if(!createResultSet)
 					saveLog(path,logname);
 				else {
@@ -510,7 +518,7 @@ public class FileHandler {
 					File directory = new File(path_result);
 					if(!directory.exists())
 						directory.mkdir();
-                    
+
 					lastDir = directory.getAbsolutePath();
 					saveLog(path_result,logname);
 
@@ -698,7 +706,7 @@ public class FileHandler {
 		fileChooser.getExtensionFilters().addAll(filter);
 		File f = new File(initDir);
 		if(f.exists())
-		  fileChooser.setInitialDirectory(f);
+			fileChooser.setInitialDirectory(f);
 		return fileChooser;
 	}
 
