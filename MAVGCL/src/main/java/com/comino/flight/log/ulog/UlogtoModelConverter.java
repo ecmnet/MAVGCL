@@ -66,7 +66,7 @@ public class UlogtoModelConverter {
 	}
 
 
-	public void doConversion() throws FormatErrorException {
+	public boolean doConversion() throws FormatErrorException {
 
 		long tms_slot = 0; long tms = 0; long tms_old=0; boolean errorFlag = false;
 		
@@ -114,8 +114,10 @@ public class UlogtoModelConverter {
 			if(errorFlag)
 				System.out.println("WARNING: Some of the key-figures were not available.");
 			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+			return false;
 
 		}
+		return true;
 	}
 
 

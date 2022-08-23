@@ -263,9 +263,13 @@ public class FileHandler {
 						ULogReader reader = new ULogReader(file.getAbsolutePath());
 						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());	
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());		
-						converter.doConversion();	
+						if(converter.doConversion()) {
 						ulogFields = reader.getFieldList();
 						state.getLogLoadedProperty().set(true);
+						} else {
+							state.getLogLoadedProperty().set(false);
+						}
+						state.isLogLoading().set(false);
 					}
 
 					if(file.getName().endsWith("mgc")) {
@@ -692,8 +696,9 @@ public class FileHandler {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(filter);
-		fileChooser.setInitialDirectory(
-				new File(initDir));
+		File f = new File(initDir);
+		if(f.exists())
+		  fileChooser.setInitialDirectory(f);
 		return fileChooser;
 	}
 
