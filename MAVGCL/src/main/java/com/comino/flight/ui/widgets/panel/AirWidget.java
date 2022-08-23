@@ -77,9 +77,9 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 
 		task = new AnimationTimer() {
 			@Override public void handle(long now) {
-				if(!isDisabled() && isVisible() && (System.currentTimeMillis()-tms)>50 && MainApp.getPrimaryStage().isFocused()) {
-					tms = System.currentTimeMillis();
-					//					System.out.println(model.getValue("HEAD"));
+				if(!isDisabled() && isVisible() && (now-tms)>30_000_000) {
+					tms = now;
+									//	System.out.println(model.getValue("HEAD"));
 					if(Double.isFinite(model.getValue("HEAD")))
 						g_compass.setBearing(model.getValue("HEAD"));
 					else
@@ -88,6 +88,8 @@ public class AirWidget extends ChartControlPane implements IChartControl {
 				}
 			}
 		};
+		
+		
 	}
 
 
