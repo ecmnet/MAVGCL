@@ -158,10 +158,22 @@ public class ChartControlWidget extends ChartControlPane  {
 
 
 			if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms()
-					|| modelService.isCollecting() || modelService.getModelList().size()==0)
+					|| modelService.isCollecting() || modelService.getModelList().size()==0) {
 				scroll.setDisable(true);
-			else
+				Platform.runLater(() -> { 
+					if(!state.getConnectedProperty().get()) {
+						modelService.setCurrent(modelService.calculateIndexByFactor(1)-1);
+					}
+					scroll.setValue(0);
+				});
+			}
+			else {
 				scroll.setDisable(false);
+				if(state.getLogLoadedProperty().get()) {
+					Platform.runLater(() -> scroll.setValue(0));
+				}
+			}
+			
 		});
 
 		scroll.setSnapToTicks(false);

@@ -943,6 +943,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void updateRequest() {
+		
+		if(refreshRequest)
+			return;
 
 		Platform.runLater(() -> {
 
