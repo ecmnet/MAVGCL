@@ -221,6 +221,8 @@ public class ReplayMP4VideoSource  {
 		
 		File[] videos = dir.listFiles(new FilenameFilter() {
 			public boolean accept(File directory, String fn) {
+				if(filename.length() < 1 || !filename.contains("."))
+					return false;
 				return fn.endsWith(filename.substring(0,filename.indexOf("."))+".mp4") || fn.equals("video.mp4") ;
 			}
 		});

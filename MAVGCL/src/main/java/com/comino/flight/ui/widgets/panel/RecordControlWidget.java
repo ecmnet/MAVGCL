@@ -217,7 +217,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			triggerStopMode = newvalue.intValue();
 		});
 
-		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
+		state.getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(!newvalue.booleanValue())
 				state.getRecordingProperty().set(AnalysisModelService.STOPPED);
 		});
@@ -246,6 +246,8 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 							e.printStackTrace();
 						}
 					}
+					if(modelService.getModelList().size() > 0)
+						state.getLogLoadedProperty().set(true);
 					break;
 
 				case AnalysisModelService.READING_HEADER:

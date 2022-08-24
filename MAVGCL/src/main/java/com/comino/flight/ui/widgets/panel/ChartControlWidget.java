@@ -118,12 +118,12 @@ public class ChartControlWidget extends ChartControlPane  {
 
 			if(nv.booleanValue()) {
 				state.getReplayingProperty().set(false);
-				if(modelService.getModelList().size() < totalTime_sec * 1000 /  modelService.getCollectorInterval_ms() || modelService.isCollecting())
-					Platform.runLater(() -> scroll.setDisable(true));
-				else
-					Platform.runLater(() -> scroll.setDisable(false));
-				Platform.runLater(() -> scroll.setValue(0));
+				Platform.runLater(() -> scroll.setDisable(false));
+			} else {
+				Platform.runLater(() -> scroll.setDisable(true));
 			}
+			
+			Platform.runLater(() -> scroll.setValue(0));
 
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null) {
@@ -166,12 +166,9 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		scroll.setOnMousePressed((e) -> { 
 			if(!state.getConnectedProperty().get())
-			  state.getCurrentUpToDate().set(false);
+				state.getCurrentUpToDate().set(false);
 		});
 
-		scroll.setOnMouseReleased((e) ->{
-			state.getCurrentUpToDate().set(true);
-		});
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
 			if(state.getReplayingProperty().get() || (System.currentTimeMillis() - anim_tms) < 50)
@@ -182,12 +179,12 @@ public class ChartControlWidget extends ChartControlPane  {
 			//			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
 			//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
 			//	
-			
+
 			if(!state.getConnectedProperty().get()) {
 				int x1 =  modelService.calculateIndexByFactor(scroll.getValue())+1;	
 				modelService.setCurrent(x1);
 			}
-			
+
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
