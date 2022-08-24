@@ -116,15 +116,20 @@ public class ChartControlWidget extends ChartControlPane  {
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
 
+			Platform.runLater(() -> scroll.setValue(0));
 			if(nv.booleanValue()) {
 				state.getReplayingProperty().set(false);
-				Platform.runLater(() -> scroll.setDisable(false));
+				Platform.runLater(() -> { 
+					if(!state.getConnectedProperty().get()) {
+						modelService.setCurrent(modelService.calculateIndexByFactor(1)-1);
+					}
+				    scroll.setDisable(false); 
+				});
 			} else {
 				Platform.runLater(() -> scroll.setDisable(true));
 			}
+		
 			
-			Platform.runLater(() -> scroll.setValue(0));
-
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null) {
 					chart.getValue().getTimeFrameProperty().set(0);
@@ -165,9 +170,19 @@ public class ChartControlWidget extends ChartControlPane  {
 
 
 		scroll.setOnMousePressed((e) -> { 
-			if(!state.getConnectedProperty().get())
+			if(!state.getConnectedProperty().get()) {
 				state.getCurrentUpToDate().set(false);
+				int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
+				modelService.setCurrent(x1);
+			}
 		});
+		
+		scroll.setOnMouseReleased((e) -> { 
+			if(!state.getConnectedProperty().get()) {
+				state.getCurrentUpToDate().set(true);
+			}
+		});
+		
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -181,7 +196,7 @@ public class ChartControlWidget extends ChartControlPane  {
 			//	
 
 			if(!state.getConnectedProperty().get()) {
-				int x1 =  modelService.calculateIndexByFactor(scroll.getValue())+1;	
+				int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
 				modelService.setCurrent(x1);
 			}
 

@@ -415,6 +415,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if((x1-x0) > 0.2f)
 				for(IChartSyncControl sync : syncCharts)
 					sync.setZoom(x0, x1);
+			
+			if(!state.getConnectedProperty().get())
+			 dataService.setCurrent(dataService.calculateIndexByFactor(scroll.getValue()));
 
 			mouseEvent.consume();
 		});
