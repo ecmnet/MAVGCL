@@ -144,7 +144,7 @@ public class DetailsWidget extends ChartControlPane {
 				null, 
 				"MAVGCLNET", "MAVGCLACC", 
 				null,
-				"BATTR","TARM","TBOOT"
+				"TARM","TBOOT"
 			}
 
 	};
