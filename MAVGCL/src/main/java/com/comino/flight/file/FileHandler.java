@@ -526,7 +526,7 @@ public class FileHandler {
 						nutshell.dump("dmesg", path_result);
 
 					List<ParameterAttributes> params_changed = MAVGCLPX4Parameters.getInstance().getChanged();
-					PrintWriter writer = new PrintWriter(path_result+"/"+name+".txt", "UTF-8");
+					PrintWriter writer = new PrintWriter(path_result+"/"+logname+".txt", "UTF-8");
 					writer.println("Notes for flight: "+name);
 					if(model.sys.build!=null)
 						writer.println("MSP Build: "+model.sys.build);
