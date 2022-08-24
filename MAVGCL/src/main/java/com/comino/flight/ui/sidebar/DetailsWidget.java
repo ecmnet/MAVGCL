@@ -136,7 +136,7 @@ public class DetailsWidget extends ChartControlPane {
 				null, 
 				"BATV","BATC", "BATH", "BATP", "BATW",
 				null, 
-				"IMUTEMP", "MSPTEMP",  "BATT",
+				"IMUTEMP", "MSPTEMP", 
 				null,  
 				"CPUPX4", "CPUMSP", "MEMMSP","SWIFI", "RSSI", 
 				null,
@@ -144,7 +144,7 @@ public class DetailsWidget extends ChartControlPane {
 				null, 
 				"MAVGCLNET", "MAVGCLACC", 
 				null,
-				"TARM","TBOOT"
+				"BATTR","TARM","TBOOT"
 			}
 
 	};
