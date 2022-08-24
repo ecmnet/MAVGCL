@@ -476,7 +476,7 @@ public class MainApp extends Application  {
 			
 			System.out.println("Root: "+(System.currentTimeMillis()-startup)+"ms");
 			
-			rootLayout.setCenter(new Label("Initializing MAVGCL application components..."));
+			rootLayout.setCenter(new Label("Initializing MAVGCL ("+getBuildInfo().getProperty("build")+") application components..."));
 
 			// Show the scene containing the root layout.
 			scene = new Scene(rootLayout);
