@@ -106,7 +106,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Tst.Ratio.Hor.Pos." uom="" mask="#0.00" key="EKFPTR">
-	 <MSPSource class="est" field="horiRatio"></MSPSource>
+	 <MSPSource class="est" field="horizRatio"></MSPSource>
 	 <ULogSource field="estimator_status_0.pos_test_ratio"/>
 		<Groups>
 			<Group>EKF2 TestRatios</Group>
