@@ -90,10 +90,14 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -134,12 +138,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	@FXML
 	private GPSDetailsWidget gpsdetails;
-
-	@FXML
-	private CheckBox aircontrol;
-
-	@FXML
-	private AirWidget air;
 
 	@FXML
 	private Button export;
@@ -212,9 +210,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		gpsdetails.setVisible(false);
 		gpsdetails.fadeProperty().bind(viewdetails.selectedProperty());
 
-		air.setVisible(false);
-		air.fadeProperty().bind(aircontrol.selectedProperty());
-
 		center.getItems().addAll(CENTER_OPTIONS);
 		center.getSelectionModel().select(0);
 
@@ -232,6 +227,15 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		type = 0;
 
 		map = new LayeredMap(satellite_provider);
+		
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem imageCopy = new MenuItem("Copy map to clipboard");
+		imageCopy.setOnAction((e) -> copyToClipboardImage());
+		contextMenu.getItems().add(imageCopy);
+		map.setOnContextMenuRequested((event) -> {
+			contextMenu.show(map, event.getScreenX(), event.getScreenY());
+
+		});
 
 		mapviewpane.setCenter(map);
 
@@ -478,7 +482,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
 		ChartControlPane.addChart(3,this);
-		air.setup(control);
 
 		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
 			provider.getSelectionModel().select(1);
@@ -671,5 +674,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				map.setCenter(takeoff_lat, takeoff_lon);
 			break;
 		}
+	}
+	
+	public void copyToClipboardImage() {
+
+		final SnapshotParameters param = new SnapshotParameters();
+		WritableImage snapshot = map.snapshot(param, null);
+		final Clipboard clipboard = Clipboard.getSystemClipboard();
+		final ClipboardContent content = new ClipboardContent();
+
+		content.putImage(snapshot);
+		clipboard.setContent(content);
+
 	}
 }

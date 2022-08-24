@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import com.comino.flight.ui.widgets.gps.details.GPSDetailsWidget?>
-<?import com.comino.flight.ui.widgets.panel.AirWidget?>
 <?import com.comino.jfx.extensions.*?>
 
 <fx:root styleClass="widget" type="javafx.scene.layout.BorderPane"
@@ -23,7 +22,6 @@
 						<ChoiceBox fx:id="center" maxHeight="17.0" prefWidth="60.0" />
 						<ChoiceBox fx:id="provider" prefWidth="100.0" maxHeight="17.0" />
 						<StoredCheckBox fx:id="viewdetails" text="Details" />
-						<StoredCheckBox fx:id="aircontrol" text="Compass" />
 						<Button fx:id="export" prefHeight="19.0" prefWidth="110.0"
 							text="PNG export" />
 					</children>
@@ -37,9 +35,7 @@
 				<BorderPane fx:id="mapviewpane" prefWidth="800" />
 				<GPSDetailsWidget fx:id="gpsdetails" moveable="true"
 					initialWidth="240" initialHeight="215" visible="false" styleClass="glass">
-
 				</GPSDetailsWidget>
-				<AirWidget fx:id="air" moveable="true" maxWidth="160" maxHeight="160"/>
 			</children>
 		</StackPane>
 	</center>
