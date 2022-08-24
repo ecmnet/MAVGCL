@@ -228,14 +228,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		map = new LayeredMap(satellite_provider);
 		
-		ContextMenu contextMenu = new ContextMenu();
-		MenuItem imageCopy = new MenuItem("Copy map to clipboard");
-		imageCopy.setOnAction((e) -> copyToClipboardImage());
-		contextMenu.getItems().add(imageCopy);
-		map.setOnContextMenuRequested((event) -> {
-			contextMenu.show(map, event.getScreenX(), event.getScreenY());
-
-		});
 
 		mapviewpane.setCenter(map);
 
@@ -676,15 +668,4 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		}
 	}
 	
-	public void copyToClipboardImage() {
-
-		final SnapshotParameters param = new SnapshotParameters();
-		WritableImage snapshot = map.snapshot(param, null);
-		final Clipboard clipboard = Clipboard.getSystemClipboard();
-		final ClipboardContent content = new ClipboardContent();
-
-		content.putImage(snapshot);
-		clipboard.setContent(content);
-
-	}
 }
