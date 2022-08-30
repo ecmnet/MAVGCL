@@ -189,11 +189,11 @@ public class ChartControlWidget extends ChartControlPane  {
 			}
 		});
 		
-		scroll.setOnMouseReleased((e) -> { 
-			if(!state.getConnectedProperty().get()) {
-				state.getCurrentUpToDate().set(true);
-			}
-		});
+//		scroll.setOnMouseReleased((e) -> { 
+//			if(!state.getConnectedProperty().get()) {
+//				state.getCurrentUpToDate().set(true);
+//			}
+//		});
 		
 
 
