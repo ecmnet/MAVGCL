@@ -98,15 +98,15 @@
 .console {
 	-fx-background-color: #F0F0F0;
     -fx-control-inner-background: #E5E5E5;
-    -fx-font-size: 9pt;
+    -fx-font-size: 8.5pt;
     -fx-font-weight: normal;
-    -fx-text-fill: #202020;
+    -fx-text-fill: #101010;
     -fx-border-color: #303030;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
     -fx-border-insets: 2 ,0 ,0 ,0 ;
     -fx-padding: 10.0px;
-    -fx-font-family: "SF Mono Regular";
+    -fx-font-family: "Menlo";
 }
 
 .console .scroll-bar:vertical {
