@@ -739,11 +739,13 @@ public class MainApp extends Application  {
 
 			MavLinkULOGHandler log =  MavLinkULOGHandler.getInstance(control);
 
-			final String m_text = r_px4log_s.getText();
 			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
 				if(!newvalue.booleanValue()) {
+					
 					Platform.runLater(() -> {
-						r_px4log_s.setText(m_text);
+						r_px4log_s.setText("Import log from vehicle...");
+					});
+					Platform.runLater(() -> {
 						controlpanel.getChartControl().refreshCharts();
 					});
 				} else {

@@ -32,6 +32,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.param.ParameterAttributes;
+import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.application.Platform;
@@ -106,6 +107,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			if(n.booleanValue() && is_loading.get()) {
 				cancelLoading();
 				logger.writeLocalMsg("[mgc] Vehicle armed. Import of log cancelled.");
+				is_loading.set(false);
 			}
 
 		});
@@ -149,7 +151,6 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				return;
 
 			System.out.println("Log loaded");
-			is_loading.set(false);
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 
 			try {
@@ -161,12 +162,14 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				//				e.printStackTrace();
 			}
 
+			props.getLogLoadedProperty().set(true);
+			is_loading.set(false);
 			logger.writeLocalMsg("[mgc] Import completed in "+((System.currentTimeMillis()-start)/1000)+"secs");
 			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
 			String name = "Log-" + log_id + "-" + formatter.format(directory.get(log_id).time_utc);
 			copyFileToLogDir(path, name);
 			filehandler.setName(name);
-			props.getLogLoadedProperty().set(true);
+			
 
 		});
 
@@ -259,10 +262,10 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
 
-		worker = wq.addCyclicTask("LP",100,() -> {
+		worker = wq.addCyclicTask("LP",50,() -> {
 
 
-			if((System.currentTimeMillis() - last_package_tms) < 10 )
+			if((System.currentTimeMillis() - last_package_tms) < 5 )
 				return;
 
 			if (++retry > 1000) {
@@ -273,7 +276,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 10) 
+			while(searchForNextUnreadPackage() && c++ < 2) 
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 
 		});
@@ -425,7 +428,8 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			return;
 		}
 		final Path dest = Paths.get(dir+"/"+targetname+".ulg");
-		new Thread(() -> {
+		ExecutorService.get().execute(() -> {
+//		new Thread(() -> {
 			try {
 
 				Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
@@ -434,6 +438,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				return;
 			}
 			logger.writeLocalMsg("[mgc] Imported file copied to Downloads");
-		}).start();
+		});
+		//.start();
 	}
 }
