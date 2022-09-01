@@ -102,11 +102,11 @@ public class ULogSelectionDialog  {
 		TableColumn<TabData, Integer> colId= new TableColumn<TabData, Integer>("Id");
 		colId.setMinWidth(15); 
 		colId.setCellValueFactory( new PropertyValueFactory<TabData, Integer>("id"));
+		colId.setSortType(TableColumn.SortType.DESCENDING);
 		
 		TableColumn<TabData, String> colName = new TableColumn<TabData, String>("Timestamp");
 		colName.setMinWidth(200); 
 		colName.setCellValueFactory( new PropertyValueFactory<TabData, String>("name"));
-		colName.setSortType(TableColumn.SortType.DESCENDING);
 		
 		TableColumn<TabData, String> colSize= new TableColumn<TabData, String>("Size");
 		colSize.setMinWidth(25); 
@@ -121,7 +121,7 @@ public class ULogSelectionDialog  {
 		
 		table.setItems(sortedData);
 		
-		table.getSortOrder().addAll(colName);
+		table.getSortOrder().addAll(colId);
 		pane.getChildren().add(table);
 		
 		
