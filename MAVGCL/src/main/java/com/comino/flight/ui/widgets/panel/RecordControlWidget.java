@@ -68,7 +68,7 @@ import javafx.util.Duration;
 
 public class RecordControlWidget extends ChartControlPane implements IMSPStatusChangedListener {
 
-	private static final int MIN_RECORDING_MS   = 5000;
+	private static final int MIN_RECORDING_MS   = 15000;
 
 	private static final int TRIG_ARMED 		= 0;
 	private static final int TRIG_LANDED		= 1;
@@ -303,7 +303,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			} else {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
-						&& modelService.getTotalRecordingTimeMS() / 1000 > 30 ) {
+						&& modelService.getTotalRecordingTimeMS()  > MIN_RECORDING_MS ) {
 					recording(false,30);
 					try {
 						FileHandler.getInstance().autoSave();
