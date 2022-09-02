@@ -884,28 +884,28 @@
 	</KeyFigure>
 
    <KeyFigure desc="Output 1-2" uom="" mask="#0.0" key="SERVO12">
-		<ULogSource field="actuator_outputs_1.output[0]"/>
+		<ULogSource field="actuator_outputs_2.output[0]"/>
 		<Groups>
 			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Output 2-2" uom="" mask="#0.0" key="SERVO22">
-		<ULogSource field="actuator_outputs_1.output[1]"/>
+		<ULogSource field="actuator_outputs_2.output[1]"/>
 		<Groups>
 			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Output 3-2" uom="" mask="#0.0" key="SERVO32">
-		<ULogSource field="actuator_outputs_1.output[2]"/>
+		<ULogSource field="actuator_outputs_2.output[2]"/>
 		<Groups>
 			<Group>Actuators</Group>
 		</Groups>
 	</KeyFigure>
 
 	<KeyFigure desc="Output 4-2" uom="" mask="#0.0" key="SERVO42">
-		<ULogSource field="actuator_outputs_1.output[3]"/>
+		<ULogSource field="actuator_outputs_2.output[3]"/>
 		<Groups>
 			<Group>Actuators</Group>
 		</Groups>
