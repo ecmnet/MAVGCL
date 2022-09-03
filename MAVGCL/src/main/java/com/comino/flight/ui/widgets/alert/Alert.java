@@ -86,9 +86,6 @@ public class Alert extends ChartControlPane    {
 						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)
 						&& !control.isSimulation()) {
 						
-						if(msg.payload_length < 10)
-							return;
-						
 						final String m = msg.getText().replaceAll("[^\\w\\s]","");
 						if(m.length() < 10)
 							return;
