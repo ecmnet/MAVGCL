@@ -731,6 +731,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
 		//show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
+		
 
 		//
 		//		this.disabledProperty().addListener((l,o,n) -> {
@@ -1125,6 +1126,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					updateGraph(true,replay.intValue());
 				}
 			}
+		});
+		
+		state.getRecordingProperty().addListener((e,o,n) -> {
+			if(o.intValue() == 0 && n.intValue() != 0 && !this.getParent().disabledProperty().get())
+				updateRequest();
+			
 		});
 
 		return this;
