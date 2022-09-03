@@ -86,10 +86,16 @@ public class Alert extends ChartControlPane    {
 						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)
 						&& !control.isSimulation()) {
 						
+						if(msg.payload_length < 10)
+							return;
+						
+						final String m = msg.getText().replaceAll("[^\\w\\s]","");
+						if(m.length() < 10)
+							return;
+						
 						Platform.runLater(() -> {
-							String m = "["+LogMessage.severity_texts[msg.severity]+"] "+(new String(msg.text)).trim();
-							m = m.replaceAll("[^\\w\\s]","");
-							message.setText(m.length() > 60 ? m.substring(0, 58)+".." : m );
+							message.setText(m.length() > 60 ? 
+									"["+LogMessage.severity_texts[msg.severity]+"] "+m.substring(0, 58)+".." : "["+LogMessage.severity_texts[msg.severity]+"] "+m );
 							message.setAlignment(Pos.CENTER);
 							fadeProperty().set(true);	
 							fadeProperty().set(false);	
