@@ -153,23 +153,26 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			System.out.println("Log loaded");
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
 
-			try {
-				ULogReader reader = new ULogReader(path);
-				UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
-				converter.doConversion();
-				reader.close();
-			} catch (Exception e) {
-				//				e.printStackTrace();
-			}
+			ExecutorService.get().execute(() -> {
+				try {
+					ULogReader reader = new ULogReader(path);
+					UlogtoModelConverter converter = new UlogtoModelConverter(reader, modelService.getModelList());
+					converter.doConversion();
+					reader.close();
+				} catch (Exception e) {
+					//				e.printStackTrace();
+				}
 
-			props.getLogLoadedProperty().set(true);
-			is_loading.set(false);
-			logger.writeLocalMsg("[mgc] Import completed in "+((System.currentTimeMillis()-start)/1000)+"secs");
-			DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
-			String name = "Log-" + log_id + "-" + formatter.format(directory.get(log_id).time_utc);
-			copyFileToLogDir(path, name);
-			filehandler.setName(name);
-			
+
+				props.getLogLoadedProperty().set(true);
+				is_loading.set(false);
+				logger.writeLocalMsg("[mgc] Import completed in "+((System.currentTimeMillis()-start)/1000)+"secs");
+				DateFormat formatter = new SimpleDateFormat("YYYYMMdd-HHmmss");
+				String name = "Log-" + log_id + "-" + formatter.format(directory.get(log_id).time_utc);
+				copyFileToLogDir(path, name);
+				filehandler.setName(name);
+			});
+
 
 		});
 
@@ -265,7 +268,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		worker = wq.addCyclicTask("LP",50,() -> {
 
 
-			if((System.currentTimeMillis() - last_package_tms) < 5 )
+			if((System.currentTimeMillis() - last_package_tms) < 2 )
 				return;
 
 			if (++retry > 1000) {
@@ -276,7 +279,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 2) 
+			while(searchForNextUnreadPackage() && c++ < 10) 
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 
 		});
@@ -429,7 +432,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		}
 		final Path dest = Paths.get(dir+"/"+targetname+".ulg");
 		ExecutorService.get().execute(() -> {
-//		new Thread(() -> {
+			//		new Thread(() -> {
 			try {
 
 				Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);

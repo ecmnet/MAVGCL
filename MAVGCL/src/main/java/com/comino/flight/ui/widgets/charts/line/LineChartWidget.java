@@ -785,6 +785,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				updateGraph(true,0);
 
 		});
+		
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> updateRequest());
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
 		if(k1!=null) type1 = k1;
