@@ -1232,6 +1232,20 @@
 			<Group>GPS</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="GPS.LocalSpeedX" uom="m" mask="#0.00" key="GPSLXS">
+		<MSPSource class="gps" field="lx_s"></MSPSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="GPS.LocalSpeedY" uom="m" mask="#0.00" key="GPSLYS">
+		<MSPSource class="gps" field="ly_s"></MSPSource>
+		<Groups>
+			<Group>GPS</Group>
+		</Groups>
+	</KeyFigure>
 
     <KeyFigure desc="GPS Jamming" uom="" mask="#0" key="RGPSJAM">
 		<ULogSource field="vehicle_gps_position_0.jamming_indicator"/>
