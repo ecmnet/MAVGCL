@@ -52,6 +52,7 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.replay.ReplayMP4VideoSource;
@@ -189,37 +190,39 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			
+
 			if(  !userPrefs.getBoolean(MAVPreferences.VIDREC, false) ||
-			//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
-				 control.isSimulation())
-			return;
+					//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
+					control.isSimulation())
+				return;
 
-			if(nv.intValue()==AnalysisModelService.COLLECTING) {
+			ExecutorService.get().execute(() -> {
+				if(nv.intValue()==AnalysisModelService.COLLECTING) {
 
-				if(replay_video.isOpen()) 
-					replay_video.close();
+					if(replay_video.isOpen()) 
+						replay_video.close();
 
-				if(source==null)
-					connect();
-				if(!isConnected)
-					return;
-				if(!source.isRunning())
-					source.start();
-				Platform.runLater(() -> {
-					recorder.getRecordMP4Property().set(true);
-					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-				});
-			} else {
-				if(recorder.getRecordMP4Property().get()) {
+					if(source==null)
+						connect();
+					if(!isConnected)
+						return;
+					if(!source.isRunning())
+						source.start();
 					Platform.runLater(() -> {
-						recorder.getRecordMP4Property().set(false);
-						logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-						if(!fadeProperty().getValue())
-							stopStreaming();
+						recorder.getRecordMP4Property().set(true);
+						logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 					});
+				} else {
+					if(recorder.getRecordMP4Property().get()) {
+						Platform.runLater(() -> {
+							recorder.getRecordMP4Property().set(false);
+							logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+							if(!fadeProperty().getValue())
+								stopStreaming();
+						});
+					}
 				}
-			}
+			});
 
 		});
 
@@ -309,26 +312,26 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			if(!replay_video.isOpen())
 				return;
-		
+
 			final Image img = replay_video.playAt(p);
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
 
 		});
-		
+
 		state.getTimeSelectProperty().addListener((e,o,n) -> {
-			
+
 			float p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
-			
+
 			if(!replay_video.isOpen())
 				return;
-			
+
 			final Image img = replay_video.playAt(p);
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
-			
+
 		});
 	}
 
@@ -372,6 +375,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				System.out.println("Streaming protocol not supported");
 				return false;
 			}
+			source.removeListeners();
+			source.addProcessListener(recorder);
 			source.addProcessListener((im, fps, tms) -> {
 				if(isVisible())
 					Platform.runLater(() -> {
@@ -379,7 +384,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 					});
 			});
-			source.addProcessListener(recorder);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			return false;
