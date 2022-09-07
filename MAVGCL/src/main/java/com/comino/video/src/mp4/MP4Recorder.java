@@ -69,7 +69,9 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 						encoder.finish();
 					}
 				}
-			}  catch (Exception e1) {  }
+			}  catch (Exception e1) { 
+				e1.printStackTrace();
+			}
 		});
 	}
 
