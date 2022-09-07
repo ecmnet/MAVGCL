@@ -584,7 +584,8 @@ public class ParameterWidget extends ChartControlPane  {
 		}
 
 		private boolean isEditable() {
-			return state.getLogLoadedProperty().or(state.getConnectedProperty().not()).not().get();
+		//	return state.getLogLoadedProperty().or(state.getConnectedProperty().not()).not().get();
+			return state.getConnectedProperty().get();
 		}
 
 		private void sendParameter(ParameterAttributes att, float val) {
