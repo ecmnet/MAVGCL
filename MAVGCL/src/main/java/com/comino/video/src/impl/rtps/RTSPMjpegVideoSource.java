@@ -223,6 +223,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					
 					//get the payload bitstream from the RTPpacket object
 					payload_length = rtp_packet.getpayload_length();
+					if(payload_length < 1)
+						continue;
 					rtp_packet.getpayload(payload);
 
 					statExpRtpNb++;
@@ -258,7 +260,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 //					isRunning = false;
 				}
 				catch (Exception ioe) {	
-					System.err.println(ioe.getLocalizedMessage());
+					ioe.printStackTrace();
+//					System.err.println(ioe.getLocalizedMessage());
 				}
 			}
 		}
