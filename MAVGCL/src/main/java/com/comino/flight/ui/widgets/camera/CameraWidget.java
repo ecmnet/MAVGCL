@@ -195,12 +195,12 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
 					control.isSimulation())
 				return;
+			
+			if(replay_video.isOpen()) 
+				replay_video.close();
 
 			ExecutorService.get().execute(() -> {
 				if(nv.intValue()==AnalysisModelService.COLLECTING) {
-
-					if(replay_video.isOpen()) 
-						replay_video.close();
 
 					if(source==null)
 						connect();
@@ -256,10 +256,14 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					widget.getVideoVisibility().setValue(false);
 
 			} else {
-				replay_video.close();
+				System.out.println("Replay camera closed. Returning to current streams");
+				if(replay_video.open()) 
+				  replay_video.close();
 				if(state.getConnectedProperty().get()) {
-					if(!connect())
+					if(!connect()) {
+						image.setVisible(false);
 						return;
+					}
 					source.start();
 				}
 				else

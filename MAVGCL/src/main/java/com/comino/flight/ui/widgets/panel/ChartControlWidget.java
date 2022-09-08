@@ -207,11 +207,10 @@ public class ChartControlWidget extends ChartControlPane  {
 			//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
 			//	
 
-			if(!state.getConnectedProperty().get()) {
-				int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
-				modelService.setCurrent(x1);
-			}
-
+//			if(!state.getConnectedProperty().get()) {
+//				int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
+//				modelService.setCurrent(x1);
+//		}
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
 					chart.getValue().getScrollProperty().set(1f-v);
