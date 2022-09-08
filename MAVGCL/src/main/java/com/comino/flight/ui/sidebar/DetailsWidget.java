@@ -122,10 +122,12 @@ public class DetailsWidget extends ChartControlPane {
 
 				"ROLL", "PITCH", "YAW",
 				null, 
-				"HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  "RGPSHDOP",
+				"HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  
 				//			    null,
 				//			    "BASENO","BASEEPH","BASEEPV",
 				null, 
+				"ALTSL", 
+				null,
 				"LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
 				null,
 				"GPHACCUR", "GPVACCUR", "EKFVTR",

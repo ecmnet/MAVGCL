@@ -45,7 +45,6 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.MainApp;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
@@ -53,7 +52,6 @@ import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.model.service.ICollectorRecordingListener;
 import com.comino.flight.observables.StateProperties;
-import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.charts.annotations.PositionAnnotation;
@@ -71,7 +69,6 @@ import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.mavutils.workqueue.WorkQueue;
-import com.sun.tools.javac.Main;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -96,7 +93,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
@@ -111,7 +107,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 // TODO: Add planned path
 
@@ -280,10 +275,10 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 	public XYChartWidget() {
 
-		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
-
 		this.state = StateProperties.getInstance();
 		this.pool = new XYDataPool();
+
+		FXMLLoadHelper.load(this, "XYChartWidget.fxml");
 
 		dataService.registerListener(this);
 
@@ -826,7 +821,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		AnalysisDataModel m =null, m0=null; int max_x  = 0; long slot_tms;
 
 
-		if(disabledProperty().get() || series1==null || series2==null) {
+		if(isDisabled() || series1==null || series2==null) {
 			refreshRequest = false;
 			return;
 		}
@@ -937,7 +932,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 			} else {
 				current_x0_pt = dataService.calculateX0IndexByFactor(1);
-				current_x_pt  = dataService.calculateX0IndexByFactor(1);		
+				current_x_pt  = dataService.calculateX0IndexByFactor(1);	
 			}
 
 			if(current_x_pt < 0) current_x_pt = 0;
@@ -1014,16 +1009,18 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			} else
 				max_x = mList.size();
 
+
 			slot_tms = System.currentTimeMillis();
 
 			((XYObservableListWrapper<?>)series1.getData()).begin();
 			((XYObservableListWrapper<?>)series2.getData()).begin();
 
 			while(current_x_pt<max_x && ((System.currentTimeMillis()-slot_tms) < REFRESH_SLOT || refreshRequest)) {
-				//System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms);
+				//	System.out.println(current_x_pt+"<"+max_x+":"+resolution_ms+" --> "+dataService.getCollectorInterval_ms());
 				if(((current_x_pt * dataService.getCollectorInterval_ms()) % resolution_ms) == 0) {
 
 					m = mList.get(current_x_pt);
+
 
 					if(series1.getData().size()>0 ||series2.getData().size()>0) {
 						slam.setModel(m); traj.setModel(m);
@@ -1066,6 +1063,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 						endPosition2.setPosition(p2[0], p2[1]);
 					}
 				}
+
 				current_x_pt++;
 			}
 
@@ -1098,6 +1096,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> updateRequest());
+
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();
 
@@ -1116,23 +1116,30 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		//			}
 		//		}, 0, 1, TimeUnit.SECONDS);
 
-		this.getParent().disabledProperty().addListener((l,o,n) -> {
+		this.disabledProperty().addListener((l,o,n) -> {
 			if(!n.booleanValue()) {
-				if(!state.getReplayingProperty().get()) {
-					if(state.getRecordingProperty().get() == 0) {
-						int x1 =  dataService.calculateIndexByFactor(scroll.get());	
-						current_x0_pt = dataService.calculateX0Index(x1);
-					}
-					updateRequest();
-				} else {
-					updateGraph(true,replay.intValue());
-				}
+				wq.addSingleTask("LP",100, () -> {
+					Platform.runLater(() -> {
+						if(!state.getReplayingProperty().get()) {
+							if(state.getRecordingProperty().get() == AnalysisModelService.STOPPED) {
+								int x1 =  dataService.calculateIndexByFactor(scroll.get());	
+								current_x0_pt = dataService.calculateX0Index(x1);
+							}
+							updateRequest();
+						} else {
+							updateGraph(true,replay.intValue());
+						}
+					});
+				});
 			}
 		});
 
 		state.getRecordingProperty().addListener((e,o,n) -> {
-			if(o.intValue() == 0 && n.intValue() != 0 && !this.getParent().disabledProperty().get())
+			if(o.intValue() != AnalysisModelService.COLLECTING && n.intValue() == AnalysisModelService.COLLECTING 
+					&& !this.getParent().disabledProperty().get()) {
+				setScaling(scale);
 				updateRequest();
+			}
 		});
 
 		return this;
@@ -1163,17 +1170,15 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 
 	private void updateRequest() {
-		Platform.runLater(() -> {
-			if(!isDisabled() && !refreshRequest) {
-				center_x = 0; center_y = 0;
-				refreshRequest = true;
-				if(!state.getReplayingProperty().get()) {
-					updateGraph(refreshRequest,0);
-				} else {
-					updateGraph(refreshRequest,replay.intValue());
-				}
+		if(!refreshRequest) {
+			center_x = 0; center_y = 0;
+			refreshRequest = true;
+			if(!state.getReplayingProperty().get()) {
+				updateGraph(refreshRequest,0);
+			} else {
+				updateGraph(refreshRequest,replay.intValue());
 			}
-		});
+		}
 	}
 
 

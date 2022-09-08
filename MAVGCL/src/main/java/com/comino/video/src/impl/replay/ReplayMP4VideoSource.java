@@ -226,7 +226,8 @@ public class ReplayMP4VideoSource  {
 				return fn.endsWith(filename.substring(0,filename.indexOf("."))+".mp4") || fn.equals("video.mp4") ;
 			}
 		});
-		if(videos == null || videos.length < 1)
+		
+		if(videos == null || videos.length < 1 || videos[0].length() < 1000)
 			return null;
 		else {
 			System.out.println(videos[0].getName()+" found in "+dirname);

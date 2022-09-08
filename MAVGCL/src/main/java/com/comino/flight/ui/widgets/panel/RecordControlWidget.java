@@ -238,13 +238,15 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 					isrecording.setFill(Color.LIGHTGREY);
 					blink.stop();
 
-					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false) &&
-							modelService.getTotalRecordingTimeMS() > MIN_RECORDING_MS ) {
-						try {
-							FileHandler.getInstance().autoSave();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+					if(state.getConnectedProperty().get() && MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE, false)) {
+						if(modelService.getTotalRecordingTimeMS() > MIN_RECORDING_MS ) {
+							try {
+								FileHandler.getInstance().autoSave();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						} else
+							modelService.getModelList().clear();
 					}
 					if(modelService.getModelList().size() > 0)
 						state.getLogLoadedProperty().set(true);
@@ -357,7 +359,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		}
 		else
 			modelService.stop(delay);
-		
+
 		Platform.runLater(() -> {  charts.refreshCharts(); 	});
 	}
 }

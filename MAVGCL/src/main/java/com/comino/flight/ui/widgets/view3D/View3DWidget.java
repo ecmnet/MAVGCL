@@ -421,6 +421,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 	}
 
 	private AnalysisDataModel findTakeOff() {
+		
+		if(dataService.getModelList().size()<1)
+			return dataService.getCurrent();
 
 		AnalysisDataModel to = dataService.getModelList().get(0);
 		for(int i = 0; i < dataService.getModelList().size();i++) {
