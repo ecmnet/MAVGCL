@@ -141,7 +141,8 @@ public class MSPSequenceEncoder {
 
 	public void finish() throws IOException {
 		// Push saved SPS/PPS to a special storage in MP4
-		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
+		if(spsList.size()>0 && ppsList.size()>0)
+		  outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
 
 		// Write MP4 header and finalize recording
 		muxer.writeHeader();
