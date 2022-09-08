@@ -65,7 +65,7 @@ import org.jcodec.scale.Transform;
  *
  */
 public class MSPSequenceEncoder {
-	
+
 	private SeekableByteChannel ch;
 	private Picture toEncode;
 	private Transform transform;
@@ -77,7 +77,7 @@ public class MSPSequenceEncoder {
 	private int frameNo;
 	private MP4Muxer muxer;
 	private int rate;
-	
+
 	private byte[] buf = new byte[640*480*4];
 
 	public MSPSequenceEncoder(File out) throws IOException {
@@ -125,13 +125,13 @@ public class MSPSequenceEncoder {
 		ppsList.clear();
 		H264Utils.wipePS(result, spsList, ppsList);
 		H264Utils.encodeMOVPacket(result);
-		
+
 		// Put timestamp in
-		
+
 
 		// Add packet to video track
 		try {
-	    	outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
+			outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
 		} catch(IllegalStateException e) {
 			return;
 		}
@@ -141,11 +141,12 @@ public class MSPSequenceEncoder {
 
 	public void finish() throws IOException {
 		// Push saved SPS/PPS to a special storage in MP4
-		if(spsList.size()>0 && ppsList.size()>0)
-		  outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
+		if(spsList.size()>0 && ppsList.size()>0) {
+			outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
 
-		// Write MP4 header and finalize recording
-		muxer.writeHeader();
+			// Write MP4 header and finalize recording
+			muxer.writeHeader();
+		}
 		NIOUtils.closeQuietly(ch);
 	}
 
@@ -153,25 +154,25 @@ public class MSPSequenceEncoder {
 		encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms);
 	}
 
-//	public void encodeImage(Image bi, int fps) throws IOException {
-//		int w = (int)bi.getWidth();
-//		int h = (int)bi.getHeight();
-//		Picture dst = Picture.create(w, h, RGB);
-//		int[] dstData = dst.getPlaneData(0);
-//		
-//		bi.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, 0, w * 4);
-//		
-//		int off = 0;
-//		for (int i = 0; i < h; i++) {
-//            for (int j = 0; j < w; j++) {
-//            	  dstData[off++] = buf[i*w*4+j*4+2] ;
-//            	  dstData[off++] = buf[i*w*4+j*4+1] ;
-//            	  dstData[off++] = buf[i*w*4+j*4+0] ;
-// //           	  dstData[off++] = buf[i*w*4+j*4+3];
-//            	 
-//            }
-//        }
-//		encodeNativeFrame(dst, fps);
-//
-//	}
+	//	public void encodeImage(Image bi, int fps) throws IOException {
+	//		int w = (int)bi.getWidth();
+	//		int h = (int)bi.getHeight();
+	//		Picture dst = Picture.create(w, h, RGB);
+	//		int[] dstData = dst.getPlaneData(0);
+	//		
+	//		bi.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, 0, w * 4);
+	//		
+	//		int off = 0;
+	//		for (int i = 0; i < h; i++) {
+	//            for (int j = 0; j < w; j++) {
+	//            	  dstData[off++] = buf[i*w*4+j*4+2] ;
+	//            	  dstData[off++] = buf[i*w*4+j*4+1] ;
+	//            	  dstData[off++] = buf[i*w*4+j*4+0] ;
+	// //           	  dstData[off++] = buf[i*w*4+j*4+3];
+	//            	 
+	//            }
+	//        }
+	//		encodeNativeFrame(dst, fps);
+	//
+	//	}
 }
