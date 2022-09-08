@@ -755,33 +755,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Global.Speed.N" uom="m/s" mask="#0.00" key="GLOBVN">
-		<MSPSource class="state" field="g_vx"></MSPSource>
-		<PX4Source field="GPOS.VelN"></PX4Source>
-		<ULogSource field="vehicle_global_position_0.vel_n"/>
-		<Groups>
-			<Group>Global Position</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Global.Speed.E" uom="m/s" mask="#0.00" key="GLOBVE">
-		<MSPSource class="state" field="g_vy"></MSPSource>
-		<PX4Source field="GPOS.VelE"></PX4Source>
-		<ULogSource field="vehicle_global_position_0.vel_e"/>
-		<Groups>
-			<Group>Global Position</Group>
-		</Groups>
-	</KeyFigure>
-
-	<KeyFigure desc="Global.Speed.D" uom="m/s" mask="#0.00" key="GLOBVD">
-		<MSPSource class="state" field="g_vz"></MSPSource>
-		<PX4Source field="GPOS.VelD"></PX4Source>
-		<ULogSource field="vehicle_global_position_0.vel_d"/>
-		<Groups>
-			<Group>Global Position</Group>
-		</Groups>
-	</KeyFigure>
-
 	<KeyFigure desc="SP.Global.Pos.VX" uom="cm/s" mask="#0.00" key="SPGLOBVX">
 		<ULogSource field="vehicle_global_velocity_setpoint_0.vx"/>
 		<Groups>
@@ -1228,20 +1201,6 @@
 	
 	<KeyFigure desc="GPS.LocalY" uom="m" mask="#0.00" key="GPSLY">
 		<MSPSource class="gps" field="ly"></MSPSource>
-		<Groups>
-			<Group>GPS</Group>
-		</Groups>
-	</KeyFigure>
-	
-	<KeyFigure desc="GPS.LocalSpeedX" uom="m" mask="#0.00" key="GPSLXS">
-		<MSPSource class="gps" field="lx_s"></MSPSource>
-		<Groups>
-			<Group>GPS</Group>
-		</Groups>
-	</KeyFigure>
-	
-	<KeyFigure desc="GPS.LocalSpeedY" uom="m" mask="#0.00" key="GPSLYS">
-		<MSPSource class="gps" field="ly_s"></MSPSource>
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
