@@ -340,15 +340,15 @@ public class ModeAnnotation implements XYAnnotation {
 			node.getChildren().add(last);
 			return;
 		}
-
+		
 		if(time >= last.to) {
 			if(last.isMode(mode)) {
 				last.to = time;
 				return;
 			}
 			last = new Area(mode, time, time, colors.get(mode));
-	
-			node.getChildren().add(last);
+			if(!node.getChildren().contains(last))
+			   node.getChildren().add(last);
 		}
 	}
 
@@ -386,6 +386,8 @@ public class ModeAnnotation implements XYAnnotation {
 			this.setY(0);
 			this.setHeight(height.get());
 			this.toBack();
+			
+			this.setDisable(true);
 			
 			height.addListener((s,o,n) -> {
 				this.setHeight(n.doubleValue());

@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.LockSupport;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -63,6 +64,7 @@ import com.comino.jfx.extensions.MovingAxis;
 import com.comino.jfx.extensions.SectionLineChart;
 import com.comino.jfx.extensions.XYAnnotations.Layer;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavutils.workqueue.WorkQueue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -208,7 +210,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private boolean isRunning = false;
 
 	private long dashboard_update_tms = 0;
-
+	private long scroll_event_tms = 0; 
+	
 	public LineChartWidget() {
 
 		this.state      = StateProperties.getInstance();
@@ -316,29 +319,60 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		MenuItem imageCopy = new MenuItem("Copy graph to clipboard");
 		imageCopy.setOnAction((e) -> copyToClipboardImage());
 		contextMenu.getItems().add(imageCopy);
+		
 		linechart.setOnContextMenuRequested((event) -> {
+			if(isScrolling.get())
+				return;
+			event.consume();
 			contextMenu.show(linechart, event.getScreenX(), event.getScreenY());
 
 		});
 
-		//		linechart.setOnScrollStarted((event) -> {
-		//			current_x0_pt_scroll = current_x0_pt;
-		//		});
+
+		
+		linechart.setOnScroll((event) -> {
+			
+			if((System.nanoTime() - scroll_event_tms) < 5_000_000 || event.isInertia())
+				return;
+			scroll_event_tms = System.nanoTime();
+			
+			final int x1 =  current_x1_pt + (int)(event.getDeltaX() * 2);
+			
+			if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
+				current_x1_pt = x1;
+				current_x0_pt = 0;
+				updateGraph(true,x1);
+			}	 
+			else {
+				current_x0_pt = dataService.calculateX0Index(x1);
+				updateGraph(true,0);
+			}
+			
+		});
 
 
-		//		linechart.setOnScroll((event) -> {
-		//
-		//			System.out.println(current_x0_pt_scroll+"/"+event.getTotalDeltaX());
-		//			current_x0_pt =  current_x0_pt_scroll + (int)(event.getTotalDeltaX());
-		//			if(current_x0_pt < 0) current_x0_pt = 0;
-		//			updateRequest();
-		//
-		//		});
+		linechart.setOnScrollStarted((event) -> {
+			isScrolling.set(true);
+		});
+		
+
+		linechart.setOnScrollFinished((event) -> {
+			isScrolling.set(false);
+		});
+
 
 		linechart.setOnMouseExited(mouseEvent -> {
+			
+			
+		
+			if(isScrolling.get())
+				return;
+			
+			mouseEvent.consume();
+			
 			for(IChartSyncControl sync : syncCharts)
 				sync.setMarker(0,0);	
-			mouseEvent.consume();
+			
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
@@ -346,13 +380,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 
+
 		linechart.setOnMouseMoved(mouseEvent -> {
+			
+			if(isScrolling.get())
+				return;
 
-
+			mouseEvent.consume();
+			
 			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || zoom.isVisible()) {
 				for(IChartSyncControl sync : syncCharts)
 					sync.setMarker(0,x);	
-				mouseEvent.consume();
 				return;
 			}
 
@@ -365,12 +403,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		});
 
 		linechart.setOnMousePressed(mouseEvent -> {
-
-
-			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
-				mouseEvent.consume();
+			
+			
+			if((dataService.isCollecting() && !isPaused) || isScrolling.get() || (dataService.isReplaying() && !isPaused)) {
 				return;
 			}
+			
+			mouseEvent.consume();
 
 			measure.setVisible(false);
 
@@ -395,14 +434,17 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			}
 
 			linechart.getPlotArea().requestLayout();
-			mouseEvent.consume();
+			
 		});
 
 		linechart.setOnMouseReleased(mouseEvent -> {
-			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
-				mouseEvent.consume();
+			
+			
+			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused) || isScrolling.get()) {
 				return;
 			}
+			
+			mouseEvent.consume();
 
 			state.getCurrentUpToDate().set(true);
 			linechart.setCursor(Cursor.DEFAULT);
@@ -415,31 +457,33 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			if((x1-x0) > 0.2f)
 				for(IChartSyncControl sync : syncCharts)
 					sync.setZoom(x0, x1);
-			
-			if(!state.getConnectedProperty().get())
-			 dataService.setCurrent(dataService.calculateIndexByFactor(scroll.getValue()));
 
-			mouseEvent.consume();
 		});
 
 		linechart.setOnMouseClicked(click -> {
 
+			click.consume();
+			
+
 			if (click.getClickCount() == 2) {
+				click.consume();
 				if(dataService.isReplaying()) {
 					return;
 				}				
 				measure.setVisible(isPaused);
 				for(IChartSyncControl sync : syncCharts)
 					sync.returnToOriginalTimeScale();
-				click.consume();
 			} 
+			
 		});
 
 		linechart.setOnMouseDragged(mouseEvent -> {
-			if((dataService.isCollecting() && !isPaused) || (dataService.isReplaying() && !isPaused)) {
-				mouseEvent.consume();
+			
+			if((dataService.isCollecting() && !isPaused) || isScrolling.get() || (dataService.isReplaying() && !isPaused)) {
 				return;
 			}
+			
+			mouseEvent.consume();
 
 			if(type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
 				zoom.setVisible(true);
@@ -489,7 +533,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				}
 				linechart.getPlotArea().requestLayout();
 			}
-			mouseEvent.consume();
+			
 		});
 
 		readRecentList();
@@ -785,8 +829,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				updateGraph(true,0);
 
 		});
-		
-		state.getLogLoadedProperty().addListener((o,ov,nv) -> updateRequest());
+
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> { if(nv.booleanValue()) updateRequest(); });
 
 		KeyFigureMetaData k1 = meta.getKeyFigureMap().get(prefs.getInt(MAVPreferences.LINECHART_FIG_1+id,0));
 		if(k1!=null) type1 = k1;
@@ -945,7 +989,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	}
 
 	private void updateRequest() {
-		
+
 		if(refreshRequest)
 			return;
 
@@ -956,13 +1000,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 			refreshRequest = true;
 			if(!state.getReplayingProperty().get())
-				updateGraph(refreshRequest,0);
+				updateGraph(refreshRequest,-1);
 			else
 				updateGraph(refreshRequest,replay.intValue());
 		});
 	}
 
-	private  void updateGraph(boolean refresh, int max_x0) {
+	private void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
 		int max_x = 0; long slot_tms = 0; 
 
@@ -986,7 +1030,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				refreshRequest = true; return;
 			}
 
-			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
+//			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			last_annotation_pos = 0;
 			yoffset = 0;
 			dashboard_update_tms = 0;
@@ -1087,7 +1131,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 				if(((current_x_pt * collector_interval) % resolution_ms) == 0 && current_x_pt > 0) {
 
-					if( type1.hash!=0 || type2.hash!=0 || type3.hash!=0) {
+					
+					
+					if( (type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 						mode.updateModeData(dt_sec, m);
 					}
 
