@@ -74,8 +74,8 @@ public class ReplayMP4VideoSource  {
 
 	public ReplayMP4VideoSource() {
 
-		fmt_ctx = new AVFormatContext(null);
 		pkt     = new AVPacket();
+		fmt_ctx = new AVFormatContext(null);
 
 	}
 
@@ -137,6 +137,7 @@ public class ReplayMP4VideoSource  {
 		avcodec_close(codec_ctx);
 		avcodec_free_context(codec_ctx);
 		avformat_close_input(fmt_ctx);
+		
 	}
 	
 	public boolean isOpen() {
@@ -144,14 +145,16 @@ public class ReplayMP4VideoSource  {
 	}
 
 	public boolean open() {
-
+		
 		stream_idx = -1;
 
 		String vf = getVideoFileName();
 		if(vf == null)
 			return false;
+		
 		if(avformat_open_input(fmt_ctx, vf, null, null) < 0)
 			return false;
+		
 		if(avformat_find_stream_info(fmt_ctx, (PointerPointer)null) < 0) {
 			return false;
 		}

@@ -257,7 +257,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 			} else {
 				System.out.println("Replay camera closed. Returning to current streams");
-				if(replay_video.open()) 
+				if(replay_video.isOpen()) 
 				  replay_video.close();
 				if(state.getConnectedProperty().get()) {
 					if(!connect()) {
