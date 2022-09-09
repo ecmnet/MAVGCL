@@ -332,32 +332,27 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		
 		linechart.setOnScroll((event) -> {
 			
-			if((System.nanoTime() - scroll_event_tms) < 5_000_000 || event.isInertia())
+			if((System.nanoTime() - scroll_event_tms) < 50_000_000 || event.isInertia())
 				return;
 			scroll_event_tms = System.nanoTime();
 			
 			final int x1 =  current_x1_pt + (int)(event.getDeltaX() * 2);
 			
-			if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
-				current_x1_pt = x1;
-				current_x0_pt = 0;
-				updateGraph(true,x1);
-			}	 
-			else {
-				current_x0_pt = dataService.calculateX0Index(x1);
-				updateGraph(true,0);
-			}
+			for(IChartSyncControl sync : syncCharts)
+				sync.setTime(x1);
 			
 		});
 
 
 		linechart.setOnScrollStarted((event) -> {
-			isScrolling.set(true);
+			for(IChartSyncControl sync : syncCharts)
+				sync.setScrolling(true);
 		});
 		
 
 		linechart.setOnScrollFinished((event) -> {
-			isScrolling.set(false);
+			for(IChartSyncControl sync : syncCharts)
+				sync.setScrolling(false);
 		});
 
 
@@ -1362,6 +1357,26 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		} catch(IndexOutOfBoundsException o) {
 			return Double.NaN;
 		}
+	}
+
+
+	@Override
+	public void setTime(int x1) {
+		if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
+			current_x1_pt = x1;
+			current_x0_pt = 0;
+			updateGraph(true,x1);
+		}	 
+		else {
+			current_x0_pt = dataService.calculateX0Index(x1);
+			updateGraph(true,0);
+		}
+	}
+
+
+	@Override
+	public void setScrolling(boolean enable) {
+		isScrolling.set(enable);
 	}
 
 }

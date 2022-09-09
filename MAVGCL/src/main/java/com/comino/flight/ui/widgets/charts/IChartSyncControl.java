@@ -38,5 +38,7 @@ public interface IChartSyncControl {
 	public void setZoom(double x0, double x1);
 	public void returnToOriginalTimeScale();
 	public void setMarker(int x1, double mousex);
+	public void setTime(int x1);
+	public void setScrolling(boolean enable);
 
 }
