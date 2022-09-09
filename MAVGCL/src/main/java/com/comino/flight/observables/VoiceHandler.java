@@ -136,7 +136,7 @@ public class VoiceHandler {
 		wq.addCyclicTask("LP", 45000, () -> {
 			if(!properties.getArmedProperty().get() || properties.getLandedProperty().get())
 				return;
-			voice.talk(String.format("Relative altitude is %.1f meters.",model.getValue("ALTRE")));
+			voice.talk(String.format("Relative altitude is %.1f meters.",model.getValue("ALTBC")));
 		});
 
 
