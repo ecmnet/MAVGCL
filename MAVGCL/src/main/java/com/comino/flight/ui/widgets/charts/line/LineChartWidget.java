@@ -174,8 +174,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private int resolution_ms 	  = 100;
 
 	private int current_x_pt      = 0;
-	private int current_x0_pt         = 0;
-	private int current_x1_pt         = 0;
+	private int current_x0_pt     = 0;
+	private int current_x1_pt     = 0;
+	
+	private int current_x0_zoom   = 0;
+	private int current_x1_zoom   = 0;
+	private boolean isZoomed      = false;
 
 
 	private final AnalysisDataModelMetaData meta = AnalysisDataModelMetaData.getInstance();
@@ -336,10 +340,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				return;
 			scroll_event_tms = System.nanoTime();
 			
-			final int x1 =  current_x1_pt + (int)(event.getDeltaX() * 2);
-			
 			for(IChartSyncControl sync : syncCharts)
-				sync.setTime(x1);
+				sync.setTime((int)(event.getDeltaX() * 2));
 			
 		});
 
@@ -726,7 +728,9 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		return preset;
 	}
 
+	@Override
 	public void returnToOriginalTimeScale() {
+		isZoomed = false;
 		if(dataService.isCollecting()) {
 			if(isPaused) {
 				current_x0_pt =  dataService.calculateX0IndexByFactor(scroll.get());
@@ -746,14 +750,19 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		}
 	}
 
+	@Override
 	public void setZoom(double x0, double x1) {
+		
 		if((x1-x0)>1 && ( type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
+			isZoomed = true;
 			current_x0_pt = (int)(x0 * 1000f / dataService.getCollectorInterval_ms());
+			current_x0_zoom = current_x0_pt;
 			setXResolution((int)(x1-x0));
 			updateGraph(true,0);
 		}	
 	}
 
+	@Override
 	public void setMarker(int x1, double mousex) {
 
 		if(x1 <= 0 || (type1.hash==0  && type2.hash==0 && type3.hash==0)) {
@@ -777,8 +786,37 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		measure.setStartX(mousex-chartArea.getLayoutX()-7);
 		measure.setEndX(mousex-chartArea.getLayoutX()-7);
 		linechart.getPlotArea().requestLayout();
+		
+	}
+	
+	@Override
+	public void setTime(int delta_pt) {
+		
+		if(isZoomed) {
+			current_x0_zoom -= delta_pt;
+			current_x0_pt = current_x0_zoom;
+			updateGraph(true,0);
+			return;
+		}
+		
+		final int x1 =  current_x1_pt - delta_pt;
+		
+		if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
+			current_x1_pt = x1;
+			current_x0_pt = 0;
+			updateGraph(true,x1);
+		}	 
+		else {
+			current_x0_pt = dataService.calculateX0Index(x1);
+			updateGraph(true,0);
+		}
+	}
 
 
+	@Override
+	public void setScrolling(boolean enable) {
+		if(!isZoomed)
+		 isScrolling.set(enable);
 	}
 
 	public void registerSyncChart(IChartSyncControl syncChart) {
@@ -1357,26 +1395,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		} catch(IndexOutOfBoundsException o) {
 			return Double.NaN;
 		}
-	}
-
-
-	@Override
-	public void setTime(int x1) {
-		if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
-			current_x1_pt = x1;
-			current_x0_pt = 0;
-			updateGraph(true,x1);
-		}	 
-		else {
-			current_x0_pt = dataService.calculateX0Index(x1);
-			updateGraph(true,0);
-		}
-	}
-
-
-	@Override
-	public void setScrolling(boolean enable) {
-		isScrolling.set(enable);
 	}
 
 }
