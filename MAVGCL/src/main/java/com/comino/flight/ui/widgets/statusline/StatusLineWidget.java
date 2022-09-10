@@ -58,6 +58,7 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -101,7 +102,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge lpos;
-	
+
 	@FXML
 	private Badge home;
 
@@ -111,8 +112,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private IMAVController control;
 
-	private FloatProperty scroll       = new SimpleFloatProperty(0);
-	private FloatProperty replay       = new SimpleFloatProperty(0);
+	private FloatProperty scroll              = new SimpleFloatProperty(0);
+	private FloatProperty replay              = new SimpleFloatProperty(0);
+	private BooleanProperty isScrolling       = new SimpleBooleanProperty();
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 	private StateProperties state = null;
@@ -202,7 +204,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							break;
 
 						default:
-						
+
 							gps.setMode(Badge.MODE_OFF);
 						}
 					}
@@ -213,7 +215,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				vision.setText(msp_model.vision.getShortText());
 
 				if(control.isConnected()) {
-					
+
 					if(msp_model.home_state.g_lat!=0 && msp_model.home_state.g_lon!=0) 
 						home.setMode(Badge.MODE_ON);
 					else
@@ -221,15 +223,15 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY))
 
-					driver.setMode(Badge.MODE_ON);
-					
+						driver.setMode(Badge.MODE_ON);
+
 					if(msp_model.vision.isStatus(Vision.PUBLISHED))
 						vision.setMode(Badge.MODE_ON);
 					else
 						vision.setMode(Badge.MODE_OFF);
-					
+
 					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
-						
+
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 							ready.setMode(Badge.MODE_OK);
 							ready.setText("READY");
@@ -265,29 +267,35 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				list = collector.getModelList();
 
 				if(list.size()>0) {
-					if(!state.getReplayingProperty().get()) {
-						current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
-						current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
-					}
+					//					if(!state.getReplayingProperty().get() && !isScrolling.get()) {
+					//						current_x0_pt = collector.calculateX0IndexByFactor(scroll.floatValue());
+					//						current_x1_pt = collector.calculateX1IndexByFactor(scroll.floatValue());
+					//					}
 
-					if(current_x1_pt < list.size()-1)
+					if(state.getLogLoadedProperty().get() && current_x1_pt>1) {
 						time.setText(
 								String.format("%1$tM:%1$tS - %2$tM:%2$tS / %3$tM:%3$tS",
-										list.get(current_x0_pt).tms/1000,
-										list.get(current_x1_pt).tms/1000,
-										list.get(list.size()-1).tms/1000)
+										(list.get(current_x0_pt).tms+list.get(0).tms)/1000,
+										(list.get(current_x1_pt-1).tms+list.get(0).tms)/1000,
+										(list.get(list.size()-1).tms+list.get(0).tms)/1000)
 								);
-					else
-						time.setText(
-								String.format("%1$tM:%1$tS - %2$tM:%2$tS",
-										list.get(current_x0_pt).tms/1000,
-										list.get(current_x1_pt).tms/1000)
-								);
-
-//					time.setBackgroundColor(Color.web("#1c6478"));
+					}
+					else {
+						current_x0_pt = collector.calculateX0IndexByFactor(1);
+	     				current_x1_pt = collector.calculateX1IndexByFactor(1);
+						if(current_x0_pt < list.size() && current_x1_pt>1 && current_x1_pt <= list.size()) {
+							System.out.println(list.get(current_x1_pt-1).tms);
+							time.setText(
+									String.format("%1$tM:%1$tS - %2$tM:%2$tS",
+											(list.get(current_x0_pt).tms+list.get(0).tms)/1000,
+											(list.get(current_x1_pt-1).tms+list.get(0).tms)/1000)
+									);
+						}
+					}
+					//					time.setBackgroundColor(Color.web("#1c6478"));
 				} else {
 					time.setText("00:00 - 00:00");
-//					time.setBackgroundColor(Color.GRAY);
+					//					time.setBackgroundColor(Color.GRAY);
 				}
 
 				if(state.getReplayingProperty().get()) {
@@ -304,7 +312,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					mode.setMode(Badge.MODE_ON);
 				}
 				else if(control.isConnected()) {
-					
+
 					switch(control.getMode()) {
 					case MAVController.MODE_NORMAL:
 						mode.setText("Connected");
@@ -338,8 +346,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						ekf.setMode(Badge.MODE_ERROR);
 				}
 
-			
-			
+
+
 				if((msp_model.sys.isStatus(Status.MSP_RC_ATTACHED)))
 					rc.setMode(Badge.MODE_ON);
 				else
@@ -349,13 +357,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					gpos.setMode(Badge.MODE_ON);
 				else
 					gpos.setMode(Badge.MODE_OFF);
-			
+
 				if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
 					lpos.setMode(Badge.MODE_ON);
 				else
 					lpos.setMode(Badge.MODE_OFF);
 			}
-	
+
 		};
 
 		mode.setOnMouseClicked((e) -> {
@@ -376,27 +384,27 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.state = StateProperties.getInstance();
 
 		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
-//		state.getConnectedProperty().addListener((v,o,n) -> {
-//			
-//			driver.setDisable(!n.booleanValue());
-//			rc.setDisable(!n.booleanValue());
-//			gpos.setDisable(!n.booleanValue());
-//			lpos.setDisable(!n.booleanValue());
-//			controller.setDisable(!n.booleanValue());
-//			ekf.setDisable(!n.booleanValue());
-//			ready.setDisable(!n.booleanValue());
-//			
-//			if((msp_model.sys.isStatus(Status.MSP_GPOS_VALID)))
-//				gpos.setMode(Badge.MODE_ON);
-//			else
-//				gpos.setMode(Badge.MODE_OFF);
-//			
-//			if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
-//				lpos.setMode(Badge.MODE_ON);
-//			else
-//				lpos.setMode(Badge.MODE_OFF);
-//
-//		});
+		//		state.getConnectedProperty().addListener((v,o,n) -> {
+		//			
+		//			driver.setDisable(!n.booleanValue());
+		//			rc.setDisable(!n.booleanValue());
+		//			gpos.setDisable(!n.booleanValue());
+		//			lpos.setDisable(!n.booleanValue());
+		//			controller.setDisable(!n.booleanValue());
+		//			ekf.setDisable(!n.booleanValue());
+		//			ready.setDisable(!n.booleanValue());
+		//			
+		//			if((msp_model.sys.isStatus(Status.MSP_GPOS_VALID)))
+		//				gpos.setMode(Badge.MODE_ON);
+		//			else
+		//				gpos.setMode(Badge.MODE_OFF);
+		//			
+		//			if((msp_model.sys.isStatus(Status.MSP_LPOS_VALID)))
+		//				lpos.setMode(Badge.MODE_ON);
+		//			else
+		//				lpos.setMode(Badge.MODE_OFF);
+		//
+		//		});
 
 		state.getControllerConnectedProperty().addListener((e,o,n) -> {
 			if(n.booleanValue())
@@ -405,9 +413,16 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				controller.setMode(Badge.MODE_OFF);
 		});
 
+		state.getLogLoadedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				current_x1_pt = collector.calculateIndexByFactor(1);	
+				current_x0_pt = collector.calculateX0Index(current_x1_pt);
+			}
+		});
+
 		scroll.addListener((e,o,n) -> {
-			current_x0_pt = collector.calculateX0IndexByFactor(n.floatValue());
-			current_x1_pt = collector.calculateX1IndexByFactor(n.floatValue());
+			current_x1_pt = collector.calculateIndexByFactor(n.floatValue());	
+			current_x0_pt = collector.calculateX0Index(current_x1_pt);
 		});
 
 
@@ -432,7 +447,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 	}
 
 	public BooleanProperty getIsScrollingProperty() {
-		return null;
+		return isScrolling;
 	}
 
 	@Override

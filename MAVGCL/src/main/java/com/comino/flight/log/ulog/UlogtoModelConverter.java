@@ -85,7 +85,7 @@ public class UlogtoModelConverter {
 				if(tms > (tms_slot-interval_us2)) {
 					state.getProgressProperty().set(tms*1.0f/reader.getSizeMicroseconds());
 					AnalysisDataModel model = new AnalysisDataModel();
-					model.tms = tms / 1000;
+					model.tms = tms;
 					model.dt_sec = tms / 1e6f;
 					tms_slot += interval_us;
 					model.setValues(KeyFigureMetaData.ULG_SOURCE, data, meta);

@@ -446,7 +446,7 @@ public class AnalysisModelService  {
 						state.getLogLoadedProperty().set(false);
 						state.getRecordingProperty().set(COLLECTING);
 					});
-					tms_start = System.nanoTime() / 1000;
+					tms_start = System.currentTimeMillis() * 1000;
 				}
 
 				if(mode==STOPPED && old_mode != STOPPED) {
@@ -501,7 +501,7 @@ public class AnalysisModelService  {
 							m = (AnalysisDataModel)current.clone();
 
 
-						m.tms = System.nanoTime() / 1000 - tms_start;
+						m.tms = System.currentTimeMillis() * 1000 - tms_start;
 						m.dt_sec = m.tms / 1e6f;
 						modelList.add(m);
 
@@ -518,7 +518,7 @@ public class AnalysisModelService  {
 
 					state.getRecordingAvailableProperty().set(modelList.size()>0);
 
-					current.tms = System.nanoTime() / 1000 ;
+					current.tms = System.currentTimeMillis() * 1000 ;
 					perf = ( current.tms - tms_last ) / 1e3f;
 					tms_last = current.tms;
 
