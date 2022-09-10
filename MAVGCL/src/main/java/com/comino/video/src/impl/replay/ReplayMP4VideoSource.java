@@ -217,6 +217,7 @@ public class ReplayMP4VideoSource  {
 		String dirname  = fh.getCurrentPath();
 		String filename = fh.getName();
 		
+		System.out.println(dirname +" //// "+filename);
 		
 		if(dirname==null)
 			return null;
@@ -226,12 +227,14 @@ public class ReplayMP4VideoSource  {
 			public boolean accept(File directory, String fn) {
 				if(filename.length() < 1 || !filename.contains("."))
 					return false;
-				return fn.endsWith(filename.substring(0,filename.indexOf("."))+".mp4") || fn.equals("video.mp4") ;
+				return fn.endsWith(".mp4") ;
 			}
 		});
 		
-		if(videos == null || videos.length < 1 || videos[0].length() < 1000)
+		if(videos == null || videos.length < 1 || videos[0].length() < 1000) {
+			System.out.println("No video found");
 			return null;
+		}
 		else {
 			System.out.println(videos[0].getName()+" found in "+dirname);
 			return videos[0].getAbsolutePath();
