@@ -133,6 +133,7 @@ public class MSPSequenceEncoder {
 		try {
 			outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
 		} catch(IllegalStateException e) {
+			e.printStackTrace();
 			return;
 		}
 
@@ -143,10 +144,9 @@ public class MSPSequenceEncoder {
 		// Push saved SPS/PPS to a special storage in MP4
 		if(spsList.size()>0 && ppsList.size()>0) {
 			outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
-
-			// Write MP4 header and finalize recording
-			muxer.writeHeader();
-		}
+		} else
+			System.err.println("spsList or ppsList empty");
+		muxer.writeHeader();
 		NIOUtils.closeQuietly(ch);
 	}
 
