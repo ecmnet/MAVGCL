@@ -341,7 +341,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			scroll_event_tms = System.nanoTime();
 			
 			for(IChartSyncControl sync : syncCharts)
-				sync.setTime((int)(event.getDeltaX() * 2));
+				sync.setTime((int)(event.getDeltaX()));
 			
 		});
 
@@ -799,7 +799,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			return;
 		}
 		
-		final int x1 =  current_x1_pt - delta_pt;
+		final int x1 =  current_x1_pt - delta_pt*2;
 		
 		if(x1 < (timeFrame.get() * 1000 / dataService.getCollectorInterval_ms())) {
 			current_x1_pt = x1;
