@@ -267,7 +267,6 @@ public class FileHandler {
 						converter = new UlogtoModelConverter(reader,modelService.getModelList());	
 							converter.doConversion();
 							ulogFields = reader.getFieldList();
-							state.getLogLoadedProperty().set(true);
 						}
 						catch(FormatErrorException f) {
 							logger.writeLocalMsg("[mgc] "+f.getMessage(),MAV_SEVERITY.MAV_SEVERITY_ERROR);
