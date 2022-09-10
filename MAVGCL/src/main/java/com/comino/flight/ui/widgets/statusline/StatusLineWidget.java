@@ -284,7 +284,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						current_x0_pt = collector.calculateX0IndexByFactor(1);
 	     				current_x1_pt = collector.calculateX1IndexByFactor(1);
 						if(current_x0_pt < list.size() && current_x1_pt>1 && current_x1_pt <= list.size()) {
-							System.out.println(list.get(current_x1_pt-1).tms);
 							time.setText(
 									String.format("%1$tM:%1$tS - %2$tM:%2$tS",
 											(list.get(current_x0_pt).tms+list.get(0).tms)/1000,
