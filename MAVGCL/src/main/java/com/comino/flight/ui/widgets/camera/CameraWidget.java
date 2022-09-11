@@ -246,7 +246,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
-			
+			if(state.getRecordingProperty().get()!= 0)
+				return;
 			if(n.booleanValue()) {
 				stopStreaming();
 				if(replay_video.open()) {

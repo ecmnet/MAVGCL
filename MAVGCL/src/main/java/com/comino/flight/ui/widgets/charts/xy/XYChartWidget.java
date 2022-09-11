@@ -853,10 +853,11 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				series2.getData().clear();
 			}
 			pool.invalidateAll();
-
-			xychart.getData().clear();
-			xychart.getData().add(series1);
-			xychart.getData().add(series2);
+			synchronized(this) {
+				xychart.getData().clear();
+				xychart.getData().add(series1);
+				xychart.getData().add(series2);
+			}
 
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);

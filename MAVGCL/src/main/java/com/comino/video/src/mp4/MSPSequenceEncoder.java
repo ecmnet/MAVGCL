@@ -103,8 +103,8 @@ public class MSPSequenceEncoder {
 
 		// Encoder extra data ( SPS, PPS ) to be stored in a special place of
 		// MP4
-		spsList = new ArrayList<ByteBuffer>();
-		ppsList = new ArrayList<ByteBuffer>();
+		spsList = new ArrayList<ByteBuffer>(5);
+		ppsList = new ArrayList<ByteBuffer>(5);
 
 	}
 
@@ -121,10 +121,12 @@ public class MSPSequenceEncoder {
 		ByteBuffer result = encoder.encodeFrame(toEncode, _out);
 
 		// Based on the frame above form correct MP4 packet
+		synchronized(this) {
 		spsList.clear();
 		ppsList.clear();
 		H264Utils.wipePS(result, spsList, ppsList);
 		H264Utils.encodeMOVPacket(result);
+		}
 
 		// Put timestamp in
 
@@ -142,10 +144,14 @@ public class MSPSequenceEncoder {
 
 	public void finish() throws IOException {
 		// Push saved SPS/PPS to a special storage in MP4
-		if(spsList.size()>0 && ppsList.size()>0) {
-			outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
-		} else
-			System.err.println("spsList or ppsList empty");
+		if(spsList.size()==0)
+			spsList = new ArrayList<ByteBuffer>(4);
+		if(ppsList.size()==0)
+			ppsList = new ArrayList<ByteBuffer>(4);
+	
+		
+		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
+			
 		muxer.writeHeader();
 		NIOUtils.closeQuietly(ch);
 	}

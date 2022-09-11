@@ -332,17 +332,13 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		});
 
-
-		
-		linechart.setOnScroll((event) -> {
-			
+		linechart.setOnScroll((event) -> {	
 			if((System.nanoTime() - scroll_event_tms) < 50_000_000 || event.isInertia())
 				return;
 			scroll_event_tms = System.nanoTime();
 			
 			for(IChartSyncControl sync : syncCharts)
 				sync.setTime((int)(event.getDeltaX()));
-			
 		});
 
 
@@ -359,11 +355,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		linechart.setOnMouseExited(mouseEvent -> {
-			
-			
-		
-			if(isScrolling.get())
-				return;
 			
 			mouseEvent.consume();
 			
@@ -683,8 +674,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 
 		isScrolling.addListener((v, ov, nv) -> {
-			setXResolution(timeFrame.get());
-			updateRequest();
+			setXResolution(timeFrame.get());	
+				updateGraph(true,0);
 		});
 
 		dash.selectedProperty().addListener((v, ov, nv) -> {
@@ -1175,6 +1166,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 						if(current_x_pt > current_x1_pt && series1.getData().size()>0 )
 							series1.getData().remove(0);
 						series1.getData().add(pool.checkOut(dt_sec,v1));
+			
 					} 
 					if(type2.hash!=0)  {
 

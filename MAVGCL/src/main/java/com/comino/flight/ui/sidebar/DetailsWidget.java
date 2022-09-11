@@ -86,9 +86,9 @@ public class DetailsWidget extends ChartControlPane {
 			// Default view
 
 			{ 
-				"ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", "AIRV",
+				"ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", 
 				null, 
-				"HEAD", "RGPSNO", 
+				"HEAD", "RGPSNO", "RGPSHDOP",
 				null, 
 				"ALTSL", "ALTTR", "ALTGL", "ALTRE",
 				null, 
@@ -122,7 +122,7 @@ public class DetailsWidget extends ChartControlPane {
 
 				"ROLL", "PITCH", "YAW",
 				null, 
-				"HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV",  
+				"HEAD", "RGPSNO", "RGPSEPH", "RGPSEPV","RGPSHDOP",  
 				//			    null,
 				//			    "BASENO","BASEEPH","BASEEPV",
 				null, 
@@ -130,7 +130,7 @@ public class DetailsWidget extends ChartControlPane {
 				null,
 				"LIDAR", "FLOWDI", "VISIONZ", "LPOSZ", 
 				null,
-				"GPHACCUR", "GPVACCUR", "EKFVTR",
+				"GPHACCUR", "GPVACCUR", 
 				null,
 				"VISIONFPS", "VISIONQUAL", "FLOWQL","VISIONERRC",
 				null,
