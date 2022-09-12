@@ -37,6 +37,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
@@ -431,6 +434,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				current_x0_pt = collector.calculateX0Index(n.intValue());
 			}
 		});
+		
+		ready.setOnMouseClicked((event) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_CHECK_READY;
+			control.sendMAVLinkMessage(msp);
+		});
+		
 		task.start();
 
 	}
