@@ -108,13 +108,13 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 					setWrapText(false);
 					switch(m.severity) {
 					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
-						if(is_light) setStyle("-fx-text-fill:black;"); else setStyle("-fx-text-fill:lightblue;");
+						if(is_light) setStyle("-fx-text-fill:darkblue;"); else setStyle("-fx-text-fill:lightblue;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_DEBUG:
 						if(is_light) setStyle("-fx-text-fill:green;"); else setStyle("-fx-text-fill:lightgreen;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_WARNING:
-						if(is_light) setStyle("-fx-text-fill:blue;"); else setStyle("-fx-text-fill:wheat;");
+						if(is_light) setStyle("-fx-text-fill:Chocolate;"); else setStyle("-fx-text-fill:wheat;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
 						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:salmon;");
