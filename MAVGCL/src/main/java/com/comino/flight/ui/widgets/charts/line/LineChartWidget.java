@@ -1075,10 +1075,10 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				series3.getData().clear();
 			}
 
+			linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 
 			if(dash.isSelected() && size> 0) {
-				linechart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
-
+				
 				if(type1.hash!=0)
 					linechart.getAnnotations().add(dashboard1, Layer.FOREGROUND);
 				else  {
