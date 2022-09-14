@@ -251,6 +251,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(n.booleanValue()) {
 				stopStreaming();
 				if(replay_video.open()) {
+					if(widget.isVisible())
+					  image.setVisible(true);
 					Platform.runLater(() -> {
 						image.setImage(replay_video.playAt(1.0f));
 					});
