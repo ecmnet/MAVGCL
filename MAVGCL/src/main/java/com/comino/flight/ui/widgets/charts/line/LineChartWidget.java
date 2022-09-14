@@ -1032,7 +1032,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 	private void updateGraph(boolean refresh, int max_x0) {
 		float dt_sec = 0; AnalysisDataModel m =null; boolean set_bounds = false; double v1 ; double v2; double v3;
-		int max_x = 0; long slot_tms = 0; 
+		int max_x = 0; long slot_tms = 0;  
 
 		final int size               = dataService.getModelList().size();
 		final int collector_interval = dataService.getCollectorInterval_ms();
