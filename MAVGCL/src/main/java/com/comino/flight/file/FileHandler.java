@@ -706,6 +706,9 @@ public class FileHandler {
 		File f = new File(initDir);
 		if(f.exists())
 			fileChooser.setInitialDirectory(f);
+		else
+			fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+			
 		return fileChooser;
 	}
 
