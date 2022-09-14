@@ -80,6 +80,7 @@ public class AnalysisDataModel implements Cloneable {
 		this.data.clear();
 		this.data.putAll(model.data);
 		this.dt_sec = model.dt_sec;
+		this.tms    = model.tms;
 		//		this.grid.clear();
 		//		this.grid.addAll(model.grid);
 	}
