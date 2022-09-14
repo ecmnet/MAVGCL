@@ -331,6 +331,7 @@ public class FileHandler {
 					lastDir = file.getParentFile().getAbsolutePath();
 					state.isLogLoading().set(false);
 					state.getLogLoadedProperty().set(true);
+					modelService.setCurrent(Integer.MAX_VALUE);
 					return null;
 				}
 			}).start();

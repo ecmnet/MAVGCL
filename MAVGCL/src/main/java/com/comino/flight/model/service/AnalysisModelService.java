@@ -243,6 +243,8 @@ public class AnalysisModelService  {
 			
 			current.set(modelList.get(index));
 			
+		} else {
+			current.set(modelList.get(modelList.size()-1));
 		}
 	}
 
