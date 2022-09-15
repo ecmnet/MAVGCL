@@ -1156,7 +1156,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 				if(((current_x_pt * collector_interval) % resolution_ms) == 0 && current_x_pt > 0) {
 
 					
-					
 					if( (type1.hash!=0 || type2.hash!=0 || type3.hash!=0)) {
 						mode.updateModeData(dt_sec, m);
 					}
