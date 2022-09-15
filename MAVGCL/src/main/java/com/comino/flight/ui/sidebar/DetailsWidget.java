@@ -92,9 +92,11 @@ public class DetailsWidget extends ChartControlPane {
 				null, 
 				"ALTSL", "ALTTR", "ALTGL", "ALTRE",
 				null, 
-				"LIDAR", "FLOWDI", 
+				"LIDAR", 
 				null, 
 				"LPOSX", "LPOSY", "LPOSZ", 
+				null,
+				"VIBMETA",
 				null,
 				"GPHACCUR", "GPVACCUR", 
 				null, 
@@ -254,7 +256,7 @@ public class DetailsWidget extends ChartControlPane {
 		state.getCurrentUpToDate().addListener((e, o, n) -> {
 			Platform.runLater(() -> {
 				if(MAVPreferences.isLightTheme()) {
-					
+
 					for (KeyFigure figure : figures) {	
 						if (n.booleanValue())
 							figure.setColor(Color.web("#606060"));
@@ -315,7 +317,7 @@ public class DetailsWidget extends ChartControlPane {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130);
 				label.setPrefHeight(19);
-				if (kf.uom.equals("%")) {
+				if (kf.uom.equals("%") || ( kf.uom.isBlank() && kf.max > 0)) {
 					tip = new Tooltip();
 					ProgressBar l2 = new ProgressBar();
 					l2.setPrefWidth(105);
@@ -369,8 +371,15 @@ public class DetailsWidget extends ChartControlPane {
 				if (value instanceof Label)
 					((Label) value).setText(kf.getValueString(val));
 				if (value instanceof ProgressBar) {
-					tip.setText((int) (val * 100) + "%");
-					((ProgressBar) value).setProgress(val);
+					if (kf.uom.equals("%")) {
+						tip.setText((int) (val * 100) + "%");
+						((ProgressBar) value).setProgress(val);
+					}
+
+					if (kf.uom.equals("") && kf.max > 0) {
+						tip.setText(String.valueOf(val));
+						((ProgressBar) value).setProgress(val / (kf.max - kf.min));
+					}
 				}
 			}
 		}

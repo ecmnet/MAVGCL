@@ -240,10 +240,16 @@ public class AnalysisDataModelMetaData extends Observable {
 			}
 
 			if(node.getNodeName().equalsIgnoreCase("Validity")) {
+				
+				if(node.getAttributes().getNamedItem("max")!=null)
 				keyfigure.setBounds(
 						Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
 						Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
 						);
+				else 
+					keyfigure.setBounds(
+							Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
+							0.0f);
 
 			}
 

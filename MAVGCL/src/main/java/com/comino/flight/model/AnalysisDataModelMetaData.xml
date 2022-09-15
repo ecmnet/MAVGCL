@@ -284,12 +284,13 @@
 	 <!-- Vibration -->
 
 	
-	<KeyFigure desc="Vibr.Metrics.Acc" uom="rad/s" mask="#0.00" key="VIBMETA">
+	<KeyFigure desc="Vibr.Metrics.Acc" uom="" mask="#0.00" key="VIBMETA">
 	    <MSPSource class="vibration" field="vibz"></MSPSource>
 		<ULogSource field="vehicle_imu_status_0.accel_vibration_metric"/>
 		<Groups>
 			<Group>Vibration</Group>
 		</Groups>
+		<Validity min="0" max="3.0"/>
 	</KeyFigure>
 	
 	<KeyFigure desc="Vibr.Metrics.Gyro" uom="rad/s" mask="#0.00" key="VIBMETG">
@@ -1136,7 +1137,7 @@
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
-		<Validity min="6" max="30"/>
+		<Validity min="6"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Abs.Pressure" uom="hPa" mask="#0" key="ABSPRES">
@@ -1221,7 +1222,7 @@
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
-		<Validity min="6" max="30"/>
+		<Validity min="6"/>
 	</KeyFigure>
 
 	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
