@@ -123,13 +123,13 @@ public class ChartControlWidget extends ChartControlPane  {
 					if(!state.getConnectedProperty().get()) {
 						modelService.setCurrent(modelService.calculateIndexByFactor(1)-1);
 					}
-				    scroll.setDisable(false); 
+					scroll.setDisable(false); 
 				});
 			} else {
 				Platform.runLater(() -> scroll.setDisable(true));
 			}
-		
-			
+
+
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {
 				if(chart.getValue().getTimeFrameProperty()!=null) {
 					chart.getValue().getTimeFrameProperty().set(0);
@@ -173,7 +173,7 @@ public class ChartControlWidget extends ChartControlPane  {
 					Platform.runLater(() -> scroll.setValue(0));
 				}
 			}
-			
+
 		});
 
 		scroll.setSnapToTicks(false);
@@ -188,13 +188,13 @@ public class ChartControlWidget extends ChartControlPane  {
 				modelService.setCurrent(x1);
 			}
 		});
-		
-//		scroll.setOnMouseReleased((e) -> { 
-//			if(!state.getConnectedProperty().get()) {
-//				state.getCurrentUpToDate().set(true);
-//			}
-//		});
-		
+
+		//		scroll.setOnMouseReleased((e) -> { 
+		//			if(!state.getConnectedProperty().get()) {
+		//				state.getCurrentUpToDate().set(true);
+		//			}
+		//		});
+
 
 
 		scroll.valueProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -202,18 +202,14 @@ public class ChartControlWidget extends ChartControlPane  {
 				return;
 			anim_tms = System.currentTimeMillis();
 
-			final float v = (float)scroll.getValue();	
-			//			if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
-			//				modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
-			//	
+			final float v = 1.0f - (float)scroll.getValue();	
+			
+			int x1 =  modelService.calculateIndexByFactor(v)+1;	
+			modelService.setCurrent(x1);
 
-//			if(!state.getConnectedProperty().get()) {
-//				int x1 =  modelService.calculateIndexByFactor(1f-scroll.getValue())+1;	
-//				modelService.setCurrent(x1);
-//		}
 			charts.entrySet().forEach((chart) -> {
 				if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
-					chart.getValue().getScrollProperty().set(1f-v);
+					chart.getValue().getScrollProperty().set(v);
 				}
 			});
 		});

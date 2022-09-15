@@ -67,7 +67,6 @@ public class ReplayMP4VideoSource  {
 	private BytePointer buffer;
 	private DataBufferByte frame_buffer;
 	private int stream_idx;
-	private float old_val;
 	
 	private boolean is_opened = false;
 
@@ -78,15 +77,60 @@ public class ReplayMP4VideoSource  {
 		fmt_ctx = new AVFormatContext(null);
 
 	}
+	
+	public Image playAt(long time_ms) {
+
+		if(stream_idx < 0)
+			return null;
+		
+		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
+			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den();	
+	
+	    long time=(long)(time_ms*rate/1000_000f);
+		
+		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
+			return image;
+
+		if(av_read_frame(fmt_ctx, pkt) < 0)
+			return image;
+
+		if (pkt.stream_index() == stream_idx) {
+			avcodec_send_packet(codec_ctx, pkt);
+			avcodec_receive_frame(codec_ctx, raw);
+
+			sws_scale(
+					sws_ctx,
+					raw.data(),
+					raw.linesize(),
+					0,
+					codec_ctx.height(),
+					rgb.data(),
+					rgb.linesize()
+					);
+
+			buffer.get(frame_buffer.getData());
+			// TODO: Display recording time here:
+			ctx.drawString("Replay:",12,45);
+			ctx.drawRect(8,35,37,13);
+			image = SwingFXUtils.toFXImage(frame, null);
+			av_packet_unref(pkt);
+			return image;
+		}
+
+		return null;
+	}
 
 	public Image playAt(float percentage) {
 
 		if(stream_idx < 0)
 			return null;
 		
-		long time=(long)((fmt_ctx.duration()*percentage*15)/1000_000)+2;
+		float rate = (float)fmt_ctx.streams(stream_idx).avg_frame_rate().num() / 
+				     (float)fmt_ctx.streams(stream_idx).avg_frame_rate().den();	
+		
+		long time=(long)(fmt_ctx.duration()*rate/1000_000f*percentage);
 		if(percentage >= 1)
-			time = (long)(fmt_ctx.duration()*15/1000_000)-5;
+			time = (long)(fmt_ctx.duration()*rate/1000_000)-1;
 
 		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
 			return image;
@@ -113,17 +157,12 @@ public class ReplayMP4VideoSource  {
 			ctx.drawRect(8,35,37,13);
 			image = SwingFXUtils.toFXImage(frame, null);
 			av_packet_unref(pkt);
-			old_val = percentage;
 			return image;
 		}
 
 		return null;
 	}
 	
-	public float getPrevPercentage() {
-		return old_val;
-	}
-
 	public void close() {
 		
 		if(!is_opened)

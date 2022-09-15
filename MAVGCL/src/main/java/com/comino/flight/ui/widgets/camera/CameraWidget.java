@@ -92,7 +92,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private MP4Recorder     recorder = null;
 	private boolean         isConnected = false;
-	private float           prev;
+	private long            prev;
 
 	private MSPLogger       logger = null;
 	private Preferences     userPrefs;
@@ -229,16 +229,16 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		scroll.addListener((v, ov, nv) -> {
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
-					image.setImage(replay_video.playAt(nv.floatValue()));
+					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
+					image.setImage(replay_video.playAt(model.getModelList().get(x1).tms));
 				});
 			}
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			int data_size = model.getModelList().size();
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
-					image.setImage(replay_video.playAt(nv.floatValue()/data_size));
+					image.setImage(replay_video.playAt(model.getModelList().get((int)Math.abs(nv.floatValue())).tms));
 				});
 			}
 		});
@@ -254,7 +254,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					if(widget.isVisible())
 					  image.setVisible(true);
 					Platform.runLater(() -> {
-						image.setImage(replay_video.playAt(1.0f));
+						image.setImage(replay_video.playAt(model.getCurrent().tms));
 					});
 				} else
 					widget.getVideoVisibility().setValue(false);
@@ -299,43 +299,38 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	}
 
 	public void setup(IMAVController control,FlightControlPanel flightControl) {
+		
 		this.control = control;
 		this.widget  = flightControl.getControl();
+		
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
 		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
+		
 		ChartControlPane.addChart(91,this);
 
 		state.getCurrentUpToDate().addListener((v,o,n) -> {
-			float p = 0; 
-
+			
 			if(state.getReplayingProperty().get())
 				return;
-
-			if(!n.booleanValue()) {
-				prev = replay_video.getPrevPercentage(); 
-				p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
-			} else 
-				p = prev;
-
+			
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt(p);
+			final Image img = replay_video.playAt(model.getCurrent().tms);	
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
+			
 
 		});
 
 		state.getTimeSelectProperty().addListener((e,o,n) -> {
 
-			float p = (float)(model.getCurrent().dt_sec) / (float)(model.getLast().dt_sec);	
-
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt(p);
+			final Image img = replay_video.playAt(model.getCurrent().tms);
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
