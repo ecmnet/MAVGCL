@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.DecimalFormat;
 
 import org.bytedeco.ffmpeg.avcodec.AVCodec;
 import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
@@ -69,6 +70,7 @@ public class ReplayMP4VideoSource  {
 	private int stream_idx;
 	
 	private boolean is_opened = false;
+	private DecimalFormat time_format = new DecimalFormat("#0.00");
 
 
 	public ReplayMP4VideoSource() {
@@ -85,39 +87,8 @@ public class ReplayMP4VideoSource  {
 		
 		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
 			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den();	
-	
-	    long time=(long)(time_ms*rate/1000_000f);
 		
-		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
-			return image;
-
-		if(av_read_frame(fmt_ctx, pkt) < 0)
-			return image;
-
-		if (pkt.stream_index() == stream_idx) {
-			avcodec_send_packet(codec_ctx, pkt);
-			avcodec_receive_frame(codec_ctx, raw);
-
-			sws_scale(
-					sws_ctx,
-					raw.data(),
-					raw.linesize(),
-					0,
-					codec_ctx.height(),
-					rgb.data(),
-					rgb.linesize()
-					);
-
-			buffer.get(frame_buffer.getData());
-			// TODO: Display recording time here:
-			ctx.drawString("Replay:",12,45);
-			ctx.drawRect(8,35,37,13);
-			image = SwingFXUtils.toFXImage(frame, null);
-			av_packet_unref(pkt);
-			return image;
-		}
-
-		return null;
+		return play((long)(time_ms*rate/1000_000f));
 	}
 
 	public Image playAt(float percentage) {
@@ -132,36 +103,9 @@ public class ReplayMP4VideoSource  {
 		if(percentage >= 1)
 			time = (long)(fmt_ctx.duration()*rate/1000_000)-1;
 
-		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
-			return image;
-
-		if(av_read_frame(fmt_ctx, pkt) < 0)
-			return image;
-
-		if (pkt.stream_index() == stream_idx) {
-			avcodec_send_packet(codec_ctx, pkt);
-			avcodec_receive_frame(codec_ctx, raw);
-
-			sws_scale(
-					sws_ctx,
-					raw.data(),
-					raw.linesize(),
-					0,
-					codec_ctx.height(),
-					rgb.data(),
-					rgb.linesize()
-					);
-
-			buffer.get(frame_buffer.getData());
-			ctx.drawString("Replay",12,45);
-			ctx.drawRect(8,35,37,13);
-			image = SwingFXUtils.toFXImage(frame, null);
-			av_packet_unref(pkt);
-			return image;
-		}
-
-		return null;
+		return play(time);
 	}
+	
 	
 	public void close() {
 		
@@ -248,6 +192,38 @@ public class ReplayMP4VideoSource  {
 		is_opened = true;
 
 		return true;
+	}
+	
+	private Image play(long time) {
+		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
+			return image;
+
+		if(av_read_frame(fmt_ctx, pkt) < 0)
+			return image;
+
+		if (pkt.stream_index() == stream_idx) {
+			avcodec_send_packet(codec_ctx, pkt);
+			avcodec_receive_frame(codec_ctx, raw);
+
+			sws_scale(
+					sws_ctx,
+					raw.data(),
+					raw.linesize(),
+					0,
+					codec_ctx.height(),
+					rgb.data(),
+					rgb.linesize()
+					);
+
+			buffer.get(frame_buffer.getData());
+			ctx.drawString("Replay:",12,45);
+			ctx.drawRect(8,35,37,13);
+			image = SwingFXUtils.toFXImage(frame, null);
+			av_packet_unref(pkt);
+			return image;
+		}
+
+		return null;
 	}
 
 
