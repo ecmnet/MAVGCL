@@ -317,7 +317,7 @@ public class DetailsWidget extends ChartControlPane {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130);
 				label.setPrefHeight(19);
-				if (kf.uom.equals("%") || ( kf.uom.isBlank() && kf.max > 0)) {
+				if (kf.uom.equals("%") || ( kf.uom.isEmpty() && kf.max > 0)) {
 					tip = new Tooltip();
 					ProgressBar l2 = new ProgressBar();
 					l2.setPrefWidth(105);
@@ -376,7 +376,7 @@ public class DetailsWidget extends ChartControlPane {
 						((ProgressBar) value).setProgress(val);
 					}
 
-					if (kf.uom.equals("") && kf.max > 0) {
+					if (kf.uom.isEmpty() && kf.max > 0) {
 						tip.setText(String.valueOf(val));
 						((ProgressBar) value).setProgress(val / (kf.max - kf.min));
 					}
