@@ -31,7 +31,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.text.DecimalFormat;
 
 import org.bytedeco.ffmpeg.avcodec.AVCodec;
 import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
@@ -70,7 +69,6 @@ public class ReplayMP4VideoSource  {
 	private int stream_idx;
 	
 	private boolean is_opened = false;
-	private DecimalFormat time_format = new DecimalFormat("#0.00");
 
 
 	public ReplayMP4VideoSource() {
