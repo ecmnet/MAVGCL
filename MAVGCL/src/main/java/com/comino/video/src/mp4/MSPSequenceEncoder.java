@@ -77,12 +77,15 @@ public class MSPSequenceEncoder {
 	private int frameNo;
 	private MP4Muxer muxer;
 	private int rate;
+	private boolean is_encoding = false;
 
 	private byte[] buf = new byte[640*480*4];
 
 	public MSPSequenceEncoder(File out) throws IOException {
 
 		Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
+		
+		is_encoding = true;
 
 		this.ch = NIOUtils.writableFileChannel(out);
 
@@ -108,7 +111,7 @@ public class MSPSequenceEncoder {
 
 	}
 
-	public void encodeNativeFrame(Picture pic, int fps, long tms) throws IOException {
+	public void encodeNativeFrame(Picture pic, float fps, long tms) throws IOException {
 		if (toEncode == null) {
 			toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
 		}
@@ -121,19 +124,17 @@ public class MSPSequenceEncoder {
 		ByteBuffer result = encoder.encodeFrame(toEncode, _out);
 
 		// Based on the frame above form correct MP4 packet
-		synchronized(this) {
+
 		spsList.clear();
 		ppsList.clear();
 		H264Utils.wipePS(result, spsList, ppsList);
 		H264Utils.encodeMOVPacket(result);
-		}
 
 		// Put timestamp in
 
-
 		// Add packet to video track
 		try {
-			outTrack.addFrame(new MP4Packet(result, frameNo, fps, 1, frameNo, true, null, frameNo, 0));
+			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1, frameNo, true, null, frameNo, 0));
 		} catch(IllegalStateException e) {
 			e.printStackTrace();
 			return;
@@ -143,6 +144,7 @@ public class MSPSequenceEncoder {
 	}
 
 	public void finish() throws IOException {
+		is_encoding = false;
 		// Push saved SPS/PPS to a special storage in MP4
 		if(spsList.size()==0)
 			spsList = new ArrayList<ByteBuffer>(4);
@@ -154,31 +156,12 @@ public class MSPSequenceEncoder {
 			
 		muxer.writeHeader();
 		NIOUtils.closeQuietly(ch);
+		
 	}
 
-	public void encodeImage(BufferedImage bi, int fps, long tms) throws IOException {
-		encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms);
+	public void encodeImage(BufferedImage bi, float fps, long tms) throws IOException {
+		if(is_encoding)
+		  encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms);
 	}
 
-	//	public void encodeImage(Image bi, int fps) throws IOException {
-	//		int w = (int)bi.getWidth();
-	//		int h = (int)bi.getHeight();
-	//		Picture dst = Picture.create(w, h, RGB);
-	//		int[] dstData = dst.getPlaneData(0);
-	//		
-	//		bi.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, 0, w * 4);
-	//		
-	//		int off = 0;
-	//		for (int i = 0; i < h; i++) {
-	//            for (int j = 0; j < w; j++) {
-	//            	  dstData[off++] = buf[i*w*4+j*4+2] ;
-	//            	  dstData[off++] = buf[i*w*4+j*4+1] ;
-	//            	  dstData[off++] = buf[i*w*4+j*4+0] ;
-	// //           	  dstData[off++] = buf[i*w*4+j*4+3];
-	//            	 
-	//            }
-	//        }
-	//		encodeNativeFrame(dst, fps);
-	//
-	//	}
 }

@@ -500,8 +500,8 @@ public class FileHandler {
 
 				DataModel model = control.getCurrentModel();
 
-				if(control.isSimulation())
-					return null;
+//				if(control.isSimulation())
+//					return null;
 
 				String logname = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
 				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
@@ -542,6 +542,11 @@ public class FileHandler {
 					writer.println("==========================================================================================");
 					writer.flush();
 					writer.close();
+					
+					// Wait for video recording has stopped or timeout of 1 sec
+					int to = 5;
+					while(--to > 0 && state.getMP4RecordingProperty().get())
+					   Thread.sleep(200);
 
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {

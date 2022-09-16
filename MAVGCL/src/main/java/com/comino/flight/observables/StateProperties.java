@@ -70,16 +70,17 @@ public class StateProperties {
 	private BooleanProperty offboardProperty 			    = new SimpleBooleanProperty();
 	private BooleanProperty holdProperty 			        = new SimpleBooleanProperty();
 
-	private IntegerProperty recordingProperty     			= new SimpleIntegerProperty();
-	private IntegerProperty streamProperty     		    	= new SimpleIntegerProperty();
-	private BooleanProperty isAutoRecordingProperty    		= new SimpleBooleanProperty();
-	private BooleanProperty isLogLoadingProperty    	   	= new SimpleBooleanProperty();
-	private BooleanProperty isLogLoadedProperty   			= new SimpleBooleanProperty();
-	private BooleanProperty isLogULOGProperty   	 		= new SimpleBooleanProperty();
-	private BooleanProperty isParamLoadedProperty 			= new SimpleBooleanProperty();
+	private IntegerProperty recordingProperty     			 = new SimpleIntegerProperty();
+	private IntegerProperty streamProperty     		    	 = new SimpleIntegerProperty();
+	private BooleanProperty isAutoRecordingProperty    		 = new SimpleBooleanProperty();
+	private BooleanProperty isLogLoadingProperty    	   	 = new SimpleBooleanProperty();
+	private BooleanProperty isLogLoadedProperty   			 = new SimpleBooleanProperty();
+	private BooleanProperty isLogULOGProperty   	 		 = new SimpleBooleanProperty();
+	private BooleanProperty isParamLoadedProperty 			 = new SimpleBooleanProperty();
 	private BooleanProperty isRecordingAvailableProperty	 = new SimpleBooleanProperty();
 	private BooleanProperty isReplayingProperty	             = new SimpleBooleanProperty();
 	private BooleanProperty isReadyProperty	                 = new SimpleBooleanProperty();
+	private BooleanProperty isMP4RecordingProperty           = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -317,6 +318,10 @@ public class StateProperties {
 
 	public IntegerProperty getRecordingProperty() {
 		return recordingProperty;
+	}
+	
+	public BooleanProperty getMP4RecordingProperty() {
+		return isMP4RecordingProperty;
 	}
 
 	public BooleanProperty getLogLoadedProperty() {

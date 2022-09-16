@@ -48,44 +48,45 @@ import javafx.scene.image.Image;
 public class MP4Recorder implements IMWStreamVideoProcessListener {
 
 	private MSPSequenceEncoder encoder = null;
-	private BooleanProperty recording = new SimpleBooleanProperty();
+	private final StateProperties state = StateProperties.getInstance();
 
 	private BufferedImage bimg = null;
+	private final String path;
 
-	public MP4Recorder(String path, int width, int height) {
 
-		recording.addListener((c,o,n) -> {
-	
-			if(StateProperties.getInstance().getSimulationProperty().get())
-				return;
-			try {
-				if(n.booleanValue()) {
-					System.out.println("MP4 recording started - MP4");
-					encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
-				}
-				else {
-					if(encoder!=null) {
-						System.out.println("MP4 recording stopped");
-						encoder.finish();
-					}
-				}
-			}  catch (Exception e1) { 
-				e1.printStackTrace();
-			}
-		});
+	public MP4Recorder(String path) {
+		this.path = path;
 	}
 
-	@Override
-	public void process(Image image,  int fps, long tms) throws Exception {
-		if(recording.get() && image!=null && encoder!=null) {
-			bimg = SwingFXUtils.fromFXImage(image, bimg);
-			encoder.encodeImage(bimg, fps, tms);
-			//		encoder.encodeImage(image, fps);
+	public void start() {
+		try {
+			state.getMP4RecordingProperty().set(true);
+			encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
+			System.out.println("MP4 recording started - MP4");
+		}  catch (Exception e1) { 
+			e1.printStackTrace();
 		}
 	}
 
-	public  BooleanProperty getRecordMP4Property() {
-		return recording;
+	public void stop() {
+		try {
+			if(encoder!=null && state.getMP4RecordingProperty().get()) {
+				encoder.finish();
+				state.getMP4RecordingProperty().set(false);
+				System.out.println("MP4 recording stopped");
+			}
+		}  catch (Exception e1) { 
+			e1.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void process(Image image,  float fps, long tms) throws Exception {
+		if(state.getMP4RecordingProperty().get() && image!=null && encoder!=null) {
+			bimg = SwingFXUtils.fromFXImage(image, bimg);
+			encoder.encodeImage(bimg, fps, tms);
+		}
 	}
 
 }

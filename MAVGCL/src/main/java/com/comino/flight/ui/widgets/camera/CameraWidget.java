@@ -150,7 +150,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					}
 				}
 			else {
-				if(!recorder.getRecordMP4Property().get())
+				if(!state.getMP4RecordingProperty().get())
 					stopStreaming();
 			}
 		});
@@ -191,15 +191,15 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 
-			if(  !userPrefs.getBoolean(MAVPreferences.VIDREC, false) ||
-					//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
-					control.isSimulation())
-				return;
+//			if(  !userPrefs.getBoolean(MAVPreferences.VIDREC, false) ||
+//					//	 (!state.isAutoRecording().get() && state.getArmedProperty().get()) || 
+//					control.isSimulation())
+//				return;
 			
 			if(replay_video.isOpen()) 
 				replay_video.close();
 
-			ExecutorService.get().execute(() -> {
+			
 				if(nv.intValue()==AnalysisModelService.COLLECTING) {
 
 					if(source==null)
@@ -208,14 +208,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 						return;
 					if(!source.isRunning())
 						source.start();
-					Platform.runLater(() -> {
-						recorder.getRecordMP4Property().set(true);
-						logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-					});
+					recorder.start();
+					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					
 				} else {
-					if(recorder.getRecordMP4Property().get()) {
+					if(state.getMP4RecordingProperty().get()) {
 						Platform.runLater(() -> {
-							recorder.getRecordMP4Property().set(false);
+							recorder.stop();
 							logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 							if(!fadeProperty().getValue())
 								stopStreaming();
@@ -224,12 +223,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				}
 			});
 
-		});
+	
 
 		scroll.addListener((v, ov, nv) -> {
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
 					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
+					if(x1 < 0) x1 = 0;
 					image.setImage(replay_video.playAt(model.getModelList().get(x1).tms));
 				});
 			}
@@ -305,7 +305,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		
 		userPrefs = MAVPreferences.getInstance();
 		logger = MSPLogger.getInstance();
-		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")),X,Y);
+		recorder = new MP4Recorder(userPrefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")));
 		
 		ChartControlPane.addChart(91,this);
 

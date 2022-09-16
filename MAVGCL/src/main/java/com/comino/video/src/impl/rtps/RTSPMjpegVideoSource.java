@@ -239,7 +239,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					//get an Image object from the payload bitstream
 					//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
 				//	fps = (fps * 0.9f + (1000 / (System.currentTimeMillis() - tms)) * 0.1f);
-					fps = 1000 / (System.currentTimeMillis() - tms);
+					fps = 1000f / (System.currentTimeMillis() - tms);
 					tms = System.currentTimeMillis();
 					
 					if(proxy_enabled)
@@ -248,7 +248,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					if(next!=null) {
 						listeners.forEach((listener) -> {
 							try {
-								listener.process(next, (int)(fps), tms);
+								listener.process(next, fps, tms);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else

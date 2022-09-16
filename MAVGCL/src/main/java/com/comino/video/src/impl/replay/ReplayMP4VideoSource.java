@@ -78,13 +78,23 @@ public class ReplayMP4VideoSource  {
 
 	}
 	
+	public Image playAt(long time_ms, double fps) {
+
+		if(stream_idx < 0)
+			return null;
+		
+		return play((long)(time_ms*(float)fps/1000_000f));
+	}
+	
 	public Image playAt(long time_ms) {
 
 		if(stream_idx < 0)
 			return null;
 		
 		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
-			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den();	
+			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den() ;	
+		
+		// Idea: get rate from data service
 		
 		return play((long)(time_ms*rate/1000_000f));
 	}
@@ -229,8 +239,7 @@ public class ReplayMP4VideoSource  {
 		
 		String dirname  = fh.getCurrentPath();
 		String filename = fh.getName();
-		
-		System.out.println(dirname +" //// "+filename);
+
 		
 		if(dirname==null)
 			return null;
