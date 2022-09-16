@@ -549,6 +549,92 @@
 			<Group>Local Position</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<!-- Setpoints -->
+	
+	<KeyFigure desc="Man.SP.X" uom="" mask="auto" key="SPMANX">
+		<ULogSource field="manual_control_setpoint_0.x"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Man.SP.Y" uom="" mask="auto" key="SPMANY">
+		<ULogSource field="manual_control_setpoint_0.y"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Man.SP.Z" uom="" mask="auto" key="SPMANZ">
+		<ULogSource field="manual_control_setpoint_0.z"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.X" uom="" mask="auto" key="SPTRAJX">
+		<ULogSource field="trajectory_setpoint_0.position[0]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.Y" uom="" mask="auto" key="SPTRAJY">
+		<ULogSource field="trajectory_setpoint_0.position[1]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.Z" uom="" mask="auto" key="SPTRAJZ">
+		<ULogSource field="trajectory_setpoint_0.position[2]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.VX" uom="" mask="auto" key="SPTRAJVX">
+		<ULogSource field="trajectory_setpoint_0.velocity[0]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.VY" uom="" mask="auto" key="SPTRAJVY">
+		<ULogSource field="trajectory_setpoint_0.velocity[1]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.VZ" uom="" mask="auto" key="SPTRAJVZ">
+		<ULogSource field="trajectory_setpoint_0.velocity[2]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.AX" uom="" mask="auto" key="SPTRAJAX">
+		<ULogSource field="trajectory_setpoint_0.acceleration[0]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.AY" uom="" mask="auto" key="SPTRAJAY">
+		<ULogSource field="trajectory_setpoint_0.acceleration[1]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Traj.SP.AZ" uom="" mask="auto" key="SPTRAJAZ">
+		<ULogSource field="trajectory_setpoint_0.acceleration[2]"></ULogSource>
+		<Groups>
+			<Group>Setpoints</Group>
+		</Groups>
+	</KeyFigure>
 
 
 	<!-- Attitude  -->
