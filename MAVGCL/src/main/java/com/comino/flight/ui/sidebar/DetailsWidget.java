@@ -75,9 +75,10 @@ public class DetailsWidget extends ChartControlPane {
 
 	private final static int SEPHEIGHT = 12;
 	private final static int ROWHEIGHT = 18;
-	private final static String STYLE_OUTOFBOUNDS = "-fx-background-color:#2f606e;";
-	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#D0D0E8;";
-	private final static String STYLE_VALIDDATA = "-fx-background-color:transparent; ";
+	private final static String STYLE_OUTOFBOUNDS       = "-fx-background-color:#2f606e; -fx-accent: #ed3118;";
+	private final static String STYLE_OUTOFBOUNDS_LIGHT = "-fx-background-color:#D0D0E8; -fx-accent: #ed3118;";
+	private final static String STYLE_VALIDDATA         = "-fx-background-color:transparent; -fx-accent: #3d8fa6";
+	private final static String STYLE_VALIDDATA_LIGHT   = "-fx-background-color:transparent; -fx-accent: #0000C0";
 
 	private final static String[] views = { "Flight", "System" };
 
@@ -170,14 +171,19 @@ public class DetailsWidget extends ChartControlPane {
 
 	private int last_view = 0;
 	private final String style_outofbounds;
+	private final String style_valid;
 
 
 	public DetailsWidget() {
 
-		if(MAVPreferences.isLightTheme()) 
+		if(MAVPreferences.isLightTheme()) {
 			style_outofbounds = STYLE_OUTOFBOUNDS_LIGHT;
-		else
+			style_valid       = STYLE_VALIDDATA_LIGHT;
+		}
+		else {
+			style_valid       = STYLE_VALIDDATA;
 			style_outofbounds = STYLE_OUTOFBOUNDS;
+		}
 
 
 		figures = new ArrayList<KeyFigure>();
@@ -315,7 +321,7 @@ public class DetailsWidget extends ChartControlPane {
 				label = new DashLabel(kf.desc1);
 				label.setPrefWidth(130);
 				label.setPrefHeight(19);
-				if (kf.uom.equals("%") || ( kf.uom.isEmpty() && kf.max > 0)) {
+				if (kf.uom.equals("%") || ( kf.uom.isEmpty() && Double.isFinite(kf.range_max))) {
 					tip = new Tooltip();
 					ProgressBar l2 = new ProgressBar();
 					l2.setPrefWidth(105);
@@ -346,7 +352,6 @@ public class DetailsWidget extends ChartControlPane {
 			if (kf != null) {
 				val = model.getValue(kf);
 				if (Double.isNaN(val)) {
-					label.setDashColor(Color.GRAY);
 					if (value instanceof ProgressBar)
 						((ProgressBar) value).setProgress(0);
 					if (value instanceof Label)
@@ -356,27 +361,32 @@ public class DetailsWidget extends ChartControlPane {
 
 				if (kf.min != kf.max) {
 					if ((val < kf.min || val > kf.max) && state.getConnectedProperty().get()) {
-						label.setDashColor(Color.WHITE);
 						p.setStyle(style_outofbounds);
 					} else {
-						label.setDashColor(null);
-						p.setStyle(STYLE_VALIDDATA);
+						p.setStyle(style_valid);
 					}
 				} else {
 					label.setDashColor(null);
-					p.setStyle(STYLE_VALIDDATA);
+					p.setStyle(style_valid);
 				}
 				if (value instanceof Label)
 					((Label) value).setText(kf.getValueString(val));
-				if (value instanceof ProgressBar) {
+				
+				else if (value instanceof ProgressBar) {
+					
 					if (kf.uom.equals("%")) {
 						tip.setText((int) (val * 100) + "%");
 						((ProgressBar) value).setProgress(val);
 					}
-
-					if (kf.uom.isEmpty() && kf.max > 0) {
+					
+					if (kf.uom.isEmpty() && Double.isFinite(kf.range_max)) {
 						tip.setText(String.valueOf(val));
-						((ProgressBar) value).setProgress(val / (kf.max - kf.min));
+						((ProgressBar) value).setProgress(val / (kf.range_max - kf.range_min));
+						if (kf.min != kf.max && (val < kf.min || val > kf.max)) {
+							value.setStyle(style_outofbounds);
+						} else {
+							value.setStyle(style_valid);
+						}
 					}
 				}
 			}

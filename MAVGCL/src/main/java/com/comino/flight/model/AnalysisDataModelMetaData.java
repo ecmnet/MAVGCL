@@ -254,8 +254,8 @@ public class AnalysisDataModelMetaData extends Observable {
 			}
 
 
-			if(node.getNodeName().equalsIgnoreCase("Clip")) {
-				keyfigure.setClipping(
+			if(node.getNodeName().equalsIgnoreCase("Range")) {
+				keyfigure.setRange(
 						Float.parseFloat(node.getAttributes().getNamedItem("min").getTextContent()),
 						Float.parseFloat(node.getAttributes().getNamedItem("max").getTextContent())
 						);

@@ -290,7 +290,8 @@
 		<Groups>
 			<Group>Vibration</Group>
 		</Groups>
-		<Validity min="0" max="3.0"/>
+		<Validity min="0" max="2.5"/>
+		<Range    min="0" max="3.0"/>
 	</KeyFigure>
 	
 	<KeyFigure desc="Vibration (Gyro)" uom="rad/s" mask="#0.00" key="VIBMETG">

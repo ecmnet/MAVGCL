@@ -69,8 +69,8 @@ public class KeyFigureMetaData {
 	public int    hash;
 	public float  min=0;
 	public float  max=0;
-	public double  clip_min = -Double.MAX_VALUE;
-	public double  clip_max =  Double.MAX_VALUE;
+	public double range_min = Double.NaN;
+	public double range_max = Double.NaN;
 
 	private DecimalFormat formatting = null;
 
@@ -125,10 +125,10 @@ public class KeyFigureMetaData {
 		}
 	}
 
-	public void setClipping(float min, float max) {
+	public void setRange(float min, float max) {
 		if(Float.isFinite(min) && Float.isFinite(max)) {
-			this.clip_min = (double)min;
-			this.clip_max = (double)max;
+			this.range_min = (double)min;
+			this.range_max = (double)max;
 		}
 	}
 
@@ -136,7 +136,7 @@ public class KeyFigureMetaData {
 		setSource(type,null,field,class_c,params);
 
 	}
-	
+
 	public int hashCode() {
 		return hash;
 	}
@@ -266,8 +266,10 @@ public class KeyFigureMetaData {
 	}
 
 	private Double checkClipping(double v) {
-		if(v > clip_max) v = Double.NaN;
-		if(v < clip_min) v = Double.NaN;
+		if(Double.isFinite(range_max) && Double.isFinite(range_min)) {
+			if(v > range_max) v = Double.NaN;
+			if(v < range_min) v = Double.NaN;
+		}
 		return v;
 	}
 
