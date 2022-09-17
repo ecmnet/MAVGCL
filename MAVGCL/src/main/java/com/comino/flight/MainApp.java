@@ -534,7 +534,7 @@ public class MainApp extends Application  {
 		
 		state.getLogLoadedProperty().addListener((e,o,n) -> {
 			Platform.runLater(() -> {
-			setupMenuBar();
+			  setupMenuBar();
 			});
 		});
 	}
@@ -692,6 +692,7 @@ public class MainApp extends Application  {
 				} catch (IOException e) { }
 			});
 
+		
 			m_def.setOnAction(event -> {
 				FileHandler.getInstance().openKeyFigureMetaDataDefinition();
 			});
@@ -834,6 +835,7 @@ public class MainApp extends Application  {
 		int li; String d;
 		
 		String s1 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
+		System.out.println(s1);
 		if(s1!=null) {
 			li = s1.lastIndexOf("/")+1;
 			d = s1.substring(0,li-1); d = d.substring(d.lastIndexOf("/")+1, d.length());

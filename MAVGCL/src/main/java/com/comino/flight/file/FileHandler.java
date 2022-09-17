@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
@@ -499,6 +500,7 @@ public class FileHandler {
 			@Override protected Void call() throws Exception {
 
 				DataModel model = control.getCurrentModel();
+				
 
 //				if(control.isSimulation())
 //					return null;
@@ -543,10 +545,12 @@ public class FileHandler {
 					writer.flush();
 					writer.close();
 					
+					state.getLogLoadedProperty().set(true);
+					
 					// Wait for video recording has stopped or timeout of 1 sec
 					int to = 5;
 					while(--to > 0 && state.getMP4RecordingProperty().get())
-					   Thread.sleep(200);
+					   Thread.sleep(100);
 
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {
@@ -555,7 +559,7 @@ public class FileHandler {
 
 				}
 				name = logname+".mgc";
-				state.getLogLoadedProperty().set(true);
+				
 				return null;
 			}
 		}).start();
@@ -688,6 +692,15 @@ public class FileHandler {
 			userPrefs.put(MAVPreferences.LAST_FILE2,s1);
 
 		userPrefs.put(MAVPreferences.LAST_FILE,name);
+		
+		try {
+			userPrefs.sync();
+			userPrefs.flush();
+		} catch (BackingStoreException e) {
+			
+		}
+		
+		System.out.println(name);
 
 	}
 
@@ -696,13 +709,13 @@ public class FileHandler {
 		if(f.exists())
 			f.delete();
 		f.createNewFile();
+		addToLastFile(f.getAbsolutePath());
 		Writer writer = new FileWriter(f);
 		FileData data = new FileData(); data.prepareData(modelService,paramService, currentModel);
 		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 		gson.toJson(data, writer);
 		writer.flush();
 		writer.close();
-		addToLastFile(f.getAbsolutePath());
 	}
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
