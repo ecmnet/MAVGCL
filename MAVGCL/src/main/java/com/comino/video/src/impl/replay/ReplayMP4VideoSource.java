@@ -83,6 +83,9 @@ public class ReplayMP4VideoSource  {
 		if(stream_idx < 0)
 			return null;
 		
+		if(fps == 0)
+			play((long)(time_ms*(float)15/1000_000f));
+		
 		return play((long)(time_ms*(float)fps/1000_000f));
 	}
 	
