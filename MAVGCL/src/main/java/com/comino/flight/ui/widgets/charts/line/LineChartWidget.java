@@ -203,7 +203,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 	private ModeAnnotation            mode;
 
 	private final Line  measure        = new Line();
-	private final Label duration_label = new Label();
 
 	private final List<IChartSyncControl> syncCharts;
 
@@ -304,19 +303,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 		zoom.heightProperty().bind(yAxis.heightProperty());
 
 		final Label zoom_label = new Label();
-		zoom_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #9090D0; -fx-padding:3;");
+		zoom_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #505050; -fx-padding:3;");
 		zoom_label.setVisible(false);
 		chartArea.getChildren().add(zoom_label);
-
-		duration_label.setStyle("-fx-font-size: 6pt;-fx-text-fill: #E0E0D0; -fx-padding:3;");
-		duration_label.setVisible(false);
-		chartArea.getChildren().add(duration_label);
 
 
 		measure.setVisible(false);
 		measure.setStartY(0);
 		measure.setEndY(1000);
-		measure.setStroke(Color.color(0.9,0.6,1.0,0.8));
+		measure.setStroke(Color.color(0.3,0.6,1.0,0.9));
 		chartArea.getChildren().add(measure);
 
 		ContextMenu contextMenu = new ContextMenu();
@@ -364,7 +359,7 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
-			duration_label.setVisible(false);
+			
 		});
 
 
@@ -440,7 +435,6 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			linechart.setCursor(Cursor.DEFAULT);
 			zoom.setVisible(false);
 			zoom_label.setVisible(false);
-			duration_label.setVisible(false);
 			double x0 = xAxis.getValueForDisplay(x-xAxis.getLayoutX()-6).doubleValue() ;
 			double x1 = xAxis.getValueForDisplay(mouseEvent.getX()-xAxis.getLayoutX()-6).doubleValue();
 
@@ -762,25 +756,20 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		if(x1 <= 0 || (type1.hash==0  && type2.hash==0 && type3.hash==0)) {
 			measure.setVisible(false);
-			duration_label.setVisible(false);
 			return;
 		}
 
 		measure.setVisible(true);
-		duration_label.setVisible(true);
 
 		dashboard1.setVal(dataService.getModelList().get(x1).getValue(type1),type1, true);
 		dashboard2.setVal(dataService.getModelList().get(x1).getValue(type2),type2, true);
 		dashboard3.setVal(dataService.getModelList().get(x1).getValue(type3),type3, true);
 
-		duration_label.setLayoutY(xAxis.getLayoutY()-25);
-		duration_label.setText(String.format("%#.2fs", (x1 * dataService.getCollectorInterval_ms()/1000f)));
-		duration_label.setLayoutX(mousex-xAxis.getLayoutX());
-
-
 		measure.setStartX(mousex-chartArea.getLayoutX()-7);
 		measure.setEndX(mousex-chartArea.getLayoutX()-7);
-		linechart.getPlotArea().requestLayout();
+		Platform.runLater(() -> {
+			linechart.getPlotArea().requestLayout();
+		});
 
 	}
 
