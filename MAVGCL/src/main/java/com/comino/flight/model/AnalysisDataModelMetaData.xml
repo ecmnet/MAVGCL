@@ -1224,7 +1224,7 @@
 		<Groups>
 			<Group>Raw data</Group>
 		</Groups>
-		<Validity min="6"/>
+		<Validity min="6" max="99"/>
 	</KeyFigure>
 
 	<KeyFigure desc="Abs.Pressure" uom="hPa" mask="#0" key="ABSPRES">
@@ -1309,7 +1309,7 @@
 		<Groups>
 			<Group>GPS</Group>
 		</Groups>
-		<Validity min="6"/>
+		<Validity min="6" max="99"/>
 	</KeyFigure>
 
 	<KeyFigure desc="GPS HDOP" uom="m" mask="#0.0" key="RGPSHDOP">
