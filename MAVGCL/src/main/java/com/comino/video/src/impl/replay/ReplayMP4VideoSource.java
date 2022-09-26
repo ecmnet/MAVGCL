@@ -227,8 +227,8 @@ public class ReplayMP4VideoSource  {
 					);
 
 			buffer.get(frame_buffer.getData());
-			ctx.drawString("Replay:",12,45);
-			ctx.drawRect(8,35,37,13);
+			ctx.drawString("Replay:",codec_ctx.width()-40,45);
+			ctx.drawRect(codec_ctx.width()-44,35,37,13);
 			image = SwingFXUtils.toFXImage(frame, null);
 			av_packet_unref(pkt);
 			return image;
