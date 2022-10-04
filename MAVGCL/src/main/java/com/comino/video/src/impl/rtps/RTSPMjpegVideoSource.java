@@ -14,6 +14,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.rtps.RTPpacket;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
@@ -75,13 +78,16 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	int statExpRtpNb;           //Expected Sequence number of RTP messages within the session
 	int statHighSeqNb;          //Highest sequence number received in session
 
+
+	private final DataModel model;
+
 	//private FrameSynchronizer fsynch;
 
 	private final static String CRLF = "\r\n";
 
-	public RTSPMjpegVideoSource(URI uri, AnalysisDataModel model) {
+	public RTSPMjpegVideoSource(URI uri, DataModel model) {
 
-		ImageIO.setUseCache(false);
+		this.model = model;
 		
 		//create the frame synchronizer
 		//	fsynch = new FrameSynchronizer(100);
@@ -146,19 +152,19 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	@Override
 	public void start() {
 
-		if(isRunning)
+		if(isRunning || !model.sys.isStatus(Status.MSP_CONNECTED))
 			return;
 
 		try {
 
 			RTSPsocket = new Socket(ServerIPAddr, ServerPort);
-			RTSPsocket.setSoTimeout(200);
+			RTSPsocket.setSoTimeout(400);
 
 			try {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 				RTPsocket.setReceiveBufferSize(1024*1024);
-				RTPsocket.setSoTimeout(200);
+				RTPsocket.setSoTimeout(400);
 			
 			}
 			catch (SocketException se) {
@@ -223,8 +229,10 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					
 					//get the payload bitstream from the RTPpacket object
 					payload_length = rtp_packet.getpayload_length();
+					
 					if(payload_length < 1)
 						continue;
+					
 					rtp_packet.getpayload(payload);
 
 					statExpRtpNb++;
@@ -260,7 +268,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 //					isRunning = false;
 				}
 				catch (Exception ioe) {	
-					ioe.printStackTrace();
+//					ioe.printStackTrace();
 //					System.err.println(ioe.getLocalizedMessage());
 				}
 			}
@@ -292,6 +300,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					RTSPid = tokens.nextToken();
 				}
 			}
+		} catch(SocketTimeoutException t) {
+			System.out.println("timeout");
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

@@ -142,6 +142,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 				}
 				else  {
+					if(replay_video.isOpen())
+						replay_video.close();
 					if(!state.getConnectedProperty().get() || !connect())
 						return;
 					if(source!=null) {

@@ -169,6 +169,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			AnalysisModelService.getInstance().clearModelList();
 			FileHandler.getInstance().clear();
 			state.getLogLoadedProperty().set(false);
+			state.getReplayingProperty().set(false);
 
 
 			if(!state.getConnectedProperty().get())

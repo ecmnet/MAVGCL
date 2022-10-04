@@ -141,6 +141,7 @@ public class ReplayMP4VideoSource  {
 	public boolean open() {
 		
 		stream_idx = -1;
+		
 
 		String vf = getVideoFileName();
 		if(vf == null)
@@ -197,7 +198,7 @@ public class ReplayMP4VideoSource  {
 
 		frame = new BufferedImage(codec_ctx.width(), codec_ctx.height(), BufferedImage.TYPE_3BYTE_BGR);
 		ctx   = frame.getGraphics();
-		ctx.setFont(new Font("SansSerif", Font.PLAIN, 9));
+		ctx.setFont(new Font("PT SANS", Font.BOLD, 10));
 		frame_buffer = (DataBufferByte)frame.getRaster().getDataBuffer();
 		
 		is_opened = true;
@@ -227,8 +228,8 @@ public class ReplayMP4VideoSource  {
 					);
 
 			buffer.get(frame_buffer.getData());
-			ctx.drawString("Replay:",codec_ctx.width()-40,45);
-			ctx.drawRect(codec_ctx.width()-44,35,37,13);
+			ctx.drawString("REPLAY",codec_ctx.width()-50,51);
+			ctx.drawRect(codec_ctx.width()-54,40,40,13);
 			image = SwingFXUtils.toFXImage(frame, null);
 			av_packet_unref(pkt);
 			return image;
@@ -246,6 +247,7 @@ public class ReplayMP4VideoSource  {
 		
 		if(dirname==null)
 			return null;
+		
 		File dir = new File(fh.getCurrentPath());
 		
 		File[] videos = dir.listFiles(new FilenameFilter() {
@@ -256,7 +258,7 @@ public class ReplayMP4VideoSource  {
 			}
 		});
 		
-		if(videos == null || videos.length < 1 || videos[0].length() < 1000) {
+		if(videos == null || videos.length < 1 || videos[0].length() < 100) {
 			System.out.println("No video found");
 			return null;
 		}
