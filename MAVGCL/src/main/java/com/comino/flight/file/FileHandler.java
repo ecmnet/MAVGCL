@@ -545,10 +545,8 @@ public class FileHandler {
 					writer.flush();
 					writer.close();
 					
-					state.getLogLoadedProperty().set(true);
-					
-					// Wait for video recording has stopped or timeout of 1 sec
-					int to = 5;
+					// Wait for video recording has stopped or timeout of 2 sec
+					int to = 20;
 					while(--to > 0 && state.getMP4RecordingProperty().get())
 					   Thread.sleep(100);
 
@@ -559,7 +557,7 @@ public class FileHandler {
 
 				}
 				name = logname+".mgc";
-				
+				state.getLogLoadedProperty().set(true);
 				return null;
 			}
 		}).start();

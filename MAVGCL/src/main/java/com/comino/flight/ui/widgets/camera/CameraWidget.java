@@ -256,8 +256,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					Platform.runLater(() -> {
 						image.setImage(replay_video.playAt(model.getCurrent().tms));
 					});
-				} else
+				} 
+				else {
 					widget.getVideoVisibility().setValue(false);
+				}
 
 			} else {
 				System.out.println("Replay camera closed. Returning to current streams");
@@ -340,7 +342,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	protected void perform_action() {
-		widget.getVideoVisibility().setValue(false);
+	    widget.getVideoVisibility().setValue(false);
 	}       
 
 	private void stopStreaming() {
@@ -372,7 +374,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				source = new MJpegVideoSource(url,model.getCurrent());
 			} 
 			else if(url.toString().startsWith("rtsp")) {
-				source = new RTSPMjpegVideoSource(url,AnalysisModelService.getInstance().getCurrent());
+				source = new RTSPMjpegVideoSource(url,control.getCurrentModel());
 			}
 			else {
 				System.out.println("Streaming protocol not supported");

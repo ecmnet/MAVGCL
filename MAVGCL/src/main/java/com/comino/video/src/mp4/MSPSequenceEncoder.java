@@ -79,7 +79,8 @@ public class MSPSequenceEncoder {
 	private int rate;
 	private boolean is_encoding = false;
 
-	private byte[] buf = new byte[640*480*4];
+//	private final  byte[] buf = new byte[640*480*4];
+	private final  File   out;
 
 	public MSPSequenceEncoder(File out) throws IOException {
 
@@ -87,6 +88,7 @@ public class MSPSequenceEncoder {
 		
 		is_encoding = true;
 
+		this.out = out;
 		this.ch = NIOUtils.writableFileChannel(out);
 
 		// Muxer that will store the encoded frames
@@ -136,7 +138,6 @@ public class MSPSequenceEncoder {
 		try {
 			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1, frameNo, true, null, frameNo, 0));
 		} catch(IllegalStateException e) {
-			e.printStackTrace();
 			return;
 		}
 
@@ -155,7 +156,11 @@ public class MSPSequenceEncoder {
 		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
 			
 		muxer.writeHeader();
-		NIOUtils.closeQuietly(ch);
+		
+		ch.close();
+		//NIOUtils.closeQuietly(ch);
+	
+		
 		
 	}
 
