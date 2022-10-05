@@ -366,8 +366,8 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 
 		linechart.setOnMouseMoved(mouseEvent -> {
 
-			if(isScrolling.get())
-				return;
+//			if(isScrolling.get())
+//				return;
 
 			mouseEvent.consume();
 

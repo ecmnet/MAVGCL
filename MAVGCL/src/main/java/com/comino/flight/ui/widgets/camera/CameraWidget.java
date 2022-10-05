@@ -232,7 +232,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				Platform.runLater(() -> {
 					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
 					if(x1 < 0) x1 = 0;
-					image.setImage(replay_video.playAt((int)(model.getModelList().get(x1).tms)));
+					if(model.getModelList().size()>0)
+					  image.setImage(replay_video.playAt((int)(model.getModelList().get(x1).tms)));
 				});
 			}
 		});
