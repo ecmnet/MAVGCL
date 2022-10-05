@@ -232,7 +232,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				Platform.runLater(() -> {
 					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
 					if(x1 < 0) x1 = 0;
-					image.setImage(replay_video.playAt(model.getModelList().get(x1).tms));
+					image.setImage(replay_video.playAt((int)(model.getModelList().get(x1).tms)));
 				});
 			}
 		});
@@ -321,7 +321,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt(model.getCurrent().tms);	
+			final Image img = replay_video.playAt((int)(model.getCurrent().tms));	
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});

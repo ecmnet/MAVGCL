@@ -97,8 +97,6 @@ public class ReplayMP4VideoSource  {
 		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
 			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den() ;	
 		
-		// Idea: get rate from data service
-		
 		return play((long)(time_ms*rate/1000_000f));
 	}
 

@@ -75,6 +75,7 @@ public class MSPSequenceEncoder {
 	private FramesMP4MuxerTrack outTrack;
 	private ByteBuffer _out;
 	private int frameNo;
+	private long last = 0;
 	private MP4Muxer muxer;
 	private int rate;
 	private boolean is_encoding = false;
@@ -98,7 +99,7 @@ public class MSPSequenceEncoder {
 		outTrack = muxer.addTrack(TrackType.VIDEO, 15);
 
 		// Allocate a buffer big enough to hold output frames
-		_out = ByteBuffer.allocate(640*480 * 25);
+		_out = ByteBuffer.allocate(640*480*25);
 
 		// Create an instance of encoder
 		encoder = new H264Encoder();
@@ -113,7 +114,7 @@ public class MSPSequenceEncoder {
 
 	}
 
-	public void encodeNativeFrame(Picture pic, float fps, long tms) throws IOException {
+	public void encodeNativeFrame(Picture pic, float fps, long tms, long tms_start) throws IOException {
 		if (toEncode == null) {
 			toEncode = Picture.create(pic.getWidth(), pic.getHeight(), encoder.getSupportedColorSpaces()[0]);
 		}
@@ -135,11 +136,13 @@ public class MSPSequenceEncoder {
 		// Put timestamp in
 
 		// Add packet to video track
+		final long time = tms - tms_start;
 		try {
-			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1, frameNo, true, null, frameNo, 0));
+			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1 ,frameNo, true, null, time, 0));
 		} catch(IllegalStateException e) {
 			return;
 		}
+		
 
 		frameNo++;
 	}
@@ -164,9 +167,9 @@ public class MSPSequenceEncoder {
 		
 	}
 
-	public void encodeImage(BufferedImage bi, float fps, long tms) throws IOException {
+	public void encodeImage(BufferedImage bi, float fps, long tms, long tms_start) throws IOException {
 		if(is_encoding)
-		  encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms);
+		  encodeNativeFrame(AWTUtil.fromBufferedImage(bi), fps, tms, tms_start);
 	}
 
 }

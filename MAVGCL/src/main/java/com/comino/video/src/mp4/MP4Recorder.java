@@ -52,6 +52,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 
 	private BufferedImage bimg = null;
 	private final String path;
+	private long tms_start = 0;
 
 
 	public MP4Recorder(String path) {
@@ -61,6 +62,7 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 	public void start() {
 		try {
 			encoder = new MSPSequenceEncoder(new File(path+"/video.mp4"));
+			tms_start = 0;
 			state.getMP4RecordingProperty().set(true);
 			System.out.println("MP4 recording started - MP4");
 		}  catch (Exception e1) { 
@@ -85,7 +87,9 @@ public class MP4Recorder implements IMWStreamVideoProcessListener {
 	public void process(Image image,  float fps, long tms) throws Exception {
 		if(state.getMP4RecordingProperty().get() && image!=null && encoder!=null) {
 			bimg = SwingFXUtils.fromFXImage(image, bimg);
-			encoder.encodeImage(bimg, fps, tms);
+			if(tms_start == 0)
+				tms_start = tms;
+			encoder.encodeImage(bimg, fps, tms, tms_start);
 		}
 	}
 

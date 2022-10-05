@@ -51,9 +51,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	private boolean isRunning;
 	private float   fps;
 	private long    tms;
-	private float   fps_tms;
-	private float   fps_tms_old;
-
+  
 	private static BufferedReader RTSPBufferedReader;
 	private static BufferedWriter RTSPBufferedWriter;
 
@@ -256,7 +254,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					if(next!=null) {
 						listeners.forEach((listener) -> {
 							try {
-								listener.process(next, fps, tms);
+								listener.process(next, fps, model.sys.t_boot_ms);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else
