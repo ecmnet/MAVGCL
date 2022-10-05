@@ -239,26 +239,26 @@ public class ChartControlWidget extends ChartControlPane  {
 				scroll.setDisable(false);
 		});
 
-		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent click) {
-				if(state.getReplayingProperty().get())
-					return;
-				if (click.getClickCount() == 2) {
-					scroll.setValue(scroll.getValue() == 1 ? 0 : 1);
-					final float v = (float)scroll.getValue();	
-					if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
-						modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
-						charts.entrySet().forEach((chart) -> {
-							if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
-								chart.getValue().getScrollProperty().set(1f-v);
-							}
-						});
-					}
-				}
-
-			}
-		});
+//		scroll.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//			@Override
+//			public void handle(MouseEvent click) {
+//				if(state.getReplayingProperty().get())
+//					return;
+//				if (click.getClickCount() == 2) {
+//					scroll.setValue(scroll.getValue() == 1 ? 0 : 1);
+//					final float v = (float)scroll.getValue();	
+//					if(!modelService.isCollecting() && !modelService.isReplaying()  && !state.getConnectedProperty().get() ) {
+//						modelService.setCurrent(modelService.calculateIndexByFactor(1f-v)+1);
+//						charts.entrySet().forEach((chart) -> {
+//							if(chart.getValue().getScrollProperty()!=null && chart.getValue().isVisible()) {
+//								chart.getValue().getScrollProperty().set(1f-v);
+//							}
+//						});
+//					}
+//				}
+//
+//			}
+//		});
 
 		save.setOnAction((ActionEvent event)-> {
 			saveKeyFigureSelection();
