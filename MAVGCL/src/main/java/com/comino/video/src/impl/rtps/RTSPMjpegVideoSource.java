@@ -244,9 +244,11 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 					//get an Image object from the payload bitstream
 					//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
-				//	fps = (fps * 0.9f + (1000 / (System.currentTimeMillis() - tms)) * 0.1f);
-					fps = 1000f / (System.currentTimeMillis() - tms);
-					tms = System.currentTimeMillis();
+				
+					fps = 1000f / (rtp_packet.TimeStamp - tms);
+					tms = rtp_packet.TimeStamp;
+					
+					System.out.println(fps);
 					
 					if(proxy_enabled)
 					  proxy.process(payload, payload_length);
