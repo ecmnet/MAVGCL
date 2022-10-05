@@ -254,7 +254,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					if(next!=null) {
 						listeners.forEach((listener) -> {
 							try {
-								listener.process(next, fps, model.sys.t_boot_ms);
+								listener.process(next, fps, rtp_packet.TimeStamp);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else
