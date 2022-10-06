@@ -147,11 +147,12 @@ public class CommanderWidget extends ChartControlPane  {
 
 		land_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
+		// Note: Do opportunistic precision landing 
 		land_command.setOnAction((ActionEvent event)-> {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
 				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
 					logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
-			}, 0, 0, 0, Float.NaN );
+			}, 0, 1, 0, Float.NaN );
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
