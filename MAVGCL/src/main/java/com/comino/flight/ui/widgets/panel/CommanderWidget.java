@@ -40,6 +40,7 @@ import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
+import org.mavlink.messages.PRECISION_LAND_MODE;
 import org.mavlink.messages.lquac.msg_manual_control;
 import org.mavlink.messages.lquac.msg_msp_command;
 
@@ -152,7 +153,7 @@ public class CommanderWidget extends ChartControlPane  {
 			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
 				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
 					logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
-			}, 0, 1, 0, Float.NaN );
+			}, 0, PRECISION_LAND_MODE.PRECISION_LAND_MODE_OPPORTUNISTIC, 0, Float.NaN );
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
