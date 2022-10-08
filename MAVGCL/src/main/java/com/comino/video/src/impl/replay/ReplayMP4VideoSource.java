@@ -97,7 +97,7 @@ public class ReplayMP4VideoSource  {
 		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
 			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den() ;	
 		
-		return play((long)(time_ms*rate/1000_000f));
+		return play((long)(time_ms*14.9/1000_000f));
 	}
 
 	public Image playAt(float percentage) {
