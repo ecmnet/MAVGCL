@@ -205,6 +205,12 @@ public class Vibration extends VBox implements IChartControl  {
 	public void setup(IMAVController control) {
  
 		state = StateProperties.getInstance();
+		
+		this.disabledProperty().addListener((v,o,n) -> {
+			if(!n.booleanValue()) {
+				updateGraph();
+			}
+		});
 
 		state.getRecordingProperty().addListener((p,o,n) -> {
 			if(n.intValue()>0)
