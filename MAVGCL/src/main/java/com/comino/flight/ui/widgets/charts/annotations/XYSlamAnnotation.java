@@ -95,7 +95,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		lock_rotate = Rotate.rotate(0, 0, 0);
 		lock = new Polyline(-6,-3,6,-3,0,12,-6,-3);
 		lock.getTransforms().add(lock_rotate);
-		lock.setStroke(Color.rgb(60, 220, 230, 0.8));
+		lock.setStroke(Color.DARKBLUE);
 		lock.setVisible(false);
 
 		vhc_rotate = Rotate.rotate(0, 0, 0);
