@@ -74,11 +74,11 @@ public class StatusWidget extends ChartControlPane  {
 	public void setup(IMAVController control) {
 		super.setup(control);
 
-		
+
 		this.disableProperty().bind(state.getConnectedProperty().not());
 
 		state.getConnectedProperty().addListener((v,o,n) -> refresh());
-			
+
 		control.getStatusManager().addListener(Status.MSP_ARMED, (n) -> {
 			Platform.runLater(() -> {
 				armed.set(n.isStatus(Status.MSP_ARMED));
@@ -123,6 +123,8 @@ public class StatusWidget extends ChartControlPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
 					mission.setMode(DashLabelLED.MODE_ON);
 				else
@@ -136,6 +138,8 @@ public class StatusWidget extends ChartControlPane  {
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
 					mission.setMode(DashLabelLED.MODE_ON);
 				else
@@ -148,6 +152,23 @@ public class StatusWidget extends ChartControlPane  {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
+					mission.setMode(DashLabelLED.MODE_ON);
+				else
+					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+			});
+		});
+
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_PRECLAND,  (n) -> {
+			Platform.runLater(() -> {
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
+					mission.setMode(DashLabelLED.MODE_BLINK);
+				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
 					mission.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
 					mission.setMode(DashLabelLED.MODE_ON);
@@ -171,29 +192,29 @@ public class StatusWidget extends ChartControlPane  {
 					offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 			});
 		});
-		
-	
-        refresh();
+
+
+		refresh();
 
 
 	}
-	
+
 	private void refresh() {
-		
+
 		final Status status = control.getCurrentModel().sys;
-		
+
 		Platform.runLater(() ->  {
 			armed.set(status.isStatus(Status.MSP_ARMED));
-			
+
 			landed.set(status.isStatus(Status.MSP_LANDED));
 			althold.set(status.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 			poshold.set(status.nav_state == Status.NAVIGATION_STATE_POSCTL);
-			
+
 			if(status.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
 				offboard.setMode(DashLabelLED.MODE_BLINK);
 			else
 				offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
-			
+
 			if(status.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !status.isStatus(Status.MSP_LANDED))
 				mission.setMode(DashLabelLED.MODE_BLINK);
 			else
