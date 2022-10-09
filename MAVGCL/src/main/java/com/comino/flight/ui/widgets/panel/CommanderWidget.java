@@ -52,6 +52,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavcom.status.StatusManager;
 import com.comino.mavutils.MSPMathUtils;
 
@@ -148,12 +149,22 @@ public class CommanderWidget extends ChartControlPane  {
 
 		land_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
-		// Note: Do opportunistic precision landing 
+
+
 		land_command.setOnAction((ActionEvent event)-> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
-				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
-					logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
-			}, 0, PRECISION_LAND_MODE.PRECISION_LAND_MODE_OPPORTUNISTIC, 0, Float.NaN );
+			
+			if(!model.vision.isStatus(Vision.FIDUCIAL_LOCKED)) {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
+					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
+						logger.writeLocalMsg("[mgc] PX4 landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				}, 0, 0, 0, Float.NaN );
+			} else {
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE, (cmd, result) -> {
+					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
+						logger.writeLocalMsg("[mgc] PX4 Prec.Landing rejected ("+result+")",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				},	MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED | MAV_MODE_FLAG.MAV_MODE_FLAG_SAFETY_ARMED,
+						MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_PRECLAND );
+			}
 		});
 
 		hold_command.disableProperty().bind(state.getArmedProperty().not()
@@ -174,7 +185,7 @@ public class CommanderWidget extends ChartControlPane  {
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
 				if(state.getMSPProperty().get()) {
-					
+
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 					msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
