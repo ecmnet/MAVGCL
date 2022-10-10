@@ -154,9 +154,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		
 		if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
 			
-//			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")+model.getValue("LPOSY")));
-//			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")+model.getValue("LPOSX")));
-			
 			lock_rotate.angleProperty().set(180+model.getValue("PRECLOCKW"));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));

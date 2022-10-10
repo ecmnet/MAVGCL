@@ -46,6 +46,7 @@ import com.comino.flight.ui.widgets.view3D.objects.Trajectory;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.segment.Vision;
 
 import georegression.struct.point.Point3D_F64;
 import javafx.animation.AnimationTimer;
@@ -78,6 +79,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private Xform 			world 		= new Xform();
 
 	private Box             ground;
+	private Box             landing_target;
 
 	//	private MapGroup 		blocks		= null;
 	private Map3DGroup      blocks      = null;
@@ -132,10 +134,15 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
+		
+		landing_target = new Box(100,0,100);
+		PhongMaterial landing_target_material = new PhongMaterial();
+		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
+		landing_target.setMaterial(landing_target_material);
 
 		vehicle = new VehicleModel(VEHICLE_SCALE);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground, vehicle,  target, trajectory, pointLight, ambient,
+		world.getChildren().addAll(ground, landing_target, vehicle,  target, trajectory, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
@@ -248,9 +255,17 @@ public class View3DWidget extends SubScene implements IChartControl {
 							offset = -(float)model.getValue("LPOSZ");
 					} 
 				}
+				
+				if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
+					
+					landing_target.setTranslateX(-model.getValue("PRECLOCKY")*100f);
+					landing_target.setTranslateZ(model.getValue("PRECLOCKX")*100f);		
+					landing_target.setVisible(true);
+					
+				} else
+					landing_target.setVisible(false);
 
-				//				target.updateState(model);
-				//				vehicle.updateState(model,offset);
+				
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
 					if(!vehicle.isVisible())
