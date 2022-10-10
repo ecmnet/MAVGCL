@@ -160,7 +160,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			lock_rotate.angleProperty().set(180+model.getValue("PRECLOCKW"));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
-			lock.setVisible(enable_slam);
+			lock.setVisible(true);
 		} else
 			lock.setVisible(false);
 			
