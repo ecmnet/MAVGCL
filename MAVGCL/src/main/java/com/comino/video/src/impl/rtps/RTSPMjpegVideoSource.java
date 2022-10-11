@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.rtps.RTPpacket;
@@ -77,7 +78,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	int statHighSeqNb;          //Highest sequence number received in session
 
 
-	private final DataModel model;
+	private final AnalysisModelService model;
 
 	//private FrameSynchronizer fsynch;
 
@@ -85,7 +86,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 	public RTSPMjpegVideoSource(URI uri, DataModel model) {
 
-		this.model = model;
+		this.model = AnalysisModelService.getInstance();
 		
 		//create the frame synchronizer
 		//	fsynch = new FrameSynchronizer(100);
@@ -150,7 +151,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	@Override
 	public void start() {
 
-		if(isRunning || !model.sys.isStatus(Status.MSP_CONNECTED))
+		if(isRunning)
 			return;
 
 		try {
@@ -215,6 +216,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 			int seqNb = 0; int payload_length; 
 
 			rcvdp = new DatagramPacket(buf, buf.length);
+			statExpRtpNb = 0;
 
 			while(isRunning) {
 				try {
@@ -245,7 +247,11 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					//get an Image object from the payload bitstream
 					//		fsynch.addFrame(new Image(new ByteArrayInputStream(payload,0,payload_length), 0, 0, false, true), seqNb);
 				
-					fps = 1000f / (rtp_packet.TimeStamp - tms);
+					// Calculate the current average FPS and store it in the datamodel for replay.
+					if(statExpRtpNb > 0) {
+					  fps = ( fps * (statExpRtpNb -1) + 1000_000f / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
+					  model.getCurrent().setValue("VIDEOFPS", fps);
+					}
 					tms = rtp_packet.TimeStamp;
 					
 					if(proxy_enabled)

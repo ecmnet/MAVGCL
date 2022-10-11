@@ -43,6 +43,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
@@ -232,8 +233,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				Platform.runLater(() -> {
 					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
 					if(x1 < 0) x1 = 0;
-					if(model.getModelList().size()>0)
-					  image.setImage(replay_video.playAt((int)(model.getModelList().get(x1).tms)));
+					if(model.getModelList().size()>0) {
+						AnalysisDataModel m = model.getModelList().get(x1);
+					  image.setImage(replay_video.playAt(m.tms,m.getValue("VIDEOFPS")));
+					}
 				});
 			}
 		});
@@ -241,7 +244,8 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		replay.addListener((v, ov, nv) -> {
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
-					image.setImage(replay_video.playAt(model.getModelList().get((int)Math.abs(nv.floatValue())).tms));
+					AnalysisDataModel m = model.getModelList().get((int)Math.abs(nv.floatValue()));
+					image.setImage(replay_video.playAt(m.tms,m.getValue("VIDEOFPS")));
 				});
 			}
 		});
@@ -322,7 +326,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt((int)(model.getCurrent().tms));	
+			final Image img = replay_video.playAt((int)(model.getCurrent().tms),model.getCurrent().getValue("VIDEOFPS"));	
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
@@ -335,7 +339,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt(model.getCurrent().tms);
+			final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().getValue("VIDEOFPS"));
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});

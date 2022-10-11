@@ -83,21 +83,18 @@ public class ReplayMP4VideoSource  {
 		if(stream_idx < 0)
 			return null;
 		
-		if(fps == 0)
-			play((long)(time_ms*(float)15/1000_000f));
+		if(fps == 0 || Double.isNaN(fps))
+			return play((long)(time_ms*(float)15/1000_000f));
 		
 		return play((long)(time_ms*(float)fps/1000_000f));
 	}
 	
 	public Image playAt(long time_ms) {
-
+		
 		if(stream_idx < 0)
 			return null;
 		
-		float rate = (float)fmt_ctx.streams(stream_idx).r_frame_rate().num() / 
-			         (float)fmt_ctx.streams(stream_idx).r_frame_rate().den() ;	
-		
-		return play((long)(time_ms*14.9/1000_000f));
+		return play((long)(time_ms*15/1000_000f));
 	}
 
 	public Image playAt(float percentage) {
@@ -147,6 +144,8 @@ public class ReplayMP4VideoSource  {
 		
 		if(avformat_open_input(fmt_ctx, vf, null, null) < 0)
 			return false;
+		
+		fmt_ctx.fps_probe_size(200);
 		
 		if(avformat_find_stream_info(fmt_ctx, (PointerPointer)null) < 0) {
 			return false;
@@ -205,6 +204,7 @@ public class ReplayMP4VideoSource  {
 	}
 	
 	private Image play(long time) {
+		
 		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
 			return image;
 

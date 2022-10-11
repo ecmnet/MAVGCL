@@ -137,8 +137,9 @@ public class MSPSequenceEncoder {
 
 		// Add packet to video track
 		final long time = tms - tms_start;
+		
 		try {
-			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1 ,frameNo, true, null, time, 0));
+			outTrack.addFrame(new MP4Packet(result, frameNo, (int)(fps), 1 ,frameNo, true, null, time, 0));	
 		} catch(IllegalStateException e) {
 			return;
 		}
