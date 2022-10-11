@@ -99,10 +99,14 @@ public class VehicleModel extends Group {
 	}
 
 	public void show(boolean show) {
-		if(show)
+		if(show && this.getChildren().isEmpty())
 			this.getChildren().addAll(mesh);
-		else
-			this.getChildren().clear();
+		
+		this.setVisible(show);
+//		if(show)
+//			this.getChildren().addAll(mesh);
+//		else
+//			this.getChildren().clear();
 	}
 
 	private void addRotate(Group node, Rotate rotate, double angle) {

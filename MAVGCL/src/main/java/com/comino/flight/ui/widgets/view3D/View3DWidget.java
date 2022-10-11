@@ -125,8 +125,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 		pointLight.setRotate(45);
 		pointLight.setTranslateZ(-800);
 
-
-
 		PhongMaterial northMaterial = new PhongMaterial();
 		northMaterial.setDiffuseColor(Color.RED);
 
@@ -147,6 +145,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		camera = new Camera(this);
 		trajectory.show(true);
+		
+		setPerspective(Camera.OBSERVER_PERSPECTIVE);
 
 	}
 
@@ -202,9 +202,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
-		state.getConnectedProperty().addListener((v,o,n) -> {
-			vehicle.setVisible(n.booleanValue());
-		});
+//		state.getConnectedProperty().addListener((v,o,n) -> {
+//			vehicle.setVisible(n.booleanValue());
+//		});
 
 		state.getArmedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
@@ -227,9 +227,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 				
 				if(isDisabled())
 					return;
-
-
-				if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
+				
+				if(takeoff!=null && state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
 
 					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
 						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
