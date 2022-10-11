@@ -156,9 +156,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.blocks   = new Map3DGroup(world,control.getCurrentModel());
 
-		//		this.map   = new Map3DGroup(world,control.getCurrentModel());
-
-
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
 				if(!Double.isNaN(model.getValue("ALTTR"))) {
