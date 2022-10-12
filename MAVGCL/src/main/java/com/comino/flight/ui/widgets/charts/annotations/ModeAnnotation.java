@@ -99,7 +99,7 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("olivedrab","dodgerblue","green","mediumvioletred","orangered","darkgoldenrod","gray");
+		setModeColors("gold","dodgerblue","green","mediumorchid","crimson","chocolate","gray");
 		this.legend.setPadding(new Insets(1,1,1,20));
 		this.legend.setSpacing(5);
 	}
