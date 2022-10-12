@@ -48,7 +48,8 @@ public class AnalysisDataModel implements Cloneable {
 	public LogMessage       msg  = null;
 	public Status         status = null;
 
-	public float    dt_sec = 0;
+	public float          dt_sec = 0;
+	public float        sync_fps = 0;
 
 	private volatile Map<Integer,Double> data = null;
 	private static List<Long> grid = new ArrayList<Long>();
@@ -68,7 +69,8 @@ public class AnalysisDataModel implements Cloneable {
 
 	public Object clone() {
 		AnalysisDataModel d = new AnalysisDataModel(data, grid);
-		d.tms = tms;
+		d.tms       = tms;
+		d.sync_fps  = sync_fps;
 		if(msg!=null)
 			d.msg = msg.clone();
 		if(status!=null)
@@ -79,16 +81,17 @@ public class AnalysisDataModel implements Cloneable {
 	public void set(AnalysisDataModel model) {
 		this.data.clear();
 		this.data.putAll(model.data);
-		this.dt_sec = model.dt_sec;
-		this.tms    = model.tms;
-		//		this.grid.clear();
-		//		this.grid.addAll(model.grid);
+
+		this.dt_sec   = model.dt_sec;
+		this.tms      = model.tms;
+		this.sync_fps = model.sync_fps;
 	}
 
 	public void clear()  {
 		data.clear();
 		grid.clear();
 		tms = 0;
+		sync_fps = 0;
 		msg = null;
 		status = null;
 	}
@@ -133,40 +136,27 @@ public class AnalysisDataModel implements Cloneable {
 		});
 	}
 
-	private Double val = null;
-
-
-
 	public  void  setValues(int type, Object source, AnalysisDataModelMetaData md ) {
 
-
 		md.getKeyFigureMap().forEach((i,e) -> {
+			Double val = Double.NaN;
+			try {
+				if(!e.isVirtual) {
+					if(!e.hasSource(type))
+						return;
 
-				val = Double.NaN;
-				try {
-					if(!e.isVirtual) {
+					if( type == KeyFigureMetaData.MSP_SOURCE)
+						val = e.getValueFromMSPModel((DataModel)source);
+					if( type == KeyFigureMetaData.ULG_SOURCE)
+						val = e.getValueFromULogModel((Map<String,Object>)source);
 
-						if(!e.hasSource(type))
-							return;
-
-
-						if( type == KeyFigureMetaData.MSP_SOURCE)
-							val = e.getValueFromMSPModel((DataModel)source);
-						//						if( type == KeyFigureMetaData.PX4_SOURCE)
-						//							val = e.getValueFromPX4Model((Map<String,Object>)source);
-						if( type == KeyFigureMetaData.ULG_SOURCE)
-							val = e.getValueFromULogModel((Map<String,Object>)source);
-						//						if( type == KeyFigureMetaData.MAV_SOURCE)
-						//							val = e.getValueFromMAVLinkMessage(source);
-
-						if(val!=null)
-							data.put(e.hash,val);
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					//				data.put(e.hash, Double.NaN);
+					if(val!=null)
+						data.put(e.hash,val);
 				}
-	
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				//				data.put(e.hash, Double.NaN);
+			}
 		});
 
 	}

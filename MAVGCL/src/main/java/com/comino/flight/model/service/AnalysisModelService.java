@@ -222,6 +222,10 @@ public class AnalysisModelService  {
 	public AnalysisDataModel getCurrent() {
 		return current;
 	}
+	
+	public int getCurrentIndex() {
+		return modelList.indexOf(current);
+	}
 
 	public AnalysisDataModel getLast(float f) {
 		if(mode==STOPPED && modelList.size()>0)
@@ -236,16 +240,18 @@ public class AnalysisModelService  {
 	}
 
 	public void setCurrent(int index) {
+		
 		if(modelList.size() > index) {
 			if(index < 0) {
 				return;
 			}
-			
 			current.set(modelList.get(index));
 			
-		} else {
+		} else if(modelList.size() == 0)
+			return;
+		else 
 			current.set(modelList.get(modelList.size()-1));
-		}
+		
 	}
 
 	public void setCurrent(double time) {

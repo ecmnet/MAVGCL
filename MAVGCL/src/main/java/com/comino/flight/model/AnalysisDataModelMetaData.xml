@@ -1692,6 +1692,13 @@
 		</Groups>
   </KeyFigure>
   
+  <KeyFigure desc="PrecLock.Z" uom="m" mask="#0.00" key="PRECLOCKZ">
+		<MSPSource class="vision" field="pz"/>
+		<Groups>
+			<Group>Vision</Group>
+		</Groups>
+  </KeyFigure>
+  
    <KeyFigure desc="PrecLock.Orientation" uom="°" mask="#0.0" key="PRECLOCKW">
 		<MSPSource class="vision" field="pw">
 		  <Converter class="Rad2DegreeConverter" expression="PRECLOCKW" />
