@@ -37,6 +37,7 @@ package com.comino.video.src.mp4;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 

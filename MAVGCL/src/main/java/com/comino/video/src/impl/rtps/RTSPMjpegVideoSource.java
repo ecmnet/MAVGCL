@@ -249,10 +249,10 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				
 					// Calculate the current average FPS and store it in the datamodel for replay.
 					if(statExpRtpNb > 0) {
-					  fps = ( fps * (statExpRtpNb -1) + 1000_000f / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
-					  model.getCurrent().setValue("VIDEOFPS", fps);
+					  fps = ( fps * (statExpRtpNb - 1) + 1000_000f / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
 					}
 					tms = rtp_packet.TimeStamp;
+     				model.getCurrent().sync_fps = fps;
 					
 					if(proxy_enabled)
 					  proxy.process(payload, payload_length);
@@ -260,7 +260,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					if(next!=null) {
 						listeners.forEach((listener) -> {
 							try {
-								listener.process(next, fps, rtp_packet.TimeStamp);
+								listener.process(next, fps, rtp_packet.TimeStamp/1000);
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else

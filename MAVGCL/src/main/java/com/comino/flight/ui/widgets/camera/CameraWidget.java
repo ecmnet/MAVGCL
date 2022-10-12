@@ -52,8 +52,6 @@ import com.comino.flight.ui.widgets.panel.ControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
-import com.comino.mavcom.model.segment.Status;
-import com.comino.mavutils.legacy.ExecutorService;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.replay.ReplayMP4VideoSource;
@@ -69,10 +67,6 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.util.Duration;
 
 public class CameraWidget extends ChartControlPane implements IChartControl {
 
@@ -93,8 +87,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private MP4Recorder     recorder = null;
 	private boolean         isConnected = false;
-	private long            prev;
-
+	
 	private MSPLogger       logger = null;
 	private Preferences     userPrefs;
 
@@ -143,13 +136,15 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 				}
 				else  {
+					
 					if(replay_video.isOpen())
 						replay_video.close();
 					if(!state.getConnectedProperty().get() || !connect())
 						return;
 					if(source!=null) {
 						image.setVisible(true);
-						source.start();
+						if(!source.isRunning())
+						  source.start();
 					}
 				}
 			else {
@@ -235,7 +230,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					if(x1 < 0) x1 = 0;
 					if(model.getModelList().size()>0) {
 						AnalysisDataModel m = model.getModelList().get(x1);
-					  image.setImage(replay_video.playAt(m.tms,m.getValue("VIDEOFPS")));
+					  image.setImage(replay_video.playAt(m.tms,m.sync_fps));
 					}
 				});
 			}
@@ -245,7 +240,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(replay_video.isOpen() && image.isVisible()) {
 				Platform.runLater(() -> {
 					AnalysisDataModel m = model.getModelList().get((int)Math.abs(nv.floatValue()));
-					image.setImage(replay_video.playAt(m.tms,m.getValue("VIDEOFPS")));
+					image.setImage(replay_video.playAt(m.tms,m.sync_fps));
 				});
 			}
 		});
@@ -261,7 +256,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					if(widget.isVisible())
 					  image.setVisible(true);
 					Platform.runLater(() -> {
-						image.setImage(replay_video.playAt(model.getCurrent().tms));
+						image.setImage(replay_video.playAt(model.getCurrent().tms,model.getCurrent().sync_fps));
 					});
 				} 
 				else {
@@ -326,7 +321,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt((int)(model.getCurrent().tms),model.getCurrent().getValue("VIDEOFPS"));	
+			final Image img = replay_video.playAt((int)(model.getCurrent().tms),model.getCurrent().sync_fps);	
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
@@ -339,7 +334,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-			final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().getValue("VIDEOFPS"));
+			final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().sync_fps);
 			Platform.runLater(() -> {
 				image.setImage(img);
 			});
@@ -422,7 +417,14 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
+		
+		if(!replay_video.isOpen())
+			return;
 
+		final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().sync_fps);
+		Platform.runLater(() -> {
+			image.setImage(img);
+		});
 	}
 
 	@Override

@@ -78,13 +78,13 @@ public class ReplayMP4VideoSource  {
 
 	}
 	
-	public Image playAt(long time_ms, double fps) {
+	public Image playAt(long time_ms, float fps) {
 
 		if(stream_idx < 0)
 			return null;
 		
 		if(fps == 0 || Double.isNaN(fps))
-			return play((long)(time_ms*(float)15/1000_000f));
+			return play((long)(time_ms*15f/1000_000f));
 		
 		return play((long)(time_ms*(float)fps/1000_000f));
 	}
@@ -144,8 +144,6 @@ public class ReplayMP4VideoSource  {
 		
 		if(avformat_open_input(fmt_ctx, vf, null, null) < 0)
 			return false;
-		
-		fmt_ctx.fps_probe_size(200);
 		
 		if(avformat_find_stream_info(fmt_ctx, (PointerPointer)null) < 0) {
 			return false;
