@@ -46,6 +46,7 @@ import com.emxsys.chart.extension.XYAnnotation;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
@@ -69,7 +70,7 @@ public class ModeAnnotation implements XYAnnotation {
 
 
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Velocity", "Error", "GPS.Error","Other"};
-	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard","Other" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard", "Land", "PrecLand","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix"," GPS3D","DGPS","RTK float","RTK fixed" };
 	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","Move","Speed","Turn","Land" };
@@ -98,7 +99,9 @@ public class ModeAnnotation implements XYAnnotation {
 		colors.put(0, Color.TRANSPARENT);
 		this.legend_colors = new HashMap<Integer,Color>();
 		node.setVisible(false);
-		setModeColors("YELLOW","DODGERBLUE","GREEN","MEDIUMSLATEBLUE","ORANGERED","VIOLET","GRAY");
+		setModeColors("olivedrab","dodgerblue","green","mediumvioletred","orangered","darkgoldenrod","gray");
+		this.legend.setPadding(new Insets(1,1,1,20));
+		this.legend.setSpacing(5);
 	}
 
 	public DoubleProperty heightProperty() {
@@ -281,8 +284,12 @@ public class ModeAnnotation implements XYAnnotation {
 			addAreaData(time,3); break;
 		case Status.NAVIGATION_STATE_OFFBOARD:
 			addAreaData(time,4); break;
+		case Status.NAVIGATION_STATE_AUTO_LAND:
+			addAreaData(time,5); break;
+		case Status.NAVIGATION_STATE_AUTO_PRECLAND:
+			addAreaData(time,6); break;
 		default:
-			addAreaData(time,5);
+			addAreaData(time,7);
 		}
 	}
 	
