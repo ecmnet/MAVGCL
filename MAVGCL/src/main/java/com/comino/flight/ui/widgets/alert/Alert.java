@@ -74,7 +74,7 @@ public class Alert extends ChartControlPane    {
 			@Override
 			public void received(Object o) {
 				
-				if(isDisabled())
+				if(isDisabled() || state.getLogLoadedProperty().get())
 					return;
 				
 				if(o instanceof msg_statustext) {
