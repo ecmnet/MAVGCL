@@ -236,8 +236,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
 
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
-							ready.setMode(Badge.MODE_OK);
-							ready.setText("READY");
+							if(msp_model.sys.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED)) {
+								ready.setMode(Badge.MODE_SPECIAL);
+								ready.setText("LOCKED");
+							} else {
+								ready.setMode(Badge.MODE_OK);
+								ready.setText("READY");
+							}
 
 						}
 						else {
@@ -285,7 +290,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					}
 					else {
 						current_x0_pt = collector.calculateX0IndexByFactor(1);
-	     				current_x1_pt = collector.calculateX1IndexByFactor(1);
+						current_x1_pt = collector.calculateX1IndexByFactor(1);
 						if(current_x0_pt < list.size() && current_x1_pt>1 && current_x1_pt <= list.size()) {
 							time.setText(
 									String.format("%1$tM:%1$tS - %2$tM:%2$tS",
@@ -434,13 +439,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				current_x0_pt = collector.calculateX0Index(n.intValue());
 			}
 		});
-		
+
 		ready.setOnMouseClicked((event) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_CHECK_READY;
 			control.sendMAVLinkMessage(msp);
 		});
-		
+
 		task.start();
 
 	}

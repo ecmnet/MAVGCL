@@ -55,6 +55,7 @@ public class Badge extends Label {
 	public final static int MODE_OK 		=  2;
 	public final static int MODE_BLINK  	=  3;
 	public final static int MODE_ERROR  	=  4;
+	public final static int MODE_SPECIAL  	=  5;
 
 	private int     mode   = MODE_OFF;
 	private String  color  = null;
@@ -149,6 +150,9 @@ public class Badge extends Label {
 				break;
 			case MODE_ERROR:		
 				setStyle(DEFAULT_CSS+"-fx-background-color: #C02020;-fx-text-fill:#F0F0F0;");
+				break;
+			case MODE_SPECIAL:		
+				setStyle(DEFAULT_CSS+"-fx-background-color: #B8860B;-fx-text-fill:#F0F0F0;");
 				break;
 			default:
 				if(MAVPreferences.isLightTheme()) 
