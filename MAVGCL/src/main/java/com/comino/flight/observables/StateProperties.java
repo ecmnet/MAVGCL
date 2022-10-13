@@ -138,7 +138,7 @@ public class StateProperties {
 			});
 
 		});
-
+		
 		control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 			
 			simulationProperty.set(n.isStatus(Status.MSP_SITL));
