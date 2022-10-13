@@ -24,6 +24,10 @@ import org.apache.commons.net.ntp.NtpUtils;
 import org.apache.commons.net.ntp.NtpV3Impl;
 import org.apache.commons.net.ntp.NtpV3Packet;
 import org.apache.commons.net.ntp.TimeStamp;
+import org.mavlink.messages.MAV_SEVERITY;
+
+import com.comino.flight.observables.StateProperties;
+import com.comino.mavcom.log.MSPLogger;
 
 /**
  * The SimpleNTPServer class is a UDP implementation of a server for the
@@ -42,6 +46,9 @@ public class SimpleNTPServer implements Runnable {
     private volatile boolean running;
     private boolean started;
     private DatagramSocket socket;
+    private boolean logged = false;
+    
+    private final StateProperties properties = StateProperties.getInstance();
 
     /**
      * Creates SimpleNTPServer listening on default NTP port.
@@ -142,7 +149,9 @@ public class SimpleNTPServer implements Runnable {
             try {
                 socket.receive(request);
                 final long rcvTime = System.currentTimeMillis();
-                handlePacket(request, rcvTime);
+                // Only handle ntp request in landed state
+                if(!properties.getArmedProperty().get())
+                  handlePacket(request, rcvTime);
             } catch (final Exception e) {
                 if (running)
                 {
@@ -166,6 +175,10 @@ public class SimpleNTPServer implements Runnable {
     {
         final NtpV3Packet message = new NtpV3Impl();
         message.setDatagramPacket(request);
+        if(!logged) {
+        	logged = true;
+        MSPLogger.getInstance().writeLocalMsg("[mgc] NTP synchronization",MAV_SEVERITY.MAV_SEVERITY_DEBUG);
+        }
         System.out.printf("NTP packet from %s mode=%s%n", request.getAddress().getHostAddress(),
                 NtpUtils.getModeName(message.getMode()));
         if (message.getMode() == NtpV3Packet.MODE_CLIENT) {
