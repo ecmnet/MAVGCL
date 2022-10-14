@@ -87,6 +87,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge rc;
+	
+	@FXML
+	private Badge bat;
 
 	@FXML
 	private Badge controller;
@@ -261,6 +264,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							ready.setText("NOT READY");
 						}
 					}
+					
+					bat.setMode(Badge.MODE_ON);
+					bat.setText(msp_model.sys.getBatTypeString());
 
 				}
 				else {
@@ -269,6 +275,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					ekf.setMode(Badge.MODE_OFF);
 					vision.setMode(Badge.MODE_OFF);
 					home.setMode(Badge.MODE_OFF);
+					bat.setText("");
 					driver.setText("");
 				}
 
@@ -414,10 +421,13 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		//		});
 
 		state.getControllerConnectedProperty().addListener((e,o,n) -> {
-			if(n.booleanValue())
+			if(n.booleanValue()) {
 				controller.setMode(Badge.MODE_ON);
-			else
+			}
+			else {
 				controller.setMode(Badge.MODE_OFF);
+			}
+			
 		});
 
 		state.getLogLoadedProperty().addListener((e,o,n) -> {
