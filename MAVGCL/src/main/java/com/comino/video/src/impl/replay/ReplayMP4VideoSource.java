@@ -50,7 +50,7 @@ import javafx.scene.image.Image;
 
 public class ReplayMP4VideoSource  {
 
-	private final FileHandler fh = FileHandler.getInstance();
+	private final FileHandler fh;
 	private final AVFormatContext fmt_ctx;
 	private final AVPacket pkt;
 
@@ -73,6 +73,7 @@ public class ReplayMP4VideoSource  {
 
 	public ReplayMP4VideoSource() {
 
+		fh      = FileHandler.getInstance();
 		pkt     = new AVPacket();
 		fmt_ctx = new AVFormatContext(null);
 
@@ -137,10 +138,15 @@ public class ReplayMP4VideoSource  {
 		
 		stream_idx = -1;
 		
+		if(is_opened)
+			return true;
+		
 
 		String vf = getVideoFileName();
-		if(vf == null)
+		if(vf == null) {
+			System.out.println("video "+vf+" not found");
 			return false;
+		}
 		
 		if(avformat_open_input(fmt_ctx, vf, null, null) < 0)
 			return false;
@@ -240,9 +246,10 @@ public class ReplayMP4VideoSource  {
 		String dirname  = fh.getCurrentPath();
 		String filename = fh.getName();
 
-		
-		if(dirname==null)
+		if(dirname==null) {
+			System.out.println("Dir empty: No video found in "+dirname+" - "+filename);
 			return null;
+		}
 		
 		File dir = new File(fh.getCurrentPath());
 		
@@ -255,7 +262,7 @@ public class ReplayMP4VideoSource  {
 		});
 		
 		if(videos == null || videos.length < 1 || videos[0].length() < 100) {
-			System.out.println("No video found");
+			System.out.println("No video found in "+dirname+" - "+filename);
 			return null;
 		}
 		else {

@@ -263,9 +263,9 @@ public class FileHandler {
 
 					if(file.getName().endsWith("ulg")) {
 						try {
-						ULogReader reader = new ULogReader(file.getAbsolutePath());
-						MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());	
-						converter = new UlogtoModelConverter(reader,modelService.getModelList());	
+							ULogReader reader = new ULogReader(file.getAbsolutePath());
+							MAVGCLPX4Parameters.getInstance().setParametersFromLog(reader.getParameters());	
+							converter = new UlogtoModelConverter(reader,modelService.getModelList());	
 							converter.doConversion();
 							ulogFields = reader.getFieldList();
 						}
@@ -500,21 +500,22 @@ public class FileHandler {
 			@Override protected Void call() throws Exception {
 
 				DataModel model = control.getCurrentModel();
-				
 
-//				if(control.isSimulation())
-//					return null;
+
+				//				if(control.isSimulation())
+				//					return null;
 
 				String logname = new SimpleDateFormat("ddMMyy-HHmmss").format(new Date());
-				logger.writeLocalMsg("[mgc] Saving "+name,MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				logger.writeLocalMsg("[mgc] Saving "+logname,MAV_SEVERITY.MAV_SEVERITY_WARNING);
 
 
 				String path = userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home"));
-				lastDir = path;
+				
 
-				if(!createResultSet)
+				if(!createResultSet) {
+					lastDir = path;
 					saveLog(path,logname);
-				else {
+				} else {
 
 					String path_result = path+"/"+logname;
 					File directory = new File(path_result);
@@ -544,11 +545,11 @@ public class FileHandler {
 					writer.println("==========================================================================================");
 					writer.flush();
 					writer.close();
-					
+
 					// Wait for video recording has stopped or timeout of 2 sec
 					int to = 20;
 					while(--to > 0 && state.getMP4RecordingProperty().get())
-					   Thread.sleep(100);
+						Thread.sleep(100);
 
 					File video = new File(path+"/video.mp4");
 					if(video.exists()) {
@@ -690,14 +691,14 @@ public class FileHandler {
 			userPrefs.put(MAVPreferences.LAST_FILE2,s1);
 
 		userPrefs.put(MAVPreferences.LAST_FILE,name);
-		
+
 		try {
 			userPrefs.sync();
 			userPrefs.flush();
 		} catch (BackingStoreException e) {
-			
+
 		}
-		
+
 		System.out.println(name);
 
 	}
@@ -725,7 +726,7 @@ public class FileHandler {
 			fileChooser.setInitialDirectory(f);
 		else
 			fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-			
+
 		return fileChooser;
 	}
 

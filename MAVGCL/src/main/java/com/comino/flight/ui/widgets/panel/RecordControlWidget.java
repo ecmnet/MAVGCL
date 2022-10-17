@@ -249,7 +249,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 						} else
 							modelService.getModelList().clear();
 					}
-					if(modelService.getModelList().size() > 0)
+					if(modelService.getModelList().size() > 0 && !MAVPreferences.getInstance().getBoolean(MAVPreferences.AUTOSAVE,false))
 						state.getLogLoadedProperty().set(true);
 					break;
 
