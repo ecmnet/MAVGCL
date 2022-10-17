@@ -140,12 +140,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			}
 		});
 
-		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
-			if(!nv.booleanValue() && !player.isConnected()) {
-				widget.getVideoVisibility().setValue(false);
-			}
-		});
-
 		scroll.addListener((v, ov, nv) -> {
 			player.playAt(nv.floatValue());
 		});

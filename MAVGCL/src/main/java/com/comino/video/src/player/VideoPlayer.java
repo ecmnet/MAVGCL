@@ -90,9 +90,7 @@ public class VideoPlayer {
 		
 		if(isConnected)
 		  stop();	
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) { }
+		try { Thread.sleep(100); } catch (InterruptedException e) { }
 		if(connect()) {
 			image.setVisible(true);
 			if(!source.isRunning())

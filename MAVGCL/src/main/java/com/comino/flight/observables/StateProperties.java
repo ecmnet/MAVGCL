@@ -155,7 +155,7 @@ public class StateProperties {
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 				Platform.runLater(() -> {
-				isVideoStreamAvailable.set(false);
+				  isVideoStreamAvailable.set(false);
 				});
 			} 
 		});
@@ -268,7 +268,6 @@ public class StateProperties {
 			isCVAvailable.set(false);
 			isIMUAvailable.set(false);
 			isMSPAvailable.set(false);
-			isVideoStreamAvailable.set(false);
 		});
 
 	}
