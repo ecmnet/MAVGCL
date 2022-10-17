@@ -81,6 +81,7 @@ public class StateProperties {
 	private BooleanProperty isReplayingProperty	             = new SimpleBooleanProperty();
 	private BooleanProperty isReadyProperty	                 = new SimpleBooleanProperty();
 	private BooleanProperty isMP4RecordingProperty           = new SimpleBooleanProperty();
+	private BooleanProperty isVideoStreamAvailable           = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -145,14 +146,17 @@ public class StateProperties {
 			
 			wq.addSingleTask("LP", 650,() -> {
 				Platform.runLater(() -> {
-					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED))
+					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
 				    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+					}
 				});
 			});
 
 			if(!n.isStatus(Status.MSP_CONNECTED)) {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-
+				Platform.runLater(() -> {
+				isVideoStreamAvailable.set(false);
+				});
 			} 
 		});
 
@@ -201,12 +205,16 @@ public class StateProperties {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_OPCV_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
 				isCVAvailable.set(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY));
+				if(n.isSensorAvailable(Status.MSP_OPCV_AVAILABILITY))
+						isVideoStreamAvailable.set(true);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_SLAM_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
 				isSLAMAvailable.set(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY));
+				if(n.isSensorAvailable(Status.MSP_SLAM_AVAILABILITY))
+						isVideoStreamAvailable.set(true);
 			});
 		});
 
@@ -260,6 +268,7 @@ public class StateProperties {
 			isCVAvailable.set(false);
 			isIMUAvailable.set(false);
 			isMSPAvailable.set(false);
+			isVideoStreamAvailable.set(false);
 		});
 
 	}
@@ -362,6 +371,10 @@ public class StateProperties {
 
 	public BooleanProperty getSLAMAvailableProperty() {
 		return isSLAMAvailable;
+	}
+	
+	public BooleanProperty getVideoStreamAvailableProperty() {
+		return isVideoStreamAvailable;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {
