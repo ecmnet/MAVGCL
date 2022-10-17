@@ -67,7 +67,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	//	private byte[] buf;                 //buffer used to store data received from the server 
 	
 	private boolean proxy_enabled = PROXY;
-	private MSPVideoProxy proxy = new MSPVideoProxy();
+//	private MSPVideoProxy proxy = new MSPVideoProxy();
 
 
 	private final List<IMWStreamVideoProcessListener> listeners = new ArrayList<IMWStreamVideoProcessListener>();
@@ -153,17 +153,17 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 		if(isRunning)
 			return;
-
+		
 		try {
 
 			RTSPsocket = new Socket(ServerIPAddr, ServerPort);
-			RTSPsocket.setSoTimeout(400);
+			RTSPsocket.setSoTimeout(100);
 
 			try {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 				RTPsocket.setReceiveBufferSize(1024*1024);
-				RTPsocket.setSoTimeout(400);
+				RTPsocket.setSoTimeout(100);
 			
 			}
 			catch (SocketException se) {
@@ -254,8 +254,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 					tms = rtp_packet.TimeStamp;
      				model.getCurrent().sync_fps = fps;
 					
-					if(proxy_enabled)
-					  proxy.process(payload, payload_length);
+//					if(proxy_enabled)
+//					  proxy.process(payload, payload_length);
 					next = new Image(new BufferedInputStream(new ByteArrayInputStream(payload,0,payload_length)), 0, 0, false, true);
 					if(next!=null) {
 						listeners.forEach((listener) -> {
