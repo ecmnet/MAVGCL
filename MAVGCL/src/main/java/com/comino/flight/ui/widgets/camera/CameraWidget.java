@@ -100,7 +100,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	public CameraWidget() {
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
-		
+
 		image.fitWidthProperty().bind(this.widthProperty());
 		image.fitHeightProperty().bind(this.heightProperty());
 
@@ -122,19 +122,18 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 				if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get()) {
 
-					if(replay_video.isOpen()) {
+					if(replay_video.open()) {
 						image.setVisible(true);
+						final Image img = replay_video.playAt(1.0f);
 						Platform.runLater(() -> {
-							image.setImage(replay_video.playAt(1.0f));
+							image.setImage(img);
+
 						});
 					} else {
-						if(!replay_video.open()) {
-							image.setVisible(false);
-							widget.getVideoVisibility().setValue(false);
-						}
+
+						image.setVisible(false);
+						widget.getVideoVisibility().setValue(false);
 					}
-
-
 				}
 				else  {
 
@@ -149,8 +148,13 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					}
 				}
 			}	else {
-				  if(!state.getMP4RecordingProperty().get())
-					stopStreaming();
+				image.setVisible(false);
+				if(replay_video.isOpen())
+					replay_video.close();
+				else {
+					if(!state.getMP4RecordingProperty().get() && source.isRunning())
+						stopStreaming();
+				}
 			}
 		});
 
@@ -220,22 +224,25 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		scroll.addListener((v, ov, nv) -> {
 			if(replay_video.isOpen() && image.isVisible()) {
-				Platform.runLater(() -> {
-					int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
-					if(x1 < 0) x1 = 0;
-					if(model.getModelList().size()>0) {
-						AnalysisDataModel m = model.getModelList().get(x1);
-						image.setImage(replay_video.playAt(m.tms,m.sync_fps));
-					}
-				});
+				int x1 =  model.calculateIndexByFactor(nv.floatValue())-1;
+				if(x1 < 0) x1 = 0;
+				if(model.getModelList().size()>0) {
+					AnalysisDataModel m = model.getModelList().get(x1);
+					final Image img = replay_video.playAt(m.tms,m.sync_fps);
+					Platform.runLater(() -> {
+						image.setImage(img);
+					});
+				}
+
 			}
 		});
 
 		replay.addListener((v, ov, nv) -> {
 			if(replay_video.isOpen() && image.isVisible()) {
+				AnalysisDataModel m = model.getModelList().get((int)Math.abs(nv.floatValue()));
+				final Image img = replay_video.playAt(m.tms,m.sync_fps);
 				Platform.runLater(() -> {
-					AnalysisDataModel m = model.getModelList().get((int)Math.abs(nv.floatValue()));
-					image.setImage(replay_video.playAt(m.tms,m.sync_fps));
+					image.setImage(img);
 				});
 			}
 		});
@@ -243,19 +250,20 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
-			
+
 			if(state.getRecordingProperty().get()!= 0)
 				return;
 
 			if(n.booleanValue()) {
-//			
+				//			
 				if(replay_video.open()) {
 					System.out.println("Showing replay");
 					if(widget.isVisible()) {
 						image.setVisible(true);
+						final Image img = replay_video.playAt(1.0f);
 						Platform.runLater(() -> {
-							image.setImage(replay_video.playAt(1.0f));
-							image.setVisible(true);
+							image.setImage(img);
+
 						});
 						stopStreaming();
 						return;
@@ -266,7 +274,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					System.out.println("Replay video not opened");
 					widget.getVideoVisibility().setValue(false);
 				}
-			
+
 			} 
 			else {
 				System.out.println("Replay camera closed. Returning to current streams");
@@ -326,10 +334,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-//			final Image img = replay_video.playAt((int)(model.getCurrent().tms),model.getCurrent().sync_fps);	
+			final Image img = replay_video.playAt((int)(model.getCurrent().tms),model.getCurrent().sync_fps);	
 			Platform.runLater(() -> {
-				image.setImage(replay_video.playAt(1.0f));
-//				image.setImage(img);
+				//				image.setImage(replay_video.playAt(1.0f));
+				image.setImage(img);
 			});
 
 
@@ -340,16 +348,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(!replay_video.isOpen())
 				return;
 
-//			final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().sync_fps);
-//			Platform.runLater(() -> {
-//				image.setImage(img);
-//			});
-			
+			final Image img = replay_video.playAt(model.getCurrent().tms,model.getCurrent().sync_fps);
 			Platform.runLater(() -> {
-				image.setImage(replay_video.playAt(1.0f));
-//				image.setImage(img);
+				image.setImage(img);
 			});
-
 		});
 	}
 
