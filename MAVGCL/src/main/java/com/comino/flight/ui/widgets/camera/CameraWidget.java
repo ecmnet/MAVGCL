@@ -46,6 +46,7 @@ import com.comino.flight.ui.widgets.panel.ControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.log.MSPLogger;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.video.src.player.VideoPlayer;
 
 import javafx.application.Platform;
@@ -90,7 +91,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		this.setFixedRatio((double)Y/X);
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
-             player.show(newvalue.booleanValue());	
+			player.show(newvalue.booleanValue());	
 		});
 
 		image.setOnMouseClicked(event -> {
@@ -130,15 +131,15 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 
 			if(nv.intValue()==AnalysisModelService.COLLECTING) {
-                if(player.recording(true)) 
-				 logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+				if(player.recording(true)) 
+					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 
 			} else {
 				if(player.recording(false))
-				 logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 			}
 		});
-		
+
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> {
 			if(!nv.booleanValue() && !player.isConnected()) {
 				widget.getVideoVisibility().setValue(false);
@@ -181,6 +182,16 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		ChartControlPane.addChart(91,this);
 
+		state.getVideoStreamAvailableProperty().addListener((e,o,n) -> {
+
+			if(state.getLogLoadedProperty().get() || state.getReplayingProperty().get())
+				return;
+
+			if(n.booleanValue())  {
+				if(widget.getVideoVisibility().get() && player.isConnected()) 
+					player.reconnect();
+			} 
+		});
 	}
 
 	@Override
@@ -206,7 +217,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	@Override
 	public void refreshChart() {
-        player.playAtCurrent();
+		player.playAtCurrent();
 	}
 
 	@Override

@@ -52,6 +52,7 @@ public class VideoPlayer {
 	
 	
 	public void show(boolean show) {
+	
 		
 		if(show) {
 			if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get()) {
@@ -67,9 +68,10 @@ public class VideoPlayer {
 				if(!state.getConnectedProperty().get())
 					return;
 				if(source!=null || connect()) {
-					image.setVisible(true);
-					if(!source.isRunning())
+					if(!source.isRunning()) {
 						source.start();
+					}
+					image.setVisible(true);
 				}
 			}	
 		} else {
@@ -79,9 +81,23 @@ public class VideoPlayer {
 				replay_video.close();
 			else {
 				if(!state.getMP4RecordingProperty().get() && source != null && source.isRunning())
-					stopStreaming();
+					stop();
 			}	
 		}
+	}
+	
+	public void reconnect() {
+		
+		if(isConnected)
+		  stop();	
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) { }
+		if(connect()) {
+			image.setVisible(true);
+			if(!source.isRunning())
+				source.start();
+		}	
 	}
 	
 	public boolean recording(boolean recording) {
@@ -111,7 +127,7 @@ public class VideoPlayer {
 				Platform.runLater(() -> {
 					recorder.stop();
 					if(!image.isVisible())
-						stopStreaming();
+						stop();
 				});
 				return true;
 			}	
@@ -201,12 +217,12 @@ public class VideoPlayer {
 							image.setImage(img);
 
 						});
-						stopStreaming();
+						stop();
 						return;
 					}
 				} 
 				else {
-					stopStreaming();
+					stop();
 					System.out.println("Replay video not opened");
 				}
 
@@ -229,10 +245,11 @@ public class VideoPlayer {
 		});
 	}
 	
-	private void stopStreaming() {
+	public void stop() {
 		if(isConnected && source != null) {
 			System.out.println(source.getClass().getSimpleName()+" stopped");
 			source.stop();
+			isConnected = false;
 		}
 	}
 	
