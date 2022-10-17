@@ -141,7 +141,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 						replay_video.close();
 					if(!state.getConnectedProperty().get())
 						return;
-					if(source!=null) {
+					if(source!=null || connect()) {
 						image.setVisible(true);
 						if(!source.isRunning())
 							source.start();
@@ -152,7 +152,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				if(replay_video.isOpen())
 					replay_video.close();
 				else {
-					if(!state.getMP4RecordingProperty().get() && source.isRunning())
+					if(!state.getMP4RecordingProperty().get() && source != null && source.isRunning())
 						stopStreaming();
 				}
 			}
@@ -383,7 +383,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		try {
 			URI url = new URI(url_string);
 
-			System.out.println(url.toString());
+			System.out.println("try connect to "+url.toString());
 
 			if(url.toString().startsWith("http")) {
 				//				source = new StreamVideoSource(url,AnalysisModelService.getInstance().getCurrent());
