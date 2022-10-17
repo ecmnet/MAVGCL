@@ -158,11 +158,10 @@ public class MSPSequenceEncoder {
 	
 		
 		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
-			
 		muxer.writeHeader();
 		
-		ch.close();
-		//NIOUtils.closeQuietly(ch);
+		//ch.close();
+		NIOUtils.closeQuietly(ch);
 	
 		
 		
