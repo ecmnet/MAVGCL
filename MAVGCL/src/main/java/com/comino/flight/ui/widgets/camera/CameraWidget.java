@@ -150,7 +150,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			player.playAt(nv.floatValue());
+			player.playAtIndex(nv.intValue());
 		});
 	}
 

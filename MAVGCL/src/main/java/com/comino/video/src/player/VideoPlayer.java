@@ -155,6 +155,17 @@ public class VideoPlayer {
 		}
 	}
 	
+
+	public void playAtIndex(int index) {
+		if(replay_video.isOpen() && image.isVisible()) {
+			AnalysisDataModel m = model.getModelList().get(Math.abs(index));
+			final Image img = replay_video.playAt(m.tms,m.sync_fps);
+			Platform.runLater(() -> {
+				image.setImage(img);
+			});
+		}
+	}
+	
 	public boolean isConnected() {
 		return isConnected;
 	}
