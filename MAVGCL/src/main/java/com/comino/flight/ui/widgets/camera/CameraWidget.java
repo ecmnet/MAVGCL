@@ -123,9 +123,9 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 				if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get()) {
 
 					if(replay_video.open()) {
-						image.setVisible(true);
 						final Image img = replay_video.playAt(1.0f);
 						Platform.runLater(() -> {
+							image.setVisible(true);
 							image.setImage(img);
 
 						});
@@ -136,10 +136,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					}
 				}
 				else  {
-
-					if(replay_video.isOpen())
+					
+					if(replay_video.isOpen() && !state.getLogLoadedProperty().get())
 						replay_video.close();
-					if(!state.getConnectedProperty().get() || !connect())
+					if(!state.getConnectedProperty().get())
 						return;
 					if(source!=null) {
 						image.setVisible(true);
@@ -257,7 +257,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			if(n.booleanValue()) {
 				//			
 				if(replay_video.open()) {
-					System.out.println("Showing replay");
 					if(widget.isVisible()) {
 						image.setVisible(true);
 						final Image img = replay_video.playAt(1.0f);

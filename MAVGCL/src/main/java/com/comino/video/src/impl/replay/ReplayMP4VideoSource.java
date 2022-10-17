@@ -136,10 +136,10 @@ public class ReplayMP4VideoSource  {
 
 	public boolean open() {
 		
-		stream_idx = -1;
-		
 		if(is_opened)
 			return true;
+		
+		stream_idx = -1;
 		
 
 		String vf = getVideoFileName();
