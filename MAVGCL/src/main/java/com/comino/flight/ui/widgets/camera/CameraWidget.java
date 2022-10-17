@@ -72,13 +72,11 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 	private FloatProperty  	scroll= new SimpleFloatProperty(0);
 	private FloatProperty  	replay= new SimpleFloatProperty(0);
 
-
-	private MSPLogger       logger = null;
 	private ControlWidget   widget;
 
 
-
 	public CameraWidget() {
+		super();
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
 		image.fitWidthProperty().bind(this.widthProperty());
 		image.fitHeightProperty().bind(this.heightProperty());
