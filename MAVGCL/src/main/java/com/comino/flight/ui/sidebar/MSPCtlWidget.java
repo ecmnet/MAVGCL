@@ -100,7 +100,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private CheckBox enable_precision_lock;
 
 	@FXML
-	private CheckBox enable_fcum_mode;
+	private CheckBox enable_mode1;
+	
+	@FXML
+	private CheckBox enable_mode2;
+	
+	@FXML
+	private CheckBox enable_mode3;
 
 	@FXML
 	private ChoiceBox<String> stream;
@@ -173,19 +179,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 		box.prefHeightProperty().bind(this.heightProperty());
 
 		modes.disableProperty().bind(state.getOffboardProperty().not());
+		
+		enable_mode1.setDisable(true);
+		enable_mode2.setDisable(true);
+		enable_mode3.setDisable(true);
+		enable_takeoff_proc.setDisable(true);
 
-		enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
+		//enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
 		stream.getItems().addAll(STREAMS);
 		stream.getSelectionModel().select(0);
-
-//		state.getFiducialLockedProperty().addListener((v,o,n) -> {
-//			if(n.booleanValue())
-//				state.getStreamProperty().set(1);
-//			else
-//				if(state.getSLAMAvailableProperty().get())
-//					state.getStreamProperty().set(0);
-//		});
 
 		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
 			state.getStreamProperty().set(newvalue.intValue());
@@ -231,23 +234,23 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		enable_fcum_mode.selectedProperty().addListener((v,o,n) -> {
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.FCUM;
-			if(n.booleanValue()) {
-				if(confirmationDialog(AlertType.CONFIRMATION,"Is the FCU separated from vehicle?"))
-					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-				else {
-					enable_fcum_mode.setSelected(false);
-					return;
-				}
-			}
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
+//		enable_fcum_mode.selectedProperty().addListener((v,o,n) -> {
+//			msg_msp_command msp = new msg_msp_command(255,1);
+//			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+//			msp.param2 =  MSP_AUTOCONTROL_MODE.FCUM;
+//			if(n.booleanValue()) {
+//				if(confirmationDialog(AlertType.CONFIRMATION,"Is the FCU separated from vehicle?"))
+//					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+//				else {
+//					enable_fcum_mode.setSelected(false);
+//					return;
+//				}
+//			}
+//			else
+//				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+//			control.sendMAVLinkMessage(msp);
+//
+//		});
 
 		enable_stop.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -506,10 +509,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
-			if(!n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM))
-				enable_fcum_mode.setSelected(false);
-		});
+//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
+//			if(!n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM))
+//				enable_fcum_mode.setSelected(false);
+//		});
 
 		enable_vision.setSelected(true);
 
