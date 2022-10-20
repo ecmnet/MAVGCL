@@ -126,11 +126,9 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			control.sendMAVLinkMessage(msp);
 		});
 
-
-
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-
-			if(nv.intValue()==AnalysisModelService.COLLECTING) {
+			
+			if(nv.intValue()!=AnalysisModelService.STOPPED) {
 				if(player.recording(true)) 
 					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 

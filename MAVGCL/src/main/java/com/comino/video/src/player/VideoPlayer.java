@@ -33,6 +33,7 @@ public class VideoPlayer {
     private MP4Recorder          recorder = null;
     
     private boolean              isConnected = false;
+    private boolean              isRecording = false;
 	
 
 	public VideoPlayer(IMAVController control,ImageView image, boolean allowRecording) {
@@ -100,7 +101,12 @@ public class VideoPlayer {
 	
 	public boolean recording(boolean recording) {
 		
-		if(recorder == null)
+		if(recorder == null) {
+			System.out.println("No recorder available. Video not recorded");
+			return false;
+		}
+		
+		if(recording == isRecording)
 			return false;
 		
 		if(recording) {
@@ -108,14 +114,16 @@ public class VideoPlayer {
 			if(replay_video.isOpen()) 
 				replay_video.close();
 
-			if(source==null)
+			if(source==null || !isConnected())
 				connect();
-			if(!isConnected)
-				return false;
+			
 			if(!source.isRunning())
 				source.start();
 			
 			recorder.start();
+			
+			isRecording = true;
+			
 			return true;
 		
 		} else {
@@ -127,6 +135,8 @@ public class VideoPlayer {
 					if(!image.isVisible())
 						stop();
 				});
+				
+				isRecording = false;
 				return true;
 			}	
 			
@@ -192,13 +202,14 @@ public class VideoPlayer {
 		
 		state.getCurrentUpToDate().addListener((v,o,n) -> {
 
-			if(state.getReplayingProperty().get())
+			if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get())
 				return;
 			if(!replay_video.isOpen())
 				return;
 			playAtCurrent();
 
 		});
+		
 		
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 
