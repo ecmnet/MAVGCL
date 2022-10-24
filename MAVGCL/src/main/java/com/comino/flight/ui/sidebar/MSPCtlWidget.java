@@ -139,7 +139,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button debug_mode2;
 
 	@FXML
-	private Button rotate_north;
+	private Button rotate;
 
 	@FXML
 	private Button exec_land;
@@ -333,11 +333,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.DEBUG_MODE1;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.DEBUG_MODE1))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
 		});
@@ -350,11 +345,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		rotate_north.setOnAction((event) ->{
+		rotate.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.ROTATE;
-			msp.param3 = 0f;
+			msp.param3 = 180f;
 			control.sendMAVLinkMessage(msp);
 
 		});
