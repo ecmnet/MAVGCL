@@ -862,6 +862,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			xychart.getAnnotations().clearAnnotations(Layer.FOREGROUND);
 			xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
 
+
 			if(mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
 				xychart.getAnnotations().add(slam, Layer.FOREGROUND);
 				endPosition1.setVisible(false);
@@ -1165,7 +1166,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			frame_secs = 60;
 		current_x0_pt = dataService.calculateX0Index(1);
 		setScaling(scale);
-        Platform.runLater(() -> updateRequest());
+		Platform.runLater(() -> updateRequest());
 	}
 
 
