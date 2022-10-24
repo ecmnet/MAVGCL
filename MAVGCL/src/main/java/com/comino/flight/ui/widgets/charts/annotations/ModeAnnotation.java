@@ -39,6 +39,7 @@ import java.util.Map;
 import org.mavlink.messages.ESTIMATOR_STATUS_FLAGS;
 
 import com.comino.flight.model.AnalysisDataModel;
+import com.comino.mavcom.model.segment.Slam;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
 import com.emxsys.chart.extension.XYAnnotation;
@@ -72,8 +73,8 @@ public class ModeAnnotation implements XYAnnotation {
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Velocity", "Error", "GPS.Error","Other"};
 	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard", "Land", "PrecLand","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
+	private static final String[]  OFFBOARD_TEXTS   = { "", "YawDirect", "YawPlanner", "XYZDirect","XYZPlanner","Timeout" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix"," GPS3D","DGPS","RTK float","RTK fixed" };
-	private final static String[]  OFFBOARD_TEXTS   = { "", "Loiter","Move","Speed","Turn","Land" };
 	private final static String[]  VISION_TEXTS     = { "", "Reset","Speed","Position","Locked","Error","Experimental" };
 	private final static String[]  EKFHGTMODE_TEXTS = { "", "Baro","GPS","Range","Vision" };
 
@@ -295,10 +296,16 @@ public class ModeAnnotation implements XYAnnotation {
 	
 	private void updateModeDataOffboardMode(double time, AnalysisDataModel m) {
 		int state = (int)m.getValue("SLAMFLG");
-		if(state < OFFBOARD_TEXTS.length)
-		  addAreaData(time,state);
-		else
-		  addAreaData(time,7);
+		if((state & (1 << Slam.OFFBOARD_FLAG_TIMEOUT))!=0)
+			  addAreaData(time,5);
+		else if((state & (1 << Slam.OFFBOARD_FLAG_XYZ_PLANNER))!=0)
+	          addAreaData(time,4);
+		else if((state & (1 << Slam.OFFBOARD_FLAG_YAW_PLANNER))!=0)
+	          addAreaData(time,2);
+		else if((state & (1 << Slam.OFFBOARD_FLAG_XYZ_DIRECT))!=0)
+	          addAreaData(time,3);
+		else if((state & (1 << Slam.OFFBOARD_FLAG_YAW_DIRECT))!=0)
+	          addAreaData(time,1);
 	}
 	
 	private void updateVisionData(double time, AnalysisDataModel m) {
