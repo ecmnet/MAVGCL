@@ -202,7 +202,7 @@ public class VideoPlayer {
 		
 		state.getCurrentUpToDate().addListener((v,o,n) -> {
 
-			if(state.getReplayingProperty().get() || state.getLogLoadedProperty().get())
+			if(state.getReplayingProperty().get())
 				return;
 			if(!replay_video.isOpen())
 				return;
@@ -251,6 +251,12 @@ public class VideoPlayer {
 					image.setVisible(false);
 			}
 
+		});
+		
+		state.getConnectedProperty().addListener((o,ov,nv) -> {
+			if(!nv.booleanValue()) {
+				stop();
+			}
 		});
 	}
 	

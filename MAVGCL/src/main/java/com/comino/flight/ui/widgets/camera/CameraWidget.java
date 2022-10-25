@@ -116,6 +116,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			}
 			event.consume();
 		});
+		
 
 
 		state.getStreamProperty().addListener((o,ov,nv) -> {
