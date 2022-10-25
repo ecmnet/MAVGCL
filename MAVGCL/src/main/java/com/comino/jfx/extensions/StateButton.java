@@ -50,13 +50,13 @@ public class StateButton extends Button {
 		Platform.runLater(() -> {
 			if(state) {
 				if(is_light)
-					setStyle("-fx-background-color: #A0A0A0");
+					setStyle("-fx-background-color: #909090; -fx-text-fill: #F0F0F0");
 				else
 					setStyle("-fx-background-color: #2f606e");
 			}
 			else {
 				if(is_light)
-					setStyle("-fx-background-color: #C0C0C0");
+					setStyle("-fx-background-color: #B0B0B0;");
 				else
 					setStyle("-fx-background-color: #606060");
 			}

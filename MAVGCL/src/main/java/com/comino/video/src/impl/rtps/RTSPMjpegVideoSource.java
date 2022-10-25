@@ -127,9 +127,9 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		sendRequest("TEARDOWN");
 		isRunning = false;
 
-		if(parseServerResponse() == 200) {
-			closeStream();	
-		}
+		parseServerResponse();
+		closeStream();	
+		//}
 	}
 
 	@Override
@@ -157,13 +157,13 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		try {
 
 			RTSPsocket = new Socket(ServerIPAddr, ServerPort);
-			RTSPsocket.setSoTimeout(100);
+			RTSPsocket.setSoTimeout(2000);
 
 			try {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 				RTPsocket.setReceiveBufferSize(1024*1024);
-				RTPsocket.setSoTimeout(100);
+				RTPsocket.setSoTimeout(60000);
 			
 			}
 			catch (SocketException se) {
@@ -268,12 +268,13 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 				}
 				catch (InterruptedIOException iioe) { 
-//					System.err.println(iioe.getLocalizedMessage());
-//					isRunning = false;
+					System.err.println(iioe.getLocalizedMessage());
+					
 				}
 				catch (Exception ioe) {	
 //					ioe.printStackTrace();
-//					System.err.println(ioe.getLocalizedMessage());
+					System.err.println(ioe.getLocalizedMessage());
+					
 				}
 			}
 		}
