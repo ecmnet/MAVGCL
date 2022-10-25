@@ -253,15 +253,10 @@ public class VideoPlayer {
 
 		});
 		
-		state.getConnectedProperty().addListener((o,ov,nv) -> {
-			if(!nv.booleanValue()) {
-				stop();
-			}
-		});
 	}
 	
 	public void stop() {
-		if(isConnected && source != null) {
+		if(source != null) {
 			System.out.println(source.getClass().getSimpleName()+" stopped");
 			source.stop();
 			isConnected = false;
