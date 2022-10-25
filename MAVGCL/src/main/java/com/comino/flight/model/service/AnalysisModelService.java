@@ -474,7 +474,7 @@ public class AnalysisModelService  {
 				if(!state.getInitializedProperty().get())
 					continue;
 
-				if(state.getCurrentUpToDate().getValue()) {
+				if(state.getCurrentUpToDate().getValue() && !state.getLogLoadedProperty().get()) {
 					try {
 						current.setValues(KeyFigureMetaData.MSP_SOURCE,model,meta);
 						current.calculateVirtualKeyFigures(meta);
