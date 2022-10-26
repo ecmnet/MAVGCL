@@ -89,8 +89,9 @@ public class VideoPlayer {
 	
 	public void reconnect() {
 		
-		if(isConnected)
+		if(isConnected || state.getLogLoadedProperty().get())
 		  stop();	
+		
 		try { Thread.sleep(100); } catch (InterruptedException e) { }
 		if(connect()) {
 			image.setVisible(true);
