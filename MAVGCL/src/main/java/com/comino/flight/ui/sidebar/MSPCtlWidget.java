@@ -77,12 +77,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private VBox     settings;
-
-	@FXML
-	private VBox     modes;
 	
 	@FXML
 	private VBox     planner;
+
+	@FXML
+	private VBox     modes;
 
 	@FXML
 	private VBox     msp_control;
@@ -124,7 +124,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_avoidance;
 
 	@FXML
-	private CheckBox enable_interactive;
+	private StateButton enable_interactive;
 
 	@FXML
 	private StateButton enable_follow;
@@ -487,9 +487,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
 		});
 
-//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
-//			enable_interactive.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
-//		});
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
+			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
+		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
 			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));

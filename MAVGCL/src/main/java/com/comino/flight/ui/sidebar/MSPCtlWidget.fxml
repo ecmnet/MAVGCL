@@ -68,7 +68,7 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
-				  <CheckBox fx:id="enable_interactive" text="Enable interactive mode" prefWidth="165.0"/>
+				  <StateButton fx:id="enable_interactive" text="Interactive mode" prefWidth="165.0"/>
 				  <Button fx:id="rotate" text="Rotate South" prefWidth="165.0" />
 				  <Button fx:id="debug_mode1" text="Action 1" prefWidth="165.0" />
 				  <Button fx:id="debug_mode2" text="Action 2" prefWidth="165.0" />
