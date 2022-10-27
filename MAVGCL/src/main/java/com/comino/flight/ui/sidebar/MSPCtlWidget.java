@@ -80,6 +80,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private VBox     modes;
+	
+	@FXML
+	private VBox     planner;
 
 	@FXML
 	private VBox     msp_control;
@@ -121,7 +124,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_avoidance;
 
 	@FXML
-	private StateButton enable_interactive;
+	private CheckBox enable_interactive;
 
 	@FXML
 	private StateButton enable_follow;
@@ -178,7 +181,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		box.prefHeightProperty().bind(this.heightProperty());
 
-		modes.disableProperty().bind(state.getOffboardProperty().not());
+		settings.setDisable(true);
+		planner.setDisable(true);
 		
 		enable_mode1.setDisable(true);
 		enable_mode2.setDisable(true);
@@ -329,7 +333,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		debug_mode1.disableProperty().bind(enable_interactive.getSelectedProperty().not());
+		debug_mode1.disableProperty().bind(enable_interactive.selectedProperty().not());
 		debug_mode1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -338,7 +342,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		debug_mode2.disableProperty().bind(enable_interactive.getSelectedProperty().not());
+		debug_mode2.disableProperty().bind(enable_interactive.selectedProperty().not());
 		debug_mode2.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -347,7 +351,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		rotate.disableProperty().bind(enable_interactive.getSelectedProperty().not());
+		rotate.disableProperty().bind(enable_interactive.selectedProperty().not());
 		rotate.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -483,9 +487,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
-			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
-		});
+//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
+//			enable_interactive.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
+//		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
 			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));

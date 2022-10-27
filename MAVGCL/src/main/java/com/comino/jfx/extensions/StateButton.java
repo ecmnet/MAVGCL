@@ -45,6 +45,10 @@ public class StateButton extends Button {
 					setStyle("-fx-background-color: #606060");
 		});
 	}
+	
+	public void setSelected(boolean state) {
+		setState(state);
+	}
 
 	public void setState(boolean state) {
 		//		if(state == this.state || isDisabled())
@@ -66,7 +70,7 @@ public class StateButton extends Button {
 		});
 	}
 	
-	public BooleanProperty getSelectedProperty() {
+	public BooleanProperty selectedProperty() {
 		return selectedProperty;
 	}
 
