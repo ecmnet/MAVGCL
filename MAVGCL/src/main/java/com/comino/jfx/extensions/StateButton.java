@@ -5,14 +5,17 @@ import com.comino.flight.prefs.MAVPreferences;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 
 public class StateButton extends Button {
 
-	private boolean state 	= false;
 	private boolean is_light = false;
+	
+	private BooleanProperty selectedProperty = new SimpleBooleanProperty();
 
 	public StateButton() {
 
@@ -22,7 +25,7 @@ public class StateButton extends Button {
 
 		Timeline timeline = new Timeline(new KeyFrame(
 				Duration.millis(200),
-				ae ->  { setState(state); } ));
+				ae ->  { setState(selectedProperty.get()); } ));
 
 		this.addEventHandler(ActionEvent.ACTION, event -> {
 			timeline.playFromStart();
@@ -35,7 +38,7 @@ public class StateButton extends Button {
 		});
 
 		this.disabledProperty().addListener((v,o,n) -> {
-			if(!state)
+			if(!selectedProperty.get())
 				if(is_light)
 					setStyle("-fx-background-color: #E0E0E0");
 				else
@@ -46,7 +49,7 @@ public class StateButton extends Button {
 	public void setState(boolean state) {
 		//		if(state == this.state || isDisabled())
 		//			return;
-		this.state = state;
+		selectedProperty.set(state);
 		Platform.runLater(() -> {
 			if(state) {
 				if(is_light)
@@ -56,17 +59,19 @@ public class StateButton extends Button {
 			}
 			else {
 				if(is_light)
-					setStyle("-fx-background-color: #B0B0B0;");
+					setStyle("-fx-background-color: #D0D0D0;");
 				else
 					setStyle("-fx-background-color: #606060");
 			}
 		});
 	}
-
-
+	
+	public BooleanProperty getSelectedProperty() {
+		return selectedProperty;
+	}
 
 	public boolean getState() {
-		return state;
+		return selectedProperty.get();
 	}
 
 

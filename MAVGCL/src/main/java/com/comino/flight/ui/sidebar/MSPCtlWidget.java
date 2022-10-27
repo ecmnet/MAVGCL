@@ -329,6 +329,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		debug_mode1.disableProperty().bind(enable_interactive.getSelectedProperty().not());
 		debug_mode1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -337,6 +338,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		debug_mode2.disableProperty().bind(enable_interactive.getSelectedProperty().not());
 		debug_mode2.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -345,6 +347,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		rotate.disableProperty().bind(enable_interactive.getSelectedProperty().not());
 		rotate.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;

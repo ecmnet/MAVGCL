@@ -140,6 +140,7 @@ public class AnalysisModelService  {
 				}
 
 			} else {
+				control.getCurrentModel().sys.clear();
 				current.clear();
 			}
 		});

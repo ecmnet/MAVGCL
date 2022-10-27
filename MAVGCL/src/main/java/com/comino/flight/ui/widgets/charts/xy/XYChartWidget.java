@@ -1098,7 +1098,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 		});
 
-		state.getLogLoadedProperty().addListener((o,ov,nv) -> updateRequest());
+		state.getLogLoadedProperty().addListener((o,ov,nv) -> Platform.runLater(() -> updateRequest()));
 
 		current_x0_pt = dataService.calculateX0IndexByFactor(1);
 		current_x1_pt = current_x0_pt + timeFrame.intValue() * 1000 / dataService.getCollectorInterval_ms();

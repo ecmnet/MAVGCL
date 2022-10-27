@@ -79,12 +79,13 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
 	private StateProperties state        = null;
 
-	private final WorkQueue wq = WorkQueue.getInstance();
 	private boolean is_light = false;
+	
+	private static final String EMPTY = "";
 
 
 	public InfoWidget() {
-		super(300, true);
+		super(0, true);
 		FXMLLoadHelper.load(this, "InfoWidget.fxml");
 		
 		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light"))
@@ -102,10 +103,14 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 			@Override
 			protected void updateItem(LogMessage m, boolean empty) {
+		
 				super.updateItem(m, empty);
+//				setGraphic(null);
 				if(!empty && m!=null) {
 					setPrefWidth(130);
 					setWrapText(false);
+					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
+					
 					switch(m.severity) {
 					case MAV_SEVERITY.MAV_SEVERITY_NOTICE:
 						if(is_light) setStyle("-fx-text-fill:darkblue;"); else setStyle("-fx-text-fill:lightblue;");
@@ -132,12 +137,10 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 						if(is_light) setStyle("-fx-text-fill:black;"); else setStyle("-fx-text-fill:white;");
 					}
 					setText(m.text);
-					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
 				} else {
-					setText(null);
-					setGraphic(null);
+					setText(EMPTY);
 				}
-			}
+		   }
 		});
 
 
@@ -177,14 +180,12 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			Platform.runLater(() -> {
 				final LogMessage message;
 				if(nv.intValue()<=1) {
 					message = dataService.getModelList().get(1).msg;
 				} else
 					message = dataService.getModelList().get(nv.intValue()).msg;
 				addMessageToList(message);
-			});
 		});
 
 	}
@@ -204,9 +205,9 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		if(m.isNew()) {
 			Platform.runLater(() -> {
-				listview.getItems().add(m);
-				if(listview.getItems().size()>MAX_ITEMS)
+				if(listview.getItems().size()>=MAX_ITEMS)
 					listview.getItems().remove(0,0);
+				listview.getItems().add(m);
 				listview.scrollTo(m);
 			});
 		}
