@@ -146,7 +146,7 @@ public class AnalysisModelService  {
 		});
 
 		state.getIMUProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue()) {
+			if(nv.booleanValue() && !state.getLogLoadedProperty().get()) {
 				synchronized(converter) {
 					converter.notify();
 				}

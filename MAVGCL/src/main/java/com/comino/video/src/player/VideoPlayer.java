@@ -92,7 +92,7 @@ public class VideoPlayer {
 		if(isConnected || state.getLogLoadedProperty().get())
 		  stop();	
 		
-		try { Thread.sleep(100); } catch (InterruptedException e) { }
+		try { Thread.sleep(30); } catch (InterruptedException e) { }
 		if(connect()) {
 			image.setVisible(true);
 			if(!source.isRunning())
