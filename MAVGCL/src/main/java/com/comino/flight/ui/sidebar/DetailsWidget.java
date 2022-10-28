@@ -279,14 +279,14 @@ public class DetailsWidget extends ChartControlPane {
 			});
 		});
 
-		state.getArmedProperty().addListener((e, o, n) -> {
-			if(n.booleanValue()) {
-				last_view = view.getSelectionModel().getSelectedIndex();
-				view.getSelectionModel().clearAndSelect(0);	
-			} else {
-				view.getSelectionModel().clearAndSelect(last_view);	
-			}
-		});
+//		state.getArmedProperty().addListener((e, o, n) -> {
+//			if(n.booleanValue()) {
+//				last_view = view.getSelectionModel().getSelectedIndex();
+//				view.getSelectionModel().clearAndSelect(0);	
+//			} else {
+//				view.getSelectionModel().clearAndSelect(last_view);	
+//			}
+//		});
 
 		task.play();
 
