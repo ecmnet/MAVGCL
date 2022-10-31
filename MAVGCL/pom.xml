@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -11,10 +11,16 @@
 	<name>MAVGCL2</name>
 
 	<repositories>
+	   <repository>
+			<id>in-project</id>
+			<name>In Project Repo</name>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
+		<!--
 		 <repository>
         <snapshots>
             <enabled>false</enabled>
@@ -22,25 +28,26 @@
         <id>central</id>
         <name>bintray</name>
         <url>https://jcenter.bintray.com</url>
-    </repository>
-		<repository>
-			<id>in-project</id>
-			<name>In Project Repo</name>
-			<url>file://${project.basedir}/lib</url>
-		</repository>
+        </repository>
+    -->
 	</repositories>
 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.target>1.10</maven.compiler.target>
-		<maven.compiler.source>1.10</maven.compiler.source>
+		<maven.compiler.target>1.11</maven.compiler.target>
+		<maven.compiler.source>1.11</maven.compiler.source>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>mavbase</groupId>
 			<artifactId>mavbase</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.comino</groupId>
+			<artifactId>mavutils</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
@@ -98,11 +105,14 @@
 			<artifactId>Medusa</artifactId>
 			<version>7.4</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>objimport</groupId>
 			<artifactId>objimport</artifactId>
 			<version>0.8.0</version>
 		</dependency>
+		
+	
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -148,6 +158,7 @@
 			<artifactId>ffmpeg-platform</artifactId>
 			<version>5.1.1-1.5.8-SNAPSHOT</version>
 		</dependency>
+		
 	</dependencies>
 
 	<build>
