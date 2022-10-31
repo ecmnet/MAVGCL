@@ -116,7 +116,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		double length  = model.getValue("TRAJLEN");
 		
 
-		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 ) {
+		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 && length >0) {
 
 			if(current < STEP || refresh) {
 				

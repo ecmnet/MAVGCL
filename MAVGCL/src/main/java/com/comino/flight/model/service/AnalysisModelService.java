@@ -129,6 +129,8 @@ public class AnalysisModelService  {
 
 
 		state.getConnectedProperty().addListener((o,ov,nv) -> {
+			
+			control.getStatusManager().reset();
 
 			if(state.getLogLoadedProperty().get())
 				return;
@@ -140,7 +142,9 @@ public class AnalysisModelService  {
 				}
 
 			} else {
+				
 				control.getCurrentModel().sys.clear();
+				control.getCurrentModel().sys.resetStatus();
 				current.clear();
 			}
 		});
