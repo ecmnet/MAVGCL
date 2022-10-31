@@ -58,9 +58,11 @@ public class VehicleModel extends Group {
 
 	public VehicleModel(float scale) {
 		super();
+		
 		obj = new ObjModelImporter();
 		obj.read(this.getClass().getResource("resources/quad_x.obj"));
 		mesh = obj.getImport();
+		
 		this.setScaleX(scale);
 		this.setScaleY(scale);
 		this.setScaleZ(scale);

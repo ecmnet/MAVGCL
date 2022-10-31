@@ -146,7 +146,7 @@ public class AnalysisModelService  {
 		});
 
 		state.getIMUProperty().addListener((o,ov,nv) -> {
-			if(nv.booleanValue() && !state.getLogLoadedProperty().get()) {
+			if(nv.booleanValue()) {
 				synchronized(converter) {
 					converter.notify();
 				}
@@ -312,6 +312,7 @@ public class AnalysisModelService  {
 		mode = STOPPED;
 		current.clear();
 		clear();
+		model.clear();
 	}
 
 	public void setTotalTimeSec(int totalTime) {

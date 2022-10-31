@@ -46,7 +46,7 @@ import javafx.scene.shape.Line;
 
 public class XYTrajectoryAnnonation  implements XYAnnotation {
 
-	private static final int   SIZE 		= 4;
+	private static final int   SIZE 		= 6;
 	private static final float STEP 		= 0.2f;
 
 
@@ -81,14 +81,14 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		this.start.setCenterX(SIZE/2);
 		this.start.setCenterY(SIZE/2);
 		this.start.setRadius(SIZE/2);
-		this.start.setFill(Color.GREENYELLOW);
+		this.start.setFill(color);
 		this.start.setVisible(false);
 
 		this.projected = new Circle();
 		this.projected.setCenterX(SIZE/2);
 		this.projected.setCenterY(SIZE/2);
 		this.projected.setRadius(SIZE/2);
-		this.projected.setFill(Color.CORAL);
+		this.projected.setFill(color);
 		this.projected.setVisible(false);
 
 
@@ -114,6 +114,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 
 		double current = model.getValue("TRAJCURRENT");
 		double length  = model.getValue("TRAJLEN");
+		
 
 		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 ) {
 
@@ -126,10 +127,14 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 				p0y = (float)model.getValue("TRAJSTARTY");
 				v0x = (float)model.getValue("TRAJSTARTVX");
 				v0y = (float)model.getValue("TRAJSTARTVY");
+				
+				x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 
-				projected.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE/2);
-				projected.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE/2);
+				projected.setLayoutX(xAxis.getDisplayPosition(y)-SIZE/2);
+				projected.setLayoutY(yAxis.getDisplayPosition(x)-SIZE/2);
 				projected.setVisible(true);
+				
 
 				start.setLayoutX(xAxis.getDisplayPosition(p0y)-SIZE/2);
 				start.setLayoutY(yAxis.getDisplayPosition(p0x)-SIZE/2);

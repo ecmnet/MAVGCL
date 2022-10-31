@@ -170,6 +170,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 			FileHandler.getInstance().clear();
 			state.getLogLoadedProperty().set(false);
 			state.getReplayingProperty().set(false);
+			state.getIMUProperty().set(false);
 
 
 			if(!state.getConnectedProperty().get())
@@ -184,6 +185,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 			charts.refreshCharts();
 			info.clear();
+			
 
 		});
 
