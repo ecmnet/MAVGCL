@@ -68,7 +68,7 @@ import javafx.scene.control.Tooltip;
 
 public class InfoWidget extends ChartControlPane implements IChartControl {
 
-	private static final int MAX_ITEMS = 200;
+	private static final int MAX_ITEMS = 50;
 
 	@FXML
 	private ListView<LogMessage> listview;
@@ -202,12 +202,16 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 
 		if(m==null || m.text==null)
 			return;
+		
 		if(m.isNew()) {
+			
+			Platform.runLater(() -> {
+				listview.getItems().add(m);
+				listview.scrollTo(m);
+			});
 			Platform.runLater(() -> {
 				if(listview.getItems().size()>=MAX_ITEMS)
 					listview.getItems().remove(0,1);
-				listview.getItems().add(m);
-				listview.scrollTo(m);
 			});
 		}
 	}
