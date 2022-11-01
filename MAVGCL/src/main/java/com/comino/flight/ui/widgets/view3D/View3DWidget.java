@@ -47,6 +47,7 @@ import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Vision;
+import com.comino.mavutils.MSPMathUtils;
 
 import georegression.struct.point.Point3D_F64;
 import javafx.animation.AnimationTimer;
@@ -67,6 +68,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 
 public class View3DWidget extends SubScene implements IChartControl {
 
@@ -80,6 +82,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	private Box             ground;
 	private Box             landing_target;
+	private Rotate          rf = new Rotate(0, Rotate.Y_AXIS);
 
 	//	private MapGroup 		blocks		= null;
 	private Map3DGroup      blocks      = null;
@@ -256,6 +259,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 					
 					landing_target.setTranslateX(-model.getValue("PRECLOCKY")*100f);
 					landing_target.setTranslateZ(model.getValue("PRECLOCKX")*100f);		
+					landing_target.setRotationAxis(rf.getAxis());
+					landing_target.setRotate(MSPMathUtils.fromRad(180 - model.getValue("PRECLOCKW") -90));
 					landing_target.setVisible(true);
 					
 				} else
