@@ -188,6 +188,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		enable_mode2.setDisable(true);
 		enable_mode3.setDisable(true);
 		enable_takeoff_proc.setDisable(true);
+	    exec_land.setDisable(true);
 
 		//enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
@@ -361,6 +362,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		exec_land.disableProperty().bind(enable_interactive.selectedProperty().not());
 		exec_land.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
