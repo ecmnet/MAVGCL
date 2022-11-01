@@ -56,6 +56,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
@@ -68,6 +69,7 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
 public class View3DWidget extends SubScene implements IChartControl {
@@ -136,7 +138,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
 		
-		landing_target = new Box(100,0,100);
+		landing_target = new Box(50,0,50);
 		PhongMaterial landing_target_material = new PhongMaterial();
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
 		landing_target.setMaterial(landing_target_material);
@@ -257,10 +259,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 				
 				if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
 					
+					landing_target.getTransforms().clear();
 					landing_target.setTranslateX(-model.getValue("PRECLOCKY")*100f);
 					landing_target.setTranslateZ(model.getValue("PRECLOCKX")*100f);		
-					landing_target.setRotationAxis(rf.getAxis());
-					landing_target.setRotate(MSPMathUtils.fromRad(180 - model.getValue("PRECLOCKW") -90));
+					addRotate(landing_target, rf,180 - model.getValue("PRECLOCKW"));
 					landing_target.setVisible(true);
 					
 				} else
@@ -450,6 +452,27 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		}
 		return to;
+	}
+	
+	private void addRotate(Box node, Rotate rotate, double angle) {
+
+		Affine affine = node.getTransforms().isEmpty() ? new Affine() : (Affine)(node.getTransforms().get(0));
+
+		double A11 = affine.getMxx(), A12 = affine.getMxy(), A13 = affine.getMxz();
+		double A21 = affine.getMyx(), A22 = affine.getMyy(), A23 = affine.getMyz();
+		double A31 = affine.getMzx(), A32 = affine.getMzy(), A33 = affine.getMzz();
+
+
+		// rotations over local axis
+		Rotate newRotateX = new Rotate(angle, new Point3D(A11, A21, A31));
+		Rotate newRotateY = new Rotate(angle, new Point3D(A12, A22, A32));
+		Rotate newRotateZ = new Rotate(angle, new Point3D(A13, A23, A33));
+
+
+		// apply rotation
+		affine.prepend(rotate.getAxis() == Rotate.X_AXIS ? newRotateX :
+			rotate.getAxis() == Rotate.Y_AXIS ? newRotateY : newRotateZ);
+		node.getTransforms().setAll(affine);
 	}
 
 

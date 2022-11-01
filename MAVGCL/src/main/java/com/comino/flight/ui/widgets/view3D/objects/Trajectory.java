@@ -18,7 +18,7 @@ import javafx.scene.shape.Sphere;
 public class Trajectory extends Xform {
 
 	private static final float STEP = 0.2f;
-	
+
 	private final List<Point3D> points = new ArrayList<Point3D>();
 	private final Sphere sphere = new Sphere(1.5);
 	private PolyLine3D line;
@@ -35,7 +35,7 @@ public class Trajectory extends Xform {
 	private float x= 0; 
 	private float y= 0;
 	private float z= 0;
-	
+
 	private boolean enabled = true;
 
 	public Trajectory() {
@@ -56,7 +56,7 @@ public class Trajectory extends Xform {
 		double current = model.getValue("TRAJCURRENT");
 		double length  = model.getValue("TRAJLEN");
 
-		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 ) {
+		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 && length >0 ) {
 
 			points.clear();
 
@@ -76,21 +76,23 @@ public class Trajectory extends Xform {
 				points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
 
 			}
-			
+
 			// Endpoint dot
 			sphere.setTranslateX(-y*100);
 			sphere.setTranslateY(-(z+offset)*100-6);
 			sphere.setTranslateZ(x*100);
 			sphere.setVisible(true);
-			
+
 			if(!points.isEmpty()) {
 				line = new PolyLine3D(points, 1, Color.DARKRED, LineType.TRIANGLE);
 				this.getChildren().clear();
 				this.getChildren().addAll(line, sphere);
 			}
 		} 
+		else 
+			clear();
 	}
-	
+
 	public void clear() {
 		this.getChildren().clear();
 	}

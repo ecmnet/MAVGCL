@@ -93,7 +93,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		act_dir.setVisible(false);
 		
 		lock_rotate = Rotate.rotate(0, 0, 0);
-//		lock = new Polyline(-6,-3,6,-3,0,12,-6,-3);
+		lock = new Polyline(-6,-3,6,-3,0,12,-6,-3);
 		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
 		lock.getTransforms().add(lock_rotate);
 		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
