@@ -222,7 +222,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 			@Override
 			public void handle(long now) {
 				
-				if((now - tms_old) < 30_000_000)
+				if((now - tms_old) < 20_000_000)
 					return;
 				
 				tms_old = now;

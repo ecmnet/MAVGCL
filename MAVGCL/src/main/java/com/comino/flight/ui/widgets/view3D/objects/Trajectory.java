@@ -20,7 +20,7 @@ public class Trajectory extends Xform {
 	private static final float STEP = 0.2f;
 
 	private final List<Point3D> points = new ArrayList<Point3D>();
-	private final Sphere sphere = new Sphere(1.5);
+	private final Sphere sphere = new Sphere(1.3);
 	private PolyLine3D line;
 
 	private float  p0x = 0;
@@ -76,6 +76,12 @@ public class Trajectory extends Xform {
 				points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
 
 			}
+			
+			x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+			y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+			z = getPosition((float)length, p0z, v0z, 0,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
+
+			points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
 
 			// Endpoint dot
 			sphere.setTranslateX(-y*100);
