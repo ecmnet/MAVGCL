@@ -87,17 +87,23 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 		act_rotate = Rotate.rotate(0, 0, 0);
 		act_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
-		act_dir.setFill(Color.DARKRED);
+		if(MAVPreferences.isLightTheme())
+			act_dir.setFill(Color.DARKRED);
+		else
+			act_dir.setFill(Color.CORAL);
 		act_dir.getTransforms().add(act_rotate);
 		act_dir.setStrokeType(StrokeType.INSIDE);
 		act_dir.setVisible(false);
-		
+
 		lock_rotate = Rotate.rotate(0, 0, 0);
 		lock = new Polyline(-6,-3,6,-3,0,12,-6,-3);
 		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
 		lock.getTransforms().add(lock_rotate);
 		lock = new Polyline(-6,0,6,0,0,0,0,6,0,-6);
-		lock.setStroke(Color.DARKBLUE);
+		if(MAVPreferences.isLightTheme())
+			lock.setStroke(Color.DARKBLUE);
+		else
+			lock.setStroke(Color.FLORALWHITE);
 		lock.setVisible(false);
 
 		vhc_rotate = Rotate.rotate(0, 0, 0);
@@ -128,7 +134,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	}
 
 	@Override
-	
+
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
 		if(model==null)
@@ -151,16 +157,16 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			plan_dir.setVisible(false);
 
 		}
-		
+
 		if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
-			
+
 			lock_rotate.angleProperty().set(180+model.getValue("PRECLOCKW"));
 			lock.setLayoutX(xAxis.getDisplayPosition(model.getValue("PRECLOCKY")));
 			lock.setLayoutY(yAxis.getDisplayPosition(model.getValue("PRECLOCKX")));
 			lock.setVisible(true);
 		} else
 			lock.setVisible(false);
-			
+
 
 		if(model.getValue("SLAMOBX") != 0 && model.getValue("SLAMOBY") != 0 ) {
 
@@ -174,14 +180,14 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		//		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
 		//		act_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 		//		act_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
-//		act_dir.setVisible(true);
+		//		act_dir.setVisible(true);
 
 
 	}
-	
+
 	public void enableSLAM(boolean enable) {
 		this.enable_slam  = enable;
-		
+
 	}
 
 	public void clear() {
