@@ -152,6 +152,14 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 					x0 = x;
 					y0 = y;	
 				}
+				
+				
+				x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+				Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
+				l.setStroke(color);
+				pane.getChildren().add(l);
+				
 				refresh = false;
 				
 			}
