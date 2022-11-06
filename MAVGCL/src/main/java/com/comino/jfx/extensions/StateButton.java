@@ -31,7 +31,7 @@ public class StateButton extends Button {
 			timeline.playFromStart();
 			Platform.runLater(() -> {
 				if(is_light)
-					setStyle("-fx-background-color: #A0A0A0");
+					setStyle("-fx-background-color: #C0C0C0");
 				else
 					setStyle("-fx-background-color: #1a606e");
 			});
