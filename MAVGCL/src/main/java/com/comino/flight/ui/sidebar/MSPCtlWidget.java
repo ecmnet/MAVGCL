@@ -76,16 +76,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private VBox     box;
 
 	@FXML
-	private VBox     settings;
+	private VBox     modes;
 	
 	@FXML
-	private VBox     planner;
-
-	@FXML
-	private VBox     modes;
+	private VBox     sitl;
 
 	@FXML
 	private VBox     msp_control;
+	
+	@FXML
+	private VBox     actions;
 
 	@FXML
 	private Button   reset_odometry;
@@ -103,7 +103,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private CheckBox enable_precision_lock;
 
 	@FXML
-	private CheckBox enable_mode1;
+	private CheckBox enable_turn_to_person;
+	
+	@FXML
+	private CheckBox enable_obstacle_stop;
 	
 	@FXML
 	private CheckBox enable_mode2;
@@ -115,22 +118,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private ChoiceBox<String> stream;
 
 	@FXML
-	private StateButton enable_offboard;
-
-	@FXML
-	private StateButton enable_stop;
-
-	@FXML
-	private StateButton enable_avoidance;
-
-	@FXML
 	private StateButton enable_interactive;
-
-	@FXML
-	private StateButton enable_follow;
-
-	@FXML
-	private StateButton enable_planner;
 
 	@FXML
 	private StateButton enable_rtl;
@@ -146,6 +134,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private Button exec_land;
+	
+	@FXML
+	private Button sitl_action1;
+
+	@FXML
+	private Button sitl_action2;
 
 	@FXML
 	private Button test_seq1;
@@ -160,7 +154,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private Button   abort;
 
 	private IMAVController  control = null;
-	private Preferences     prefs   = null;
 
 	public MSPCtlWidget() {
 
@@ -178,17 +171,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private void initialize() {
 
 		this.disableProperty().bind(state.getConnectedProperty().not().or(state.getMSPProperty().not()));
+		
 
 		box.prefHeightProperty().bind(this.heightProperty());
-
-		settings.setDisable(true);
-		planner.setDisable(true);
 		
-		enable_mode1.setDisable(true);
 		enable_mode2.setDisable(true);
 		enable_mode3.setDisable(true);
 		enable_takeoff_proc.setDisable(true);
 	    exec_land.setDisable(true);
+	    
+	    actions.setDisable(true);
 
 		//enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
@@ -238,6 +230,30 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
+		
+		enable_turn_to_person.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+		
+		enable_obstacle_stop.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
 
 //		enable_fcum_mode.selectedProperty().addListener((v,o,n) -> {
 //			msg_msp_command msp = new msg_msp_command(255,1);
@@ -257,42 +273,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 //
 //		});
 
-		enable_stop.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE;
-			msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-
-		});
-
-		enable_avoidance.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
-			msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
 
 		enable_interactive.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -300,19 +280,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.param2 =  MSP_AUTOCONTROL_MODE.INTERACTIVE;
 
 			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-		enable_follow.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT))
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
@@ -381,37 +348,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		enable_planner.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_MODE.PX4_PLANNER;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.PX4_PLANNER))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-		enable_offboard.setOnAction((event) ->{
-
-			if(control.getCurrentModel().sys.isStatus(Status.MSP_LANDED))
-				return;
-
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-
 		save_map.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -457,6 +393,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
+		
+		sitl.disableProperty().bind(state.getSimulationProperty().not());
 
 
 		state.getCVAvailableProperty().addListener((c,o,n) -> {
@@ -468,12 +406,39 @@ public class MSPCtlWidget extends ChartControlPane   {
 			}
 		});
 		
-		state.getConnectedProperty().addListener((c,o,n) -> {
+		state.getMSPProperty().addListener((c,o,n) -> {
+			
 			if(n.booleanValue() ) {	
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 				msp.param1  = state.getStreamProperty().intValue();
 				control.sendMAVLinkMessage(msp);	
+				
+				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+				msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
+				if(enable_obstacle_stop.isSelected())
+					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				else
+					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+				control.sendMAVLinkMessage(msp);
+				
+				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+				msp.param2 =  MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT;
+				if(enable_turn_to_person.isSelected())
+					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				else
+					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+				control.sendMAVLinkMessage(msp);
+				
+				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+				msp.param2 =  MSP_AUTOCONTROL_MODE.PRECISION_LOCK;
+				if(enable_precision_lock.isSelected())
+					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+				else
+					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+				control.sendMAVLinkMessage(msp);
+				
+				
 			}
 		});
 
@@ -481,30 +446,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_STOP,(n) -> {
-			enable_stop.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE,(n) -> {
-			enable_avoidance.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_AVOIDANCE));
-		});
-
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
 		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT,(n) -> {
-			enable_follow.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PX4_PLANNER,(n) -> {
-			enable_planner.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PX4_PLANNER));
-		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER,(n) -> {
-			enable_offboard.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.OFFBOARD_UPDATER));
-		});
-
+		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
 			enable_takeoff_proc.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
 		});

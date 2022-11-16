@@ -23,9 +23,10 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
-					<CheckBox fx:id="enable_precision_lock" text="Enable precision lock" />
-					<CheckBox fx:id="enable_takeoff_proc" text="Enable TakeOff procedure" />
-					<CheckBox fx:id="enable_mode1" text="(reserved)" />
+					<CheckBox fx:id="enable_precision_lock" text="Precision lock" />
+					<CheckBox fx:id="enable_turn_to_person" text="Turn to person" />
+					<CheckBox fx:id="enable_obstacle_stop" text="Stop at obstacle" />
+					<CheckBox fx:id="enable_takeoff_proc" text="TakeOff procedure" />
 					<CheckBox fx:id="enable_mode2" text="(reserved)" />
 					<CheckBox fx:id="enable_mode3" text="(reserved)" />
 				</children>
@@ -44,24 +45,6 @@
 						<Button fx:id="debug_mode2" text="Build virtual wall" prefWidth="165.0" />
 				</children>
 			</VBox>
-			<VBox fx:id="settings" spacing="10" styleClass="widget"
-				prefWidth="193" VBox.vgrow="ALWAYS">
-				<padding>
-					<Insets top="14" left="10" bottom="14" />
-				</padding>
-				<children>
-					<StateButton fx:id="enable_offboard" text="Autopilot"
-						prefWidth="165.0" />
-					<StateButton fx:id="enable_stop" text="Collision stop"
-						prefWidth="165.0" />
-					<StateButton fx:id="enable_avoidance" text="Obstacle avoidance"
-						prefWidth="165.0" />
-					<StateButton fx:id="enable_planner" text="PX4 planner"
-						prefWidth="165.0" />
-					<StateButton fx:id="enable_follow" text="Follow object"
-						prefWidth="165.0" />
-				</children>
-			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"
 				VBox.vgrow="NEVER">
 				<padding>
@@ -75,7 +58,17 @@
 				  <Button fx:id="debug_mode2" text="Action 2" prefWidth="165.0" />
 				</children>
 			</VBox>
-			<VBox fx:id="planner" spacing="10" styleClass="widget" prefWidth="193"
+			<VBox fx:id="sitl" spacing="10" styleClass="widget" prefWidth="193"
+				VBox.vgrow="NEVER">
+				<padding>
+					<Insets top="14" left="10" bottom="14" />
+				</padding>
+				<children>
+				  <Button fx:id="sitl_action1" text="SITL Action 1" prefWidth="165.0" />
+				  <Button fx:id="sitl_action2" text="SITL Action 2" prefWidth="165.0" />
+				</children>
+			</VBox>
+			<VBox fx:id="actions" spacing="10" styleClass="widget" prefWidth="193"
 				VBox.vgrow="ALWAYS">
 				<padding>
 					<Insets top="14" left="10" bottom="14" />

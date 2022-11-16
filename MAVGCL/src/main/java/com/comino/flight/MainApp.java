@@ -364,6 +364,7 @@ public class MainApp extends Application  {
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
+			
 
 			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
 				base = UBXRTCM3Base.getInstance(control, analysisModelService);
