@@ -58,9 +58,11 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 
 	private float  p0x = 0;
 	private float  v0x = 0;
+	private float  a0x = 0;
 
 	private float  p0y = 0;
 	private float  v0y = 0;
+	private float  a0y = 0;
 
 	private float x= 0; 
 	private float y= 0;
@@ -127,9 +129,11 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 				p0y = (float)model.getValue("TRAJSTARTY");
 				v0x = (float)model.getValue("TRAJSTARTVX");
 				v0y = (float)model.getValue("TRAJSTARTVY");
+				a0x = (float)model.getValue("TRAJSTARTAX");
+				a0y = (float)model.getValue("TRAJSTARTAY");
 				
-				x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-				y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+				x = getPosition((float)length, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y = getPosition((float)length, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 
 				projected.setLayoutX(xAxis.getDisplayPosition(y)-SIZE/2);
 				projected.setLayoutY(yAxis.getDisplayPosition(x)-SIZE/2);
@@ -144,18 +148,19 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 				y0 = getPosition(0, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 
 				for(double t = 0; t < length; t = t + STEP ) {
-					x = getPosition((float)t, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-					y = getPosition((float)t, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+					x = getPosition((float)t, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+					y = getPosition((float)t, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 					Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
 					l.setStroke(color);
 					pane.getChildren().add(l);
 					x0 = x;
 					y0 = y;	
+
 				}
 				
 				
-				x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-				y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+				x = getPosition((float)length, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y = getPosition((float)length, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 				Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
 				l.setStroke(color);
 				pane.getChildren().add(l);

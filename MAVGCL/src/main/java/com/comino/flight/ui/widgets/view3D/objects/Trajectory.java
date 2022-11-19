@@ -25,12 +25,15 @@ public class Trajectory extends Xform {
 
 	private float  p0x = 0;
 	private float  v0x = 0;
+	private float  a0x = 0;
 
 	private float  p0y = 0;
 	private float  v0y = 0;
+	private float  a0y = 0;
 
 	private float  p0z = 0;
 	private float  v0z = 0;
+	private float  a0z = 0;
 
 	private float x= 0; 
 	private float y= 0;
@@ -66,20 +69,23 @@ public class Trajectory extends Xform {
 			v0x = (float)model.getValue("TRAJSTARTVX");
 			v0y = (float)model.getValue("TRAJSTARTVY");
 			v0z = (float)model.getValue("TRAJSTARTVZ");
+			a0x = (float)model.getValue("TRAJSTARTAX");
+			a0y = (float)model.getValue("TRAJSTARTAY");
+			a0z = (float)model.getValue("TRAJSTARTAZ");
 
 			for(double t = current+STEP/2; t < length; t = t + STEP ) {
 
-				x = getPosition((float)t, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-				y = getPosition((float)t, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
-				z = getPosition((float)t, p0z, v0z, 0,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
+				x = getPosition((float)t, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+				y = getPosition((float)t, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+				z = getPosition((float)t, p0z, v0z, a0z,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
 
 				points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
 
 			}
 			
-			x = getPosition((float)length, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
-			y = getPosition((float)length, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
-			z = getPosition((float)length, p0z, v0z, 0,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
+			x = getPosition((float)length, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
+			y = getPosition((float)length, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
+			z = getPosition((float)length, p0z, v0z, a0z,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
 
 			points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
 
