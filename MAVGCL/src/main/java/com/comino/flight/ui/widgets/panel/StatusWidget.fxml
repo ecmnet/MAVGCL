@@ -24,7 +24,7 @@
 				<RowConstraints prefHeight="20.0" />
 				<RowConstraints prefHeight="20.0" />
 				<RowConstraints prefHeight="20.0" />
-				<RowConstraints prefHeight="30.0" />
+				<RowConstraints prefHeight="20.0" />
 			</rowConstraints>
 			<children>
 				<DashLabelLED fx:id="armed"    text="Motors armed"
