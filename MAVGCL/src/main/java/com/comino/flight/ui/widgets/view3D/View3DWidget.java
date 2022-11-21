@@ -330,6 +330,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 	public void enableTrajectoryView(boolean enabled) {
 		trajectory.show(enabled);
 	}
+	
+	public void setDataSource(int mode) {
+		vehicle.setMode(mode);
+	}
 
 
 	public void setPerspective(int perspective) {

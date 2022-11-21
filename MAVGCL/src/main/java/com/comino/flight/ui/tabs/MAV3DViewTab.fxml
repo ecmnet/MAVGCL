@@ -23,6 +23,9 @@
 						<Label text="Perspective:" />
 						<ChoiceBox fx:id="perspective" prefWidth="100.0"
 							maxHeight="17.0" />
+						<Label text="Position by:" />
+						<ChoiceBox fx:id="source" prefWidth="100.0"
+							maxHeight="17.0" />
 						<CheckBox fx:id="show_traj" mnemonicParsing="false" text="Show Trajectory" selected="true" />
 					</children>
 				</HBox>

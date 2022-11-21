@@ -58,6 +58,7 @@ import javafx.scene.paint.Color;
 public class MAV3DViewTab extends Pane  {
 
 	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
+	private static final String[] SOURCES = { "LPOS","LPOS corrected", "Groundtruth"};
 
 	private View3DWidget widget = null;
 
@@ -71,6 +72,9 @@ public class MAV3DViewTab extends Pane  {
 
 	@FXML
 	private ChoiceBox<String> perspective;
+	
+	@FXML
+	private ChoiceBox<String> source;
 	
 	@FXML
 	private CheckBox     show_traj;
@@ -96,10 +100,15 @@ public class MAV3DViewTab extends Pane  {
 		main.getChildren().add(widget);
 
 		perspective.getItems().addAll(PERSPECTIVES);
+		source.getItems().addAll(SOURCES);
 
 
 		perspective.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
 			widget.setPerspective(n.intValue());
+		});
+		
+		source.getSelectionModel().selectedIndexProperty().addListener((v,o,n) -> {
+			widget.setDataSource(n.intValue());
 		});
 
 		zoom.setValue(100f);
@@ -135,6 +144,7 @@ public class MAV3DViewTab extends Pane  {
 		ChartControlPane.addChart(4,widget.setup(control));
 //		msg.setup(control);
 		perspective.getSelectionModel().selectFirst();
+		source.getSelectionModel().selectFirst();
 		
 		
 		return this;

@@ -46,6 +46,11 @@ import javafx.scene.transform.Rotate;
 
 public class VehicleModel extends Group {
 
+	public static final int MODE_LPOS           = 0;
+	public static final int MODE_LPOS_CORRECTED = 1;
+	public static final int MODE_GROUNDTRUTH    = 2;
+
+
 	private ObjModelImporter obj = null;
 	private MeshView[]      mesh = null;
 
@@ -55,14 +60,16 @@ public class VehicleModel extends Group {
 
 	private double z_pos        = 0;
 
+	private int mode = MODE_LPOS;
+
 
 	public VehicleModel(float scale) {
 		super();
-		
+
 		obj = new ObjModelImporter();
 		obj.read(this.getClass().getResource("resources/quad_x.obj"));
 		mesh = obj.getImport();
-		
+
 		this.setScaleX(scale);
 		this.setScaleY(scale);
 		this.setScaleZ(scale);
@@ -75,40 +82,42 @@ public class VehicleModel extends Group {
 		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))-90);
 		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
 		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
-		
-//		if(Double.isFinite(model.getValue("GNDTRUTHY")) && Double.isFinite(model.getValue("GNDTRUTHX"))) {
-//			this.setTranslateX(-model.getValue("GNDTRUTHY")*100);
-//			z_pos = ( - model.getValue("GNDTRUTHZ")  ) * 100 - 12 ;
-//			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
-//			this.setTranslateZ(model.getValue("GNDTRUTHX")*100);
-//			
-//		}
-//        else 
-        	if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX")) &&
-        	   model.getValue("LPOSRX") != 0 && model.getValue("LPOSRY") != 0	) {
-			this.setTranslateX(-model.getValue("LPOSRY")*100);
-			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
-			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
-			this.setTranslateZ(model.getValue("LPOSRX")*100);
-			
-		}
-		else {
+
+		switch(mode) {
+		case MODE_LPOS:
 			this.setTranslateX(-model.getValue("LPOSY")*100);
 			z_pos = ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
 			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
 			this.setTranslateZ(model.getValue("LPOSX")*100);
+			break;
+		case MODE_LPOS_CORRECTED:
+			this.setTranslateX(-model.getValue("LPOSRY")*100);
+			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
+			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			this.setTranslateZ(model.getValue("LPOSRX")*100);
+			break;
+		case MODE_GROUNDTRUTH:
+			this.setTranslateX(-model.getValue("GNDTRUTHY")*100);
+			z_pos = ( - model.getValue("GNDTRUTHZ")  ) * 100 - 12 ;
+			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			this.setTranslateZ(model.getValue("GNDTRUTHX")*100);
+			break;
 		}
 	}
 
 	public void show(boolean show) {
 		if(show && this.getChildren().isEmpty())
 			this.getChildren().addAll(mesh);
-		
+
 		this.setVisible(show);
-//		if(show)
-//			this.getChildren().addAll(mesh);
-//		else
-//			this.getChildren().clear();
+		//		if(show)
+		//			this.getChildren().addAll(mesh);
+		//		else
+		//			this.getChildren().clear();
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
 	}
 
 	private void addRotate(Group node, Rotate rotate, double angle) {
