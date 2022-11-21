@@ -58,7 +58,7 @@ import javafx.scene.paint.Color;
 public class MAV3DViewTab extends Pane  {
 
 	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
-	private static final String[] SOURCES = { "LPOS","LPOS corrected", "Groundtruth"};
+	private static final String[] SOURCES = { "LPOS","LPOS corrected", "Vision","Groundtruth"};
 
 	private View3DWidget widget = null;
 

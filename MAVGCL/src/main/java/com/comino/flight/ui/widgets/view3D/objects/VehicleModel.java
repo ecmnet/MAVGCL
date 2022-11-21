@@ -48,7 +48,8 @@ public class VehicleModel extends Group {
 
 	public static final int MODE_LPOS           = 0;
 	public static final int MODE_LPOS_CORRECTED = 1;
-	public static final int MODE_GROUNDTRUTH    = 2;
+	public static final int MODE_VISION         = 2;
+	public static final int MODE_GROUNDTRUTH    = 3;
 
 
 	private ObjModelImporter obj = null;
@@ -95,6 +96,12 @@ public class VehicleModel extends Group {
 			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
 			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
 			this.setTranslateZ(model.getValue("LPOSRX")*100);
+			break;
+		case MODE_VISION:
+			this.setTranslateX(-model.getValue("VISIONY")*100);
+			z_pos = ( - model.getValue("VISIONZ") - z_offset ) * 100 - 12 ;
+			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			this.setTranslateZ(model.getValue("VISIONX")*100);
 			break;
 		case MODE_GROUNDTRUTH:
 			this.setTranslateX(-model.getValue("GNDTRUTHY")*100);
