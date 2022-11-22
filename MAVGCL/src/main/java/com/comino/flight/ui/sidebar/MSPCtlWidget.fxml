@@ -64,6 +64,7 @@
 					<Insets top="14" left="10" bottom="14" />
 				</padding>
 				<children>
+				  <StateButton fx:id="sitl_mode1" text="Continuous planning" prefWidth="165.0"/>
 				  <Button fx:id="sitl_action1" text="SITL Action 1" prefWidth="165.0" />
 				  <Button fx:id="sitl_action2" text="SITL Action 2" prefWidth="165.0" />
 				</children>

@@ -184,15 +184,6 @@ public class StatusWidget extends ChartControlPane  {
 			});
 		});
 
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT,MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE, (n) -> {
-			Platform.runLater(() -> {
-				if(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
-					offboard.setMode(DashLabelLED.MODE_BLINK);
-				else
-					offboard.set(n.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
-			});
-		});
-
 
 		refresh();
 
@@ -209,11 +200,7 @@ public class StatusWidget extends ChartControlPane  {
 			landed.set(status.isStatus(Status.MSP_LANDED));
 			althold.set(status.nav_state == Status.NAVIGATION_STATE_ALTCTL);
 			poshold.set(status.nav_state == Status.NAVIGATION_STATE_POSCTL);
-
-			if(status.isAutopilotMode(MSP_AUTOCONTROL_ACTION.WAYPOINT_MODE))
-				offboard.setMode(DashLabelLED.MODE_BLINK);
-			else
-				offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
+			offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 
 			if(status.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !status.isStatus(Status.MSP_LANDED))
 				mission.setMode(DashLabelLED.MODE_BLINK);

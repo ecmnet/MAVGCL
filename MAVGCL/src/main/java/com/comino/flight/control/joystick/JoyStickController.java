@@ -81,6 +81,7 @@ public class JoyStickController implements Runnable {
 
 		if(control!=null)
 		  this.model   = control.getCurrentModel();
+		
 
 
 		joystick.addButtonListener(ch_land, (state) -> {
@@ -149,11 +150,7 @@ public class JoyStickController implements Runnable {
 		joystick.addButtonListener(ch_seq, (state) -> {
 			if(state == JoyStickModel.PRESSED) {
                 // Execute sequence 1
-				msg_msp_command msp = new msg_msp_command(255,1);
-				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-				msp.param2 =  MSP_AUTOCONTROL_ACTION.TEST_SEQ1;
-				control.sendMAVLinkMessage(msp);
+				
 
 			}
 		});
@@ -170,11 +167,11 @@ public class JoyStickController implements Runnable {
 					deadzone((y-1500.0f)/-1000.0f,0.05f));
 		});
 		
-		if(isConnected()) {
+	//	if(isConnected()) {
 		Thread thread = new Thread(this);
 		thread.setName("Joystick worker");
 		thread.start();
-		}
+//		}
 
 
 	}
@@ -203,6 +200,8 @@ public class JoyStickController implements Runnable {
 
 		this.pad = new ControllerManager();
 		this.pad.initSDLGamepad();
+		
+		System.out.println("JoystickController loaded");
 
 		while(true) {
 			try {

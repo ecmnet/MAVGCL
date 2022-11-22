@@ -140,6 +140,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private Button sitl_action2;
+	
+	@FXML
+	private StateButton sitl_mode1;
 
 	@FXML
 	private Button test_seq1;
@@ -328,6 +331,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
+		
 
 		exec_land.disableProperty().bind(enable_interactive.selectedProperty().not());
 		exec_land.setOnAction((event) ->{
@@ -335,15 +339,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.LAND;
-			control.sendMAVLinkMessage(msp);
-
-		});
-
-		test_seq1.setOnAction((event) ->{
-			msg_msp_command msp = new msg_msp_command(255,1);
-			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			msp.param2 =  MSP_AUTOCONTROL_ACTION.TEST_SEQ1;
 			control.sendMAVLinkMessage(msp);
 
 		});
@@ -384,6 +379,28 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
+		});
+		
+		sitl_mode1.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.SITL_MODE1;
+
+			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.SITL_MODE1))
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+		
+		sitl_action1.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.SITL_ACTION1;
+			msp.param3 = 180f;
+			control.sendMAVLinkMessage(msp);
+
 		});
 
 
@@ -457,11 +474,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.SITL_MODE1,(n) -> {
+			sitl_mode1.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.SITL_MODE1));
+		});
+		
 
-//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.FCUM,(n) -> {
-//			if(!n.isAutopilotMode(MSP_AUTOCONTROL_MODE.FCUM))
-//				enable_fcum_mode.setSelected(false);
-//		});
 
 		enable_vision.setSelected(true);
 

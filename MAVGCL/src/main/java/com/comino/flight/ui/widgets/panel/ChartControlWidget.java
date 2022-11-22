@@ -87,7 +87,7 @@ public class ChartControlWidget extends ChartControlPane  {
 
 	private StateProperties state = StateProperties.getInstance();
 
-	private int   replay_index = 0;
+	private float replay_index = 0;
 	private long  replay_tms   = 0;
 	private long  anim_tms     = 0;
 
@@ -270,7 +270,7 @@ public class ChartControlWidget extends ChartControlPane  {
 						.and(state.getLogLoadedProperty().not())));
 
 		task = new AnimationTimer() {
-			long replay_time_ms; long replay_index_old; long tms_old = 0;
+			long replay_time_ms; float replay_index_old; long tms_old = 0;
 			@Override public void handle(long now) {
 
 				if((now - tms_old)<20_000_000)
@@ -288,7 +288,7 @@ public class ChartControlWidget extends ChartControlPane  {
 						if(chart.getValue().getReplayProperty()!=null)
 							chart.getValue().getReplayProperty().set(replay_index);
 					});
-					replay_index = (int)(replay_time_ms / modelService.getCollectorInterval_ms());
+					replay_index = replay_time_ms / (float)modelService.getCollectorInterval_ms();
 					if(replay_index > replay_index_old) {
 						state.getProgressProperty().set((float)(replay_index) / modelService.getModelList().size() );
 						scroll.setValue((1f - (float)replay_index/modelService.getModelList().size()));
@@ -315,7 +315,7 @@ public class ChartControlWidget extends ChartControlPane  {
 				if(scroll.getValue()<0.05)
 					scroll.setValue(1);
 
-				replay_index = ((int)(modelService.getModelList().size() * (1f - scroll.getValue())))+1;
+				replay_index = (float)((modelService.getModelList().size() * (1f - scroll.getValue()))+1);
 
 				charts.entrySet().forEach((chart) -> { 
 					if(chart.getValue().getReplayProperty()!=null)
