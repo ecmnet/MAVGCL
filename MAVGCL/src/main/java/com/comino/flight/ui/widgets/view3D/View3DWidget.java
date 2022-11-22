@@ -41,6 +41,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
+import com.comino.flight.ui.widgets.view3D.objects.Obstacle;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.Trajectory;
 import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
@@ -92,6 +93,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private VehicleModel   	vehicle    	= null;
 	private Trajectory   	trajectory  = null;
 	private Target			target      = null;
+	private Obstacle		obstacle      = null;
 
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
@@ -134,6 +136,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		northMaterial.setDiffuseColor(Color.RED);
 
 		target    = new Target();
+		obstacle  = new Obstacle();
 
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
@@ -145,7 +148,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		vehicle = new VehicleModel(VEHICLE_SCALE);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground, landing_target, vehicle,  target, trajectory, pointLight, ambient,
+		world.getChildren().addAll(ground, landing_target, vehicle,  target, obstacle, trajectory, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
@@ -281,6 +284,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 					trajectory.clear();
 					break;
 				}
+				
+				obstacle.updateState(model);
 			}		
 		};
 

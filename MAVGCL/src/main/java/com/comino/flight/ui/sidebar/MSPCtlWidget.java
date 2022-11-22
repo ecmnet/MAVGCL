@@ -258,24 +258,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-//		enable_fcum_mode.selectedProperty().addListener((v,o,n) -> {
-//			msg_msp_command msp = new msg_msp_command(255,1);
-//			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-//			msp.param2 =  MSP_AUTOCONTROL_MODE.FCUM;
-//			if(n.booleanValue()) {
-//				if(confirmationDialog(AlertType.CONFIRMATION,"Is the FCU separated from vehicle?"))
-//					msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-//				else {
-//					enable_fcum_mode.setSelected(false);
-//					return;
-//				}
-//			}
-//			else
-//				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-//			control.sendMAVLinkMessage(msp);
-//
-//		});
-
 
 		enable_interactive.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -398,7 +380,14 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.SITL_ACTION1;
-			msp.param3 = 180f;
+			control.sendMAVLinkMessage(msp);
+
+		});
+		
+		sitl_action2.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_ACTION.SITL_ACTION2;
 			control.sendMAVLinkMessage(msp);
 
 		});
