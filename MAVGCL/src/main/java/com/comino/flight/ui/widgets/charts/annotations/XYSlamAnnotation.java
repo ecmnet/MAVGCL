@@ -57,15 +57,12 @@ public class XYSlamAnnotation  implements XYAnnotation {
 
 
 	private  Pane   	  			pane 	    = null;
-	private  Polygon        		act_dir     = null;
-	private  Polygon        		plan_dir    = null;
 	private  Polyline        		lock        = null;
-	private  Rotate       		    act_rotate  = null;
-	private  Rotate       		    plan_rotate = null;
 	private  Rotate       		    lock_rotate = null;
 	private  Polygon  				vhc         = null;
 	private  Rotate  				vhc_rotate  = null;
 	private  Circle                 obstacle    = null;
+	private  Circle                 infopoint   = null;
 
 	private  AnalysisDataModel      model        = null;
 	private boolean enable_slam = true;
@@ -75,25 +72,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
 		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
-
-		plan_rotate = Rotate.rotate(0, 0, 0);
-		plan_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
-		plan_dir.setFill(Color.rgb(230, 230, 20, 0.6));
-		if(MAVPreferences.isLightTheme())
-			plan_dir.setFill(Color.valueOf(plan_dir.getFill().toString()).darker());
-		plan_dir.getTransforms().add(plan_rotate);
-		plan_dir.setStrokeType(StrokeType.INSIDE);
-		plan_dir.setVisible(false);
-
-		act_rotate = Rotate.rotate(0, 0, 0);
-		act_dir = new Polygon( -4,30, -1,30, -1,0, 1,0, 1,30, 4,30, 0,35);
-		if(MAVPreferences.isLightTheme())
-			act_dir.setFill(Color.DARKRED);
-		else
-			act_dir.setFill(Color.CORAL);
-		act_dir.getTransforms().add(act_rotate);
-		act_dir.setStrokeType(StrokeType.INSIDE);
-		act_dir.setVisible(false);
 
 		lock_rotate = Rotate.rotate(0, 0, 0);
 		lock = new Polyline(-6,-3,6,-3,0,12,-6,-3);
@@ -119,8 +97,16 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		this.obstacle.setFill(Color.TRANSPARENT);
 		this.obstacle.setStroke(Color.RED);
 		this.obstacle.setVisible(enable_slam);
+		
+		this.infopoint = new Circle();
+		this.infopoint.setCenterX(SIZE_OBS/2);
+		this.infopoint.setCenterY(SIZE_OBS/2);
+		this.infopoint.setRadius(SIZE_OBS);
+		this.infopoint.setFill(Color.TRANSPARENT);
+		this.infopoint.setStroke(Color.YELLOW);
+		this.infopoint.setVisible(enable_slam);
 
-		pane.getChildren().addAll(act_dir,plan_dir, vhc, obstacle, lock);
+		pane.getChildren().addAll(vhc, obstacle, infopoint, lock);
 	}
 
 	public void setModel(AnalysisDataModel model) {
@@ -144,20 +130,6 @@ public class XYSlamAnnotation  implements XYAnnotation {
 		vhc.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
 		vhc_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("YAW")));
 
-
-		if(model.getValue("SLAMSPD") != 0 && !Double.isNaN(model.getValue("SLAMSPD"))) {
-			setArrowLength(plan_dir,(float)model.getValue("SLAMSPD")*50);
-			plan_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
-			plan_dir.setLayoutY(yAxis.getDisplayPosition(model.getValue("LPOSX")));
-			plan_rotate.angleProperty().set(180+MSPMathUtils.fromRad(model.getValue("SLAMDIR")));
-			plan_dir.setVisible(true);
-
-
-		} else {
-			plan_dir.setVisible(false);
-
-		}
-
 		if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
 
 			lock_rotate.angleProperty().set(180+model.getValue("PRECLOCKW"));
@@ -175,6 +147,14 @@ public class XYSlamAnnotation  implements XYAnnotation {
 			obstacle.setVisible(enable_slam);
 		} else
 			obstacle.setVisible(false);
+		
+		if(model.getValue("SLAMPX") != 0 && model.getValue("SLAMPY") != 0 ) {
+
+			infopoint.setLayoutX(xAxis.getDisplayPosition(model.getValue("SLAMPY"))-SIZE_OBS/2f);
+			infopoint.setLayoutY(yAxis.getDisplayPosition(model.getValue("SLAMPX"))-SIZE_OBS/2f);
+			infopoint.setVisible(enable_slam);
+		} else
+			infopoint.setVisible(false);
 
 		//		setArrowLength(act_dir,model.getValue("GNDV"));
 		//		act_dir.setLayoutX(xAxis.getDisplayPosition(model.getValue("LPOSY")));
@@ -191,17 +171,7 @@ public class XYSlamAnnotation  implements XYAnnotation {
 	}
 
 	public void clear() {
-		Platform.runLater(() -> {
-			act_dir.setVisible(false);
-			plan_dir.setVisible(false);
-		});
+		
 	}
 
-	private void setArrowLength(Polygon p, double k) {
-		p.getPoints().set(1,k);
-		p.getPoints().set(3,k);
-		p.getPoints().set(9,k);
-		p.getPoints().set(11,k);
-		p.getPoints().set(13,k+10);
-	}
 }

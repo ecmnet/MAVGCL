@@ -2052,34 +2052,28 @@
 
 	<!-- SLAM data -->
 
-	<KeyFigure desc="Path.X" uom="m" mask="#0.00" key="SLAMPX">
-		<MSPSource class="slam" field="px"></MSPSource>
+	<KeyFigure desc="Info.X" uom="m" mask="#0.00" key="SLAMPX">
+		<MSPSource class="slam" field="ix"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Path.Y" uom="m" mask="#0.00" key="SLAMPY">
-		<MSPSource class="slam" field="py"></MSPSource>
+	<KeyFigure desc="Info.Y" uom="m" mask="#0.00" key="SLAMPY">
+		<MSPSource class="slam" field="iy"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Path.Z" uom="m" mask="#0.00" key="SLAMPZ">
-		<MSPSource class="slam" field="pz"></MSPSource>
+	<KeyFigure desc="Info.Z" uom="m" mask="#0.00" key="SLAMPZ">
+		<MSPSource class="slam" field="iz"></MSPSource>
 		<Groups>
 			<Group>Local Position</Group>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
-	<KeyFigure desc="Path.Direction" uom="rad" mask="#0.00" key="SLAMDIR">
-		<MSPSource class="slam" field="pd"></MSPSource>
-		<Groups>
-			<Group>Local Position</Group>
-			<Group>Mapping</Group>
-		</Groups>
-	</KeyFigure>
+
 	<KeyFigure desc="Path distance" uom="m" mask="#0.0" key="SLAMDTT">
 		<MSPSource class="slam" field="di"></MSPSource>
 		<Groups>
@@ -2088,13 +2082,6 @@
 		</Groups>
 	</KeyFigure>
 
-	<KeyFigure desc="Path.Speed" uom="m/s" mask="#0.0" key="SLAMSPD">
-		<MSPSource class="slam" field="pv"></MSPSource>
-		<Groups>
-			<Group>Local Position</Group>
-			<Group>Mapping</Group>
-		</Groups>
-	</KeyFigure>
 	
 	<KeyFigure desc="Depth.FrameRate" uom="fps" mask="#0" key="SLAMFPS">
 		<MSPSource class="slam" field="fps"></MSPSource>
