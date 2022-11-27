@@ -726,6 +726,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
+		
+		setXResolution(30);
 
 
 		//
