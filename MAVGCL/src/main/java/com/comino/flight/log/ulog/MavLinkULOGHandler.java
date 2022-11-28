@@ -24,6 +24,7 @@ import org.mavlink.messages.lquac.msg_log_request_list;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.px4log.PX4toModelConverter;
 import com.comino.flight.log.ulog.dialog.ULogSelectionDialog;
+import com.comino.flight.log.ulog.entry.ULogEntry;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
@@ -62,7 +63,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	private final BooleanProperty is_log_loaded       = new SimpleBooleanProperty();
 	private final BooleanProperty is_loading          = new SimpleBooleanProperty();
 
-	private final Map<Integer,msg_log_entry> directory = new HashMap<Integer,msg_log_entry>();
+	private final Map<Integer,ULogEntry> directory = new HashMap<Integer,ULogEntry>();
 
 	private int log_count = 0;
 	private long start    = 0;
@@ -251,7 +252,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		is_log_loaded.set(false);
 		is_loading.set(true);
 
-		msg_log_entry entry = directory.get(id);
+		ULogEntry entry = directory.get(id);
 
 		total_package_count = prepareUnreadPackageList(entry.size);
 		System.out.println("Expected packages: " + unread_packages.size()+"/"+entry.size);
@@ -292,8 +293,9 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			return;
 
 		wq.removeTask("LP", timeout);
+		
 
-		directory.put(entry.id,entry);
+		directory.put(entry.id,new ULogEntry(entry.id, entry.time_utc, entry.size));
 
 		if(entry.id == 0) {
 			log_count = entry.num_logs;	
@@ -444,4 +446,5 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		});
 		//.start();
 	}
+	
 }

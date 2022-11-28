@@ -42,8 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.mavlink.messages.lquac.msg_log_entry;
-
+import com.comino.flight.log.ulog.MavLinkULOGHandler;
+import com.comino.flight.log.ulog.entry.ULogEntry;
 import com.comino.flight.prefs.MAVPreferences;
 
 import javafx.collections.FXCollections;
@@ -68,13 +68,13 @@ public class ULogSelectionDialog  {
 
 	private Pane                    pane = new Pane();
 	private Dialog<Boolean>       dialog = new Dialog<Boolean>();
-	private TableView<TabData>    table  = new TableView<TabData>() ;
-	private ObservableList<TabData> data = FXCollections.observableArrayList();
+	private TableView<ULogEntry>    table  = new TableView<ULogEntry>() ;
+	private ObservableList<ULogEntry> data = FXCollections.observableArrayList();
 	
 	private DateFormat date_f = null;
 
 	@SuppressWarnings("unchecked")
-	public ULogSelectionDialog(Map<Integer,msg_log_entry> list) {
+	public ULogSelectionDialog(Map<Integer,ULogEntry> list) {
 		
 		date_f = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		date_f.setTimeZone(TimeZone.getDefault());
@@ -99,24 +99,24 @@ public class ULogSelectionDialog  {
 		table.prefWidthProperty().bind(pane.widthProperty());
 		
 		
-		TableColumn<TabData, Integer> colId= new TableColumn<TabData, Integer>("Id");
+		TableColumn<ULogEntry, Integer> colId= new TableColumn<ULogEntry, Integer>("Id");
 		colId.setMinWidth(15); 
-		colId.setCellValueFactory( new PropertyValueFactory<TabData, Integer>("id"));
+		colId.setCellValueFactory( new PropertyValueFactory<ULogEntry, Integer>("id"));
 		colId.setSortType(TableColumn.SortType.DESCENDING);
 		
-		TableColumn<TabData, String> colName = new TableColumn<TabData, String>("Timestamp");
+		TableColumn<ULogEntry, String> colName = new TableColumn<ULogEntry, String>("Timestamp");
 		colName.setMinWidth(200); 
-		colName.setCellValueFactory( new PropertyValueFactory<TabData, String>("name"));
+		colName.setCellValueFactory( new PropertyValueFactory<ULogEntry, String>("name"));
 		
-		TableColumn<TabData, String> colSize= new TableColumn<TabData, String>("Size");
+		TableColumn<ULogEntry, String> colSize= new TableColumn<ULogEntry, String>("Size");
 		colSize.setMinWidth(25); 
-		colSize.setCellValueFactory( new PropertyValueFactory<TabData, String>("size"));
+		colSize.setCellValueFactory( new PropertyValueFactory<ULogEntry, String>("size"));
 		
 		table.getColumns().addAll(colId,colName,colSize);
 		
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		
-		SortedList<TabData> sortedData = new SortedList<>(data);
+		SortedList<ULogEntry> sortedData = new SortedList<>(data);
 		sortedData.comparatorProperty().bind(table.comparatorProperty());
 		
 		table.setItems(sortedData);
@@ -124,14 +124,10 @@ public class ULogSelectionDialog  {
 		table.getSortOrder().addAll(colId);
 		pane.getChildren().add(table);
 		
-		
-
-		list.values().forEach((m) -> {
-			data.add(new TabData(m));
-		});
+		data.addAll(list.values());
 		
 		table.setRowFactory( tv -> {
-		    TableRow<TabData> row = new TableRow<>();
+		    TableRow<ULogEntry> row = new TableRow<>();
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
 		          dialog.setResult(Boolean.TRUE);
@@ -155,52 +151,51 @@ public class ULogSelectionDialog  {
 	public int selectLogId() {
 		if(!dialog.showAndWait().get().booleanValue())
 			return -1;
-		ObservableList<TabData> selectedItems = table.getSelectionModel().getSelectedItems();
+		ObservableList<ULogEntry> selectedItems = table.getSelectionModel().getSelectedItems();
 		if(selectedItems.size()>0)
 		 return selectedItems.get(0).id;
 		return -1;
 	}
 	
-	public class TabData {
-		
-		private int    id;
-		private String name;
-		private String size;
-		
-		public TabData(msg_log_entry e) {
-			
-			id   = e.id;
-			name = date_f.format(e.time_utc*1000);
-			
-			float s = e.size / 1024f;
-			if(s < 1024)
-			    size = String.format("%#.0fkb", s);
-			else
-				size = String.format("%#.1fMb", s/1024f);
-				
-
-		}
-		
-		public int getId() {
-			return id;
-		}
-		public String getName() {
-			return name;
-		}
-		public String getSize() {
-			return size;
-		}
-		public void setId(int id) {
-			this.id = id;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public void setSize(String size) {
-			this.size = size;
-		}
-			
-	}
+//	public class TabData {
+//		
+//		private int    id;
+//		private String name;
+//		private String size;
+//		
+//		public TabData(MavLinkULOGHandler.LogEntry e) {
+//			
+//			id   = e.id;
+//			name = date_f.format(e.time_utc*1000);
+//			
+//			float s = e.size / 1024f;
+//			if(s < 1024)
+//			    size = String.format("%#.0fkb", s);
+//			else
+//				size = String.format("%#.1fMb", s/1024f);
+//
+//		}
+//		
+//		public int getId() {
+//			return id;
+//		}
+//		public String getName() {
+//			return name;
+//		}
+//		public String getSize() {
+//			return size;
+//		}
+//		public void setId(int id) {
+//			this.id = id;
+//		}
+//		public void setName(String name) {
+//			this.name = name;
+//		}
+//		public void setSize(String size) {
+//			this.size = size;
+//		}
+//			
+//	}
 
 	
 }
