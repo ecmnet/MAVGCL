@@ -457,6 +457,12 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		xychart.prefHeightProperty().bind(heightProperty().subtract(10));
 
+		cseries1.setOnMouseClicked((e) -> {
+			if(cseries1.getSelectionModel().getSelectedIndex() == 0) {
+				cseries1_x.getSelectionModel().select(0);
+				cseries1_y.getSelectionModel().select(0);
+			}
+		});
 
 		cseries1.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -497,6 +503,13 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				prefs.putInt(MAVPreferences.XYCHART_FIG_2,newValue.intValue());
 			}
 
+		});
+		
+		cseries2.setOnMouseClicked((e) -> {
+			if(cseries2.getSelectionModel().getSelectedIndex() == 0) {
+				cseries2_x.getSelectionModel().select(0);
+				cseries2_y.getSelectionModel().select(0);
+			}
 		});
 
 		cseries1_x.getSelectionModel().selectedItemProperty().addListener((observable, ov, nv) -> {
@@ -726,8 +739,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
 		rotation.setDisable(show_grid.isSelected());
-		
-		setXResolution(30);
 
 
 		//
@@ -1099,6 +1110,8 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				traj.clear();
 			}
 		});
+		
+		setXResolution(30);
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> Platform.runLater(() -> updateRequest()));
 
