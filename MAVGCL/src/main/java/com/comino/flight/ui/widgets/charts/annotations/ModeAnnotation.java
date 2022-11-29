@@ -71,7 +71,7 @@ public class ModeAnnotation implements XYAnnotation {
 
 
 	private final static String[]  EKF2STATUS_TEXTS = { "", "Att.", "Rel.Pos", "Abs.Pos", "Velocity", "Error", "GPS.Error","Other"};
-	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff","AltHold","PosHold","Offboard", "Land", "PrecLand","Other" };
+	private final static String[]  FLIGHTMODE_TEXTS = { "", "Takeoff/Land","AltHold","PosHold","Offboard", "Loiter", "PrecLand","Other" };
 	private final static String[]  POSESTIMAT_TEXTS = { "", "LPOS","GPOS","LPOS+GPOS" };
 	private static final String[]  OFFBOARD_TEXTS   = { "", "YawDirect", "YawPlanner", "XYZDirect","XYZPlanner","Timeout" };
 	private final static String[]  GPSMODE_TEXTS    = { "", "GPS Fix"," GPS3D","DGPS","RTK float","RTK fixed" };
@@ -279,13 +279,15 @@ public class ModeAnnotation implements XYAnnotation {
 			addAreaData(time,0); break;
 		case Status.NAVIGATION_STATE_AUTO_TAKEOFF:
 			addAreaData(time,1); break;
+		case Status.NAVIGATION_STATE_AUTO_LAND:
+			addAreaData(time,1); break;
 		case Status.NAVIGATION_STATE_ALTCTL:
 			addAreaData(time,2); break;
 		case Status.NAVIGATION_STATE_POSCTL:
 			addAreaData(time,3); break;
 		case Status.NAVIGATION_STATE_OFFBOARD:
 			addAreaData(time,4); break;
-		case Status.NAVIGATION_STATE_AUTO_LAND:
+		case Status.NAVIGATION_STATE_AUTO_LOITER:
 			addAreaData(time,5); break;
 		case Status.NAVIGATION_STATE_AUTO_PRECLAND:
 			addAreaData(time,6); break;
