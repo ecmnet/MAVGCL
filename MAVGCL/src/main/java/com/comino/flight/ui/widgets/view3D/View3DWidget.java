@@ -136,7 +136,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 		northMaterial.setDiffuseColor(Color.RED);
 
 		target    = new Target();
-		obstacle  = new Obstacle();
 
 		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
 		ground.setMaterial(groundMaterial);
@@ -146,9 +145,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
 		landing_target.setMaterial(landing_target_material);
 
-		vehicle = new VehicleModel(VEHICLE_SCALE);
+		vehicle   = new VehicleModel(VEHICLE_SCALE);
+		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground, landing_target, vehicle,  target, obstacle, trajectory, pointLight, ambient,
+		world.getChildren().addAll(ground, landing_target, vehicle, trajectory, target, obstacle, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
