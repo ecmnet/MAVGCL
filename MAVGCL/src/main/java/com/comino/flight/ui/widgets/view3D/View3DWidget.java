@@ -285,7 +285,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 					break;
 				}
 				
-				obstacle.updateState(model);
+				obstacle.updateState(model,offset);
 			}		
 		};
 
