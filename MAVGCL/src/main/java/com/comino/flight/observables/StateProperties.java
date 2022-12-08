@@ -268,6 +268,13 @@ public class StateProperties {
 			isCVAvailable.set(false);
 			isIMUAvailable.set(false);
 			isMSPAvailable.set(false);
+			progress.set(NO_PROGRESS);
+			isLogLoadedProperty.set(false);
+			isLogLoadingProperty.set(false);
+			isLogULOGProperty.set(false);
+			isReplayingProperty.set(false);
+//			isParamLoadedProperty.set(false);
+			isReadyProperty.set(false);
 		});
 
 	}

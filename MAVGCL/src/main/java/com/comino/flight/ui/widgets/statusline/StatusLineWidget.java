@@ -52,7 +52,6 @@ import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.Badge;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.control.impl.MAVController;
-import com.comino.mavcom.mavlink.MAVLinkMessagePool;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;

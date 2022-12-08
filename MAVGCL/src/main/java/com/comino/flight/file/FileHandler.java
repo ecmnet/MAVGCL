@@ -306,7 +306,7 @@ public class FileHandler {
 							reader = new BufferedReader(new InputStreamReader(raw));
 							listType = new TypeToken<ArrayList<AnalysisDataModel>>() {}.getType();
 							try {
-								modelService.clearModelList();
+								modelService.reset();
 								modelService.setModelList(gson.fromJson(reader,listType));
 							} catch(Exception e1) {
 								logger.writeLocalMsg("[mgc] Wrong file format",MAV_SEVERITY.MAV_SEVERITY_ERROR);
@@ -620,7 +620,7 @@ public class FileHandler {
 			try {
 				meta.loadModelMetaData(new FileInputStream(f), true);
 				clear();
-				modelService.clearModelList();
+				modelService.reset();
 				userPrefs.put(MAVPreferences.DEFINITION_DIR,f.getParent());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

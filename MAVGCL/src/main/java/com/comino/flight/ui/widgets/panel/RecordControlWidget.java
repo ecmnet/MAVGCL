@@ -166,17 +166,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 
 		clear.setOnAction((ActionEvent event)-> {
 
-			AnalysisModelService.getInstance().clearModelList();
-			FileHandler.getInstance().clear();
-			state.getLogLoadedProperty().set(false);
-			state.getReplayingProperty().set(false);
-			state.getIMUProperty().set(false);
-
-
-			if(!state.getConnectedProperty().get())
-				MAVGCLPX4Parameters.getInstance().clear();
-			else
-				MAVGCLPX4Parameters.getInstance().refreshParameterList(true);
+			AnalysisModelService.getInstance().reset();
 
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_MICROSLAM;
@@ -294,14 +284,14 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		this.modelService =  AnalysisModelService.getInstance();
 		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
-		this.modelService.clearModelList();
+		this.modelService.reset();
 
 		//	this.disableProperty().bind(state.getConnectedProperty().not());
 
 		state.getConnectedProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue.booleanValue()) {
 				if(!state.getLogLoadedProperty().get()) {
-					AnalysisModelService.getInstance().clearModelList();
+					AnalysisModelService.getInstance().reset();
 					FileHandler.getInstance().clear();
 					charts.refreshCharts();
 				}

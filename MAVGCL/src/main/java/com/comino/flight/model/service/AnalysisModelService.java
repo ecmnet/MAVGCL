@@ -42,11 +42,13 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
 
+import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.ULogFromMAVLinkReader;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.AnalysisDataModelMetaData;
 import com.comino.flight.model.KeyFigureMetaData;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
@@ -311,12 +313,21 @@ public class AnalysisModelService  {
 		setCurrent(0);
 	}
 
-	public void clearModelList() {
+	public void reset() {
 		//setDefaultCollectorInterval();
 		mode = STOPPED;
 		current.clear();
 		clear();
 		model.clear();
+		
+		FileHandler.getInstance().clear();
+		state.reset();
+
+
+		if(!state.getConnectedProperty().get())
+			MAVGCLPX4Parameters.getInstance().clear();
+		else
+			MAVGCLPX4Parameters.getInstance().refreshParameterList(true);
 	}
 
 	public void setTotalTimeSec(int totalTime) {
