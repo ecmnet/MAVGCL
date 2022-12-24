@@ -273,7 +273,6 @@ public class StateProperties {
 			isLogLoadingProperty.set(false);
 			isLogULOGProperty.set(false);
 			isReplayingProperty.set(false);
-//			isParamLoadedProperty.set(false);
 			isReadyProperty.set(false);
 		});
 

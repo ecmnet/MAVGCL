@@ -34,19 +34,14 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import bubo.maps.d3.grid.CellProbability_F64;
-import georegression.struct.point.Point3D_F32;
 import georegression.struct.point.Point3D_F64;
 import georegression.struct.point.Point3D_I32;
 import javafx.scene.Node;

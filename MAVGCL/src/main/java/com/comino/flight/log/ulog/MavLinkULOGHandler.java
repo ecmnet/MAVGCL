@@ -280,7 +280,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
 
 			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 10) 
+			while(searchForNextUnreadPackage() && c++ < 50) 
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 
 		});

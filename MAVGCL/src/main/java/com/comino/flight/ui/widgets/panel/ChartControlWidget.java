@@ -358,7 +358,7 @@ public class ChartControlWidget extends ChartControlPane  {
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance();
 		this.modelService.setTotalTimeSec(totalTime_sec);
-		this.modelService.clearModelList();
+		this.modelService.reset();
 
 		Platform.runLater(() -> {
 			for(Entry<Integer, IChartControl> chart : charts.entrySet()) {

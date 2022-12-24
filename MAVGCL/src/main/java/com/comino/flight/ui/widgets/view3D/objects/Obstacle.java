@@ -41,11 +41,13 @@ public class Obstacle extends Xform {
 		if(!Double.isNaN(model.getValue("SLAMOBY"))) {
 			
 			this.setVisible(true);
-			// TODO: Check if center moved
 			o.setTo(-model.getValue("SLAMOBY")*100f, (-model.getValue("SLAMOBZ")-offset ) * 100f - 12, model.getValue("SLAMOBX")*100f);
-			this.setTranslate(o.x,o.y,o.z);
 			
-			if(isCollision())
+			this.setTranslate(o.x,o.y,o.z);
+			v.setTo(vehicle.getTranslateX(),vehicle.getTranslateY(),vehicle.getTranslateZ()); v.scale(-1f);
+			v.plusIP(o);
+			
+			if(v.norm() < boundary.getRadius())
 				boundary.setMaterial(boundary_collision);
 			else
 				boundary.setMaterial(boundary_no_collision);
@@ -53,11 +55,5 @@ public class Obstacle extends Xform {
 			this.setVisible(false);
 	}
 	
-	private boolean isCollision() {
-		v.setTo(vehicle.getTranslateX(),vehicle.getTranslateY(),vehicle.getTranslateZ()); v.scale(-1f);
-		v.plusIP(o);
-		return v.norm() < 75;
-		
-	}
 
 }
