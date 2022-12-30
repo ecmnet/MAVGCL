@@ -41,7 +41,6 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.MSP_COMPONENT_CTRL;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
@@ -87,7 +86,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge rc;
-	
+
 	@FXML
 	private Badge bat;
 
@@ -174,47 +173,43 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					wp.setMode(Badge.MODE_OFF);
 				}
 
-				if(UBXRTCM3Base.getInstance()!=null && UBXRTCM3Base.getInstance().getSVINStatus().get()) {
-					gps.setMode(Badge.MODE_ON);
-					gps.setText("SVIN");
-				} else {
-					if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY)) {
+				if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY)) {
+					gps.setMode(Badge.MODE_OFF);
+					gps.setText("");
+				}
+				else {
+					switch(msp_model.gps.fixtype & 0xF) {
+
+					case 2:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS");
+					case 3:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS fix");
+						break;
+					case 4:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("GPS 3D");
+						break;
+					case 5:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("DGPS");
+						break;
+					case 6:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("RTK float");
+						break;
+					case 7:
+						gps.setMode(Badge.MODE_ON);
+						gps.setText("RTK fixed");
+						break;
+
+					default:
+
 						gps.setMode(Badge.MODE_OFF);
-						gps.setText("");
-					}
-					else {
-						switch(msp_model.gps.fixtype & 0xF) {
-
-						case 2:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("GPS");
-						case 3:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("GPS fix");
-							break;
-						case 4:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("GPS 3D");
-							break;
-						case 5:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("DGPS");
-							break;
-						case 6:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("RTK float");
-							break;
-						case 7:
-							gps.setMode(Badge.MODE_ON);
-							gps.setText("RTK fixed");
-							break;
-
-						default:
-
-							gps.setMode(Badge.MODE_OFF);
-						}
 					}
 				}
+
 
 				filename = FileHandler.getInstance().getName();
 				driver.setText(msp_model.sys.getSensorString());
@@ -264,7 +259,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							ready.setText("NOT READY");
 						}
 					}
-					
+
 					bat.setMode(Badge.MODE_ON);
 					bat.setText(msp_model.sys.getBatTypeString());
 
@@ -427,7 +422,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 			else {
 				controller.setMode(Badge.MODE_OFF);
 			}
-			
+
 		});
 
 		state.getLogLoadedProperty().addListener((e,o,n) -> {

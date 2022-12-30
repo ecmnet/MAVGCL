@@ -50,8 +50,6 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
 
-import com.comino.flight.base.UBXRTCM3Base;
-import com.comino.flight.control.SITLController;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.MavLinkULOGHandler;
 import com.comino.flight.model.map.MAVGCLMap;
@@ -110,13 +108,13 @@ public class MainApp extends Application  {
 	@FXML
 	private MenuItem m_import;
 
-	
+
 	@FXML
 	private MenuItem m_recent1;
-	
+
 	@FXML
 	private MenuItem m_recent2;
-	
+
 	@FXML
 	private MenuItem m_recent3;
 
@@ -177,17 +175,15 @@ public class MainApp extends Application  {
 	private BorderPane rootLayout;
 	private AnchorPane flightPane;
 
-	private UBXRTCM3Base base = null;
-
 	private StateProperties state = null;
 
 	private String command_line_options = null;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
-	
+
 	private AnalysisModelService analysisModelService;
 	private SimpleNTPServer ntp_server;
-	
+
 	private long startup;
 
 	public MainApp() {
@@ -235,8 +231,8 @@ public class MainApp extends Application  {
 			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
 			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")+
-			" JavaFX runtime "+com.sun.javafx.runtime.VersionInfo.getRuntimeVersion()+
-		    " build on BoofCV "+BoofVersion.VERSION); 
+					" JavaFX runtime "+com.sun.javafx.runtime.VersionInfo.getRuntimeVersion()+
+					" build on BoofCV "+BoofVersion.VERSION); 
 
 			ExecutorService.create();
 
@@ -293,7 +289,7 @@ public class MainApp extends Application  {
 				//					control = new MAVUdpController(peerAddress,peerport,bindport, false);
 				//				}
 			}
-			
+
 			System.out.println("ControL: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state = StateProperties.getInstance(control);
@@ -307,14 +303,13 @@ public class MainApp extends Application  {
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 
-					new SITLController(control);
 					System.out.println("Initializing");
 
 					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
 						FileHandler.getInstance().fileImport(new File(command_line_options));
 
 					MSPLogger.getInstance().enableDebugMessages(MAVPreferences.getInstance().getBoolean(MAVPreferences.DEBUG_MSG,false));
-					
+
 					ntp_server = new SimpleNTPServer();
 
 					try {
@@ -325,20 +320,20 @@ public class MainApp extends Application  {
 
 				}
 			});
-			
+
 			System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
 
 
 			MAVPreferences.init();
 			MAVGCLMap.getInstance(control);
-			
+
 			System.out.println("Preferences: "+(System.currentTimeMillis()-startup)+"ms");
-			
+
 			MAVGCLPX4Parameters.getInstance(control);
 
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
-			
+
 			System.out.println("Model: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
@@ -364,12 +359,6 @@ public class MainApp extends Application  {
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
-			
-
-			if(args.get("SERIAL")==null && args.get("PROXY")==null) {
-				base = UBXRTCM3Base.getInstance(control, analysisModelService);
-				new Thread(base).start();
-			}
 
 
 			state.getLPOSAvailableProperty().addListener((v,o,n) -> {
@@ -381,49 +370,16 @@ public class MainApp extends Application  {
 				DataModel model = control.getCurrentModel();
 
 
-				System.out.println("Detect base GPS");
+				msg_msp_command msp = new msg_msp_command(255,1);
+				msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
 
-				if(base !=null && base.isConnected()) {
-					System.out.println("Base GPS is connected");
-					if(base.getBaseAccuracy()<15) {
-						msg_msp_command msp = new msg_msp_command(255,1);
-						msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
+				msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
+				msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
+				msp.param3  = (int)(userPrefs.getDouble(MAVPreferences.REFALT, 0))*1000;
 
-						msp.param1  = (long)(base.getLatitude()  * 1e7);
-						msp.param2  = (long)(base.getLongitude() * 1e7);
+				control.sendMAVLinkMessage(msp);
+				System.out.println("Global Position origin set");
 
-						msp.param3  = 577*1000;
-
-						control.sendMAVLinkMessage(msp);
-						System.out.println("Global Position origin set to base position");
-					}
-				}
-				//				else 
-				//					if(model.gps.isFlagSet(GPS.GPS_SAT_FIX) && userPrefs.getDouble(MAVPreferences.REFALT, 0) < 0) {
-				//					
-				//					msg_msp_command msp = new msg_msp_command(255,1);
-				//					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
-				//
-				//					msp.param1  = (long)(model.gps.latitude * 1e7);
-				//					msp.param2  = (long)(model.gps.longitude * 1e7);
-				//					msp.param3  = (int)(model.gps.altitude)*1000;
-				//
-				//					control.sendMAVLinkMessage(msp);
-				//					System.out.println("Global Position origin set to vehicle position");
-				//				}
-				else 
-				{
-
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.MSP_CMD_SET_HOMEPOS;
-
-					msp.param1  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLAT, 0) * 1e7);
-					msp.param2  = (long)(MAVPreferences.getInstance().getDouble(MAVPreferences.REFLON, 0) * 1e7);
-					msp.param3  = (int)(userPrefs.getDouble(MAVPreferences.REFALT, 0))*1000;
-
-					control.sendMAVLinkMessage(msp);
-					System.out.println("Global Position origin set");
-				}
 
 			});
 
@@ -478,9 +434,9 @@ public class MainApp extends Application  {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
-			
+
 			System.out.println("Root: "+(System.currentTimeMillis()-startup)+"ms");
-			
+
 			rootLayout.setCenter(new Label("Initializing MAVGCL ("+getBuildInfo().getProperty("build")+") application components..."));
 
 			// Show the scene containing the root layout.
@@ -536,10 +492,10 @@ public class MainApp extends Application  {
 	private void initialize() {
 		menubar.setUseSystemMenuBar(true);
 		setupMenuBar();
-		
+
 		state.getLogLoadedProperty().addListener((e,o,n) -> {
 			Platform.runLater(() -> {
-			  setupMenuBar();
+				setupMenuBar();
 			});
 		});
 	}
@@ -575,10 +531,10 @@ public class MainApp extends Application  {
 			FlightTabs fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
-			
+
 
 		});
-		
+
 		wq.addSingleTask("LP", 1000, () -> {
 			VoiceHandler.getInstance(control);
 		});
@@ -643,7 +599,7 @@ public class MainApp extends Application  {
 		try {
 
 			state = StateProperties.getInstance();
-			
+
 			setupLastFiles();
 
 			m_import.setOnAction(new EventHandler<ActionEvent>() {
@@ -655,7 +611,7 @@ public class MainApp extends Application  {
 					setupLastFiles();
 				}
 			});
-			
+
 			m_recent1.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
@@ -664,7 +620,7 @@ public class MainApp extends Application  {
 					controlpanel.getChartControl().refreshCharts();
 				}
 			});
-			
+
 			m_recent2.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
@@ -673,7 +629,7 @@ public class MainApp extends Application  {
 					controlpanel.getChartControl().refreshCharts();
 				}
 			});
-			
+
 			m_recent3.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
 				public void handle(ActionEvent event) {
@@ -698,7 +654,7 @@ public class MainApp extends Application  {
 				} catch (IOException e) { }
 			});
 
-		
+
 			m_def.setOnAction(event -> {
 				FileHandler.getInstance().openKeyFigureMetaDataDefinition();
 			});
@@ -748,7 +704,7 @@ public class MainApp extends Application  {
 
 			log.isLoading().addListener((observable, oldvalue, newvalue) -> {
 				if(!newvalue.booleanValue()) {
-					
+
 					Platform.runLater(() -> {
 						r_px4log_s.setText("Import log from vehicle...");
 					});
@@ -818,7 +774,7 @@ public class MainApp extends Application  {
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.MSP_CMD_RESTART;
 				control.sendMAVLinkMessage(msp);
-				
+
 				AnalysisModelService.getInstance().reset();
 				FileHandler.getInstance().clear();
 				MAVGCLPX4Parameters.getInstance().clear();
@@ -835,11 +791,11 @@ public class MainApp extends Application  {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void setupLastFiles() {
-		
+
 		int li; String d;
-		
+
 		String s1 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE,null);
 		System.out.println(s1);
 		if(s1!=null) {
@@ -847,7 +803,7 @@ public class MainApp extends Application  {
 			d = s1.substring(0,li-1); d = d.substring(d.lastIndexOf("/")+1, d.length());
 			m_recent1.setText(s1.substring(li,s1.length())+" ["+d+"]");	
 		} 
-		
+
 		String s2 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE2,null);
 		if(s2!=null) {
 			li = s2.lastIndexOf("/")+1;
@@ -856,7 +812,7 @@ public class MainApp extends Application  {
 		} else {
 			m_recent2.setVisible(false);
 		}
-		
+
 		String s3 = MAVPreferences.getInstance().get(MAVPreferences.LAST_FILE3,null);
 		if(s3!=null) {
 			li = s3.lastIndexOf("/")+1;
@@ -865,7 +821,7 @@ public class MainApp extends Application  {
 		} else {
 			m_recent3.setVisible(false);
 		}
-		
+
 	}
 
 	private Properties getBuildInfo() {

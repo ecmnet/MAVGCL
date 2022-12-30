@@ -38,6 +38,13 @@
 			<arg line="-c ' /usr/local/Cellar/maven/3.8.6/bin/mvn clean install -amd -Djavacpp.platform=macosx-x86_64'" />
 		</exec>
 	</target>
+	
+	<target name="mvn_osx_arm" depends="com">
+			<exec dir="./" executable="sh">
+				<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/home"/>
+				<arg line="-c ' /usr/local/Cellar/maven/3.8.6/bin/mvn clean install -amd -Djavacpp.platform=macosx-arm64'" />
+			</exec>
+		</target>
 
 	<target name="mvn_win" depends="com">
 		<exec dir="./" executable="sh">
@@ -59,6 +66,13 @@
 			<arg line="-c './package.sh'" />
 		</exec>
 	</target>
+	
+	<target name="deploy_osx_17_arm" depends="mvn_osx_arm">
+			<echo>Deploying MAVGCL...</echo>
+			<exec dir="./" executable="sh">
+				<arg line="-c './package.sh'" />
+			</exec>
+		</target>
 
 	<target name="deploy_windows_17" depends="mvn_win">
 		<echo>Deploying MAVGCL...</echo>

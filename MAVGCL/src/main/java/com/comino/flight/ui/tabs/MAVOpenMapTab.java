@@ -52,7 +52,6 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.base.UBXRTCM3Base;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
@@ -486,17 +485,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				takeoff_lat = model.getValue( "GLOBLAT");
 			}
 		});
-
-		if(UBXRTCM3Base.getInstance()!=null) {
-			UBXRTCM3Base.getInstance().getCurrentLocationProperty().addListener((e,o,n) -> {
-				if(n.booleanValue()) {
-					Platform.runLater(() -> {
-						center.getSelectionModel().select(2);
-						map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
-					});
-				}
-			});
-		}
 
 
 		this.disabledProperty().addListener((l,o,n) -> {
