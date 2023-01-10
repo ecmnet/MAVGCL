@@ -8,7 +8,7 @@
 
 
 	<name>MAVGCL2</name>
-
+	
 	<repositories>
 	   <repository>
 			<id>in-project</id>
@@ -64,11 +64,13 @@
 			<artifactId>Jamepad</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+		<!-- 
 		<dependency>
 			<groupId>uk.co.electronstudio.sdl2gdx</groupId>
 			<artifactId>sdl2gdx</artifactId>
 			<version>1.0.4</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>net.objecthunter</groupId>
 			<artifactId>exp4j</artifactId>
@@ -155,7 +157,7 @@
 		<dependency>
 			<groupId>org.bytedeco</groupId>
 			<artifactId>ffmpeg-platform</artifactId>
-			<version>5.1.1-1.5.8-SNAPSHOT</version>
+			<version>5.1.2-1.5.8</version>
 		</dependency>
 		
 	</dependencies>
