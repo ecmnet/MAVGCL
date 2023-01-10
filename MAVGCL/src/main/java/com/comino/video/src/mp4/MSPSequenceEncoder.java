@@ -156,9 +156,12 @@ public class MSPSequenceEncoder {
 		if(ppsList.size()==0)
 			ppsList = new ArrayList<ByteBuffer>(4);
 	
+		try {
 		
 		outTrack.addSampleEntry(H264Utils.createMOVSampleEntry(spsList, ppsList, 4));
 		muxer.writeHeader();
+		
+		} catch(Exception e) { }
 		
 		//ch.close();
 		NIOUtils.closeQuietly(ch);
