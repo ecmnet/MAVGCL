@@ -120,7 +120,7 @@ public class VideoPlayer {
 		
 			
 			long tms = System.currentTimeMillis();
-			while(!source.isRunning() && (System.currentTimeMillis()-tms)< 500) {
+			while(!source.isRunning() && (System.currentTimeMillis()-tms)< 250) {
 				source.start();
 				try { Thread.sleep(10); } catch (InterruptedException e) { }
 			}
