@@ -117,10 +117,17 @@ public class VideoPlayer {
 
 			if(source==null || !isConnected())
 				connect();
+		
+			
+			long tms = System.currentTimeMillis();
+			while(!source.isRunning() && (System.currentTimeMillis()-tms)< 500) {
+				source.start();
+				try { Thread.sleep(10); } catch (InterruptedException e) { }
+			}
 			
 			if(!source.isRunning())
-				source.start();
-			
+				return false;
+				
 			recorder.start();
 			
 			isRecording = true;
