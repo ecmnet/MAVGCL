@@ -244,7 +244,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 							locked.setMode(Badge.MODE_OFF);
 						}
 						
-
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
 								ready.setMode(Badge.MODE_OK);
 								ready.setText("READY");
