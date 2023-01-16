@@ -113,6 +113,9 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge wp;
+	
+	@FXML
+	private Badge locked;
 
 
 	private IMAVController control;
@@ -232,16 +235,19 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						vision.setMode(Badge.MODE_OFF);
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
+						
+						if(msp_model.sys.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED)) {
+							locked.setMode(Badge.MODE_ON);
+							locked.setMode(Badge.MODE_SPECIAL);
+						}
+						else {
+							locked.setMode(Badge.MODE_OFF);
+						}
+						
 
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
-							if(msp_model.sys.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED)) {
-								ready.setMode(Badge.MODE_SPECIAL);
-								ready.setText("LOCKED");
-							} else {
 								ready.setMode(Badge.MODE_OK);
 								ready.setText("READY");
-							}
-
 						}
 						else {
 							ready.setMode(Badge.MODE_ERROR);
@@ -270,6 +276,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					ekf.setMode(Badge.MODE_OFF);
 					vision.setMode(Badge.MODE_OFF);
 					home.setMode(Badge.MODE_OFF);
+					bat.setMode(Badge.MODE_OFF);
 					bat.setText("");
 					driver.setText("");
 				}
