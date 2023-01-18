@@ -205,7 +205,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				out.start();
 				scrollIntoView();
 				if(console.getText().isEmpty())
-				    writeToShell("\n"); 
+				    writeToShell("ver git\n"); 
 
 			} else {
 				out.stop();
