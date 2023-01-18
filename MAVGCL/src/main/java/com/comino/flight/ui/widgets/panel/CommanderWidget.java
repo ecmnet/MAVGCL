@@ -135,7 +135,10 @@ public class CommanderWidget extends ChartControlPane  {
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,1 );
+				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,( cmd,result) -> { 
+					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
+						logger.writeLocalMsg("[mgc] Arming denied.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				},1 );
 			} else {
 				if(model.sys.isStatus(Status.MSP_LANDED)) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
