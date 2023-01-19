@@ -2,6 +2,8 @@ package com.comino.flight.ui.widgets.view3D.objects;
 
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.utils.MSP3DUtils;
 
 import georegression.struct.point.Point3D_F32;
 import georegression.struct.point.Point3D_F64;
@@ -38,10 +40,10 @@ public class Obstacle extends Xform {
 	}
 	
 	public void updateState(AnalysisDataModel model, float offset) {
-		if(!Double.isNaN(model.getValue("SLAMOBY"))) {
-			
-			this.setVisible(true);
-			o.setTo(-model.getValue("SLAMOBY")*100f, (-model.getValue("SLAMOBZ")-offset ) * 100f - 12, model.getValue("SLAMOBX")*100f);
+		
+		o.setTo(-model.getValue("SLAMOBY")*100f, (-model.getValue("SLAMOBZ")-offset ) * 100f - 12, model.getValue("SLAMOBX")*100f);
+		
+		if(MSP3DUtils.isFinite(o)) {
 			
 			this.setTranslate(o.x,o.y,o.z);
 			v.setTo(vehicle.getTranslateX(),vehicle.getTranslateY(),vehicle.getTranslateZ()); v.scale(-1f);
@@ -51,6 +53,7 @@ public class Obstacle extends Xform {
 				boundary.setMaterial(boundary_collision);
 			else
 				boundary.setMaterial(boundary_no_collision);
+			this.setVisible(true);
 		} else
 			this.setVisible(false);
 	}

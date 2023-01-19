@@ -112,13 +112,20 @@ public class AnalysisDataModel implements Cloneable {
 		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null)
 			return data.get(m.hash);
 		else
-			return Float.NaN;
+			return Double.NaN;
+	}
+
+	public boolean isValid(String kf) {
+		int hash = kf.toLowerCase().hashCode();
+		if(data!=null && data.containsKey(hash) && data.get(hash)!=null)
+			return Double.isFinite(data.get(hash));
+		else
+			return false;
 	}
 
 	public boolean isValid(KeyFigureMetaData m) {
-		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null) {
+		if(data != null && m!=null && data.containsKey(m.hash) && data.get(m.hash)!=null) 
 			return Double.isFinite(data.get(m.hash));
-		}
 		else
 			return false;
 	}
