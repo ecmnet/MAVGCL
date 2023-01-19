@@ -250,7 +250,6 @@ public class MainApp extends Application  {
 			peerport = userPrefs.getInt(MAVPreferences.PREFS_IP_PORT, 14555);
 			bindport = userPrefs.getInt(MAVPreferences.PREFS_BIND_PORT, 14550);
 
-
 			if(args.size()>0 ) {
 				if(args.get("SITL")!=null) {
 					control = new MAVUdpController("127.0.0.1",14580,14540, true);
@@ -262,7 +261,7 @@ public class MainApp extends Application  {
 				}
 				else  if(args.get("SERVER")!=null) {
 					System.out.println("Server");
-					control = new MAVUdpController("10.211.55.6",14555,14550, true);
+					control = new MAVUdpController("192.168.178.156",14656,14650, true);
 					//new SITLController(control);
 				}
 				else  if(args.get("SERIAL")!=null) {
