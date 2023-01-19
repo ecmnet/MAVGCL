@@ -47,6 +47,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -581,6 +582,17 @@ public class FileHandler {
 					return null;
 				}
 			}).start();
+		}
+	}
+	
+	public void log_cleanup() {
+		File log_dir = new File(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
+		File[] logs = log_dir.listFiles((d,n) -> { return n.contains(".mgc"); });
+		long time = Instant.now().toEpochMilli() - 86400_000_0;
+		for(int i =0; i< logs.length;i++) {
+			if(logs[i].lastModified() < time )
+			 System.out.println("CleanUp deleted: "+logs[i].getName());
+			logs[i].delete();
 		}
 	}
 

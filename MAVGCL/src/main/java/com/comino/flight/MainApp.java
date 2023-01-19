@@ -350,7 +350,7 @@ public class MainApp extends Application  {
 					});
 				}
 			});
-
+			
 			if(!control.isConnected())
 				control.connect();
 
@@ -401,7 +401,7 @@ public class MainApp extends Application  {
 		try {
 			this.primaryStage = primaryStage;
 			this.primaryStage.setTitle("MAVGCL Analysis");
-			FileHandler.getInstance(primaryStage,control);
+			FileHandler.getInstance(primaryStage,control).log_cleanup();
 			initRootLayout();
 			showMAVGCLApplication();
 		} catch(Exception e) {
