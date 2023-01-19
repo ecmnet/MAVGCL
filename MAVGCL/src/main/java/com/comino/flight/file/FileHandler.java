@@ -590,9 +590,10 @@ public class FileHandler {
 		File[] logs = log_dir.listFiles((d,n) -> { return n.contains(".mgc"); });
 		long time = Instant.now().toEpochMilli() - 86400_000_0;
 		for(int i =0; i< logs.length;i++) {
-			if(logs[i].lastModified() < time )
+			if(logs[i].lastModified() < time ) {
 			 System.out.println("CleanUp deleted: "+logs[i].getName());
-			logs[i].delete();
+			 logs[i].delete();
+			}
 		}
 	}
 
