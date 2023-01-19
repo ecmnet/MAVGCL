@@ -123,9 +123,8 @@ public class ModeAnnotation implements XYAnnotation {
 	}
 
 	public void clear() {
-		Platform.runLater(() -> {
-		node.getChildren().clear();
-		});
+		if(Platform.isFxApplicationThread())
+		  node.getChildren().clear();
 	}
 
 	public void setModeType(int modeType) {
