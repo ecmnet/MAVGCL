@@ -166,15 +166,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
-				
-				if(model.isValid("ALTTR")) {
+				if(!Double.isNaN(model.getValue("ALTTR"))) {
 					camera.setTranslateY(model.getValue("ALTTR")*100);
 					world.setTranslateY(model.getValue("ALTTR")*100);
-				} 
-				if(model.isValid("LPOSRZ"))
-					offset = -(float)model.getValue("LPOSRZ");
-				else if(model.isValid("LPOSZ"))
-					offset = -(float)model.getValue("LPOSZ");
+					if(Double.isFinite(model.getValue("LPOSRZ")) && ( model.getValue("LPOSRZ") != 0.0))
+						offset = -(float)model.getValue("LPOSRZ");
+					else
+						offset = -(float)model.getValue("LPOSZ");
+				}
 			}
 		});
 
@@ -236,27 +235,27 @@ public class View3DWidget extends SubScene implements IChartControl {
 				
 				if(takeoff!=null && state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
 
-					if(model.isValid("ALTTR")) {
-						camera.setTranslateY(model.getValue("ALTTR")*100);
-						world.setTranslateY(model.getValue("ALTTR")*100);
+					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
+						camera.setTranslateY(takeoff.getValue("ALTTR")*100);
+						world.setTranslateY(takeoff.getValue("ALTTR")*100);
 					} 
-					if(model.isValid("LPOSRZ"))
-						offset = -(float)model.getValue("LPOSRZ");
-					else if(model.isValid("LPOSZ"))
-						offset = -(float)model.getValue("LPOSZ");
+					if(Double.isFinite(model.getValue("LPOSRZ")))
+						offset = -(float)takeoff.getValue("LPOSRZ");
+					else
+						offset = -(float)takeoff.getValue("LPOSZ");
 
 
 				} else {
 
 					if(state.getLandedProperty().get()) {
 
-						if(model.isValid("ALTTR")) {
+						if(!Double.isNaN(model.getValue("ALTTR"))) {
 							camera.setTranslateY(model.getValue("ALTTR")*100);
 							world.setTranslateY(model.getValue("ALTTR")*100);
 						} 
-						if(model.isValid("LPOSRZ"))
+						if(Double.isFinite(model.getValue("LPOSRZ")))
 							offset = -(float)model.getValue("LPOSRZ");
-						else if(model.isValid("LPOSZ"))
+						else
 							offset = -(float)model.getValue("LPOSZ");
 					} 
 				}
