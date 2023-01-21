@@ -17,7 +17,8 @@ import javafx.scene.shape.Sphere;
 
 public class Trajectory extends Xform {
 
-	private static final float STEP = 0.2f;
+	private static final float STEP     = 0.2f;
+	private static final float Z_OFFSET = 3f;
 
 	private final List<Point3D> points = new ArrayList<Point3D>();
 	private final Sphere sphere = new Sphere(1.3);
@@ -79,7 +80,7 @@ public class Trajectory extends Xform {
 				y = getPosition((float)t, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 				z = getPosition((float)t, p0z, v0z, a0z,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
 
-				points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
+				points.add(new Point3D(-y*100,-(z+offset)*100+Z_OFFSET,x*100));
 
 			}
 			
@@ -87,11 +88,11 @@ public class Trajectory extends Xform {
 			y = getPosition((float)length, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 			z = getPosition((float)length, p0z, v0z, a0z,(float)model.getValue("TRAJALPHAZ"),(float)model.getValue("TRAJBETAZ"),(float)model.getValue("TRAJGAMMAZ"));
 
-			points.add(new Point3D(-y*100,-(z+offset)*100-6,x*100));
+			points.add(new Point3D(-y*100,-(z+offset)*100+Z_OFFSET,x*100));
 
 			// Endpoint dot
 			sphere.setTranslateX(-y*100);
-			sphere.setTranslateY(-(z+offset)*100-6);
+			sphere.setTranslateY(-(z+offset)*100+Z_OFFSET);
 			sphere.setTranslateZ(x*100);
 			sphere.setVisible(true);
 

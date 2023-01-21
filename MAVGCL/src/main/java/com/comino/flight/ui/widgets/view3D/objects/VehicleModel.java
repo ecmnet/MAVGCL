@@ -68,7 +68,8 @@ public class VehicleModel extends Group {
 		super();
 
 		obj = new ObjModelImporter();
-		obj.read(this.getClass().getResource("resources/quad_x.obj"));
+//		obj.read(this.getClass().getResource("resources/quad_x.obj"));
+		obj.read(this.getClass().getResource("resources/ud.obj"));
 		mesh = obj.getImport();
 
 		this.setScaleX(scale);
@@ -80,9 +81,9 @@ public class VehicleModel extends Group {
 
 		this.getTransforms().clear();
 
-		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))-90);
+		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
 		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
-		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL"))+90);
+		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL")));
 
 		switch(mode) {
 		case MODE_LPOS:
