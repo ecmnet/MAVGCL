@@ -48,9 +48,7 @@ import com.comino.flight.ui.widgets.view3D.objects.VehicleModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Vision;
-import com.comino.mavutils.MSPMathUtils;
 
-import georegression.struct.point.Point3D_F64;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -66,7 +64,6 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
@@ -77,7 +74,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 	private static final double PLANE_LENGTH  = 5000.0;
-	private static final float  VEHICLE_SCALE = 18.0f;
+	private static final float  VEHICLE_SCALE = 25.0f;
 
 
 	private AnimationTimer 	task 		= null;
