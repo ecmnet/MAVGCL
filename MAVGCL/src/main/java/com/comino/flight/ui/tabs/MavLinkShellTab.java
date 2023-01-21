@@ -52,7 +52,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.skin.TextAreaSkin;
+import javafx.scene.control.skin.TextFieldSkin;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -62,7 +69,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 
 	private final static String[] defaults = { "reboot", "listener vehicle_odometry", "gps status", "work_queue status", "listener estimator_status", 
-			                                   "sensors status", "dmesg" };
+			"sensors status", "dmesg" };
 
 
 	private IMAVController control;
@@ -95,7 +102,6 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 	@FXML
 	private void initialize() {
 
-		
 		this.out = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -143,7 +149,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					int end = console.getText().length();
 					if(!last.isEmpty() && lastindex > 0 && console.getText().length() > 0) {
 						try {
-						console.deleteText(index, console.getText().length());
+							console.deleteText(index, console.getText().length());
 						} catch(Exception e) { }
 						console.appendText(last.get(--lastindex));
 						end = console.getText().length();
@@ -193,11 +199,27 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 		this.msg     = new msg_serial_control(1,1);
 		this.state   = StateProperties.getInstance();
 		control.addMAVLinkListener(this);
+
+		ContextMenu ctx = new ContextMenu();
+		MenuItem clear = new MenuItem("Clear");
+		clear.setOnAction((v) -> {
+			reloadShell();
+		});
 		
+		MenuItem copy = new MenuItem("Copy");
+		copy.setOnAction((v) -> {
+			final ClipboardContent content = new ClipboardContent();
+			content.putString(console.getSelectedText());
+		    Clipboard.getSystemClipboard().setContent(content);
+		});
+
+		ctx.getItems().addAll(clear,copy);
+		console.setContextMenu(ctx);
+
 		state.getConnectedProperty().addListener((v,ov,nv) -> {
 			if(nv.booleanValue())
 				reloadShell();
-			
+
 		});
 
 		this.disabledProperty().addListener((v,ov,nv) -> {
@@ -205,20 +227,20 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 				out.start();
 				scrollIntoView();
 				if(console.getText().isEmpty())
-				    writeToShell("ver all\n"); 
+					writeToShell("ver all\n"); 
 
 			} else {
 				out.stop();
 			}
 			lastindex = last.size();
 		});
-		
+
 		console.disableProperty().bind(this.disabledProperty());
-		
+
 		this.setOnMouseEntered((ev) -> {
 			this.requestFocus();
 		});
-	
+
 		return this;
 	}
 
@@ -241,11 +263,11 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					if((msg.data[i] & 0x007F)!=0)
 						bytes[j++] = (char)(msg.data[i] & 0x007F);	
 				}
-				String line = String.copyValueOf(bytes,0,j).replace("[K", "");
+				String line = String.copyValueOf(bytes,0,j).replace("[K", " ");
 				if(line.contains(">"))
 					buffer.add(line.substring(0,line.length()-1));
 				else
-				buffer.add(line);
+					buffer.add(line);
 			}
 		}
 	}
@@ -256,7 +278,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 			console.clear();
 			console.setEditable(true);
 			if(!isDisabled())
-				writeToShell("\n");
+				writeToShell("\r\n");
 		});
 	}
 
