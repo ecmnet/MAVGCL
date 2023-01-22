@@ -90,14 +90,19 @@ public class Trajectory extends Xform {
 
 			points.add(new Point3D(-y*100,-(z+offset)*100+Z_OFFSET,x*100));
 
-			// Endpoint dot
-			sphere.setTranslateX(-y*100);
-			sphere.setTranslateY(-(z+offset)*100+Z_OFFSET);
-			sphere.setTranslateZ(x*100);
-			sphere.setVisible(true);
+//			// Endpoint dot
+//			sphere.setTranslateX(-y*100);
+//			sphere.setTranslateY(-(z+offset)*100+Z_OFFSET);
+//			sphere.setTranslateZ(x*100);
+//			sphere.setVisible(true);
 
 			if(!points.isEmpty()) {
 				line = new PolyLine3D(points, 1, Color.DARKRED, LineType.TRIANGLE);
+				// Endpoint dot
+				sphere.setTranslateX(-y*100);
+				sphere.setTranslateY(-(z+offset)*100+Z_OFFSET);
+				sphere.setTranslateZ(x*100);
+				sphere.setVisible(true);
 				this.getChildren().clear();
 				this.getChildren().addAll(line, sphere);
 			}

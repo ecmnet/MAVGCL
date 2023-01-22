@@ -34,6 +34,8 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
+import org.fxyz3d.scene.paint.Patterns;
+
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -80,7 +82,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private AnimationTimer 	task 		= null;
 	private Xform 			world 		= new Xform();
 
-	private Box             ground;
+	private Group           ground;
 	private Box             landing_target;
 	private Rotate          rf = new Rotate(0, Rotate.Y_AXIS);
 
@@ -117,12 +119,6 @@ public class View3DWidget extends SubScene implements IChartControl {
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("DARKGRAY", 0.1));
 
-
-		PhongMaterial groundMaterial = new PhongMaterial();
-		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
-		groundMaterial.setDiffuseMap(new Image
-				(getClass().getResource("objects/resources/ground.jpg").toExternalForm()));
-
 		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
 		pointLight.setTranslateX(100);
 		pointLight.setTranslateY(800);
@@ -134,8 +130,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		target    = new Target();
 
-		ground = new Box(PLANE_LENGTH,0,PLANE_LENGTH);
-		ground.setMaterial(groundMaterial);
+		ground = createGround();
 		
 		landing_target = new Box(50,0,50);
 		PhongMaterial landing_target_material = new PhongMaterial();
@@ -145,7 +140,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		vehicle   = new VehicleModel(VEHICLE_SCALE);
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground, landing_target, vehicle, trajectory, target, obstacle, pointLight, ambient,
+		world.getChildren().addAll(ground,landing_target, vehicle, trajectory, target, obstacle, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
@@ -333,6 +328,10 @@ public class View3DWidget extends SubScene implements IChartControl {
 		trajectory.show(enabled);
 	}
 	
+	public void enableObstacleView(boolean enabled) {
+		obstacle.show(enabled);
+	}
+	
 	public void setDataSource(int mode) {
 		vehicle.setMode(mode);
 	}
@@ -479,6 +478,34 @@ public class View3DWidget extends SubScene implements IChartControl {
 		affine.prepend(rotate.getAxis() == Rotate.X_AXIS ? newRotateX :
 			rotate.getAxis() == Rotate.Y_AXIS ? newRotateY : newRotateZ);
 		node.getTransforms().setAll(affine);
+	}
+	
+	private Group createGround() {
+		
+		final int BOX_COUNT = 10;
+		
+		Group g = new Group();
+		
+		PhongMaterial groundMaterial = new PhongMaterial();
+		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
+//		groundMaterial.setDiffuseMap(new Image
+//				(getClass().getResource("objects/resources/ceiling_tiled.jpg").toExternalForm()));
+		groundMaterial.setDiffuseMap(new Image
+				(getClass().getResource("objects/resources/tiles.jpg").toExternalForm()));
+		
+		final double side = PLANE_LENGTH/BOX_COUNT;
+		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {
+			for(int y = -BOX_COUNT; y < BOX_COUNT; y++) {
+				final Box ground = new Box(side,0,side);
+				ground.setMaterial(groundMaterial);
+				ground.setTranslateX(side*x);
+				ground.setTranslateZ(side*y);
+				g.getChildren().add(ground);
+			}
+		}
+		
+		return g;
+		
 	}
 
 

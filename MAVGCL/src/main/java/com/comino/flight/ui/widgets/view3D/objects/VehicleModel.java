@@ -45,6 +45,8 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
 public class VehicleModel extends Group {
+	
+	private static final float VEHICLE_OFFSET = -20;
 
 	public static final int MODE_LPOS           = 0;
 	public static final int MODE_LPOS_CORRECTED = 1;
@@ -88,26 +90,26 @@ public class VehicleModel extends Group {
 		switch(mode) {
 		case MODE_LPOS:
 			this.setTranslateX(-model.getValue("LPOSY")*100);
-			z_pos = ( - model.getValue("LPOSZ") - z_offset ) * 100 - 12 ;
-			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			z_pos = ( - model.getValue("LPOSZ") - z_offset ) * 100 ;
+			this.setTranslateY(z_pos < 0 ?  VEHICLE_OFFSET  : z_pos + VEHICLE_OFFSET );
 			this.setTranslateZ(model.getValue("LPOSX")*100);
 			break;
 		case MODE_LPOS_CORRECTED:
 			this.setTranslateX(-model.getValue("LPOSRY")*100);
-			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100 - 12 ;
-			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			z_pos = ( - model.getValue("LPOSRZ") - z_offset ) * 100;
+			this.setTranslateY(z_pos < 0 ?  VEHICLE_OFFSET  : z_pos + VEHICLE_OFFSET );
 			this.setTranslateZ(model.getValue("LPOSRX")*100);
 			break;
 		case MODE_VISION:
 			this.setTranslateX(-model.getValue("VISIONY")*100);
-			z_pos = ( - model.getValue("VISIONZ") - z_offset ) * 100 - 12 ;
-			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			z_pos = ( - model.getValue("VISIONZ") - z_offset ) * 100 ;
+			this.setTranslateY(z_pos < 0 ?  VEHICLE_OFFSET  : z_pos + VEHICLE_OFFSET );
 			this.setTranslateZ(model.getValue("VISIONX")*100);
 			break;
 		case MODE_GROUNDTRUTH:
 			this.setTranslateX(-model.getValue("GNDTRUTHY")*100);
-			z_pos = ( - model.getValue("GNDTRUTHZ")  ) * 100 - 12 ;
-			this.setTranslateY(z_pos < 0 ? 0 : z_pos);
+			z_pos = ( - model.getValue("GNDTRUTHZ")  ) * 100;
+			this.setTranslateY(z_pos < 0 ?  VEHICLE_OFFSET  : z_pos + VEHICLE_OFFSET );
 			this.setTranslateZ(model.getValue("GNDTRUTHX")*100);
 			break;
 		}

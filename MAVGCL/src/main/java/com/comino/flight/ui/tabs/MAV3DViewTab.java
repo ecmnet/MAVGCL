@@ -78,6 +78,9 @@ public class MAV3DViewTab extends Pane  {
 	
 	@FXML
 	private CheckBox     show_traj;
+	
+	@FXML
+	private CheckBox     show_obs;
 
 	@FXML
 	private Slider zoom;
@@ -121,6 +124,10 @@ public class MAV3DViewTab extends Pane  {
 		
 		show_traj.selectedProperty().addListener((e,o,n) -> {
 			widget.enableTrajectoryView(n.booleanValue());
+		});
+		
+		show_obs.selectedProperty().addListener((e,o,n) -> {
+			widget.enableObstacleView(n.booleanValue());
 		});
 		
 

@@ -27,6 +27,7 @@
 						<ChoiceBox fx:id="source" prefWidth="100.0"
 							maxHeight="17.0" />
 						<CheckBox fx:id="show_traj" mnemonicParsing="false" text="Show Trajectory" selected="true" />
+						<CheckBox fx:id="show_obs" mnemonicParsing="false" text="Show nearest obstacle" selected="false" />
 					</children>
 				</HBox>
 			</children>

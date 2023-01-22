@@ -22,6 +22,8 @@ public class Obstacle extends Xform {
 	private final Point3D_F64   o = new Point3D_F64();
 	private final Point3D_F64   v = new Point3D_F64();
 	
+	private boolean show = false;
+	
 	public Obstacle(VehicleModel vehicle) {
 		super();
 		
@@ -40,12 +42,13 @@ public class Obstacle extends Xform {
 	}
 	
 	public void updateState(AnalysisDataModel model, float offset) {
+	
 		
-		o.setTo(-model.getValue("SLAMOBY")*100f, (-model.getValue("SLAMOBZ")-offset ) * 100f - 12, model.getValue("SLAMOBX")*100f);
+		o.setTo(-model.getValue("SLAMOBY")*100f, (-model.getValue("SLAMOBZ")-offset ) * 100f, model.getValue("SLAMOBX")*100f);
 		
-		if(MSP3DUtils.isFinite(o)) {
+		if(show && MSP3DUtils.isFinite(o) && o.normSq()>0) {
 			
-			this.setTranslate(o.x,o.y,o.z);
+			this.setTranslate(o.x,o.y-20,o.z);
 			v.setTo(vehicle.getTranslateX(),vehicle.getTranslateY(),vehicle.getTranslateZ()); v.scale(-1f);
 			v.plusIP(o);
 			
@@ -56,6 +59,10 @@ public class Obstacle extends Xform {
 			this.setVisible(true);
 		} else
 			this.setVisible(false);
+	}
+	
+	public void show(boolean show) {
+		this.show = show;
 	}
 	
 
