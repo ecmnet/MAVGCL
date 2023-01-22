@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de.
+ *   Copyright (c) 2017,2023 Eike Mansfeld ecm@gmx.de.
  *   All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,8 +34,6 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
-import org.fxyz3d.scene.paint.Patterns;
-
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -64,6 +62,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -118,6 +117,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("DARKGRAY", 0.1));
+		
+
+		
 
 		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
 		pointLight.setTranslateX(100);
@@ -132,7 +134,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		ground = createGround();
 		
-		landing_target = new Box(50,0,50);
+		landing_target = new Box(60,0,60);
 		PhongMaterial landing_target_material = new PhongMaterial();
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
 		landing_target.setMaterial(landing_target_material);
@@ -271,6 +273,13 @@ public class View3DWidget extends SubScene implements IChartControl {
 					vehicle.updateState(model,offset);
 					trajectory.updateState(model,offset);
 					break;
+				case Camera.BIRDS_PERSPECTIVE:
+					if(!vehicle.isVisible())
+						vehicle.setVisible(true);
+					vehicle.updateState(model,offset);
+					trajectory.updateState(model,offset);
+					camera.updateState(model);
+					break;
 				case Camera.VEHICLE_PERSPECTIVE:
 					camera.updateState(model);
 					trajectory.clear();
@@ -342,6 +351,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		Platform.runLater(() -> {
 			camera.setPerspective(perspective,model);
 			switch(perspective) {
+			case Camera.BIRDS_PERSPECTIVE:
 			case Camera.OBSERVER_PERSPECTIVE:
 				vehicle.show(true);
 				//				map.setMode2D(false);
@@ -357,6 +367,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	public void scale(float scale) {
 		Platform.runLater(() -> {
 			switch(perspective) {
+			case Camera.BIRDS_PERSPECTIVE:
 			case Camera.OBSERVER_PERSPECTIVE:
 				world.setScale(scale/100);
 				break;
@@ -482,16 +493,14 @@ public class View3DWidget extends SubScene implements IChartControl {
 	
 	private Group createGround() {
 		
-		final int BOX_COUNT = 10;
+		final int BOX_COUNT = 4;
+		final String ground_image = "ground.jpg";
 		
 		Group g = new Group();
 		
 		PhongMaterial groundMaterial = new PhongMaterial();
-		//	groundMaterial.setDiffuseColor(Color.LIGHTGRAY);
-//		groundMaterial.setDiffuseMap(new Image
-//				(getClass().getResource("objects/resources/ceiling_tiled.jpg").toExternalForm()));
 		groundMaterial.setDiffuseMap(new Image
-				(getClass().getResource("objects/resources/tiles.jpg").toExternalForm()));
+				(getClass().getResource("objects/resources/"+ground_image).toExternalForm()));
 		
 		final double side = PLANE_LENGTH/BOX_COUNT;
 		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {

@@ -84,8 +84,8 @@ public class VehicleModel extends Group {
 		this.getTransforms().clear();
 
 		this.addRotate(this, this.ry, 180-MSPMathUtils.fromRad(model.getValue("YAW"))+90);
-		this.addRotate(this, this.rz, 180-MSPMathUtils.fromRad(model.getValue("PITCH")));
-		this.addRotate(this, this.rx, MSPMathUtils.fromRad(model.getValue("ROLL")));
+		this.addRotate(this, this.rz, 180+MSPMathUtils.fromRad(model.getValue("PITCH")));
+		this.addRotate(this, this.rx, -MSPMathUtils.fromRad(model.getValue("ROLL")));
 
 		switch(mode) {
 		case MODE_LPOS:

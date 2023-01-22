@@ -44,9 +44,9 @@ import javafx.scene.SubScene;
 
 public class Camera extends Xform {
 
-	public static final int	OBSERVER_PERSPECTIVE 	= 0;
-	public static final int	VEHICLE_PERSPECTIVE 		= 1;
-	public static final int	BIRDS_PERSPECTIVE 		= 2;
+	public static final int	BIRDS_PERSPECTIVE 		= 0;
+	public static final int	OBSERVER_PERSPECTIVE 	= 1;
+	public static final int	VEHICLE_PERSPECTIVE 	= 2;
 
 	private static final double CAMERA_INITIAL_DISTANCE 	= -1000;
 	private static final double CAMERA_INITIAL_HEIGHT    	=  -250;
@@ -102,6 +102,7 @@ public class Camera extends Xform {
 		this.vv_angle = 0;
 		switch(perspective) {
 		case OBSERVER_PERSPECTIVE:
+		case BIRDS_PERSPECTIVE:
 			camera.setTranslateX(0); camera.setTranslateY(CAMERA_INITIAL_HEIGHT);
 			camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
 			this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
@@ -118,16 +119,32 @@ public class Camera extends Xform {
 	}
 
 	public void updateState(AnalysisDataModel model) {
-		if(model.isValid("LPOSRY") && model.isValid("LPOSRX") &&
-	        	   model.getValue("LPOSRX") != 0 && model.getValue("LPOSRY") != 0	) 
-			this.setTranslate(-model.getValue("LPOSRY")*100, model.getValue("LPOSRZ") > -0.05 ? 5 : -model.getValue("LPOSRZ") *100, model.getValue("LPOSRX")*100);
-		else
-			this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
-		this.ry.setAngle(MSPMathUtils.fromRad(model.getValue("YAW")));
 
-		if(perspective==VEHICLE_PERSPECTIVE) {
+		switch(perspective) {
+
+
+		case VEHICLE_PERSPECTIVE:
+
+			if(model.isValid("LPOSRY") && model.isValid("LPOSRX") &&
+					model.getValue("LPOSRX") != 0 && model.getValue("LPOSRY") != 0	) 
+				this.setTranslate(-model.getValue("LPOSRY")*100, model.getValue("LPOSRZ") > -0.05 ? 5 : -model.getValue("LPOSRZ") *100, model.getValue("LPOSRX")*100);
+			else
+				this.setTranslate(-model.getValue("LPOSY")*100, model.getValue("LPOSZ") > -0.05 ? 5 : -model.getValue("LPOSZ") *100, model.getValue("LPOSX")*100);
+			this.ry.setAngle(MSPMathUtils.fromRad(model.getValue("YAW")));
+
 			this.rz.setAngle(-MSPMathUtils.fromRad(model.getValue("ROLL"))+180);
 			this.rx.setAngle(MSPMathUtils.fromRad(model.getValue("PITCH"))+vv_angle);
+			break;
+
+		case BIRDS_PERSPECTIVE:
+
+
+				this.setTranslate(-model.getValue("LPOSY")*60, 
+						-model.getValue("LPOSZ")*50-120, 
+						model.getValue("LPOSX")*60);
+
+
+
 		}
 	}
 
@@ -170,6 +187,7 @@ public class Camera extends Xform {
 
 			if (me.isPrimaryButtonDown()) {
 				switch(perspective) {
+				case BIRDS_PERSPECTIVE:
 				case OBSERVER_PERSPECTIVE:
 					this.ry.setAngle(this.ry.getAngle() - mouseDeltaX*MOUSE_SPEED*modifier*ROTATION_SPEED);  //
 					this.rx.setAngle(this.rx.getAngle() + mouseDeltaY*MOUSE_SPEED*modifier*ROTATION_SPEED);  // -

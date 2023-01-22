@@ -57,7 +57,7 @@ import javafx.scene.paint.Color;
 
 public class MAV3DViewTab extends Pane  {
 
-	private static final String[] PERSPECTIVES = { "Observer", "Vehicle" };
+	private static final String[] PERSPECTIVES = { "Follow vehicle", "Static observer", "Vehicle"};
 	private static final String[] SOURCES = { "LocalPosition","LocalPoition corr.", "VisionPosition","Groundtruth"};
 
 	private View3DWidget widget = null;
