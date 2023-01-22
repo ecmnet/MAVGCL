@@ -366,6 +366,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	public void scale(float scale) {
 		Platform.runLater(() -> {
+			
 			switch(perspective) {
 			case Camera.BIRDS_PERSPECTIVE:
 			case Camera.OBSERVER_PERSPECTIVE:
