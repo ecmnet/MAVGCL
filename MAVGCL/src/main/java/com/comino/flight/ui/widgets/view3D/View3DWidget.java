@@ -493,8 +493,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 	
 	private Group createGround() {
 		
-		final int BOX_COUNT = 4;
-		final String ground_image = "ground.jpg";
+		final int BOX_COUNT = 14;
+		final String ground_image = "tiles.jpg";
 		
 		Group g = new Group();
 		

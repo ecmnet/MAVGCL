@@ -50,7 +50,7 @@ public class Camera extends Xform {
 
 	private static final double CAMERA_INITIAL_DISTANCE 	= -1000;
 	private static final double CAMERA_INITIAL_HEIGHT    	=  -250;
-	private static final double CAMERA_INITIAL_X_ANGLE  	=  5.0;
+	private static final double CAMERA_INITIAL_X_ANGLE  	=  -12.0;
 	private static final double CAMERA_INITIAL_Y_ANGLE  	=  0.0;
 	private static final double CAMERA_INITIAL_FOV_OBS  	=  35.0;
 	private static final double CAMERA_INITIAL_FOV_VCL  	=  60.0;
