@@ -18,7 +18,7 @@ import javafx.scene.shape.Sphere;
 public class Trajectory extends Xform {
 
 	private static final float STEP     = 0.2f;
-	private static final float Z_OFFSET = 3f;
+	private static final float Z_OFFSET = 18f;
 
 	private final List<Point3D> points = new ArrayList<Point3D>();
 	private final Sphere sphere = new Sphere(1.3);
@@ -74,7 +74,7 @@ public class Trajectory extends Xform {
 			a0y = (float)model.getValue("TRAJSTARTAY");
 			a0z = (float)model.getValue("TRAJSTARTAZ");
 
-			for(double t = current+STEP/2; t < length; t = t + STEP ) {
+			for(double t = current+STEP; t < length; t = t + STEP ) {
 
 				x = getPosition((float)t, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
 				y = getPosition((float)t, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));

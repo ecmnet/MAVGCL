@@ -142,7 +142,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		vehicle   = new VehicleModel(VEHICLE_SCALE);
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground,landing_target, vehicle, trajectory, target, obstacle, pointLight, ambient,
+		world.getChildren().addAll(ground,landing_target, target, trajectory, vehicle, obstacle, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);

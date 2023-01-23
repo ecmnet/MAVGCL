@@ -46,7 +46,7 @@ import javafx.scene.transform.Rotate;
 
 public class VehicleModel extends Group {
 	
-	private static final float VEHICLE_OFFSET = -20;
+	private static final float VEHICLE_OFFSET = -5;
 
 	public static final int MODE_LPOS           = 0;
 	public static final int MODE_LPOS_CORRECTED = 1;
