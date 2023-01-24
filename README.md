@@ -12,16 +12,18 @@ This JavaFx based tool enables PX4 Users to record and analyse data published vi
 
 Any feedback, comments and contributions are very welcome.
 
-**Development Status:** Last updated 	11/08/22
+**Development Status:** Last updated 	24/01/23
 
 - Auto loading of custom keyfigure definition files from a dedicated directory at startup
 - Autosave into result directory requests and saves DMESG output
 - Multiple videostreams
 - Videostream replay (if video found in result directory)
+- 3D View reworked
 
 Note: 3D map data can be transferred to MAVGCL using the custom MAVLink message [msg_msp_micro_grid](https://github.com/ecmnet/mavcom/blob/af3a826866d977b898170547d15e1ad334899682/mavcom/mavlink/lquac.xml#L231) - for encoding refer to [MAP3DSpacialInfo.java](https://github.com/ecmnet/mavmap/blob/aa739520e2de797cad3ba71da01f041c87445557/mavmap/src/main/java/com/comino/mavmap/map/map3D/Map3DSpacialInfo.java#L84)
 
 See MAVGCL some action: 
+- 3D View: https://youtu.be/9CRZ7D_caTo (2023)
 - Video replay: <https://www.youtube.com/watch?v=liEKiAzEZ5Y> (2022)
 - XY View: <https://youtu.be/jOWNSIwIA9k> (2018)
 
