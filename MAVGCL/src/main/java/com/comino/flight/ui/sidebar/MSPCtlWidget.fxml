@@ -52,9 +52,9 @@
 				</padding>
 				<children>
 				  <StateButton fx:id="enable_interactive" text="Interactive mode" prefWidth="165.0"/>
+				  <Button fx:id="debug_mode1" text="Execute scenario" prefWidth="165.0" />
 				  <Button fx:id="rotate" text="Rotate South" prefWidth="165.0" />
 				  <Button fx:id="exec_land" text="Precision Landing" prefWidth="165.0" /> 
-				  <Button fx:id="debug_mode1" text="Action 1" prefWidth="165.0" />
 				  <Button fx:id="debug_mode2" text="Action 2" prefWidth="165.0" />
 				</children>
 			</VBox>

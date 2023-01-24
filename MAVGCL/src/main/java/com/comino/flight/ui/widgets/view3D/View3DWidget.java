@@ -117,10 +117,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("DARKGRAY", 0.1));
-		
-
-		
-
+	
 		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
 		pointLight.setTranslateX(100);
 		pointLight.setTranslateY(800);
