@@ -178,7 +178,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 				if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY)) {
 					gps.setMode(Badge.MODE_OFF);
-					gps.setText("");
+					gps.setText("GPS");
 				}
 				else {
 					switch(msp_model.gps.fixtype & 0xF) {
@@ -216,7 +216,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 				filename = FileHandler.getInstance().getName();
 				driver.setText(msp_model.sys.getSensorString());
-				vision.setText(msp_model.vision.getShortText());
+				if(msp_model.vision.getShortText().length()>0)
+				  vision.setText(msp_model.vision.getShortText());
 
 				if(control.isConnected()) {
 
@@ -257,7 +258,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						ready.setMode(Badge.MODE_ON);
 						if(ekf_status != 4) {
 							ready.setMode(Badge.MODE_OFF);
-							ready.setText("");
+							ready.setText("EKF2");
 
 						} else {
 							ready.setMode(Badge.MODE_ERROR);
@@ -276,8 +277,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					vision.setMode(Badge.MODE_OFF);
 					home.setMode(Badge.MODE_OFF);
 					bat.setMode(Badge.MODE_OFF);
-					bat.setText("");
-					driver.setText("");
+					bat.setText("UNKNOWN");
+					driver.setText("COMPONENTS");
 				}
 
 				list = collector.getModelList();
