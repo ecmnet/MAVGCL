@@ -408,7 +408,7 @@
 		</Groups>
 	</KeyFigure>
 	<KeyFigure desc="LPos.Yaw" uom="rad" mask="#0.000" key="LPOSW">
-		<MSPSource class="state" field="h"></MSPSource>
+		<MSPSource class="attitude" field="y"></MSPSource>
 		<ULogSource field="vehicle_local_position_0.yaw"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
@@ -497,7 +497,7 @@
 	</KeyFigure>
 
 	<KeyFigure desc="SP.LPos.Yaw" uom="rad" mask="#0.00" key="SPLPOSYAW">
-		<MSPSource class="target_state" field="h"></MSPSource>
+		<MSPSource class="attitude" field="sy"></MSPSource>
 		<ULogSource field="vehicle_local_position_setpoint_0.yaw"></ULogSource>
 		<Groups>
 			<Group>Local Position</Group>
@@ -704,6 +704,16 @@
 		</Groups>
 	</KeyFigure>
 	
+	<KeyFigure desc="Yaw (deg)" uom="°" mask="#0.0" key="YAWDEGREE">
+		<MSPSource class="attitude" field="y">
+		   <Converter class="Rad2DegreeConverter" expression="YAWDEGREE" />
+		</MSPSource>
+		<Groups>
+			<Group>Attitude</Group>
+			<Group>Telemetry</Group>
+		</Groups>
+	</KeyFigure>
+	
 	<KeyFigure desc="Yaw estimate" uom="rad" mask="#0.00" key="YAWEST">
 	    <ULogSource field="yaw_estimator_status_0.yaw_composite"></ULogSource>
 	    <Groups>
@@ -892,10 +902,9 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Heading" uom="°" mask="#0.0" key="HEAD">
-		<MSPSource class="hud" field="h"></MSPSource>
-		<ULogSource field="vehicle_local_position_0.yaw">
-		   <Converter class="Rad2DegreeConverter" expression="HEAD" />
-		</ULogSource>
+		<MSPSource class="hud" field="h">
+			 <Converter class="Rad2DegreeConverter" expression="HEAD" />
+		</MSPSource>
 		<Groups>
 			<Group>Global Position</Group>
 			<Group>Local Position</Group>
