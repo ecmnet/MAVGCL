@@ -87,9 +87,9 @@ public class DetailsWidget extends ChartControlPane {
 			// Default view
 
 			{ 
-				"ROLL", "PITCH", "THRUST", null, "GNDV", "CLIMB", 
+				"ROLL", "PITCH", "YAWDEGREE", "THRUST", null, "GNDV", "CLIMB", "HEAD",
 				null, 
-				"HEAD", "RGPSNO", "RGPSHDOP",
+				 "RGPSNO", "RGPSHDOP",
 				null, 
 				"ALTSL", "ALTTR", "ALTGL", "ALTRE",
 				null, 
