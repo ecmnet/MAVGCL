@@ -619,8 +619,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			else
 				positionLayer.getIcon().setImage(plane_invalid);
 
-			if(Double.isFinite(model.getValue("HEAD")))
-				positionLayer.updatePosition(pos[0],pos[1],model.getValue("HEAD"));
+			if(Double.isFinite(model.getValue("YAWDEGREE")))
+				positionLayer.updatePosition(pos[0],pos[1],model.getValue("YAWDEGREE"));
 			else
 				positionLayer.updatePosition(pos[0],pos[1],0);
 

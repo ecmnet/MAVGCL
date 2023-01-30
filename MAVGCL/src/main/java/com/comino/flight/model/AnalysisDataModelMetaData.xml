@@ -1856,7 +1856,7 @@
 		</Groups>
   </KeyFigure>
 
-  <KeyFigure desc="Vis.Heading" uom="°" mask="#0.0" key="VISIONH">
+  <KeyFigure desc="Vis.Yaw (deg)" uom="°" mask="#0.0" key="VISIONH">
 		<MSPSource class="vision" field="h">
 		   <Converter class="Rad2DegreeConverter" expression="VISIONH" />
 		</MSPSource>
