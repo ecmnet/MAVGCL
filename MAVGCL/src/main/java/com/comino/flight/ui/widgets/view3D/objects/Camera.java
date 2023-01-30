@@ -142,7 +142,7 @@ public class Camera extends Xform {
 
 				this.setTranslate(-model.getValue("LPOSY")*150*zoom, 
 						-model.getValue("LPOSZ")*150*zoom-120, 
-						model.getValue("LPOSX")*15*zoom);
+						model.getValue("LPOSX")*150*zoom);
 
 
 
