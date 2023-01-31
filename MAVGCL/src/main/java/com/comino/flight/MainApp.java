@@ -50,6 +50,7 @@ import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
 
+import com.comino.flight.file.MAVFTPClient;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.MavLinkULOGHandler;
 import com.comino.flight.model.map.MAVGCLMap;
@@ -143,6 +144,9 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_params;
+	
+	@FXML
+	private MenuItem m_ftp;
 
 	@FXML
 	private MenuItem m_map;
@@ -779,6 +783,13 @@ public class MainApp extends Application  {
 				MAVGCLPX4Parameters.getInstance().clear();
 				state.getLogLoadedProperty().set(false);
 
+			});
+			
+			m_ftp.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
+			m_ftp.setOnAction((event) ->{
+				MAVFTPClient ftp = new MAVFTPClient(control);
+				ftp.selectAndSendFile(MainApp.getPrimaryStage());
+				ftp.close();
 			});
 
 			m_about.setVisible(true);

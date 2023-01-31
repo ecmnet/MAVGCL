@@ -51,5 +51,11 @@
 	    <Label prefHeight="19.0" prefWidth="158.0" text="Theme:"                        GridPane.rowIndex="23" GridPane.columnIndex="0"/>
 		<ComboBox fx:id="theme" prefHeight="19.0" prefWidth="380.0"   			        GridPane.rowIndex="23" GridPane.columnIndex="1" GridPane.columnSpan="4"/>
 		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="24" GridPane.columnSpan="5" />
+		<Label prefHeight="19.0" prefWidth="158.0" text="FTP User/Password" 	        GridPane.rowIndex="25" GridPane.columnIndex="0" />
+		<TextField fx:id="reflon" prefHeight="19.0" prefWidth="80.0"       			    GridPane.rowIndex="15" GridPane.columnIndex="1" />
+		<TextField fx:id="ftp_user" prefHeight="19.0" prefWidth="80.0"       		    GridPane.rowIndex="25" GridPane.columnIndex="1" />
+		<PasswordField fx:id="ftp_pwd" prefHeight="19.0" prefWidth="80.0"       	    GridPane.rowIndex="25" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+		<Separator maxWidth="-Infinity" prefHeight="14.0" prefWidth="590.0"             GridPane.rowIndex="26" GridPane.columnSpan="5" />
+		
 	</children>
 </GridPane>

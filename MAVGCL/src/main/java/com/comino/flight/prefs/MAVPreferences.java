@@ -81,6 +81,8 @@ public class MAVPreferences {
 	public static final String ALERT            = "ALERT";
 	public static final String ICAO             = "ICAO";
 	public static final String VIEW             = "VIEW";
+	public static final String FTP_USER         = "FTP_USER";
+	public static final String FTP_PWD          = "FTP_PWD";
 	
 	public static final String USER_PREC_LOCK   = "USER_PRECISION_LOCK";
 

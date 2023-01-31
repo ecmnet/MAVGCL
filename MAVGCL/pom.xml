@@ -1,16 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.comino</groupId>
 	<artifactId>MAVGCL</artifactId>
 	<version>0.8.0</version>
 	<packaging>jar</packaging>
-
-
 	<name>MAVGCL2</name>
-	
 	<repositories>
-	   <repository>
+		<repository>
 			<id>in-project</id>
 			<name>In Project Repo</name>
 			<url>file://${project.basedir}/lib</url>
@@ -30,14 +26,11 @@
         </repository>
     -->
 	</repositories>
-
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.10</maven.compiler.target>
 		<maven.compiler.source>1.10</maven.compiler.source>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>mavbase</groupId>
@@ -106,14 +99,11 @@
 			<artifactId>Medusa</artifactId>
 			<version>7.4</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>objimport</groupId>
 			<artifactId>objimport</artifactId>
 			<version>0.8.0</version>
 		</dependency>
-		
-	
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -159,9 +149,12 @@
 			<artifactId>ffmpeg-platform</artifactId>
 			<version>5.1.2-1.5.8</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.mockftpserver</groupId>
+			<artifactId>MockFtpServer</artifactId>
+			<version>2.7.1</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<resources>
 			<resource>
@@ -186,7 +179,6 @@
 					</archive>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -206,7 +198,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.1.0</version>
@@ -252,6 +243,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 </project>

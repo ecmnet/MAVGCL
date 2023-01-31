@@ -93,6 +93,10 @@
 							text="Refresh map from vehicle">
 						</MenuItem>	
 						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem fx:id="m_ftp" mnemonicParsing="false"
+							text="Upload File to vehicle...">
+						</MenuItem>
+						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem fx:id="m_pdoc" mnemonicParsing="false"
 							text="Show PX4 parameter reference...">
 						</MenuItem>

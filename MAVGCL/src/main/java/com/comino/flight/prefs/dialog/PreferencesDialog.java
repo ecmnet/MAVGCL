@@ -56,6 +56,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
@@ -138,6 +139,12 @@ public class PreferencesDialog  {
 
 	@FXML
 	private TextField icao;
+	
+	@FXML
+	private TextField ftp_user;
+	
+	@FXML
+	private PasswordField ftp_pwd;
 
 	private IMAVController control;
 	private Preferences userPrefs;
@@ -257,6 +264,8 @@ public class PreferencesDialog  {
 		alert.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ALERT, false));
 		icao.setText(userPrefs.get(MAVPreferences.ICAO, "EDDM"));
 		theme.getSelectionModel().select(userPrefs.get(MAVPreferences.PREFS_THEME,THEMES[0]));
+		ftp_user.setText(userPrefs.get(MAVPreferences.FTP_USER, "-user-"));
+		ftp_pwd.setText(userPrefs.get(MAVPreferences.FTP_PWD, ""));
 
 		if(prefDialog.showAndWait().get().booleanValue()) {
 
@@ -280,6 +289,8 @@ public class PreferencesDialog  {
 			userPrefs.putBoolean(MAVPreferences.ALERT,alert.isSelected());
 			userPrefs.put(MAVPreferences.ICAO, icao.getText());
 			userPrefs.put(MAVPreferences.PREFS_THEME,theme.getSelectionModel().getSelectedItem());
+			userPrefs.put(MAVPreferences.FTP_USER, ftp_user.getText());
+			userPrefs.put(MAVPreferences.FTP_PWD, ftp_pwd.getText());
 
 			StateProperties.getInstance().preferencesChangedProperty().set(true);
 
