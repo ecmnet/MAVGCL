@@ -29,7 +29,6 @@ public class MAVFTPClient {
 
 	private String user = null;
 	private String pwd  = null;
-	private String url  = null;
 
 	private FtpClient ftp;
 	private int       port = 21;
@@ -78,11 +77,6 @@ public class MAVFTPClient {
 			sitlServer.stop();
 	}
 
-
-	public String toString() {
-		return  url;
-	}
-
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
@@ -110,7 +104,7 @@ public class MAVFTPClient {
 	private class FtpClient {
 
 		private String server;
-		private int port;
+		private int    port;
 		private String user;
 		private String password;
 
