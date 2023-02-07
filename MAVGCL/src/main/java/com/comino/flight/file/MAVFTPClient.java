@@ -20,6 +20,7 @@ import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavcom.model.segment.Status;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -43,6 +44,7 @@ public class MAVFTPClient {
 		Preferences prefs = MAVPreferences.getInstance();
 		user = prefs.get(MAVPreferences.FTP_USER, null);
 		pwd  = prefs.get(MAVPreferences.FTP_PWD, null);
+
 		if(control.isSimulation()) {
 			try {
 				sitlServer = setupSITL();
@@ -55,9 +57,15 @@ public class MAVFTPClient {
 	}
 
 	public void selectAndSendFile(Stage stage) {
+
 		FileChooser fc = getFileDialog("Select file to send to vehicle",System.getProperty("user.home"));
 		File f = fc.showOpenDialog(stage);
-		if(f==null)
+        sendFile(f);
+	}
+
+	public void sendFile(File f) {
+
+		if(f==null || control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) 
 			return;
 
 		ftp = new FtpClient(control.getConnectedAddress(), port, user, pwd);
@@ -66,10 +74,10 @@ public class MAVFTPClient {
 			ftp.put(f);
 			ftp.close();
 		} catch (IOException e) { 
-			control.writeLogMessage(new LogMessage("[mgc] Selected file could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
+			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 			return;
 		}
-		control.writeLogMessage(new LogMessage("[mgc] File sent to vehicle",MAV_SEVERITY.MAV_SEVERITY_INFO));
+		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" to vehicle",MAV_SEVERITY.MAV_SEVERITY_INFO));
 	}
 
 	public void close() {
@@ -78,10 +86,12 @@ public class MAVFTPClient {
 	}
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
+
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(filter);
 		File f = new File(initDir);
+
 		if(f.exists())
 			fileChooser.setInitialDirectory(f);
 		else
@@ -91,6 +101,7 @@ public class MAVFTPClient {
 	}
 
 	public FakeFtpServer setupSITL() throws IOException {
+
 		FakeFtpServer sitlServer = new FakeFtpServer();
 		sitlServer.addUserAccount(new UserAccount("user", "password", "/data"));
 		FileSystem fileSystem = new UnixFakeFileSystem();
@@ -99,6 +110,7 @@ public class MAVFTPClient {
 		sitlServer.setServerControlPort(0);
 		sitlServer.start();
 		return sitlServer;
+
 	}
 
 	private class FtpClient {

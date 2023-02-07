@@ -122,6 +122,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private StateButton enable_rtl;
+	
+	@FXML
+	private Button scenario;
 
 	@FXML
 	private Button debug_mode1;
@@ -282,6 +285,14 @@ public class MSPCtlWidget extends ChartControlPane   {
 				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			else
 				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
+		
+		scenario.disableProperty().bind(enable_interactive.selectedProperty().not());
+		scenario.setOnAction((event) ->{
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_EXECUTE_SCENARIO;
 			control.sendMAVLinkMessage(msp);
 
 		});
