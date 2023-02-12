@@ -44,16 +44,6 @@ public class MAVFTPClient {
 		Preferences prefs = MAVPreferences.getInstance();
 		user = prefs.get(MAVPreferences.FTP_USER, null);
 		pwd  = prefs.get(MAVPreferences.FTP_PWD, null);
-
-		if(control.isSimulation()) {
-			try {
-				sitlServer = setupSITL();
-				user = "user";
-				pwd  = "password";
-				port = sitlServer.getServerControlPort();
-
-			} catch (IOException e) { e.printStackTrace(); }
-		}
 	}
 
 	public void selectAndSendFile(Stage stage) {
@@ -77,7 +67,7 @@ public class MAVFTPClient {
 			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 			return;
 		}
-		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" to vehicle",MAV_SEVERITY.MAV_SEVERITY_INFO));
+		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent to vehicle",MAV_SEVERITY.MAV_SEVERITY_INFO));
 	}
 
 	public void close() {
