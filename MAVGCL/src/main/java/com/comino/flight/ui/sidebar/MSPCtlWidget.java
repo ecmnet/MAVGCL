@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2023 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -301,7 +301,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 		
-		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not().or(StateProperties.getInstance().getSimulationProperty()));
+		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not()
+				.or(StateProperties.getInstance().getSimulationProperty()));
 		
 		scenario_select.getSelectionModel().selectedItemProperty().addListener((o,ov,nv) -> {
 			String scenario = MAVPreferences.getInstance().get(MAVPreferences.SCENARIO_DIR,System.getProperty("user.home"))
