@@ -102,6 +102,9 @@ public class PreferencesDialog  {
 	private ComboBox<?> prespath;
 	
 	@FXML
+	private ComboBox<?> scenariopath;
+	
+	@FXML
 	private ComboBox<?> definition;
 
 	@FXML
@@ -199,6 +202,19 @@ public class PreferencesDialog  {
 			});
 		});
 		
+		scenariopath.setEditable(true);
+		scenariopath.setOnShowing(event -> {
+			DirectoryChooser dir = new DirectoryChooser();
+			if(!scenariopath.getEditor().getText().isEmpty())
+				dir.setInitialDirectory(new File(scenariopath.getEditor().getText()));
+			File file = dir.showDialog(null);
+			Platform.runLater(() -> {
+				if(file!=null)
+					scenariopath.getEditor().setText(file.getAbsolutePath());
+				scenariopath.hide();
+			});
+		});
+		
 		definition.setEditable(true);
 		definition.setOnShowing(event -> {
 			DirectoryChooser dir = new DirectoryChooser();
@@ -250,6 +266,7 @@ public class PreferencesDialog  {
 		video.setText(userPrefs.get(MAVPreferences.PREFS_VIDEO,DEF_VIDEO_URL));
 		path.getEditor().setText(userPrefs.get(MAVPreferences.PREFS_DIR,System.getProperty("user.home")));
 		prespath.getEditor().setText(userPrefs.get(MAVPreferences.PRESET_DIR,System.getProperty("user.home")));
+		scenariopath.getEditor().setText(userPrefs.get(MAVPreferences.SCENARIO_DIR,System.getProperty("user.home")));
 		definition.getEditor().setText(userPrefs.get(MAVPreferences.DEFINITION_DIR,""));
 		autosave.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.AUTOSAVE, false));
 		ulog.selectedProperty().set(userPrefs.getBoolean(MAVPreferences.ULOGGER, false));
@@ -275,6 +292,7 @@ public class PreferencesDialog  {
 			userPrefs.put(MAVPreferences.PREFS_VIDEO,video.getText());
 			userPrefs.put(MAVPreferences.PREFS_DIR,path.getEditor().getText());
 			userPrefs.put(MAVPreferences.PRESET_DIR,prespath.getEditor().getText());
+			userPrefs.put(MAVPreferences.SCENARIO_DIR,scenariopath.getEditor().getText());
 			userPrefs.put(MAVPreferences.DEFINITION_DIR,definition.getEditor().getText());
 			userPrefs.putBoolean(MAVPreferences.AUTOSAVE,autosave.isSelected());
 			userPrefs.putBoolean(MAVPreferences.ULOGGER,ulog.isSelected());

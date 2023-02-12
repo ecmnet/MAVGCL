@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.prefs.Preferences;
 
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_AUTOCONTROL_ACTION;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
@@ -45,8 +46,11 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.jfx.extensions.StateButton;
 import com.comino.flight.MainApp;
+import com.comino.flight.file.FileHandler;
+import com.comino.flight.file.MAVFTPClient;
 import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.observables.StateProperties;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
@@ -58,12 +62,14 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -80,6 +86,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	
 	@FXML
 	private VBox     sitl;
+	
+	@FXML
+	private VBox     scenario_group;
 
 	@FXML
 	private VBox     msp_control;
@@ -124,7 +133,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_rtl;
 	
 	@FXML
-	private Button scenario;
+	private ComboBox<String> scenario_select;
+	
+	@FXML
+	private Button scenario_execute;
 
 	@FXML
 	private Button debug_mode1;
@@ -289,8 +301,24 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 		
-		scenario.disableProperty().bind(enable_interactive.selectedProperty().not());
-		scenario.setOnAction((event) ->{
+		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not().or(StateProperties.getInstance().getSimulationProperty()));
+		
+		scenario_select.getSelectionModel().selectedItemProperty().addListener((o,ov,nv) -> {
+			String scenario = MAVPreferences.getInstance().get(MAVPreferences.SCENARIO_DIR,System.getProperty("user.home"))
+					         +"/" + nv + ".xml";
+			MAVFTPClient ftp = MAVFTPClient.getInstance(control);
+			ftp.sendFileAs(scenario, "scenario.xml");
+			ftp.close();
+			
+		});
+		
+		scenario_execute.disableProperty().bind(enable_interactive.selectedProperty().not());
+		scenario_execute.setOnAction((event) ->{
+			if(scenario_select.getEditor().getText().contains("...") && !control.isSimulation()) {
+				logger.writeLocalMsg("[mgc] Select scenario first.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+				return;
+			}
+			
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_EXECUTE_SCENARIO;
 			control.sendMAVLinkMessage(msp);
@@ -412,7 +440,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 		this.prefs   = MAVPreferences.getInstance();
 		
 		sitl.disableProperty().bind(state.getSimulationProperty().not());
-
+		
+		scenario_select.getEditor().setText("Select scenario...");
+		scenario_select.getItems().addAll(FileHandler.getInstance().getScenarioList());
+		scenario_select.setEditable(true);
+		scenario_select.getEditor().setEditable(false);
+		scenario_select.getEditor().setCursor(Cursor.DEFAULT);
+		scenario_select.setVisibleRowCount(15);
 
 		state.getCVAvailableProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {	

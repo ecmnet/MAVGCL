@@ -111,6 +111,7 @@ public class FileHandler {
 
 	private Map<String,String> ulogFields = null;
 	private List<String> presetfiles = null;
+	private List<String> scenariofiles = null;
 
 	private String lastDir = null;
 	private String currDir = null;
@@ -139,6 +140,7 @@ public class FileHandler {
 		super();
 		this.stage = stage;
 		this.presetfiles = new ArrayList<String>();
+		this.scenariofiles = new ArrayList<String>();
 		this.userPrefs = MAVPreferences.getInstance();
 		this.control = control;
 		this.modelService = AnalysisModelService.getInstance();
@@ -149,6 +151,7 @@ public class FileHandler {
 		this.nutshell = new DumpNutshellToFile(control);
 
 		readPresetFiles();
+		readScenarioFiles();
 		autoLoadKeyfigures();
 
 
@@ -175,6 +178,30 @@ public class FileHandler {
 			for(int i=0;i<list.length;i++)
 				presetfiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
 			Collections.sort(presetfiles);
+		}
+
+	}
+	
+	private void readScenarioFiles() {
+		scenariofiles.clear();
+		File file = new File(userPrefs.get(MAVPreferences.SCENARIO_DIR,System.getProperty("user.home")));
+		if(file.isDirectory()) {
+			File[] list = file.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return name.contains(".xml");
+				}
+			});
+			Arrays.sort(list, new Comparator<File>() {
+				@Override
+				public int compare(File o1, File o2) {
+					return (int)(o2.lastModified() - o1.lastModified());
+				}
+			});
+			System.out.println(list.length+" scenarios found");
+			for(int i=0;i<list.length;i++)
+				scenariofiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
+			Collections.sort(scenariofiles);
 		}
 
 	}
@@ -205,6 +232,10 @@ public class FileHandler {
 
 	public List<String> getPresetList() {
 		return presetfiles;
+	}
+	
+	public List<String> getScenarioList() {
+		return scenariofiles;
 	}
 
 	public void fileImport() {

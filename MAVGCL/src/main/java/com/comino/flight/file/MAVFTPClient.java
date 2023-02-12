@@ -27,6 +27,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class MAVFTPClient {
+	
+	private static MAVFTPClient instance = null;
 
 	private String user = null;
 	private String pwd  = null;
@@ -36,8 +38,14 @@ public class MAVFTPClient {
 
 	private FakeFtpServer sitlServer;
 	private IMAVController control;
+	
+	public static MAVFTPClient getInstance(IMAVController control) {
+		if(instance == null)
+			instance = new MAVFTPClient(control);
+		return instance;
+	}
 
-	public MAVFTPClient(IMAVController control) {
+	private MAVFTPClient(IMAVController control) {
 
 		this.control = control;
 
@@ -67,7 +75,28 @@ public class MAVFTPClient {
 			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 			return;
 		}
-		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent to vehicle",MAV_SEVERITY.MAV_SEVERITY_INFO));
+		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent.",MAV_SEVERITY.MAV_SEVERITY_INFO));
+	}
+	
+	public void sendFileAs(String name, String as) {
+		
+		File f = new File(name);
+		
+		if(f==null || control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) 
+			return;
+		
+		ftp = new FtpClient(control.getConnectedAddress(), port, user, pwd);
+		try {
+			ftp.open();
+			ftp.put(as,f);
+			ftp.close();
+		} catch (IOException e) { 
+			e.printStackTrace();
+			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
+			return;
+		}
+		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent.",MAV_SEVERITY.MAV_SEVERITY_INFO));
+	
 	}
 
 	public void close() {
@@ -123,7 +152,11 @@ public class MAVFTPClient {
 		}
 
 		public void put(File f) throws FileNotFoundException, IOException {
-			ftpc.storeFile(f.getName(), new FileInputStream(f));
+			put(f.getName(),f);
+		}
+		
+		public void put(String as, File f) throws FileNotFoundException, IOException {
+			ftpc.storeFile(as, new FileInputStream(f));
 		}
 
 		public void open() throws IOException {

@@ -787,7 +787,7 @@ public class MainApp extends Application  {
 			
 			m_ftp.disableProperty().bind(state.getArmedProperty().or(state.getConnectedProperty().not()));
 			m_ftp.setOnAction((event) ->{
-				MAVFTPClient ftp = new MAVFTPClient(control);
+				MAVFTPClient ftp = MAVFTPClient.getInstance(control);
 				ftp.selectAndSendFile(MainApp.getPrimaryStage());
 				ftp.close();
 			});
