@@ -17,9 +17,9 @@
 				<Badge fx:id="gps" prefHeight="16.0" prefWidth="65.0" text="GPS" color="#1c6478" description="GPS mode" />
 				<Badge fx:id="gpos" prefHeight="16.0" prefWidth="60.0" text="GPOS" color="#1c6478" description="Global position valid" />
 				<Badge fx:id="lpos" prefHeight="16.0" prefWidth="60.0" text="LPOS" color="#1c6478" description="Local position valid"/>
-				<Badge fx:id="home" prefHeight="16.0" prefWidth="60.0" text="HOME" color="#1c6478" description="Home position set"/>
 				<Badge fx:id="ekf" prefHeight="16.0" prefWidth="60.0" text="EKF2" color="#1c6478" description="EKF status" />
 				<Badge fx:id="vision" prefHeight="16.0" prefWidth="60.0" text="VISION" color="#1c6478" description="Odometry status"/>
+				<Badge fx:id="home" prefHeight="16.0" prefWidth="60.0" text="HOME" color="#1c6478" description="Home position set"/>
 				<Badge fx:id="locked" prefHeight="16.0" prefWidth="50.0" text="LOCKED" description="Fiducial lock"/>
 				<Badge fx:id="rc" prefHeight="16.0" prefWidth="30.0" text="RC" color="#1c6478" />
 				<Badge fx:id="controller" prefHeight="16.0" prefWidth="30.0" text="PS4" color="#1c6478" />
