@@ -83,16 +83,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private VBox     modes;
-	
+
 	@FXML
 	private VBox     sitl;
-	
+
 	@FXML
 	private VBox     scenario_group;
 
 	@FXML
 	private VBox     msp_control;
-	
+
 	@FXML
 	private VBox     actions;
 
@@ -113,13 +113,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private CheckBox enable_turn_to_person;
-	
+
 	@FXML
 	private CheckBox enable_obstacle_stop;
-	
+
 	@FXML
 	private CheckBox enable_mode2;
-	
+
 	@FXML
 	private CheckBox enable_mode3;
 
@@ -131,10 +131,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private StateButton enable_rtl;
-	
+
 	@FXML
 	private ComboBox<String> scenario_select;
-	
+
 	@FXML
 	private Button scenario_execute;
 
@@ -149,13 +149,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private Button exec_land;
-	
+
 	@FXML
 	private Button sitl_action1;
 
 	@FXML
 	private Button sitl_action2;
-	
+
 	@FXML
 	private StateButton sitl_mode1;
 
@@ -189,16 +189,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private void initialize() {
 
 		this.disableProperty().bind(state.getConnectedProperty().not().or(state.getMSPProperty().not()));
-		
+
 
 		box.prefHeightProperty().bind(this.heightProperty());
-		
+
 		enable_mode2.setDisable(true);
 		enable_mode3.setDisable(true);
 		enable_takeoff_proc.setDisable(true);
-	    exec_land.setDisable(true);
-	    
-	    actions.setDisable(true);
+		exec_land.setDisable(true);
+
+		actions.setDisable(true);
 
 		//enable_takeoff_proc.disableProperty().bind(state.getLandedProperty().not());
 
@@ -248,7 +248,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 		enable_turn_to_person.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -260,7 +260,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 		enable_obstacle_stop.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -300,26 +300,36 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
-		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not()
-				.or(StateProperties.getInstance().getSimulationProperty()));
-		
+
+		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not());
+		//	.or(StateProperties.getInstance().getSimulationProperty()));
+
 		scenario_select.getSelectionModel().selectedItemProperty().addListener((o,ov,nv) -> {
+			if(nv==null || nv.contains("..."))
+				return;
 			String scenario = MAVPreferences.getInstance().get(MAVPreferences.SCENARIO_DIR,System.getProperty("user.home"))
-					         +"/" + nv + ".xml";
+					+"/" + nv + ".xml";
 			MAVFTPClient ftp = MAVFTPClient.getInstance(control);
-			ftp.sendFileAs(scenario, "scenario.xml");
+			if(!ftp.sendFileAs(scenario, "scenario.xml")) {
+				scenario_select.getEditor().setText("Select scenario...");
+			}
 			ftp.close();
-			
 		});
-		
+
+		scenario_select.disabledProperty().addListener((c,o,n) -> {
+			if(n.booleanValue()) {
+				scenario_select.getSelectionModel().clearSelection();
+				scenario_select.getEditor().setText("Select scenario...");
+			}
+		});
+
 		scenario_execute.disableProperty().bind(enable_interactive.selectedProperty().not());
 		scenario_execute.setOnAction((event) ->{
-			if(scenario_select.getEditor().getText().contains("...") && !control.isSimulation()) {
+			if(scenario_select.getEditor().getText().contains("...")) {
 				logger.writeLocalMsg("[mgc] Select scenario first.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
 				return;
 			}
-			
+
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_EXECUTE_SCENARIO;
 			control.sendMAVLinkMessage(msp);
@@ -353,7 +363,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 
 		exec_land.disableProperty().bind(enable_interactive.selectedProperty().not());
 		exec_land.setOnAction((event) ->{
@@ -402,7 +412,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			msp.param1  = MSP_COMPONENT_CTRL.RESET;
 			control.sendMAVLinkMessage(msp);
 		});
-		
+
 		sitl_mode1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -415,7 +425,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 		sitl_action1.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -423,7 +433,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 		sitl_action2.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -439,9 +449,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 	public void setup(IMAVController control) {
 		this.control = control;
 		this.prefs   = MAVPreferences.getInstance();
-		
+
 		sitl.disableProperty().bind(state.getSimulationProperty().not());
-		
+
 		scenario_select.getEditor().setText("Select scenario...");
 		scenario_select.getItems().addAll(FileHandler.getInstance().getScenarioList());
 		scenario_select.setEditable(true);
@@ -457,15 +467,16 @@ public class MSPCtlWidget extends ChartControlPane   {
 				control.sendMAVLinkMessage(msp);	
 			}
 		});
-		
+
+
 		state.getMSPProperty().addListener((c,o,n) -> {
-			
+
 			if(n.booleanValue() ) {	
 				msg_msp_command msp = new msg_msp_command(255,1);
 				msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 				msp.param1  = state.getStreamProperty().intValue();
 				control.sendMAVLinkMessage(msp);	
-				
+
 				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 				msp.param2 =  MSP_AUTOCONTROL_MODE.OBSTACLE_STOP;
 				if(enable_obstacle_stop.isSelected())
@@ -473,7 +484,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 				else
 					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 				control.sendMAVLinkMessage(msp);
-				
+
 				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 				msp.param2 =  MSP_AUTOCONTROL_MODE.FOLLOW_OBJECT;
 				if(enable_turn_to_person.isSelected())
@@ -481,7 +492,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 				else
 					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 				control.sendMAVLinkMessage(msp);
-				
+
 				msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
 				msp.param2 =  MSP_AUTOCONTROL_MODE.PRECISION_LOCK;
 				if(enable_precision_lock.isSelected())
@@ -489,8 +500,8 @@ public class MSPCtlWidget extends ChartControlPane   {
 				else
 					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 				control.sendMAVLinkMessage(msp);
-				
-				
+
+
 			}
 		});
 
@@ -501,7 +512,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE,(n) -> {
 			enable_takeoff_proc.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
 		});
@@ -509,11 +520,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.SITL_MODE1,(n) -> {
 			sitl_mode1.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.SITL_MODE1));
 		});
-		
+
 
 
 		enable_vision.setSelected(true);

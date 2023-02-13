@@ -61,10 +61,10 @@ public class MAVFTPClient {
         sendFile(f);
 	}
 
-	public void sendFile(File f) {
+	public boolean sendFile(File f) {
 
 		if(f==null || control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) 
-			return;
+			return false;
 
 		ftp = new FtpClient(control.getConnectedAddress(), port, user, pwd);
 		try {
@@ -73,17 +73,18 @@ public class MAVFTPClient {
 			ftp.close();
 		} catch (IOException e) { 
 			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-			return;
+			return false;
 		}
 		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent.",MAV_SEVERITY.MAV_SEVERITY_INFO));
+		return true;
 	}
 	
-	public void sendFileAs(String name, String as) {
+	public boolean sendFileAs(String name, String as) {
 		
 		File f = new File(name);
 		
 		if(f==null || control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) 
-			return;
+			return false;
 		
 		ftp = new FtpClient(control.getConnectedAddress(), port, user, pwd);
 		try {
@@ -93,9 +94,10 @@ public class MAVFTPClient {
 		} catch (IOException e) { 
 			e.printStackTrace();
 			control.writeLogMessage(new LogMessage("[mgc] Selected file "+f.getName()+" could not be sent",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
-			return;
+			return false;
 		}
 		control.writeLogMessage(new LogMessage("[mgc] File "+f.getName()+" sent.",MAV_SEVERITY.MAV_SEVERITY_INFO));
+		return true;
 	
 	}
 
