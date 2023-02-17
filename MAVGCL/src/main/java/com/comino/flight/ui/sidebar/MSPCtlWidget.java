@@ -110,6 +110,9 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private CheckBox enable_precision_lock;
+	
+	@FXML
+	private CheckBox enable_collision_avoidance;
 
 	@FXML
 	private CheckBox enable_turn_to_person;
@@ -248,6 +251,18 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
+		
+		enable_collision_avoidance.selectedProperty().addListener((v,o,n) -> {
+			msg_msp_command msp = new msg_msp_command(255,1);
+			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param2 =  MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION;
+			if(n.booleanValue())
+				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+			else
+				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+			control.sendMAVLinkMessage(msp);
+
+		});
 
 		enable_turn_to_person.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
@@ -261,6 +276,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
+		enable_obstacle_stop.setDisable(true);
 		enable_obstacle_stop.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -522,6 +538,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION,(n) -> {
+			enable_collision_avoidance.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.SITL_MODE1,(n) -> {

@@ -48,10 +48,16 @@ public class Obstacle extends Xform {
 		
 		if(show && MSP3DUtils.isFinite(o) && o.normSq()>0) {
 			
-			this.setTranslate(o.x,o.y-20,o.z);
+			this.setTranslate(o.x,o.y+10,o.z);
 			v.setTo(vehicle.getTranslateX(),vehicle.getTranslateY(),vehicle.getTranslateZ()); v.scale(-1f);
 			v.plusIP(o);
-			
+//			
+//			if(vehicle.intersects(obstacle.getBoundsInLocal())) {
+//				boundary.setMaterial(boundary_collision);
+//			} else {
+//				boundary.setMaterial(boundary_no_collision);
+//			}
+//			
 			if(v.norm() < boundary.getRadius())
 				boundary.setMaterial(boundary_collision);
 			else

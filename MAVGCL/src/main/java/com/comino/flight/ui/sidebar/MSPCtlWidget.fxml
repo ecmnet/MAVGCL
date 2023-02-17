@@ -25,6 +25,7 @@
 				<children>
 					<CheckBox fx:id="enable_precision_lock" text="Precision lock" />
 					<CheckBox fx:id="enable_turn_to_person" text="Turn to person" />
+					<CheckBox fx:id="enable_collision_avoidance" text="Collision avoidance" />
 					<CheckBox fx:id="enable_obstacle_stop" text="Stop at obstacle" />
 					<CheckBox fx:id="enable_takeoff_proc" text="TakeOff procedure" />
 					<CheckBox fx:id="enable_mode2" text="(reserved)" />
