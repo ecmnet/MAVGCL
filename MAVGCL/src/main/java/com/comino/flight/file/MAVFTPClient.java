@@ -83,7 +83,7 @@ public class MAVFTPClient {
 		
 		File f = new File(name);
 		
-		if(f==null || control.getCurrentModel().sys.isStatus(Status.MSP_ARMED)) 
+		if(!f.exists())
 			return false;
 		
 		ftp = new FtpClient(control.getConnectedAddress(), port, user, pwd);

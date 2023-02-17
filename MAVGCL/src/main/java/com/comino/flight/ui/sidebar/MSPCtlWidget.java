@@ -312,18 +312,21 @@ public class MSPCtlWidget extends ChartControlPane   {
 			MAVFTPClient ftp = MAVFTPClient.getInstance(control);
 			if(!ftp.sendFileAs(scenario, "scenario.xml")) {
 				scenario_select.getEditor().setText("Select scenario...");
+				scenario_execute.setDisable(true);
 			}
 			ftp.close();
+			scenario_execute.setDisable(false);
 		});
 
 		scenario_select.disabledProperty().addListener((c,o,n) -> {
 			if(n.booleanValue()) {
 				scenario_select.getSelectionModel().clearSelection();
 				scenario_select.getEditor().setText("Select scenario...");
+				scenario_execute.setDisable(true);
 			}
 		});
 
-		scenario_execute.disableProperty().bind(enable_interactive.selectedProperty().not());
+		scenario_execute.setDisable(true);
 		scenario_execute.setOnAction((event) ->{
 			if(scenario_select.getEditor().getText().contains("...")) {
 				logger.writeLocalMsg("[mgc] Select scenario first.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
