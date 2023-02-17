@@ -15,7 +15,7 @@ import javafx.scene.shape.Sphere;
 public class Obstacle extends Xform {
 	
 	private final Sphere        obstacle = new Sphere(20);
-	private final Sphere        boundary = new Sphere(50);
+	private final Sphere        boundary = new Sphere(30);
 	private final VehicleModel  vehicle;
 	private final PhongMaterial boundary_no_collision = new PhongMaterial();
 	private final PhongMaterial boundary_collision    = new PhongMaterial();
