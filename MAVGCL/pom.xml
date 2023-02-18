@@ -149,11 +149,6 @@
 			<artifactId>ffmpeg-platform</artifactId>
 			<version>5.1.2-1.5.8</version>
 		</dependency>
-		<dependency>
-			<groupId>org.mockftpserver</groupId>
-			<artifactId>MockFtpServer</artifactId>
-			<version>2.7.1</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<resources>

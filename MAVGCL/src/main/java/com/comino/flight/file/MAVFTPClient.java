@@ -11,11 +11,6 @@ import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.mavlink.messages.MAV_SEVERITY;
-import org.mockftpserver.fake.FakeFtpServer;
-import org.mockftpserver.fake.UserAccount;
-import org.mockftpserver.fake.filesystem.DirectoryEntry;
-import org.mockftpserver.fake.filesystem.FileSystem;
-import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.mavcom.control.IMAVController;
@@ -36,7 +31,6 @@ public class MAVFTPClient {
 	private FtpClient ftp;
 	private int       port = 21;
 
-	private FakeFtpServer sitlServer;
 	private IMAVController control;
 	
 	public static MAVFTPClient getInstance(IMAVController control) {
@@ -102,8 +96,7 @@ public class MAVFTPClient {
 	}
 
 	public void close() {
-		if(sitlServer!=null)
-			sitlServer.stop();
+		
 	}
 
 	private FileChooser getFileDialog(String title, String initDir, ExtensionFilter...filter) {
@@ -119,19 +112,6 @@ public class MAVFTPClient {
 			fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
 		return fileChooser;
-	}
-
-	public FakeFtpServer setupSITL() throws IOException {
-
-		FakeFtpServer sitlServer = new FakeFtpServer();
-		sitlServer.addUserAccount(new UserAccount("user", "password", "/data"));
-		FileSystem fileSystem = new UnixFakeFileSystem();
-		fileSystem.add(new DirectoryEntry("/data"));
-		sitlServer.setFileSystem(fileSystem);
-		sitlServer.setServerControlPort(0);
-		sitlServer.start();
-		return sitlServer;
-
 	}
 
 	private class FtpClient {
