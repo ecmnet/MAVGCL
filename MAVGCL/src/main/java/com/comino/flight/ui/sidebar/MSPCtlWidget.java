@@ -318,7 +318,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 		});
 
 		scenario_select.disableProperty().bind(enable_interactive.selectedProperty().not());
-		//	.or(StateProperties.getInstance().getSimulationProperty()));
 
 		scenario_select.getSelectionModel().selectedItemProperty().addListener((o,ov,nv) -> {
 			if(nv==null || nv.contains("..."))
@@ -523,6 +522,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 			}
 		});
+		
+//		state.getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
+//			Platform.runLater(() -> {
+//				if(!newvalue.booleanValue())
+//					enable_interactive.setSelected(false);
+//			});
+//		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
