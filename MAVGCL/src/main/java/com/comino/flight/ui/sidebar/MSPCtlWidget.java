@@ -110,7 +110,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 	@FXML
 	private CheckBox enable_precision_lock;
-	
+
 	@FXML
 	private CheckBox enable_collision_avoidance;
 
@@ -251,7 +251,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 			control.sendMAVLinkMessage(msp);
 
 		});
-		
+
 		enable_collision_avoidance.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -326,8 +326,11 @@ public class MSPCtlWidget extends ChartControlPane   {
 					+"/" + nv + ".xml";
 			MAVFTPClient ftp = MAVFTPClient.getInstance(control);
 			if(!ftp.sendFileAs(scenario, "scenario.xml")) {
-				scenario_select.getEditor().setText("Select scenario...");
-				scenario_execute.setDisable(true);
+				Platform.runLater(() -> { 
+					scenario_select.getSelectionModel().clearSelection();
+					scenario_select.getEditor().setText("Select scenario...");
+					scenario_execute.setDisable(true);
+				});
 			}
 			ftp.close();
 			scenario_execute.setDisable(false);
@@ -522,13 +525,13 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 			}
 		});
-		
-//		state.getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
-//			Platform.runLater(() -> {
-//				if(!newvalue.booleanValue())
-//					enable_interactive.setSelected(false);
-//			});
-//		});
+
+		//		state.getArmedProperty().addListener((observable, oldvalue, newvalue) -> {
+		//			Platform.runLater(() -> {
+		//				if(!newvalue.booleanValue())
+		//					enable_interactive.setSelected(false);
+		//			});
+		//		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
 			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
@@ -545,7 +548,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.PRECISION_LOCK,(n) -> {
 			enable_precision_lock.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
 		});
-		
+
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION,(n) -> {
 			enable_collision_avoidance.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION));
 		});
