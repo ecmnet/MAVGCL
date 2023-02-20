@@ -133,7 +133,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 	private StateButton enable_interactive;
 
 	@FXML
-	private StateButton enable_rtl;
+	private Button exec_rtl;
 
 	@FXML
 	private ComboBox<String> scenario_select;
@@ -304,15 +304,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 		});
 
 
-		enable_rtl.setOnAction((event) ->{
+		exec_rtl.disableProperty().bind(state.getLandedProperty());
+		exec_rtl.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+			msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
 			msp.param2 =  MSP_AUTOCONTROL_ACTION.RTL;
-
-			if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL))
-				msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-			else
-				msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 			control.sendMAVLinkMessage(msp);
 
 		});
@@ -532,10 +529,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 		//					enable_interactive.setSelected(false);
 		//			});
 		//		});
-
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_ACTION.RTL,(n) -> {
-			enable_rtl.setState(n.isAutopilotMode(MSP_AUTOCONTROL_ACTION.RTL));
-		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.INTERACTIVE,(n) -> {
 			enable_interactive.setState(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
