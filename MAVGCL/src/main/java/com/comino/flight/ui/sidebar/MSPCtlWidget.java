@@ -383,7 +383,7 @@ public class MSPCtlWidget extends ChartControlPane   {
 		});
 
 
-		exec_land.disableProperty().bind(enable_interactive.selectedProperty().not());
+		exec_land.disableProperty().bind(state.getLandedProperty());
 		exec_land.setOnAction((event) ->{
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
