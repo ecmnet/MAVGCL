@@ -32,6 +32,19 @@
 					<CheckBox fx:id="enable_mode3" text="(reserved)" />
 				</children>
 			</VBox>
+			<VBox fx:id="scenario_group" spacing="10" styleClass="widget" prefWidth="193"
+				VBox.vgrow="NEVER">
+				<padding>
+					<Insets top="14" left="10" bottom="14" />
+				</padding>
+				<children>
+				  <StateButton fx:id="enable_interactive" text="Interactive mode" prefWidth="165.0"/>
+				  <ComboBox fx:id="scenario_select" prefWidth="165.0"  />
+				  <Button fx:id="scenario_execute" text="Execute scenario" prefWidth="165.0" />
+				  <Button fx:id="exec_land" text="Precision Landing" prefWidth="165.0" /> 
+				  <Button fx:id="exec_rtl" text="Return to launch" prefWidth="165.0" /> 
+				</children>
+			</VBox>
 			<VBox spacing="10" styleClass="widget" prefWidth="193">
 				<padding>
 					<Insets top="14" left="10" bottom="14" />
@@ -44,19 +57,6 @@
 					<Button fx:id="load_map" prefWidth="165.0"
 						text="Load current map to from store" />
 						<Button fx:id="debug_mode2" text="Build virtual wall" prefWidth="165.0" />
-				</children>
-			</VBox>
-			<VBox fx:id="scenario_group" spacing="10" styleClass="widget" prefWidth="193"
-				VBox.vgrow="NEVER">
-				<padding>
-					<Insets top="14" left="10" bottom="14" />
-				</padding>
-				<children>
-				  <StateButton fx:id="enable_interactive" text="Interactive mode" prefWidth="165.0"/>
-				  <ComboBox fx:id="scenario_select" prefWidth="165.0"  />
-				  <Button fx:id="scenario_execute" text="Execute scenario" prefWidth="165.0" />
-				  <Button fx:id="exec_land" text="Precision Landing" prefWidth="165.0" /> 
-				  <Button fx:id="exec_rtl" text="Return to launch" prefWidth="165.0" /> 
 				</children>
 			</VBox>
 			<VBox fx:id="modes" spacing="10" styleClass="widget" prefWidth="193"
