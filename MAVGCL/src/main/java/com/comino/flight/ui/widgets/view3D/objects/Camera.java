@@ -140,6 +140,12 @@ public class Camera extends Xform {
 		case BIRDS_PERSPECTIVE:
 
 
+			if(model.getValue("LPOSZ")>0) 
+				this.setTranslate(-model.getValue("LPOSY")*150*zoom, 
+						-120, 
+						model.getValue("LPOSX")*150*zoom);
+			else
+
 				this.setTranslate(-model.getValue("LPOSY")*150*zoom, 
 						-model.getValue("LPOSZ")*150*zoom-120, 
 						model.getValue("LPOSX")*150*zoom);
@@ -152,7 +158,7 @@ public class Camera extends Xform {
 	public void setFieldOfView(double fov) {
 		camera.setFieldOfView(100-fov/2+10);
 	}
-	
+
 	public void setZoom(double zoom) {
 		this.zoom = zoom;
 	}
