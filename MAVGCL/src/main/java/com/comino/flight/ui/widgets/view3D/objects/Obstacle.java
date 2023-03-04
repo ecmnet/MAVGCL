@@ -29,7 +29,7 @@ public class Obstacle extends Xform {
 		this.vehicle = vehicle;
 		
 		boundary_no_collision.setDiffuseColor(Color.web("rgba( 50,50,50,0.9 )"));
-		boundary_collision.setDiffuseColor   (Color.web("rgba( 50,10,10,0.9 )"));
+		boundary_collision.setDiffuseColor   (Color.web("rgba( 90,10,10,0.7 )"));
 		obstacle.setMaterial(boundary_no_collision);
 		
 		this.getChildren().addAll(obstacle);
