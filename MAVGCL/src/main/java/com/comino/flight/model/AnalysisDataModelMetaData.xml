@@ -2141,21 +2141,42 @@
 	</KeyFigure>
 
 	<KeyFigure desc="Obstacle.X" uom="m" mask="#0.00" key="SLAMOBX">
-		<MSPSource class="slam" field="ox"></MSPSource>
+		<MSPSource class="obs" field="x"></MSPSource>
 		<Groups>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
 	
 	<KeyFigure desc="Obstacle.Y" uom="m" mask="#0.00" key="SLAMOBY">
-		<MSPSource class="slam" field="oy"></MSPSource>
+		<MSPSource class="obs" field="y"></MSPSource>
 		<Groups>
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
 	
 	<KeyFigure desc="Obstacle.Z" uom="m" mask="#0.00" key="SLAMOBZ">
-		<MSPSource class="slam" field="oz"></MSPSource>
+		<MSPSource class="obs" field="z"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="ObstSize.X" uom="m" mask="#0.00" key="SLAMSOBX">
+		<MSPSource class="obs" field="sx"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="ObstSize.Y" uom="m" mask="#0.00" key="SLAMSOBY">
+		<MSPSource class="obs" field="sy"></MSPSource>
+		<Groups>
+			<Group>Mapping</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="ObstSize.Z" uom="m" mask="#0.00" key="SLAMSOBZ">
+		<MSPSource class="obs" field="sz"></MSPSource>
 		<Groups>
 			<Group>Mapping</Group>
 		</Groups>
