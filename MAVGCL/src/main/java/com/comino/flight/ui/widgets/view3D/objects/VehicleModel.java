@@ -40,6 +40,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.shape.CullFace;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
@@ -77,6 +78,10 @@ public class VehicleModel extends Group {
 		this.setScaleX(scale);
 		this.setScaleY(scale);
 		this.setScaleZ(scale);
+		
+		for(int i=0; i<mesh.length;i++)
+			mesh[i].setCullFace(CullFace.BACK);
+		
 	}
 
 	public void updateState(AnalysisDataModel model, double z_offset) {

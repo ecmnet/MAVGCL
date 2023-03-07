@@ -41,6 +41,7 @@ import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
 import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
+import com.comino.flight.ui.widgets.view3D.objects.Map3DOctoGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Obstacle;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
 import com.comino.flight.ui.widgets.view3D.objects.Trajectory;
@@ -86,7 +87,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private Rotate          rf = new Rotate(0, Rotate.Y_AXIS);
 
 	//	private MapGroup 		blocks		= null;
-	private Map3DGroup      blocks      = null;
+	private Map3DOctoGroup      blocks      = null;
 	private Camera 			camera		= null;
 	private VehicleModel   	vehicle    	= null;
 	private Trajectory   	trajectory  = null;
@@ -153,7 +154,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		this.model = dataService.getCurrent();
 
-		this.blocks   = new Map3DGroup(world,control.getCurrentModel());
+		this.blocks   = new Map3DOctoGroup(world,control);
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
@@ -325,8 +326,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 				task.stop();
 				trajectory.clear();
 			}
+			blocks.enable(!n.booleanValue());
 		});
-
+		
+		
+        blocks.enable(true);
 		return this;
 	}
 
