@@ -84,7 +84,6 @@ public class Map3DOctoGroup  {
 					// TODO: Find a thread safe way to access changes in the octomap
 				} catch(ConcurrentModificationException c) { }
 
-
 			}
 
 
@@ -95,11 +94,15 @@ public class Map3DOctoGroup  {
 		if(p.w > 0.5) {
 			if(boxes.containsKey(id))
 				return;
+			
 			final Box box = new Box(size, size, size);
+			final int index = (int)(p.z/map.getResolution());
+			
 			box.setTranslateZ(p.x*100);
 			box.setTranslateX(-p.y*100);
 			box.setTranslateY(p.z*100);
-			box.setMaterial(blocked.get((int)(p.z/map.getResolution())));
+			
+			box.setMaterial(blocked.get(index > blocked.size()-1 ? 0 : index));
 			box.setCullFace(CullFace.NONE);
 		    box.setDepthTest(DepthTest.ENABLE);
 			boxes.put(id, box);

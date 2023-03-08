@@ -76,7 +76,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 	private static final double PLANE_LENGTH  = 5000.0;
-	private static final float  VEHICLE_SCALE = 25.0f;
+	private static final float  VEHICLE_SCALE = 15.0f;
 
 
 	private AnimationTimer 	task 		= null;

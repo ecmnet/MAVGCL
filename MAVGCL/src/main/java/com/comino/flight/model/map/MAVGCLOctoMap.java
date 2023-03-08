@@ -21,6 +21,7 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 	
 	public MAVGCLOctoMap(IMAVController control) {
 		super();
+		
 		this.model = control.getCurrentModel();
 		
 		control.addMAVLinkListener((o) -> {
