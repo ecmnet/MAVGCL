@@ -80,7 +80,7 @@ public class VehicleModel extends Group {
 		this.setScaleZ(scale);
 		
 		for(int i=0; i<mesh.length;i++)
-			mesh[i].setCullFace(CullFace.BACK);
+			mesh[i].setCullFace(CullFace.NONE);
 		
 	}
 

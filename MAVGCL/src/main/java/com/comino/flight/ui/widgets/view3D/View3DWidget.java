@@ -113,6 +113,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		root.getChildren().add(world);
 		root.setDepthTest(DepthTest.ENABLE);
+	
 
 		this.state = StateProperties.getInstance();
 
@@ -132,7 +133,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		ground = createGround();
 		
-		landing_target = new Box(60,0,60);
+		landing_target = new Box(60,3,60);
 		PhongMaterial landing_target_material = new PhongMaterial();
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
 		landing_target.setMaterial(landing_target_material);

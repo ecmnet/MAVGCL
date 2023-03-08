@@ -12,7 +12,7 @@ import com.comino.mavcom.control.IMAVController;
 
 import georegression.struct.point.Point4D_F32;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
+import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -21,6 +21,12 @@ import javafx.scene.shape.CullFace;
 import us.ihmc.jOctoMap.key.OcTreeKeyReadOnly;
 
 public class Map3DOctoGroup  {
+	
+	private final static double MIN = 0 ;
+    private final static double MAX = 10.0 ;
+    private final static double BLUE_HUE = Color.BLUE.getHue() ;
+    private final static double RED_HUE = Color.RED.getHue() ;
+
 
 	private final Group root;
 
@@ -42,9 +48,9 @@ public class Map3DOctoGroup  {
 		this.boxes = new HashMap<Long,Box>();
 		this.size = (int)(map.getResolution() * 100f);
 
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < (MAX/map.getResolution()); i++) {
 			PhongMaterial m = new PhongMaterial();
-			m.setDiffuseColor(Color.web("DARKCYAN", 1));
+			m.setDiffuseColor(getColorForValue(i*map.getResolution()));
 			m.setSpecularColor(Color.WHITE);
 			blocked.add(m);
 		}
@@ -93,8 +99,9 @@ public class Map3DOctoGroup  {
 			box.setTranslateZ(p.x*100);
 			box.setTranslateX(-p.y*100);
 			box.setTranslateY(p.z*100);
-			box.setMaterial(blocked.get(0));
-			box.setCullFace(CullFace.BACK);
+			box.setMaterial(blocked.get((int)(p.z/map.getResolution())));
+			box.setCullFace(CullFace.NONE);
+		    box.setDepthTest(DepthTest.ENABLE);
 			boxes.put(id, box);
 			root.getChildren().add(box);
 		} else {
@@ -119,6 +126,14 @@ public class Map3DOctoGroup  {
 		boxes.clear();
 
 	}
+	
+	private Color getColorForValue(double value) {
+        if (value < MIN || value > MAX) {
+            return Color.BLACK ;
+        }
+        double hue = BLUE_HUE + (RED_HUE - BLUE_HUE) * (value - MIN) / (MAX - MIN) ;
+        return Color.hsb(hue, 1.0, 1.0);
+    }
 
 
 }
