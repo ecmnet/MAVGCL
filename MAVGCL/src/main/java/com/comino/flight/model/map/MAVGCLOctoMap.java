@@ -28,12 +28,12 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 		
 		this.model = control.getCurrentModel();
 		
-		control.getStatusManager().addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_CONNECTED, StatusManager.EDGE_RISING, (a) -> {
-			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-				clear(); 
-				model.grid.count = -1;
-			}
-		});
+//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_CONNECTED, StatusManager.EDGE_RISING, (a) -> {
+//			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+//				clear(); 
+//				model.grid.count = -1;
+//			}
+//		});
 		
 		control.addMAVLinkListener((o) -> {
 			if(o instanceof msg_msp_micro_grid) {

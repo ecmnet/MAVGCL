@@ -100,7 +100,7 @@ public class Map3DOctoGroup  {
 	public void handleBlock(Point4D_F32 p, long id) {
 		Key key = new Key(id);
 		if(p.w > 0.5) {
-			if(boxes.containsKey(key))
+			if(boxes.containsKey(key) || p.z < 0)
 				return;
 
 			final Box box = new Box(size, size, size);
@@ -110,7 +110,7 @@ public class Map3DOctoGroup  {
 			box.setTranslateX(-p.y*100);
 			box.setTranslateY(p.z*100);
 
-			box.setMaterial(blocked.get(index > blocked.size()-1 ? 0 : index));
+			box.setMaterial(blocked.get(index > blocked.size()-1 || index < 0 ? 0 : index));
 			box.setCullFace(CullFace.NONE);
 			box.setDepthTest(DepthTest.ENABLE);
 			boxes.put(key, box);
