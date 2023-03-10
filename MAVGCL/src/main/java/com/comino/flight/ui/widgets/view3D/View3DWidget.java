@@ -133,7 +133,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		ground = createGround();
 		
-		landing_target = new Box(60,3,60);
+		landing_target = new Box(40,3,40);
 		PhongMaterial landing_target_material = new PhongMaterial();
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
 		landing_target.setMaterial(landing_target_material);

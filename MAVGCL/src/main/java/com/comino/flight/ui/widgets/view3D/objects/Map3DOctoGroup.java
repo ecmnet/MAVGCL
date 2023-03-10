@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.model.DataModel;
 
 import georegression.struct.point.Point4D_F32;
 import javafx.animation.AnimationTimer;
@@ -26,6 +27,8 @@ public class Map3DOctoGroup  {
     private final static double MAX = 10.0 ;
     private final static double BLUE_HUE = Color.BLUE.getHue() ;
     private final static double RED_HUE = Color.RED.getHue() ;
+    
+	private final static long    KEYMASK      = 0x0FFFFFFFFFFFFFFFL;
 
 
 	private final Group root;
@@ -37,12 +40,15 @@ public class Map3DOctoGroup  {
 	private final MAVGCLOctoMap         map;
 	private final Point4D_F32           tmp;
 	private final int                   size;
+	private DataModel model;
+	
 
 
 	public Map3DOctoGroup(Group root, IMAVController control) {
 
 
 		this.root  = root;
+		this.model = control.getCurrentModel();
 		this.map   = MAVGCLOctoMap.getInstance(control);
 		this.tmp   = new Point4D_F32();
 		this.boxes = new HashMap<Long,Box>();
@@ -60,33 +66,30 @@ public class Map3DOctoGroup  {
 			@Override
 			public void handle(long now) {
 
-
-				if(control.getCurrentModel().grid.count < 0) {
-					clear();
-					tms_old = now;
-					return;
-				}
-
-				if((now - tms_old)<50_000_000)
+				if((now - tms_old)<33_000_000L)
 					return;
 				tms_old = now;
-
-
-
-				Iterator<OcTreeKeyReadOnly> list = map.getChanged().iterator();
+				
+				if(model.grid.count == -1) {
+					model.grid.count = 0;
+					clear();	
+				}
+				
 				try {
+					Iterator<OcTreeKeyReadOnly> list = map.getChanged().iterator();
 					while(list!=null && list.hasNext()) {
-						long id = map.convertTo(list.next(), tmp);
+						long id = map.convertTo(list.next(), tmp) & KEYMASK;
 						handleBlock(tmp,id);
 					}
-					map.resetChangeDetection();
+					
+     				map.resetChangeDetection();
+					
 
 					// TODO: Find a thread safe way to access changes in the octomap
-				} catch(ConcurrentModificationException c) { }
-
+				} catch(ConcurrentModificationException c) { 
+					
+				}
 			}
-
-
 		};
 	}
 
@@ -112,6 +115,12 @@ public class Map3DOctoGroup  {
 			if(box!=null) 
 				root.getChildren().remove(box);	 
 		}
+	}
+	
+	private void removeBlock(long encoded) {
+		Box box = boxes.remove(encoded);
+		if(box!=null) 
+			root.getChildren().remove(box);	 
 	}
 
 	public void enable(boolean enable) {
