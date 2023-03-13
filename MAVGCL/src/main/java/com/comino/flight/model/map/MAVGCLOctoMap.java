@@ -15,6 +15,7 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 	private final DataModel model;
 	
 	private static MAVGCLOctoMap instance = null;
+	private int count;
 	
 	public static MAVGCLOctoMap getInstance(IMAVController control) {
 		if(instance==null)
@@ -45,15 +46,14 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 					model.grid.count = -1;
 					return;
 				}
-				
+			
 				for(int i=0;i< grid.data.length;i++) {
 					if(grid.data[i] > 0) {
 						insertBoolean(grid.data[i]);
 					}
 				}
-
-
 			}
+				
 		});	
 	}
 	

@@ -2108,7 +2108,8 @@
 	</KeyFigure>
 	
 	<KeyFigure desc="Map.Size" uom="" mask="#" key="SLAMMPS">
-		<MSPSource class="grid" field="count"></MSPSource>
+		<MSPSource class="grid" field="count">
+		</MSPSource>
 		<Groups>
 			<Group>Mapping</Group>
 		</Groups>

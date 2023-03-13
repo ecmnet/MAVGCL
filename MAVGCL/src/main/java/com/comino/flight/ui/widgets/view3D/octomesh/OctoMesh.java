@@ -38,6 +38,8 @@ public class OctoMesh extends MeshView {
 		this.size   = size;
 		mesh = new MAVScatterMesh(cubes.values(),size);
 		root.getChildren().add(mesh);
+	
+		
 	}
 
 	public boolean hasSpace() {
@@ -53,6 +55,7 @@ public class OctoMesh extends MeshView {
 	public boolean remove(long id) {
 		cubes.remove(id);
 		if(cubes.isEmpty()) {
+			mesh.update();
 			root.getChildren().remove(mesh);
 			return true;
 		}

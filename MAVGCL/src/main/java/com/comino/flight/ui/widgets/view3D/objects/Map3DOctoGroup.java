@@ -25,7 +25,7 @@ import us.ihmc.jOctoMap.key.OcTreeKeyReadOnly;
 
 public class Map3DOctoGroup  {
 
-	
+
 
 	private final static long    KEYMASK      = 0x0FFFFFFFFFFFFFFFL;
 
@@ -40,7 +40,7 @@ public class Map3DOctoGroup  {
 
 	private Map<Long,OctoMesh>          meshIndex = new HashMap<>();
 	private List<OctoMesh>              meshes    = new LinkedList<>();
-	
+
 
 	public Map3DOctoGroup(Group root, IMAVController control) {
 
@@ -49,47 +49,33 @@ public class Map3DOctoGroup  {
 		this.map   = MAVGCLOctoMap.getInstance(control);
 		this.tmp   = new Point4D_F32();
 		this.size = (int)(map.getResolution() * 100f);
-		
+
 
 		task = new AnimationTimer() {
-			long tms_old;
+			
 			@Override
 			public void handle(long now) {
-
-				// update rate 10Hz
-				if((now - tms_old)<20_000_000L)
-					return;
-				tms_old = now;
 
 				if(model.grid.count == -1) {
 					model.grid.count = 0;
 					clear();	
 				}
-
 				
-				try {
-					Iterator<OcTreeKeyReadOnly> list = map.getChanged().iterator();
-					while(list!=null && list.hasNext()) {
-                        
-						long id = map.convertTo(list.next(), tmp) & KEYMASK;
-						handleBlock(tmp,id);
-							
-					}
-					map.resetChangeDetection();
+				map.getChanged().stream().forEach((id) -> {
+					handleBlock(tmp,map.convertTo(id, tmp) & KEYMASK);
+				});
 
-					// TODO: Find a thread safe way to access changes in the octomap
-				} catch(ConcurrentModificationException c) { 
-                    
-				}
+				map.resetChangeDetection();
+
 			}
 		};
 	}
 
 	public void handleBlock(Point4D_F32 p, long id) {
-		
+
 		if(meshes.isEmpty())
 			meshes.add(new OctoMesh(root,size));
-		
+
 		OctoMesh mesh =	meshes.get(meshes.size()-1);
 		if(tmp.w > 0.5) {
 			if(meshIndex.containsKey(id) || tmp.z < 0)
