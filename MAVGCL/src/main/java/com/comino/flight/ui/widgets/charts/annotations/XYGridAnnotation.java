@@ -34,33 +34,39 @@
 package com.comino.flight.ui.widgets.charts.annotations;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.comino.flight.model.map.MAVGCLMap;
+import com.comino.flight.model.map.MAVGCLOctoMap;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavmap.map.map3D.impl.octomap.boundingbox.MAVBoundingBox;
 import com.emxsys.chart.extension.XYAnnotation;
 
+import georegression.struct.point.Point3D_F32;
 import georegression.struct.point.Point3D_F64;
 import georegression.struct.point.Point3D_I32;
+import georegression.struct.point.Point4D_F32;
 import javafx.scene.Node;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import us.ihmc.jOctoMap.iterators.OcTreeIteratorFactory;
 
 public class XYGridAnnotation  implements XYAnnotation {
 
 
-	private  Pane   	      pane 		= null;
+	private  Pane   	       pane 		= null;
 //	private  Pane             indicator = null;
-	private  MAVGCLMap          map       = null;
-	private Map<Long,Pane>    blocks    = null;
-	private DataModel         model     = null;
-	private boolean           enabled   = false;
-    private Point3D_I32       mapp      = new Point3D_I32();
-    private Point3D_F64       mapo      = new Point3D_F64();
-
-
+	private  MAVGCLOctoMap     map       = null;
+	private  Map<Long,Pane>    blocks    = null;
+	private  DataModel         model     = null;
+	private  boolean           enabled   = false;
+    private  Point4D_F32       mapo      = new Point4D_F32();
+    
 	public XYGridAnnotation() {
 		this.pane = new Pane();
 		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
@@ -78,7 +84,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public void setController(IMAVController control) {
 		this.model = control.getCurrentModel();
-		this.map   = MAVGCLMap.getInstance();
+		this.map   = MAVGCLOctoMap.getInstance(control);
 	}
 
 
@@ -86,55 +92,60 @@ public class XYGridAnnotation  implements XYAnnotation {
 	public Node getNode() {
 		return pane;
 	}
+	
+	public void setScale(float scale) {
+		
+	}
+	
+	private long tms;
 
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
 		if(pane.isDisabled() || !pane.isVisible())
 			return;
+		
+		tms = System.currentTimeMillis();
 
 		pane.getChildren().retainAll(blocks.values());
 
 		if(model == null || model.grid==null || !enabled)
 			return;
 		
-		if(map.size()==0) {
+		if(map.getNumberOfNodes() == 0) {
 			blocks.clear();
 			return;
 		}
 		
+		blocks.forEach((i,p) -> {
+			map.decode(i, mapo);
+			p.setLayoutX(xAxis.getDisplayPosition(mapo.y-map.getResolution()/2)+1.0f);
+			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getResolution()/2));
+			p.setPrefWidth(xAxis.getDisplayPosition(map.getResolution())-xAxis.getDisplayPosition(0));
+			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getResolution()));
+		});
 		
-		Set<Long> set = map.getLevelSet(blocks.isEmpty());
+		
+		
+		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
+		
+		List<Long> set = map.getAtAltitudeEncoded(current_altitude, 0.6f);
+		
 		if(set.isEmpty())
 			return;
-	
 		
-		blocks.keySet().retainAll(set);	
+		blocks.keySet().retainAll(set);
 		
-		set.forEach((i) -> {
-			
+		set.forEach((i) -> {	
 			Pane p = null;
-			if(!blocks.containsKey(i))
-				p = addBlockPane(i);
-			else
-				p = blocks.get(i);
-			
-			map.getInfo().decodeMapPoint(i, mapp);
-			map.getInfo().mapToGlobal(mapp, mapo);
-			
-			p.setLayoutX(xAxis.getDisplayPosition(mapo.y));
-			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getInfo().getCellSize()));
-			p.setPrefWidth(xAxis.getDisplayPosition(map.getInfo().getCellSize())-xAxis.getDisplayPosition(0));
-			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getInfo().getCellSize()));
-		
-			
+			if(!blocks.containsKey(i) && blocks.size()<200)
+				p = addBlockPane(i & 0x0FFFFFFFFFF00000L);
 		});
+		
 	}
 
 	public  void invalidate(boolean enable) {
-		if(map!=null) {
-		    blocks.keySet().retainAll(map.getLevelSet(true));	
-		}
+        blocks.clear();
 		enabled = enable;
 	}
 	
@@ -147,7 +158,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 	private Pane addBlockPane(long block) {
 		Pane p = new Pane();
 		p.setStyle("-fx-background-color: rgba(38, 136, 163, 0.5); -fx-padding:-1px; -fx-border-color: #20738a;");
-		pane.getChildren().add(p);
+	    pane.getChildren().add(p);
 		blocks.put(block, p);
 		p.setVisible( true);
 		return p;

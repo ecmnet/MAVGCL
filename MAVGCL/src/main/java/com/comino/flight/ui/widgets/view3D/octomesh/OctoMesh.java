@@ -1,15 +1,9 @@
 package com.comino.flight.ui.widgets.view3D.octomesh;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.fxyz3d.geometry.Point3D;
-import org.fxyz3d.scene.paint.Palette;
-import org.fxyz3d.scene.paint.Palette.ListColorPalette;
 import org.fxyz3d.shapes.primitives.MAVScatterMesh;
 
 import javafx.scene.Group;
@@ -27,7 +21,7 @@ public class OctoMesh extends MeshView {
 	private final static double RED_HUE = Color.RED.getHue() ;
 
 	private Map<Long,Point3D> cubes = new HashMap<>(MESHCOUNT);
-	private int               size;
+
 	private MAVScatterMesh    mesh;
 
 	private Group root;
@@ -35,10 +29,8 @@ public class OctoMesh extends MeshView {
 	
 	public OctoMesh(Group root,int size) {
 		this.root   = root;
-		this.size   = size;
 		mesh = new MAVScatterMesh(cubes.values(),size);
 		root.getChildren().add(mesh);
-	
 		
 	}
 

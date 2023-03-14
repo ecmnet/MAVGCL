@@ -13,6 +13,7 @@ import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import javafx.scene.DepthTest;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Sphere;
 
 public class Trajectory extends Xform {
@@ -21,7 +22,8 @@ public class Trajectory extends Xform {
 	private static final float Z_OFFSET = 18f;
 
 	private final List<Point3D> points = new ArrayList<Point3D>();
-	private final Sphere sphere = new Sphere(1.3);
+	private final Sphere        sphere = new Sphere(1.3);
+	
 	private PolyLine3D line;
 
 	private float  p0x = 0;
@@ -46,10 +48,13 @@ public class Trajectory extends Xform {
 		super();
 		this.setDepthTest(DepthTest.ENABLE);
 		line = new PolyLine3D(points, 1, Color.DARKRED, LineType.TRIANGLE);
-		PhongMaterial material = new PhongMaterial();
-		material.setDiffuseColor(Color.DARKRED);
-		sphere.setMaterial(material);
+		
+		final PhongMaterial line_material = new PhongMaterial();
+		line_material.setDiffuseColor(Color.DARKRED);
+		sphere.setMaterial(line_material);
+		
 	}
+	
 
 	@SuppressWarnings("deprecation")
 	public void updateState(AnalysisDataModel model, double offset) {
@@ -106,9 +111,12 @@ public class Trajectory extends Xform {
 				this.getChildren().clear();
 				this.getChildren().addAll(line, sphere);
 			}
+			
+	
 		} 
 		else 
 			clear();
+				
 	}
 
 	public void clear() {

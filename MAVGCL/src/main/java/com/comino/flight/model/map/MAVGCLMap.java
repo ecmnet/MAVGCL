@@ -58,31 +58,31 @@ public class MAVGCLMap  {
 		this.info =  new Map3DSpacialInfo(0.10f,20.0f,20.0f,5.0f);
 		this.model = control.getCurrentModel();
 
-		control.addMAVLinkListener((o) -> {
-			if(o instanceof msg_msp_micro_grid) {
-
-				if(model.grid.count == 0) {
-					clear();
-					origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
-					return;
-				}
-
-				// Adjust resolution
-				if(info.getCellSize() != model.grid.resolution) {
-					clear();
-					info.adjustResolution(model.grid.resolution);
-					System.out.println("Map resolution adjusted to "+model.grid.resolution+"m");
-				}
-
-				while(model.grid.hasTransfers()) {
-					list.add(model.grid.pop());
-				}
-
-				// TODO: Access AnalysisDatamodel
-				origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
-				last_update  = System.currentTimeMillis();
-			}
-		});
+//		control.addMAVLinkListener((o) -> {
+//			if(o instanceof msg_msp_micro_grid) {
+//
+//				if(model.grid.count == 0) {
+//					clear();
+//					origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
+//					return;
+//				}
+//
+//				// Adjust resolution
+//				if(info.getCellSize() != model.grid.resolution) {
+//					clear();
+//					info.adjustResolution(model.grid.resolution);
+//					System.out.println("Map resolution adjusted to "+model.grid.resolution+"m");
+//				}
+//
+//				while(model.grid.hasTransfers()) {
+//					list.add(model.grid.pop());
+//				}
+//
+//				// TODO: Access AnalysisDatamodel
+//				origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
+//				last_update  = System.currentTimeMillis();
+//			}
+//		});
 
 	}
 

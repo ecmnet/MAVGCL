@@ -34,6 +34,12 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fxyz3d.scene.paint.Patterns;
+import org.fxyz3d.shapes.primitives.ScatterMesh;
+
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -72,10 +78,12 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
+import org.fxyz3d.shapes.primitives.helper.MarkerFactory;
+
 public class View3DWidget extends SubScene implements IChartControl {
 
 
-	private static final double PLANE_LENGTH  = 5000.0;
+	private static final double PLANE_LENGTH  = 3000.0;
 	private static final float  VEHICLE_SCALE = 15.0f;
 
 
@@ -141,7 +149,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		vehicle   = new VehicleModel(VEHICLE_SCALE);
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground,landing_target, target, trajectory, obstacle, vehicle, pointLight, ambient,
+		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory, pointLight, ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
 
 		camera = new Camera(this);
@@ -496,12 +504,31 @@ public class View3DWidget extends SubScene implements IChartControl {
 	
 	private Group createGround() {
 		
-		final int BOX_COUNT = 14;
+//		final int BOX_COUNT = 30;
+//		final String ground_image = "tiles.jpg";
+//		
+//		
+//		final List<org.fxyz3d.geometry.Point3D> ground_cubes = new ArrayList<>();
+//		
+//		
+//		final float side = (float)PLANE_LENGTH/BOX_COUNT;
+//		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {
+//			for(int y = -BOX_COUNT; y < BOX_COUNT; y++) {
+//				ground_cubes.add( new org.fxyz3d.geometry.Point3D(side*x,-side/2,side*y,0));
+//			}
+//		}
+//		
+//		final ScatterMesh mesh = new ScatterMesh(ground_cubes,side);
+//		mesh.setMarker(MarkerFactory.Marker.CUBE);
+//		mesh.setTextureModeImage(getClass().getResource("objects/resources/"+ground_image).toExternalForm());
+//		
+		
+		final int BOX_COUNT = 10;
 		final String ground_image = "tiles.jpg";
 		
 		Group g = new Group();
 		
-		PhongMaterial groundMaterial = new PhongMaterial();
+		final PhongMaterial groundMaterial = new PhongMaterial();
 		groundMaterial.setDiffuseMap(new Image
 				(getClass().getResource("objects/resources/"+ground_image).toExternalForm()));
 		

@@ -36,10 +36,10 @@ public class Map3DOctoGroup  {
 	private final MAVGCLOctoMap         map;
 	private Point4D_F32                 tmp;
 	private final int                   size;
-	private DataModel model;
+	private final DataModel model;
 
-	private Map<Long,OctoMesh>          meshIndex = new HashMap<>();
-	private List<OctoMesh>              meshes    = new LinkedList<>();
+	private final static Map<Long,OctoMesh>          meshIndex = new HashMap<>();
+	private final static List<OctoMesh>              meshes    = new LinkedList<>();
 
 
 	public Map3DOctoGroup(Group root, IMAVController control) {
@@ -58,7 +58,8 @@ public class Map3DOctoGroup  {
 
 				if(model.grid.count == -1) {
 					model.grid.count = 0;
-					clear();	
+					clear();
+					return;
 				}
 				
 				map.getChanged().stream().forEach((id) -> {
@@ -69,6 +70,8 @@ public class Map3DOctoGroup  {
 
 			}
 		};
+		
+		task.start();
 	}
 
 	public void handleBlock(Point4D_F32 p, long id) {
@@ -97,10 +100,10 @@ public class Map3DOctoGroup  {
 	}
 
 	public void enable(boolean enable) {
-		if(enable)
-			task.start();
-		else
-			task.stop();
+//		if(enable)
+//			task.start();
+//		else
+//			task.stop();
 	}
 
 

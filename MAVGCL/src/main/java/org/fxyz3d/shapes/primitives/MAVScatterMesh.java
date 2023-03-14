@@ -254,7 +254,10 @@ public class MAVScatterMesh extends Group implements TextureMode {
 			marker.updateMesh(mh);
 			meshes.add(marker);
 		}
+		
 	}
+	
+
 
 	@Override
 	public void setTextureModeNone() {
