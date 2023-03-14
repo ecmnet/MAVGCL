@@ -19,7 +19,7 @@ import javafx.scene.shape.Sphere;
 public class Trajectory extends Xform {
 
 	private static final float STEP     = 0.2f;
-	private static final float Z_OFFSET = 18f;
+	private static final float Z_OFFSET = 8f;
 
 	private final List<Point3D> points = new ArrayList<Point3D>();
 	private final Sphere        sphere = new Sphere(1.3);

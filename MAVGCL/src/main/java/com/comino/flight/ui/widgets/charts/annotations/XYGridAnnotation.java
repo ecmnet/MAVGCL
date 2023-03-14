@@ -76,8 +76,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 		
 	}
 
-
-
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
@@ -93,6 +91,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public void clear() {
 		blocks.clear();
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	@Override
