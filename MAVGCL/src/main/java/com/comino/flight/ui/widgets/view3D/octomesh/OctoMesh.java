@@ -14,7 +14,7 @@ public class OctoMesh extends MeshView {
 	
 	private static final int MESHCOUNT = 25;
 	
-	private static Color color = Color.CORNFLOWERBLUE; //
+	private static Color color = Color.CORNSILK.darker(); //
 	private final static double MIN = 0 ;
 	private final static double MAX = 1000 ;
 	private final static double BLUE_HUE = Color.BLUE.getHue() ;

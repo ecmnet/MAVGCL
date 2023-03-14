@@ -36,134 +36,115 @@ package com.comino.flight.ui.widgets.charts.annotations;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.comino.flight.model.map.MAVGCLMap;
+import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavcom.model.DataModel;
-import com.comino.mavmap.map.map3D.impl.octomap.boundingbox.MAVBoundingBox;
 import com.emxsys.chart.extension.XYAnnotation;
 
-import georegression.struct.point.Point3D_F32;
-import georegression.struct.point.Point3D_F64;
-import georegression.struct.point.Point3D_I32;
 import georegression.struct.point.Point4D_F32;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.ValueAxis;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
-import us.ihmc.jOctoMap.iterators.OcTreeIteratorFactory;
+import javafx.scene.paint.Color;
 
 public class XYGridAnnotation  implements XYAnnotation {
 
 
-	private  Pane   	       pane 		= null;
-//	private  Pane             indicator = null;
-	private  MAVGCLOctoMap     map       = null;
-	private  Map<Long,Pane>    blocks    = null;
-	private  DataModel         model     = null;
-	private  boolean           enabled   = false;
-    private  Point4D_F32       mapo      = new Point4D_F32();
-    
+	private final Canvas                 canvas;
+	private final Map<Long,Point4D_F32>  blocks;
+	private final GraphicsContext        gc;
+	private final Point4D_F32            mapo;
+
+	private  MAVGCLOctoMap               map;
+	private  AnalysisDataModel           model;
+
+	private float                        scale = 10.0f;
+
 	public XYGridAnnotation() {
-		this.pane = new Pane();
-		this.pane.setMaxWidth(999); this.pane.setMaxHeight(999);
-		this.pane.setLayoutX(0); this.pane.setLayoutY(0);
+		super();
+		this.canvas = new Canvas(2000,2000);
+		this.blocks = new HashMap<Long,Point4D_F32>();
+		this.gc     = canvas.getGraphicsContext2D();
+		this.mapo   = new Point4D_F32();
 
-		this.blocks = new HashMap<Long,Pane>();
+		gc.setFill(Color.web("#2688A3",0.3f));
+		gc.setStroke(Color.web("#2688A3",1f).darker());
+		gc.setLineWidth(2);
+		
+	}
 
-		//		indicator = new Pane();
-		//		indicator.setStyle("-fx-background-color: rgba(180.0, 60.0, 100.0, 0.7);; -fx-padding:-1px; -fx-border-color: #606030;");
-		//		indicator.setVisible(false);
-		//		indicator.setCache(true);
-		//		indicator.setCacheHint(CacheHint.SPEED);
-		//		pane.getChildren().add(indicator);
+
+
+	public void setScale(float scale) {
+		this.scale = scale;
 	}
 
 	public void setController(IMAVController control) {
-		this.model = control.getCurrentModel();
 		this.map   = MAVGCLOctoMap.getInstance(control);
-	}
-
-
-	@Override
-	public Node getNode() {
-		return pane;
-	}
-	
-	public void setScale(float scale) {
-		
-	}
-	
-	private long tms;
-
-	@Override
-	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
-
-		if(pane.isDisabled() || !pane.isVisible())
-			return;
-		
-		tms = System.currentTimeMillis();
-
-		pane.getChildren().retainAll(blocks.values());
-
-		if(model == null || model.grid==null || !enabled)
-			return;
-		
-		if(map.getNumberOfNodes() == 0) {
-			blocks.clear();
-			return;
-		}
-		
-		blocks.forEach((i,p) -> {
-			map.decode(i, mapo);
-			p.setLayoutX(xAxis.getDisplayPosition(mapo.y-map.getResolution()/2)+1.0f);
-			p.setLayoutY(yAxis.getDisplayPosition(mapo.x+map.getResolution()/2));
-			p.setPrefWidth(xAxis.getDisplayPosition(map.getResolution())-xAxis.getDisplayPosition(0));
-			p.setPrefHeight(yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getResolution()));
-		});
-		
-		
-		
-		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
-		
-		List<Long> set = map.getAtAltitudeEncoded(current_altitude, 0.6f);
-		
-		if(set.isEmpty())
-			return;
-		
-		blocks.keySet().retainAll(set);
-		
-		set.forEach((i) -> {	
-			Pane p = null;
-			if(!blocks.containsKey(i) && blocks.size()<200)
-				p = addBlockPane(i & 0x0FFFFFFFFFF00000L);
-		});
-		
+		this.model = AnalysisModelService.getInstance().getCurrent();
 	}
 
 	public  void invalidate(boolean enable) {
-        blocks.clear();
-		enabled = enable;
-	}
-	
-	public void clear() {
-		pane.getChildren().clear();
 		blocks.clear();
 	}
 
-
-	private Pane addBlockPane(long block) {
-		Pane p = new Pane();
-		p.setStyle("-fx-background-color: rgba(38, 136, 163, 0.5); -fx-padding:-1px; -fx-border-color: #20738a;");
-	    pane.getChildren().add(p);
-		blocks.put(block, p);
-		p.setVisible( true);
-		return p;
+	public void clear() {
+		blocks.clear();
 	}
-	
+
+	@Override
+	public Node getNode() {
+		return canvas;
+	}
 
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
+
+		if(canvas.isDisabled() || !canvas.isVisible())
+			return;
+		
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+		@SuppressWarnings("unchecked")
+		final double width  = xAxis.getDisplayPosition(map.getResolution())-xAxis.getDisplayPosition(0);
+		@SuppressWarnings("unchecked")
+		final double height = yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getResolution());
+
+
+		mapo.setTo((float)model.getValue("LPOSX"),(float)model.getValue("LPOSY"),(float)model.getValue("LPOSZ"),0);
+		List<Long> set = map.getLeafsAtPositionEncoded(mapo, scale, 0.25f);
+		
+		blocks.keySet().retainAll(set);
+
+		set.forEach((i) -> {
+			if(blocks.containsKey(i & 0x0FFFFFFFFFF00000L))
+				return;
+			final Point4D_F32 p = new Point4D_F32();
+			map.decode(i, p);
+			blocks.put(i & 0x0FFFFFFFFFF00000L, p);	
+		});
+
+		blocks.values().forEach((r) -> {
+			
+			@SuppressWarnings("unchecked")
+			final double x0 = xAxis.getDisplayPosition(r.y-map.getResolution()/2);
+			@SuppressWarnings("unchecked")
+			final double y0 = yAxis.getDisplayPosition(r.x+map.getResolution()/2);
+			
+			gc.fillRect(x0,y0,width, height);
+			
+			gc.strokeLine(x0, y0,x0+width,y0);
+			gc.strokeLine(x0+width,y0,x0+width,y0+height);
+			gc.strokeLine(x0+width,y0+height,x0,y0+height);
+			gc.strokeLine(x0,y0+height,x0,y0);
+
+
+		});
+
+	}
 }

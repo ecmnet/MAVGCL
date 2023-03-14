@@ -1201,6 +1201,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private void setScaling(float scale) {
 
 		this.scale = scale;
+		
+		if(scale > 1 && scale < 20)
+		  this.grid.setScale(scale);
 
 		if(scale>0) {
 
