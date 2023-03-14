@@ -2114,6 +2114,18 @@
 			<Group>Mapping</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<KeyFigure desc="BBox,X" uom="" mask="#" key="SLAMBBX">
+		<MSPSource class="grid" field="cx"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="BBox,Y" uom="" mask="#" key="SLAMBBY">
+		<MSPSource class="grid" field="cy"/>
+	</KeyFigure>
+	
+	<KeyFigure desc="BBox,Z" uom="" mask="#" key="SLAMBBZ">
+		<MSPSource class="grid" field="cz"/>
+	</KeyFigure>
 
 	<KeyFigure desc="Depth.Quality" uom="%" mask="#0.0" key="SLAMQU">
 		<MSPSource class="slam" field="quality">
