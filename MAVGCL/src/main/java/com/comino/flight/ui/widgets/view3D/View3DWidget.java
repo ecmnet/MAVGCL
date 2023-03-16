@@ -149,7 +149,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		PhongMaterial markerMaterial = new PhongMaterial();
 		markerMaterial.setDiffuseColor(Color.web("#606060"));
 		target    = new Target();
-		marker    = new Box(20,1,20);
+		marker    = new Box(20,2,20);
 		marker.setMaterial(markerMaterial);
 		marker.setVisible(false);
 
@@ -178,24 +178,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.model = dataService.getCurrent();
 
 		this.blocks   = new Map3DOctoGroup(world,control);
-		
-		world.setOnMousePressed((me) -> {
-			PickResult pr = me.getPickResult();
-			Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
-			
-			marker.setVisible(true);
-			marker.setTranslateX(p.getX());
-			marker.setTranslateY(p.getY());
-			marker.setTranslateZ(p.getZ());
-			PauseTransition hide = new PauseTransition(Duration.seconds(1));
-			hide.setOnFinished(e -> marker.setVisible(false));
-			hide.playFromStart();
-		});
+	
 
 		world.setOnMouseClicked((me) -> {
 			if(me.getClickCount()==2) {
 				PickResult pr = me.getPickResult();
 				Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
+				
+				marker.setVisible(true);
+				marker.setTranslateX(p.getX());
+				marker.setTranslateY(p.getY());
+				marker.setTranslateZ(p.getZ());
+				PauseTransition hide = new PauseTransition(Duration.seconds(1));
+				hide.setOnFinished(e -> marker.setVisible(false));
+				hide.playFromStart();
 				
 				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
 					msg_msp_command msp = new msg_msp_command(255,1);
