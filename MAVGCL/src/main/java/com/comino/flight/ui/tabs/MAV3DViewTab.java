@@ -131,12 +131,6 @@ public class MAV3DViewTab extends Pane  {
 		});
 		
 
-		this.setOnMouseClicked((me) -> {
-			if(me.getClickCount()==2) {
-				zoom.setValue(100f);
-			}
-		});
-
 		this.setOnZoom(event -> {
 			double z = zoom.getValue() * ((( event.getZoomFactor() - 1 ) / 2) + 1.0);
 			zoom.setValue(z);

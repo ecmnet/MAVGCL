@@ -178,6 +178,7 @@ public class Xform extends Group {
         ip.setY(0.0);
         ip.setZ(0.0);
     }
+    
 
     public void debug() {
         System.out.println("t = (" +

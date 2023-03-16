@@ -34,12 +34,16 @@
 
 package com.comino.flight.ui.widgets.view3D.objects;
 
+
+
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.ui.widgets.view3D.utils.Xform;
 import com.comino.mavutils.MSPMathUtils;
 
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 public class Camera extends Xform {
@@ -209,29 +213,13 @@ public class Camera extends Xform {
 				}
 			}
 		});
+		
 
-		node.setOnMouseClicked((me) -> {
-			if(me.getClickCount()==2) {
-				vv_angle = 0;
-				switch(perspective) {
-				case OBSERVER_PERSPECTIVE:
-					camera.setTranslateX(0); camera.setTranslateY(0);
-					camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
-					this.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
-					this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
-					this.setRotateZ(180.0);
-					camera.setFieldOfView(CAMERA_INITIAL_FOV_OBS);
-					break;
-				case VEHICLE_PERSPECTIVE:
-					camera.setTranslateX(0); camera.setTranslateY(0);
-					camera.setTranslateZ(0);
-					this.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
-					camera.setFieldOfView(CAMERA_INITIAL_FOV_VCL);
-					break;
-				}
-
-			}
-		});
 	}
+
+	public double getFieldOfView() {
+		return camera.getFieldOfView();
+	}
+
 
 }

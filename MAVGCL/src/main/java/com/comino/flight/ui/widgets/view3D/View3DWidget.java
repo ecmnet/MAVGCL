@@ -57,11 +57,14 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Vision;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
@@ -71,14 +74,19 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.input.PickResult;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import org.fxyz3d.shapes.primitives.helper.MarkerFactory;
+import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 public class View3DWidget extends SubScene implements IChartControl {
 
@@ -100,7 +108,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 	private VehicleModel   	vehicle    	= null;
 	private Trajectory   	trajectory  = null;
 	private Target			target      = null;
-	private Obstacle		obstacle      = null;
+	private Obstacle		obstacle    = null;
+	private Box             marker      = null;
 
 	private FloatProperty   scroll       = new SimpleFloatProperty(0);
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
@@ -121,13 +130,13 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		root.getChildren().add(world);
 		root.setDepthTest(DepthTest.ENABLE);
-	
+
 
 		this.state = StateProperties.getInstance();
 
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("DARKGRAY", 0.1));
-	
+
 		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
 		pointLight.setTranslateX(100);
 		pointLight.setTranslateY(800);
@@ -137,10 +146,15 @@ public class View3DWidget extends SubScene implements IChartControl {
 		PhongMaterial northMaterial = new PhongMaterial();
 		northMaterial.setDiffuseColor(Color.RED);
 
+		PhongMaterial markerMaterial = new PhongMaterial();
+		markerMaterial.setDiffuseColor(Color.web("#606060"));
 		target    = new Target();
+		marker    = new Box(20,1,20);
+		marker.setMaterial(markerMaterial);
+		marker.setVisible(false);
 
 		ground = createGround();
-		
+
 		landing_target = new Box(40,3,40);
 		PhongMaterial landing_target_material = new PhongMaterial();
 		landing_target_material.setDiffuseMap(new Image(this.getClass().getResourceAsStream("fiducial.png")));
@@ -150,11 +164,11 @@ public class View3DWidget extends SubScene implements IChartControl {
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
 		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory, pointLight, ambient,
-				addPole('N'), addPole('S'),addPole('W'),addPole('E'));
+				addPole('N'), addPole('S'),addPole('W'),addPole('E'),marker);
 
 		camera = new Camera(this);
 		trajectory.show(true);
-		
+
 		setPerspective(Camera.OBSERVER_PERSPECTIVE);
 
 	}
@@ -164,6 +178,36 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.model = dataService.getCurrent();
 
 		this.blocks   = new Map3DOctoGroup(world,control);
+		
+		world.setOnMousePressed((me) -> {
+			PickResult pr = me.getPickResult();
+			Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
+			
+			marker.setVisible(true);
+			marker.setTranslateX(p.getX());
+			marker.setTranslateY(p.getY());
+			marker.setTranslateZ(p.getZ());
+			PauseTransition hide = new PauseTransition(Duration.seconds(1));
+			hide.setOnFinished(e -> marker.setVisible(false));
+			hide.playFromStart();
+		});
+
+		world.setOnMouseClicked((me) -> {
+			if(me.getClickCount()==2) {
+				PickResult pr = me.getPickResult();
+				Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
+				
+				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+					msg_msp_command msp = new msg_msp_command(255,1);
+					msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+					msp.param1 =  (float)(p.getZ()/100f);
+					msp.param2 =  -(float)(p.getX()/100f);
+					msp.param3 =  Float.NaN;
+					msp.param4 =  Float.NaN;
+					control.sendMAVLinkMessage(msp);
+				}
+			}
+		});
 
 		state.getLandedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue() && !state.getLogLoadedProperty().get()) {
@@ -177,6 +221,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 				}
 			}
 		});
+
 
 
 		// search for takeoff 
@@ -208,9 +253,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 		});
 
-//		state.getConnectedProperty().addListener((v,o,n) -> {
-//			vehicle.setVisible(n.booleanValue());
-//		});
+		//		state.getConnectedProperty().addListener((v,o,n) -> {
+		//			vehicle.setVisible(n.booleanValue());
+		//		});
 
 		state.getArmedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {
@@ -220,20 +265,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		task = new AnimationTimer() {
-			
+
 			private long tms_old=0;
-			
+
 			@Override
 			public void handle(long now) {
-				
+
 				if((now - tms_old) < 20_000_000)
 					return;
-				
+
 				tms_old = now;
-				
+
 				if(isDisabled())
 					return;
-				
+
 				if(takeoff!=null && state.getLogLoadedProperty().get() || state.getReplayingProperty().get() || state.getRecordingAvailableProperty().get()) {
 
 					if(!Double.isNaN(takeoff.getValue("ALTTR"))) {
@@ -260,19 +305,19 @@ public class View3DWidget extends SubScene implements IChartControl {
 							offset = -(float)model.getValue("LPOSZ");
 					} 
 				}
-				
+
 				if((((int)model.getValue("VISIONFLAGS")) & 1 << Vision.FIDUCIAL_LOCKED ) == 1 << Vision.FIDUCIAL_LOCKED) {
-					
+
 					landing_target.getTransforms().clear();
 					landing_target.setTranslateX(-model.getValue("PRECLOCKY")*100f);
 					landing_target.setTranslateZ(model.getValue("PRECLOCKX")*100f);		
 					addRotate(landing_target, rf,180 - model.getValue("PRECLOCKW"));
 					landing_target.setVisible(true);
-					
+
 				} else
 					landing_target.setVisible(false);
 
-				
+
 				switch(perspective) {
 				case Camera.OBSERVER_PERSPECTIVE:
 					if(!vehicle.isVisible())
@@ -292,7 +337,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 					trajectory.clear();
 					break;
 				}
-				
+
 				obstacle.updateState(model,offset);
 			}		
 		};
@@ -337,20 +382,20 @@ public class View3DWidget extends SubScene implements IChartControl {
 			}
 			blocks.enable(!n.booleanValue());
 		});
-		
-		
-        blocks.enable(true);
+
+
+		blocks.enable(true);
 		return this;
 	}
 
 	public void enableTrajectoryView(boolean enabled) {
 		trajectory.show(enabled);
 	}
-	
+
 	public void enableObstacleView(boolean enabled) {
 		obstacle.show(enabled);
 	}
-	
+
 	public void setDataSource(int mode) {
 		vehicle.setMode(mode);
 	}
@@ -376,7 +421,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 	public void scale(float scale) {
 		Platform.runLater(() -> {
-			
+
 			switch(perspective) {
 			case Camera.BIRDS_PERSPECTIVE:
 			case Camera.OBSERVER_PERSPECTIVE:
@@ -466,7 +511,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 	}
 
 	private AnalysisDataModel findTakeOff() {
-		
+
 		if(dataService.getModelList().size()<1)
 			return dataService.getCurrent();
 
@@ -480,7 +525,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		}
 		return to;
 	}
-	
+
 	private void addRotate(Box node, Rotate rotate, double angle) {
 
 		Affine affine = node.getTransforms().isEmpty() ? new Affine() : (Affine)(node.getTransforms().get(0));
@@ -501,37 +546,38 @@ public class View3DWidget extends SubScene implements IChartControl {
 			rotate.getAxis() == Rotate.Y_AXIS ? newRotateY : newRotateZ);
 		node.getTransforms().setAll(affine);
 	}
-	
+
 	private Group createGround() {
-		
-//		final int BOX_COUNT = 30;
-//		final String ground_image = "tiles.jpg";
-//		
-//		
-//		final List<org.fxyz3d.geometry.Point3D> ground_cubes = new ArrayList<>();
-//		
-//		
-//		final float side = (float)PLANE_LENGTH/BOX_COUNT;
-//		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {
-//			for(int y = -BOX_COUNT; y < BOX_COUNT; y++) {
-//				ground_cubes.add( new org.fxyz3d.geometry.Point3D(side*x,-side/2,side*y,0));
-//			}
-//		}
-//		
-//		final ScatterMesh mesh = new ScatterMesh(ground_cubes,side);
-//		mesh.setMarker(MarkerFactory.Marker.CUBE);
-//		mesh.setTextureModeImage(getClass().getResource("objects/resources/"+ground_image).toExternalForm());
-//		
-		
+
+		//		final int BOX_COUNT = 30;
+		//		final String ground_image = "tiles.jpg";
+		//		
+		//		
+		//		final List<org.fxyz3d.geometry.Point3D> ground_cubes = new ArrayList<>();
+		//		
+		//		
+		//		final float side = (float)PLANE_LENGTH/BOX_COUNT;
+		//		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {
+		//			for(int y = -BOX_COUNT; y < BOX_COUNT; y++) {
+		//				ground_cubes.add( new org.fxyz3d.geometry.Point3D(side*x,-side/2,side*y,0));
+		//			}
+		//		}
+		//		
+		//		final ScatterMesh mesh = new ScatterMesh(ground_cubes,side);
+		//		mesh.setMarker(MarkerFactory.Marker.CUBE);
+		//		mesh.setTextureModeImage(getClass().getResource("objects/resources/"+ground_image).toExternalForm());
+		//		
+
 		final int BOX_COUNT = 10;
 		final String ground_image = "tiles.jpg";
-		
+
 		Group g = new Group();
-		
+
+
 		final PhongMaterial groundMaterial = new PhongMaterial();
 		groundMaterial.setDiffuseMap(new Image
 				(getClass().getResource("objects/resources/"+ground_image).toExternalForm()));
-		
+
 		final double side = PLANE_LENGTH/BOX_COUNT;
 		for(int x = -BOX_COUNT; x < BOX_COUNT; x++) {
 			for(int y = -BOX_COUNT; y < BOX_COUNT; y++) {
@@ -542,9 +588,9 @@ public class View3DWidget extends SubScene implements IChartControl {
 				g.getChildren().add(ground);
 			}
 		}
-		
+
 		return g;
-		
+
 	}
 
 
