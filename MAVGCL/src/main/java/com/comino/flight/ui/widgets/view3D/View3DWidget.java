@@ -178,22 +178,22 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.model = dataService.getCurrent();
 
 		this.blocks   = new Map3DOctoGroup(world,control);
-	
+
 
 		world.setOnMouseClicked((me) -> {
 			if(me.getClickCount()==2) {
-				PickResult pr = me.getPickResult();
-				Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
-				
-				marker.setVisible(true);
-				marker.setTranslateX(p.getX());
-				marker.setTranslateY(p.getY());
-				marker.setTranslateZ(p.getZ());
-				PauseTransition hide = new PauseTransition(Duration.seconds(1));
-				hide.setOnFinished(e -> marker.setVisible(false));
-				hide.playFromStart();
-				
 				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+					PickResult pr = me.getPickResult();
+					Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
+
+					marker.setVisible(true);
+					marker.setTranslateX(p.getX());
+					marker.setTranslateY(p.getY());
+					marker.setTranslateZ(p.getZ());
+					PauseTransition hide = new PauseTransition(Duration.seconds(1));
+					hide.setOnFinished(e -> marker.setVisible(false));
+					hide.playFromStart();
+
 					msg_msp_command msp = new msg_msp_command(255,1);
 					msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
 					msp.param1 =  (float)(p.getZ()/100f);

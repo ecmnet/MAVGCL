@@ -15,6 +15,7 @@ import com.comino.mavcom.model.DataModel;
 
 import georegression.struct.point.Point4D_F32;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -57,7 +58,6 @@ public class Map3DOctoGroup  {
 			public void handle(long now) {
 
 				if(model.grid.count == -1) {
-					model.grid.count = 0;
 					clear();
 					return;
 				}
@@ -108,13 +108,14 @@ public class Map3DOctoGroup  {
 
 
 	public void clear() {
-
-		meshIndex.forEach((id,mesh) -> { 
-			if(mesh.remove(id)) { 
-				meshes.remove(mesh); 
-			}
-		});
-		meshIndex.clear();
+        Platform.runLater(() -> {
+        	meshIndex.forEach((id,mesh) -> { 
+    			if(mesh.remove(id)) { 
+    				meshes.remove(mesh); 
+    			}
+    		});
+    		meshIndex.clear();
+        });
 	}
 
 }
