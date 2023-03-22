@@ -127,6 +127,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 			map.decode(i, p);
 			blocks.put(i & 0x0FFFFFFFFFF00000L, p);	
 		});
+	
 
 		blocks.values().forEach((r) -> {
 			
