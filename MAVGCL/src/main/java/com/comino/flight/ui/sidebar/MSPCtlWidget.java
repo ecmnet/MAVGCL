@@ -276,7 +276,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		});
 
-		enable_obstacle_stop.setDisable(true);
 		enable_obstacle_stop.selectedProperty().addListener((v,o,n) -> {
 			msg_msp_command msp = new msg_msp_command(255,1);
 			msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
@@ -544,6 +543,10 @@ public class MSPCtlWidget extends ChartControlPane   {
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION,(n) -> {
 			enable_collision_avoidance.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION));
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.OBSTACLE_STOP,(n) -> {
+			enable_obstacle_stop.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP));
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.SITL_MODE1,(n) -> {

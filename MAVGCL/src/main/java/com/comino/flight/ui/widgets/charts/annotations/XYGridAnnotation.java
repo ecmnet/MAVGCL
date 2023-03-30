@@ -41,6 +41,8 @@ import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
+import com.comino.mavmap.map.map3D.impl.octomap.boundingbox.MAVSimpleBoundingBox;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import georegression.struct.point.Point4D_F32;
@@ -49,6 +51,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.paint.Color;
+import us.ihmc.jOctoMap.iterators.OcTreeIterable;
+import us.ihmc.jOctoMap.iterators.OcTreeIteratorFactory;
 
 public class XYGridAnnotation  implements XYAnnotation {
 
@@ -58,8 +62,9 @@ public class XYGridAnnotation  implements XYAnnotation {
 	private final GraphicsContext        gc;
 	private final Point4D_F32            mapo;
 
-	private  MAVGCLOctoMap               map;
-	private  AnalysisDataModel           model;
+	private MAVGCLOctoMap                map;
+	private MAVSimpleBoundingBox         boundingBox;
+	private AnalysisDataModel           model;
 
 	private float                        scale = 10.0f;
 
@@ -74,6 +79,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		gc.setStroke(Color.web("#2688A3",1f).darker());
 		gc.setLineWidth(2);
 		
+		
 	}
 
 	public void setScale(float scale) {
@@ -82,6 +88,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public void setController(IMAVController control) {
 		this.map   = MAVGCLOctoMap.getInstance(control);
+		this.boundingBox = new MAVSimpleBoundingBox(map.getResolution(),16);
 		this.model = AnalysisModelService.getInstance().getCurrent();
 	}
 
@@ -116,7 +123,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 
 		mapo.setTo((float)model.getValue("LPOSX"),(float)model.getValue("LPOSY"),(float)model.getValue("LPOSZ"),0);
-		List<Long> set = map.getLeafsAtPositionEncoded(mapo, scale, 0.25f);
+		boundingBox.set(mapo,scale,0.25f);
+		List<Long> set = map.getLeafsInBoundingBoxEncoded(boundingBox);
 		
 		blocks.keySet().retainAll(set);
 
