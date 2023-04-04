@@ -51,6 +51,7 @@ import com.comino.jfx.extensions.StateButton;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavcom.status.StatusManager;
@@ -135,6 +136,18 @@ public class CommanderWidget extends ChartControlPane  {
 		arm_command.setOnAction((ActionEvent event)-> {
 
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
+
+				if(control.isSimulation()) {
+					// SITL: Reset mode in order to be able to arm
+					// TODO: Might be required for real vehicle also
+					control.writeLogMessage(new LogMessage("[mgc] Arming prep.: Switch to Loiter",MAV_SEVERITY.MAV_SEVERITY_DEBUG));
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE, (cmd,result) -> {
+						if(result != MAV_RESULT.MAV_RESULT_ACCEPTED) 
+							control.writeLogMessage(new LogMessage("Arming preparation failed",MAV_SEVERITY.MAV_SEVERITY_DEBUG));
+					}, MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_LOITER);
+				}
+
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,( cmd,result) -> { 
 					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
 						logger.writeLocalMsg("[mgc] Arming denied.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
@@ -152,7 +165,7 @@ public class CommanderWidget extends ChartControlPane  {
 
 
 		land_command.setOnAction((ActionEvent event)-> {
-			
+
 			if(!model.vision.isStatus(Vision.FIDUCIAL_LOCKED)) {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_LAND, ( cmd,result) -> {
 					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
