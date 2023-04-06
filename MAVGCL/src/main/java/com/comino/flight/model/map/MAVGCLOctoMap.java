@@ -4,8 +4,6 @@ import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavcom.model.segment.Status;
-import com.comino.mavcom.status.StatusManager;
 import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
 import com.comino.mavmap.map.map3D.impl.octomap.MAVOctoMap3D;
 

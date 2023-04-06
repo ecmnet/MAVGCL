@@ -138,8 +138,10 @@ public class CommanderWidget extends ChartControlPane  {
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
 
 				if(control.isSimulation()) {
-					// SITL: Reset mode in order to be able to arm
-					// TODO: Might be required for real vehicle also
+					
+					// SITL: Reset mode in order to be able to re-arm after offboard mode 
+					// TODO: Might be required for real vehicle also => Check; First try without props
+					
 					control.writeLogMessage(new LogMessage("[mgc] Arming prep.: Switch to Loiter",MAV_SEVERITY.MAV_SEVERITY_DEBUG));
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE, (cmd,result) -> {
 						if(result != MAV_RESULT.MAV_RESULT_ACCEPTED) 
