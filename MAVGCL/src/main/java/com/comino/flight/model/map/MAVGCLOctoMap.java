@@ -45,6 +45,10 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 					model.grid.count = -1;
 					return;
 				}
+				
+				if(grid.resolution != this.getResolution()) {
+					clearAndChangeResolution(grid.resolution);
+				}
 
 				for(int i=0;i< grid.data.length;i++) {
 					if(grid.data[i] > 0) {
