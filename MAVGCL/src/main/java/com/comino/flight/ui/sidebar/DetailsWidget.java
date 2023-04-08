@@ -286,7 +286,7 @@ public class DetailsWidget extends ChartControlPane {
 		});
 		
 		state.getLogLoadedProperty().addListener((e, o, n) -> {
-			this.setDisable(!state.getLogLoadedProperty().get() && !n.booleanValue());
+			this.setDisable(!state.getConnectedProperty().get() && !n.booleanValue());
 		});
 
 //		state.getArmedProperty().addListener((e, o, n) -> {
