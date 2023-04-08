@@ -280,6 +280,14 @@ public class DetailsWidget extends ChartControlPane {
 				}
 			});
 		});
+		
+		state.getConnectedProperty().addListener((e, o, n) -> {
+			this.setDisable(!state.getLogLoadedProperty().get() && !n.booleanValue());
+		});
+		
+		state.getLogLoadedProperty().addListener((e, o, n) -> {
+			this.setDisable(!state.getLogLoadedProperty().get() && !n.booleanValue());
+		});
 
 //		state.getArmedProperty().addListener((e, o, n) -> {
 //			if(n.booleanValue()) {

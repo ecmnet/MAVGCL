@@ -147,7 +147,7 @@ public class StateProperties {
 			wq.addSingleTask("LP", 650,() -> {
 				Platform.runLater(() -> {
 					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
-				    	connectedProperty.set(n.isStatus(Status.MSP_CONNECTED));
+				    	connectedProperty.set(true);
 					}
 				});
 			});
@@ -156,6 +156,7 @@ public class StateProperties {
 				control.writeLogMessage(new LogMessage("[mgc] Connection to vehicle lost..",MAV_SEVERITY.MAV_SEVERITY_CRITICAL));
 				Platform.runLater(() -> {
 				  isVideoStreamAvailable.set(false);
+				  connectedProperty.set(false);
 				});
 			} 
 		});

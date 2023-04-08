@@ -97,6 +97,74 @@ public class BatteryWidget extends ChartControlPane  {
 		}
 		
 		
+		
+		task = new AnimationTimer() {
+			private long tms;
+			@Override public void handle(long now) {
+				if((System.currentTimeMillis()-tms)>1000 && MainApp.getPrimaryStage().isFocused()) {
+					tms = System.currentTimeMillis();
+		            
+					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
+						voltage = model.getValue("BATV");
+						g_voltage.setValue(voltage);
+						if(voltage < 10.5 && voltage > 0)
+							g_voltage.setBarColor(Color.RED);
+						if(voltage > 11.0)
+							g_voltage.setBarColor(color_bar);
+					}
+					
+					if(!Double.isFinite(voltage) || voltage <= 6){
+		            	g_voltage.setValue(6);
+		            	g_voltage.setBarColor(Color.DARKGREY);
+		        
+		            } 
+					
+					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
+						capacity = model.getValue("BATP");
+						g_capacity.setValue(capacity*100f);
+						if(capacity < 0.15 && capacity > 0)
+							g_capacity.setBarColor(Color.RED);
+						if(capacity > 0.20)
+							g_capacity.setBarColor(color_bar);
+					}
+					
+					if(!Double.isFinite(capacity)) {
+		            	g_capacity.setValue(0);
+		            	g_capacity.setBarColor(Color.DARKGREY);
+		            	return;
+		            }
+				}
+			}
+		};
+
+	}
+
+
+	private void setupGauge(Gauge gauge, String unit) {
+		gauge.animatedProperty().set(false);
+		gauge.setSkinType(SkinType.SLIM);
+		gauge.setBarColor(color_bar);
+		if(MAVPreferences.isLightTheme())
+		 gauge.setBarBackgroundColor(Color.LIGHTGRAY);
+		gauge.setTitle(unit);
+		gauge.setUnit("Battery");
+		gauge.disableProperty().bind(state.getConnectedProperty().not().and(state.getLogLoadedProperty().not()));
+		gauge.setValueColor(color_text);
+		gauge.setTitleColor(color_text);
+		gauge.setUnitColor(color_text);
+	}
+
+	private void setColor(Gauge gauge, Color color) {
+		gauge.setValueColor(color);
+		gauge.setTitleColor(color);
+		gauge.setUnitColor(color);
+	}
+
+
+	public void setup(IMAVController control) {
+		this.dataService = AnalysisModelService.getInstance();
+		this.model = dataService.getCurrent();
+		
 		setupGauge(g_voltage,"V");
 		setupGauge(g_capacity,"%");
 		
@@ -115,70 +183,6 @@ public class BatteryWidget extends ChartControlPane  {
 				}
 			});
 		});
-		
-		task = new AnimationTimer() {
-			private long tms;
-			@Override public void handle(long now) {
-				if((System.currentTimeMillis()-tms)>1000 && MainApp.getPrimaryStage().isFocused()) {
-					tms = System.currentTimeMillis();
-		            if(!Double.isFinite(model.getValue("BATV"))) {
-		            	g_voltage.setValue(0);
-		            	g_voltage.setBarColor(Color.DARKGREY);
-		            	return;
-		            }
-					if(Math.abs(voltage - model.getValue("BATV")) > 0.1f) {
-						voltage = model.getValue("BATV");
-						g_voltage.setValue(voltage);
-						if(voltage < 10.5 && voltage > 0)
-							g_voltage.setBarColor(Color.RED);
-						if(voltage > 11.0)
-							g_voltage.setBarColor(color_bar);
-					}
-					 if(!Double.isFinite(model.getValue("BATP"))) {
-			            	g_capacity.setValue(0);
-			            	g_capacity.setBarColor(Color.DARKGREY);
-			            	return;
-			            }
-					if(Math.abs(capacity - model.getValue("BATP")) > 0.01f) {
-						capacity = model.getValue("BATP");
-						g_capacity.setValue(capacity*100f);
-						if(capacity < 0.15 && capacity > 0)
-							g_capacity.setBarColor(Color.RED);
-						if(capacity > 0.20)
-							g_capacity.setBarColor(color_bar);
-					}
-				}
-			}
-		};
-
-	}
-
-
-	private void setupGauge(Gauge gauge, String unit) {
-		gauge.animatedProperty().set(false);
-		gauge.setSkinType(SkinType.SLIM);
-		gauge.setBarColor(color_bar);
-		if(MAVPreferences.isLightTheme())
-		 gauge.setBarBackgroundColor(Color.LIGHTGRAY);
-		gauge.setDecimals(1);
-		gauge.setTitle(unit);
-		gauge.setUnit("Battery");
-		gauge.disableProperty().bind(state.getConnectedProperty().not());
-		gauge.setValueColor(color_text);
-		gauge.setTitleColor(color_text);
-		gauge.setUnitColor(color_text);
-	}
-
-	private void setColor(Gauge gauge, Color color) {
-		gauge.setValueColor(color);
-		gauge.setTitleColor(color);
-		gauge.setUnitColor(color);
-	}
-
-
-	public void setup(IMAVController control) {
-		this.dataService = AnalysisModelService.getInstance();
-		this.model = dataService.getCurrent();
 		task.start();
 
 	}
