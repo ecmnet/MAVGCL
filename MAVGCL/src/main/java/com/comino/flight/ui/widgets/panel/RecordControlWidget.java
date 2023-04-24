@@ -150,8 +150,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 				.or(state.getInitializedProperty().not())
 				);
 
-		recording.setOnMousePressed(event -> {
-			if(!modelService.isCollecting())
+		recording.setOnMouseReleased(event -> {
 				enablemodetrig.selectedProperty().set(false);
 		});
 
