@@ -82,6 +82,7 @@ public class StateProperties {
 	private BooleanProperty isReadyProperty	                 = new SimpleBooleanProperty();
 	private BooleanProperty isMP4RecordingProperty           = new SimpleBooleanProperty();
 	private BooleanProperty isVideoStreamAvailable           = new SimpleBooleanProperty();
+	private BooleanProperty isVideoAsBackground              = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -381,6 +382,10 @@ public class StateProperties {
 	
 	public BooleanProperty getVideoStreamAvailableProperty() {
 		return isVideoStreamAvailable;
+	}
+	
+	public BooleanProperty getVideoAsBackgroundProperty() {
+		return isVideoAsBackground;
 	}
 
 	public BooleanProperty getParamLoadedProperty() {

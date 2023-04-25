@@ -55,8 +55,11 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.fxml.FXML;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 
 public class CameraWidget extends ChartControlPane implements IChartControl {
 
@@ -75,7 +78,6 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private ControlWidget   widget;
 
-
 	public CameraWidget() {
 		super();
 		FXMLLoadHelper.load(this, "CameraWidget.fxml");
@@ -92,6 +94,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		fadeProperty().addListener((observable, oldvalue, newvalue) -> {
 			player.show(newvalue.booleanValue());	
+			setAsBackground(state.getVideoAsBackgroundProperty().get());
 		});
 
 		image.setOnMouseClicked(event -> {
@@ -116,7 +119,10 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			}
 			event.consume();
 		});
-		
+
+		state.getVideoAsBackgroundProperty().addListener((o,ov,nv) -> {
+			setAsBackground(nv.booleanValue());
+		});
 
 
 		state.getStreamProperty().addListener((o,ov,nv) -> {
@@ -128,7 +134,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
-			
+
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {
 				if(player.recording(true)) 
 					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
@@ -146,6 +152,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		replay.addListener((v, ov, nv) -> {
 			player.playAtIndex(nv.intValue());
 		});
+
 	}
 
 	public FloatProperty getScrollProperty() {
@@ -185,6 +192,24 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 					player.reconnect();
 			} 
 		});
+
+
+	}
+
+	private void setAsBackground(boolean enable) {
+		Platform.runLater(() -> {
+		if(enable) {
+			this.toBack();
+			this.setLayoutX(-300); this.setLayoutY(-200);
+			this.setWidth(1920); this.setHeight(1440);
+			image.setEffect(new ColorAdjust(0,0,-0.7,0));
+		} else {
+			this.toFront();
+			setMoveable(true);
+			resize(false,X,Y);
+			image.setEffect(null);
+		}
+	  });
 	}
 
 	@Override

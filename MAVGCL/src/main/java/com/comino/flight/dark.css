@@ -327,7 +327,7 @@
 }
 
 .status .badge  {
-	-fx-background-color: #404040;
+	-fx-background-color: transparent;
 	-fx-border-radius: 3;
     -fx-background-radius: 3;
     -fx-padding: 2;
@@ -335,7 +335,7 @@
 
 .status .message {
 	-fx-text-fill: #F0F0F0;
-	-fx-background-color: #404040;
+	-fx-background-color: transparent;
 	-fx-border-radius: 3;
     -fx-background-radius: 3;
     -fx-padding: 2;
@@ -359,7 +359,7 @@
 
 .tree-table-view  {
   -fx-background: -fx-control-inner-background ;
-  -fx-background-color: #303030;
+  -fx-background-color: transparent;
   -fx-border-style: none;
 }
 

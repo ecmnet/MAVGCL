@@ -89,6 +89,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -165,6 +166,10 @@ public class MainApp extends Application  {
 
 	@FXML
 	private MenuItem m_log;
+	
+
+	@FXML
+	private CheckMenuItem m_video_as_background;
 
 	@FXML
 	private MenuBar menubar;
@@ -182,6 +187,8 @@ public class MainApp extends Application  {
 	private StateProperties state = null;
 
 	private String command_line_options = null;
+	
+	private FlightTabs fvController;
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
@@ -370,7 +377,6 @@ public class MainApp extends Application  {
 				if(!n.booleanValue() || state.getGPOSAvailableProperty().get() || control.getCurrentModel().sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY))
 					return;
 
-				DataModel model = control.getCurrentModel();
 
 
 				msg_msp_command msp = new msg_msp_command(255,1);
@@ -495,6 +501,7 @@ public class MainApp extends Application  {
 	private void initialize() {
 		menubar.setUseSystemMenuBar(true);
 		setupMenuBar();
+		
 
 		state.getLogLoadedProperty().addListener((e,o,n) -> {
 			Platform.runLater(() -> {
@@ -531,7 +538,7 @@ public class MainApp extends Application  {
 			controlpanel.setup(control);
 
 
-			FlightTabs fvController = loader.getController();
+			fvController = loader.getController();
 			fvController.setup(controlpanel,statusline, control);
 			fvController.setPrefHeight(820);
 
@@ -737,6 +744,10 @@ public class MainApp extends Application  {
 
 				}
 			});
+			
+			m_video_as_background.setOnAction((event -> {
+				state.getVideoAsBackgroundProperty().set(m_video_as_background.isSelected());
+			}));
 
 			m_export.setOnAction(event -> {
 				AnalysisModelService.getInstance().stop();
