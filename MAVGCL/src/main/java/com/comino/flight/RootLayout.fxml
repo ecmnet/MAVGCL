@@ -81,7 +81,7 @@
 				<Menu mnemonicParsing="false" text="System">
 					<items>
 					  <CheckMenuItem fx:id="m_video_as_background" mnemonicParsing="false"
-							text="Show videostreams as background">
+							text="Show videos in background">
 					</CheckMenuItem>	
 					<SeparatorMenuItem mnemonicParsing="false" />	
 					   <MenuItem fx:id="m_reload" mnemonicParsing="false"

@@ -745,6 +745,9 @@ public class MainApp extends Application  {
 				}
 			});
 			
+			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
+				m_video_as_background.setDisable(true);
+			}
 			m_video_as_background.setOnAction((event -> {
 				state.getVideoAsBackgroundProperty().set(m_video_as_background.isSelected());
 			}));

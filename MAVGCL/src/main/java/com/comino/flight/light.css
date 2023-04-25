@@ -8,7 +8,7 @@
 
 
 .tab-pane {
-	 -fx-background-color: #F0F0F0;
+	 -fx-background-color: transparent;
 }
 
 .tab-header-background {
@@ -42,7 +42,7 @@
 
 .tab
 {
--fx-background-color: #F0F0F0;
+-fx-background-color: transparent;
 -fx-alignment: CENTER;
 -fx-text-fill: #f0f0f0;
 }
@@ -96,7 +96,7 @@
 }
 
 .console {
-	-fx-background-color: #F0F0F0;
+	-fx-background-color: transparent;
     -fx-control-inner-background: #E5E5E5;
     -fx-font-size: 8.5pt;
     -fx-font-weight: normal;
@@ -115,7 +115,7 @@
 }
 
 .widget {
-	-fx-background-color: #F0F0F0;
+	-fx-background-color: transparent;
     -fx-font-size: 7.0pt;
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1px;
