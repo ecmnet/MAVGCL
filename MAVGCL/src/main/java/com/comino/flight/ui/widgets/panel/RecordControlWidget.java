@@ -42,15 +42,12 @@ import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.FileHandler;
-import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.flight.model.service.AnalysisModelService;
-import com.comino.flight.observables.StateProperties;
-import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.prefs.MAVPreferences;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
-import com.comino.mavcom.status.listener.IMSPStatusChangedListener;
+import com.comino.mavcom.status.StatusManager;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -67,7 +64,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-public class RecordControlWidget extends ChartControlPane implements IMSPStatusChangedListener {
+public class RecordControlWidget extends ChartControlPane { 
 
 	private static final int MIN_RECORDING_MS   = 15000;
 
@@ -151,6 +148,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 				);
 
 		recording.setOnMouseReleased(event -> {
+			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED)
 				enablemodetrig.selectedProperty().set(false);
 		});
 
@@ -284,7 +282,7 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 		this.info = info;
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance();
-		this.control.addStatusChangeListener(this);
+//		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.reset();
 
@@ -310,40 +308,50 @@ public class RecordControlWidget extends ChartControlPane implements IMSPStatusC
 				}
 			}
 		});
-
-		state.getInitializedProperty().addListener((e,o,n) -> {
-			update(control.getCurrentModel().sys);
-		});
+		
+		setupAutoRecording(control.getStatusManager());
 
 	}
-
-	@Override
-	public void update(Status newStat) {
-
-		if(!modetrigger)
-			return;
-
-		//System.err.println("START recording: "+oldStat+"/"+newStat);
-
-		if(!modelService.isCollecting()) {
-			switch(triggerStartMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),0); break;
-			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),0); break;
-			case TRIG_ALTHOLD:		recording(newStat.nav_state == Status.NAVIGATION_STATE_ALTCTL || newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,0); break;
-			case TRIG_POSHOLD:	    recording(newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,0); break;
-			}
-		} else {
-			switch(triggerStopMode) {
-			case TRIG_ARMED: 		recording(newStat.isStatus(Status.MSP_ARMED),1);
-			break;
-			case TRIG_LANDED:		recording(!newStat.isStatus(Status.MSP_LANDED),1);
-			break;
-			case TRIG_ALTHOLD:		recording(newStat.nav_state == Status.NAVIGATION_STATE_ALTCTL || newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,1);
-			break;
-			case TRIG_POSHOLD:	    recording(newStat.nav_state == Status.NAVIGATION_STATE_POSCTL,1);
-			break;
-			}
-		}
+	
+	
+	private void setupAutoRecording(StatusManager status) {
+		
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED, StatusManager.EDGE_BOTH, (a) -> {
+			   if(triggerStartMode == TRIG_ARMED && a.isStatus(Status.MSP_ARMED)) {
+			    	   recording(true,0);
+			   }	
+			   if(triggerStopMode == TRIG_ARMED && !a.isStatus(Status.MSP_ARMED)) {
+		    	   recording(false,0);
+		   }	
+		});
+		
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_LANDED, StatusManager.EDGE_BOTH, (a) -> {
+			   if(triggerStartMode == TRIG_LANDED && !a.isStatus(Status.MSP_LANDED)) {
+			    	   recording(true,0);
+			   }	
+			   if(triggerStopMode == TRIG_LANDED &&   a.isStatus(Status.MSP_LANDED)) {
+		    	   recording(false,0);
+		   }	
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL, StatusManager.EDGE_BOTH, (a) -> {
+			   if(triggerStartMode == TRIG_ALTHOLD && a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
+			    	   recording(true,0);
+			   }	
+			   if(triggerStopMode == TRIG_ALTHOLD && !a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
+		    	   recording(false,0);
+		   }	
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, StatusManager.EDGE_BOTH, (a) -> {
+			   if(triggerStartMode == TRIG_POSHOLD && a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
+			    	   recording(true,0);
+			   }	
+			   if(triggerStopMode == TRIG_POSHOLD && !a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
+		    	   recording(false,0);
+		   }	
+		});
+		
 	}
 
 
