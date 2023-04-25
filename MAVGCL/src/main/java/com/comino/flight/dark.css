@@ -1,16 +1,24 @@
 .root{
     -fx-font-size: 8.0pt;
-    -fx-background-color: #303030;
+   
     -fx-accent: #000000;
-}
+    -fx-background-image: url("bg_dark.jpg");
+    -fx-background-repeat: stretch;   
+    -fx-background-size: 3000 2000;
+    -fx-background-position: center center;
+ }
+
+
 
 
 .tab-pane {
-	 -fx-background-color: #303030;
+	 -fx-background-color: transparent;
+	 -fx-accent: #000000;
+  
 }
 
 .tab-header-background {
-	 -fx-background-color: #303030;
+	 -fx-background-color: transparent;
 }
 
 
@@ -21,7 +29,7 @@
 }
 
 .progress-bar {
-    -fx-background-color: #303030;
+    -fx-background-color: transparent;
 }
 
 .tooltip {
@@ -38,9 +46,10 @@
 
 .tab
 {
--fx-background-color: #303030;
+-fx-background-color:transparent;
 -fx-alignment: CENTER;
 -fx-text-fill: #f0f0f0;
+
 }
 
 .tab-label {
@@ -92,8 +101,8 @@
 }
 
 .console {
-	-fx-background-color: #282828;
-    -fx-control-inner-background: #202020;
+	-fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
     -fx-font-size: 9pt;
     -fx-text-inner-color: white;
     -fx-border-color: #B0B0B0;
@@ -110,7 +119,7 @@
 }
 
 .widget {
-	-fx-background-color: #282828;
+	-fx-background-color: transparent;
     -fx-font-size: 7.0pt;
     -fx-border-color: #B0B0B0;
     -fx-border-width: 1px;
@@ -130,8 +139,8 @@
 }
 
 .list-view  {
-	-fx-background-color: #303030;
-    -fx-control-inner-background:  #303030;
+	-fx-background-color: transparent;
+    -fx-control-inner-background:  transparent;
     -fx-background-radius: 10.0;
     -fx-box-border: #B0B0B0;
     -fx-border-radius: 10.0px;
@@ -141,7 +150,7 @@
 
 .list-cell {
 	-fx-font-size: 7.0pt;
-    -fx-background-color: #303030;
+    -fx-background-color: transparent;
 }
 
 .messages  {
@@ -160,9 +169,9 @@
 }
 
 .scroll-pane:focused {
-  -fx-background-color: #282828;
+  -fx-background-color: transparent;
   -fx-box-border: #282828;
-  -fx-control-inner-background: #282828;
+  -fx-control-inner-background: transparent;
   -fx-background-insets: -1.4, 0, 1;
   -fx-background-radius: 1.4, 0, 0;
   -fx-padding: 1; /* 0.083333em; */
@@ -289,14 +298,14 @@
 }
 
 .tree-table-view, .tree-table-view .column-header, .tree-table-view  .filler {
-	 -fx-background-color:#404040;
+	 -fx-background-color:transparent;
 	 -fx-border-style: none;
 	 -fx-font-size: 8.0pt;
 }
 
 .tree-table-view {
     -fx-base: #1d1d1d;
-    -fx-control-inner-background: #202020;
+    -fx-control-inner-background: transparent;
     -fx-background-color: #303030;
     -fx-border-style: none;
 }
