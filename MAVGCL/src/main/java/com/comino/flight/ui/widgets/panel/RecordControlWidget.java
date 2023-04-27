@@ -173,9 +173,9 @@ public class RecordControlWidget extends ChartControlPane {
 
 			charts.refreshCharts();
 			info.clear();
-			
+
 			control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
-			
+
 
 		});
 
@@ -282,7 +282,7 @@ public class RecordControlWidget extends ChartControlPane {
 		this.info = info;
 		this.control = control;
 		this.modelService =  AnalysisModelService.getInstance();
-//		this.control.addStatusChangeListener(this);
+		//		this.control.addStatusChangeListener(this);
 		this.modelService.setTotalTimeSec(totalTime_sec);
 		this.modelService.reset();
 
@@ -299,7 +299,7 @@ public class RecordControlWidget extends ChartControlPane {
 
 				if( state.getRecordingProperty().get()!=AnalysisModelService.STOPPED
 						&& modelService.getTotalRecordingTimeMS()  > MIN_RECORDING_MS ) {
-					recording(false,30);
+					recording(false,0);
 					try {
 						FileHandler.getInstance().autoSave();
 					} catch (IOException e) {
@@ -308,50 +308,58 @@ public class RecordControlWidget extends ChartControlPane {
 				}
 			}
 		});
-		
+
 		setupAutoRecording(control.getStatusManager());
 
 	}
-	
-	
+
+
 	private void setupAutoRecording(StatusManager status) {
-		
+
 		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED, StatusManager.EDGE_BOTH, (a) -> {
-			   if(triggerStartMode == TRIG_ARMED && a.isStatus(Status.MSP_ARMED)) {
-			    	   recording(true,0);
-			   }	
-			   if(triggerStopMode == TRIG_ARMED && !a.isStatus(Status.MSP_ARMED)) {
-		    	   recording(false,0);
-		   }	
+			if(enablemodetrig.isSelected()) {
+				if(triggerStartMode == TRIG_ARMED && a.isStatus(Status.MSP_ARMED)) {
+					recording(true,0);
+				}	
+				if(triggerStopMode == TRIG_ARMED && !a.isStatus(Status.MSP_ARMED)) {
+					recording(false,0);
+				}	
+			}
 		});
-		
+
 		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_LANDED, StatusManager.EDGE_BOTH, (a) -> {
-			   if(triggerStartMode == TRIG_LANDED && !a.isStatus(Status.MSP_LANDED)) {
-			    	   recording(true,0);
-			   }	
-			   if(triggerStopMode == TRIG_LANDED &&   a.isStatus(Status.MSP_LANDED)) {
-		    	   recording(false,0);
-		   }	
+			if(enablemodetrig.isSelected()) {
+				if(triggerStartMode == TRIG_LANDED && !a.isStatus(Status.MSP_LANDED)) {
+					recording(true,0);
+				}	
+				if(triggerStopMode == TRIG_LANDED &&   a.isStatus(Status.MSP_LANDED)) {
+					recording(false,0);
+				}	
+			}
 		});
-		
+
 		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL, StatusManager.EDGE_BOTH, (a) -> {
-			   if(triggerStartMode == TRIG_ALTHOLD && a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
-			    	   recording(true,0);
-			   }	
-			   if(triggerStopMode == TRIG_ALTHOLD && !a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
-		    	   recording(false,0);
-		   }	
+			if(enablemodetrig.isSelected()) {
+				if(triggerStartMode == TRIG_ALTHOLD && a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
+					recording(true,0);
+				}	
+				if(triggerStopMode == TRIG_ALTHOLD && !a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
+					recording(false,0);
+				}	
+			}
 		});
-		
+
 		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, StatusManager.EDGE_BOTH, (a) -> {
-			   if(triggerStartMode == TRIG_POSHOLD && a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
-			    	   recording(true,0);
-			   }	
-			   if(triggerStopMode == TRIG_POSHOLD && !a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
-		    	   recording(false,0);
-		   }	
+			if(enablemodetrig.isSelected()) {
+				if(triggerStartMode == TRIG_POSHOLD && a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
+					recording(true,0);
+				}	
+				if(triggerStopMode == TRIG_POSHOLD && !a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
+					recording(false,0);
+				}	
+			}
 		});
-		
+
 	}
 
 
