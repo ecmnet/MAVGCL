@@ -316,49 +316,54 @@ public class RecordControlWidget extends ChartControlPane {
 
 	private void setupAutoRecording(StatusManager status) {
 
-		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED, StatusManager.EDGE_BOTH, (a) -> {
-			if(enablemodetrig.isSelected()) {
-				if(triggerStartMode == TRIG_ARMED && a.isStatus(Status.MSP_ARMED)) {
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED, StatusManager.EDGE_RISING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStartMode == TRIG_ARMED) {
 					recording(true,0);
 				}	
-				if(triggerStopMode == TRIG_ARMED && !a.isStatus(Status.MSP_ARMED)) {
+		});
+		
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED, StatusManager.EDGE_FALLING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStopMode == TRIG_ARMED) {
 					recording(false,0);
 				}	
+		});
+		
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_LANDED, StatusManager.EDGE_RISING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStopMode == TRIG_LANDED) {
+					recording(false,0);
+				}	
+		});
+		
+		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_LANDED, StatusManager.EDGE_FALLING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStartMode == TRIG_LANDED) {
+					recording(true,0);
+				}	
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL, StatusManager.EDGE_RISING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStartMode == TRIG_ALTHOLD) {
+				recording(true,0);
+			}
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL, StatusManager.EDGE_FALLING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStopMode == TRIG_ALTHOLD) {
+				recording(false,0);
+			}
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, StatusManager.EDGE_RISING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStartMode == TRIG_POSHOLD) {
+				recording(true,0);
+			}
+		});
+		
+		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, StatusManager.EDGE_FALLING, (a) -> {
+			if(enablemodetrig.isSelected() && triggerStopMode == TRIG_POSHOLD) {
+				recording(false,0);
 			}
 		});
 
-		status.addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_LANDED, StatusManager.EDGE_BOTH, (a) -> {
-			if(enablemodetrig.isSelected()) {
-				if(triggerStartMode == TRIG_LANDED && !a.isStatus(Status.MSP_LANDED)) {
-					recording(true,0);
-				}	
-				if(triggerStopMode == TRIG_LANDED &&   a.isStatus(Status.MSP_LANDED)) {
-					recording(false,0);
-				}	
-			}
-		});
-
-		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_ALTCTL, StatusManager.EDGE_BOTH, (a) -> {
-			if(enablemodetrig.isSelected()) {
-				if(triggerStartMode == TRIG_ALTHOLD && a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
-					recording(true,0);
-				}	
-				if(triggerStopMode == TRIG_ALTHOLD && !a.isNavState(Status.NAVIGATION_STATE_ALTCTL)) {
-					recording(false,0);
-				}	
-			}
-		});
-
-		status.addListener(StatusManager.TYPE_PX4_NAVSTATE, Status.NAVIGATION_STATE_POSCTL, StatusManager.EDGE_BOTH, (a) -> {
-			if(enablemodetrig.isSelected()) {
-				if(triggerStartMode == TRIG_POSHOLD && a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
-					recording(true,0);
-				}	
-				if(triggerStopMode == TRIG_POSHOLD && !a.isNavState(Status.NAVIGATION_STATE_POSCTL)) {
-					recording(false,0);
-				}	
-			}
-		});
 
 	}
 

@@ -328,8 +328,8 @@
 
 .status .badge  {
 	-fx-background-color: transparent;
-	-fx-border-radius: 3;
-    -fx-background-radius: 3;
+	-fx-border-radius: 10;
+    -fx-background-radius: 10;
     -fx-padding: 2;
 }
 

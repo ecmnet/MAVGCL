@@ -8,7 +8,7 @@
 
 <fx:root maxHeight="30.0" prefHeight="30.0" styleClass="status" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
-		<HBox layoutY="6.0" layoutX="6.0" spacing="2.0">
+		<HBox fx:id="hbox" layoutY="0.0" layoutX="5.0" spacing="2.0" styleClass="widget" style="-fx-padding: 3;">
 			<children>
 			    <Badge fx:id="ready" prefHeight="16.0" prefWidth="200.0" text="NOT READY" color="RED" description="MSP Preflight check result"/>
 			    <Badge fx:id="mode" prefHeight="16.0" prefWidth="230.0" text="offline" color="GRAY" />

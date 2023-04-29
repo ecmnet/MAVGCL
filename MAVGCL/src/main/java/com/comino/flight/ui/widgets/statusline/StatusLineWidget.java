@@ -67,11 +67,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 public class StatusLineWidget extends Pane implements IChartControl {
 
+	@FXML
+	private HBox hbox;
+	
 	@FXML
 	private Badge ready;
 
@@ -398,6 +402,8 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.msp_model = control.getCurrentModel();
 		this.model = AnalysisModelService.getInstance().getCurrent();
 		this.state = StateProperties.getInstance();
+		
+		hbox.prefWidthProperty().bind(this.widthProperty().subtract(9));
 
 		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
 		//		state.getConnectedProperty().addListener((v,o,n) -> {

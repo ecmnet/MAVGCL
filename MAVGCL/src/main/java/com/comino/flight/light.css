@@ -333,8 +333,8 @@
 
 .status .badge  {
 	-fx-background-color: #E0E0E0;
-	-fx-border-radius: 3;
-    -fx-background-radius: 3;
+	-fx-border-radius:10;
+    -fx-background-radius: 10;
     -fx-padding: 2;
 }
 
