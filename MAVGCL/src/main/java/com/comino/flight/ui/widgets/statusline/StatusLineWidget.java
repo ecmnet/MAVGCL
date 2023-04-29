@@ -46,6 +46,7 @@ import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
+import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.Badge;
@@ -54,6 +55,7 @@ import com.comino.mavcom.control.impl.MAVController;
 import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
+import com.comino.mavcom.param.PX4Parameters;
 import com.comino.mavutils.MSPMathUtils;
 
 import javafx.animation.AnimationTimer;
@@ -75,7 +77,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private HBox hbox;
-	
+
 	@FXML
 	private Badge ready;
 
@@ -117,7 +119,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	@FXML
 	private Badge wp;
-	
+
 	@FXML
 	private Badge locked;
 
@@ -130,7 +132,6 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	private AnalysisModelService collector = AnalysisModelService.getInstance();
 	private StateProperties state = null;
-
 	private String filename;
 
 	private final static String[]  EKF2STATUS_TEXTS = { "", "ATT", "RPOS", "APOS", "FAULT", "VEL", "OTHER"  };
@@ -175,12 +176,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 					wp.setText(String.format("T % d", (int)(msp_model.sys.t_takeoff_ms/1000-0.5f)));
 					wp.setMode(Badge.MODE_ON);
 				}
-//				else {
-//					wp.setText("");
-//					wp.setMode(Badge.MODE_OFF);
-//				}
+				//				else {
+				//					wp.setText("");
+				//					wp.setMode(Badge.MODE_OFF);
+				//				}
 
-				if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY)) {
+				if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY) || !hasGPS()) {
 					gps.setMode(Badge.MODE_OFF);
 					gps.setText("GPS");
 				}
@@ -221,7 +222,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				filename = FileHandler.getInstance().getName();
 				driver.setText(msp_model.sys.getSensorString());
 				if(msp_model.vision.getShortText().length()>0)
-				  vision.setText(msp_model.vision.getShortText());
+					vision.setText(msp_model.vision.getShortText());
 
 				if(control.isConnected()) {
 
@@ -240,7 +241,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						vision.setMode(Badge.MODE_OFF);
 
 					if(msp_model.sys.isSensorAvailable(Status.MSP_MSP_AVAILABILITY)) {
-						
+
 						if(msp_model.sys.isSensorAvailable(Status.MSP_FIDUCIAL_LOCKED)) {
 							locked.setMode(Badge.MODE_ON);
 							locked.setMode(Badge.MODE_SPECIAL);
@@ -248,10 +249,10 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						else {
 							locked.setMode(Badge.MODE_OFF);
 						}
-						
+
 						if(msp_model.sys.isStatus(Status.MSP_READY_FOR_FLIGHT)) {
-								ready.setMode(Badge.MODE_OK);
-								ready.setText("READY");
+							ready.setMode(Badge.MODE_OK);
+							ready.setText("READY");
 						}
 						else {
 							ready.setMode(Badge.MODE_ERROR);
@@ -402,7 +403,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 		this.msp_model = control.getCurrentModel();
 		this.model = AnalysisModelService.getInstance().getCurrent();
 		this.state = StateProperties.getInstance();
-		
+
 		hbox.prefWidthProperty().bind(this.widthProperty().subtract(9));
 
 		//	control.getStatusManager().addListener(Status.MSP_CONNECTED, (n) -> {
@@ -498,6 +499,11 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 	public KeyFigurePreset getKeyFigureSelection() {
 		return null;
+	}
+
+	private boolean hasGPS() {
+		MAVGCLPX4Parameters params = MAVGCLPX4Parameters.getInstance();
+		return params.getParam("SYS_HAS_GPS")!=null && params.getParam("SYS_HAS_GPS").value == 1;
 	}
 
 	private int getEKF2Status() {
