@@ -112,23 +112,28 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-base</artifactId>
+			<version>20.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>19.0.2.1</version>
+			<version>20.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>19.0.2.1</version>
+				<version>20.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-swing</artifactId>
-			<version>19.0.2.1</version>
+				<version>20.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>19.0.2.1</version>
+				<version>20.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>

@@ -207,12 +207,11 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 			
 			Platform.runLater(() -> {
 				listview.getItems().add(m);
-				listview.scrollTo(m);
-			});
-			Platform.runLater(() -> {
 				if(listview.getItems().size()>=MAX_ITEMS)
 					listview.getItems().remove(0,1);
+				listview.scrollTo(m);
 			});
+		
 		}
 	}
 
