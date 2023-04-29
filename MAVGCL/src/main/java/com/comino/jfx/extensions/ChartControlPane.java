@@ -230,6 +230,13 @@ public class ChartControlPane extends Pane {
 
 	}
 	
+	protected void resetSize() {
+		if(resizable.get()) {
+			setWidth(MAVPreferences.getInstance().getDouble(prefKey+"SX", 320));
+			setHeight(MAVPreferences.getInstance().getDouble(prefKey+"SY", 240));
+		}
+	}
+	
 	protected void perform_action() {
 		// to be implemented in child classes
 		System.out.println("Action of "+this.getClass().getSimpleName());

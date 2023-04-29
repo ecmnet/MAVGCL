@@ -40,6 +40,7 @@ import org.mavlink.messages.lquac.msg_msp_command;
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.panel.control.FlightControlPanel;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.panel.ControlWidget;
@@ -202,11 +203,11 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			this.toBack();
 			this.setLayoutX(-300); this.setLayoutY(-200);
 			this.setWidth(1920); this.setHeight(1440);
-			image.setEffect(new ColorAdjust(0,0,-0.7,0));
+			image.setEffect(new ColorAdjust(0,-1,-0.6,0));
 		} else {
 			this.toFront();
 			setMoveable(true);
-			resize(false,X,Y);
+			resetSize();
 			image.setEffect(null);
 		}
 	  });
