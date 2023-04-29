@@ -121,10 +121,10 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 			}
 		});
 
-		state.getArmedProperty().addListener((e,o,n) -> {
-			if(!n.booleanValue() && !state.getParamLoadedProperty().get()) {
-				wq.addSingleTask("LP",1000, () -> refreshParameterList(true));
-			}
+		state.getArmedProperty().addListener((e,o,n) -> {		
+			if(n.booleanValue())
+				wq.addSingleTask("LP",100, () -> refreshParameterList(false));
+			
 		});
 
 	}
@@ -137,7 +137,7 @@ public class MAVGCLPX4Parameters extends PX4Parameters implements IMAVLinkListen
 	}
 
 	public void refreshParameterList(boolean loaded) {
-		if(!is_reading && !control.getCurrentModel().sys.isStatus(Status.MSP_ARMED) && !state.getLogLoadedProperty().get()) {
+		if(!is_reading && !state.getLogLoadedProperty().get() && state.getLandedProperty().get()) {
 			is_reading = true;
 			property.setValue(null);
 			parameterList.clear();
