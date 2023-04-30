@@ -107,7 +107,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 				super.updateItem(m, empty);
 //				setGraphic(null);
 				if(!empty && m!=null) {
-					setPrefWidth(130);
+					setPrefWidth(140);
 					setWrapText(false);
 					setTextOverrun(OverrunStyle.LEADING_ELLIPSIS);
 					
