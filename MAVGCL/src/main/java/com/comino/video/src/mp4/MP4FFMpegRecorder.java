@@ -72,6 +72,7 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 			recorder = new FFmpegFrameRecorder(path+"/video.mp4",640,480,0);
 			recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
 			recorder.setGopSize(1);
+			recorder.setVideoBitrate(800000);
 			
 			tms_start = 0;
 			frameNo = 0;

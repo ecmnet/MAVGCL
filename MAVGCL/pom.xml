@@ -90,18 +90,6 @@
 			<artifactId>javaparser-core</artifactId>
 			<version>3.24.2</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.jcodec</groupId>
-			<artifactId>jcodec</artifactId>
-			<version>0.1.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jcodec</groupId>
-			<artifactId>jcodec-javase</artifactId>
-			<version>0.1.9</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>eu.hansolo</groupId>
 			<artifactId>Medusa</artifactId>
