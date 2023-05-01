@@ -13,7 +13,8 @@ import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.replay.ReplayMP4VideoSource;
 import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
-import com.comino.video.src.mp4.MP4Recorder;
+import com.comino.video.src.mp4.MP4FFMpegRecorder;
+//import com.comino.video.src.mp4.MP4Recorder;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -30,7 +31,7 @@ public class VideoPlayer {
 	
     private IMWVideoSource    	 source;
     private ReplayMP4VideoSource replay_video;
-    private MP4Recorder          recorder = null;
+    private MP4FFMpegRecorder          recorder = null;
     
     private boolean              isConnected = false;
     private boolean              isRecording = false;
@@ -46,8 +47,8 @@ public class VideoPlayer {
 		this.replay_video = new ReplayMP4VideoSource();
 		
 		if(allowRecording)
-		  recorder = new MP4Recorder(prefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")));
-		
+		  recorder = new MP4FFMpegRecorder(prefs.get(MAVPreferences.PREFS_DIR, System.getProperty("user.home")));
+	
 		setupStateEvents();
 	}
 	

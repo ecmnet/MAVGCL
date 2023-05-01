@@ -15,7 +15,7 @@ import static org.bytedeco.ffmpeg.global.avformat.avformat_close_input;
 import static org.bytedeco.ffmpeg.global.avformat.avformat_find_stream_info;
 import static org.bytedeco.ffmpeg.global.avformat.avformat_open_input;
 import static org.bytedeco.ffmpeg.global.avutil.AVMEDIA_TYPE_VIDEO;
-import static org.bytedeco.ffmpeg.global.avutil.AV_PIX_FMT_BGR24;
+
 import static org.bytedeco.ffmpeg.global.avutil.av_frame_alloc;
 import static org.bytedeco.ffmpeg.global.avutil.av_frame_free;
 import static org.bytedeco.ffmpeg.global.avutil.av_image_fill_arrays;
@@ -37,6 +37,7 @@ import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
 import org.bytedeco.ffmpeg.avformat.AVFormatContext;
 import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.ffmpeg.swscale.SwsContext;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.DoublePointer;
@@ -69,6 +70,7 @@ public class ReplayMP4VideoSource  {
 	private int stream_idx;
 	
 	private boolean is_opened = false;
+	private boolean isH264 = false;
 
 
 	public ReplayMP4VideoSource() {
@@ -80,14 +82,22 @@ public class ReplayMP4VideoSource  {
 	}
 	
 	public Image playAt(long time_ms, float fps) {
+		
+		Long time = (long)(time_ms*15f/1000_000f);
 
 		if(stream_idx < 0)
 			return null;
 		
 		if(fps == 0 || Double.isNaN(fps))
-			return play((long)(time_ms*15f/1000_000f));
+			return play(time);
 		
-		return play((long)(time_ms*(float)fps/1000_000f));
+		if(isH264)
+			time = (long)(time_ms*(float)fps/2000);
+		else
+		time = (long)(time_ms*(float)fps/1000_000f);
+		
+		return play(time);
+	
 	}
 	
 	public Image playAt(long time_ms) {
@@ -109,7 +119,7 @@ public class ReplayMP4VideoSource  {
 		long time=(long)(fmt_ctx.duration()*rate/1000_000f*percentage);
 		if(percentage >= 1)
 			time = (long)(fmt_ctx.duration()*rate/1000_000)-1;
-
+		
 		return play(time);
 	}
 	
@@ -161,28 +171,38 @@ public class ReplayMP4VideoSource  {
 				break;
 			}
 		}
-		if (stream_idx <0)
-			return false;
+		if (stream_idx <0) {
+			System.out.println("FFMPEG player No stream found");
+			return false; 
+		}
+		
 
 		codec_ctx = avcodec_alloc_context3(null);
 		avcodec_parameters_to_context(codec_ctx, fmt_ctx.streams(stream_idx).codecpar());
 		AVCodec codec = avcodec_find_decoder(codec_ctx.codec_id());
+		
+		isH264 = codec_ctx.bit_rate() <= 4000000L;
+		System.err.println("Bitrate "+codec_ctx.bit_rate());
 
-		if (codec == null) 
+		if (codec == null) {
+			System.out.println("FFMPEG player No codec");
 			return false;
+		}
 
-		if(avcodec_open2(codec_ctx, codec, (PointerPointer)null)<0)
+		if(avcodec_open2(codec_ctx, codec, (PointerPointer)null)<0) {
+			System.out.println("FFMPEG player Not opened");
 			return false;
+		}
 
 		raw = av_frame_alloc();
 		rgb = av_frame_alloc();
 
-		int numBytes = av_image_get_buffer_size(AV_PIX_FMT_BGR24, codec_ctx.width(),
+		int numBytes = av_image_get_buffer_size(avutil.AV_PIX_FMT_BGR24, codec_ctx.width(),
 				codec_ctx.height(), 1);
 		buffer = new BytePointer(av_malloc(numBytes));
 
 		av_image_fill_arrays(rgb.data(), rgb.linesize(),
-				buffer, AV_PIX_FMT_BGR24, codec_ctx.width(), codec_ctx.height(), 1);
+				buffer, avutil.AV_PIX_FMT_BGR24, codec_ctx.width(), codec_ctx.height(), 1);
 
 		sws_ctx = sws_getContext(
 				codec_ctx.width(),
@@ -190,7 +210,7 @@ public class ReplayMP4VideoSource  {
 				codec_ctx.pix_fmt(),
 				codec_ctx.width(),
 				codec_ctx.height(),
-				AV_PIX_FMT_BGR24,
+				avutil.AV_PIX_FMT_BGR24,
 				SWS_BILINEAR,
 				null,
 				null,
@@ -214,6 +234,8 @@ public class ReplayMP4VideoSource  {
 
 		if(av_read_frame(fmt_ctx, pkt) < 0)
 			return image;
+		
+		
 
 		if (pkt.stream_index() == stream_idx) {
 			avcodec_send_packet(codec_ctx, pkt);
