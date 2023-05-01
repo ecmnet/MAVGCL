@@ -70,7 +70,6 @@ public class ReplayMP4VideoSource  {
 	private int stream_idx;
 	
 	private boolean is_opened = false;
-	private boolean isH264 = false;
 
 
 	public ReplayMP4VideoSource() {
@@ -83,7 +82,7 @@ public class ReplayMP4VideoSource  {
 	
 	public Image playAt(long time_ms, float fps) {
 		
-		Long time = (long)(time_ms*15f/1000_000f);
+		Long time = (long)(time_ms*15f/1000f);
 
 		if(stream_idx < 0)
 			return null;
@@ -91,10 +90,10 @@ public class ReplayMP4VideoSource  {
 		if(fps == 0 || Double.isNaN(fps))
 			return play(time);
 		
-		if(isH264)
-			time = (long)(time_ms*(float)fps/2000);
-		else
-		time = (long)(time_ms*(float)fps/1000_000f);
+//		if(isH264)
+			time = (long)(time_ms*(float)fps/1958);
+//		else
+//		time = (long)(time_ms*(float)fps/1000_000f);
 		
 		return play(time);
 	
@@ -105,7 +104,7 @@ public class ReplayMP4VideoSource  {
 		if(stream_idx < 0)
 			return null;
 		
-		return play((long)(time_ms*15/1000_000f));
+		return play((long)(time_ms*15/2000f));
 	}
 
 	public Image playAt(float percentage) {
@@ -181,7 +180,6 @@ public class ReplayMP4VideoSource  {
 		avcodec_parameters_to_context(codec_ctx, fmt_ctx.streams(stream_idx).codecpar());
 		AVCodec codec = avcodec_find_decoder(codec_ctx.codec_id());
 		
-		isH264 = codec_ctx.bit_rate() <= 4000000L;
 		System.err.println("Bitrate "+codec_ctx.bit_rate());
 
 		if (codec == null) {

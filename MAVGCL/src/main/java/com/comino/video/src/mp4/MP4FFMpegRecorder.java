@@ -48,11 +48,10 @@ import com.comino.video.src.IMWStreamVideoProcessListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
-// Replay is not working
-
 public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 
 	private final StateProperties state = StateProperties.getInstance();
+	private static final int VIDEO_BITRATE = 1500_000;
 
 	private FFmpegFrameRecorder recorder;
 	private final Java2DFrameConverter biconv = new Java2DFrameConverter();;
@@ -60,7 +59,6 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 	private long tms_start = 0;
 	private BufferedImage bimg = null;
 	private boolean isRunning;
-	private long frameNo;
 
 
 	public MP4FFMpegRecorder(String path) {
@@ -72,10 +70,9 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 			recorder = new FFmpegFrameRecorder(path+"/video.mp4",640,480,0);
 			recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
 			recorder.setGopSize(1);
-			recorder.setVideoBitrate(800000);
+			recorder.setVideoBitrate(VIDEO_BITRATE);
 			
 			tms_start = 0;
-			frameNo = 0;
 			recorder.start();
 			state.getMP4RecordingProperty().set(true);
 			System.out.println("MP4 recording started - MP4");
@@ -111,9 +108,10 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 			if(tms_start == 0) {
 				tms_start = tms;
 			}
+			recorder.setVideoBitrate((int)fps);
 			frame.sampleRate  = (int)fps;
 			frame.timestamp   = (tms - tms_start)*(long)fps*1000;
-		//	frame.keyFrame    = true;
+			frame.keyFrame    = true;
 		
 		   
 			recorder.record(frame,avutil.AV_PIX_FMT_0RGB);

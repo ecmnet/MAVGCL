@@ -249,7 +249,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				
 					// Calculate the current average FPS and store it in the datamodel for replay.
 					if(statExpRtpNb > 0) {
-					  fps = ( fps * (statExpRtpNb - 1) + 1000_000f / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
+					  fps = ( fps * (statExpRtpNb - 1)  / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
 					}
 					tms = rtp_packet.TimeStamp;
      				model.getCurrent().sync_fps = fps;
