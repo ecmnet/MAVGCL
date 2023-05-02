@@ -78,7 +78,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 	int statHighSeqNb;          //Highest sequence number received in session
 
 
-	private final AnalysisModelService model;
+	private final AnalysisModelService analysis_model;
+	private final DataModel            model;
 
 	//private FrameSynchronizer fsynch;
 
@@ -86,7 +87,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 	public RTSPMjpegVideoSource(URI uri, DataModel model) {
 
-		this.model = AnalysisModelService.getInstance();
+		this.analysis_model = AnalysisModelService.getInstance();
+		this.model          = model;
 		
 		//create the frame synchronizer
 		//	fsynch = new FrameSynchronizer(100);
@@ -249,10 +251,12 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				
 					// Calculate the current average FPS and store it in the datamodel for replay.
 					if(statExpRtpNb > 0) {
-					  fps = ( fps * (statExpRtpNb - 1)  / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
+					  fps = ( fps * (statExpRtpNb - 1) + 1000_000f / (rtp_packet.TimeStamp - tms) ) / statExpRtpNb;
 					}
 					tms = rtp_packet.TimeStamp;
-     				model.getCurrent().sync_fps = fps;
+     				analysis_model.getCurrent().sync_fps = fps;
+ //    				analysis_model.getCurrent().sync_fps = model.slam.fps;
+ //    				System.out.println(fps);
 					
 //					if(proxy_enabled)
 //					  proxy.process(payload, payload_length);

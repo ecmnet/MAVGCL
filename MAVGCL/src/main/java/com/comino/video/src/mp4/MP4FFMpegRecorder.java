@@ -71,7 +71,7 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 			recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
 			recorder.setGopSize(1);
 			recorder.setVideoBitrate(VIDEO_BITRATE);
-			
+			recorder.setFrameRate(20);
 			tms_start = 0;
 			recorder.start();
 			state.getMP4RecordingProperty().set(true);
@@ -108,7 +108,7 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 			if(tms_start == 0) {
 				tms_start = tms;
 			}
-			recorder.setVideoBitrate((int)fps);
+			recorder.setFrameRate((int)fps);
 			frame.sampleRate  = (int)fps;
 			frame.timestamp   = (tms - tms_start)*(long)fps*1000;
 			frame.keyFrame    = true;

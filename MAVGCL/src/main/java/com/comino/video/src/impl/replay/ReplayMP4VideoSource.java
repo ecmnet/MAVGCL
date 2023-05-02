@@ -82,7 +82,7 @@ public class ReplayMP4VideoSource  {
 	
 	public Image playAt(long time_ms, float fps) {
 		
-		Long time = (long)(time_ms*15f/1000f);
+		Long time = (long)(time_ms*15f/1000_000f);
 
 		if(stream_idx < 0)
 			return null;
@@ -90,9 +90,9 @@ public class ReplayMP4VideoSource  {
 		if(fps == 0 || Double.isNaN(fps))
 			return play(time);
 		
-//		if(isH264)
-			time = (long)(time_ms*(float)fps/1958);
-//		else
+
+		time = (long)(time_ms*(float)fps/1960);
+
 //		time = (long)(time_ms*(float)fps/1000_000f);
 		
 		return play(time);
