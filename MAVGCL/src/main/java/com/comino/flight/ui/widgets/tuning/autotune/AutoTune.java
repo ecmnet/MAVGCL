@@ -33,61 +33,55 @@
 
 package com.comino.flight.ui.widgets.tuning.autotune;
 
-import org.mavlink.messages.AUTOTUNE_AXIS;
+
 import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_CMD_ACK;
+import org.mavlink.messages.MAV_RESULT;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.lquac.msg_command_ack;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModelMetaData;
-import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.param.MAVGCLPX4Parameters;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavutils.workqueue.WorkQueue;
 
-import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 
 
 public class AutoTune extends VBox {
 
+	private static final int TUNE_STATE_DISABLED = 0;
+	private static final int TUNE_STATE_INIT     = 1;
+	private static final int TUNE_STATE_ROLL     = 2;
+	private static final int TUNE_STATE_PITCH    = 3;
+	private static final int TUNE_STATE_YAW      = 4;
+	private static final int TUNE_STATE_DISARM   = 5;
+
 
 	private StateProperties state = null;
-	private MAVGCLPX4Parameters parameters = null;
 	private IMAVController control;
 	private AnalysisDataModelMetaData metadata;
+	private MAVGCLPX4Parameters parameters;
+
 
 	private final WorkQueue wq = WorkQueue.getInstance();
 
-	private int current_axis;
 	private int tune_worker;
-
-
-	@FXML
-	private ProgressBar progress;
+	private int tune_state = TUNE_STATE_DISABLED;
+	private final BooleanProperty isTuning = new SimpleBooleanProperty();
 
 	@FXML
-	private Button     roll;
-
-	@FXML
-	private Button     pitch;
-
-	@FXML
-	private Button     yaw;
-
-	@FXML
-	private Button     abort;
+	private Button     autotune;
 
 
 	public AutoTune() {
@@ -97,59 +91,90 @@ public class AutoTune extends VBox {
 
 	@FXML
 	private void initialize() {
-		progress.prefWidthProperty().bind(this.widthProperty());
 		state = StateProperties.getInstance();
-		parameters = MAVGCLPX4Parameters.getInstance();
-		progress.setProgress(0);
-		abort.setDisable(true);
 	}
 
 	public void setup(IMAVController control) {
 
 		this.control = control;
 		this.metadata = AnalysisDataModelMetaData.getInstance();
+		this.parameters = MAVGCLPX4Parameters.getInstance();
 		this.disableProperty().bind(state.getConnectedProperty().not());
+		autotune.disableProperty().bind(state.getHoldProperty().not().or(state.getLandedProperty().or(isTuning)));
 
-		roll.setOnAction((ActionEvent event)-> {
-			this.current_axis = AUTOTUNE_AXIS.AUTOTUNE_AXIS_ROLL;
-			startAutotuneAxis();
+		autotune.setOnAction((ActionEvent event)-> {
+			startAutotune();
 		});
 
-		pitch.setOnAction((ActionEvent event)-> {
-			this.current_axis = AUTOTUNE_AXIS.AUTOTUNE_AXIS_PITCH;
-			startAutotuneAxis();
-		});
-
-		yaw.setOnAction((ActionEvent event)-> {
-			this.current_axis = AUTOTUNE_AXIS.AUTOTUNE_AXIS_YAW;
-			startAutotuneAxis();
-		});
-
-		abort.setOnAction((ActionEvent event)-> {
-			stopAutoTune(0);
-		});
 
 		// Polling the command acknowledge
 		control.addMAVLinkListener(msg_command_ack.class,(o) -> {
 			msg_command_ack ack = (msg_command_ack) o;
 			if(ack.command == MAV_CMD.MAV_CMD_DO_AUTOTUNE_ENABLE) {
-				// Determine progress of tuning and stop autotuning procedure if completed
-				switch(ack.result) {
-				case MAV_CMD_ACK.MAV_CMD_ACK_OK:
 
-					if(ack.progress >= 100) {
-						stopAutoTune(1) ;
-					} else {
-						Platform.runLater(() -> {
-							roll.setDisable(true); pitch.setDisable(true); yaw.setDisable(true); abort.setDisable(false);
-							progress.setProgress(ack.progress/100.0);
-						});
+				// Determine progress of tuning and stop autotuning procedure if completed
+
+				switch(ack.result) {
+
+				case MAV_RESULT.MAV_RESULT_IN_PROGRESS:
+				case MAV_RESULT.MAV_RESULT_ACCEPTED:
+
+					isTuning.set(true);
+
+					if(ack.result_param2 > 0)
+						state.getProgressProperty().set(ack.result_param2/100f);
+					else
+						state.getProgressProperty().set(0.01f);
+
+
+					if(ack.result_param2 < 20 ) {
+						if(tune_state != TUNE_STATE_INIT) {
+							control.writeLogMessage(new LogMessage("[mgc] AutoTune initializing", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						}
+						tune_state = TUNE_STATE_INIT;
+					}
+
+					else if(ack.result_param2 < 40 ) {
+						if(tune_state != TUNE_STATE_ROLL)
+							control.writeLogMessage(new LogMessage("[mgc] AutoTune tune roll", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						tune_state = TUNE_STATE_ROLL;
+					}
+
+					else if(ack.result_param2 < 60 ) {
+						if(tune_state != TUNE_STATE_PITCH)
+							control.writeLogMessage(new LogMessage("[mgc] AutoTune tune pitch", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						tune_state = TUNE_STATE_PITCH;
+					}
+
+					else if(ack.result_param2 <= 80 ) {
+						if(tune_state != TUNE_STATE_YAW)
+							control.writeLogMessage(new LogMessage("[mgc] AutoTune tune yaw", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						tune_state = TUNE_STATE_YAW;
+					}
+
+					else if(ack.result_param2 == 95) {
+						if(tune_state != TUNE_STATE_DISARM)
+							control.writeLogMessage(new LogMessage("[mgc] Land and disarm to apply tuning", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						tune_state = TUNE_STATE_DISARM;
+					}
+
+					else {
+
+						stopAutoTune();
+						if(ack.result_param2 == 100) {
+							control.writeLogMessage(new LogMessage("[mgc] Autotuning successfull", MAV_SEVERITY.MAV_SEVERITY_INFO));
+							parameters.refreshParameterList(false);
+						} else {
+							control.writeLogMessage(new LogMessage("[mgc] Autotuning unknown error ("+ack.result_param2+")", MAV_SEVERITY.MAV_SEVERITY_INFO));
+						}
 					}
 					break;
-				case MAV_CMD_ACK.MAV_CMD_ACK_ERR_NOT_SUPPORTED:
-					stopAutoTune(2) ;
+
+				case MAV_RESULT.MAV_RESULT_FAILED:
+				case MAV_RESULT.MAV_RESULT_CANCELLED:
+					control.writeLogMessage(new LogMessage("[mgc] Autotuning aborted/timeout", MAV_SEVERITY.MAV_SEVERITY_INFO));
+					stopAutoTune() ;
 					break;
-				default:
 
 				}
 			}
@@ -157,58 +182,28 @@ public class AutoTune extends VBox {
 
 	}
 
-	private void startAutotuneAxis() {
+	private void startAutotune() {
 
-//		if(!control.isSimulation()) {
-//			control.writeLogMessage(new LogMessage("[mgc] In development. Run in simulation only.", MAV_SEVERITY.MAV_SEVERITY_DEBUG));
-//			return;
-//		}
 
 		IChartControl chart = ChartControlPane.getChart(ChartControlPane.XT_TUNING_CHART);
 		KeyFigurePreset preset = new KeyFigurePreset();
-		switch(current_axis) {
-		case AUTOTUNE_AXIS.AUTOTUNE_AXIS_ROLL:
-			preset.set(0, 0, metadata.getMetaData("ROLLR").hash,metadata.getMetaData("SPROLLR").hash );
-			break;
-		case AUTOTUNE_AXIS.AUTOTUNE_AXIS_PITCH:
-			preset.set(0, 0, metadata.getMetaData("PITCHR").hash,metadata.getMetaData("SPPITCHR").hash );
-			break;
-		case AUTOTUNE_AXIS.AUTOTUNE_AXIS_YAW:
-			preset.set(0, 0, metadata.getMetaData("YAWR").hash,metadata.getMetaData("SPYAWR").hash );
-			break;
-		}
+		preset.set(0, 0, 0,metadata.getMetaData("ROLLR").hash, 
+				metadata.getMetaData("PITCHR").hash,
+				metadata.getMetaData("YAWR").hash);
 		chart.setKeyFigureSelection(preset);
-		System.out.println("[mgc] Start autotuning on selected axis. ");
-		control.writeLogMessage(new LogMessage("[mgc] Start autotuning on selected axis.", MAV_SEVERITY.MAV_SEVERITY_INFO));
-		tune_worker = wq.addCyclicTask("LP", 100, () -> {
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_AUTOTUNE_ENABLE, 1,current_axis);
-		});
 
+		tune_worker = wq.addCyclicTask("LP", 1000, () -> {
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_AUTOTUNE_ENABLE,1,0);
+
+		});
 	}
 
 
-	private void stopAutoTune(int reason) {
-
+	private void stopAutoTune() {
+		isTuning.set(false);
 		wq.removeTask("LP", tune_worker);
-
-		Platform.runLater(() -> {		
-			progress.setProgress(0);
-			roll.setDisable(false); pitch.setDisable(false); yaw.setDisable(false); abort.setDisable(true);
-		});
-
-		switch(reason) {
-		case 0:
-			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_AUTOTUNE_ENABLE, 0,current_axis);
-			control.writeLogMessage(new LogMessage("[mgc] Autotuning aborted.", MAV_SEVERITY.MAV_SEVERITY_INFO));
-			break;
-		case 1:
-			control.writeLogMessage(new LogMessage("[mgc] Autotuning finalized. Saving parameters.", MAV_SEVERITY.MAV_SEVERITY_INFO));
-			break;
-		case 2:
-			control.writeLogMessage(new LogMessage("[mgc] Autotuning not supported.", MAV_SEVERITY.MAV_SEVERITY_WARNING));
-			break;
-		}
-
+		state.getProgressProperty().set(-1);
+		tune_state = TUNE_STATE_DISABLED;
 	}
 
 

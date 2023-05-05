@@ -83,7 +83,7 @@ public class ProgressWidget extends Pane   {
 		if(MAVPreferences.isLightTheme()) 
 			progress.setStyle("-fx-accent: darkblue;");
 		else
-			progress.setStyle("-fx-accent: white;");
+			progress.setStyle("-fx-accent: cyan;");
 
 		StateProperties.getInstance().getProgressProperty().addListener((v,ov,nv) -> {
 
