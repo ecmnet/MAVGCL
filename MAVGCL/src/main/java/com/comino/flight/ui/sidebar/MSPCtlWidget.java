@@ -517,6 +517,12 @@ public class MSPCtlWidget extends ChartControlPane   {
 				else
 					msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
 				control.sendMAVLinkMessage(msp);
+				
+				enable_interactive.setState(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE));
+				enable_takeoff_proc.setSelected(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.TAKEOFF_PROCEDURE));
+				enable_precision_lock.setSelected(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.PRECISION_LOCK));
+				enable_collision_avoidance.setSelected(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.COLLISION_PREVENTION));
+				enable_obstacle_stop.setSelected(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.OBSTACLE_STOP));
 
 
 			}
@@ -552,8 +558,6 @@ public class MSPCtlWidget extends ChartControlPane   {
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_AUTOPILOT, MSP_AUTOCONTROL_MODE.SITL_MODE1,(n) -> {
 			sitl_mode1.setSelected(n.isAutopilotMode(MSP_AUTOCONTROL_MODE.SITL_MODE1));
 		});
-
-
 
 		enable_vision.setSelected(true);
 

@@ -149,6 +149,7 @@ public class StateProperties {
 				Platform.runLater(() -> {
 					if(control.getCurrentModel().sys.isStatus(Status.MSP_CONNECTED)) {
 				    	connectedProperty.set(true);
+				    	armedProperty.set(control.getCurrentModel().sys.isStatus(Status.MSP_ARMED));
 					}
 				});
 			});
