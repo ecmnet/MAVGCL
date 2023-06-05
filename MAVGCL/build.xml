@@ -18,7 +18,7 @@
 
 		<exec dir="${workspace.dir}/MAVUtils/mavutils" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c '/usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd'" />
+			<arg line="-c '/usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd'" />
 		</exec>
 
 	</target>
@@ -27,12 +27,12 @@
 
 		<exec dir="${workspace.dir}/MAVCom/mavcom" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c '/usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd'" />
+			<arg line="-c '/usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd'" />
 		</exec>
 
 		<exec dir="${workspace.dir}/MAVMap/mavmap" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c '/usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd'" />
+			<arg line="-c '/usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd'" />
 		</exec>
 
 	</target>
@@ -40,28 +40,28 @@
 	<target name="mvn_osx" depends="com">
 		<exec dir="./" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c ' /usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd -Djavacpp.platform=macosx-x86_64'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd -Djavacpp.platform=macosx-x86_64'" />
 		</exec>
 	</target>
 
 	<target name="mvn_osx_arm" depends="com">
 		<exec dir="./" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c ' /usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd -Djavacpp.platform=macosx-arm64'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd -Djavacpp.platform=macosx-arm64'" />
 		</exec>
 	</target>
 
 	<target name="mvn_win" depends="com">
 		<exec dir="./" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c ' /usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd -Djavacpp.platform=windows-x86_64'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd -Djavacpp.platform=windows-x86_64'" />
 		</exec>
 	</target>
 
 	<target name="mvn_linux" depends="com">
 		<exec dir="./" executable="sh">
 			<env key="JAVA_HOME" path="/Library/Java/JavaVirtualMachines/jdk-19.jdk/Contents/home" />
-			<arg line="-c ' /usr/local/Cellar/maven/3.9.0/bin/mvn clean install -amd -Djavacpp.platform=linux-x86_64'" />
+			<arg line="-c ' /usr/local/Cellar/maven/3.9.2/bin/mvn clean install -amd -Djavacpp.platform=linux-x86_64'" />
 		</exec>
 	</target>
 
