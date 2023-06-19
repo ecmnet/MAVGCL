@@ -39,7 +39,7 @@ public class OctoMesh extends MeshView {
 	}
 
 	public void add(long id, float x, float y, float z) {
-		cubes.put(id,new Point3D(x,y+10,z,0));
+		cubes.put(id,new Point3D(x,y,z,0));
 		mesh.update();
 		mesh.setTextureModeNone(color);
 	}
@@ -53,6 +53,7 @@ public class OctoMesh extends MeshView {
 		}
 		mesh.update();
 		mesh.setTextureModeNone(color);
+		
 		return false;
 	}
 	

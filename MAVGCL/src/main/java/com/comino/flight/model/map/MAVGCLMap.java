@@ -55,7 +55,7 @@ public class MAVGCLMap  {
 
 	private MAVGCLMap(IMAVController control) {
 
-		this.info =  new Map3DSpacialInfo(0.10f,20.0f,20.0f,5.0f);
+		this.info =  new Map3DSpacialInfo(0.20f,20.0f,20.0f,10.0f);
 		this.model = control.getCurrentModel();
 
 //		control.addMAVLinkListener((o) -> {

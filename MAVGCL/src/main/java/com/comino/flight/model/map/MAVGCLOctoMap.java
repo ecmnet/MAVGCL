@@ -25,6 +25,8 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 
 	public MAVGCLOctoMap(IMAVController control) {
 		super();
+		
+		super.enableRemoveOutdated(true);
 
 		this.model = control.getCurrentModel();
 
@@ -56,6 +58,8 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 					}
 				}
 			}
+			
+		//	removeOutdatedNodes(1000);
 
 		});	
 	}
@@ -72,7 +76,7 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 				node.clear();
 				this.getTree().getChangedKeys().put(key, (byte)1);
 			}
-			//		this.getTree().updateNode(key, false);
+		
 		}
 	}
 
