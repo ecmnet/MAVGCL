@@ -297,9 +297,11 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 					for(int i =0;i<bytes.length && i<70;i++)
 						msg.data[i] = bytes[i];
 					msg.count = bytes.length;
-				}			
+				}		
+				msg.target_system = 1;
+				msg.target_component = 1;
 				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
-				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND;
+				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND ;
 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();

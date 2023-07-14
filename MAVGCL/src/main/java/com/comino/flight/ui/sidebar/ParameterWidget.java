@@ -231,7 +231,7 @@ public class ParameterWidget extends ChartControlPane  {
 					ParameterAttributes p = (ParameterAttributes)newValue;
 
 					Platform.runLater(() -> {
-						if(!groups.getItems().contains(p.group_name) && p !=null && !p.group_name.contains("Default")) {
+						if(!groups.getItems().contains(p.group_name) && p !=null ) { //&& !p.group_name.contains("Default")) {
 							groups.getItems().add(p.group_name);
 							groups.getItems().sort(new Comparator<String>() {
 								@Override
