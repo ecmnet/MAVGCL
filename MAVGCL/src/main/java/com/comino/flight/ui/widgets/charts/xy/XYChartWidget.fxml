@@ -62,12 +62,13 @@
             <Separator layoutX="15.0" layoutY="530.0" prefHeight="4.0" prefWidth="126.0" />
             <CheckBox fx:id="annotation" layoutX="15.0" layoutY="550.0" mnemonicParsing="false" text="Dashboard" selected="true" />
             <CheckBox fx:id="show_grid" layoutX="15.0" layoutY="570.0" mnemonicParsing="false" text="Map / SLAM info" selected="false" />
-            <CheckBox fx:id="show_traj" layoutX="15.0" layoutY="590.0" mnemonicParsing="false" text="Trajectory" selected="false" />
+            <CheckBox fx:id="show_edf" layoutX="15.0" layoutY="590.0" mnemonicParsing="false" text="Show EDF" selected="false" />
+            <CheckBox fx:id="show_traj" layoutX="15.0" layoutY="610.0" mnemonicParsing="false" text="Trajectory" selected="false" />
 
-             <Separator layoutX="15.0" layoutY="610.0" prefHeight="4.0" prefWidth="126.0" />
+             <Separator layoutX="15.0" layoutY="630.0" prefHeight="4.0" prefWidth="126.0" />
 
 
-            <Button fx:id="export" layoutX="15.0" layoutY="620.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
+            <Button fx:id="export" layoutX="15.0" layoutY="650.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="110.0" text="PNG export" />
 
          </children>
 

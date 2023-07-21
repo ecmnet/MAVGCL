@@ -33,17 +33,10 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
-import com.comino.mavmap.map.map3D.impl.octomap.boundingbox.MAVSimpleBoundingBox;
 import com.comino.mavutils.workqueue.WorkQueue;
 import com.emxsys.chart.extension.XYAnnotation;
 
@@ -53,36 +46,30 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.paint.Color;
-import us.ihmc.jOctoMap.iterators.OcTreeIterable;
-import us.ihmc.jOctoMap.iterators.OcTreeIteratorFactory;
 
-public class XYGridAnnotation  implements XYAnnotation {
+public class XYEDFAnnotation  implements XYAnnotation {
 
 
 	private final Canvas                 canvas;
-	private final Map<Long,Point4D_F32>  blocks;
 	private final GraphicsContext        gc;
 	private final Point4D_F32            mapo;
 
 	private MAVGCLOctoMap                map;
-	private MAVSimpleBoundingBox         boundingBox;
 	private AnalysisDataModel           model;
 
 	private float                        scale = 10.0f;
+	private float                        resolution;
+	private int[][]                      edf_map;
 
-
-	public XYGridAnnotation() {
+	public XYEDFAnnotation() {
 		super();
 		this.canvas = new Canvas(2000,2000);
-		this.blocks = new ConcurrentHashMap<Long,Point4D_F32>();
 		this.gc     = canvas.getGraphicsContext2D();
 		this.mapo   = new Point4D_F32();
-
-		gc.setFill(Color.web("#2688A3",0.3f));
-		gc.setStroke(Color.web("#2688A3",1f).darker());
-		gc.setLineWidth(2);
-	
 		
+		gc.setFill(Color.web("#4628A3",0.6f));
+		gc.setStroke(Color.web("#4688A3",1f).darker());
+		gc.setLineWidth(2);	
 		
 	}
 
@@ -91,18 +78,17 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	public void setController(IMAVController control) {
-		this.map   = MAVGCLOctoMap.getInstance(control);
-		this.boundingBox = new MAVSimpleBoundingBox(map.getResolution(),16);
-		this.model = AnalysisModelService.getInstance().getCurrent();
+		this.map      = MAVGCLOctoMap.getInstance(control);
+		this.edf_map  = map.getLocalEDF2D().getESDF2DMap();
+		this.model    = AnalysisModelService.getInstance().getCurrent();
 		
 	}
 
 	public  void invalidate(boolean enable) {
-		blocks.clear();
+		//update();
 	}
 
 	public void clear() {
-		blocks.clear();
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
@@ -113,25 +99,18 @@ public class XYGridAnnotation  implements XYAnnotation {
 	
 	public void update() {
 		
-		float resolution = map.getResolution();
+		if(canvas.isDisabled() || !canvas.isVisible() || model == null)
+			return;
 		
 		float xp = (float)model.getValue("LPOSX");  xp = ((int)(xp / resolution)) * resolution;
 		float yp = (float)model.getValue("LPOSY");  yp = ((int)(yp / resolution)) * resolution;
 		float zp = (float)model.getValue("LPOSZ");  zp = ((int)(zp / resolution)) * resolution;
 	
 		mapo.setTo(xp,yp,zp,0);
-		boundingBox.set(mapo,scale*2.0f,0.25f);
-		List<Long> set = map.getLeafsInBoundingBoxEncoded(boundingBox);
-		
-		blocks.keySet().retainAll(set);
+		map.updateESDF(mapo);
+		edf_map  = map.getLocalEDF2D().getESDF2DMap();
 
-		set.forEach((i) -> {
-			if(blocks.containsKey(i & 0x0FFFFFFFFFF00000L))
-				return;
-			final Point4D_F32 p = new Point4D_F32();
-			map.decode(i, p);
-			blocks.put(i & 0x0FFFFFFFFFF00000L, p);	
-		});
+
 	}
 
 
@@ -139,32 +118,42 @@ public class XYGridAnnotation  implements XYAnnotation {
 	@Override
 	public void layoutAnnotation(ValueAxis xAxis, ValueAxis yAxis) {
 
-		if(canvas.isDisabled() || !canvas.isVisible())
+		if(canvas.isDisabled() || !canvas.isVisible() || model == null)
 			return;
 		
+		this.resolution = map.getResolution();
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
 		@SuppressWarnings("unchecked")
 		final double width  = xAxis.getDisplayPosition(map.getResolution())-xAxis.getDisplayPosition(0);
 		@SuppressWarnings("unchecked")
 		final double height = yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getResolution());
-
-		blocks.values().forEach((r) -> {
-			
-			@SuppressWarnings("unchecked")
-			final double x0 = xAxis.getDisplayPosition((int)(r.y/map.getResolution())*map.getResolution()-map.getResolution()/2);
-			@SuppressWarnings("unchecked")
-			final double y0 = yAxis.getDisplayPosition((int)(r.x/map.getResolution())*map.getResolution()+map.getResolution()/2);
-			
-			gc.fillRect(x0,y0,width, height);
-			
-			gc.strokeLine(x0, y0,x0+width,y0);
-			gc.strokeLine(x0+width,y0,x0+width,y0+height);
-			gc.strokeLine(x0+width,y0+height,x0,y0+height);
-			gc.strokeLine(x0,y0+height,x0,y0);
-
-
-		});
-
+		
+		
+		for(int x =0; x < map.getLocalEDF2D().gezSizeX();x++) {
+			for(int y =0; y < map.getLocalEDF2D().gezSizeY();y++) {
+				
+				float xf = ( x - map.getLocalEDF2D().gezSizeX()/2 ) * resolution + mapo.x; //((int)(mapo.x / resolution))*resolution;
+				float yf = ( y - map.getLocalEDF2D().gezSizeY()/2 ) * resolution + mapo.y; //((int)(mapo.y / resolution))*resolution;
+				
+				@SuppressWarnings("unchecked")
+				final double x0 = xAxis.getDisplayPosition(yf-map.getResolution()/2);
+				@SuppressWarnings("unchecked")
+				final double y0 = yAxis.getDisplayPosition(xf+map.getResolution()/2);
+				
+				int val = edf_map[x][y];
+				if(val == -1) {	
+					gc.setFill(Color.web("#4688A3",0.8));
+				} else {
+					float t = 1.0f-(float)Math.sqrt(val)/10f; if(t<0) t = 0; if(t>0.7f) t= 0.7f;
+					gc.setFill(Color.web("#4688A3",t).darker());
+				}
+				
+				gc.fillRect(x0,y0,width, height);	
+			}
+		}
+	
 	}
+	
+
 }

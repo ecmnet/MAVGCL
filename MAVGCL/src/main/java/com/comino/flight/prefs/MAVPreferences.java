@@ -63,6 +63,7 @@ public class MAVPreferences {
 	public final static String XYCHART_CENTER   = "XYCHARTCENTER";
 	public final static String XYCHART_OFFSET   = "XYCHARTOFFSET";
 	public final static String XYCHART_SLAM     = "XYCHARTSLAM";
+	public final static String XYCHART_EDF      = "XYCHARTSEDF";
 	public final static String XYCHART_TRAJ     = "XYCHARTTRAJ";
 	public final static String ULOGGER          = "ULOGGER";
 	public final static String TUNING_GROUP     = "TUNING_GROUP";

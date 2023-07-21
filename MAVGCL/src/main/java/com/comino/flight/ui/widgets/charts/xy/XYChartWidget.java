@@ -56,6 +56,7 @@ import com.comino.flight.prefs.MAVPreferences;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.charts.annotations.PositionAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYDashBoardAnnotation;
+import com.comino.flight.ui.widgets.charts.annotations.XYEDFAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYGridAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSigmaAnnotation;
 import com.comino.flight.ui.widgets.charts.annotations.XYSlamAnnotation;
@@ -201,6 +202,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private CheckBox show_grid;
 
 	@FXML
+	private CheckBox show_edf;
+
+	@FXML
 	private CheckBox show_traj;
 
 	private  XYChart.Series<Number,Number> series1;
@@ -245,6 +249,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private XYSigmaAnnotation     sigma2 = null;
 
 	private XYGridAnnotation grid = null;
+	private XYEDFAnnotation  edf = null;
 	private XYSlamAnnotation slam = null;
 
 	private XYTrajectoryAnnonation traj = null;
@@ -295,6 +300,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private void initialize() {
 
 		this.grid = new XYGridAnnotation();
+		this.edf  = new XYEDFAnnotation();
 		this.slam = new XYSlamAnnotation(Color.DARKSLATEBLUE);
 
 		this.traj = new XYTrajectoryAnnonation(Color.BROWN);
@@ -504,7 +510,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			}
 
 		});
-		
+
 		cseries2.setOnMouseClicked((e) -> {
 			if(cseries2.getSelectionModel().getSelectedIndex() == 0) {
 				cseries2_x.getSelectionModel().select(0);
@@ -719,16 +725,25 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				rotation.setValue(0);
 
 			} 
-			//			else {
-			//		//		xychart.getAnnotations().clearAnnotations(Layer.BACKGROUND);
-			//				grid.invalidate(false);
-			//			}
-
 			rotation.setDisable(nv.booleanValue());
 
 			updateRequest();
 			prefs.putBoolean(MAVPreferences.XYCHART_SLAM,show_grid.isSelected());
 		});
+
+		show_edf.selectedProperty().addListener((v, ov, nv) -> {
+			if(nv.booleanValue()) {
+				//		grid.invalidate(true);
+				rotation_rad = 0;
+				rotation.setValue(0);
+			}
+
+			rotation.setDisable(nv.booleanValue());
+
+			updateRequest();
+			prefs.putBoolean(MAVPreferences.XYCHART_EDF,show_edf.isSelected());
+		});
+
 
 		show_traj.selectedProperty().addListener((v, ov, nv) -> {      
 			updateRequest();
@@ -738,7 +753,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		show_traj.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_TRAJ, false));
 		show_grid.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_SLAM, false));
+		show_edf.setSelected(prefs.getBoolean(MAVPreferences.XYCHART_EDF, false));
 		rotation.setDisable(show_grid.isSelected());
+		rotation.setDisable(show_edf.isSelected());
 
 
 		//
@@ -851,6 +868,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		if(refresh) {
 
 			grid.invalidate(isLocalPositionSelected(type1_x.hash,type1_y.hash));
+			edf.invalidate(isLocalPositionSelected(type1_x.hash,type1_y.hash));
 
 			if(mList.size()==0 && dataService.isCollecting()) {
 				refreshRequest = true; return;
@@ -893,6 +911,14 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			} else {
 				slam.enableSLAM(false);
 				grid.clear();
+			}
+
+			if(show_edf.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
+				xychart.getAnnotations().add(edf,Layer.BACKGROUND);
+				slam.enableSLAM(true);
+			} else {
+				slam.enableSLAM(false);
+				edf.clear();
 			}
 
 			if(show_traj.isSelected() &&  mList.size()>0 && isLocalPositionSelected(type1_x.hash,type1_y.hash)) {
@@ -957,12 +983,17 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			return;
 		}
 
-		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 500) {
+		if((force_zero.isSelected() || annotation.isSelected()) &&  (System.currentTimeMillis()-dashboard_update_tms) > 200) {
 			wq.addSingleTask("LP",() -> {
 				dashboard_update_tms = System.currentTimeMillis();
 				s1.getStatistics(current_x0_pt,current_x1_pt,mList);
 				s2.getStatistics(current_x0_pt,current_x1_pt,mList);
 			});
+			
+			if(show_edf.isSelected())
+				edf.update();
+			if(show_grid.isSelected())
+				grid.update();
 		}
 
 		if(force_zero.isSelected() && scale > 0 ) {
@@ -1103,6 +1134,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		this.control = control;
 
 		grid.setController(control);
+		edf.setController(control);
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 			if(nv.intValue()!=AnalysisModelService.STOPPED) {
@@ -1110,7 +1142,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				traj.clear();
 			}
 		});
-		
+
 		setXResolution(30);
 
 		state.getLogLoadedProperty().addListener((o,ov,nv) -> Platform.runLater(() -> updateRequest()));
@@ -1201,9 +1233,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	private void setScaling(float scale) {
 
 		this.scale = scale;
-		
+
 		if(scale > 1 && scale < 20)
-		  this.grid.setScale(scale);
+			this.grid.setScale(scale);
 
 		if(scale>0) {
 
