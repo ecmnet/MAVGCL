@@ -341,7 +341,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 				try {
 					setScaling(Float.parseFloat(scale_select.getValue()));
 				} catch(Exception e) { setScaling(0); };
-				updateGraph(true,0);
+			//	updateGraph(true,0);
 			} else {
 				if(dataService.isCollecting()) {
 					// set target if collecting
