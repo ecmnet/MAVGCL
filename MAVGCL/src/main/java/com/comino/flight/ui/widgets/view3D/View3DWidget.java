@@ -135,13 +135,13 @@ public class View3DWidget extends SubScene implements IChartControl {
 		this.state = StateProperties.getInstance();
 
 		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(Color.web("DARKGRAY", 0.1));
+		ambient.setColor(Color.web("WHITE", 0.6));
 
-		PointLight pointLight = new PointLight(Color.web("GRAY", 0.5));
-		pointLight.setTranslateX(100);
-		pointLight.setTranslateY(800);
-		pointLight.setRotate(45);
-		pointLight.setTranslateZ(-800);
+//		PointLight pointLight = new PointLight(Color.web("GRAY", 0.0));
+//		pointLight.setTranslateX(100);
+//		pointLight.setTranslateY(800);
+//		pointLight.setRotate(45);
+//		pointLight.setTranslateZ(-800);
 
 		PhongMaterial northMaterial = new PhongMaterial();
 		northMaterial.setDiffuseColor(Color.RED);
@@ -163,7 +163,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		vehicle   = new VehicleModel(VEHICLE_SCALE);
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory, pointLight, ambient,
+		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory,  ambient,
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'),marker);
 
 		camera = new Camera(this);
