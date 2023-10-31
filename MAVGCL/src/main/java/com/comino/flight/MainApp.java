@@ -44,9 +44,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import org.mavlink.generator.MAVLinkMessage;
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_autopilot_version;
 import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
 
@@ -353,7 +355,7 @@ public class MainApp extends Application  {
 					wq.addSingleTask("LP",500, () -> {			
 						System.out.println("Is simulation: "+control.isSimulation());
 						//	control.getStatusManager().reset();
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, 1);
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_MESSAGE, msg_autopilot_version.MAVLINK_MSG_ID_AUTOPILOT_VERSION);
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
 							control.sendMSPLinkCmd(MSP_CMD.MSP_TRANSFER_MICROSLAM);
 							MSPLogger.getInstance().writeLocalMsg("[mgc] grid data requested",MAV_SEVERITY.MAV_SEVERITY_NOTICE);
