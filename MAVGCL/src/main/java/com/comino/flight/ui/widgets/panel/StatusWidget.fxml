@@ -33,12 +33,14 @@
 					GridPane.rowIndex="1" />
 				<DashLabelLED fx:id="poshold"  text="Position hold"
 					GridPane.rowIndex="2" />
-				<DashLabelLED fx:id="mission"  text="Auto mode" rate="300"
+				<DashLabelLED fx:id="automode"  text="Auto mode" rate="300"
 					GridPane.rowIndex="3" />
-				<DashLabelLED fx:id="offboard" text="Offboard" rate="300"
+				<DashLabelLED fx:id="mission"  text="Mission" rate="300"
 					GridPane.rowIndex="4" />
-				<DashLabelLED fx:id="landed"   text="Landed"  rate="300"
+				<DashLabelLED fx:id="offboard" text="Offboard" rate="300"
 					GridPane.rowIndex="5" />
+				<DashLabelLED fx:id="landed"   text="Landed"  rate="300"
+					GridPane.rowIndex="6" />
 			</children>
 		</GridPane>
 	</children>

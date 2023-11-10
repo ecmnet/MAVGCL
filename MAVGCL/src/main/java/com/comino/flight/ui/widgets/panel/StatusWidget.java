@@ -57,7 +57,11 @@ public class StatusWidget extends ChartControlPane  {
 	private DashLabelLED poshold;
 
 	@FXML
+	private DashLabelLED automode;
+	
+	@FXML
 	private DashLabelLED mission;
+
 
 	@FXML
 	private DashLabelLED offboard;
@@ -83,7 +87,7 @@ public class StatusWidget extends ChartControlPane  {
 			Platform.runLater(() -> {
 				armed.set(n.isStatus(Status.MSP_ARMED));
 				if(!n.isStatus(Status.MSP_ARMED)) {
-					mission.set(false);
+					automode.set(false);
 					landed.set(true);
 				}
 
@@ -111,67 +115,76 @@ public class StatusWidget extends ChartControlPane  {
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_RTL, (n) -> {
 			Platform.runLater(() -> {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else
-					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+					automode.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_TAKEOFF, (n) -> {
 			Platform.runLater(() -> {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
-					mission.setMode(DashLabelLED.MODE_ON);
+					automode.setMode(DashLabelLED.MODE_ON);
 				else
-					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+					automode.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LOITER, (n) -> {
 			Platform.runLater(() -> {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
-					mission.setMode(DashLabelLED.MODE_ON);
+					automode.setMode(DashLabelLED.MODE_ON);
 				else
-					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+					automode.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_LAND,  (n) -> {
 			Platform.runLater(() -> {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
-					mission.setMode(DashLabelLED.MODE_ON);
+					automode.setMode(DashLabelLED.MODE_ON);
 				else
-					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+					automode.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
 		});
 
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_PRECLAND,  (n) -> {
 			Platform.runLater(() -> {
 				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_TAKEOFF)
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_PRECLAND && !n.isStatus(Status.MSP_LANDED))
-					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_BLINK);
 				else if(n.nav_state == Status.NAVIGATION_STATE_AUTO_LOITER)
-					mission.setMode(DashLabelLED.MODE_ON);
+					automode.setMode(DashLabelLED.MODE_ON);
+				else
+					automode.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+			});
+		});
+		
+		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_MISSION, (n) -> {
+			Platform.runLater(() -> {
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION)
+					mission.setMode(DashLabelLED.MODE_BLINK);
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
@@ -203,9 +216,9 @@ public class StatusWidget extends ChartControlPane  {
 			offboard.set(status.nav_state == Status.NAVIGATION_STATE_OFFBOARD);
 
 			if(status.nav_state == Status.NAVIGATION_STATE_AUTO_RTL && !status.isStatus(Status.MSP_LANDED))
-				mission.setMode(DashLabelLED.MODE_BLINK);
+				automode.setMode(DashLabelLED.MODE_BLINK);
 			else
-				mission.set(status.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
+				automode.set(status.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 		});	
 	}
 
