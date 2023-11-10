@@ -183,8 +183,10 @@ public class StatusWidget extends ChartControlPane  {
 		
 		control.getStatusManager().addListener(StatusManager.TYPE_PX4_NAVSTATE,Status.NAVIGATION_STATE_AUTO_MISSION, (n) -> {
 			Platform.runLater(() -> {
-				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION)
+				if(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION ) {
 					mission.setMode(DashLabelLED.MODE_BLINK);
+					automode.setMode(DashLabelLED.MODE_OFF);
+				}
 				else
 					mission.set(n.nav_state == Status.NAVIGATION_STATE_AUTO_MISSION);
 			});
