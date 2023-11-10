@@ -141,7 +141,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 	};
 
 	private final static String[] SCALES = {
-			"Auto", "0.1", "0.2", "0.5","1", "2", "5", "10", "20","50", "100", "200"
+			"Auto", "0.1", "0.2", "0.5","1", "2", "5", "10", "20","50", "100", "200","500"
 	};
 
 	@FXML
@@ -1243,7 +1243,9 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			xAxis.setAutoRanging(false);
 			yAxis.setAutoRanging(false);
 
-			if(scale>10) {
+			if(scale>100) {
+				xAxis.setTickUnit(50); yAxis.setTickUnit(50);
+			} else if(scale>10) {
 				xAxis.setTickUnit(10); yAxis.setTickUnit(10);
 			} else if(scale>2) {
 				xAxis.setTickUnit(1); yAxis.setTickUnit(1);
