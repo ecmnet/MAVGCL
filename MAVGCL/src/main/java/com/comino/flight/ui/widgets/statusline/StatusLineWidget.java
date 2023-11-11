@@ -175,11 +175,11 @@ public class StatusLineWidget extends Pane implements IChartControl {
 				else if(msp_model.sys.t_takeoff_ms < 0 ) {
 					wp.setText(String.format("T % d", (int)(msp_model.sys.t_takeoff_ms/1000-0.5f)));
 					wp.setMode(Badge.MODE_ON);
+				} 
+				else if(!msp_model.sys.isStatus(Status.MSP_ARMED)){
+					wp.setText("WP");
+					wp.setMode(Badge.MODE_OFF);
 				}
-				//				else {
-				//					wp.setText("");
-				//					wp.setMode(Badge.MODE_OFF);
-				//				}
 
 				if(!control.isConnected() || !msp_model.sys.isSensorAvailable(Status.MSP_GPS_AVAILABILITY) || !hasGPS()) {
 					gps.setMode(Badge.MODE_OFF);
