@@ -51,6 +51,7 @@ public class MAVEventMataData {
 			map.getValue().getAsJsonObject().get("events").getAsJsonObject().entrySet().forEach((event) -> {
 				EventMetaData event_meta_data = new EventMetaData( );
 				event_meta_data.message = event.getValue().getAsJsonObject().get("message").getAsString();
+				// TODO: Replace formatting with Java formatting
 				var _arguments = event.getValue().getAsJsonObject().get("arguments");
 				if(_arguments!=null) {
 					_arguments.getAsJsonArray().forEach((argument) -> {
@@ -65,13 +66,13 @@ public class MAVEventMataData {
 
 
 		System.out.println("Event metadata parsed for namespace: "+namespace);
-
-		//		event_map.forEach((id,event)->{
-		//			System.out.println(id+": "+event.message);
-		//			event.arguments.forEach((arg)-> {
-		//				System.out.println(" -> "+arg.name+": "+arg.type);
-		//			});
-		//		});
+//
+//				event_map.forEach((id,event)->{
+//					System.out.println(id+": "+event.message);
+//					event.arguments.forEach((arg)-> {
+//						System.out.println(" -> "+arg);
+//					});
+//				});
 
 		//		enum_map.forEach((k,v)-> {
 		//			System.out.println(k);
@@ -96,21 +97,28 @@ public class MAVEventMataData {
 
 		public String buildMessage(msg_event event_msg) {
 			String msg = this.message;
+			int ix = 0;
 			for(int i=0; i<arguments.size();i++) {
-				// Complex types
+				
 				if(enum_map.containsKey(arguments.get(i)))
 					msg = msg.replace("{"+(i+1)+"}", enum_map.get(arguments.get(i)).get(event_msg.arguments[i]));
 				else	{
-				// Simple types
+				
 					switch(arguments.get(i)) {
 					case "uint8_t":
-						msg = msg.replace("{"+(i+1)+"}", String.valueOf(event_msg.arguments[i] & 0xFF));
+						msg = msg.replace("{"+(i+1)+"}", String.valueOf(event_msg.arguments[ix++] & 0xFF));
 						break;
 					case "uint16_t":
-						msg = msg.replace("{"+(i+1)+"}", String.valueOf(event_msg.arguments[i] & 0xFFFF));
+						msg = msg.replace("{"+(i+1)+"}", 
+								String.valueOf(	(event_msg.arguments[ix++] & 0xFF) | (event_msg.arguments[ix++] & 0xFF) << 8 )
+								);
 						break;
-					case "float_t":
-						msg = msg.substring(0,msg.indexOf('{'));
+					case "float":
+						int f_ix = msg.indexOf('}');
+						int v = (event_msg.arguments[ix++] & 0xFF)  | (event_msg.arguments[ix++] & 0xFF)  << 8 |
+								(event_msg.arguments[ix++] & 0xFF) << 16 | (event_msg.arguments[ix++] & 0xFF) << 24;
+						msg = msg.replace("{"+(i+1)+":",String.valueOf(Float.intBitsToFloat(v)));
+						msg = msg.substring(0,f_ix-3)+msg.substring(f_ix-1, f_ix);
 						break;
 					default:
 						msg = msg.substring(0,msg.indexOf('{'));
