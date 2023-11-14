@@ -53,6 +53,7 @@ import org.mavlink.messages.lquac.msg_log_erase;
 import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.file.MAVFTPClient;
+import com.comino.flight.events.MAVEventMataData;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.MavLinkULOGHandler;
 import com.comino.flight.model.map.MAVGCLMap;
@@ -335,6 +336,7 @@ public class MainApp extends Application  {
 
 			System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
 
+			MAVEventMataData.getInstance( );
 
 			MAVPreferences.init();
 			MAVGCLMap.getInstance(control);
@@ -586,11 +588,11 @@ public class MainApp extends Application  {
 		version_txt.append(" (Cycle: "+AnalysisModelService.getInstance().getCollectorInterval_ms()+"ms)");
 
 		version.setText(version_txt.toString());
-
+		Label connect = new Label("  Connected to "+control.getConnectedAddress());
 		version.setPadding(new Insets(10,0,0,0));
 		Label source = new Label("  Source, license and terms of use: https://github.com/ecmnet/MAVGCL");
 		Label copyright = new Label("  ecm@gmx.de");
-		box.getChildren().addAll(splash, version, source, copyright);
+		box.getChildren().addAll(splash, version, connect,source, copyright);
 		box.autosize();
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("About MAVGAnalysis");

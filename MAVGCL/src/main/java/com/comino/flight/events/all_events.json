@@ -1,0 +1,4614 @@
+{
+  "components": {
+    "0": {
+      "enums": {
+        "calibration_action_t": {
+          "description": "Calibration Action/next step",
+          "entries": {
+            "0": {
+              "description": "Side already completed, switch to one of the remaining sides",
+              "name": "already_completed"
+            },
+            "1": {
+              "description": "Switch to next orientation",
+              "name": "next_orientation"
+            },
+            "2": {
+              "description": "Rotate as shown",
+              "name": "rotate"
+            },
+            "3": {
+              "description": "Hold still",
+              "name": "hold_still"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "calibration_result_t": {
+          "description": "Calibration Result",
+          "entries": {
+            "0": {
+              "description": "Success",
+              "name": "success"
+            },
+            "1": {
+              "description": "Failed",
+              "name": "failed"
+            },
+            "2": {
+              "description": "Aborted",
+              "name": "aborted"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "calibration_sides_t": {
+          "description": "Calibration Sides Bitfield",
+          "entries": {
+            "1": {
+              "description": "Tail Down",
+              "name": "tail_down"
+            },
+            "16": {
+              "description": "Upside Down",
+              "name": "upside_down"
+            },
+            "2": {
+              "description": "Nose Down",
+              "name": "nose_down"
+            },
+            "32": {
+              "description": "Down",
+              "name": "down"
+            },
+            "4": {
+              "description": "Left Side Down",
+              "name": "left_side_down"
+            },
+            "8": {
+              "description": "Right Side Down",
+              "name": "right_side_down"
+            }
+          },
+          "is_bitfield": true,
+          "type": "uint8_t"
+        },
+        "calibration_type_t": {
+          "description": "Calibration type",
+          "entries": {
+            "1": {
+              "description": "Accelerometer",
+              "name": "accel"
+            },
+            "16": {
+              "description": "Airspeed",
+              "name": "airspeed"
+            },
+            "2": {
+              "description": "Magnetometer",
+              "name": "mag"
+            },
+            "32": {
+              "description": "RC",
+              "name": "rc"
+            },
+            "4": {
+              "description": "Gyroscope",
+              "name": "gyro"
+            },
+            "8": {
+              "description": "Level",
+              "name": "level"
+            }
+          },
+          "is_bitfield": true,
+          "type": "uint16_t"
+        }
+      },
+      "event_groups": {
+        "calibration": {
+          "events": {
+            "1100": {
+              "arguments": [
+                {
+                  "description": "Protocol version (set to 1)",
+                  "name": "proto_ver",
+                  "type": "uint8_t"
+                },
+                {
+                  "description": "Current progress in %",
+                  "name": "progress",
+                  "type": "int8_t"
+                },
+                {
+                  "name": "calibration_type",
+                  "type": "calibration_type_t"
+                },
+                {
+                  "description": "Sides still left to be done",
+                  "name": "required_sides",
+                  "type": "calibration_sides_t"
+                }
+              ],
+              "message": "Calibration progress: {2}%",
+              "name": "cal_progress"
+            },
+            "1101": {
+              "arguments": [
+                {
+                  "name": "orientation",
+                  "type": "calibration_sides_t"
+                },
+                {
+                  "name": "action",
+                  "type": "calibration_action_t"
+                }
+              ],
+              "message": "Orientation detected: {1}",
+              "name": "cal_orientation_detected"
+            },
+            "1102": {
+              "arguments": [
+                {
+                  "name": "orientation",
+                  "type": "calibration_sides_t"
+                },
+                {
+                  "name": "action",
+                  "type": "calibration_action_t"
+                }
+              ],
+              "message": "Orientation Complete: {1}, next step: {2}",
+              "name": "cal_orientation_done"
+            },
+            "1103": {
+              "arguments": [
+                {
+                  "name": "result",
+                  "type": "calibration_result_t"
+                }
+              ],
+              "message": "Calibration Complete: {1}",
+              "name": "cal_done"
+            }
+          }
+        },
+        "default": {
+          "events": {}
+        }
+      },
+      "namespace": "common"
+    },
+    "1": {
+      "enums": {
+        "arm_disarm_reason_t": {
+          "description": "Reason for arming/disarming",
+          "entries": {
+            "0": {
+              "description": "Transition to standby",
+              "name": "transition_to_standby"
+            },
+            "1": {
+              "description": "RC",
+              "name": "rc_stick"
+            },
+            "10": {
+              "description": "failure detector",
+              "name": "failure_detector"
+            },
+            "11": {
+              "description": "shutdown request",
+              "name": "shutdown"
+            },
+            "12": {
+              "description": "unit tests",
+              "name": "unit_test"
+            },
+            "13": {
+              "description": "RC (button)",
+              "name": "rc_button"
+            },
+            "14": {
+              "description": "failsafe",
+              "name": "failsafe"
+            },
+            "2": {
+              "description": "RC (switch)",
+              "name": "rc_switch"
+            },
+            "3": {
+              "description": "internal command",
+              "name": "command_internal"
+            },
+            "4": {
+              "description": "external command",
+              "name": "command_external"
+            },
+            "5": {
+              "description": "mission start",
+              "name": "mission_start"
+            },
+            "6": {
+              "description": "landing",
+              "name": "auto_disarm_land"
+            },
+            "7": {
+              "description": "auto preflight disarming",
+              "name": "auto_disarm_preflight"
+            },
+            "8": {
+              "description": "kill switch",
+              "name": "kill_switch"
+            },
+            "9": {
+              "description": "lockdown",
+              "name": "lockdown"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "arming_state_t": {
+          "description": "State of the main arming state machine",
+          "entries": {
+            "0": {
+              "description": "Init",
+              "name": "init"
+            },
+            "1": {
+              "description": "Standby",
+              "name": "standby"
+            },
+            "2": {
+              "description": "Armed",
+              "name": "armed"
+            },
+            "3": {
+              "description": "Standby Error",
+              "name": "standby_error"
+            },
+            "4": {
+              "description": "Shutdown",
+              "name": "shutdown"
+            },
+            "5": {
+              "description": "In-air Restore",
+              "name": "inair_restore"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "battery_fault_reason_t": {
+          "description": "Reason for battery fault",
+          "entries": {
+            "0": {
+              "description": "Battery has deep discharged",
+              "name": "deep_discharge"
+            },
+            "1": {
+              "description": "Battery detected voltage spikes",
+              "name": "voltage_spikes"
+            },
+            "10": {
+              "description": "Battery is over-heating",
+              "name": "over_temperature"
+            },
+            "2": {
+              "description": "One or more battery cells have failed",
+              "name": "cell_fail"
+            },
+            "3": {
+              "description": "Battery reported over-current",
+              "name": "over_current"
+            },
+            "4": {
+              "description": "Battery has reached a critical temperature which can result in a critical failure",
+              "name": "fault_temperature"
+            },
+            "5": {
+              "description": "Battery temperature is below operating range",
+              "name": "under_temperature"
+            },
+            "6": {
+              "description": "Vehicle voltage is not compatible with battery one",
+              "name": "incompatible_voltage"
+            },
+            "7": {
+              "description": "Battery firmware is not compatible with current autopilot firmware",
+              "name": "incompatible_firmware"
+            },
+            "8": {
+              "description": "Battery model is not supported by the system",
+              "name": "incompatible_model"
+            },
+            "9": {
+              "description": "Battery reported an hardware problem",
+              "name": "hardware_fault"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "battery_mode_t": {
+          "description": "Smart battery modes of operation",
+          "entries": {
+            "0": {
+              "description": "unknown",
+              "name": "unknown"
+            },
+            "1": {
+              "description": "auto discharging towards storage level",
+              "name": "autodischarging"
+            },
+            "2": {
+              "description": "hot-swap",
+              "name": "hotswap"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "esc_fault_reason_t": {
+          "description": "Bitfield for ESC failure reason",
+          "entries": {
+            "0": {
+              "description": "detected over current",
+              "name": "over_current"
+            },
+            "1": {
+              "description": "detected over voltage",
+              "name": "over_voltage"
+            },
+            "2": {
+              "description": "Motor has reached a critical temperature",
+              "name": "motor_over_temp"
+            },
+            "3": {
+              "description": "Motor RPM is exceeding the limits",
+              "name": "over_rpm"
+            },
+            "4": {
+              "description": "received an invalid control command",
+              "name": "inconsistent_cmd"
+            },
+            "5": {
+              "description": "Motor stalled",
+              "name": "motor_stuck"
+            },
+            "6": {
+              "description": "detected a generic hardware failure",
+              "name": "failure_generic"
+            },
+            "7": {
+              "description": "Motor is over-heating",
+              "name": "motor_warn_temp"
+            },
+            "8": {
+              "description": "is over-heating",
+              "name": "esc_warn_temp"
+            },
+            "9": {
+              "description": "reached a critical temperature",
+              "name": "esc_over_temp"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "failsafe_action_t": {
+          "description": "failsafe action",
+          "entries": {
+            "0": {
+              "description": "",
+              "name": "none"
+            },
+            "1": {
+              "description": "warning",
+              "name": "warn"
+            },
+            "10": {
+              "description": "terminate",
+              "name": "terminate"
+            },
+            "2": {
+              "description": "fallback to position control",
+              "name": "fallback_posctrl"
+            },
+            "3": {
+              "description": "fallback to altitude control",
+              "name": "fallback_altctrl"
+            },
+            "4": {
+              "description": "fallback to stabilized",
+              "name": "fallback_stabilized"
+            },
+            "5": {
+              "description": "hold",
+              "name": "hold"
+            },
+            "6": {
+              "description": "RTL",
+              "name": "rtl"
+            },
+            "7": {
+              "description": "land",
+              "name": "land"
+            },
+            "8": {
+              "description": "descend",
+              "name": "descend"
+            },
+            "9": {
+              "description": "disarm",
+              "name": "disarm"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "failsafe_cause_t": {
+          "description": "Cause for entering failsafe",
+          "entries": {
+            "0": {
+              "description": "",
+              "name": "generic"
+            },
+            "1": {
+              "description": "manual control loss",
+              "name": "manual_control_loss"
+            },
+            "2": {
+              "description": "GCS connection loss",
+              "name": "gcs_connection_loss"
+            },
+            "3": {
+              "description": "low battery level",
+              "name": "low_battery_level"
+            },
+            "4": {
+              "description": "critical battery level",
+              "name": "critical_battery_level"
+            },
+            "5": {
+              "description": "emergency battery level",
+              "name": "emergency_battery_level"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "geofence_violation_reason_t": {
+          "description": "Reason for geofence violation",
+          "entries": {
+            "0": {
+              "description": "maximum distance to home exceeded",
+              "name": "dist_to_home_exceeded"
+            },
+            "1": {
+              "description": "maximum altitude exceeded",
+              "name": "max_altitude_exceeded"
+            },
+            "2": {
+              "description": "approaching or outside geofence",
+              "name": "fence_violation"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "health_component_t": {
+          "description": "Bitfield for subsystems & components",
+          "entries": {
+            "1": {
+              "comment": "Not assigned to any component",
+              "description": "None",
+              "name": "none"
+            },
+            "1024": {
+              "description": "Logging",
+              "name": "logging"
+            },
+            "1048576": {
+              "comment": "e.g. CPU or RAM",
+              "description": "System",
+              "name": "system"
+            },
+            "128": {
+              "description": "Remote Control (RC or Joystick)",
+              "name": "remote_control"
+            },
+            "131072": {
+              "description": "Local position estimate",
+              "name": "local_position_estimate"
+            },
+            "134217728": {
+              "description": "Magnetometer",
+              "name": "magnetometer"
+            },
+            "16": {
+              "description": "Optical flow",
+              "name": "optical_flow"
+            },
+            "16384": {
+              "description": "Attitude controller",
+              "name": "attitude_controller"
+            },
+            "16777216": {
+              "description": "Global position estimate",
+              "name": "global_position_estimate"
+            },
+            "2": {
+              "description": "Absolute pressure",
+              "name": "absolute_pressure"
+            },
+            "2048": {
+              "description": "Battery",
+              "name": "battery"
+            },
+            "2097152": {
+              "description": "Camera",
+              "name": "camera"
+            },
+            "256": {
+              "description": "Motors/ESCs",
+              "name": "motors_escs"
+            },
+            "262144": {
+              "description": "Mission",
+              "name": "mission"
+            },
+            "268435456": {
+              "description": "Accelerometer",
+              "name": "accel"
+            },
+            "32": {
+              "description": "Vision position estimate",
+              "name": "vision_position"
+            },
+            "32768": {
+              "description": "Position controller",
+              "name": "position_controller"
+            },
+            "33554432": {
+              "comment": "e.g. SD card or FRAM",
+              "description": "Storage",
+              "name": "storage"
+            },
+            "4": {
+              "description": "Differential pressure",
+              "name": "differential_pressure"
+            },
+            "4096": {
+              "description": "Communication links",
+              "name": "communication_links"
+            },
+            "4194304": {
+              "description": "Gimbal",
+              "name": "gimbal"
+            },
+            "512": {
+              "description": "UTM",
+              "name": "utm"
+            },
+            "524288": {
+              "description": "Avoidance",
+              "name": "avoidance"
+            },
+            "536870912": {
+              "description": "Gyroscope",
+              "name": "gyro"
+            },
+            "64": {
+              "description": "Distance sensor",
+              "name": "distance_sensor"
+            },
+            "65536": {
+              "description": "Attitude estimate",
+              "name": "attitude_estimate"
+            },
+            "67108864": {
+              "description": "Parachute",
+              "name": "parachute"
+            },
+            "8": {
+              "description": "GPS",
+              "name": "gps"
+            },
+            "8192": {
+              "description": "Rate controller",
+              "name": "rate_controller"
+            },
+            "8388608": {
+              "description": "Payload",
+              "name": "payload"
+            }
+          },
+          "is_bitfield": true,
+          "type": "uint32_t"
+        },
+        "navigation_mode_group_t": {
+          "description": "Navigation/flight mode group bits. All modes within a group share the same arming checks. For now we directly map group == mode.",
+          "entries": {
+            "1": {
+              "description": "Fully manual mode (w/o any controller support)",
+              "name": "manual"
+            },
+            "1024": {
+              "description": "Acro",
+              "name": "acro"
+            },
+            "1048576": {
+              "description": "Precision Land",
+              "name": "precland"
+            },
+            "131072": {
+              "description": "Takeoff",
+              "name": "takeoff"
+            },
+            "16": {
+              "description": "Loiter",
+              "name": "loiter"
+            },
+            "16384": {
+              "description": "Offboard",
+              "name": "offboard"
+            },
+            "2": {
+              "description": "Altitude mode",
+              "name": "altctl"
+            },
+            "2097152": {
+              "description": "Orbit",
+              "name": "orbit"
+            },
+            "262144": {
+              "description": "Land",
+              "name": "land"
+            },
+            "32": {
+              "description": "RTL",
+              "name": "rtl"
+            },
+            "32768": {
+              "description": "Stabilized",
+              "name": "stab"
+            },
+            "4": {
+              "description": "Position mode",
+              "name": "posctl"
+            },
+            "4194304": {
+              "description": "VTOL Takeoff",
+              "name": "vtol_takeoff"
+            },
+            "524288": {
+              "description": "Follow Target",
+              "name": "follow_target"
+            },
+            "8": {
+              "description": "Mission mode",
+              "name": "mission"
+            }
+          },
+          "is_bitfield": true,
+          "type": "uint32_t"
+        },
+        "navigation_mode_t": {
+          "description": "Flight mode",
+          "entries": {
+            "0": {
+              "description": "Manual",
+              "name": "manual"
+            },
+            "1": {
+              "description": "Altitude control",
+              "name": "altctl"
+            },
+            "10": {
+              "description": "Takeoff",
+              "name": "auto_takeoff"
+            },
+            "11": {
+              "description": "Land",
+              "name": "auto_land"
+            },
+            "12": {
+              "description": "Follow Target",
+              "name": "auto_follow_target"
+            },
+            "13": {
+              "description": "Precision Landing",
+              "name": "auto_precland"
+            },
+            "14": {
+              "description": "Orbit",
+              "name": "orbit"
+            },
+            "15": {
+              "description": "Vtol Takeoff",
+              "name": "auto_vtol_takeoff"
+            },
+            "2": {
+              "description": "Position control",
+              "name": "posctl"
+            },
+            "255": {
+              "description": "[Unknown]",
+              "name": "unknown"
+            },
+            "3": {
+              "description": "Mission",
+              "name": "auto_mission"
+            },
+            "4": {
+              "description": "Hold",
+              "name": "auto_loiter"
+            },
+            "5": {
+              "description": "RTL",
+              "name": "auto_rtl"
+            },
+            "6": {
+              "description": "Acro",
+              "name": "acro"
+            },
+            "7": {
+              "description": "Offboard",
+              "name": "offboard"
+            },
+            "8": {
+              "description": "Stabilized",
+              "name": "stab"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "sensor_failover_reason_t": {
+          "description": "Bitfield for sensor failover reason",
+          "entries": {
+            "1": {
+              "description": "No data",
+              "name": "no_data"
+            },
+            "16": {
+              "description": "High Error Density",
+              "name": "high_error_density"
+            },
+            "2": {
+              "description": "Stale data",
+              "name": "stale_data"
+            },
+            "4": {
+              "description": "Timeout",
+              "name": "timeout"
+            },
+            "8": {
+              "description": "High Error Count",
+              "name": "high_error_count"
+            }
+          },
+          "is_bitfield": true,
+          "type": "uint16_t"
+        },
+        "sensor_type_t": {
+          "description": "Sensor type for failover reporting",
+          "entries": {
+            "0": {
+              "description": "Accelerometer",
+              "name": "accel"
+            },
+            "1": {
+              "description": "Gyroscope",
+              "name": "gyro"
+            },
+            "2": {
+              "description": "Magnetometer",
+              "name": "mag"
+            }
+          },
+          "type": "uint8_t"
+        },
+        "suggested_action_t": {
+          "description": "Suggested actions for the user in case of a safety critical event is triggered",
+          "entries": {
+            "0": {
+              "description": "",
+              "name": "none"
+            },
+            "1": {
+              "description": "Land now!",
+              "name": "land"
+            },
+            "2": {
+              "description": "Reduce throttle!",
+              "name": "reduce_throttle"
+            }
+          },
+          "type": "uint8_t"
+        }
+      },
+      "event_groups": {
+        "arming_check": {
+          "events": {
+            "10011251": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid global position estimate",
+              "name": "check_modes_global_pos"
+            },
+            "10198977": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS PDOP too high",
+              "name": "check_estimator_gps_pdop_too_high"
+            },
+            "10450063": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Wait until the estimator initialized",
+              "message": "No valid attitude estimate",
+              "name": "check_modes_attitude"
+            },
+            "1049276": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Horizontal Position Error too high",
+              "name": "check_estimator_gps_hor_pos_err_too_high"
+            },
+            "10678671": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Speed Accuracy too low",
+              "name": "check_estimator_gps_speed_acc_too_low"
+            },
+            "10996333": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Insert an SD Card to the autopilot and reboot the system.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_SDCARD</param> parameter.\n</profile>",
+              "message": "Missing FMU SD Card",
+              "name": "check_missing_fmu_sdcard"
+            },
+            "11047904": {
+              "arguments": [
+                {
+                  "name": "chunk_idx",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "error",
+                  "type": "px4::health_component_t"
+                },
+                {
+                  "name": "warning",
+                  "type": "px4::health_component_t"
+                },
+                {
+                  "name": "can_arm",
+                  "type": "px4::navigation_mode_group_t"
+                },
+                {
+                  "name": "can_run",
+                  "type": "px4::navigation_mode_group_t"
+                }
+              ],
+              "message": "Arming check summary event",
+              "name": "commander_arming_check_summary",
+              "type": "summary"
+            },
+            "11413600": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_WIND_MAX</param> parameter.\n</profile>",
+              "message": "Wind speed is above limit ({3:.1m/s})",
+              "name": "check_wind_too_high"
+            },
+            "11497430": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Vertical Position Drift too high",
+              "name": "check_estimator_gps_vert_pos_drift_too_high"
+            },
+            "11973889": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Test ratio: {3:.3}, limit: {4:.3}.\n\nThis check can be configured via <param>COM_ARM_EKF_VEL</param> parameter.\n</profile>",
+              "message": "Velocity estimate error",
+              "name": "check_estimator_vel_est_err"
+            },
+            "12276004": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_ARM_WO_GPS</param> parameter.\n</profile>",
+              "message": "Global position required",
+              "name": "check_system_no_global_pos"
+            },
+            "12369553": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS fix too low",
+              "name": "check_estimator_gps_fix_too_low"
+            },
+            "124285": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>GF_ACTION</param> parameter.\n</profile>",
+              "message": "Geofence RTL requires valid home",
+              "name": "check_gf_no_home"
+            },
+            "12689900": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid altitude estimate",
+              "name": "check_modes_local_alt"
+            },
+            "12754954": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Flight termination active",
+              "name": "check_system_flight_term_active"
+            },
+            "12780289": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "GPS reports critical jamming state",
+              "name": "check_estimator_gps_jamming_critical"
+            },
+            "12805643": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Mission cannot be completed",
+              "name": "check_mission_failure"
+            },
+            "13017122": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_OBS_AVOID</param> parameter.\n</profile>",
+              "message": "Avoidance system not ready",
+              "name": "check_system_avoidance_not_ready"
+            },
+            "13094458": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "Not enough GPS Satellites",
+              "name": "check_estimator_gps_num_sats_too_low"
+            },
+            "13131225": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "px4::geofence_violation_reason_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>GF_ACTION</param> parameter.\n</profile>",
+              "message": "Geofence violation: {3}",
+              "name": "check_gf_violation"
+            },
+            "1326449": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Gyro {3} uncalibrated",
+              "name": "check_gyro_not_calibrated"
+            },
+            "13528143": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Vehicle is in transition state",
+              "name": "check_system_vtol_in_transition"
+            },
+            "13835193": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid local position estimate",
+              "name": "check_modes_local_pos"
+            },
+            "14200647": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>CBRK_VTOLARMING</param> parameter.\n</profile>",
+              "message": "Vehicle is not in multicopter mode",
+              "name": "check_system_vtol_in_fw_mode"
+            },
+            "14644618": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_FLT_TIME_MAX</param> parameter.\n</profile>",
+              "message": "Maximum flight time reached",
+              "name": "check_flight_time_limit"
+            },
+            "15180799": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "VTOL fixed-wing system failure detected. Verify reason for failure, and reboot the vehicle once confirmed safe",
+              "name": "check_vtol_fixed_wing_system_failure"
+            },
+            "15399315": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "GPS reports spoofing indicated",
+              "name": "check_estimator_gps_spoofing_indicated"
+            },
+            "15713375": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_ARM_MAG_STR</param> and <param>EKF2_MAG_CHECK</param> parameters.\n</profile>",
+              "message": "Strong magnetic interference",
+              "name": "check_estimator_mag_interference"
+            },
+            "16158540": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Landing gear switch set in UP position",
+              "name": "check_man_control_landing_gear_up"
+            },
+            "16642797": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Heading estimate not stable",
+              "name": "check_estimator_heading_not_stable"
+            },
+            "16716537": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Compass {3} uncalibrated",
+              "name": "check_mag_not_calibrated"
+            },
+            "16745468": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "The vehicle exceeded the maximum configured pitch angle.\n\n<profile name=\"dev\"> This check can be configured via <param>FD_FAIL_P</param> parameter.\n</profile>",
+              "message": "Attitude failure detected",
+              "name": "check_failure_detector_pitch"
+            },
+            "1802995": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "Current airspeed reading too high. Check if wind is below maximum airspeed and redo airspeed calibration if the measured airspeed does not correspond to wind conditions.\n\n<profile name=\"dev\"> Measured: {3:.1m/s}, limit: {4:.1m/s}.\n\nThis check can be configured via <param>COM_ARM_ARSP_EN</param> and <param>FW_AIRSPD_MAX</param> parameter.\n</profile>",
+              "message": "Airspeed too high",
+              "name": "check_airspeed_too_high"
+            },
+            "1871713": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Switch to another mode first.",
+              "message": "Mode not suitable for arming",
+              "name": "check_modes_cannot_takeoff"
+            },
+            "1917030": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int16_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Recalibrate the RC.",
+              "message": "RC calibration for channel {3} invalid: TRIM greater than MAX ({4} greater than {5})",
+              "name": "check_rc_trim_too_high"
+            },
+            "2088119": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Poor GPS Quality",
+              "name": "check_estimator_gps_generic"
+            },
+            "2228586": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Remaining flight time low",
+              "name": "check_battery_rem_flight_time_low"
+            },
+            "2229864": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Available power modules: {3}. Required power modules: {4}.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_POWER_COUNT</param> parameter.\n</profile>",
+              "message": "Power redundancy not met",
+              "name": "check_avionics_power_redundancy"
+            },
+            "2481841": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                },
+                {
+                  "name": "arg2",
+                  "type": "float"
+                }
+              ],
+              "description": "Check the calibration.\n\nInconsistency value: {4}. Configured Threshold: {5}.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_IMU_GYR</param> parameter.\n</profile>",
+              "message": "Gyro {3} inconsistent",
+              "name": "check_imu_gyro_inconsistent"
+            },
+            "276785": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>CBRK_IO_SAFETY</param> parameter.\n</profile>",
+              "message": "Press safety button first",
+              "name": "check_system_safety_button"
+            },
+            "3061044": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                },
+                {
+                  "name": "arg2",
+                  "type": "float"
+                }
+              ],
+              "description": "Check the calibration.\n\nInconsistency value: {4}. Configured Threshold: {5}.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_IMU_ACC</param> parameter.\n</profile>",
+              "message": "Accel {3} inconsistent",
+              "name": "check_imu_accel_inconsistent"
+            },
+            "3087815": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "The offboard component is not sending setpoints or the required estimate (e.g. position) is missing.",
+              "message": "No offboard signal",
+              "name": "check_modes_offboard_signal"
+            },
+            "3603209": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Land and calibrate the compass.",
+              "message": "Stopping compass use",
+              "name": "check_estimator_mag_fault"
+            },
+            "3613628": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                },
+                {
+                  "name": "arg2",
+                  "type": "float"
+                },
+                {
+                  "name": "arg3",
+                  "type": "float"
+                }
+              ],
+              "description": "An accelerometer recalibration might help.\n\n<profile name=\"dev\"> Axis {3}: |{4:.8}| \\> {5:.8} + {6:.8}\n\nThis check can be configured via <param>EKF2_ABL_LIM</param> parameter.\n</profile>",
+              "message": "High Accelerometer Bias",
+              "name": "check_estimator_high_accel_bias"
+            },
+            "377561": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Upload a mission first.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_MIS_REQ</param> parameter.\n</profile>",
+              "message": "No valid mission available",
+              "name": "check_modes_mission"
+            },
+            "4261821": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>FD_EXT_ATS_EN</param> parameter.\n</profile>",
+              "message": "Failure triggered by external system",
+              "name": "check_failure_detector_ext"
+            },
+            "453929": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Connect and enable stick input or use autonomous mode.\n<profile name=\"dev\"> Sticks can be enabled via <param>COM_RC_IN_MODE</param> parameter.\n</profile>",
+              "message": "No manual control input",
+              "name": "check_modes_manual_control"
+            },
+            "4549029": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Altitude failure detected",
+              "name": "check_failure_detector_alt"
+            },
+            "4975227": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Horizontal Speed Drift too high",
+              "name": "check_estimator_gps_hor_speed_drift_too_high"
+            },
+            "5049764": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Low battery",
+              "name": "check_battery_low"
+            },
+            "516062": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Vertical Position Error too high",
+              "name": "check_estimator_gps_vert_pos_err_too_high"
+            },
+            "5273740": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Check the compass orientations and recalibrate.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_MAG_ANG</param> parameter.\n</profile>",
+              "message": "Compass inconsistent by {3} degrees",
+              "name": "check_mag_consistency"
+            },
+            "5444856": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Accelerometer {3} uncalibrated",
+              "name": "check_accel_not_calibrated"
+            },
+            "5704353": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Arm authorization denied",
+              "name": "check_system_arm_auth_failed"
+            },
+            "5717196": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Horizontal Position Drift too high",
+              "name": "check_estimator_gps_hor_pos_drift_too_high"
+            },
+            "5943233": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Make sure all required sensors are working, enabled and calibrated.\n\n<profile name=\"dev\"> This check can be configured via <param>SYS_HAS_MAG</param> parameter.\n</profile>",
+              "message": "Found {3} compass (required: {4})",
+              "name": "check_mag_sys_has_mag_missing"
+            },
+            "6054338": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Waiting for estimator to initialize",
+              "name": "check_estimator_missing_data"
+            },
+            "6258044": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Recalibrate the compass and check the orientation.",
+              "message": "Estimator fault due to Compass {3}",
+              "name": "check_mag_fault"
+            },
+            "6491364": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_ARM_WO_GPS</param> parameter.\n</profile>",
+              "message": "Home position required",
+              "name": "check_system_no_home_pos"
+            },
+            "6558257": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>EKF2_GPS_CHECK</param> parameter.\n</profile>",
+              "message": "GPS Vertical Speed Drift too high",
+              "name": "check_estimator_gps_vert_speed_drift_too_high"
+            },
+            "6659180": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "description": "Recalibrate the RC.",
+              "message": "RC calibration for channel {3} invalid: DZ greater than {4}",
+              "name": "check_rc_dz_too_high"
+            },
+            "6801787": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "To arm, at least a data link or manual control (RC) must be present.\n\n<profile name=\"dev\"> This check can be configured via <param>NAV_DLL_ACT</param> parameter.\n</profile>",
+              "message": "No connection to the ground control station",
+              "name": "check_rc_dl_no_dllink"
+            },
+            "6952872": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Test ratio: {3:.3}, limit: {4:.3}.\n\nThis check can be configured via <param>COM_ARM_EKF_POS</param> parameter.\n</profile>",
+              "message": "Position estimate error",
+              "name": "check_estimator_pos_est_err"
+            },
+            "6979701": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "description": "Recalibrate the RC.",
+              "message": "RC calibration for channel {3} invalid: MIN less than {4}",
+              "name": "check_rc_min_too_small"
+            },
+            "7662152": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Flying with USB is not safe. Disconnect it and reboot the FMU.\n\n<profile name=\"dev\"> This check can be configured via <param>CBRK_USB_CHK</param> parameter.\n</profile>",
+              "message": "USB connected",
+              "name": "check_system_usb_connected"
+            },
+            "7847312": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "description": "Recalibrate the RC.",
+              "message": "RC calibration for channel {3} invalid: MAX greater than {4}",
+              "name": "check_rc_max_too_high"
+            },
+            "7884377": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "RTL switch engaged",
+              "name": "check_man_control_rtl_engaged"
+            },
+            "79408": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Home position not set",
+              "name": "check_modes_home_position"
+            },
+            "8495477": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int16_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Recalibrate the RC.",
+              "message": "RC calibration for channel {3} invalid: TRIM less than MIN ({4} less than {5})",
+              "name": "check_rc_trim_too_small"
+            },
+            "8538897": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "The vehicle exceeded the maximum configured roll angle.\n\n<profile name=\"dev\"> This check can be configured via <param>FD_FAIL_R</param> parameter.\n</profile>",
+              "message": "Attitude failure detected",
+              "name": "check_failure_detector_roll"
+            },
+            "8658530": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "GPS reports multiple spoofing indicated",
+              "name": "check_estimator_gps_multiple_spoofing_indicated"
+            },
+            "8902208": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Horizontal velocity unstable",
+              "name": "check_estimator_hor_vel_not_stable"
+            },
+            "9028597": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Test ratio: {3:.3}, limit: {4:.3}.\n\nThis check can be configured via <param>COM_ARM_EKF_HGT</param> parameter.\n</profile>",
+              "message": "Height estimate error",
+              "name": "check_estimator_hgt_est_err"
+            },
+            "9077977": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Kill switch engaged",
+              "name": "check_man_control_kill_engaged"
+            },
+            "9171208": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Vertical velocity unstable",
+              "name": "check_estimator_vert_vel_not_stable"
+            },
+            "9307221": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                },
+                {
+                  "name": "arg2",
+                  "type": "float"
+                },
+                {
+                  "name": "arg3",
+                  "type": "float"
+                }
+              ],
+              "description": "A Gyro recalibration might help.\n\n<profile name=\"dev\"> Axis {3}: |{4:.8}| \\> {5:.8} + {6:.8}\n\nThis check can be configured via <param>EKF2_ABL_GYRLIM</param> parameter.\n</profile>",
+              "message": "High Gyro Bias",
+              "name": "check_estimator_high_gyro_bias"
+            },
+            "9581033": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Test ratio: {3:.3}, limit: {4:.3}.\n\nThis check can be configured via <param>COM_ARM_EKF_YAW</param> parameter.\n</profile>",
+              "message": "Yaw estimate error",
+              "name": "check_estimator_yaw_est_err"
+            },
+            "9608226": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Estimator not using GPS",
+              "name": "check_estimator_gps_not_fusing"
+            },
+            "9634798": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Height estimate not stable",
+              "name": "check_estimator_hgt_not_stable"
+            },
+            "9643369": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Make sure the gyroscope is providing valid data.",
+              "message": "Angular velocity not valid",
+              "name": "check_modes_angular_velocity"
+            },
+            "9965819": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Land now",
+              "message": "GNSS heading not reliable",
+              "name": "check_estimator_gnss_fault"
+            }
+          }
+        },
+        "default": {
+          "events": {
+            "10044444": {
+              "message": "Error loading settings",
+              "name": "commander_load_param_failed"
+            },
+            "10072599": {
+              "message": "Calibration: Disabling RC input",
+              "name": "commander_calib_rc_off"
+            },
+            "10236960": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint64_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "- ID: {1}\n- Distance: {2m}\n- Direction: {3} degrees",
+              "message": "Traffic alert",
+              "name": "navigator_traffic"
+            },
+            "10398259": {
+              "message": "Executing Reverse Mission",
+              "name": "mission_execute_rev"
+            },
+            "10452355": {
+              "message": "Takeoff airspeed reached, climbout",
+              "name": "runway_takeoff_reached_airspeed"
+            },
+            "1047676": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int8_t"
+                }
+              ],
+              "message": "Enabling transmitting with IRIDIUM mavlink on instance {1} by command",
+              "name": "mavlink_iridium_enable_cmd"
+            },
+            "10493596": {
+              "message": "Airspeed sensor failure detected. Return to launch (RTL) is advised",
+              "name": "airspeed_selector_sensor_failure"
+            },
+            "10503063": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::navigation_mode_t"
+                }
+              ],
+              "message": "Switching to mode '{2}' is currently not possible",
+              "name": "commander_modeswitch_not_avail",
+              "type": "append_health_and_arming_messages"
+            },
+            "1064976": {
+              "message": "Reverse Mission finished, loitering",
+              "name": "mission_finished_rev_loiter"
+            },
+            "10658115": {
+              "message": "SET_POSITION_TARGET_GLOBAL_INT: FORCE is not supported",
+              "name": "mavlink_rcv_sp_target_gl_unsup_force"
+            },
+            "10664053": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint64_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "- ID: {1}\n- Distance: {2m}\n- Direction: {3} degrees",
+              "message": "Traffic alert, returning home",
+              "name": "navigator_traffic_rtl"
+            },
+            "10716939": {
+              "message": "Onboard controller regained",
+              "name": "commander_onboard_ctrl_regained"
+            },
+            "10794072": {
+              "message": "Connection to ground control station lost",
+              "name": "commander_gcs_lost"
+            },
+            "10834203": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int8_t"
+                }
+              ],
+              "message": "Enabling transmitting with IRIDIUM mavlink on instance {1}",
+              "name": "mavlink_iridium_enable"
+            },
+            "10960133": {
+              "description": "Local position estimate valid but has low accuracy. Warn user.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_POS_LOW_EPH</param> parameter.\n</profile>",
+              "message": "Local position estimate has low accuracy",
+              "name": "check_estimator_low_position_accuracy"
+            },
+            "10962739": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "SET_POSITION_TARGET_GLOBAL_INT invalid coordinate frame {1}",
+              "name": "mavlink_rcv_sp_target_gl_invalid_coord"
+            },
+            "11078412": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_AID_MASK</param> is set to {1:.0}.",
+              "message": "Use EKF2_DRAG_CTRL instead",
+              "name": "ekf2_aid_mask_drag"
+            },
+            "11085221": {
+              "message": "Mission: unable to write to storage",
+              "name": "mavlink_mission_storage_failure"
+            },
+            "11123101": {
+              "message": "Connection to mission computer lost",
+              "name": "commander_mission_comp_lost"
+            },
+            "11157417": {
+              "message": "RTL: landing at home position",
+              "name": "rtl_land_at_home"
+            },
+            "1119664": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "- <param>FW_AIRSPD_MIN</param>: {1:.1}\n- <param>FW_AIRSPD_STALL</param>: {2:.1}",
+              "message": "Invalid configuration: FW_AIRSPD_STALL higher FW_AIRSPD_MIN",
+              "name": "fixedwing_position_control_conf_invalid_stall"
+            },
+            "11290563": {
+              "message": "Kill-switch engaged",
+              "name": "commander_kill_sw_engaged"
+            },
+            "11552065": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "SET_POSITION_TARGET_LOCAL_NED: coordinate frame {1} unsupported",
+              "name": "mavlink_rcv_sp_target_unsup_coord"
+            },
+            "11572261": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint32_t"
+                }
+              ],
+              "message": "Reduce the glide slope, lower the entrance altitude {1} meters, or increase the landing approach distance {2} meters",
+              "name": "navigator_mis_correct_glide_slope"
+            },
+            "11606074": {
+              "message": "Launch detected: enable motors (no motor delay)",
+              "name": "launch_detection_no_motor_delay"
+            },
+            "11664376": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Mission type: {1}. Number of bytes read: {2}",
+              "message": "Mission: Unable to read from storage",
+              "name": "mavlink_mission_storage_read_failure"
+            },
+            "11675604": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint32_t"
+                }
+              ],
+              "message": "First waypoint too far away: {1m} (maximum: {2m})",
+              "name": "navigator_mis_first_wp_too_far"
+            },
+            "11724756": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "Waypoint {1} could not be read from storage",
+              "name": "mission_failed_to_read_wp"
+            },
+            "11851609": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "RTL: loiter {1:.1}s",
+              "name": "rtl_loiter"
+            },
+            "11985219": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Holding at {1:.0m_v} above landing waypoint",
+              "name": "mission_holding_above_landing"
+            },
+            "1203183": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg3",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg4",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg5",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "logging: opening log file {1}-{2}-{3}/{4}_{5}_{6}.ulg",
+              "name": "logger_open_file_time"
+            },
+            "12128736": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                }
+              ],
+              "message": "RTL: descend to {1m_v} ({2m_v} above destination)",
+              "name": "rtl_descend_to"
+            },
+            "12208749": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Mission rejected: takeoff altitude too low! Minimum: {1:.1m_v}",
+              "name": "navigator_mis_takeoff_too_low"
+            },
+            "12216659": {
+              "message": "Low battery level, return advised",
+              "name": "commander_failsafe_enter_low_bat"
+            },
+            "12221094": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "landing target: unsupported coordinate frame {1}",
+              "name": "mavlink_rcv_lnd_target_unsup_coord"
+            },
+            "12224414": {
+              "message": "Mission rejected: Takeoff or Landing item missing",
+              "name": "navigator_mis_takeoff_or_land_missing"
+            },
+            "122461": {
+              "message": "Landing aborted: terrain measurement not found",
+              "name": "fixedwing_position_control_landing_abort_status_terrain_not_found"
+            },
+            "12320347": {
+              "message": "Primary airspeed index bigger than number connected sensors, taking last sensor",
+              "name": "airspeed_selector_prim_too_high"
+            },
+            "12420351": {
+              "message": "Arming denied: switch to manual mode first",
+              "name": "commander_arm_denied_not_manual"
+            },
+            "124372": {
+              "message": "RTL Mission activated, fly to home",
+              "name": "navigator_rtl_mission_activated_home"
+            },
+            "12499622": {
+              "message": "Mission: Unable to write to storage",
+              "name": "mavlink_mission_storage_write_failure3"
+            },
+            "12500025": {
+              "message": "Mission: Unable to write to storage",
+              "name": "mavlink_mission_storage_write_failure2"
+            },
+            "12768213": {
+              "message": "Mission rejected: more than one land start commands",
+              "name": "navigator_mis_multiple_land"
+            },
+            "12815955": {
+              "message": "SET_POSITION_TARGET_LOCAL_NED: FORCE is not supported",
+              "name": "mavlink_rcv_sp_target_unsup_force"
+            },
+            "12894058": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "px4::sensor_type_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "px4::sensor_failover_reason_t"
+                }
+              ],
+              "description": "Land immediately and check the system.",
+              "message": "{1} sensor #{2} failure: {3}",
+              "name": "sensor_failover"
+            },
+            "12907101": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "px4::arming_state_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::arming_state_t"
+                }
+              ],
+              "message": "Arming state transition denied: {1} to {2}",
+              "name": "commander_transition_denied"
+            },
+            "12957883": {
+              "message": "Start descending",
+              "name": "fixedwing_position_control_descend"
+            },
+            "13277401": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                }
+              ],
+              "description": "No action is triggered.",
+              "message": "Failsafe warning triggered",
+              "name": "commander_failsafe_enter_generic_warn",
+              "type": "append_health_and_arming_messages"
+            },
+            "13378512": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "message": "Distance between waypoint and gate too close: {1:.3m} (minimum: {2:.3m})",
+              "name": "navigator_mis_wp_gate_too_close"
+            },
+            "13439583": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_EV_CTRL</param> is set to {1:.0}.",
+              "message": "EV vertical position enabled by EKF2_HGT_REF",
+              "name": "ekf2_hgt_ref_ev"
+            },
+            "1344123": {
+              "message": "RTL activated",
+              "name": "navigator_rtl_home_activated"
+            },
+            "13471314": {
+              "message": "Quad-chute triggered due to loss of altitude during transition",
+              "name": "vtol_att_ctrl_quadchute_trans_alt_err"
+            },
+            "13495236": {
+              "message": "Reposition is outside geofence",
+              "name": "navigator_reposition_outside_geofence"
+            },
+            "13568553": {
+              "message": "New mission waypoint sequence out of bounds",
+              "name": "mavlink_mission_seq_out_of_bounds"
+            },
+            "1369685": {
+              "message": "Takeoff on runway",
+              "name": "fixedwing_position_control_takeoff"
+            },
+            "13704694": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::failsafe_action_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "uint16_t"
+                },
+                {
+                  "name": "arg3",
+                  "type": "px4::failsafe_cause_t"
+                }
+              ],
+              "message": "Failsafe activated due to {4}, triggering {2} in {3} seconds",
+              "name": "commander_failsafe_enter_hold"
+            },
+            "13944665": {
+              "message": "Transition to hover mode and descend",
+              "name": "navigator_transition_descend"
+            },
+            "13956202": {
+              "message": "Mission rejected: invalid land start",
+              "name": "navigator_mis_invalid_land"
+            },
+            "14005080": {
+              "message": "RTL: landing at mission landing",
+              "name": "rtl_land_at_mission"
+            },
+            "14080694": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_Z_V_AUTO_DN</param> is set to {1:.0}.",
+              "message": "Descent speed has been constrained by max speed",
+              "name": "mc_pos_ctrl_down_vel_set"
+            },
+            "1410140": {
+              "message": "Quad-chute triggered due to external command",
+              "name": "vtol_att_ctrl_quadchute_ext_cmd"
+            },
+            "14153224": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_VEL_MANUAL</param> is set to {1:.0}.",
+              "message": "Manual speed has been constrained by maximum speed",
+              "name": "mc_pos_ctrl_man_vel_set"
+            },
+            "14188249": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_RNG_CTRL</param> is set to {1:.0}.",
+              "message": "Range enabled by EKF2_HGT_REF",
+              "name": "ekf2_hgt_ref_rng"
+            },
+            "14234660": {
+              "message": "GCS connection regained",
+              "name": "commander_dl_regained"
+            },
+            "14380058": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_AID_MASK</param> is set to {1:.0}.",
+              "message": "Use EKF2_GPS_CTRL instead",
+              "name": "ekf2_aid_mask_gps"
+            },
+            "1438136": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Geofence: maximum distance from home reached ({1:.0m})",
+              "name": "navigator_geofence_max_dist_from_home"
+            },
+            "14415650": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Using minimum takeoff altitude: {1:.2m}",
+              "name": "navigator_takeoff_min_alt"
+            },
+            "14443523": {
+              "message": "Launch detected: enable motors",
+              "name": "launch_detection_enable_motors"
+            },
+            "14535820": {
+              "message": "Landing aborted: terrain estimate timed out",
+              "name": "fixedwing_position_control_landing_abort_status_terrain_timeout"
+            },
+            "14581325": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_TILTMAX_AIR</param> is set to {1:.0}.",
+              "message": "Maximum tilt limit has been constrained to a safe value",
+              "name": "mc_pos_ctrl_tilt_set"
+            },
+            "14590856": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "message": "Waypoint {1} below home",
+              "name": "navigator_mis_wp_below_home"
+            },
+            "14605264": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::failsafe_action_t"
+                }
+              ],
+              "message": "Failsafe activated, triggering {2}",
+              "name": "commander_failsafe_enter_generic",
+              "type": "append_health_and_arming_messages"
+            },
+            "14699175": {
+              "message": "GNSS data fusion stopped",
+              "name": "check_estimator_gnss_fusion_stopped"
+            },
+            "15007151": {
+              "description": "<param>MAN_ARM_GESTURE</param> is now set to disable arm/disarm stick gesture.",
+              "message": "Arm stick gesture disabled if arm switch in use",
+              "name": "rc_update_arm_stick_gesture_disabled_with_switch"
+            },
+            "15098248": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int8_t"
+                }
+              ],
+              "message": "Disabling transmitting with IRIDIUM mavlink on instance {1}",
+              "name": "mavlink_iridium_disable"
+            },
+            "15151454": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Takeoff to {1:.1m_v} above home",
+              "name": "mission_takeoff_to"
+            },
+            "1525547": {
+              "message": "Landing aborted: unknown criterion",
+              "name": "fixedwing_position_control_landing_abort_status_unknown_criterion"
+            },
+            "15283212": {
+              "message": "Mission download request ignored, already active",
+              "name": "mavlink_mission_req_ignored"
+            },
+            "15292483": {
+              "message": "GNSS data fusion started",
+              "name": "check_estimator_gnss_fusion_started"
+            },
+            "15317431": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "- <param>FW_AIRSPD_MAX</param>: {1:.1}\n- <param>FW_AIRSPD_MIN</param>: {2:.1}",
+              "message": "Invalid configuration: Airspeed max \\< 5 m/s or min \\> 100 m/s",
+              "name": "fixedwing_position_control_conf_invalid_airspeed_bounds"
+            },
+            "15373867": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Launch detected: enablecontrol, waiting {1:.1}s until full throttle",
+              "name": "launch_detection_wait_for_throttle"
+            },
+            "15432474": {
+              "message": "RTL: landing at safe landing point",
+              "name": "rtl_land_at_safe_point"
+            },
+            "15456613": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Land now, and check the vehicle setup. Clipping can lead to fly-aways.",
+              "message": "Accel {1} clipping, not safe to fly!",
+              "name": "vehicle_imu_accel_clipping"
+            },
+            "15598001": {
+              "message": "Executing Mission",
+              "name": "mission_execute"
+            },
+            "15603271": {
+              "message": "Dangerously low battery! Shutting system down",
+              "name": "commander_low_bat_shutdown"
+            },
+            "1569033": {
+              "message": "parameter_rc_channel_index out of bounds",
+              "name": "mavlink_param_rc_chan_out_of_bounds"
+            },
+            "15869512": {
+              "message": "Quad-chute triggered due to transition timeout",
+              "name": "vtol_att_ctrl_quadchute_tout"
+            },
+            "15900704": {
+              "message": "Quad-chute triggered due to minimum altitude breach",
+              "name": "vtol_att_ctrl_quadchute_min_alt"
+            },
+            "15909593": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_XY_CRUISE</param> is set to {1:.0}.",
+              "message": "Cruise speed has been constrained by maximum speed",
+              "name": "mc_pos_ctrl_cruise_set"
+            },
+            "16017271": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "px4::arm_disarm_reason_t"
+                }
+              ],
+              "message": "Disarmed by {1}",
+              "name": "commander_disarmed_by"
+            },
+            "16048801": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                }
+              ],
+              "description": "Either manually free up some space, or enable automatic log rotation via <param>SDLOG_DIRS_MAX</param>.",
+              "message": "Not logging, storage is almost full: {1} MiB",
+              "name": "logger_storage_full"
+            },
+            "16105804": {
+              "message": "OpenDroneID system lost",
+              "name": "commander_open_drone_id_lost"
+            },
+            "16133968": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                }
+              ],
+              "message": "RTL: return at {1m_v} ({2m_v} above destination)",
+              "name": "rtl_return_at"
+            },
+            "16223078": {
+              "message": "Landing aborted by operator",
+              "name": "fixedwing_position_control_landing_abort_status_operator_abort"
+            },
+            "16347639": {
+              "message": "Landing, flaring",
+              "name": "fixedwing_position_control_landing_circle_flaring"
+            },
+            "16440365": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "ODOMETRY: unsupported estimator_type {1}",
+              "name": "mavlink_rcv_odom_unsup_estimator_type"
+            },
+            "16509566": {
+              "message": "Mission rejected: Add Takeoff item or remove Landing",
+              "name": "navigator_mis_add_to_or_rm_land"
+            },
+            "16591495": {
+              "message": "Control high latency failed! Telemetry unavailable",
+              "name": "commander_ctrl_high_latency_failed"
+            },
+            "16663074": {
+              "message": "Mission rejected: takeoff is not the first waypoint item",
+              "name": "navigator_mis_takeoff_not_first"
+            },
+            "16682655": {
+              "message": "Kill-switch disengaged",
+              "name": "commander_kill_sw_disengaged"
+            },
+            "16691824": {
+              "message": "Ignoring mission item, invalid item",
+              "name": "mavlink_mission_mis_item_invalid"
+            },
+            "16718376": {
+              "message": "RTL to Mission landing, continue landing",
+              "name": "rtl_land_at_mission_continue_landing"
+            },
+            "16725343": {
+              "message": "RTL: completed, loitering",
+              "name": "rtl_completed_loiter"
+            },
+            "16773080": {
+              "message": "MissionReverse: Got a non-position mission item, ignoring it",
+              "name": "mission_ignore_non_position_item"
+            },
+            "1746622": {
+              "message": "Pilot took over using sticks",
+              "name": "commander_rc_override"
+            },
+            "1749061": {
+              "message": "Arming denied: throttle above center",
+              "name": "commander_arm_denied_throttle_center"
+            },
+            "1801328": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint64_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "- ID: {1}\n- Distance: {2m}\n- Direction: {3} degrees",
+              "message": "Traffic alert, holding position",
+              "name": "navigator_traffic_hold"
+            },
+            "185258": {
+              "message": "RTL: land at destination",
+              "name": "rtl_land_at_destination"
+            },
+            "1880909": {
+              "message": "Altitude change is outside geofence",
+              "name": "navigator_change_altitude_outside_geofence"
+            },
+            "1925166": {
+              "message": "Mission rejected: starts with landing",
+              "name": "navigator_mis_starts_w_landing2"
+            },
+            "1962848": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "Mission item index out of bound, index: {1}, max: {2}",
+              "name": "mission_index_out_of_bound"
+            },
+            "2087806": {
+              "message": "Orbit radius limit exceeded",
+              "name": "orbit_radius_exceeded"
+            },
+            "2225852": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_AID_MASK</param> is set to {1:.0}.",
+              "message": "Use EKF2_OF_CTRL instead",
+              "name": "ekf2_aid_mask_opt_flow"
+            },
+            "2321600": {
+              "message": "Already higher than takeoff altitude (not descending)",
+              "name": "navigator_takeoff_already_higher"
+            },
+            "2440093": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Unsupported ARM_DISARM param: {1:.3}",
+              "name": "commander_unsupported_arm_disarm_param"
+            },
+            "2474944": {
+              "message": "Critical battery level, land now",
+              "name": "commander_failsafe_enter_crit_bat_warn"
+            },
+            "2566971": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int8_t"
+                }
+              ],
+              "message": "Disabling transmitting with IRIDIUM mavlink on instance {1} by command",
+              "name": "mavlink_iridium_disable_cmd"
+            },
+            "2659830": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "Waypoint index eceeds list capacity (maximum: {1})",
+              "name": "mavlink_mission_wp_index_exceeds_list"
+            },
+            "2754873": {
+              "message": "Mission upload busy, ignoring MISSION_COUNT",
+              "name": "mavlink_mission_ignore_mis_count"
+            },
+            "2769710": {
+              "message": "Mission rejected: Add Landing item or remove Takeoff",
+              "name": "navigator_mis_add_land_or_rm_to"
+            },
+            "2806966": {
+              "message": "Reverse Mission finished, landed",
+              "name": "mission_finished_rev"
+            },
+            "2831661": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "message": "Geofence violation for waypoint {1}",
+              "name": "navigator_mis_geofence_violation"
+            },
+            "3038268": {
+              "message": "Received unknown mission type, abort",
+              "name": "mavlink_mission_unknown_mis_type"
+            },
+            "3092229": {
+              "message": "Unsupported auto mode",
+              "name": "commander_unsupported_auto_mode"
+            },
+            "3198435": {
+              "message": "Mission rejected: the approach waypoint must be above the landing point",
+              "name": "navigator_mis_approach_wp_below_land"
+            },
+            "3237806": {
+              "message": "Landing, flaring",
+              "name": "fixedwing_position_control_landing_flaring"
+            },
+            "3321936": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                }
+              ],
+              "message": "Waypoint index out of bounds ({1} \\< {2})",
+              "name": "mavlink_mission_wp_index_out_of_bounds"
+            },
+            "3322590": {
+              "message": "Landing at current position",
+              "name": "commander_landing_current_pos"
+            },
+            "3329221": {
+              "message": "OpenDroneID system regained",
+              "name": "commander_open_drone_id_regained"
+            },
+            "3378258": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "message": "Mission rejected: No home position, waypoint {1} uses relative altitude",
+              "name": "navigator_mis_no_home_rel_alt"
+            },
+            "3386258": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_GPS_CTRL</param> is set to {1:.0}.",
+              "message": "GPS lon/lat is required for altitude fusion",
+              "name": "ekf2_gps_ctrl_alt"
+            },
+            "3390156": {
+              "message": "No valid mission available, loitering",
+              "name": "mission_not_valid_loiter"
+            },
+            "3453129": {
+              "message": "Geofence requires a valid home position",
+              "name": "navigator_mis_geofence_no_home2"
+            },
+            "346311": {
+              "message": "Launch detection running",
+              "name": "launch_detection_running_info"
+            },
+            "3484900": {
+              "message": "Returning to launch",
+              "name": "commander_rtl"
+            },
+            "3592387": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_AID_MASK</param> is set to {1:.0}.",
+              "message": "Use EKF2_IMU_CTRL instead",
+              "name": "ekf2_aid_mask_imu"
+            },
+            "3611313": {
+              "message": "Mission: Unable to write to storage",
+              "name": "mavlink_mission_storage_write_failure"
+            },
+            "3623245": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "- <param>FW_AIRSPD_MAX</param>: {1:.1}\n- <param>FW_AIRSPD_MIN</param>: {2:.1}",
+              "message": "Invalid configuration: Airspeed max smaller than min",
+              "name": "fixedwing_position_control_conf_invalid_airspeed"
+            },
+            "3645914": {
+              "message": "High latency data link lost",
+              "name": "commander_high_latency_lost"
+            },
+            "3779911": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_THR_HOVER</param> is set to {1:.0}.",
+              "message": "Hover thrust has been constrained by min/max thrust",
+              "name": "mc_pos_ctrl_hover_thrust_set"
+            },
+            "3817890": {
+              "description": "No mission or storage failure",
+              "message": "Invalid mission state",
+              "name": "mission_invalid_mission_state"
+            },
+            "3914228": {
+              "message": "Rejecting mission request command, component or system ID mismatch",
+              "name": "mavlink_mission_partner_id_mismatch2"
+            },
+            "3939705": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_TILTMAX_LND</param> is set to {1:.0}.",
+              "message": "Land tilt limit has been constrained by maximum tilt",
+              "name": "mc_pos_ctrl_land_tilt_set"
+            },
+            "4089486": {
+              "message": "Rejecting waypoint command, component or system ID mismatch",
+              "name": "mavlink_mission_partner_id_mismatch"
+            },
+            "4163547": {
+              "message": "Start loiter with fixed bank angle",
+              "name": "fixedwing_position_control_fb_loiter"
+            },
+            "4202815": {
+              "message": "Ignoring mission clear command, busy",
+              "name": "mavlink_mission_ignore_clear"
+            },
+            "4277609": {
+              "message": "Takeoff detected",
+              "name": "commander_takeoff_detected"
+            },
+            "439666": {
+              "message": "Ignoring mission item, no transfer in progress",
+              "name": "mavlink_mission_no_transfer"
+            },
+            "4488117": {
+              "message": "DO JUMP is cycling, giving up",
+              "name": "mission_do_jump_cycle"
+            },
+            "4502496": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::failsafe_action_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "Failsafe activated, triggering {2} in {3} seconds",
+              "name": "commander_failsafe_enter_generic_hold",
+              "type": "append_health_and_arming_messages"
+            },
+            "4519150": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                },
+                {
+                  "name": "arg2",
+                  "type": "float"
+                }
+              ],
+              "description": "- <param>FW_AIRSPD_MAX</param>: {1:.1}\n- <param>FW_AIRSPD_MIN</param>: {2:.1}\n- <param>FW_AIRSPD_TRIM</param>: {3:.1}",
+              "message": "Invalid configuration: Airspeed trim out of min or max bounds",
+              "name": "fixedwing_position_control_conf_invalid_trim_bounds"
+            },
+            "4535132": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "logging: opening log file sess{1}/log{2}.ulg",
+              "name": "logger_open_file_sess"
+            },
+            "4678390": {
+              "message": "Mission finished, loitering",
+              "name": "mission_finished_loiter"
+            },
+            "4704426": {
+              "message": "Geofence imported",
+              "name": "navigator_geofence_imported"
+            },
+            "4774181": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Mission rejected: the landing glide slope is steeper than the vehicle setting of {1}.{2} degrees",
+              "name": "navigator_mis_glide_slope_too_steep"
+            },
+            "4790285": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint64_t"
+                }
+              ],
+              "message": "Traffic Conflict Resolved",
+              "name": "navigator_traffic_resolved"
+            },
+            "4796299": {
+              "message": "Mission upload busy, already receiving waypoint",
+              "name": "mavlink_mission_getlist_busy"
+            },
+            "4854315": {
+              "message": "No valid mission available, refusing takeoff",
+              "name": "mission_not_valid_refuse"
+            },
+            "4934924": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Land now, and check the vehicle setup. Clipping can lead to fly-aways.",
+              "message": "Gyro {1} clipping, not safe to fly!",
+              "name": "vehicle_imu_gyro_clipping"
+            },
+            "5063943": {
+              "message": "Error saving settings",
+              "name": "commander_save_param_failed"
+            },
+            "5065788": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_VEL_MAN_SIDE</param> is set to {1:.0}.",
+              "message": "Manual sideways speed has been constrained by forward speed",
+              "name": "mc_pos_ctrl_man_vel_side_set"
+            },
+            "5108026": {
+              "message": "ESCs calibration denied",
+              "name": "commander_esc_calibration_denied"
+            },
+            "51327": {
+              "message": "Emergency battery level, land immediately",
+              "name": "commander_failsafe_enter_crit_low_bat_warn"
+            },
+            "5158211": {
+              "message": "No airspeed sensor detected, switching to non-airspeed mode",
+              "name": "airspeed_selector_switch"
+            },
+            "5371654": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::sensor_failover_reason_t"
+                }
+              ],
+              "description": "Land immediately and check the system.",
+              "message": "Magnetometer sensor #{1} failure: {2}",
+              "name": "sensor_failover_mag"
+            },
+            "5494498": {
+              "message": "Mission rejected: Takeoff waypoint required",
+              "name": "navigator_mis_takeoff_missing"
+            },
+            "5623108": {
+              "message": "Manual control lost",
+              "name": "commander_rc_lost"
+            },
+            "5650341": {
+              "message": "SET_POSITION_TARGET_LOCAL_NED: invalid, missing position, velocity or acceleration",
+              "name": "mavlink_rcv_sp_target_invalid"
+            },
+            "5726704": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "High wind speed detected ({1:.1m/s}), landing advised",
+              "name": "check_high_wind_warning"
+            },
+            "5734437": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                }
+              ],
+              "message": "Command denied during calibration: {1}",
+              "name": "commander_cal_cmd_denied"
+            },
+            "5795201": {
+              "message": "Geofence requires a valid home position",
+              "name": "navigator_mis_geofence_no_home"
+            },
+            "5814991": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_Z_V_AUTO_UP</param> is set to {1:.0}.",
+              "message": "Ascent speed has been constrained by max speed",
+              "name": "mc_pos_ctrl_up_vel_set"
+            },
+            "5847165": {
+              "description": "Cannot shut down, most likely the system does not support it.",
+              "message": "Dangerously low battery! System shut down failed",
+              "name": "commander_low_bat_shutdown_failed"
+            },
+            "5874720": {
+              "message": "Arming denied: high throttle",
+              "name": "commander_arm_denied_throttle_high"
+            },
+            "5911339": {
+              "message": "Received unknown mission type, abort",
+              "name": "mavlink_mission_recv_unknown_mis_type"
+            },
+            "6006807": {
+              "message": "Quad-chute triggered due to maximum pitch angle exceeded",
+              "name": "vtol_att_ctrl_quadchute_max_pitch"
+            },
+            "6124520": {
+              "message": "Mission rejected: starts with landing",
+              "name": "navigator_mis_starts_w_landing"
+            },
+            "613779": {
+              "message": "Mission rejected: unsupported landing approach entrance waypoint type. Only ORBIT_TO_ALT or WAYPOINT allowed",
+              "name": "navigator_mis_unsupported_landing_approach_wp"
+            },
+            "6349555": {
+              "message": "Calibration: Restoring RC input",
+              "name": "commander_calib_rc_on"
+            },
+            "6363289": {
+              "message": "Airspeed estimation valid",
+              "name": "airspeed_selector_estimation_valid"
+            },
+            "6415112": {
+              "message": "RC trim calibration completed",
+              "name": "commander_cal_trim_done"
+            },
+            "6835962": {
+              "message": "RTL Mission activated, continue mission",
+              "name": "navigator_rtl_mission_activated"
+            },
+            "6843301": {
+              "message": "Parachute system regained",
+              "name": "commander_parachute_regained"
+            },
+            "6847604": {
+              "message": "Quad-chute triggered due to maximum roll angle exceeded",
+              "name": "vtol_att_ctrl_quadchute_max_roll"
+            },
+            "6880628": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Maximal flight time warning (more than 1min remaining)",
+              "message": "Approaching max flight time (system will RTL in {1} minutes)",
+              "name": "commander_max_flight_time_warning_minutes"
+            },
+            "6922012": {
+              "message": "DO JUMP waypoint could not be written",
+              "name": "mission_failed_to_write_do_jump"
+            },
+            "6974862": {
+              "message": "Unexpected waypoint index, aborting transfer",
+              "name": "mavlink_mission_wp_unexpected"
+            },
+            "697858": {
+              "message": "RC trim calibration: failed to set parameters",
+              "name": "commander_cal_trim_param_set_failed"
+            },
+            "7028282": {
+              "message": "Airspeed sensor failure detected. Check connection and reboot",
+              "name": "airspeed_selector_sensor_failure_disarmed"
+            },
+            "7067274": {
+              "message": "Mission start denied! No valid mission",
+              "name": "commander_mission_start_denied_no_mission"
+            },
+            "710679": {
+              "message": "Mission failure: unable to reach heading within timeout",
+              "name": "navigator_mission_failure_heading"
+            },
+            "7126042": {
+              "message": "Failed to write current mission ID to storage",
+              "name": "mavlink_mission_err_id"
+            },
+            "713405": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Manual control regained after {1:.1} s",
+              "name": "commander_rc_regained"
+            },
+            "7144644": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint64_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "- ID: {1}\n- Distance: {2m}\n- Direction: {3} degrees",
+              "message": "Traffic alert, landing",
+              "name": "navigator_traffic_land"
+            },
+            "7186357": {
+              "description": "<param>MC_AIRMODE</param> is now set to roll/pitch airmode.",
+              "message": "Yaw Airmode requires disabling the stick arm gesture",
+              "name": "commander_airmode_requires_no_arm_gesture"
+            },
+            "7293273": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_AID_MASK</param> is set to {1:.0}.",
+              "message": "Use EKF2_EV_CTRL instead",
+              "name": "ekf2_aid_mask_ev"
+            },
+            "7714236": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int16_t"
+                }
+              ],
+              "description": "Maximal flight time warning (less than 1min remaining)",
+              "message": "Approaching max flight time (system will RTL in {1} seconds)",
+              "name": "commander_max_flight_time_warning_seconds"
+            },
+            "7791755": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Previously selected sensor index: {1}, current sensor index: {2}.",
+              "message": "Airspeed sensor healthy, start using again",
+              "name": "airspeed_selector_estimation_regain"
+            },
+            "7803396": {
+              "message": "Mission finished, landed",
+              "name": "mission_finished"
+            },
+            "7860665": {
+              "message": "Mission rejected: land start item before RTL item is not possible",
+              "name": "navigator_mis_land_before_rtl"
+            },
+            "7867944": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_GPS_CTRL</param> is set to {1:.0}.",
+              "message": "GPS enabled by EKF2_HGT_REF",
+              "name": "ekf2_hgt_ref_gps"
+            },
+            "8163167": {
+              "message": "Could not read mission",
+              "name": "mission_cannot_read_mission"
+            },
+            "8165317": {
+              "message": "Disarming denied, not landed",
+              "name": "commander_disarming_denied_not_landed"
+            },
+            "8280920": {
+              "message": "Airspeed estimation invalid",
+              "name": "airspeed_selector_estimation_invalid"
+            },
+            "8310204": {
+              "message": "Landing using precision landing",
+              "name": "commander_landing_prec_land"
+            },
+            "8324861": {
+              "message": "Not yet ready for mission, no position lock",
+              "name": "navigator_mis_no_pos_lock"
+            },
+            "8459921": {
+              "message": "Mission rejected: Landing waypoint/pattern required",
+              "name": "navigator_mis_land_missing"
+            },
+            "8520304": {
+              "message": "Operation timeout, aborting transfer",
+              "name": "mavlink_mission_op_timeout"
+            },
+            "8546752": {
+              "message": "Ignoring mission item, busy",
+              "name": "mavlink_mission_mis_item_busy"
+            },
+            "8557551": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::failsafe_cause_t"
+                }
+              ],
+              "description": "No action is triggered.",
+              "message": "Failsafe warning triggered due to {2}",
+              "name": "commander_failsafe_enter_warn"
+            },
+            "8673473": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                }
+              ],
+              "message": "Not enough bandwidth to enable log streaming ({1} \\< 5000)",
+              "name": "mavlink_log_not_enough_bw"
+            },
+            "8706060": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>MPC_VEL_MAN_BACK</param> is set to {1:.0}.",
+              "message": "Manual backward speed has been constrained by forward speed",
+              "name": "mc_pos_ctrl_man_vel_back_set"
+            },
+            "8716192": {
+              "message": "RTL Mission activated, fly mission in reverse",
+              "name": "navigator_rtl_mission_activated_rev"
+            },
+            "8775715": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint16_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "uint16_t"
+                }
+              ],
+              "message": "Mission rejected: item {1}: unsupported command: {2}",
+              "name": "navigator_mis_unsup_cmd"
+            },
+            "8833276": {
+              "message": "No inputs, aborting RC trim calibration",
+              "name": "commander_cal_no_inputs"
+            },
+            "8858122": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "<param>EKF2_BARO_CTRL</param> is set to {1:.0}.",
+              "message": "Baro enabled by EKF2_HGT_REF",
+              "name": "ekf2_hgt_ref_baro"
+            },
+            "8865457": {
+              "message": "Geofence: import error",
+              "name": "navigator_geofence_import_failed"
+            },
+            "8894709": {
+              "message": "Mission rejected: the landing point must be outside the orbit radius",
+              "name": "navigator_mis_land_wp_inside_orbit_radius"
+            },
+            "8935528": {
+              "message": "Mission manager currently busy, ignoring new waypoint index",
+              "name": "mavlink_mission_state_busy"
+            },
+            "9013084": {
+              "message": "Ignoring mission request, currently busy",
+              "name": "mavlink_mission_mis_req_ignored_busy"
+            },
+            "9092852": {
+              "message": "Unexpected waypoint index, aborting mission transfer",
+              "name": "mavlink_mission_wp_unexpected2"
+            },
+            "9210889": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "int32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "int32_t"
+                }
+              ],
+              "message": "RTL: climb to {1m_v} ({2m_v} above destination)",
+              "name": "rtl_climb_to"
+            },
+            "9316102": {
+              "message": "DO JUMP repetitions completed",
+              "name": "mission_do_jump_rep_completed"
+            },
+            "9346577": {
+              "message": "Reached clearance altitude",
+              "name": "runway_takeoff_reached_clearance_altitude"
+            },
+            "9351472": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "RTL: unsupported MAV_FRAME ({1})",
+              "name": "rtl_unsupported_mav_frame"
+            },
+            "9370229": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "message": "Geofence: maximum altitude above home reached ({1:.0m_v})",
+              "name": "navigator_geofence_max_alt_from_home"
+            },
+            "9421773": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::sensor_failover_reason_t"
+                }
+              ],
+              "description": "Land immediately and check the system.",
+              "message": "Baro sensor #{1} failure: {2}",
+              "name": "sensor_failover_baro"
+            },
+            "9476947": {
+              "message": "Quad-chute triggered due to uncommanded descent detection",
+              "name": "vtol_att_ctrl_quadchute_alt_loss"
+            },
+            "9489139": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "px4::arm_disarm_reason_t"
+                }
+              ],
+              "message": "Armed by {1}",
+              "name": "commander_armed_by"
+            },
+            "9537079": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Obstacle message received in unsupported frame {1}",
+              "name": "col_prev_unsup_frame"
+            },
+            "961599": {
+              "message": "Pilot took over using sticks",
+              "name": "failsafe_rc_override"
+            },
+            "9751178": {
+              "arguments": [
+                {
+                  "name": "arg0",
+                  "type": "uint32_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::failsafe_action_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "px4::failsafe_cause_t"
+                }
+              ],
+              "message": "Failsafe activated due to {3}, triggering {2}",
+              "name": "commander_failsafe_enter"
+            },
+            "9844908": {
+              "message": "Landing detected",
+              "name": "commander_landing_detected"
+            }
+          }
+        },
+        "health": {
+          "events": {
+            "1058956": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                }
+              ],
+              "description": "The CPU load can be reduced for example by disabling unused modules (e.g. mavlink instances) or reducing the gyro update rate via <param>IMU_GYRO_RATEMAX</param>.\n\n<profile name=\"dev\"> The threshold can be adjusted via <param>COM_CPU_MAX</param> parameter.\n</profile>",
+              "message": "CPU load too high: {3:.1}%",
+              "name": "check_cpuload_too_high"
+            },
+            "11478328": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid data from Gyro {3}",
+              "name": "check_gyro_no_data"
+            },
+            "13344346": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Make sure all batteries are connected and operational.",
+              "message": "Battery unhealthy",
+              "name": "check_battery_unhealthy"
+            },
+            "13372152": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Parachute system reported being unhealth.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_PARACHUTE</param> parameter.\n</profile>",
+              "message": "Parachute system not ready",
+              "name": "check_parachute_unhealthy"
+            },
+            "14221469": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>SYS_HAS_NUM_DIST</param> parameter.\n</profile>",
+              "message": "Distance sensor {3} missing",
+              "name": "check_distance_sensor_missing"
+            },
+            "14566046": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_ARM_CHK_ESCS</param> parameter.\n</profile>",
+              "message": "ESC {3} offline",
+              "name": "check_escs_offline"
+            },
+            "15289843": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "Check the voltage supply to the FMU, it must be below {4:.2} Volt.\n\n<profile name=\"dev\"> This check can be configured via <param>CBRK_SUPPLY_CHK</param> parameter.\n</profile>",
+              "message": "Avionics Power high: {3:.2} Volt",
+              "name": "check_avionics_power_high"
+            },
+            "15388760": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Compass sensor {3} missing",
+              "name": "check_mag_missing"
+            },
+            "15602498": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "battery_fault_reason_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "px4::suggested_action_t"
+                },
+                {
+                  "name": "arg3",
+                  "type": "uint32_t"
+                }
+              ],
+              "description": "The battery reported a failure which might be dangerous to fly with. Manufacturer error code: {6}",
+              "message": "Battery {3}: {4}. {5}",
+              "name": "check_battery_fault"
+            },
+            "15793174": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "One or more ESCs failed to arm.\n\n<profile name=\"dev\"> This check can be configured via <param>FD_ESCS_EN</param> parameter.\n</profile>",
+              "message": "ESC failure",
+              "name": "check_failure_detector_arm_esc"
+            },
+            "15965684": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Parachute system failed to report. Make sure it it setup and installed properly.\n\n<profile name=\"dev\"> This check can be configured via <param>COM_PARACHUTE</param> parameter.\n</profile>",
+              "message": "Parachute system missing",
+              "name": "check_parachute_missing"
+            },
+            "16230031": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid data from Accelerometer {3}",
+              "name": "check_accel_no_data"
+            },
+            "1670367": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "float"
+                },
+                {
+                  "name": "arg1",
+                  "type": "float"
+                }
+              ],
+              "description": "Check the voltage supply to the FMU, it must be above {4:.2} Volt.\n\n<profile name=\"dev\"> This check can be configured via <param>CBRK_SUPPLY_CHK</param> parameter.\n</profile>",
+              "message": "Avionics Power low: {3:.2} Volt",
+              "name": "check_avionics_power_low"
+            },
+            "1914663": {
+              "arguments": [
+                {
+                  "name": "chunk_idx",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "is_present",
+                  "type": "px4::health_component_t"
+                },
+                {
+                  "name": "error",
+                  "type": "px4::health_component_t"
+                },
+                {
+                  "name": "warning",
+                  "type": "px4::health_component_t"
+                }
+              ],
+              "message": "Health report summary event",
+              "name": "commander_health_summary",
+              "type": "summary"
+            },
+            "3189229": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid data from barometer {3}",
+              "name": "check_baro_no_data"
+            },
+            "3568720": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Gyro sensor {3} missing",
+              "name": "check_gyro_missing"
+            },
+            "4448091": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "The SD card contains crash dump files, service the vehicle before continuing to fly.\n\n<profile name=\"dev\"> Check how to debug hardfaults on <a>https://docs.px4.io/main/en/debug/gdb_debugging.html#hard-fault-debugging</a>. When completed, remove the files 'fault_*.log' on the SD card.\n\nThis check can be configured via <param>COM_ARM_HFLT_CHK</param> parameter.\n</profile>",
+              "message": "Crash dumps present on SD card",
+              "name": "check_hardfault_present"
+            },
+            "4643123": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Airspeed invalid",
+              "name": "check_airspeed_invalid"
+            },
+            "4877352": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Check that all propellers are mounted correctly and are not damaged.\n\n<profile name=\"dev\"> This check can be configured via <param>FD_IMB_PROP_THR</param> and <param>COM_IMB_PROP_ACT</param> parameters.\n</profile>",
+              "message": "Imbalanced propeller detected",
+              "name": "check_failure_detector_imbalanced_prop"
+            },
+            "5095593": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Barometer {3} missing",
+              "name": "check_baro_missing"
+            },
+            "5623109": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::battery_mode_t"
+                }
+              ],
+              "message": "Battery {3} mode: {4}",
+              "name": "check_battery_mode"
+            },
+            "6410608": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid data from Compass {3}",
+              "name": "check_mag_no_data"
+            },
+            "666479": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>FD_ACT_EN</param> parameter.\n</profile>",
+              "message": "Motor failure detected",
+              "name": "check_failure_detector_motor"
+            },
+            "6948489": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg1",
+                  "type": "px4::esc_fault_reason_t"
+                },
+                {
+                  "name": "arg2",
+                  "type": "px4::suggested_action_t"
+                }
+              ],
+              "description": "{5}\n\n<profile name=\"dev\"> This check can be configured via <param>COM_ARM_CHK_ESCS</param> parameter.\n</profile>",
+              "message": "ESC {3}: {4}",
+              "name": "check_escs_fault"
+            },
+            "7214714": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Ensure the ADC is working and the system_power topic is published.\n\nThis check can be configured via <param>CBRK_SUPPLY_CHK</param> parameter.\n</profile>",
+              "message": "System power unavailable",
+              "name": "check_missing_system_power"
+            },
+            "7908333": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Note that USB must be disconnected as well.\n\n<profile name=\"dev\"> This check can be configured via <param>CBRK_SUPPLY_CHK</param> parameter.\n</profile>",
+              "message": "Power module not connected",
+              "name": "check_avionics_power_missing"
+            },
+            "8227839": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Accelerometer sensor {3} missing",
+              "name": "check_accel_missing"
+            },
+            "8274357": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "Land and recalibrate the sensors.",
+              "message": "Navigation failure",
+              "name": "check_estimator_nav_failure"
+            },
+            "8544646": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "No valid data from distance sensor {3}",
+              "name": "check_distance_sensor_invalid"
+            },
+            "8799553": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                },
+                {
+                  "name": "arg0",
+                  "type": "uint8_t"
+                }
+              ],
+              "message": "Battery {3} disconnected",
+              "name": "check_battery_disconnected"
+            },
+            "9191449": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> This check can be configured via <param>COM_ARM_CHK_ESCS</param> parameter.\n</profile>",
+              "message": "ESC telemetry missing",
+              "name": "check_escs_telem_missing"
+            },
+            "9266821": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> If the system does not provide any CPU load information, use the parameter <param>COM_CPU_MAX</param> to disable the check.\n</profile>",
+              "message": "No CPU load information",
+              "name": "check_missing_cpuload"
+            },
+            "9493632": {
+              "arguments": [
+                {
+                  "name": "modes",
+                  "type": "navigation_mode_group_t"
+                },
+                {
+                  "name": "health_component_index",
+                  "type": "uint8_t"
+                }
+              ],
+              "description": "<profile name=\"dev\"> Most likely the airspeed selector module is not running. This check can be configured via <param>CBRK_AIRSPD_CHK</param> parameter.\n</profile>",
+              "message": "No airspeed data",
+              "name": "check_airspeed_no_data"
+            }
+          }
+        }
+      },
+      "namespace": "px4",
+      "navigation_mode_groups": {
+        "groups": {
+          "0": [
+            65536
+          ],
+          "1": [
+            131072
+          ],
+          "10": [
+            327680
+          ],
+          "14": [
+            393216
+          ],
+          "15": [
+            458752
+          ],
+          "17": [
+            33816576
+          ],
+          "18": [
+            100925440
+          ],
+          "19": [
+            134479872
+          ],
+          "2": [
+            196608
+          ],
+          "20": [
+            151257088
+          ],
+          "21": [
+            16973824
+          ],
+          "22": [
+            168034304
+          ],
+          "3": [
+            67371008
+          ],
+          "4": [
+            50593792
+          ],
+          "5": [
+            84148224
+          ]
+        }
+      },
+      "supported_protocols": [
+        "health_and_arming_check"
+      ]
+    }
+  },
+  "translation": {
+    "items": {
+      "components": {
+        "items": {
+          "*": {
+            "items": {
+              "enums": {
+                "items": {
+                  "*": {
+                    "items": {
+                      "entries": {
+                        "items": {
+                          "*": {
+                            "translate": [
+                              "description"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "event_groups": {
+                "items": {
+                  "*": {
+                    "items": {
+                      "events": {
+                        "items": {
+                          "*": {
+                            "translate": [
+                              "message",
+                              "description"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "version": 2
+}

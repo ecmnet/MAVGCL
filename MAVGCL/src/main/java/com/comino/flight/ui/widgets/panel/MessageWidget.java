@@ -33,10 +33,13 @@
 
 package com.comino.flight.ui.widgets.panel;
 
+import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_event;
 import org.mavlink.messages.lquac.msg_statustext;
 
 import com.comino.flight.FXMLLoadHelper;
 import com.comino.flight.MainApp;
+import com.comino.flight.events.MAVEventMataData;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
 import com.comino.flight.model.service.AnalysisModelService;
@@ -61,7 +64,8 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private Label g_message;
 
-	private AnalysisModelService dataService = AnalysisModelService.getInstance();
+	private final AnalysisModelService dataService = AnalysisModelService.getInstance();
+	private final MAVEventMataData     eventMetaData = MAVEventMataData.getInstance( );
 
 	private AnimationTimer task;
 
@@ -127,9 +131,23 @@ public class MessageWidget extends ChartControlPane implements IChartControl {
 			public void received(Object o) {
 				if(o instanceof msg_statustext && !isDisabled()) {
 					msg_statustext msg = (msg_statustext) o;
+					String s = (new String(msg.text));
+					if(!s.contains("/t")) {
+						message = new LogMessage();
+						message.text = s.trim();
+						message.severity = msg.severity;
+					}
+				}
+			}
+		});
+
+		control.addMAVLinkListener((o) -> {
+			if(o instanceof msg_event) {
+				msg_event msg = (msg_event)o;
+				if((msg.log_levels >> 4 & 0x0F) < MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
 					message = new LogMessage();
-					message.text = (new String(msg.text)).trim();
-					message.severity = msg.severity;
+					message.text = eventMetaData.buildMessageFromMAVLink(msg).trim();
+					message.severity = (msg.log_levels >> 4 & 0x0F);
 				}
 			}
 		});

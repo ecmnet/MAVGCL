@@ -36,8 +36,10 @@ package com.comino.flight.ui.widgets.panel;
 import java.util.prefs.Preferences;
 
 import org.mavlink.messages.MAV_SEVERITY;
+import org.mavlink.messages.lquac.msg_event;
 
 import com.comino.flight.FXMLLoadHelper;
+import com.comino.flight.events.MAVEventMataData;
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
@@ -73,7 +75,8 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 	@FXML
 	private ListView<LogMessage> listview;
 
-	private AnalysisModelService dataService = AnalysisModelService.getInstance();
+	private final AnalysisModelService dataService = AnalysisModelService.getInstance();
+	private final MAVEventMataData     eventMetaData = MAVEventMataData.getInstance( );
 
 	private boolean debug_message_enabled = false;
 	private FloatProperty   replay       = new SimpleFloatProperty(0);
@@ -170,6 +173,20 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 					return;
 
 				addMessageToList(message);
+			}
+		});
+		
+		control.addMAVLinkListener((o) -> {
+			if(o instanceof msg_event) {
+				msg_event msg = (msg_event)o;
+				if((msg.log_levels >> 4 & 0x0F) < MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
+					
+					LogMessage message = new LogMessage();
+					message.text = eventMetaData.buildMessageFromMAVLink(msg).trim();
+					message.severity = (msg.log_levels >> 4 & 0x0F);
+					control.getCurrentModel().msg.set(message);
+					addMessageToList(message);
+				}
 			}
 		});
 

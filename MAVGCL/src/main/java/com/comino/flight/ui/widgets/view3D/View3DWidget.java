@@ -137,7 +137,8 @@ public class View3DWidget extends SubScene implements IChartControl {
 		AmbientLight ambient = new AmbientLight();
 		ambient.setColor(Color.web("WHITE", 0.6));
 
-//		PointLight pointLight = new PointLight(Color.web("GRAY", 0.0));
+//		PointLight pointLight = new PointLight(Color.web("GRAY", 0.7));
+//		pointLight.setOpacity(0.1);
 //		pointLight.setTranslateX(100);
 //		pointLight.setTranslateY(800);
 //		pointLight.setRotate(45);
@@ -163,7 +164,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 		vehicle   = new VehicleModel(VEHICLE_SCALE);
 		obstacle  = new Obstacle(vehicle);
 		trajectory = new Trajectory();
-		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory,  ambient,
+		world.getChildren().addAll(ground,landing_target, target,obstacle, vehicle, trajectory,  ambient, 
 				addPole('N'), addPole('S'),addPole('W'),addPole('E'),marker);
 
 		camera = new Camera(this);
@@ -307,6 +308,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 					landing_target.getTransforms().clear();
 					landing_target.setTranslateX(-model.getValue("PRECLOCKY")*100f);
 					landing_target.setTranslateZ(model.getValue("PRECLOCKX")*100f);		
+					landing_target.setTranslateY(2f);		
 					addRotate(landing_target, rf,180 - model.getValue("PRECLOCKW"));
 					landing_target.setVisible(true);
 
