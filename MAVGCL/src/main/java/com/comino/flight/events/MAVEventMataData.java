@@ -54,10 +54,9 @@ public class MAVEventMataData {
 				var _arguments = event.getValue().getAsJsonObject().get("arguments");
 				if(_arguments!=null) {
 					_arguments.getAsJsonArray().forEach((argument) -> {
-						Argument arg = new Argument();
-						arg.name = argument.getAsJsonObject().get("name").getAsString();
-						arg.type = argument.getAsJsonObject().get("type").getAsString();
-						event_meta_data.arguments.add(arg);
+						String type = argument.getAsJsonObject().get("type").getAsString();
+						if(type!=null && type.length()>0)
+						  event_meta_data.arguments.add(type);
 					});
 				}
 				event_map.put(Integer.parseInt(event.getKey()),event_meta_data);
@@ -93,19 +92,26 @@ public class MAVEventMataData {
 	private class EventMetaData {
 
 		public String message;
-		public List<Argument> arguments = new ArrayList<Argument>();;
+		public List<String> arguments = new ArrayList<String>();;
 
 		public String buildMessage(msg_event event_msg) {
 			String msg = this.message;
 			for(int i=0; i<arguments.size();i++) {
-				if(enum_map.containsKey(arguments.get(i).type))
-					msg = msg.replace("{"+(i+1)+"}", enum_map.get(arguments.get(i).type).get(event_msg.arguments[i]));
+				// Complex types
+				if(enum_map.containsKey(arguments.get(i)))
+					msg = msg.replace("{"+(i+1)+"}", enum_map.get(arguments.get(i)).get(event_msg.arguments[i]));
 				else	{
-					switch(arguments.get(i).type) {
+				// Simple types
+					switch(arguments.get(i)) {
 					case "uint8_t":
 						msg = msg.replace("{"+(i+1)+"}", String.valueOf(event_msg.arguments[i] & 0xFF));
+						break;
 					case "uint16_t":
 						msg = msg.replace("{"+(i+1)+"}", String.valueOf(event_msg.arguments[i] & 0xFFFF));
+						break;
+					case "float_t":
+						msg = msg.substring(0,msg.indexOf('{'));
+						break;
 					default:
 						msg = msg.substring(0,msg.indexOf('{'));
 					}
@@ -114,17 +120,4 @@ public class MAVEventMataData {
 			return msg;
 		}
 	}
-
-	private class Argument {
-		public String name;
-		public String type;
-	}
-
-
-
-
-
-
-
-
 }

@@ -180,7 +180,6 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 			if(o instanceof msg_event) {
 				msg_event msg = (msg_event)o;
 				if((msg.log_levels >> 4 & 0x0F) < MAV_SEVERITY.MAV_SEVERITY_DEBUG) {
-					
 					LogMessage message = new LogMessage();
 					message.text = eventMetaData.buildMessageFromMAVLink(msg).trim();
 					message.severity = (msg.log_levels >> 4 & 0x0F);
