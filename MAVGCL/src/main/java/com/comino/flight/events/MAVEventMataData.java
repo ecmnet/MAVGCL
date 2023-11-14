@@ -86,8 +86,8 @@ public class MAVEventMataData {
 	public String buildMessageFromMAVLink( msg_event event_msg) {
 		EventMetaData emd = this.event_map.get((int)(event_msg.id & 0x0FFFFFF));
 		if(emd == null)
-			return "[px4] Event "+(int)(event_msg.id & 0x0FFFFFF)+" received";
-		return "[px4] "+emd.buildMessage(event_msg);
+			return "["+namespace.toLowerCase()+"] Event "+(int)(event_msg.id & 0x0FFFFFF)+" received";
+		return "["+namespace.toLowerCase()+"] "+emd.buildMessage(event_msg);
 	}
 
 	private class EventMetaData {
