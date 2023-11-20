@@ -115,13 +115,18 @@ public class MAVEventMataData {
 						break;
 					case "float":
 						int f_ix = msg.indexOf('}');
+						if(f_ix < 1) {
+							return msg;
+						}
+						
 						int v = (event_msg.arguments[ix++] & 0xFF)  | (event_msg.arguments[ix++] & 0xFF)  << 8 |
 								(event_msg.arguments[ix++] & 0xFF) << 16 | (event_msg.arguments[ix++] & 0xFF) << 24;
 						msg = msg.replace("{"+(i+1)+":",String.valueOf(Float.intBitsToFloat(v)));
 						msg = msg.substring(0,f_ix-3)+msg.substring(f_ix-1, f_ix);
 						break;
 					default:
-						msg = msg.substring(0,msg.indexOf('{'));
+						if(msg.contains("{"))
+						 msg = msg.substring(0,msg.indexOf('{'));
 					}
 				}
 			}
