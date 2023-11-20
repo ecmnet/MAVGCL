@@ -34,6 +34,7 @@
 package com.comino.flight.log.ulog;
 
 import java.util.Map;
+import java.util.concurrent.locks.LockSupport;
 
 import org.mavlink.messages.MAV_CMD;
 import org.mavlink.messages.MAV_SEVERITY;
@@ -186,7 +187,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				return;
 			}
 			parser.addToBuffer(log);
-
 			msg_logging_ack ack = new msg_logging_ack(255,1);
 			ack.target_component=1;
 			ack.target_system=1;
