@@ -707,7 +707,10 @@ public class MainApp extends Application  {
 				Optional<ButtonType> result = alert.showAndWait();
 
 				if (result.get() == ButtonType.OK) {
-					control.sendMAVLinkMessage(new msg_log_erase(1,2));
+					msg_log_erase msg = new msg_log_erase(1,2);
+					msg.target_component = 1;
+					msg.target_system    = 1;
+					control.sendMAVLinkMessage(msg);
 					MSPLogger.getInstance().writeLocalMsg("[mgc] All PX4 logs have been erased",
 							MAV_SEVERITY.MAV_SEVERITY_NOTICE);
 				}
