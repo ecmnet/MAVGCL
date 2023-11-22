@@ -1475,7 +1475,7 @@
 		<MSPSource class="rc" field="rssi">
 		   <Converter class="ExpressionConverter" expression="RSSI/100" />
 		</MSPSource>
-		<ULogSource field="rc_channels_0.rssi">
+		<ULogSource field="radio_status_0.rssi">
 		  <Converter class="ExpressionConverter" expression="RSSI/100" />
 		</ULogSource>
 		<Groups>
