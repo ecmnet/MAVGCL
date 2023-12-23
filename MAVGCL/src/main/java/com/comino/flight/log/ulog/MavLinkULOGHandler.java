@@ -50,6 +50,9 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	public static final int MODE_LAST   = 1;
 
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
+	
+	private static final int MAX_CHUNK_SIZE         = 2500;
+	private static final int REQ_CYCLE_MS           = 33;
 
 	private int   mode = 0;
 
@@ -75,13 +78,16 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 	private int total_package_count = 0;
 
-	private volatile int chunk_offset = 0;
-	private volatile int chunk_size = 0;
+	private int chunk_offset = 0;
+	private int chunk_size = 0;
+	
+	private int read_count     = 0;
+	private int read_count_old = 0;
 
 	private String path = null;
 	private RandomAccessFile file = null;
 
-	private int read_count = 0;
+	
 	private List<Long> unread_packages = null;
 
 	private long last_package_tms = 0;
@@ -263,26 +269,28 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		chunk_offset = 0;
 		read_count = 0;
 
+       chunk_size = total_package_count > MAX_CHUNK_SIZE ? MAX_CHUNK_SIZE : total_package_count;
+		
+		requestDataPackages(id, 0, chunk_size * LOG_PACKAG_DATA_LENGTH );
 
-		requestDataPackages(id, 0, total_package_count * LOG_PACKAG_DATA_LENGTH );
-
-		worker = wq.addCyclicTask("LP",50,() -> {
+		worker = wq.addCyclicTask("LP",REQ_CYCLE_MS,() -> {
 
 
-			if((System.currentTimeMillis() - last_package_tms) < 20 )
+			if((System.currentTimeMillis() - last_package_tms) < 2 )
 				return;
 
 			if (++retry > 1000) {
 				cancelLoading();
 				return;
 			}
+			
+			filehandler.setName("Loading log "+log_id+" ("+speed+"kb/s)");
 
-			filehandler.setName("loading log "+log_id+" ("+speed+"kb/s)");
-
-			int c = 0;
-			while(searchForNextUnreadPackage() && c++ < 1) {
+			//System.out.println(chunk_offset+":"+chunk_size+":"+read_count+":"+read_count_old);
+			if(read_count == read_count_old && searchForNextUnreadPackage() )  {
 				requestDataPackages(id,chunk_offset * LOG_PACKAG_DATA_LENGTH, chunk_size  * LOG_PACKAG_DATA_LENGTH);
 			}
+			read_count_old = read_count;
 
 		});
 	}
@@ -419,7 +427,10 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		chunk_size = 0;
 		for (int i = chunk_offset; i < unread_packages.size() && unread_packages.get(i) != -1; i++)
 			chunk_size++;
-
+        
+		if(chunk_size > MAX_CHUNK_SIZE)
+			chunk_size = MAX_CHUNK_SIZE;
+		
 		return true;
 	}
 
