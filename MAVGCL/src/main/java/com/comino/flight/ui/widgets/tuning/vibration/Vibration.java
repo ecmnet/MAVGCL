@@ -75,7 +75,7 @@ public class Vibration extends VBox implements IChartControl  {
 	private static final float VIB_SCALE = 0.2f;
 
 
-	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Gyro.Y+Gyro.X" , "Act.R+Act.P"};
+	private final static String[] SOURCES = { "Acc.X+Acc.Y ", "Acc.Z", "Raw Gyro Data" , "Act.Roll+Act.Pitch", "Angular Rates"};
 
 
 	@FXML
@@ -307,10 +307,16 @@ public class Vibration extends VBox implements IChartControl  {
 			case 2:
 				data1[i] = (float)m.getValue("GYROY");	
 				data2[i] = (float)m.getValue("GYROX");	
+				data3[i] = (float)m.getValue("GYROZ");	
 				break;
 			case 3:
 				data1[i] = (float)m.getValue("ACTROLL");	
 				data2[i] = (float)m.getValue("ACTPITCH");	
+				break;
+			case 4:
+				data1[i] = (float)m.getValue("VEHVX");	
+				data2[i] = (float)m.getValue("VEHVY");	
+				data3[i] = (float)m.getValue("VEHVZ");	
 				break;
 
 			}
@@ -321,7 +327,6 @@ public class Vibration extends VBox implements IChartControl  {
 		switch(source_id) {
 
 		case 0:
-		case 2:
 		case 3:
 
 			fft1.forward(data1); 
@@ -340,6 +345,29 @@ public class Vibration extends VBox implements IChartControl  {
 
 		case 1:
 
+			fft3.forward(data3);
+			series3.getData().add(new Data<Number, Number>(0.0,0.0));
+			for(int i = 1; i < fft3.specSize(); i++ ) {
+				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
+			}
+			
+			break;
+			
+		case 2:
+		case 4:
+			
+			fft1.forward(data1); 
+			series1.getData().add(new Data<Number, Number>(0.0,0.0));
+			for(int i = 1; i < fft1.specSize(); i++ ) {
+				series1.getData().add(pool.checkOut(i * fft1.getBandWidth(),fft1.getSpectrum()[i]));
+			}
+
+			fft2.forward(data2); 
+			series2.getData().add(new Data<Number, Number>(0.0,0.0));
+			for(int i = 1; i < fft2.specSize(); i++ ) {
+				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
+			}
+			
 			fft3.forward(data3);
 			series3.getData().add(new Data<Number, Number>(0.0,0.0));
 			for(int i = 1; i < fft3.specSize(); i++ ) {
