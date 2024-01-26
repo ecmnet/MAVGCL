@@ -340,6 +340,8 @@ public class Vibration extends VBox implements IChartControl  {
 			for(int i = 1; i < fft2.specSize(); i++ ) {
 				series2.getData().add(pool.checkOut(i * fft2.getBandWidth(),fft2.getSpectrum()[i]));
 			}
+			
+			series3.getData().clear();
 
 			break;
 
@@ -350,6 +352,9 @@ public class Vibration extends VBox implements IChartControl  {
 			for(int i = 1; i < fft3.specSize(); i++ ) {
 				series3.getData().add(pool.checkOut(i * fft3.getBandWidth(),fft3.getSpectrum()[i]));
 			}
+			
+			series2.getData().clear();
+			series1.getData().clear();
 			
 			break;
 			
