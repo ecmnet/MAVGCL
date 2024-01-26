@@ -34,6 +34,18 @@
 		<maven.compiler.source>1.10</maven.compiler.source>
 	</properties>
 	<dependencies>
+		<!--
+		<dependency>
+			<groupId>io.fair-acc</groupId>
+			<artifactId>samples</artifactId>
+			<version>11.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.fair-acc</groupId>
+			<artifactId>chartfx</artifactId>
+			<version>11.3.0</version>
+		</dependency>
+        -->
 		<dependency>
 			<groupId>mavbase</groupId>
 			<artifactId>mavbase</artifactId>

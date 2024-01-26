@@ -466,6 +466,50 @@
 			<Group>Local Acceleration</Group>
 		</Groups>
 	</KeyFigure>
+	
+	<!-- Filtered data -->
+	
+	<KeyFigure desc="Veh.Acc.X" uom="m/s2" mask="#0.00" key="VEHAX">
+		<ULogSource field="vehicle_acceleration_0.xyz[0]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Veh.Acc.Y" uom="m/s2" mask="#0.00" key="VEHAY">
+		<ULogSource field="vehicle_acceleration_0.xyz[1]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Veh.Acc.Z" uom="m/s2" mask="#0.00" key="VEHAZ">
+		<ULogSource field="vehicle_acceleration_0.xyz[2]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Veh.Ang.Vel.X" uom="rad/s" mask="#0.00" key="VEHVX">
+		<ULogSource field="vehicle_angular_velocity_0.xyz[0]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Veh.Ang.Vel.Y" uom="rad/s" mask="#0.00" key="VEHVY">
+		<ULogSource field="vehicle_angular_velocity_0.xyz[1]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
+	
+	<KeyFigure desc="Veh.Ang.Vel.Z" uom="rad/s" mask="#0.00" key="VEHVZ">
+		<ULogSource field="vehicle_angular_velocity_0.xyz[2]"></ULogSource>
+		<Groups>
+			<Group>Filtered raw</Group>
+		</Groups>
+	</KeyFigure>
 
 	<!-- Local position setpoint -->
 
