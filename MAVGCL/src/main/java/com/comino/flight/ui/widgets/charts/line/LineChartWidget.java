@@ -359,15 +359,15 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			dashboard1.setVal(0,null,false);
 			dashboard2.setVal(0,null,false);
 			dashboard3.setVal(0,null,false);
-			
+
 		});
 
 
 
 		linechart.setOnMouseMoved(mouseEvent -> {
 
-//			if(isScrolling.get())
-//				return;
+			//			if(isScrolling.get())
+			//				return;
 
 			mouseEvent.consume();
 
@@ -1059,9 +1059,12 @@ public class LineChartWidget extends BorderPane implements IChartControl, IColle
 			mode.clear();
 
 			if(size==0) {
-				series1.getData().remove(0,series1.getData().size()-1);
-				series2.getData().remove(0,series2.getData().size()-1);
-				series3.getData().remove(0,series3.getData().size()-1);
+				if(series1.getData().size()>0)
+					series1.getData().remove(0,series1.getData().size()-1);
+				if(series2.getData().size()>0)
+					series2.getData().remove(0,series2.getData().size()-1);
+				if(series3.getData().size()>0)
+					series3.getData().remove(0,series3.getData().size()-1);
 			} else {
 				series1.getData().clear();
 				series2.getData().clear();
