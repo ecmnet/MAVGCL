@@ -298,8 +298,6 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 	private void handleLogEntry(msg_log_entry entry) {
 		
-		System.out.println(entry);
-
 		if(entry.size == 0)
 			return;
 
