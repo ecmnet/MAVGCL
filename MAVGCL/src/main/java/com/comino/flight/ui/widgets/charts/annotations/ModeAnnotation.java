@@ -117,7 +117,7 @@ public class ModeAnnotation implements XYAnnotation {
 	private void setModeColors(String... color) {
 		colors.clear();
 		for(int i=0;i<color.length;i++) {
-			colors.put(i+1, Color.web(color[i], 0.08f));
+			colors.put(i+1, Color.web(color[i], 0.12f));
 			legend_colors.put(i+1, Color.web(color[i], 0.20f));
 		}
 	}
@@ -221,6 +221,7 @@ public class ModeAnnotation implements XYAnnotation {
 					addAreaData(time,5);
 					return;
 		}
+		
 		
 		if((flags & ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) == ESTIMATOR_STATUS_FLAGS.ESTIMATOR_GPS_GLITCH) 
 			addAreaData(time,6);
