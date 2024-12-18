@@ -297,6 +297,8 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 
 
 	private void handleLogEntry(msg_log_entry entry) {
+		
+		System.out.println(entry);
 
 		if(entry.size == 0)
 			return;
@@ -313,7 +315,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		if(log_count > 0)
 			props.getProgressProperty().set((float)directory.size() / log_count);
 
-		if(entry.id == entry.last_log_num) {
+		if(entry.id == log_count-1) {
 			Platform.runLater(() -> {
 				is_directory_loaded.set(true);
 			});
