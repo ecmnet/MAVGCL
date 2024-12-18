@@ -116,10 +116,10 @@ public class ULogSelectionDialog  {
 		
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		
-		SortedList<ULogEntry> sortedData = new SortedList<>(data);
-		sortedData.comparatorProperty().bind(table.comparatorProperty());
+//		SortedList<ULogEntry> sortedData = new SortedList<>(data);
+//		sortedData.comparatorProperty().bind(table.comparatorProperty());
 		
-		table.setItems(sortedData);
+		table.setItems(data);
 		
 		table.getSortOrder().addAll(colId);
 		pane.getChildren().add(table);
