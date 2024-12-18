@@ -102,26 +102,26 @@ public class ULogSelectionDialog  {
 		TableColumn<ULogEntry, Integer> colId= new TableColumn<ULogEntry, Integer>("Id");
 		colId.setMinWidth(15); 
 		colId.setCellValueFactory( new PropertyValueFactory<ULogEntry, Integer>("id"));
-		colId.setSortType(TableColumn.SortType.DESCENDING);
 		
 		TableColumn<ULogEntry, String> colName = new TableColumn<ULogEntry, String>("Timestamp");
-		colName.setMinWidth(200); 
+		colName.setMinWidth(215); 
 		colName.setCellValueFactory( new PropertyValueFactory<ULogEntry, String>("name"));
+		colName.setSortType(TableColumn.SortType.DESCENDING);
 		
 		TableColumn<ULogEntry, String> colSize= new TableColumn<ULogEntry, String>("Size");
-		colSize.setMinWidth(25); 
+		colSize.setMinWidth(50); 
 		colSize.setCellValueFactory( new PropertyValueFactory<ULogEntry, String>("size"));
 		
 		table.getColumns().addAll(colId,colName,colSize);
 		
 		table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		
-//		SortedList<ULogEntry> sortedData = new SortedList<>(data);
-//		sortedData.comparatorProperty().bind(table.comparatorProperty());
+		SortedList<ULogEntry> sortedData = new SortedList<>(data);
+		sortedData.comparatorProperty().bind(table.comparatorProperty());
 		
-		table.setItems(data);
+		table.setItems(sortedData);
 		
-		table.getSortOrder().addAll(colId);
+		table.getSortOrder().addAll(colName);
 		pane.getChildren().add(table);
 		
 		data.addAll(list.values());
