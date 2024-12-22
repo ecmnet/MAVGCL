@@ -50,6 +50,8 @@ import com.comino.mavcom.log.MSPLogger;
 import com.comino.mavcom.mavlink.IMAVLinkListener;
 import com.comino.mavutils.workqueue.WorkQueue;
 
+import us.ihmc.log.LogTools;
+
 
 public class ULogFromMAVLinkReader implements IMAVLinkListener {
 
@@ -198,7 +200,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				if(parser.checkHeader()) {
 					header_processed = log.sequence;
 					state = STATE_HEADER_WAIT;
-					System.out.println("ULOG Start reading header");
+					LogTools.info("ULOG Start reading header");
 				} else
 					return;
 			}
@@ -219,7 +221,7 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 			}
 
 			if(state==STATE_HEADER_WAIT) {
-				System.out.println("ULOG build subscriptions");
+				LogTools.info("ULOG build subscriptions");
 				parser.buildSubscriptions();
 				data_processed = header_processed;
 				parser.clearBuffer();

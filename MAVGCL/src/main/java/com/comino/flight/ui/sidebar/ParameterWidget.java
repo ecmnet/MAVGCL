@@ -90,6 +90,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import us.ihmc.log.LogTools;
 
 public class ParameterWidget extends ChartControlPane  {
 
@@ -316,7 +317,7 @@ public class ParameterWidget extends ChartControlPane  {
 	}
 
 	private void uploadChangedParameterList() {
-		System.out.println("Uploading changed parameters...");
+		LogTools.info("Uploading changed parameters...");
 		new Thread(new Task<Void>() {
 			int count = 0; int valid = 0; int size = grid.getRowCount();
 			@Override protected Void call() throws Exception {
@@ -590,7 +591,7 @@ public class ParameterWidget extends ChartControlPane  {
 
 		private void sendParameter(ParameterAttributes att, float val) {
 
-			System.out.println("Try to set "+att.name+" to "+val+"...");
+			LogTools.info("Try to set "+att.name+" to "+val+"...");
 			old_val = (float)att.value;
 			if(old_val != att.default_val) {
 				cmPrevVal.setText("Prev.Val: "+format(old_val, att.decimals));
@@ -637,7 +638,7 @@ public class ParameterWidget extends ChartControlPane  {
 				} else
 					return 0;
 			} catch(Exception e) {
-				System.err.println(e.getMessage());
+				LogTools.error(e.getMessage());
 				return 0;
 			}
 		}

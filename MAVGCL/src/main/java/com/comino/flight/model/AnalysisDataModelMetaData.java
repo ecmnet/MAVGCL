@@ -50,6 +50,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import us.ihmc.log.LogTools;
+
 public class AnalysisDataModelMetaData extends Observable {
 
 	private static AnalysisDataModelMetaData instance = null;
@@ -90,7 +92,7 @@ public class AnalysisDataModelMetaData extends Observable {
 		} else {
 			is = AnalysisDataModelMetaData.class.getResourceAsStream("AnalysisDataModelMetaData.xml");
 			if(is==null) {
-				System.err.println("Path to resources cannot be found: AnalysisDataModelMetaData.xml");
+				LogTools.error("Path to resources cannot be found: AnalysisDataModelMetaData.xml");
 				System.exit(0);
 			}
 			buildDocument(is);
@@ -207,7 +209,7 @@ public class AnalysisDataModelMetaData extends Observable {
 			if(keyfigure.isVirtual)
 				virt.put(keyfigure.hash,keyfigure);
 		}
-		System.out.println(description+" (version "+version+") with "+count+" keyfigures ");
+		LogTools.info(description+" (version "+version+") with "+count+" keyfigures ");
 	}
 
 	private KeyFigureMetaData buildKeyFigure(Node kf_node) {

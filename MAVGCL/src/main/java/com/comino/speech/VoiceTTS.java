@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import javazoom.jl.player.Player;
+import us.ihmc.log.LogTools;
 
 public class VoiceTTS implements Runnable {
 
@@ -116,7 +117,7 @@ public class VoiceTTS implements Runnable {
 
 				}
 
-			} catch(Exception e) { System.err.println(e.getMessage()); e.printStackTrace(); System.out.println(text); }
+			} catch(Exception e) { LogTools.error(e.getMessage()); e.printStackTrace(); System.out.println(text); }
 		}
 
 		try {

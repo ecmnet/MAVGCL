@@ -47,6 +47,7 @@ import com.comino.mavcom.model.segment.LogMessage;
 
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.ULogReader;
+import us.ihmc.log.LogTools;
 
 public class UlogtoModelConverter {
 
@@ -107,12 +108,12 @@ public class UlogtoModelConverter {
 
 			state.getLogULOGProperty().set(true);
 			state.getProgressProperty().set(StateProperties.NO_PROGRESS);
-			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+			LogTools.info(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 
 		} catch(IOException e) {
 			if(errorFlag)
-				System.out.println("WARNING: Some of the key-figures were not available.");
-			System.out.println(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
+				LogTools.info("WARNING: Some of the key-figures were not available.");
+			LogTools.info(list.size()+" entries read. Timespan is "+tms_slot/1e6f+" sec");
 		}
 		
 	}

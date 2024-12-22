@@ -11,6 +11,8 @@ import org.mavlink.messages.lquac.msg_event;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import us.ihmc.log.LogTools;
+
 
 
 public class MAVEventMataData {
@@ -65,7 +67,7 @@ public class MAVEventMataData {
 		});
 
 
-		System.out.println("Event metadata parsed for namespace: "+namespace);
+		LogTools.info("Event metadata parsed for namespace: "+namespace);
 //
 //				event_map.forEach((id,event)->{
 //					System.out.println(id+": "+event.message);

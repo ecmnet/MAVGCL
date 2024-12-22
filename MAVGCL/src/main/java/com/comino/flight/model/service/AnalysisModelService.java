@@ -56,6 +56,7 @@ import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import us.ihmc.log.LogTools;
 
 
 public class AnalysisModelService  {
@@ -436,7 +437,7 @@ public class AnalysisModelService  {
 		public void run() {
 
 
-			System.out.println("AnalysisModelService converter thread started ..");
+            LogTools.info("AnalysisModelService converter thread started ..");
 			mode = STOPPED;
 
 
@@ -454,9 +455,9 @@ public class AnalysisModelService  {
 					current.setValue("MAVGCLNET", 0);
 					current.setValue("MAVGCLACC", perf);
 					synchronized(converter) {
-						System.out.println("Combined Converter is waiting");
+						LogTools.info("Combined Converter is waiting");
 						try { 	this.wait(); } catch (InterruptedException e) { }
-						System.out.println("Combined Converter continued");
+						LogTools.info("Combined Converter continued");
 					}
 					continue;
 				}

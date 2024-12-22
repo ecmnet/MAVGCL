@@ -55,6 +55,7 @@ import com.comino.mavutils.workqueue.WorkQueue;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import us.ihmc.log.LogTools;
 
 public class UBXRTCM3Base implements Runnable {
 
@@ -102,7 +103,7 @@ public class UBXRTCM3Base implements Runnable {
 		base = control.getCurrentModel().base;
 		status = control.getCurrentModel().sys;
 		
-		System.out.println("UBX Base driver started...");
+		LogTools.info("UBX Base driver started...");
 
 		ubxtask = wq.addCyclicTask("LP", 2000, this);
 

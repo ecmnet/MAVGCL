@@ -50,6 +50,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import us.ihmc.log.LogTools;
 
 public class StateProperties {
 
@@ -83,6 +84,7 @@ public class StateProperties {
 	private BooleanProperty isMP4RecordingProperty           = new SimpleBooleanProperty();
 	private BooleanProperty isVideoStreamAvailable           = new SimpleBooleanProperty();
 	private BooleanProperty isVideoAsBackground              = new SimpleBooleanProperty();
+	private BooleanProperty isMSPActive                      = new SimpleBooleanProperty();
 
 	private BooleanProperty isGPOSAvailable                  = new SimpleBooleanProperty();
 	private BooleanProperty isLPOSAvailable                  = new SimpleBooleanProperty();
@@ -117,7 +119,7 @@ public class StateProperties {
 	public static StateProperties getInstance(IMAVController control) {
 		if(instance == null) {
 			instance = new StateProperties(control);
-			System.out.println("States initialized");
+			LogTools.info("States initialized");
 		}
 		return instance;
 	}
@@ -125,6 +127,7 @@ public class StateProperties {
 	private StateProperties(IMAVController control) {
 		this.control = control;
 		this.logger = MSPLogger.getInstance();
+		
 
 		wq.addSingleTask("LP", 600, () ->  isInitializedProperty.set(true) );
 
@@ -199,6 +202,12 @@ public class StateProperties {
 			});
 		});
 
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_MSP_AVAILABILITY, (n) -> {
+			Platform.runLater(()-> {
+				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
+			});
+		});
+		
 		control.getStatusManager().addListener(StatusManager.TYPE_MSP_SERVICES,Status.MSP_MSP_AVAILABILITY, (n) -> {
 			Platform.runLater(()-> {
 				isMSPAvailable.set(n.isSensorAvailable(Status.MSP_MSP_AVAILABILITY));
@@ -281,7 +290,7 @@ public class StateProperties {
 
 	}
 
-	public BooleanProperty getMSPProperty() {
+	public BooleanProperty getMSPAvailableProperty() {
 		return isMSPAvailable;
 	}
 
@@ -343,6 +352,10 @@ public class StateProperties {
 
 	public BooleanProperty getLogLoadedProperty() {
 		return isLogLoadedProperty;
+	}
+	
+	public BooleanProperty getMSPProperty() {
+		return isMSPActive;
 	}
 
 	public BooleanProperty getLogULOGProperty() {

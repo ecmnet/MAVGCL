@@ -235,7 +235,7 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 						driver.setMode(Badge.MODE_ON);
 
-					if(msp_model.vision.isStatus(Vision.PUBLISHED))
+					if(msp_model.vision.isStatus(Vision.AVAILABLE))
 						vision.setMode(Badge.MODE_ON);
 					else
 						vision.setMode(Badge.MODE_OFF);
@@ -260,12 +260,12 @@ public class StatusLineWidget extends Pane implements IChartControl {
 						}
 					} else {
 
-						ready.setMode(Badge.MODE_ON);
 						if(ekf_status != 4) {
+							ready.setText("EKF2 Ready");
 							ready.setMode(Badge.MODE_OFF);
-							ready.setText("EKF2");
-
+							ready.setText("EKF2 READY");
 						} else {
+							ready.setVisible(true);
 							ready.setMode(Badge.MODE_ERROR);
 							ready.setText("NOT READY");
 						}
@@ -336,14 +336,14 @@ public class StatusLineWidget extends Pane implements IChartControl {
 
 					switch(control.getMode()) {
 					case MAVController.MODE_NORMAL:
-						mode.setText("Connected");
+						if(control.isSimulation()) 
+							mode.setText("SITL");
+						else
+							mode.setText("Connected");
 						break;
 					case MAVController.MODE_USB:
 						mode.setText("Serial");
 						break;
-					case MAVController.MODE_SITL:
-						mode.setText("SITL");
-						break;	
 					case MAVController.MODE_SITL_PROXY:
 						mode.setText("SITL Proxy");
 						break;	

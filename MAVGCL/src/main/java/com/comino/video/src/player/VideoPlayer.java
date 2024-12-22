@@ -67,8 +67,8 @@ public class VideoPlayer {
 			else  {	
 				if(replay_video.isOpen() && !state.getLogLoadedProperty().get())
 					replay_video.close();
-				if(!state.getConnectedProperty().get())
-					return;
+//				if(!state.getConnectedProperty().get())
+//					return;
 				if(source!=null || connect()) {
 					if(!source.isRunning()) {
 						source.start();

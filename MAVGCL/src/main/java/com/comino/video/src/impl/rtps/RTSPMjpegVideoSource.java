@@ -35,6 +35,7 @@ import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.proxy.MSPVideoProxy;
 
 import javafx.scene.image.Image;
+import us.ihmc.log.LogTools;
 
 public class RTSPMjpegVideoSource implements IMWVideoSource {
 	
@@ -268,7 +269,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 							} catch (Exception ex) { ex.printStackTrace(); }
 						} );
 					} else
-						System.out.println("NO VIDEO");
+						LogTools.info("NO VIDEO");
 
 				}
 				catch (InterruptedIOException iioe) { 
@@ -277,7 +278,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				}
 				catch (Exception ioe) {	
 //					ioe.printStackTrace();
-					System.err.println(ioe.getLocalizedMessage());
+					LogTools.error(ioe.getLocalizedMessage());
 					
 				}
 			}

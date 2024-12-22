@@ -41,6 +41,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import me.drton.jmavlib.log.px4.PX4LogReader;
 import me.drton.jmavlib.log.ulog.ULogReader;
+import us.ihmc.log.LogTools;
 
 public class MavLinkULOGHandler  implements IMAVLinkListener {
 
@@ -52,7 +53,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 	private static final int LOG_PACKAG_DATA_LENGTH = 90;
 	
 	private static final int MAX_CHUNK_SIZE         = 2500;
-	private static final int REQ_CYCLE_MS           = 33;
+	private static final int REQ_CYCLE_MS           = 5;
 
 	private int   mode = 0;
 
@@ -125,7 +126,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 				return;
 
 			props.getProgressProperty().set(StateProperties.NO_PROGRESS);
-			System.out.println(directory.size()+" log entries found");
+			LogTools.info(directory.size()+" log entries found");
 			switch(mode) {
 			case MODE_SELECT:
 
@@ -261,7 +262,7 @@ public class MavLinkULOGHandler  implements IMAVLinkListener {
 		ULogEntry entry = directory.get(id);
 
 		total_package_count = prepareUnreadPackageList(entry.size);
-		System.out.println("Expected packages: " + unread_packages.size()+"/"+entry.size);
+		LogTools.info("Expected packages: " + unread_packages.size()+"/"+entry.size);
 		logger.writeLocalMsg("[mgc] Importing Log (" + id + ") - " + (entry.size / 1024) + " kb");
 
 		start = System.currentTimeMillis();

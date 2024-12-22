@@ -42,6 +42,8 @@ import java.util.Map;
 import com.comino.flight.model.converter.SourceConverter;
 import com.comino.mavcom.model.DataModel;
 
+import us.ihmc.log.LogTools;
+
 public class KeyFigureMetaData {
 
 	private static final DecimalFormat f1 = new DecimalFormat("#0.0");
@@ -155,7 +157,7 @@ public class KeyFigureMetaData {
 				conv.setParameter(key,params);
 				sources.put(type, new DataSource(class_n,field,conv));
 			} catch(Exception e) {
-				System.err.println(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
+				LogTools.error(this.getClass().getPackage().getName()+".converter."+type+" : "+e.getMessage());
 			}
 		} else
 			sources.put(type, new DataSource(class_n,field,null));

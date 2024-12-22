@@ -363,15 +363,17 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 				} else {
 
-					control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
-							MAV_FRAME.MAV_FRAME_GLOBAL,
-							MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
-							0,2f,
-							Float.NaN,
-							(float)p.getLatitude()*1e7f,
-							(float)p.getLongitude()*1e7f,
-							Float.NaN
-							);
+					if(control.isSimulation()) {
+						control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
+								MAV_FRAME.MAV_FRAME_GLOBAL,
+								MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
+								0,2f,
+								Float.NaN,
+								(float)p.getLatitude()*1e7f,
+								(float)p.getLongitude()*1e7f,
+								Float.NaN
+								);
+					}
 
 				}
 			}

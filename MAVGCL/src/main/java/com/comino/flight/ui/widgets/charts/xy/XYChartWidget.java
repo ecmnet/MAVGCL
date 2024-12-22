@@ -399,31 +399,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			updateGraph(false,0);
 		});
 
-		//		xychart.setOnRotate(new EventHandler<RotateEvent>() {
-		//			@Override public void handle(RotateEvent event) {
-		//				System.err.println("Rectangle: Rotate event" +
-		//						", inertia: " + event.isInertia() +
-		//						", direct: " + event.isDirect() +
-		//						", Angle: " + event.getAngle()
-		//						);
-		//				event.consume();
-		//			}
-		//		});
-		//
-		//		xychart.setOnRotationStarted(new EventHandler<RotateEvent>() {
-		//			@Override public void handle(RotateEvent event) {
-		//				System.err.println("Rectangle: Rotate event started");
-		//				event.consume();
-		//			}
-		//		});
-		//
-		//		xychart.setOnRotationFinished(new EventHandler<RotateEvent>() {
-		//			@Override public void handle(RotateEvent event) {
-		//				System.err.println("Rectangle: Rotate event finished");
-		//				event.consume();
-		//			}
-		//		});
-
 
 		xAxis.setAutoRanging(true);
 		xAxis.setForceZeroInRange(false);

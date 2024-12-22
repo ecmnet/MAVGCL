@@ -47,6 +47,7 @@ import com.comino.flight.file.FileHandler;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import us.ihmc.log.LogTools;
 
 
 public class ReplayMP4VideoSource  {
@@ -180,7 +181,7 @@ public class ReplayMP4VideoSource  {
 		avcodec_parameters_to_context(codec_ctx, fmt_ctx.streams(stream_idx).codecpar());
 		AVCodec codec = avcodec_find_decoder(codec_ctx.codec_id());
 		
-		System.err.println("Bitrate "+codec_ctx.bit_rate());
+		LogTools.info("Bitrate "+codec_ctx.bit_rate());
 
 		if (codec == null) {
 			System.out.println("FFMPEG player No codec");

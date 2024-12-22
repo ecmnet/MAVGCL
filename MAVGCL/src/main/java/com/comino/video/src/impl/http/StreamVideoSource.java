@@ -55,6 +55,7 @@ import com.comino.video.src.IMWStreamVideoProcessListener;
 import com.comino.video.src.IMWVideoSource;
 
 import javafx.scene.image.Image;
+import us.ihmc.log.LogTools;
 
 
 
@@ -242,8 +243,7 @@ public class StreamVideoSource  implements IMWVideoSource, Runnable {
 										try {
 										l.process(image, fps, tms);
 										} catch (Exception e) {
-											e.printStackTrace();
-											System.err.println(e.getMessage());
+											LogTools.error(e.getMessage());
 										}
 									} );
 

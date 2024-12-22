@@ -88,6 +88,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import me.drton.jmavlib.log.FormatErrorException;
 import me.drton.jmavlib.log.ulog.ULogReader;
+import us.ihmc.log.LogTools;
 
 
 public class FileHandler {
@@ -174,7 +175,7 @@ public class FileHandler {
 					return (int)(o2.lastModified() - o1.lastModified());
 				}
 			});
-			System.out.println(list.length+" presets found");
+			LogTools.info(list.length+" presets found");
 			for(int i=0;i<list.length;i++)
 				presetfiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
 			Collections.sort(presetfiles);
@@ -198,7 +199,7 @@ public class FileHandler {
 					return (int)(o2.lastModified() - o1.lastModified());
 				}
 			});
-			System.out.println(list.length+" scenarios found");
+			LogTools.info(list.length+" scenarios found");
 			for(int i=0;i<list.length;i++)
 				scenariofiles.add(list[i].getName().substring(0, list[i].getName().length()-4));
 			Collections.sort(scenariofiles);
@@ -391,7 +392,7 @@ public class FileHandler {
 				@Override protected Void call() throws Exception {
 					if(file.getName().endsWith("mgc")) {
 						try {
-							System.out.println(file.getName()+" saved..");
+							LogTools.info(file.getName()+" saved..");
 							Writer writer = new FileWriter(file);
 							FileData data = new FileData(); data.prepareData(modelService,paramService, currentModel);
 							Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -402,7 +403,7 @@ public class FileHandler {
 							StateProperties.getInstance().getLogLoadedProperty().set(true);
 							name = file.getName();
 						} catch(Exception e) {
-							System.err.println(e.getMessage());
+							LogTools.error(e.getMessage());
 							stage.getScene().setCursor(Cursor.DEFAULT);
 						}
 					}
@@ -622,7 +623,7 @@ public class FileHandler {
 		long time = Instant.now().toEpochMilli() - 86400_000_0;
 		for(int i =0; i< logs.length;i++) {
 			if(logs[i].lastModified() < time ) {
-			 System.out.println("CleanUp deleted: "+logs[i].getName());
+				LogTools.info("CleanUp deleted: "+logs[i].getName());
 			 logs[i].delete();
 			}
 		}
@@ -680,7 +681,7 @@ public class FileHandler {
 			for(int i=0; i<paths.length;i++) {
 				try {
 					if(paths[i].getName().endsWith("xml") && !paths[i].getName().startsWith("_")) {
-						System.out.println("Loading keyfigure definitions of "+paths[i].getName());
+						LogTools.info("Loading keyfigure definitions of "+paths[i].getName());
 						meta.loadModelMetaData(new FileInputStream(paths[i]), true);
 					}
 				} catch (FileNotFoundException e) {
@@ -743,7 +744,7 @@ public class FileHandler {
 
 		}
 
-		System.out.println(name);
+		LogTools.info(name);
 
 	}
 

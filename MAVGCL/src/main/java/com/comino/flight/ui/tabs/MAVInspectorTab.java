@@ -63,6 +63,7 @@ import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
+import us.ihmc.log.LogTools;
 
 public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 
@@ -229,7 +230,7 @@ public class MAVInspectorTab extends Pane implements IMAVLinkListener {
 			if(!this.isDisabled() && MainApp.getPrimaryStage().isFocused())
 				parseMessageString(msg.toString().split("  "));	
 		} catch(Exception e) {
-			System.err.println(msg);
+			LogTools.error(msg);
 		}
 	}
 

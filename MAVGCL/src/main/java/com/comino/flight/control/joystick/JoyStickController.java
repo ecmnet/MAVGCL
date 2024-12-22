@@ -51,6 +51,8 @@ import com.comino.mavutils.MSPMathUtils;
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
 
+import us.ihmc.log.LogTools;
+
 
 
 public class JoyStickController implements Runnable {
@@ -201,7 +203,7 @@ public class JoyStickController implements Runnable {
 		this.pad = new ControllerManager();
 		this.pad.initSDLGamepad();
 		
-		System.out.println("JoystickController loaded");
+		LogTools.info("JoystickController loaded");
 
 		while(true) {
 			try {

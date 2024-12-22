@@ -104,6 +104,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import us.ihmc.log.LogTools;
 
 public class MainApp extends Application  {
 
@@ -244,7 +245,7 @@ public class MainApp extends Application  {
 			// To avoid MJPEG warnings
 			Logger.getLogger("javafx.scene.image").setLevel(Level.SEVERE);
 
-			System.out.println("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")+
+			LogTools.info("Initializing application ( Java: "+Runtime.version()+")"+" "+System.getProperty("java.vm.vendor")+
 					" JavaFX runtime "+com.sun.javafx.runtime.VersionInfo.getRuntimeVersion()+
 					" build on BoofCV "+BoofVersion.VERSION); 
 
@@ -274,8 +275,8 @@ public class MainApp extends Application  {
 					//new SITLController(control);
 				}
 				else  if(args.get("SERVER")!=null) {
-					System.out.println("Server");
-					control = new MAVUdpController("192.168.178.156",14656,14650, true);
+					LogTools.info("Connecting to VM");
+					control = new MAVUdpController("192.168.178.187",14656,14650, true);
 					//new SITLController(control);
 				}
 				else  if(args.get("SERIAL")!=null) {
@@ -303,7 +304,7 @@ public class MainApp extends Application  {
 				//				}
 			}
 
-			System.out.println("ControL: "+(System.currentTimeMillis()-startup)+"ms");
+			LogTools.info("ControL: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state = StateProperties.getInstance(control);
 			MSPLogger.getInstance(control);
@@ -316,7 +317,7 @@ public class MainApp extends Application  {
 			state.getInitializedProperty().addListener((v,o,n) -> {
 				if(n.booleanValue()) {
 
-					System.out.println("Initializing");
+					LogTools.info("Initializing");
 
 					if(command_line_options!=null && command_line_options.contains(".mgc") && !control.isConnected())
 						FileHandler.getInstance().fileImport(new File(command_line_options));
@@ -328,34 +329,32 @@ public class MainApp extends Application  {
 					try {
 						ntp_server.start();
 					} catch (Exception e1) {
-						System.out.println("NTP time server not started.");
+						LogTools.info("NTP time server not started.");
 					}
 
 				}
 			});
-
-			System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
 
 			MAVEventMataData.getInstance( );
 
 			MAVPreferences.init();
 			MAVGCLMap.getInstance(control);
 
-			System.out.println("Preferences: "+(System.currentTimeMillis()-startup)+"ms");
+			LogTools.info("Preferences: "+(System.currentTimeMillis()-startup)+"ms");
 
 			MAVGCLPX4Parameters.getInstance(control);
 
 			analysisModelService = AnalysisModelService.getInstance(control);
 			analysisModelService.startConverter();
 
-			System.out.println("Model: "+(System.currentTimeMillis()-startup)+"ms");
+			LogTools.info("Model: "+(System.currentTimeMillis()-startup)+"ms");
 
 			state.getConnectedProperty().addListener((e,o,n) -> {
 				if(n.booleanValue()) {
 
 					//control.getStatusManager().reset();
 					wq.addSingleTask("LP",500, () -> {			
-						System.out.println("Is simulation: "+control.isSimulation());
+						LogTools.info("Is simulation: "+control.isSimulation());
 						//	control.getStatusManager().reset();
 						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_REQUEST_MESSAGE, msg_autopilot_version.MAVLINK_MSG_ID_AUTOPILOT_VERSION);
 						if(!control.getCurrentModel().sys.isStatus(Status.MSP_INAIR) && control.getCurrentModel().sys.isStatus(Status.MSP_ACTIVE)) {
@@ -369,7 +368,7 @@ public class MainApp extends Application  {
 			if(!control.isConnected())
 				control.connect();
 
-			System.out.println("Connect: "+(System.currentTimeMillis()-startup)+"ms");
+			LogTools.info("Connect: "+(System.currentTimeMillis()-startup)+"ms");
 
 			log_filename = control.enableFileLogging(true,userPrefs.get(MAVPreferences.PREFS_DIR,
 					System.getProperty("user.home"))+"/MAVGCL");
@@ -391,7 +390,7 @@ public class MainApp extends Application  {
 				msp.param3  = (int)(userPrefs.getDouble(MAVPreferences.REFALT, 0))*1000;
 
 				control.sendMAVLinkMessage(msp);
-				System.out.println("Global Position origin set");
+				LogTools.info("Global Position origin set");
 
 
 			});
@@ -419,14 +418,14 @@ public class MainApp extends Application  {
 			initRootLayout();
 			showMAVGCLApplication();
 		} catch(Exception e) {
-			System.err.println("Errors occurred");
+			LogTools.error("Errors occurred");
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void stop() throws Exception {
-		System.out.println("[mgc] Closing...");
+		LogTools.info("[mgc] Closing...");
 		analysisModelService.close();
 		control.shutdown();
 		MAVPreferences.getInstance().putDouble("stage.x", primaryStage.getX());
@@ -448,7 +447,7 @@ public class MainApp extends Application  {
 			loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
 
-			System.out.println("Root: "+(System.currentTimeMillis()-startup)+"ms");
+			LogTools.info("Root: "+(System.currentTimeMillis()-startup)+"ms");
 
 			rootLayout.setCenter(new Label("Initializing MAVGCL ("+getBuildInfo().getProperty("build")+") application components..."));
 
@@ -457,11 +456,11 @@ public class MainApp extends Application  {
 
 
 			if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) {
-				System.out.println("Loading light theme");
+				LogTools.info("Loading light theme");
 				scene.getStylesheets().add(getClass().getResource("light.css").toExternalForm());
 			}
 			else {
-				System.out.println("Loading dark theme");
+				LogTools.info("Loading dark theme");
 				scene.setFill(Color.rgb(32,32,32));
 				scene.getStylesheets().add(getClass().getResource("dark.css").toExternalForm());
 			}
@@ -470,7 +469,7 @@ public class MainApp extends Application  {
 
 
 			Preferences userPrefs = MAVPreferences.getInstance();
-			System.out.println("Preferences loaded");
+			LogTools.info("Preferences loaded");
 
 			if(userPrefs.getDouble("stage.width", 100)>0 && userPrefs.getDouble("stage.height", 100) > 0 ) {
 				primaryStage.setX(userPrefs.getDouble("stage.x", 100));

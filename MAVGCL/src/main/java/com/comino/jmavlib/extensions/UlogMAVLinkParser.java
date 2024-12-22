@@ -58,6 +58,7 @@ import me.drton.jmavlib.log.ulog.MessageInfo;
 import me.drton.jmavlib.log.ulog.MessageInfoMultiple;
 import me.drton.jmavlib.log.ulog.MessageLog;
 import me.drton.jmavlib.log.ulog.MessageParameter;
+import us.ihmc.log.LogTools;
 
 public class UlogMAVLinkParser  {
 
@@ -213,7 +214,7 @@ public class UlogMAVLinkParser  {
 						containsUnknownIncompatBits = true;
 				}
 				if (containsUnknownIncompatBits) {
-					System.err.println("Log contains unknown incompatible bits. Refusing to parse the log.");
+					LogTools.error("Log contains unknown incompatible bits. Refusing to parse the log.");
 				}
 
 			} else if (msg instanceof MessageFormat) {
@@ -246,7 +247,7 @@ public class UlogMAVLinkParser  {
 				MessageAddLogged msgAddLogged = (MessageAddLogged) msg;
 				MessageFormat msgFormat = messageFormats.get(msgAddLogged.name);
 				if(msgFormat == null) {
-					System.err.println("Format of subscribed message not found: " + msgAddLogged.name);
+					LogTools.error("Format of subscribed message not found: " + msgAddLogged.name);
 					continue;
 				}
 				Subscription subscription = new Subscription(msgFormat, msgAddLogged.multiID);

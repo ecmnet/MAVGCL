@@ -108,17 +108,6 @@ public class CommanderWidget extends ChartControlPane  {
 			});
 		});
 
-		state.getLandedProperty().addListener((observable, oldvalue, newvalue) -> {
-			if(control!=null && control.isSimulation()) {
-				msg_manual_control rc = new msg_manual_control(255,1);
-				if(newvalue.booleanValue())
-					rc.z = 0;
-				else
-					rc.z = 500;
-				control.sendMAVLinkMessage(rc);
-			}
-		});
-
 
 		rtl_command.disableProperty().bind(state.getArmedProperty().not()
 				.or(StateProperties.getInstance().getLandedProperty()));
@@ -131,35 +120,19 @@ public class CommanderWidget extends ChartControlPane  {
 		});
 
 		arm_command.disableProperty().bind((state.getLandedProperty().not()
-				.and(state.getSimulationProperty().not()).or(state.getParamLoadedProperty().not())));
+				.and(state.getParamLoadedProperty().not())));
 
 		arm_command.setOnAction((ActionEvent event)-> {
-
 			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-
-				if(control.isSimulation()) {
-					
-					// SITL: Reset mode in order to be able to re-arm after offboard mode 
-					// TODO: Might be required for real vehicle also => Check; First try without props
-					
-					control.writeLogMessage(new LogMessage("[mgc] Arming prep.: Switch to Loiter",MAV_SEVERITY.MAV_SEVERITY_DEBUG));
-					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_SET_MODE, (cmd,result) -> {
-						if(result != MAV_RESULT.MAV_RESULT_ACCEPTED) 
-							control.writeLogMessage(new LogMessage("Arming preparation failed",MAV_SEVERITY.MAV_SEVERITY_DEBUG));
-					}, MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-							MAV_CUST_MODE.PX4_CUSTOM_MAIN_MODE_AUTO, MAV_CUST_MODE.PX4_CUSTOM_SUB_MODE_AUTO_LOITER);
-				}
-
-				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,( cmd,result) -> { 
-					if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
-						logger.writeLocalMsg("[mgc] Arming denied.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
-				},1 );
+			control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,( cmd,result) -> { 
+				if(result != MAV_RESULT.MAV_RESULT_ACCEPTED)
+					logger.writeLocalMsg("[mgc] Arming denied.",MAV_SEVERITY.MAV_SEVERITY_WARNING);
+			},1 );
 			} else {
 				if(model.sys.isStatus(Status.MSP_LANDED)) {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM,0 );
 				}
 			}
-
 		});
 
 		land_command.disableProperty().bind(state.getArmedProperty().not()
