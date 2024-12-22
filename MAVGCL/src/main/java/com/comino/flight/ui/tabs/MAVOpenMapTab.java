@@ -47,6 +47,12 @@ import org.lodgon.openmapfx.core.PositionLayer;
 import org.lodgon.openmapfx.providers.BingTileProvider;
 import org.lodgon.openmapfx.providers.OSMTileProvider;
 import org.lodgon.openmapfx.providers.WMFLabsTileProvider;
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_DO_REPOSITION_FLAGS;
+import org.mavlink.messages.MAV_FRAME;
+import org.mavlink.messages.MAV_MODE_FLAG;
+import org.mavlink.messages.MAV_RESULT;
+import org.mavlink.messages.MAV_SEVERITY;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
@@ -65,6 +71,8 @@ import com.comino.flight.ui.widgets.panel.AirWidget;
 import com.comino.flight.ui.widgets.panel.ChartControlWidget;
 import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
+import com.comino.mavcom.mavlink.MAV_CUST_MODE;
+import com.comino.mavcom.model.segment.LogMessage;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
@@ -226,7 +234,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		type = 0;
 
 		map = new LayeredMap(satellite_provider);
-		
+
 
 		mapviewpane.setCenter(map);
 
@@ -335,13 +343,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		});
 
 		map.setOnMouseClicked(click -> {
-			if (click.getClickCount() == 2)
+			if (click.getClickCount() == 1)
 				setCenter(centermode);
 			else {
+
+				Position p = map.getMapPosition(click.getX(), click.getY());
 				float[] xy = new float[2];
 				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)
 						&& MSPMathUtils.is_projection_initialized()) {
-					Position p = map.getMapPosition(click.getX(), click.getY());
 					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
 						msg_msp_command msp = new msg_msp_command(255,1);
 						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
@@ -351,6 +360,19 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 						msp.param4 =  Float.NaN;
 						control.sendMAVLinkMessage(msp);
 					}
+
+				} else {
+
+					control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
+							MAV_FRAME.MAV_FRAME_GLOBAL,
+							MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
+							0,2f,
+							Float.NaN,
+							(float)p.getLatitude()*1e7f,
+							(float)p.getLongitude()*1e7f,
+							Float.NaN
+							);
+
 				}
 			}
 			click.consume();
@@ -655,5 +677,5 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			break;
 		}
 	}
-	
+
 }
