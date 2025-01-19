@@ -183,7 +183,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 		world.setOnMouseClicked((me) -> {
 			if(me.getClickCount()==2) {
-				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+				if(StateProperties.getInstance().getMSPAvailableProperty().get()) {
 					PickResult pr = me.getPickResult();
 					Point3D p = pr.getIntersectedNode().localToParent(pr.getIntersectedPoint());
 

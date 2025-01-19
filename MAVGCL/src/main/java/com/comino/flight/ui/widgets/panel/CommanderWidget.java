@@ -176,23 +176,23 @@ public class CommanderWidget extends ChartControlPane  {
 
 		takeoff_command.setOnAction((ActionEvent event)-> {
 			if(model.hud.ag!=Float.NaN && model.sys.isStatus(Status.MSP_LPOS_VALID) ) {
-				if(state.getMSPProperty().get()) {
-
-					msg_msp_command msp = new msg_msp_command(255,1);
-					msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
-					msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
-
-					if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF))
-						msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
-					else
-						msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
-					control.sendMAVLinkMessage(msp);
-
-				}
-				else {
+//				if(state.getMSPProperty().get()) {
+//
+//					msg_msp_command msp = new msg_msp_command(255,1);
+//					msp.command = MSP_CMD.MSP_CMD_AUTOMODE;
+//					msp.param2 =  MSP_AUTOCONTROL_ACTION.TAKEOFF;
+//
+//					if(!control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_ACTION.TAKEOFF))
+//						msp.param1  = MSP_COMPONENT_CTRL.ENABLE;
+//					else
+//						msp.param1  = MSP_COMPONENT_CTRL.DISABLE;
+//					control.sendMAVLinkMessage(msp);
+//
+//				}
+//				else {
 					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_NAV_TAKEOFF, -1, 0, 0, Float.NaN, Float.NaN, Float.NaN,Float.NaN);
 					Platform.runLater(() -> takeoff_command.setState(false));
-				}
+//				}
 			}
 			else {
 				if(model.sys.isStatus(Status.MSP_LANDED))

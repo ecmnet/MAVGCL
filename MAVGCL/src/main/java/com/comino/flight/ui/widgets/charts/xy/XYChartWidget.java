@@ -40,6 +40,9 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
+import org.mavlink.messages.MAV_CMD;
+import org.mavlink.messages.MAV_DO_REPOSITION_FLAGS;
+import org.mavlink.messages.MAV_FRAME;
 import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
@@ -108,6 +111,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import us.ihmc.log.LogTools;
 
 // TODO: Add planned path
 
@@ -344,8 +348,41 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 			//	updateGraph(true,0);
 			} else {
 				if(dataService.isCollecting()) {
-					// set target if collecting
-					if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)) {
+					
+//					Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
+////					float y = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
+////					float x = yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue();
+//					
+//					double[] p = new double[2];
+//					
+//					if(!MSPMathUtils.map_projection_reproject(xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue(), 
+//							                                  yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue(),
+//							                                  2.0f,
+//							                                  p)) {
+//						LogTools.warn("Map projection not initialized");
+//						return;
+//					}
+//					
+//					System.err.println((float)p[0]+"/"+(float)p[1]);
+//					
+//					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_CHANGE_SPEED,
+//							1.0f,
+//							0.3f,
+//						   -1.0f,
+//						    0
+//						   );
+//					control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
+//							MAV_FRAME.MAV_FRAME_GLOBAL,
+//							MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
+//							0,0f,
+//							Float.NaN,
+//							(float)p[0],
+//							(float)p[1],
+//							Float.NaN
+//							);
+					
+//					// set target if collecting
+				//	if(StateProperties.getInstance().getMSPProperty().get()) {
 						Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
 						float x = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
 						float y = yAxis.getValueForDisplay(yAxis.sceneToLocal(mouseSceneCoords).getX()).floatValue();
@@ -356,7 +393,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 						msp.param3 =  Float.NaN;
 						msp.param4 =  Float.NaN;
 						control.sendMAVLinkMessage(msp);
-					}
+				//	}
 				} else {
 					if(click.getButton().compareTo(MouseButton.SECONDARY)==0)
 						this.copyToClipboardImage();

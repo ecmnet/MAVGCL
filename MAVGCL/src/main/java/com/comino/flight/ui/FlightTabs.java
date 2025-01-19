@@ -170,7 +170,7 @@ public class FlightTabs extends Pane {
 		mavlinkshelltab.setup(control);
 
 //		this.tabpane.getTabs().get(5).setDisable(true);
-//		this.tabpane.getTabs().get(6).setDisable(true);
+	
 
 
 		StateProperties.getInstance().getConnectedProperty().addListener((observable, oldvalue, newvalue) -> {

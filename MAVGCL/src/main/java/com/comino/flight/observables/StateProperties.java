@@ -133,7 +133,7 @@ public class StateProperties {
 
 		control.getStatusManager().addListener(Status.MSP_ACTIVE, (n) -> {
 			Platform.runLater(()-> {
-				isMSPAvailable.set(n.isStatus(Status.MSP_ACTIVE));
+				isMSPActive.set(n.isStatus(Status.MSP_ACTIVE));
 			});
 		});
 

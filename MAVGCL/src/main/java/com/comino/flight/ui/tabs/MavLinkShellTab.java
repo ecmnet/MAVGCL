@@ -89,7 +89,7 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	private char[] bytes = new char[132];
 
-	private msg_serial_control msg;
+	private msg_serial_control msg = new msg_serial_control(255,1);
 
 
 	public MavLinkShellTab() {
@@ -255,8 +255,14 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 	@Override
 	public void received(Object _msg) {
+		
 		if(!isDisabled() && _msg instanceof msg_serial_control) {
 			final msg_serial_control msg = (msg_serial_control)_msg;
+			
+//			if (msg.device != SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL) {
+//		        return;
+//		    }
+			
 			int j=0;
 			if(msg.count > 0) {
 				for(int i=0;i<=msg.count && i < msg.data.length;i++) {
@@ -284,29 +290,35 @@ public class MavLinkShellTab extends Pane implements IMAVLinkListener  {
 
 
 	private void writeToShell(String s) {
-
 		if(s!=null) {
 			Arrays.fill(msg.data, 0);
+			msg.target_system = 1;
+			msg.target_component = 1;
 			try {
 				if(s.equals("\n")) {
 					msg.data[0] = 13;
 					msg.count = 1;
 				}
 				else {
+					int i=0;
 					byte[] bytes = s.getBytes("US-ASCII");
-					for(int i =0;i<bytes.length && i<70;i++)
+					for(i=0;i<bytes.length && i<70;i++)
 						msg.data[i] = bytes[i];
-					msg.count = bytes.length;
-				}		
+					msg.count = bytes.length > 70 ? 70 : bytes.length;
+			
+			   }	
 				msg.target_system = 1;
 				msg.target_component = 1;
+				msg.timeout =0;
 				msg.device = SERIAL_CONTROL_DEV.SERIAL_CONTROL_DEV_SHELL;
-				msg.flags  = SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND ;
+				msg.flags  =  SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_RESPOND | SERIAL_CONTROL_FLAG.SERIAL_CONTROL_FLAG_EXCLUSIVE;
+				
 
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			control.sendMAVLinkMessage(msg);
+		control.sendMAVLinkMessage(msg);
+		
 		} 
 	}
 

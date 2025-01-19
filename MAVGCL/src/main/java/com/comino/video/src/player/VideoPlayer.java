@@ -12,6 +12,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.video.src.IMWVideoSource;
 import com.comino.video.src.impl.http.MJpegVideoSource;
 import com.comino.video.src.impl.replay.ReplayMP4VideoSource;
+import com.comino.video.src.impl.rtps.RTPSH264VideoSource;
 import com.comino.video.src.impl.rtps.RTSPMjpegVideoSource;
 import com.comino.video.src.mp4.MP4FFMpegRecorder;
 
@@ -19,6 +20,7 @@ import com.comino.video.src.mp4.MP4FFMpegRecorder;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import us.ihmc.log.LogTools;
 
 public class VideoPlayer {
 	
@@ -104,7 +106,7 @@ public class VideoPlayer {
 	public boolean recording(boolean recording) {
 		
 		if(recorder == null) {
-			System.out.println("No recorder available. Video not recorded");
+			LogTools.warn("No recorder available. Video not recorded");
 			return false;
 		}
 		
@@ -241,12 +243,12 @@ public class VideoPlayer {
 				} 
 				else {
 					stop();
-					System.out.println("Replay video not opened");
+					LogTools.warn("Replay video not opened");
 				}
 
 			} 
 			else {
-				System.out.println("Replay camera closed. Returning to current streams");
+				LogTools.info("Replay camera closed. Returning to current streams");
 				if(replay_video.isOpen()) 
 					replay_video.close();
 				if(state.getConnectedProperty().get()) {
@@ -277,26 +279,32 @@ public class VideoPlayer {
 
 		if(isConnected)
 			return true;
+		
+		Platform.runLater(() -> {
+			image.setImage(null);
+		});
 
 
-		if(prefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").contains("%"))
-			url_string = prefs.get(MAVPreferences.PREFS_VIDEO,"http://%:8080/mjpeg").replace("%", control.getConnectedAddress());
+		if(prefs.get(MAVPreferences.PREFS_VIDEO,"http://%:1051/stream").contains("%"))
+			url_string = prefs.get(MAVPreferences.PREFS_VIDEO,"http://%:1051/stream").replace("%", control.getConnectedAddress());
 		else
 			url_string = prefs.get(MAVPreferences.PREFS_VIDEO,"none");
+		
+//		url_string = "rtsp://192.168.178.187:1051/stream";
 
 		try {
 			URI url = new URI(url_string);
 
-			System.out.println("try connect to "+url.toString());
+			LogTools.info("try connect to "+url.toString());
 
 			if(url.toString().startsWith("http")) {
 				source = new MJpegVideoSource(url,model.getCurrent());
 			} 
 			else if(url.toString().startsWith("rtsp")) {
-				source = new RTSPMjpegVideoSource(url,control.getCurrentModel());
+				source = new RTPSH264VideoSource(url.toString(),control.getCurrentModel());
 			}
 			else {
-				System.out.println("Streaming protocol not supported");
+				LogTools.warn("Streaming protocol not supported");
 				return false;
 			}
 			source.removeListeners();
@@ -305,6 +313,7 @@ public class VideoPlayer {
 			  source.addProcessListener(recorder);
 			
 			source.addProcessListener((im, fps, tms) -> {
+               
 				if(image.isVisible())
 					Platform.runLater(() -> {
 						image.setImage(im);
@@ -312,7 +321,7 @@ public class VideoPlayer {
 					});
 			});
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			LogTools.error(e.getMessage());
 			return false;
 		}
 

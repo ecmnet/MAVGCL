@@ -73,6 +73,7 @@ import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.mavlink.MAV_CUST_MODE;
 import com.comino.mavcom.model.segment.LogMessage;
+import com.comino.mavcom.model.segment.Status;
 import com.comino.mavutils.MSPMathUtils;
 import com.comino.openmapfx.ext.CanvasLayer;
 import com.comino.openmapfx.ext.GoogleMapsTileProvider;
@@ -110,6 +111,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import us.ihmc.log.LogTools;
 
 
 
@@ -348,9 +350,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			else {
 
 				Position p = map.getMapPosition(click.getX(), click.getY());
+				
 				float[] xy = new float[2];
-				if(control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)
-						&& MSPMathUtils.is_projection_initialized()) {
+				if( // control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE) &&
+						control.getCurrentModel().sys.isSensorAvailable(Status.MSP_ROS_AVAILABILITY) &&
+						MSPMathUtils.is_projection_initialized()) {
 					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
 						msg_msp_command msp = new msg_msp_command(255,1);
 						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
@@ -364,6 +368,19 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				} else {
 
 					if(control.isSimulation()) {
+						double speed = MSPMathUtils.getDistance(p.getLatitude(), p.getLongitude(), model.getValue("GLOBLAT"), model.getValue("GLOBLON"))
+								       / 10.0 ;
+						
+						if(speed > 10.0) speed = 10.0;
+						if(speed < 0.3)  speed = 0.3;
+						
+						
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_CHANGE_SPEED,
+								1.0f,
+								(float)speed,
+							   -1.0f,
+							    0
+							   );
 						control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
 								MAV_FRAME.MAV_FRAME_GLOBAL,
 								MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,

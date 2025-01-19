@@ -44,7 +44,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 	private DatagramPacket rcvdp;            //UDP packet received from the server
 	private DatagramSocket RTPsocket;        //socket to be used to send and receive UDP packets
-	private static int RTP_RCV_PORT = 25000; //port where the client will receive the RTP packets
+	private static int RTP_RCV_PORT = 5004; //port where the client will receive the RTP packets
 
 	//Video constants:
 	//------------------
@@ -84,7 +84,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 
 	//private FrameSynchronizer fsynch;
 
-	private final static String CRLF = "\r\n";
+	private final static String CRLF = "\r\n\r\n";
 
 	public RTSPMjpegVideoSource(URI uri, DataModel model) {
 
@@ -98,7 +98,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		try {
 			ServerIPAddr = InetAddress.getByName(uri.getHost());
 			ServerPort   = uri.getPort();
-			System.out.println("Video: "+ServerIPAddr);
+			System.out.println("VideoSource: "+ServerIPAddr.getHostAddress());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -130,7 +130,7 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		sendRequest("TEARDOWN");
 		isRunning = false;
 
-		parseServerResponse();
+		//parseServerResponse();
 		closeStream();	
 		//}
 	}
@@ -160,12 +160,13 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		try {
 
 			RTSPsocket = new Socket(ServerIPAddr, ServerPort);
-			RTSPsocket.setSoTimeout(2000);
+			RTSPsocket.setSoTimeout(1000);
 
 			try {
 				//construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT
 				RTPsocket = new DatagramSocket(RTP_RCV_PORT);
 				RTPsocket.setReceiveBufferSize(1024*1024);
+			
 				RTPsocket.setSoTimeout(60000);
 			
 			}
@@ -186,9 +187,25 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		}
 
 		RTSPSeqNb = 1;
+		
+//		sendRequest("OPTIONS");
+//		//Wait for the response 
+//		if (parseServerResponse() != 200) {
+//			System.out.println("Invalid Server Response");
+//			isRunning = false;
+//			return;
+//		}
+//		
+//		sendRequest("DESCRIBE");
+//		//Wait for the response 
+//		if (parseServerResponse() != 200) {
+//			System.out.println("Invalid Server Response");
+//			isRunning = false;
+//			return;
+//		}
+//		
 
 		sendRequest("SETUP");
-
 		//Wait for the response 
 		if (parseServerResponse() != 200) {
 			System.out.println("Invalid Server Response");
@@ -203,6 +220,25 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		RTSPSeqNb++;
 		//Send PLAY message to the server
 		sendRequest("PLAY");
+		try {
+			//parse status line and extract the reply_code:
+			String StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+			StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
+		}	catch(Exception e) { }
+		
+
 
 	}
 
@@ -225,6 +261,8 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 				try {
 					//receive the DP from the socket, save time for stats
 					RTPsocket.receive(rcvdp);
+					
+					LogTools.info("received");
 
 					//create an RTPpacket object from the DP
 					RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
@@ -293,25 +331,29 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		try {
 			//parse status line and extract the reply_code:
 			String StatusLine = RTSPBufferedReader.readLine();
+			LogTools.info(StatusLine);
 			StringTokenizer tokens = new StringTokenizer(StatusLine);
 			tokens.nextToken(); //skip over the RTSP version
 			reply_code = Integer.parseInt(tokens.nextToken());
-
+			
 			//if reply code is OK get and print the 2 other lines
 			if (reply_code == 200) {
-
 				String SeqNumLine = RTSPBufferedReader.readLine();
-
+				RTSPBufferedReader.readLine(); RTSPBufferedReader.readLine();
 				String SessionLine = RTSPBufferedReader.readLine();
 				tokens = new StringTokenizer(SessionLine);
 				String temp = tokens.nextToken();
-
 				if (temp.compareTo("Session:") == 0) {
 					RTSPid = tokens.nextToken();
+					LogTools.info("Session started: "+RTSPid);;
 				}
+			} else {
+				LogTools.error(StatusLine);;
+				RTPsocket.close();
 			}
 		} catch(SocketTimeoutException t) {
-			System.out.println("timeout");
+			System.out.println("Timeout");
+			RTPsocket.close();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -323,25 +365,24 @@ public class RTSPMjpegVideoSource implements IMWVideoSource {
 		
 		try {
 			//Use the RTSPBufferedWriter to write to the RTSP socket
+			LogTools.info(request_type);;
 
-			//write the request line:
-			RTSPBufferedWriter.write(request_type + " RTSP/1.0" + CRLF);
+	
 
-			//write the CSeq line: 
-			RTSPBufferedWriter.write("CSeq: " + RTSPSeqNb + CRLF);
 
 			//check if request_type is equal to "SETUP" and in this case write the 
 			//Transport: line advertising to the server the port used to receive 
 			//the RTP packets RTP_RCV_PORT
 			if (request_type == "SETUP") {
-				RTSPBufferedWriter.write("Transport: RTP/UDP; client_port= " + RTP_RCV_PORT + CRLF);
+				RTSPBufferedWriter.write(request_type + " rtsp://0.0.0.0:1051/stream RTSP/1.0\nCSeq: " + RTSPSeqNb + "\nTransport: RTP/UDP;multicast;client_port=" + RTP_RCV_PORT + CRLF);
 			}
 			else if (request_type == "DESCRIBE") {
-				RTSPBufferedWriter.write("Accept: application/sdp" + CRLF);
+				RTSPBufferedWriter.write(request_type + " rtsp://0.0.0.0:1051/:1051/stream RTSP/1.0\nCSeq: " + RTSPSeqNb + "\nAccept: application/sdp" + CRLF);
 			}
 			else {
 				//otherwise, write the Session line from the RTSPid field
-				RTSPBufferedWriter.write("Session: " + RTSPid + CRLF);
+				RTSPBufferedWriter.write(request_type + " rtsp://0.0.0.0:1051/stream RTSP/1.0\nCSeq: " + RTSPSeqNb + "\nSession: " + RTSPid+ CRLF);
+				
 			}
 
 			RTSPBufferedWriter.flush();
