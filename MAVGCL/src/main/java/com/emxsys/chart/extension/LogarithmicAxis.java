@@ -127,7 +127,7 @@ public class LogarithmicAxis extends NumericAxis {
      * Binds our logarithmic bounds with the super class bounds. 
      */
     private void bindLogBoundsToDefaultBounds() {
-        // TODO: consider other than the base 10 logarithmic scale.
+      
         logLowerBound.bind(new DoubleBinding() {
             {
                 super.bind(lowerBoundProperty());
@@ -279,8 +279,6 @@ public class LogarithmicAxis extends NumericAxis {
         this.base = base;
         this.baseLog = Math.log(base);
 
-        // TODO: notify chart that axis has changed
-        // TODO: this should be a property!
     }
 
     public double calculateLog(double value) {

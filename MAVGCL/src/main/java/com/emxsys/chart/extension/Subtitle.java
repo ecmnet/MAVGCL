@@ -74,7 +74,7 @@ public class Subtitle {
         subtitleLabel.getStyleClass().add("chart-subtitle");
         subtitleLabel.setAlignment(Pos.CENTER);
 
-        // TODO: could possibly discover or validate title and content based on styles...
+       
         // Observe this excerpt from the Chart constructor:
         //        titleLabel.getStyleClass().add("chart-title");
         //        chartContent.getStyleClass().add("chart-content");

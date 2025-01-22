@@ -78,7 +78,7 @@ public class MAVGCLMap  {
 //					list.add(model.grid.pop());
 //				}
 //
-//				// TODO: Access AnalysisDatamodel
+//				//Task: Access AnalysisDatamodel
 //				origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
 //				last_update  = System.currentTimeMillis();
 //			}

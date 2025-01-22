@@ -57,6 +57,7 @@ import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.model.segment.Vision;
 import com.comino.mavcom.status.StatusManager;
+import com.comino.video.src.player.VideoPlayer;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -76,6 +77,7 @@ import javafx.scene.paint.Color;
 public class MSPCtlWidget extends ChartControlPane   {
 
 	private static final String[]  STREAMS = { "FPV+Down", "Down", "Depth", "FPV" };
+	
 
 
 	@FXML

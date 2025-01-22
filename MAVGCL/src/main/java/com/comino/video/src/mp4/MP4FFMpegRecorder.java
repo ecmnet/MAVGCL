@@ -36,12 +36,15 @@ package com.comino.video.src.mp4;
 
 import java.awt.image.BufferedImage;
 
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
+import com.comino.flight.model.AnalysisDataModel;
+import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.video.src.IMWStreamVideoProcessListener;
 
@@ -51,28 +54,31 @@ import javafx.scene.image.Image;
 public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 
 	private final StateProperties state = StateProperties.getInstance();
-	private static final int VIDEO_BITRATE = 1500_000;
+	private static final int VIDEO_BITRATE = 500_000;
 
 	private FFmpegFrameRecorder recorder;
 	private final Java2DFrameConverter biconv = new Java2DFrameConverter();;
 	private String path;
-	private long tms_start = 0;
 	private BufferedImage bimg = null;
 	private boolean isRunning;
+	private final AnalysisModelService model;
 
 
 	public MP4FFMpegRecorder(String path) {
-		this.path = path;
+		this.path    = path;
+		this.model   = AnalysisModelService.getInstance();
 	}
 
 	public void start() {
+		
+		//TODO: Videorecording not working
+		
 		try {
-			recorder = new FFmpegFrameRecorder(path+"/video.mp4",640,480,0);
+			recorder = new FFmpegFrameRecorder(path+"/video.mp4",1280,720,0);
 			recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
 			recorder.setGopSize(1);
 			recorder.setVideoBitrate(VIDEO_BITRATE);
-			recorder.setFrameRate(20);
-			tms_start = 0;
+			recorder.setFrameRate(25);
 			recorder.start();
 			state.getMP4RecordingProperty().set(true);
 			System.out.println("MP4 recording started - MP4");
@@ -101,19 +107,15 @@ public class MP4FFMpegRecorder implements IMWStreamVideoProcessListener {
 	}
 
 	@Override
-	public void process(Image image,  float fps, long tms) throws Exception {
+	public void process(Image image,  AVCodecContext context) throws Exception {
 		if(state.getMP4RecordingProperty().get() && image!=null & isRunning) {
 			bimg = SwingFXUtils.fromFXImage(image, bimg);
 			Frame frame = biconv.convert(bimg);
-			if(tms_start == 0) {
-				tms_start = tms;
-			}
-			recorder.setFrameRate((int)fps);
-			frame.sampleRate  = (int)fps;
-			frame.timestamp   = (tms - tms_start)*(long)fps*1000;
+			recorder.setVideoBitrate((int)context.bit_rate());
+			recorder.setFrameRate(context.sample_rate());
+			frame.sampleRate  =context.framerate().num() / context.framerate().den();
 			frame.keyFrame    = true;
-		
-		   
+			frame.timestamp   = model.getCurrent().tms;
 			recorder.record(frame,avutil.AV_PIX_FMT_0RGB);
 		
 		

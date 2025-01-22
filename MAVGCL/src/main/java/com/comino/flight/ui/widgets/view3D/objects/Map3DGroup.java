@@ -117,7 +117,7 @@ public class Map3DGroup {
 
 			info.mapToGlobal(pos,map.getOrigin(), global);
 
-			// TODO: Fix rotation
+			// TAsk:Fix rotation
 			final Box box = new Box(size, size, size);
 			box.setTranslateZ(global.x*100);
 			box.setTranslateX(-global.y*100);

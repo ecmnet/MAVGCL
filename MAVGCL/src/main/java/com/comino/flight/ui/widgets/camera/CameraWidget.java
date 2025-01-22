@@ -65,7 +65,7 @@ import javafx.scene.layout.Pane;
 public class CameraWidget extends ChartControlPane implements IChartControl {
 
 	private int X = 640 ;
-	private int Y = 480 ;
+	private int Y = 360 ;
 
 
 	@FXML
@@ -132,18 +132,21 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 			msp.command = MSP_CMD.SELECT_VIDEO_STREAM;
 			msp.param1  = nv.intValue();
 			control.sendMAVLinkMessage(msp);
+			var player = VideoPlayer.getInstance();
+			if(player!=null)
+				player.changeStreamSource(state.getStreamProperty().intValue());
 		});
 
 		state.getRecordingProperty().addListener((o,ov,nv) -> {
 
-			if(nv.intValue()!=AnalysisModelService.STOPPED) {
-				if(player.recording(true)) 
-					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-
-			} else {
-				if(player.recording(false))
-					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
-			}
+//			if(nv.intValue()!=AnalysisModelService.STOPPED) {
+//				if(player.recording(true)) 
+//					logger.writeLocalMsg("[mgc] MP4 recording started", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+//
+//			} else {
+//				if(player.recording(false))
+//					logger.writeLocalMsg("[mgc] MP4 recording stopped", MAV_SEVERITY.MAV_SEVERITY_NOTICE);
+//			}
 		});
 
 		scroll.addListener((v, ov, nv) -> {
@@ -179,7 +182,7 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 
 		this.control = control;
 		this.widget  = flightControl.getControl();
-		this.player  = new VideoPlayer(control,image,true);
+		this.player  = VideoPlayer.getInstance(control,image,true);
 
 		ChartControlPane.addChart(91,this);
 

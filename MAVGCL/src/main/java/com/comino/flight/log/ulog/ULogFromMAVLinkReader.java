@@ -125,7 +125,6 @@ public class ULogFromMAVLinkReader implements IMAVLinkListener {
 				control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_LOGGING_START,0);
 
 				while(state!=STATE_DATA ) {
-					// TODO: This is blocking the UI Thread -> resolve
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {	}

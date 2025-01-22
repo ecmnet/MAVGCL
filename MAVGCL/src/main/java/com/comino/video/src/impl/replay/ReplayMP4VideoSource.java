@@ -83,7 +83,7 @@ public class ReplayMP4VideoSource  {
 	
 	public Image playAt(long time_ms, float fps) {
 		
-		Long time = (long)(time_ms*15f/1000_000f);
+		Long time = (long)(time_ms*30f/2000f);
 
 		if(stream_idx < 0)
 			return null;
@@ -182,6 +182,7 @@ public class ReplayMP4VideoSource  {
 		AVCodec codec = avcodec_find_decoder(codec_ctx.codec_id());
 		
 		LogTools.info("Bitrate "+codec_ctx.bit_rate());
+		LogTools.info("Samplerate "+codec_ctx.sample_rate());
 
 		if (codec == null) {
 			System.out.println("FFMPEG player No codec");
@@ -228,7 +229,7 @@ public class ReplayMP4VideoSource  {
 	
 	private Image play(long time) {
 		
-		if(av_seek_frame(fmt_ctx,0,time,0)<0) 
+		if(av_seek_frame(fmt_ctx,-1,time,0)<0) 
 			return image;
 
 		if(av_read_frame(fmt_ctx, pkt) < 0)

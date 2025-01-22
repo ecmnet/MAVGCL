@@ -289,7 +289,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		//					first = true;
 		//				}
 		//
-		//				// TODO MAVOpenMapTab: Draw path also in replay
 		//
 		//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
 		//						(dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms()) {

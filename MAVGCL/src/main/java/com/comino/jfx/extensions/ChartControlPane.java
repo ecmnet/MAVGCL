@@ -113,7 +113,7 @@ public class ChartControlPane extends Pane {
 		this.state  = StateProperties.getInstance();
 		this.prefs  = MAVPreferences.getInstance();
 		this.logger = MSPLogger.getInstance();
-
+		
 		in = new FadeTransition(Duration.millis(duration_ms), this);
 		in.setFromValue(0.0);
 		in.setToValue(1.0);

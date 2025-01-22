@@ -53,7 +53,7 @@ public class MAVEventMataData {
 			map.getValue().getAsJsonObject().get("events").getAsJsonObject().entrySet().forEach((event) -> {
 				EventMetaData event_meta_data = new EventMetaData( );
 				event_meta_data.message = event.getValue().getAsJsonObject().get("message").getAsString();
-				// TODO: Replace formatting with Java formatting
+				// Task: Replace formatting with Java formatting
 				var _arguments = event.getValue().getAsJsonObject().get("arguments");
 				if(_arguments!=null) {
 					_arguments.getAsJsonArray().forEach((argument) -> {

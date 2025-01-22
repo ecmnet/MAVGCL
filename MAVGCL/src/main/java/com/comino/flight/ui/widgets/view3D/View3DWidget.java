@@ -222,7 +222,7 @@ public class View3DWidget extends SubScene implements IChartControl {
 
 
 		// search for takeoff 
-		// TODO: What if no takeoff found
+		// Task: What if no takeoff found
 		//
 		state.getLogLoadedProperty().addListener((v,o,n) -> {
 			if(n.booleanValue()) {

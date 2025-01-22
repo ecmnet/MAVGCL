@@ -40,10 +40,6 @@ import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
 
-import org.mavlink.messages.MAV_CMD;
-import org.mavlink.messages.MAV_DO_REPOSITION_FLAGS;
-import org.mavlink.messages.MAV_FRAME;
-import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
 import org.mavlink.messages.MSP_CMD;
 import org.mavlink.messages.lquac.msg_msp_command;
 
@@ -111,9 +107,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import us.ihmc.log.LogTools;
-
-// TODO: Add planned path
 
 public class XYChartWidget extends BorderPane implements IChartControl, ICollectorRecordingListener {
 
@@ -726,7 +719,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 
 		annotation.selectedProperty().set(true);
 
-		// TODO: handle grid annotation properly
+		// Task: handle grid annotation properly
 		//		show_grid.setDisable(true);
 
 

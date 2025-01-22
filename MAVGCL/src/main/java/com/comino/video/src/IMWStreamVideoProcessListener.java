@@ -33,13 +33,13 @@
 
 package com.comino.video.src;
 
-import java.awt.image.BufferedImage;
+import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
 
 import javafx.scene.image.Image;
 
 
 public interface IMWStreamVideoProcessListener {
 
-	public void process(Image image,  float fps, long tms) throws Exception;
+	public void process(Image image,  AVCodecContext context) throws Exception;
 
 }

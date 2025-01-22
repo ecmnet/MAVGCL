@@ -341,7 +341,7 @@ public class NumericAxis extends ValueAxis<Number> {
             getLowerBound(),
             getUpperBound(),
             getTickUnit(),
-            //this.tickUnit,  // TODO: Select from TickUnitSource
+            //this.tickUnit,  /
             getScale(), //currentFormatterProperty.get()
         };
     }
@@ -364,7 +364,7 @@ public class NumericAxis extends ValueAxis<Number> {
         //final String formatter = (String) rangeProps[4];
         //currentFormatterProperty.set(formatter);
 
-        // TODO: determine the TickUnit this axis to it
+      
         final int minorTickUnits = this.tickUnit.getMinorTickCount() + 1;
         this.setMinorTickCount(minorTickUnits);
 

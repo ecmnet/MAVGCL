@@ -46,7 +46,7 @@ import javafx.scene.shape.Line;
  * EnhancedScatterChart chart = new EnhancedScatterChart(xAxis, yAxis, dataset);
  * double maxX;
  * double maxY;
- * // TODO: compute maxX, and maxY
+ * 
  * chart.getMarkers().addDomainMarker(new ValueMarker(maxX, String.format("Max: %1$.1f", maxX), Pos.BOTTOM_RIGHT));
  * chart.getMarkers().addRangeMarker(new ValueMarker(maxY, String.format("Max: %1$.1f", maxY), Pos.TOP_LEFT));
  * }</pre>

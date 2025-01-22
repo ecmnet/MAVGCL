@@ -112,18 +112,20 @@ public class ControlWidget extends ChartControlPane  {
 				parameters.setSelected(false);
 		});
 		
-//		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
-//			if(n.booleanValue()) {
-//				video.setSelected(false);
-//			}
-//		});
+		stateProperties.getLogLoadedProperty().addListener((e,o,n) -> {
+			if(n.booleanValue()) {
+				video.setSelected(false);
+			}
+		});
 		
 		parameters.disableProperty().bind(stateProperties.getParamLoadedProperty().not());
 	
 
 		vehiclectl.disableProperty().bind(stateProperties.getMSPProperty().not());
-//		video.setDisable(true);
-	    video.disableProperty().bind(stateProperties.isLogLoading());
+		
+	    video.disableProperty().bind(
+	    		 (stateProperties.getLogLoadedProperty().or(stateProperties.getCVAvailableProperty()))
+	    		.not());
 		
 
 	}
