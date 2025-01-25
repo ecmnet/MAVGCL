@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2017,2018 Eike Mansfeld ecm@gmx.de. All rights reserved.
+ *   Copyright (c) 2017,2021 Eike Mansfeld ecm@gmx.de. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,94 +31,54 @@
  *
  ****************************************************************************/
 
-package com.comino.flight.ui.panel.control;
+package com.comino.flight.ui.widgets.panel;
 
 import com.comino.flight.FXMLLoadHelper;
-import com.comino.flight.ui.sidebar.DetailsWidget;
-import com.comino.flight.ui.widgets.panel.AirWidget;
-import com.comino.flight.ui.widgets.panel.BatteryWidget;
-import com.comino.flight.ui.widgets.panel.ChartControlWidget;
-import com.comino.flight.ui.widgets.panel.CommanderWidget;
-import com.comino.flight.ui.widgets.panel.ControlWidget;
-import com.comino.flight.ui.widgets.panel.InfoWidget;
-import com.comino.flight.ui.widgets.panel.RecordControlWidget;
-import com.comino.flight.ui.widgets.panel.StatusWidget;
-import com.comino.flight.ui.widgets.panel.StreamWidget;
+import com.comino.jfx.extensions.ChartControlPane;
 import com.comino.mavcom.control.IMAVController;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ChoiceBox;
 
-public class FlightControlPanel extends Pane  {
+public class StreamWidget extends ChartControlPane  {
+	
+	private static final String[]  STREAMS = { "Video", "Depth" };
 
-	@FXML
-	private VBox     box;
-
-	@FXML
-	private ControlWidget control;
-
-	@FXML
-	private StatusWidget status;
-
-	@FXML
-	private RecordControlWidget recordcontrol;
-
-	@FXML
-	private ChartControlWidget  chartcontrol;
-
-	@FXML
-	private BatteryWidget battery;
-
-	@FXML
-	private AirWidget air;
-
-	@FXML
-	private DetailsWidget details;
-
-	@FXML
-	private CommanderWidget commander;
 	
 	@FXML
-	private StreamWidget stream;
+	private ChoiceBox<String> stream;
+
+	public StreamWidget() {
+		super(300,true);
+
+		FXMLLoadHelper.load(this, "StreamWidget.fxml");
+	}
+
 
 	@FXML
-	private InfoWidget info;
+	private void initialize() {
 
-	public FlightControlPanel() {
-		FXMLLoadHelper.load(this, "FlightControlPanel.fxml");
-	}
+		stream.getItems().addAll(STREAMS);
+		stream.getSelectionModel().select(0);
+		
+		stream.getSelectionModel().selectedIndexProperty().addListener((observable, oldvalue, newvalue) -> {
+			   state.getStreamProperty().set(newvalue.intValue());
+		});
+		
+		state.getStreamProperty().addListener((o,ov,nv) -> {
+			stream.getSelectionModel().select(nv.intValue());
+			
+		});
+			
+		
+		stream.disableProperty().bind(state.getCVAvailableProperty().not());	
 
-	public RecordControlWidget getRecordControl() {
-		return recordcontrol;
-	}
-
-	public ChartControlWidget getChartControl() {
-		return chartcontrol;
-	}
-
-	public ControlWidget getControl() {
-		return control;
 	}
 
 	public void setup(IMAVController control) {
+		
 
-		box.prefHeightProperty().bind(this.heightProperty().subtract(2));
-
-		status.setup(control);
-		recordcontrol.setup(control, chartcontrol, info, status);
-
-		if(battery!=null)
-		  battery.setup(control);
-
-		if(details!=null)
-			details.setup(control);
-
-		if(commander!=null)
-		  commander.setup(control);
-
-		info.setup(control);
-
+        
 	}
 
 }

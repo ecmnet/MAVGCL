@@ -13,8 +13,9 @@
 				</padding>
 				<children>
 					<StatusWidget fx:id="status" />
-					<ControlWidget fx:id="control" />
 					<BatteryWidget fx:id="battery" />
+					<ControlWidget fx:id="control" />
+					<StreamWidget fx:id="stream" />
 					<RecordControlWidget fx:id="recordcontrol" />
 					<ChartControlWidget fx:id="chartcontrol" />
 					<CommanderWidget fx:id="commander" />

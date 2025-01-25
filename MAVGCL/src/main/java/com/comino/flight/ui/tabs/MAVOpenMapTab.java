@@ -114,7 +114,6 @@ import javafx.util.Duration;
 import us.ihmc.log.LogTools;
 
 
-
 public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static float MINEPH = 5.0f;
@@ -590,6 +589,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	}
 
 	private void updateMap(boolean refreshCanvas) {
+		
+		//TODO: Position projection not accurate enough
 
 		pos[0] = 0; pos[1] = 0;
 
@@ -620,6 +621,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		if(model.getValue("SLAMDIR") !=0) {
 			targetLayer.setVisible(true);
+			
 			MSPMathUtils.map_projection_reproject((float)model.getValue("SLAMPX"),
 					(float)model.getValue("SLAMPY"),
 					(float)model.getValue("SLAMPZ"), tar);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import com.comino.flight.widgets.fx.controls.*?>
+
+<fx:root prefWidth="183.0"  prefHeight="40.0" type="javafx.scene.layout.Pane"
+	styleClass="widget" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+	<children>
+		<ChoiceBox fx:id="stream" layoutX="85.0" layoutY="10.0"
+			prefHeight="19.0" prefWidth="105.0" />
+		<Label layoutX="14.0" layoutY="14.0" text="Video stream" />
+	</children>
+</fx:root>

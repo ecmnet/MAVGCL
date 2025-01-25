@@ -104,10 +104,6 @@ public class VideoPlayer {
 		Platform.runLater(() -> {
 			LogTools.info("Switching stream");
 			source.stop();
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-			}
 			source.start();
 		});
 	}
