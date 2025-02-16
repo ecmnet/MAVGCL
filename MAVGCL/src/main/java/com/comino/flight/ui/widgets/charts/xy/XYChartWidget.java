@@ -322,17 +322,7 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 		measurement = new XYMeasurement((Group) xychart.getPlotArea());
 
 		xychart.setOnMouseClicked(click -> {
-			if (click.getClickCount() == 2) {
-				force_zero.setSelected(true);
-				try {
-					setScaling(Float.parseFloat(scale_select.getValue()));
-				} catch (Exception e) {
-					setScaling(0);
-				}
-				;
-				// updateGraph(true,0);
-			} else {
-				if (dataService.isCollecting()) {
+			if (click.getClickCount() == 2 && dataService.isCollecting()) {
 
 					Point2D mouseSceneCoords = new Point2D(click.getSceneX(), click.getSceneY());
 					float x = xAxis.getValueForDisplay(xAxis.sceneToLocal(mouseSceneCoords).getY()).floatValue();
@@ -373,7 +363,6 @@ public class XYChartWidget extends BorderPane implements IChartControl, ICollect
 					if (click.getButton().compareTo(MouseButton.SECONDARY) == 0)
 						this.copyToClipboardImage();
 				}
-			}
 			click.consume();
 		});
 

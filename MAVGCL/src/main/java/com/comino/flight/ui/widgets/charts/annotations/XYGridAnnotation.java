@@ -73,7 +73,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 
 	public XYGridAnnotation() {
 		super();
-		this.canvas = new Canvas(5000,5000);
+		this.canvas = new Canvas(1000,1000);
 		this.blocks = new ConcurrentHashMap<Long,Point4D_F32>();
 		this.gc     = canvas.getGraphicsContext2D();
 		this.mapo   = new Point4D_F32();
@@ -119,8 +119,8 @@ public class XYGridAnnotation  implements XYAnnotation {
 		float yp = (float)model.getValue("LPOSY");  yp = ((int)(yp / resolution)) * resolution;
 		float zp = (float)model.getValue("LPOSZ");  zp = ((int)(zp / resolution)) * resolution;
 	
-		mapo.setTo(xp,yp,zp,0);
-		boundingBox.set(mapo,scale*5.0f,0.10f);
+		mapo.setTo(xp,yp,zp,0f);
+		boundingBox.set(mapo,scale*5.0f,0.1f);
 		List<Long> set = map.getLeafsInBoundingBoxEncoded(boundingBox);
 		
 		blocks.keySet().retainAll(set);
@@ -162,7 +162,6 @@ public class XYGridAnnotation  implements XYAnnotation {
 			gc.strokeLine(x0+width,y0,x0+width,y0+height);
 			gc.strokeLine(x0+width,y0+height,x0,y0+height);
 			gc.strokeLine(x0,y0+height,x0,y0);
-
 
 		});
 
