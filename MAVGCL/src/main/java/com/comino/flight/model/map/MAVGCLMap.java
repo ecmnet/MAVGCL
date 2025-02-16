@@ -1,51 +1,44 @@
 package com.comino.flight.model.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
-import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
-import com.comino.mavcom.model.segment.Status;
-import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
 
-import bubo.maps.d3.grid.CellProbability_F64;
-import georegression.struct.point.Point3D_F64;
-import javafx.application.Platform;
-import javafx.scene.shape.Box;
+import georegression.struct.point.Point2D_F32;
 
-public class MAVGCLMap  {
-	
+public class MAVGCLMap {
 
-	private static final long CLEARING      = -1L;      // A key -1 clears map
-	private static final int MAXMAPPOINTS   = 30000;
+	private static final float LIMIT = 0.5f;
+	private static final float MAX_DISTANCE_SQUARED = 100.0f;
 
 	private static MAVGCLMap mav2dmap = null;
 
-	private final DataModel  model;  
+	private final DataModel model;
 
-	private Map3DSpacialInfo info;
-	private final Point3D_F64 indicator       = new Point3D_F64();
+	private final Point2D_F32 indicator = new Point2D_F32();
 
-	private final HashSet<Long>        set    = new HashSet<Long>();
-	private final BlockingQueue<Long>  list   = new ArrayBlockingQueue<Long>(MAXMAPPOINTS);
-	private final Map<Long,Box>       boxes   = new HashMap<Long,Box>();
-	private final Point3D_F64        origin   = new Point3D_F64();
+	private final BlockingQueue<Long> set = new ArrayBlockingQueue<Long>(50000);
+	private final Map<Long, Box> map = new HashMap<Long, Box>();
+	private final Point2D_F32 origin = new Point2D_F32();
 
-	private long  last_update = - 1;
-	private int   transfer_count=0;
+	private final long dimension;
+	private final long dimensionxy;
+	private final long dimensionxyz;
 
+	private long last_update = -1;
+	private int transfer_count = 0;
 
-	public static MAVGCLMap getInstance(IMAVController control) {
-		if(mav2dmap==null)
-			mav2dmap = new MAVGCLMap(control);
+	public static MAVGCLMap getInstance(IMAVController control, long dimension) {
+		if (mav2dmap == null)
+			mav2dmap = new MAVGCLMap(control, dimension);
 		return mav2dmap;
 	}
 
@@ -53,172 +46,127 @@ public class MAVGCLMap  {
 		return mav2dmap;
 	}
 
-	private MAVGCLMap(IMAVController control) {
+	private MAVGCLMap(IMAVController control, long dimension) {
 
-		this.info =  new Map3DSpacialInfo(0.20f,20.0f,20.0f,10.0f);
 		this.model = control.getCurrentModel();
+		this.dimension = dimension;
+		this.dimensionxy = dimension * dimension;
+		this.dimensionxyz = dimension * dimension * dimension;
 
-//		control.addMAVLinkListener((o) -> {
-//			if(o instanceof msg_msp_micro_grid) {
-//
-//				if(model.grid.count == 0) {
-//					clear();
-//					origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
-//					return;
-//				}
-//
-//				// Adjust resolution
-//				if(info.getCellSize() != model.grid.resolution) {
-//					clear();
-//					info.adjustResolution(model.grid.resolution);
-//					System.out.println("Map resolution adjusted to "+model.grid.resolution+"m");
-//				}
-//
-//				while(model.grid.hasTransfers()) {
-//					list.add(model.grid.pop());
-//				}
-//
-//				//Task: Access AnalysisDatamodel
-//				origin.setTo(model.grid.ox,model.grid.oy,model.grid.oz);
-//				last_update  = System.currentTimeMillis();
-//			}
-//		});
+		new Thread(new Mapper()).start();
+
+		control.addMAVLinkListener((o) -> {
+			if (o instanceof msg_msp_micro_grid) {
+
+				msg_msp_micro_grid grid = (msg_msp_micro_grid) o;
+
+				if (grid.count == 0) {
+					clear();
+					origin.setTo(grid.cx, grid.cy);
+					return;
+				}
+
+				for (int i = 0; i < grid.count; i++) {
+					long mpi = grid.data[i];
+					if (check(mpi, LIMIT))
+						set.add(mpi);
+				}
+				cleanUp(model.state.l_x, model.state.l_y);
+				last_update = System.currentTimeMillis();
+			}
+		});
 
 	}
 
-	public BlockingQueue<Long> getList() {
-		return list;
+	public Map<Long, Box> getMap() {
+		return map;
 	}
 
-	public Map<Long,Box> getMap() {
-		return boxes;
-	}
-
-
-	public Map3DSpacialInfo getInfo() {
-		return info;
-	}
-
-	public Point3D_F64 getIndicator() {
+	public Point2D_F32 getIndicator() {
 		return indicator;
 	}
-	
-	public Point3D_F64 getOrigin() {
+
+	public Point2D_F32 getOrigin() {
 		return indicator;
 	}
 
 	public void clear() {
-		last_update    = - 1;
-		list.add(CLEARING);
+		last_update = -1;
+		map.clear();
 	}
-
-	public Map3DSpacialInfo getSpacialInfo() {
-		return info;
-	}
-
 
 	public long getLastUpdate() {
 		return last_update;
 	}
 
-
 	public boolean isEmpty() {
-		return list.isEmpty();
+		return map.isEmpty();
 	}
 
 	public int size() {
-		return boxes.size();
+		return map.size();
 	}
 
-	public Iterator<CellProbability_F64> getMapLevelItems(float current_altitude) {
-		float delta = 2.0f*info.getCellSize();
-		return new MapSetIterator( new ZFilter(current_altitude-delta,current_altitude+delta));
+	public void cleanUp(float x, float y) {
+		final ArrayList<Long> del = new ArrayList<Long>();
+//		map.forEach((mpi, box) -> {		
+//			if (box.p.)
+//				del.add(mpi);
+//		});
+//		del.forEach((mpi) -> {
+//			map.remove(mpi);
+//		});
 	}
 
-	public Set<Long> getLevelSet(boolean enforce) {
+	private boolean check(long mpi, float limit) {
+		if (((long) (mpi / dimensionxyz) / 100.0) < limit)
+			return false;
+		return true;
+	}
 
-		float current_altitude = (float)AnalysisModelService.getInstance().getCurrent().getValue("ALTRE");
+	public class Box {
+		public Point2D_F32 p;
+		public long tms;
+		public float width;
 
-		set.clear();
-		Iterator<CellProbability_F64> i = getMapLevelItems(current_altitude);
-		while(i.hasNext()) {
-			CellProbability_F64 p = i.next();
-			set.add(info.encodeMapPoint(p,p.probability));
+		Box(long mpi) {
+			p = new Point2D_F32();
+			float w2 = ((int) (mpi / dimensionxy % dimension) / 200.0f);
+			this.width = w2 * 2.0f;
+			this.p.x = ((int) (mpi % dimension) * this.width);
+			this.p.y = ((int) (mpi / dimension % dimension) * this.width);
+			this.tms = System.currentTimeMillis();
+			// System.out.println("X: "+p.x+" Y: "+p.y+" W: "+width);
 		}
-		return set;	
+
 	}
 
+	public float getResolution() {
+		return 0.2f;
+	}
 
-
-	private class MapSetIterator implements Iterator<CellProbability_F64> {
-
-		Comparable<Integer> zfilter = null;
-		boolean has_next = true;
-
-		Iterator<Long> m = boxes.keySet().iterator();
-
-		CellProbability_F64 storage = new CellProbability_F64();
-
-		public MapSetIterator(Comparable<Integer> zfilter) {
-			this.zfilter = zfilter;
-			searchNext();
-		}
+	private class Mapper implements Runnable {
 
 		@Override
-		public boolean hasNext() {
-			return has_next;
-		}
-
-		@Override
-		public CellProbability_F64 next() {
-			CellProbability_F64 prev = new CellProbability_F64();
-			prev.probability = storage.probability;
-			prev.setTo(storage);
-			searchNext();
-			return prev;
-		}
-
-		protected void searchNext() {
-
-			if(boxes.isEmpty()) {
-				has_next = false;
-			}
-
-			while(m.hasNext()) {
-				long h = m.next(); 
-				if(!boxes.containsKey(h))
-					continue;
-				info.decodeMapPoint(h, storage);
-				if (zfilter.compareTo(storage.z) == 0) {
-					has_next = true;
-					return;
+		public void run() {
+			while (true) {
+				set.forEach((mpi) -> {
+					if(map.containsKey(mpi))
+						map.get(mpi).tms = System.currentTimeMillis();
+					else
+					  map.put(mpi, new Box(mpi));
+				});
+				set.clear();
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			has_next = false;
-			return;
+
 		}
 
-		@Override
-		public void remove() {
-			throw new RuntimeException("Remove is not supported");
-		}
 	}
 
-	private class ZFilter implements Comparable<Integer> {
-
-		int from;
-		int to;
-
-		public ZFilter(float from,float to) {
-
-			this.from = (int)(from * info.getBlocksPerM());
-			this.to   = (int)(to   * info.getBlocksPerM());
-		}
-
-		@Override
-		public int compareTo(Integer z) {
-			if( from < z &&  to > z) return 0; else return 1;
-
-		}
-	}
 }

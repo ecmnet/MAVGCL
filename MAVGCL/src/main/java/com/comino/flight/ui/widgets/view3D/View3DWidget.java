@@ -34,11 +34,8 @@
 
 package com.comino.flight.ui.widgets.view3D;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.fxyz3d.scene.paint.Patterns;
-import org.fxyz3d.shapes.primitives.ScatterMesh;
+import org.mavlink.messages.MSP_CMD;
+import org.mavlink.messages.lquac.msg_msp_command;
 
 import com.comino.flight.file.KeyFigurePreset;
 import com.comino.flight.model.AnalysisDataModel;
@@ -46,7 +43,6 @@ import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.ui.widgets.charts.IChartControl;
 import com.comino.flight.ui.widgets.view3D.objects.Camera;
-import com.comino.flight.ui.widgets.view3D.objects.Map3DGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Map3DOctoGroup;
 import com.comino.flight.ui.widgets.view3D.objects.Obstacle;
 import com.comino.flight.ui.widgets.view3D.objects.Target;
@@ -58,21 +54,17 @@ import com.comino.mavcom.model.segment.Vision;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.input.PickResult;
 import javafx.scene.paint.Color;
@@ -82,11 +74,6 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import org.fxyz3d.shapes.primitives.helper.MarkerFactory;
-import org.mavlink.messages.MSP_AUTOCONTROL_MODE;
-import org.mavlink.messages.MSP_CMD;
-import org.mavlink.messages.lquac.msg_msp_command;
 
 public class View3DWidget extends SubScene implements IChartControl {
 

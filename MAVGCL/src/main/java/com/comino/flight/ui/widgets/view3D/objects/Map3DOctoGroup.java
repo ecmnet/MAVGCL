@@ -52,26 +52,26 @@ public class Map3DOctoGroup  {
 		this.size = (int)(map.getResolution() * 100f);
 
 
-		task = new AnimationTimer() {
-			
-			@Override
-			public void handle(long now) {
-
-				if(model.grid.count == -1) {
-					clear();
-					return;
-				}
-				
-				map.getChanged().stream().forEach((id) -> {
-					handleBlock(tmp,map.convertTo(id, tmp) & KEYMASK);
-				});
-
-				map.resetChangeDetection();
-
-			}
-		};
-		
-		task.start();
+//		task = new AnimationTimer() {
+//			
+//			@Override
+//			public void handle(long now) {
+//
+//				if(model.grid.count == -1) {
+//					clear();
+//					return;
+//				}
+//				
+//				map.getChanged().stream().forEach((id) -> {
+//					handleBlock(tmp,map.convertTo(id, tmp) & KEYMASK);
+//				});
+//
+//				map.resetChangeDetection();
+//
+//			}
+//		};
+//		
+//		task.start();
 	}
 
 	public void handleBlock(Point4D_F32 p, long id) {

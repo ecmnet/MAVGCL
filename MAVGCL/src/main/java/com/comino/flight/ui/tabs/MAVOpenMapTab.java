@@ -113,17 +113,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import us.ihmc.log.LogTools;
 
-
 public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private final static float MINEPH = 5.0f;
 
-
-	private final static String[] GPS_SOURCES    	= { "Global Position", "Local Position", "Raw GPS data" };
-	private final static String[] CENTER_OPTIONS 	= { "Vehicle", "Home", "Base", "Takeoff" };
-	private final static String[] PROVIDER_OPTIONS 	= { "Satellite", 
-			"StreetMap"
-			//  "Terrain" 
+	private final static String[] GPS_SOURCES = { "Global Position", "Local Position", "Raw GPS data" };
+	private final static String[] CENTER_OPTIONS = { "Vehicle", "Home", "Base", "Takeoff" };
+	private final static String[] PROVIDER_OPTIONS = { "Satellite", "StreetMap"
+			// "Terrain"
 	};
 
 	@FXML
@@ -152,12 +149,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 	private LayeredMap map;
 
-	private PositionLayer 		positionLayer;
-	private PositionLayer 		homeLayer;
-	private PositionLayer 		baseLayer;
-	private PositionLayer 		targetLayer;
-	//	private LicenceLayer  		licenceLayer;
-	private CanvasLayer			canvasLayer;
+	private PositionLayer positionLayer;
+	private PositionLayer homeLayer;
+	private PositionLayer baseLayer;
+	private PositionLayer targetLayer;
+	// private LicenceLayer licenceLayer;
+	private CanvasLayer canvasLayer;
 
 	private AnimationTimer task = null;
 
@@ -170,27 +167,27 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	private double[] pos = new double[2];
 	private double[] tar = new double[2];
 
-	private IntegerProperty timeFrame    = new SimpleIntegerProperty(30);
-	private FloatProperty   scroll        = new SimpleFloatProperty(0);
-	private FloatProperty   replay       = new SimpleFloatProperty(0);
+	private IntegerProperty timeFrame = new SimpleIntegerProperty(30);
+	private FloatProperty scroll = new SimpleFloatProperty(0);
+	private FloatProperty replay = new SimpleFloatProperty(0);
 
 	private Image plane_valid, plane_invalid, plane_lpos;
 
 	private AnalysisModelService dataService = AnalysisModelService.getInstance();
 	private Preferences preferences = MAVPreferences.getInstance();
 
-	private  StateProperties state;
+	private StateProperties state;
 
-	private  BaseMapProvider satellite_provider = null;
-	private  BaseMapProvider street_provider = null;
-	private  BaseMapProvider terrain_provider = null;
+	private BaseMapProvider satellite_provider = null;
+	private BaseMapProvider street_provider = null;
+	private BaseMapProvider terrain_provider = null;
 
 	private StateProperties properties = null;
 
-	private  double zoom_start=0;
+	private double zoom_start = 0;
 
 	protected int centermode;
-	private long tms_old=0;
+	private long tms_old = 0;
 
 	private IMAVController control;
 
@@ -202,15 +199,14 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		task = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if((now - tms_old)<66_000_000)
+				if ((now - tms_old) < 66_000_000)
 					return;
 				tms_old = now;
 				updateMap(true);
-			}		
+			}
 		};
 
 	}
-
 
 	@FXML
 	private void initialize() {
@@ -223,19 +219,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 		provider.getItems().addAll(PROVIDER_OPTIONS);
 
-
-		String mapDirName = FileHandler.getInstance().getBasePath()+"/MapCache";
+		String mapDirName = FileHandler.getInstance().getBasePath() + "/MapCache";
 		satellite_provider = new DefaultBaseMapProvider(new BingTileProvider(mapDirName));
 		street_provider = new DefaultBaseMapProvider(new OSMTileProvider(mapDirName));
 		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
-		//		terrain_provider = new DefaultBaseMapProvider(new OpenTopoMapTileProvider(mapDirName));
+		// terrain_provider = new DefaultBaseMapProvider(new
+		// OpenTopoMapTileProvider(mapDirName));
 
 		gpssource.getItems().addAll(GPS_SOURCES);
 		gpssource.getSelectionModel().select(0);
 		type = 0;
 
 		map = new LayeredMap(satellite_provider);
-
 
 		mapviewpane.setCenter(map);
 
@@ -259,145 +254,162 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		baseLayer = new PositionLayer(new Image(getClass().getResource("resources/base.png").toString()));
 		map.getLayers().add(baseLayer);
 
-		plane_valid   = new Image(getClass().getResource("resources/airplane_g.png").toString());
-		plane_lpos    = new Image(getClass().getResource("resources/airplane_y.png").toString());
+		plane_valid = new Image(getClass().getResource("resources/airplane_g.png").toString());
+		plane_lpos = new Image(getClass().getResource("resources/airplane_y.png").toString());
 		plane_invalid = new Image(getClass().getResource("resources/airplane_r.png").toString());
 
 		positionLayer = new PositionLayer(plane_valid);
 		map.getLayers().add(positionLayer);
 		positionLayer.setVisible(true);
 
-		positionLayer.updatePosition(47.142899,11.577723);
+		positionLayer.updatePosition(47.142899, 11.577723);
 
 		//
-		//		licenceLayer = new LicenceLayer(satellite_provider);
-		//		map.getLayers().add(licenceLayer);
+		// licenceLayer = new LicenceLayer(satellite_provider);
+		// map.getLayers().add(licenceLayer);
 
 		// Test paintlistener
-		//		canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
+		// canvasLayer.addPaintListener(new CanvasLayerPaintListener() {
 		//
-		//			Point2D p0; Point2D p1;  boolean first = true; AnalysisDataModel m;
-		//
-		//
-		//			@Override
-		//			public void redraw(GraphicsContext gc, double width, double height, boolean refresh) {
-		//
-		//				int index=0;
-		//				if(refresh) {
-		//					index = dataService.calculateX0IndexByFactor(1);
-		//					first = true;
-		//				}
+		// Point2D p0; Point2D p1; boolean first = true; AnalysisDataModel m;
 		//
 		//
-		//				if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
-		//						(dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms()) {
+		// @Override
+		// public void redraw(GraphicsContext gc, double width, double height, boolean
+		// refresh) {
+		//
+		// int index=0;
+		// if(refresh) {
+		// index = dataService.calculateX0IndexByFactor(1);
+		// first = true;
+		// }
 		//
 		//
-		//					gc.setStroke(Color.LIGHTSKYBLUE); gc.setFill(Color.LIGHTSKYBLUE);
-		//					gc.setLineWidth(1.5);
-		//					for(int i=index; i<dataService.getModelList().size();
-		//							i += 50/dataService.getCollectorInterval_ms()) {
+		// if(state.getRecordingProperty().get()!=AnalysisModelService.STOPPED &&
+		// (dataService.getModelList().size()-index)>2*50/dataService.getCollectorInterval_ms())
+		// {
 		//
-		//						m = dataService.getModelList().get(i);
 		//
-		//						if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
-		//							continue;
+		// gc.setStroke(Color.LIGHTSKYBLUE); gc.setFill(Color.LIGHTSKYBLUE);
+		// gc.setLineWidth(1.5);
+		// for(int i=index; i<dataService.getModelList().size();
+		// i += 50/dataService.getCollectorInterval_ms()) {
 		//
-		//						if(first) {
-		//							p0 = map.getMapArea().getMapPoint(
-		//									m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		// m = dataService.getModelList().get(i);
 		//
-		//							//		gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
-		//							first = false; continue;
-		//						}
-		//						p1 = map.getMapArea().getMapPoint(
-		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		// if(m.getValue(TYPES[type][0])==0 && m.getValue(TYPES[type][1]) == 0)
+		// continue;
 		//
-		//						gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
-		//						p0 = map.getMapArea().getMapPoint(
-		//								m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
-		//					}
-		//					index = dataService.getModelList().size();
-		//				}
-		//			}
+		// if(first) {
+		// p0 = map.getMapArea().getMapPoint(
+		// m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
 		//
-		//		});
+		// // gc.fillOval(p0.getX()-4, p0.getY()-4,8,8);
+		// first = false; continue;
+		// }
+		// p1 = map.getMapArea().getMapPoint(
+		// m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		//
+		// gc.strokeLine(p0.getX(), p0.getY(), p1.getX(), p1.getY());
+		// p0 = map.getMapArea().getMapPoint(
+		// m.getValue(TYPES[type][0]),m.getValue(TYPES[type][1]));
+		// }
+		// index = dataService.getModelList().size();
+		// }
+		// }
+		//
+		// });
 
-
-		mapviewpane.widthProperty().addListener((v,o,n) -> {
+		mapviewpane.widthProperty().addListener((v, o, n) -> {
 			Platform.runLater(() -> {
 				setCenter(centermode);
 			});
 		});
 
 		map.setOnScroll(event -> {
-			if(centermode!=0) {
-				map.getMapArea().moveX(-event.getDeltaX()/3);
-				map.getMapArea().moveY(-event.getDeltaY()/3);
+			if (centermode != 0) {
+				map.getMapArea().moveX(-event.getDeltaX() / 3);
+				map.getMapArea().moveY(-event.getDeltaY() / 3);
 			}
 		});
 
 		map.setOnZoom(event -> {
-			double z = zoom.getValue() * ((( event.getZoomFactor() - 1 ) / 10) + 1.0);
+			double z = zoom.getValue() * (((event.getZoomFactor() - 1) / 10) + 1.0);
 			zoom.setValue(z);
 		});
 
 		map.setOnMouseClicked(click -> {
-			if (click.getClickCount() == 1)
+
+			if (click.getClickCount() == 1) {
 				setCenter(centermode);
-			else {
+
+			} else if (click.getClickCount() == 2) {
+
+				if (!control.getCurrentModel().sys.isStatus(Status.MSP_ARMED))
+					return;
 
 				Position p = map.getMapPosition(click.getX(), click.getY());
-				
-				float[] xy = new float[2];
-				if( // control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE) &&
-						control.getCurrentModel().sys.isSensorAvailable(Status.MSP_ROS_AVAILABILITY) &&
-						MSPMathUtils.is_projection_initialized()) {
-					if(MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
-						msg_msp_command msp = new msg_msp_command(255,1);
-						msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
-						msp.param1 =  xy[0];
-						msp.param2 =  xy[1];
-						msp.param3 =  Float.NaN;
-						msp.param4 =  Float.NaN;
-						control.sendMAVLinkMessage(msp);
-					}
+
+				double distance = MSPMathUtils.getDistance(p.getLatitude(), p.getLongitude(), model.getValue("GLOBLAT"),
+						model.getValue("GLOBLON"));
+
+				if (distance > 1) {
+
+					float[] xy = new float[2];
+//					if ( // control.getCurrentModel().sys.isAutopilotMode(MSP_AUTOCONTROL_MODE.INTERACTIVE)
+//							// &&
+//					control.getCurrentModel().sys.isSensorAvailable(Status.MSP_ROS_AVAILABILITY)
+//							&& MSPMathUtils.is_projection_initialized()) {
+//						if (MSPMathUtils.map_projection_project(p.getLatitude(), p.getLongitude(), xy)) {
+//							msg_msp_command msp = new msg_msp_command(255, 1);
+//							msp.command = MSP_CMD.MSP_CMD_OFFBOARD_SETLOCALPOS;
+//							msp.param1 = xy[0];
+//							msp.param2 = xy[1];
+//							msp.param3 = Float.NaN;
+//							msp.param4 = Float.NaN;
+//							control.sendMAVLinkMessage(msp);
+//						}
+//
+//					} else {
+
+						double speed = distance;
+
+						if (speed > 10.0)
+							speed = 10.0;
+						if (speed < 0.3)
+							speed = 0.3;
+
+						
+						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_CHANGE_SPEED, 1.0f, (float) speed, -1.0f, 0);
+						control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, MAV_FRAME.MAV_FRAME_GLOBAL, -1.0f,
+								MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE, Float.NaN, Float.NaN,
+								(float) p.getLatitude() * 1e7f, (float) p.getLongitude() * 1e7f, Float.NaN);
+//					}
 
 				} else {
-
-					if(control.isSimulation()) {
-						double speed = MSPMathUtils.getDistance(p.getLatitude(), p.getLongitude(), model.getValue("GLOBLAT"), model.getValue("GLOBLON"))
-								       / 10.0 ;
-						
-						if(speed > 10.0) speed = 10.0;
-						if(speed < 0.3)  speed = 0.3;
-						
-						
-						control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_CHANGE_SPEED,
-								1.0f,
-								(float)speed,
-							   -1.0f,
-							    0
-							   );
-						control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, 
-								MAV_FRAME.MAV_FRAME_GLOBAL,
-								MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE,
-								0,2f,
-								Float.NaN,
-								(float)p.getLatitude()*1e7f,
-								(float)p.getLongitude()*1e7f,
-								Float.NaN
-								);
-					}
+					
+					control.sendMAVLinkCmd(MAV_CMD.MAV_CMD_DO_CHANGE_SPEED, 1.0f, -1.0f, -1.0f, 0);
+					if(click.isControlDown())
+						control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, MAV_FRAME.MAV_FRAME_GLOBAL, -1.0f,
+								MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE, Float.NaN,
+								- (float) Math.PI / 4 + (float) model.getValue("YAW"),
+								(float) model.getValue("GLOBLAT") * 1e7f, (float) model.getValue("GLOBLON") * 1e7f,
+								Float.NaN);
+					else
+					control.sendMAVLinkCmdInt(MAV_CMD.MAV_CMD_DO_REPOSITION, MAV_FRAME.MAV_FRAME_GLOBAL, -1.0f,
+							MAV_DO_REPOSITION_FLAGS.MAV_DO_REPOSITION_FLAGS_CHANGE_MODE, Float.NaN,
+							(float) Math.PI / 4 + (float) model.getValue("YAW"),
+							(float) model.getValue("GLOBLAT") * 1e7f, (float) model.getValue("GLOBLON") * 1e7f,
+							Float.NaN);
 
 				}
 			}
+
 			click.consume();
 		});
 
 		zoom.valueProperty().addListener(new ChangeListener<Number>() {
-			public void changed(ObservableValue<? extends Number> ov,
-					Number old_val, Number new_val) {
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
 				Platform.runLater(() -> {
 					map.setZoom(zoom.getValue());
 					updateMap(true);
@@ -418,7 +430,6 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 				}
 			}
 		});
-
 
 		gpssource.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -450,7 +461,7 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				switch(newValue.intValue()) {
+				switch (newValue.intValue()) {
 				case 0:
 					zoom.setMax(20.76);
 					map.setBaseMapProvider(satellite_provider);
@@ -461,8 +472,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 					break;
 				case 2:
 
-					//						if(zoom.getValue()>17.5)
-					//							map.setZoom(17.5);
+					// if(zoom.getValue()>17.5)
+					// map.setZoom(17.5);
 					zoom.setMax(20.5);
 					map.setBaseMapProvider(terrain_provider);
 					break;
@@ -472,11 +483,11 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		});
 
 		scroll.addListener((v, ov, nv) -> {
-			if(state.getRecordingProperty().get()==AnalysisModelService.STOPPED) {
+			if (state.getRecordingProperty().get() == AnalysisModelService.STOPPED) {
 
 				int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
 
-				if(dataService.getModelList().size()>0 && current_x1_pt > 0)
+				if (dataService.getModelList().size() > 0 && current_x1_pt > 0)
 					model = dataService.getModelList().get(current_x1_pt);
 				else
 					model = dataService.getCurrent();
@@ -484,20 +495,18 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-		export.setOnAction((ActionEvent event)-> {
+		export.setOnAction((ActionEvent event) -> {
 			saveAsPng(System.getProperty("user.home"));
 		});
 
-
 		zoom.setTooltip(new Tooltip("Zooming"));
 	}
-
 
 	public void saveAsPng(String path) {
 		SnapshotParameters param = new SnapshotParameters();
 		param.setFill(Color.BLACK);
 		WritableImage image = mapviewpane.snapshot(param, null);
-		File file = new File(path+"/map.png");
+		File file = new File(path + "/map.png");
 		try {
 			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
 		} catch (IOException e) {
@@ -505,29 +514,27 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		}
 	}
 
-
 	public MAVOpenMapTab setup(IMAVController control) {
 		this.control = control;
-		this.model=dataService.getCurrent();
+		this.model = dataService.getCurrent();
 		this.properties = StateProperties.getInstance();
 		gpsdetails.setup(control);
-		ChartControlPane.addChart(3,this);
+		ChartControlPane.addChart(3, this);
 
-		if(MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME,"").contains("Light")) 
+		if (MAVPreferences.getInstance().get(MAVPreferences.PREFS_THEME, "").contains("Light"))
 			provider.getSelectionModel().select(1);
 		else
 			provider.getSelectionModel().select(0);
 
-		properties.getLandedProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
-				takeoff_lon = model.getValue( "GLOBLON");
-				takeoff_lat = model.getValue( "GLOBLAT");
+		properties.getLandedProperty().addListener((e, o, n) -> {
+			if (n.booleanValue()) {
+				takeoff_lon = model.getValue("GLOBLON");
+				takeoff_lat = model.getValue("GLOBLAT");
 			}
 		});
 
-
-		this.disabledProperty().addListener((l,o,n) -> {
-			if(!n.booleanValue()) {
+		this.disabledProperty().addListener((l, o, n) -> {
+			if (!n.booleanValue()) {
 				task.start();
 				model = dataService.getCurrent();
 			} else {
@@ -535,8 +542,8 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			}
 		});
 
-		state.getBaseAvailableProperty().addListener((e,o,n) -> {
-			if(n.booleanValue()) {
+		state.getBaseAvailableProperty().addListener((e, o, n) -> {
+			if (n.booleanValue()) {
 				Platform.runLater(() -> {
 					updateMap(true);
 				});
@@ -544,12 +551,13 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		});
 
 		replay.addListener((v, ov, nv) -> {
-			if(isDisabled())
+			if (isDisabled())
 				return;
 
 			int current_x1_pt = dataService.calculateX0IndexByFactor(nv.floatValue());
 
-			if(dataService.getModelList().size()>0 && current_x1_pt > 0 && current_x1_pt < dataService.getModelList().size())
+			if (dataService.getModelList().size() > 0 && current_x1_pt > 0
+					&& current_x1_pt < dataService.getModelList().size())
 				model = dataService.getModelList().get(current_x1_pt);
 			else
 				model = dataService.getCurrent();
@@ -558,11 +566,9 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		return this;
 	}
 
-
 	public IntegerProperty getTimeFrameProperty() {
 		return timeFrame;
 	}
-
 
 	@Override
 	public FloatProperty getScrollProperty() {
@@ -578,23 +584,23 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		return null;
 	}
 
-
 	@Override
 	public void refreshChart() {
 
 		Platform.runLater(() -> {
-			//	this.model=dataService.getLast(1);
+			// this.model=dataService.getLast(1);
 			updateMap(true);
 		});
 	}
 
 	private void updateMap(boolean refreshCanvas) {
-		
-		//TODO: Position projection not accurate enough
 
-		pos[0] = 0; pos[1] = 0;
+		// TODO: Position projection not accurate enough
 
-		switch(type) {
+		pos[0] = 0;
+		pos[1] = 0;
+
+		switch (type) {
 		case 0:
 			pos[0] = model.getValue("GLOBLAT");
 			pos[1] = model.getValue("GLOBLON");
@@ -602,14 +608,12 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 		case 1:
 			MSPMathUtils.map_projection_init(preferences.getDouble(MAVPreferences.REFLAT, 0),
 					preferences.getDouble(MAVPreferences.REFLON, 0));
-			if(Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX"))) {
-				MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSRX"),
-						(float)model.getValue("LPOSRY"),
-						(float)model.getValue("LPOSRZ"), pos);
+			if (Double.isFinite(model.getValue("LPOSRY")) && Double.isFinite(model.getValue("LPOSRX"))) {
+				MSPMathUtils.map_projection_reproject((float) model.getValue("LPOSRX"),
+						(float) model.getValue("LPOSRY"), (float) model.getValue("LPOSRZ"), pos);
 			} else {
-				MSPMathUtils.map_projection_reproject((float)model.getValue("LPOSX"),
-						(float)model.getValue("LPOSY"),
-						(float)model.getValue("LPOSZ"), pos);
+				MSPMathUtils.map_projection_reproject((float) model.getValue("LPOSX"), (float) model.getValue("LPOSY"),
+						(float) model.getValue("LPOSZ"), pos);
 			}
 
 			break;
@@ -619,56 +623,56 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 			break;
 		}
 
-		if(model.getValue("SLAMDIR") !=0) {
+		if (model.getValue("SLAMDIR") != 0) {
 			targetLayer.setVisible(true);
-			
-			MSPMathUtils.map_projection_reproject((float)model.getValue("SLAMPX"),
-					(float)model.getValue("SLAMPY"),
-					(float)model.getValue("SLAMPZ"), tar);
+
+			MSPMathUtils.map_projection_reproject((float) model.getValue("SLAMPX"), (float) model.getValue("SLAMPY"),
+					(float) model.getValue("SLAMPZ"), tar);
 			targetLayer.updatePosition(tar[0], tar[1]);
 		} else
 			targetLayer.setVisible(false);
 
-		//	canvasLayer.redraw(refreshCanvas);
+		// canvasLayer.redraw(refreshCanvas);
 
-		if(centermode==0 && pos[0]!=0)
-			map.setCenter(pos[0],pos[1]);
+		if (centermode == 0 && pos[0] != 0)
+			map.setCenter(pos[0], pos[1]);
 
 		try {
-			if(type!=1) {
-				if(model.getValue("HOMLAT")!=0 && model.getValue("HOMLON")!=0) {
-					//map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
+			if (type != 1) {
+				if (model.getValue("HOMLAT") != 0 && model.getValue("HOMLON") != 0) {
+					// map.setCenter(model.gps.ref_lat, model.gps.ref_lon);
 					homeLayer.setVisible(true);
 					homeLayer.updatePosition(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 				} else
 					homeLayer.setVisible(false);
 			} else {
 				homeLayer.setVisible(true);
-				homeLayer.updatePosition(preferences.getDouble(MAVPreferences.REFLAT,0),
-						preferences.getDouble(MAVPreferences.REFLON,0));
+				homeLayer.updatePosition(preferences.getDouble(MAVPreferences.REFLAT, 0),
+						preferences.getDouble(MAVPreferences.REFLON, 0));
 			}
 
-			if(model.getValue("BASELAT")!=0 && model.getValue("BASELON")!=0) {
+			if (model.getValue("BASELAT") != 0 && model.getValue("BASELON") != 0) {
 				baseLayer.setVisible(true);
 				baseLayer.updatePosition(model.getValue("BASELAT"), model.getValue("BASELON"));
 			} else
 				baseLayer.setVisible(false);
 
-			if((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") > 4) && type!=1)
+			if ((model.getValue("RGPSEPH") > MINEPH || model.getValue("RGPSNO") > 4) && type != 1)
 				positionLayer.getIcon().setImage(plane_valid);
-			else if(StateProperties.getInstance().getLPOSAvailableProperty().get())
+			else if (StateProperties.getInstance().getLPOSAvailableProperty().get())
 				positionLayer.getIcon().setImage(plane_lpos);
 			else
 				positionLayer.getIcon().setImage(plane_invalid);
 
-			if(Double.isFinite(model.getValue("YAWDEGREE")))
-				positionLayer.updatePosition(pos[0],pos[1],model.getValue("YAWDEGREE"));
+			if (Double.isFinite(model.getValue("YAWDEGREE")))
+				positionLayer.updatePosition(pos[0], pos[1], model.getValue("YAWDEGREE"));
 			else
-				positionLayer.updatePosition(pos[0],pos[1],0);
+				positionLayer.updatePosition(pos[0], pos[1], 0);
 
-		} catch(Exception e) { e.printStackTrace(); }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 
 	public void setKeyFigureSelection(KeyFigurePreset preset) {
 
@@ -679,20 +683,20 @@ public class MAVOpenMapTab extends BorderPane implements IChartControl {
 	}
 
 	private void setCenter(int mode) {
-		switch(mode) {
+		switch (mode) {
 		case 1:
-			if(model.getValue("HOMLAT")!=0 && type!=1)
+			if (model.getValue("HOMLAT") != 0 && type != 1)
 				map.setCenter(model.getValue("HOMLAT"), model.getValue("HOMLON"));
 			else
-				map.setCenter(preferences.getDouble(MAVPreferences.REFLAT,0),
-						preferences.getDouble(MAVPreferences.REFLON,0));
+				map.setCenter(preferences.getDouble(MAVPreferences.REFLAT, 0),
+						preferences.getDouble(MAVPreferences.REFLON, 0));
 			break;
 		case 2:
-			if(model.getValue("BASELAT")!=0)
+			if (model.getValue("BASELAT") != 0)
 				map.setCenter(model.getValue("BASELAT"), model.getValue("BASELON"));
 			break;
 		case 3:
-			if(takeoff_lat!=0)
+			if (takeoff_lat != 0)
 				map.setCenter(takeoff_lat, takeoff_lon);
 			break;
 		}

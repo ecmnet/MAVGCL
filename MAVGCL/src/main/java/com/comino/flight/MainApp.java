@@ -57,6 +57,7 @@ import com.comino.flight.events.MAVEventMataData;
 import com.comino.flight.file.FileHandler;
 import com.comino.flight.log.ulog.MavLinkULOGHandler;
 import com.comino.flight.model.map.MAVGCLMap;
+import com.comino.flight.model.map.MAVGCLOctoMap;
 import com.comino.flight.model.service.AnalysisModelService;
 import com.comino.flight.observables.StateProperties;
 import com.comino.flight.observables.VoiceHandler;
@@ -338,7 +339,7 @@ public class MainApp extends Application  {
 			MAVEventMataData.getInstance( );
 
 			MAVPreferences.init();
-			MAVGCLMap.getInstance(control);
+			MAVGCLOctoMap.getInstance(control);
 
 			LogTools.info("Preferences: "+(System.currentTimeMillis()-startup)+"ms");
 

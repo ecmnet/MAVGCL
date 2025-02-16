@@ -33,18 +33,11 @@
 
 package com.comino.flight.ui.widgets.charts.annotations;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.comino.flight.model.AnalysisDataModel;
-import com.comino.flight.model.map.MAVGCLOctoMap;
-import com.comino.flight.model.service.AnalysisModelService;
+import com.comino.flight.model.map.MAVGCLMap;
 import com.comino.mavcom.control.IMAVController;
-import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
-import com.comino.mavmap.map.map3D.impl.octomap.boundingbox.MAVSimpleBoundingBox;
-import com.comino.mavutils.workqueue.WorkQueue;
 import com.emxsys.chart.extension.XYAnnotation;
 
 import georegression.struct.point.Point4D_F32;
@@ -53,47 +46,35 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.paint.Color;
-import us.ihmc.jOctoMap.iterators.OcTreeIterable;
-import us.ihmc.jOctoMap.iterators.OcTreeIteratorFactory;
 
-public class XYGridAnnotation  implements XYAnnotation {
+public class XYGridAnnotation2  implements XYAnnotation {
 
 
 	private final Canvas                 canvas;
 	private final Map<Long,Point4D_F32>  blocks;
 	private final GraphicsContext        gc;
-	private final Point4D_F32            mapo;
 
-	private MAVGCLOctoMap                map;
-	private MAVSimpleBoundingBox         boundingBox;
-	private AnalysisDataModel           model;
-
-	private float                        scale = 10.0f;
+	private MAVGCLMap                     map;
+	private float scale = 5.0f;
 
 
-	public XYGridAnnotation() {
+
+	public XYGridAnnotation2() {
 		super();
 		this.canvas = new Canvas(5000,5000);
 		this.blocks = new ConcurrentHashMap<Long,Point4D_F32>();
 		this.gc     = canvas.getGraphicsContext2D();
-		this.mapo   = new Point4D_F32();
 
 		gc.setFill(Color.web("#2688A3",0.3f));
 		gc.setStroke(Color.web("#2688A3",1f).darker());
 		gc.setLineWidth(2);
 	
-		
-		
+	
 	}
 
-	public void setScale(float scale) {
-		this.scale = scale;
-	}
 
 	public void setController(IMAVController control) {
-		this.map   = MAVGCLOctoMap.getInstance(control);
-		this.boundingBox = new MAVSimpleBoundingBox(map.getResolution(),16);
-		this.model = AnalysisModelService.getInstance().getCurrent();
+		this.map   = MAVGCLMap.getInstance();
 		
 	}
 
@@ -111,29 +92,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 		return canvas;
 	}
 	
-	public void update() {
-		
-		float resolution = map.getResolution();
-		
-		float xp = (float)model.getValue("LPOSX");  xp = ((int)(xp / resolution)) * resolution;
-		float yp = (float)model.getValue("LPOSY");  yp = ((int)(yp / resolution)) * resolution;
-		float zp = (float)model.getValue("LPOSZ");  zp = ((int)(zp / resolution)) * resolution;
 	
-		mapo.setTo(xp,yp,zp,0);
-		boundingBox.set(mapo,scale*5.0f,0.10f);
-		List<Long> set = map.getLeafsInBoundingBoxEncoded(boundingBox);
-		
-		blocks.keySet().retainAll(set);
-
-		set.forEach((i) -> {
-			if(blocks.containsKey(i & 0x0FFFFFFFFFF00000L))
-				return;
-			final Point4D_F32 p = new Point4D_F32();
-			map.decode(i, p);
-			blocks.put(i & 0x0FFFFFFFFFF00000L, p);	
-		});
-	}
-
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -143,18 +102,18 @@ public class XYGridAnnotation  implements XYAnnotation {
 			return;
 		
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-		@SuppressWarnings("unchecked")
-		final double width  = xAxis.getDisplayPosition(map.getResolution())-xAxis.getDisplayPosition(0);
-		@SuppressWarnings("unchecked")
-		final double height = yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(map.getResolution());
-
-		blocks.values().forEach((r) -> {
+try {
+		map.getMap().values().forEach((r) -> {
 			
 			@SuppressWarnings("unchecked")
-			final double x0 = xAxis.getDisplayPosition((int)(r.y/map.getResolution())*map.getResolution()-map.getResolution()/2);
+			final double width  = xAxis.getDisplayPosition(r.width)-xAxis.getDisplayPosition(0);
 			@SuppressWarnings("unchecked")
-			final double y0 = yAxis.getDisplayPosition((int)(r.x/map.getResolution())*map.getResolution()+map.getResolution()/2);
+			final double height = yAxis.getDisplayPosition(0)-yAxis.getDisplayPosition(r.width);
+			
+			@SuppressWarnings("unchecked")
+			final double x0 = xAxis.getDisplayPosition((int)(r.p.y/r.width)*r.width-r.width/2);
+			@SuppressWarnings("unchecked")
+			final double y0 = yAxis.getDisplayPosition((int)(r.p.x/r.width)*r.width+r.width/2);
 			
 			gc.fillRect(x0,y0,width, height);
 			
@@ -163,8 +122,15 @@ public class XYGridAnnotation  implements XYAnnotation {
 			gc.strokeLine(x0+width,y0+height,x0,y0+height);
 			gc.strokeLine(x0,y0+height,x0,y0);
 
-
 		});
+}
+catch( java.util.ConcurrentModificationException z) { };
 
+	}
+
+
+	public void setScale(float scale) {
+		this.scale = scale;
+		
 	}
 }

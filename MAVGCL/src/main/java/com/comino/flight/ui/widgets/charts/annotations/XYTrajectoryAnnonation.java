@@ -119,7 +119,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 		
 
 		if(!Double.isNaN(current) && !Double.isNaN(length) && current >= 0 && length >0) {
-
+refresh = true; 
 			if(current < STEP || refresh) {
 				
 				pane.getChildren().clear();
@@ -147,7 +147,7 @@ public class XYTrajectoryAnnonation  implements XYAnnotation {
 				x0 = getPosition(0, p0x, v0x, 0,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
 				y0 = getPosition(0, p0y, v0y, 0,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 
-				for(double t = 0; t < length; t = t + STEP ) {
+				for(double t = current; t < length; t = t + STEP ) {
 					x = getPosition((float)t, p0x, v0x, a0x,(float)model.getValue("TRAJALPHAX"),(float)model.getValue("TRAJBETAX"),(float)model.getValue("TRAJGAMMAX"));
 					y = getPosition((float)t, p0y, v0y, a0y,(float)model.getValue("TRAJALPHAY"),(float)model.getValue("TRAJBETAY"),(float)model.getValue("TRAJGAMMAY"));
 					Line l = new Line(xAxis.getDisplayPosition(y0),yAxis.getDisplayPosition(x0), xAxis.getDisplayPosition(y), yAxis.getDisplayPosition(x));
