@@ -204,9 +204,11 @@ public class CameraWidget extends ChartControlPane implements IChartControl {
 		Platform.runLater(() -> {
 		if(enable) {
 			this.toBack();
-			this.setLayoutX(-300); this.setLayoutY(-200);
-			this.setWidth(1920); this.setHeight(1440);
-			image.setEffect(new ColorAdjust(0,-0.5,-0.6,-0.2));
+			this.setLayoutX(-300); 
+			this.setLayoutY(-20);
+			this.setWidth(this.getParent().getScene().getWidth()+300);
+			this.setHeight(this.getParent().getScene().getHeight()+200);
+			image.setEffect(new ColorAdjust(0,-0.4,-0.5,-0.2));
 		} else {
 			this.toFront();
 			setMoveable(true);

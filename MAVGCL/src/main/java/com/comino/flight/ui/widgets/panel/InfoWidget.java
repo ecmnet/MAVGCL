@@ -125,7 +125,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 						if(is_light) setStyle("-fx-text-fill:Chocolate;"); else setStyle("-fx-text-fill:wheat;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_CRITICAL:
-						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:salmon;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:red;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_EMERGENCY:
 						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:tomato;");
@@ -134,7 +134,7 @@ public class InfoWidget extends ChartControlPane implements IChartControl {
 						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:yellow;");
 						break;
 					case MAV_SEVERITY.MAV_SEVERITY_ALERT:
-						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:yellowgreen;");
+						if(is_light) setStyle("-fx-text-fill:red;"); else setStyle("-fx-text-fill:salmon;");
 						break;
 					default:
 						if(is_light) setStyle("-fx-text-fill:black;"); else setStyle("-fx-text-fill:white;");

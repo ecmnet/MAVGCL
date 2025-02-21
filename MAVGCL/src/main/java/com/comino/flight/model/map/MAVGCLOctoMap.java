@@ -4,13 +4,12 @@ import org.mavlink.messages.lquac.msg_msp_micro_grid;
 
 import com.comino.mavcom.control.IMAVController;
 import com.comino.mavcom.model.DataModel;
+import com.comino.mavcom.model.segment.Status;
+import com.comino.mavcom.status.StatusManager;
 import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
-import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
 import com.comino.mavmap.map.map3D.impl.octomap.MAVOctoMap3D;
 
 import georegression.struct.point.Point3D_F32;
-import georegression.struct.point.Point3D_F64;
-import georegression.struct.point.Point3D_I32;
 import us.ihmc.jOctoMap.key.OcTreeKey;
 import us.ihmc.jOctoMap.tools.OcTreeKeyConversionTools;
 
@@ -38,12 +37,11 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 
 		this.model = control.getCurrentModel();
 
-		//		control.getStatusManager().addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_CONNECTED, StatusManager.EDGE_RISING, (a) -> {
-		//			if(!model.sys.isStatus(Status.MSP_ARMED)) {
-		//				clear(); 
-		//				model.grid.count = -1;
-		//			}
-		//		});
+		control.getStatusManager().addListener(StatusManager.TYPE_MSP_STATUS, Status.MSP_ARMED,
+				StatusManager.EDGE_RISING, (a) -> {
+						clear();
+						model.grid.count = -1;
+				});
 
 		control.addMAVLinkListener((o) -> {
 			if(o instanceof msg_msp_micro_grid) {
@@ -77,35 +75,38 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 
 		});	
 	}
+	
+	private Point3D_F32 pg = new Point3D_F32();
 
 	public void insertBoolean(long encoded, float resolution, Point3D_F32 pos) {
-//		OcTreeKey key = new OcTreeKey ();	
-//		int value = decode(encoded,key);
-		Point3D_I32 p = new Point3D_I32(); Point3D_F64 pg = new Point3D_F64();
-		double value = info.decodeMapPointXY(encoded, p);
-		p.x = p.x + info.getCenter().x;
-		p.y = p.y + info.getCenter().y;
-		info.mapToGlobal(p, pg);
+		
+		decode(encoded,pg,10.0f,0.2f);
 		pg.z = pos.z;
-		pg.x = pg.x - 50.0f;
-		pg.y = pg.y - 50.0f;
-	//	System.out.println(pg.x+":"+pg.y+":"+pg.z+" => "+value);
+
 		OcTreeKey key = OcTreeKeyConversionTools.coordinateToKey(pg.x, -pg.y, pg.z, resolution, this.getTree().getTreeDepth());
 		if(key==null)
 			return;
 		
-		if(value >= 0.5) {
-			this.getTree().updateNode(key, true);
-		}
-		else {
-			MAVOccupancyOcTreeNode node = this.getTree().search(key);
-			if(node!=null) {
-				node.clear();
-				this.getTree().getChangedKeys().put(key, (byte)1);
-			}
+		this.getTree().updateNode(key, true);
 		
-		}
+//		if(value >= 0.5) {
+//			this.getTree().updateNode(key, true);
+//		}
+//		else {
+//			MAVOccupancyOcTreeNode node = this.getTree().search(key);
+//			if(node!=null) {
+//				node.clear();
+//				this.getTree().getChangedKeys().put(key, (byte)1);
+//			}
+//		
+//		}
 	}
-
+	
+	private void decode(long mpi, Point3D_F32 p, float extension, float resolution) {
+		short f = (short)(extension / resolution);
+		p.x = (mpi & 0x1FFFFFL ) / 2 / (float) f - f;
+		p.y = (mpi >> 21 & 0x1FFFFFL) / 2 / (float) f - f;
+		p.z = (mpi >> 42 & 0x1FFFFFL) / 2 / (float) f - f;
+	}
 
 }

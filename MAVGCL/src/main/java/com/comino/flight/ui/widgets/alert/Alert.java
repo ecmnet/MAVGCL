@@ -80,8 +80,7 @@ public class Alert extends ChartControlPane    {
 				if(o instanceof msg_statustext) {
 					msg_statustext msg = (msg_statustext) o;
 					if(
-					   (msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY ||
-					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_ALERT     ||
+					   (msg.severity == MAV_SEVERITY.MAV_SEVERITY_EMERGENCY    ||
 					    msg.severity == MAV_SEVERITY.MAV_SEVERITY_CRITICAL  ) &&
 						MAVPreferences.getInstance().getBoolean(MAVPreferences.ALERT, false)
 						&& !control.isSimulation()) {
