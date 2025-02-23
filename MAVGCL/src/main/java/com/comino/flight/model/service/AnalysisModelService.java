@@ -443,7 +443,7 @@ public class AnalysisModelService  {
 
 			while(true) {
 
-				if(!model.sys.isStatus(Status.MSP_CONNECTED) || !model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY) || isReplaying) {
+				if(!model.sys.isStatus(Status.MSP_CONNECTED) || isReplaying) {
 					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
@@ -466,7 +466,7 @@ public class AnalysisModelService  {
 				current.setValue("MAVGCLACC", perf);
 				current.setValue("MAVGCLNET", control.getTransferRate()/1024f);
 
-				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED)) {
+				if(mode!=STOPPED && old_mode == STOPPED && model.sys.isStatus(Status.MSP_CONNECTED) && model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY) ) {
 					Platform.runLater(()->{
 						state.getRecordingProperty().set(READING_HEADER);
 						state.getLogLoadedProperty().set(false);
@@ -475,7 +475,7 @@ public class AnalysisModelService  {
 					tms_start = System.currentTimeMillis() * 1000;
 				}
 
-				if(mode==STOPPED && old_mode != STOPPED) {
+				if((mode==STOPPED || !model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY)) && old_mode != STOPPED) {
 					ulogger.enableLogging(false);
 					state.getRecordingProperty().set(STOPPED);
 				}
