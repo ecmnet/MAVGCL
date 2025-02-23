@@ -443,7 +443,7 @@ public class AnalysisModelService  {
 
 			while(true) {
 
-				if(!model.sys.isStatus(Status.MSP_CONNECTED) || isReplaying) {
+				if(!model.sys.isStatus(Status.MSP_CONNECTED) || !model.sys.isSensorAvailable(Status.MSP_IMU_AVAILABILITY) || isReplaying) {
 					if(ulogger.isLogging())         
 						ulogger.enableLogging(false);
 					mode = STOPPED; old_mode = STOPPED;
