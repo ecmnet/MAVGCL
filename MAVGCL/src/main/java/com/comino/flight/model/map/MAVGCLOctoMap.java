@@ -102,11 +102,13 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 //		}
 	}
 	
-	private void decode(long mpi, Point3D_F32 p, float extension, float resolution) {
-		short f = (short)(extension / resolution);
-		p.x = (mpi & 0x1FFFFFL ) / 2 / (float) f - f;
-		p.y = (mpi >> 21 & 0x1FFFFFL) / 2 / (float) f - f;
-		p.z = (mpi >> 42 & 0x1FFFFFL) / 2 / (float) f - f;
+	private float decode(long mpi, Point3D_F32 p, float extension, float resolution) {
+		final short f = (short)(extension / resolution);
+		final float value = p.x = (mpi & 0xFFFL) / 4096.0f;
+		p.x = (mpi >> 12  & 0x1FFFFL )/ 2 / (float) f - f;
+		p.y = (mpi >> 29 & 0x1FFFFL) / 2 / (float) f - f;
+		p.z = (mpi >> 46 & 0x1FFFFL) / 2 / (float) f - f;
+		return value;
 	}
 
 }
