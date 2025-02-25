@@ -98,7 +98,7 @@ public class XYGridAnnotation  implements XYAnnotation {
 	}
 
 	public  void invalidate(boolean enable) {
-		blocks.clear();
+	//	blocks.clear();
 	}
 
 	public void clear() {

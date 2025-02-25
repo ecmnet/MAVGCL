@@ -7,6 +7,7 @@ import com.comino.mavcom.model.DataModel;
 import com.comino.mavcom.model.segment.Status;
 import com.comino.mavcom.status.StatusManager;
 import com.comino.mavmap.map.map3D.Map3DSpacialInfo;
+import com.comino.mavmap.map.map3D.impl.octomap.MAVOccupancyOcTreeNode;
 import com.comino.mavmap.map.map3D.impl.octomap.MAVOctoMap3D;
 
 import georegression.struct.point.Point3D_F32;
@@ -32,7 +33,7 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 	public MAVGCLOctoMap(IMAVController control) {
 		super();
 		
-		super.enableRemoveOutdated(true);
+		super.enableRemoveOutdated(false);
 		this.info = new Map3DSpacialInfo(0.2,200,200,200);
 
 		this.model = control.getCurrentModel();
@@ -71,7 +72,7 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 				}
 			}
 			
-	//	removeOutdatedNodes(1000);
+	  // removeOutdatedNodes(1000);
 
 		});	
 	}
@@ -80,26 +81,25 @@ public class MAVGCLOctoMap extends MAVOctoMap3D {
 
 	public void insertBoolean(long encoded, float resolution, Point3D_F32 pos) {
 		
-		decode(encoded,pg,10.0f,0.2f);
+		final float value = decode(encoded,pg,10.0f,0.2f);
 		pg.z = pos.z;
 
 		OcTreeKey key = OcTreeKeyConversionTools.coordinateToKey(pg.x, -pg.y, pg.z, resolution, this.getTree().getTreeDepth());
 		if(key==null)
 			return;
 		
-		this.getTree().updateNode(key, true);
 		
-//		if(value >= 0.5) {
-//			this.getTree().updateNode(key, true);
-//		}
-//		else {
-//			MAVOccupancyOcTreeNode node = this.getTree().search(key);
-//			if(node!=null) {
-//				node.clear();
-//				this.getTree().getChangedKeys().put(key, (byte)1);
-//			}
-//		
-//		}
+		if(value >= 0.5) {
+			this.getTree().updateNode(key, true);
+		}
+		else {
+			MAVOccupancyOcTreeNode node = this.getTree().search(key);
+			if(node!=null) {
+				node.clear();
+				this.getTree().getChangedKeys().put(key, (byte)1);
+			}
+		
+		}
 	}
 	
 	private float decode(long mpi, Point3D_F32 p, float extension, float resolution) {
